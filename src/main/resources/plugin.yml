@@ -1,0 +1,6 @@
+main: tk.shanebee.bee.SkBee
+name: SkBee
+version: '${project.version}'
+api-version: '1.13'
+softdepend:
+  - Skript
