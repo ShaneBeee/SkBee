@@ -38,6 +38,7 @@ public class SkBee extends JavaPlugin {
             loadRecipeElements();
             loadBoardElements();
             loadBoundElements();
+            loadStructureElements();
 
             // Beta check + notice
             if (desc.getVersion().contains("Beta")) {
@@ -60,8 +61,8 @@ public class SkBee extends JavaPlugin {
         }
         try {
             addon.loadClasses("tk.shanebee.bee.elements.nbt");
-            log("&5NBT Elements &asuccessfully loaded");
             nbtApi.forceLoadNBT();
+            log("&5NBT Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -113,6 +114,20 @@ public class SkBee extends JavaPlugin {
             return;
         }
         // load bound stuff
+    }
+
+    private void loadStructureElements() {
+        if (!this.config.ELEMENTS_STRUCTURE) {
+            log("&5Structure Elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("tk.shanebee.bee.elements.structure");
+            log("&5Structure Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
     }
 
     private void loadMetrics() { //6719

@@ -18,6 +18,7 @@ public class Config {
     public boolean ELEMENTS_BOARD;
     public boolean ELEMENTS_RECIPE;
     public boolean ELEMENTS_BOUND;
+    public boolean ELEMENTS_STRUCTURE;
     public String RECIPE_NAMESPACE;
 
     public Config(SkBee plugin) {
@@ -42,6 +43,7 @@ public class Config {
         this.ELEMENTS_BOARD = this.config.getBoolean("elements.scoreboard");
         this.ELEMENTS_RECIPE = this.config.getBoolean("elements.recipe");
         this.ELEMENTS_BOUND = this.config.getBoolean("elements.bound");
+        this.ELEMENTS_STRUCTURE = this.config.getBoolean("elements.structure");
         this.RECIPE_NAMESPACE = this.config.getString("recipe.namespace");
     }
 }

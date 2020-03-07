@@ -21,6 +21,9 @@ elements:
   # Bounds are like custom world guard regions
   bound: true
 
+  # Enable structure elements
+  structure: true
+
 recipe:
   # This is the namespace all recipes will be saved under, you can choose whatever you wish
   # Example, when using the minecraft recipe command `/minecraft:recipe give playerName skrecipe:my_custom_recipe
