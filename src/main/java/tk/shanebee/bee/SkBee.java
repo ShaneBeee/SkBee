@@ -10,6 +10,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import tk.shanebee.bee.api.NBTApi;
 import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
+import tk.shanebee.bee.metrics.Metrics;
 
 import java.io.IOException;
 
@@ -48,6 +49,7 @@ public class SkBee extends JavaPlugin {
             pm.disablePlugin(this);
             return;
         }
+        loadMetrics();
         log("&aSuccessfully enabled v" + desc.getVersion());
     }
 
@@ -63,7 +65,6 @@ public class SkBee extends JavaPlugin {
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
-            return;
         }
     }
 
@@ -112,6 +113,11 @@ public class SkBee extends JavaPlugin {
             return;
         }
         // load bound stuff
+    }
+
+    private void loadMetrics() { //6719
+        Metrics metrics = new Metrics(this, 6719);
+        metrics.addCustomChart(new Metrics.SimplePie("skript_version", () -> Skript.getVersion().toString()));
     }
 
     @Override
