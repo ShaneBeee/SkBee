@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>tk.shanebee</groupId>
     <artifactId>SkBee</artifactId>
     <version>1.0.0</version>
 
@@ -40,7 +40,7 @@
         <dependency>
             <groupId>com.github.SkriptLang</groupId>
             <artifactId>Skript</artifactId>
-            <version>2.4-beta9</version>
+            <version>2.5-alpha2</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -65,6 +65,12 @@
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api</artifactId>
             <version>2.2.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.github.shynixn.structureblocklib</groupId>
+            <artifactId>structureblocklib-bukkit-core</artifactId>
+            <version>1.10.0</version>
+            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -99,7 +105,11 @@
                     <relocations>
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>tk.shanebee.bee.NBTAPI</shadedPattern>
+                            <shadedPattern>tk.shanebee.bee.api.NBT</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.github.shynixn.structureblocklib</pattern>
+                            <shadedPattern>tk.shanebee.bee.api.Structure</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
