@@ -8,9 +8,11 @@ import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import de.tr7zw.changeme.nbtapi.NBTType;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+import tk.shanebee.bee.SkBee;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,6 +20,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NBTApi {
+
+    // This is just to force load the api!
+    public void forceLoadNBT() {
+        SkBee.log("&aLoading NBTApi!");
+        NBTItem loadingItem = new NBTItem(new ItemStack(Material.STONE));
+        loadingItem.mergeCompound(new NBTContainer("{}"));
+        SkBee.log("&aNBTApi successfully loaded!");
+    }
 
     // ITEM NBT
     public void setNBT(ItemType itemType, String value) {
