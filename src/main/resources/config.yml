@@ -1,0 +1,29 @@
+# Welcome to SkBee
+
+settings:
+  # Enable this if you would like to see more verbose debug messages
+  debug: false
+
+# Disable elements you do not plan to use.
+elements:
+  # Enable NBT elements
+  nbt: true
+
+  # Enable Scoreboard elements
+  # Note: Only available on 1.13+
+  scoreboard: true
+
+  # Enable custom recipe elements
+  # Note: Only available on 1.13+
+  recipe: true
+
+  # Enable bound elements
+  # Bounds are like custom world guard regions
+  bound: true
+
+recipe:
+  # This is the namespace all recipes will be saved under, you can choose whatever you wish
+  # Example, when using the minecraft recipe command `/minecraft:recipe give playerName skrecipe:my_custom_recipe
+  # If upgrading to this plugin from SkRecipe, keep this namespace as SkRecipe to ensure previous recipes
+  # loaded to players will continue to work
+  namespace: "SkRecipe"

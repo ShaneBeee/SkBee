@@ -7,7 +7,7 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import tk.shanebee.bee.elements.board.objects.Board;
 
-public class PlayerListener implements Listener {
+public class PlayerBoardListener implements Listener {
 
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {

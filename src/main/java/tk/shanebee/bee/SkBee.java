@@ -8,7 +8,8 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import tk.shanebee.bee.api.NBTApi;
-import tk.shanebee.bee.elements.board.listener.PlayerListener;
+import tk.shanebee.bee.config.Config;
+import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
 
 import java.io.IOException;
 
@@ -17,6 +18,7 @@ public class SkBee extends JavaPlugin {
     private static SkBee instance;
     private NBTApi nbtApi;
     private PluginManager pm;
+    private Config config;
     private SkriptAddon addon;
 
     @Override
@@ -24,15 +26,17 @@ public class SkBee extends JavaPlugin {
         instance = this;
         this.nbtApi = new NBTApi();
         this.pm = Bukkit.getPluginManager();
+        this.config = new Config(this);
         PluginDescriptionFile desc = getDescription();
 
         if ((pm.getPlugin("Skript") != null) && Skript.isAcceptRegistrations()) {
             addon = Skript.registerAddon(this);
 
             // Load Skript elements
-            if (!loadNBTElements()) return;
+            loadNBTElements();
             loadRecipeElements();
             loadBoardElements();
+            loadBoundElements();
 
             // Beta check + notice
             if (desc.getVersion().contains("Beta")) {
@@ -47,7 +51,11 @@ public class SkBee extends JavaPlugin {
         log("&aSuccessfully enabled v" + desc.getVersion());
     }
 
-    private boolean loadNBTElements() {
+    private void loadNBTElements() {
+        if (!this.config.ELEMENTS_NBT) {
+            log("&5NBT Elements &cdisabled via config");
+            return;
+        }
         try {
             addon.loadClasses("tk.shanebee.bee.elements.nbt");
             log("&5NBT Elements &asuccessfully loaded");
@@ -55,13 +63,16 @@ public class SkBee extends JavaPlugin {
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
-            return false;
+            return;
         }
-        return true;
     }
 
     private void loadRecipeElements() {
         if (Skript.isRunningMinecraft(1, 13)) {
+            if (!this.config.ELEMENTS_RECIPE) {
+                log("&5Recipe Elements &cdisabled via config");
+                return;
+            }
             try {
                 addon.loadClasses("tk.shanebee.bee.elements.recipe");
                 log("&5Recipe Elements &asuccessfully loaded");
@@ -77,9 +88,13 @@ public class SkBee extends JavaPlugin {
 
     private void loadBoardElements() {
         if (Skript.isRunningMinecraft(1, 13)) {
+            if (!this.config.ELEMENTS_BOARD) {
+                log("&5Scoreboard Elements &cdisabled via config");
+                return;
+            }
             try {
                 addon.loadClasses("tk.shanebee.bee.elements.board");
-                pm.registerEvents(new PlayerListener(), this);
+                pm.registerEvents(new PlayerBoardListener(), this);
                 log("&5Scoreboard Elements &asuccessfully loaded");
             } catch (IOException ex) {
                 ex.printStackTrace();
@@ -91,12 +106,24 @@ public class SkBee extends JavaPlugin {
         }
     }
 
+    private void loadBoundElements() {
+        if (!this.config.ELEMENTS_BOUND) {
+            log("&5Bound Elements &cdisabled via config");
+            return;
+        }
+        // load bound stuff
+    }
+
     @Override
     public void onDisable() {
     }
 
     public static SkBee getPlugin() {
         return instance;
+    }
+
+    public Config getPluginConfig() {
+        return this.config;
     }
 
     public NBTApi getNbtApi() {
