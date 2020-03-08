@@ -23,7 +23,7 @@ import javax.annotation.Nullable;
 @Description("Spawn an entity at a location with NBT")
 @Examples({"spawn sheep at player with nbt \"{NoAI:1b}\"",
         "spawn 1 of zombie at player with nbt \"{NoGravity:1b}\""})
-@Since("1.2.4")
+@Since("1.0.0")
 public class EffSpawnEntityNBT extends Effect {
 
     private static final NBTApi NBT_API;

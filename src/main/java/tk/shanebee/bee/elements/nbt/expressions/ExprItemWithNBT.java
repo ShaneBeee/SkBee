@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 @Description("Give players items with NBT or even use items with NBT in GUIs")
 @Examples({"give player diamond sword with nbt \"{Unbreakable:1}\"",
         "format gui slot 1 of player with diamond axe with nbt \"{Enchantments:[{id:\\\"\\\"unbreaking\\\"\\\",lvl:5s}]}\""})
-@Since("1.2.3")
+@Since("1.0.0")
 public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
 
     private static final NBTApi NBT_API;

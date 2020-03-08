@@ -20,7 +20,7 @@ import tk.shanebee.bee.api.NBTApi;
 @Description("Set a block at a location to a block with NBT")
 @Examples({"set nbt-block at player to west facing furnace with nbt \"{CustomName:\"\"{\\\"\"text\\\"\":\\\"\"&aFurnieFurnace\\\"\"}\"\"}\"",
         "set nbt-block at event-location to hopper with nbt \"{CustomName:\"\"{\\\"\"text\\\"\":\\\"\"&cHoppieHopper\\\"\"}\"\"}\""})
-@Since("2.0.0")
+@Since("1.0.0")
 public class EffSetBlockNBT extends Effect {
 
     private static final NBTApi NBT_API;
