@@ -19,7 +19,7 @@ import tk.shanebee.bee.api.NBTApi;
 
 import javax.annotation.Nullable;
 
-@Name("Spawn Entity with NBT")
+@Name("NBT - Spawn Entity with NBT")
 @Description("Spawn an entity at a location with NBT")
 @Examples({"spawn sheep at player with nbt \"{NoAI:1b}\"",
         "spawn 1 of zombie at player with nbt \"{NoGravity:1b}\""})
