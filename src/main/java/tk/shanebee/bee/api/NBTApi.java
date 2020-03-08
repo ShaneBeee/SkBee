@@ -148,6 +148,7 @@ public class NBTApi {
 
     // TAGS
     public Object getTag(String tag, String nbt) {
+        if (nbt == null) return null;
         NBTCompound compound = new NBTContainer(nbt);
         NBTType type = compound.getType(tag);
         switch (compound.getType(tag)) {
@@ -155,23 +156,30 @@ public class NBTApi {
                 return compound.getString(tag);
             case NBTTagInt:
                 return compound.getInteger(tag);
+            case NBTTagIntArray:
+                return compound.getIntegerList(tag);
             case NBTTagFloat:
                 return compound.getFloat(tag);
             case NBTTagShort:
                 return compound.getShort(tag);
             case NBTTagDouble:
                 return compound.getDouble(tag);
+            case NBTTagEnd:
+                return compound.toString();
             case NBTTagLong:
                 return compound.getLong(tag);
             case NBTTagByte:
                 return compound.getByte(tag);
+            case NBTTagByteArray:
+                return compound.getByteArray(tag);
             case NBTTagCompound:
+                return compound.getCompound(tag).toString();
             case NBTTagList:
-                List<String> string = new ArrayList<>();
-                for (NBTCompound compound1 : compound.getCompoundList(tag)) {
-                    string.add(compound1.toString());
+                List<String> stringList = new ArrayList<>();
+                for (NBTCompound comp : compound.getCompoundList(tag)) {
+                    stringList.add(comp.toString());
                 }
-                return string;
+                return stringList;
             default:
                 return "null -> type: " + type.toString();
         }

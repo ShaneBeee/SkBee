@@ -17,10 +17,12 @@ import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 @Name("NBT - Tag")
 @Description("Returns the value of the specified tag of the specified NBT. " +
-        "Also supports getting nested tags using a semi colon as a delimiter (version 2.11.1+). " +
+        "Also supports getting nested tags using a semi colon as a delimiter. " +
+        "If the return value is a list, you can use it as a list, as it will automatically split it for ya. " +
         "(Currently only supports get. Set may be available in the future)")
 @Examples({"set {_tag} to tag \"Invulnerable\" of targeted entity's nbt",
         "send \"Tag: %tag \"\"CustomName\"\" of nbt of target entity%\" to player",
@@ -57,7 +59,11 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         if (t.contains(";")) {
             return getNested(t, n);
         }
-        return new Object[]{NBT_API.getTag(t, n)};
+        Object nbt = NBT_API.getTag(t, n);
+        if (nbt instanceof ArrayList) {
+            return ((ArrayList) nbt).toArray();
+        }
+        return new Object[]{nbt};
     }
 
     @Override
@@ -71,8 +77,8 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<? extends String> getReturnType() {
-        return String.class;
+    public Class<? extends Object> getReturnType() {
+        return Object.class;
     }
 
     private Object[] getNested(String tag, String nbt) {
