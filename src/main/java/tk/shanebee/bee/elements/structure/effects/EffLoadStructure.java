@@ -28,12 +28,10 @@ import org.bukkit.event.Event;
 public class EffLoadStructure extends Effect {
 
     static {
-        if (Skript.isRunningMinecraft(1, 9, 4)) {
-            Skript.registerEffect(EffLoadStructure.class,
-                    "(load|paste) [structure] %string% at %location% [with rotation (0¦0|1¦90|2¦180|3¦270)] [(|5¦[and] with entities)]",
-                    "(load|paste) [structure] %string% at %location% [with rotation (0¦0|1¦90|2¦180|3¦270)] [and] [with] mirror front to back [(|5¦[and] with entities)]",
-                    "(load|paste) [structure] %string% at %location% [with rotation (0¦0|1¦90|2¦180|3¦270)] [and] [with] mirror left to right [(|5¦[and] with entities)]");
-        }
+        Skript.registerEffect(EffLoadStructure.class,
+                "(load|paste) [structure] %string% at %location% [with rotation (0¦0|1¦90|2¦180|3¦270)] [(|5¦[and] with entities)]",
+                "(load|paste) [structure] %string% at %location% [with rotation (0¦0|1¦90|2¦180|3¦270)] [and] [with] mirror front to back [(|5¦[and] with entities)]",
+                "(load|paste) [structure] %string% at %location% [with rotation (0¦0|1¦90|2¦180|3¦270)] [and] [with] mirror left to right [(|5¦[and] with entities)]");
     }
 
     @SuppressWarnings("null")

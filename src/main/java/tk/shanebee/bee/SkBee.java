@@ -129,16 +129,21 @@ public class SkBee extends JavaPlugin {
     }
 
     private void loadStructureElements() {
-        if (!this.config.ELEMENTS_STRUCTURE) {
-            log("&5Structure Elements &cdisabled via config");
-            return;
-        }
-        try {
-            addon.loadClasses("tk.shanebee.bee.elements.structure");
-            log("&5Structure Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pm.disablePlugin(this);
+        if (Skript.isRunningMinecraft(1, 9, 4)) {
+            if (!this.config.ELEMENTS_STRUCTURE) {
+                log("&5Structure Elements &cdisabled via config");
+                return;
+            }
+            try {
+                addon.loadClasses("tk.shanebee.bee.elements.structure");
+                log("&5Structure Elements &asuccessfully loaded");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                pm.disablePlugin(this);
+            }
+        } else {
+            log("&5Structure Elements &cdisabled");
+            log("&7 - Structure elements are only available on 1.9.4+");
         }
     }
 

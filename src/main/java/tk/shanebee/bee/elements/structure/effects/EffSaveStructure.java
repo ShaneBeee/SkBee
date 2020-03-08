@@ -23,9 +23,7 @@ import org.bukkit.event.Event;
 public class EffSaveStructure extends Effect {
 
     static {
-        if (Skript.isRunningMinecraft(1, 9, 4)) {
-            Skript.registerEffect(EffSaveStructure.class, "save [structure] between %location% and %location% as %string%");
-        }
+        Skript.registerEffect(EffSaveStructure.class, "save [structure] between %location% and %location% as %string%");
     }
 
     @SuppressWarnings("null")
