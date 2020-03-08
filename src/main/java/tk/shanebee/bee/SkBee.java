@@ -39,6 +39,7 @@ public class SkBee extends JavaPlugin {
             loadBoardElements();
             loadBoundElements();
             loadStructureElements();
+            loadOtherElements();
 
             // Beta check + notice
             if (desc.getVersion().contains("Beta")) {
@@ -124,6 +125,16 @@ public class SkBee extends JavaPlugin {
         try {
             addon.loadClasses("tk.shanebee.bee.elements.structure");
             log("&5Structure Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
+    }
+
+    private void loadOtherElements() {
+        try {
+            addon.loadClasses("tk.shanebee.bee.elements.other");
+            log("&5Other Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
