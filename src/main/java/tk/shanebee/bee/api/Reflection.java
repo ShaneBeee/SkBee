@@ -11,7 +11,7 @@ public class Reflection {
     private static Method setMetaMethod;
     private static Method getMetaMethod;
 
-    private static boolean newMeta = (Skript.methodExists(ItemType.class, "setItemMeta", ItemMeta.class));
+    private static final boolean newMeta = (Skript.methodExists(ItemType.class, "setItemMeta", ItemMeta.class));
 
     static {
         try {

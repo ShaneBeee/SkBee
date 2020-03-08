@@ -35,7 +35,7 @@ public class NBTApi {
 
         NBTItem item = new NBTItem(itemStack);
         item.mergeCompound(new NBTContainer(value));
-        itemType.setTo(new ItemType(item.getItem()));
+        Reflection.setMeta(itemType, item.getItem().getItemMeta());
     }
 
     public void setNBT(ItemStack itemStack, String value) {
@@ -51,7 +51,7 @@ public class NBTApi {
 
         NBTItem item = new NBTItem(stack);
         item.mergeCompound(new NBTContainer(value));
-        itemType.setTo(new ItemType(item.getItem()));
+        Reflection.setMeta(itemType, item.getItem().getItemMeta());
     }
 
     public void addNBT(ItemStack itemStack, String value) {
