@@ -8,8 +8,10 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.listener.BoundBorderListener;
 import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
+import tk.shanebee.bee.elements.bound.config.BoundConfig;
 import tk.shanebee.bee.metrics.Metrics;
 
 import java.io.IOException;
@@ -20,6 +22,7 @@ public class SkBee extends JavaPlugin {
     private NBTApi nbtApi;
     private PluginManager pm;
     private Config config;
+    private BoundConfig boundConfig = null;
     private SkriptAddon addon;
 
     @Override
@@ -114,7 +117,15 @@ public class SkBee extends JavaPlugin {
             log("&5Bound Elements &cdisabled via config");
             return;
         }
-        // load bound stuff
+        try {
+            this.boundConfig = new BoundConfig(this);
+            new BoundBorderListener(this);
+            addon.loadClasses("tk.shanebee.bee.elements.bound");
+            log("&5Bound Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
     }
 
     private void loadStructureElements() {
@@ -156,6 +167,10 @@ public class SkBee extends JavaPlugin {
 
     public Config getPluginConfig() {
         return this.config;
+    }
+
+    public BoundConfig getBoundConfig() {
+        return this.boundConfig;
     }
 
     public NBTApi getNbtApi() {
