@@ -13,4 +13,14 @@ public class McReflection {
         ReflectionUtils.setField("noclip", nmsClass, nmsEntity, !clip);
     }
 
+    @SuppressWarnings("ConstantConditions")
+    public static boolean getClip(Entity entity) {
+        if (entity == null) return false;
+        Object nmsEntity = ReflectionUtils.getNMSHandle(entity);
+        if (nmsEntity == null) return false;
+        Class<?> nmsClass = ReflectionUtils.getNMSClass("Entity");
+        if (nmsClass == null) return false;
+        return !Boolean.parseBoolean(ReflectionUtils.getField("noclip", nmsClass, nmsEntity).toString());
+    }
+
 }
