@@ -125,6 +125,7 @@ public class NBTApi {
         try {
             NBTFile nbtFile = new NBTFile(file1);
             nbtFile.mergeCompound(new NBTContainer(value));
+            nbtFile.save();
 
         } catch (IOException e) {
             e.printStackTrace();
