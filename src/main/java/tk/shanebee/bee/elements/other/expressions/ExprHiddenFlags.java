@@ -14,7 +14,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
-import tk.shanebee.bee.api.Reflection;
+import tk.shanebee.bee.api.reflection.SkReclection;
 
 import javax.annotation.Nullable;
 
@@ -57,7 +57,7 @@ public class ExprHiddenFlags extends SimplePropertyExpression<ItemType, ItemType
     public ItemType convert(ItemType item) {
         if (item == null) return null;
 
-        ItemMeta meta = Reflection.getMeta(item);
+        ItemMeta meta = SkReclection.getMeta(item);
         switch (parse) {
             case 0:
                 meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
@@ -83,7 +83,7 @@ public class ExprHiddenFlags extends SimplePropertyExpression<ItemType, ItemType
                 break;
         }
 
-        Reflection.setMeta(item, meta);
+        SkReclection.setMeta(item, meta);
         return item;
     }
 

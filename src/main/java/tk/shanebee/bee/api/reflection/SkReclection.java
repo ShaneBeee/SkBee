@@ -1,4 +1,4 @@
-package tk.shanebee.bee.api;
+package tk.shanebee.bee.api.reflection;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
@@ -6,7 +6,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.Method;
 
-public class Reflection {
+public class SkReclection {
 
     private static Method setMetaMethod;
     private static Method getMetaMethod;
@@ -42,4 +42,5 @@ public class Reflection {
                 return null;
             }
     }
+
 }
