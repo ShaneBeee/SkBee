@@ -18,7 +18,7 @@ public class EvtRecipe {
                             "\tif event-string = \"minecraft:diamond_block\"",
                             "\t\tcancel event")
                     .requiredPlugins("1.13+")
-                    .since("1.2.0");
+                    .since("1.0.0");
             EventValues.registerEventValue(PlayerRecipeDiscoverEvent.class, String.class, new Getter<String, PlayerRecipeDiscoverEvent>() {
                 @Override
                 public String get(PlayerRecipeDiscoverEvent event) {
