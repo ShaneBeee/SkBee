@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -12,11 +13,16 @@ import tk.shanebee.bee.api.listener.BoundBorderListener;
 import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
 import tk.shanebee.bee.elements.bound.config.BoundConfig;
+import tk.shanebee.bee.elements.bound.objects.Bound;
 import tk.shanebee.bee.metrics.Metrics;
 
 import java.io.IOException;
 
 public class SkBee extends JavaPlugin {
+
+    static {
+        ConfigurationSerialization.registerClass(Bound.class, "Bound");
+    }
 
     private static SkBee instance;
     private NBTApi nbtApi;
@@ -119,7 +125,7 @@ public class SkBee extends JavaPlugin {
         }
         try {
             this.boundConfig = new BoundConfig(this);
-            new BoundBorderListener(this);
+            pm.registerEvents(new BoundBorderListener(this), this);
             addon.loadClasses("tk.shanebee.bee.elements.bound");
             log("&5Bound Elements &asuccessfully loaded");
         } catch (IOException ex) {
