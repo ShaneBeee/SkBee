@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 @Examples({"spawn a zombie at player", "set no clip state of last spawned zombie to true",
         "set {_var} to no clip state of last spawned sheep",
         "loop all entities in radius 5 around player:", "\tset no clip state of loop-entity to true", "\tpush loop-entity up with speed 5"})
-@Since("INSERT VERSION")
+@Since("1.0.2")
 public class ExprNoClip extends SimpleExpression<Boolean> {
 
     static {
