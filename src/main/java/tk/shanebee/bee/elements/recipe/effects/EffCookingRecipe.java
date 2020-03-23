@@ -1,6 +1,5 @@
 package tk.shanebee.bee.elements.recipe.effects;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -8,7 +7,6 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.events.bukkit.SkriptStartEvent;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -29,15 +27,15 @@ import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
 
-@SuppressWarnings({"deprecation", "NullableProblems"})
+@SuppressWarnings({"deprecation", "NullableProblems", "ConstantConditions"})
 @Name("Recipe - Cooking")
-@Description("Register new cooking recipes. " +
+@Description({"Register new cooking recipes. " +
         "On 1.13+ you can register recipes for furnaces. " +
         "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires. " +
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores. " +
         "Used for recipe discovery/unlocking recipes for players. " +
-        "You may also include an optional group for recipes. These will group the recipes together in the recipe book. " +
-        "Recipes must be registered in a <b>Skript load event</b>")
+        "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
+        "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the config to whatever you want."})
 @Examples({"on skript load:",
         "\tregister new furnace recipe for diamond using dirt with id \"furnace_diamond\"",
         "\tregister new blasting recipe for emerald using dirt with id \"blasting_emerald\"",
@@ -75,10 +73,6 @@ public class EffCookingRecipe extends Effect {
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
-        if (!ScriptLoader.isCurrentEvent(SkriptStartEvent.class)) {
-            Skript.error("Recipes can only be registered during a Skript load event!");
-            return false;
-        }
         item = (Expression<ItemType>) exprs[0];
         ingredient = (Expression<ItemType>) exprs[1];
         key = (Expression<String>) exprs[2];
@@ -112,6 +106,9 @@ public class EffCookingRecipe extends Effect {
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
         float xp = experience != null ? experience.getSingle(event).floatValue() : 0;
 
+        // Remove duplicates on script reload
+        RecipeUtil.removeRecipe(key);
+
         if (HAS_BLASTING)
             cookingRecipe(event, result, ingredient, group, key, xp);
         else
@@ -131,6 +128,7 @@ public class EffCookingRecipe extends Effect {
         }
     }
 
+    @SuppressWarnings("rawtypes")
     private void cookingRecipe(Event event, ItemStack result, RecipeChoice.ExactChoice ingredient, String group, NamespacedKey key, float xp) {
         Recipe recipe;
         int cookTime;

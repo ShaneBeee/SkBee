@@ -1,6 +1,5 @@
 package tk.shanebee.bee.elements.recipe.effects;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -8,7 +7,6 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.events.bukkit.SkriptStartEvent;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -24,15 +22,15 @@ import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
 
-@SuppressWarnings("NullableProblems")
+@SuppressWarnings({"NullableProblems", "ConstantConditions"})
 @Name("Recipe - Shaped/Shapeless")
-@Description("Register a new shaped/shapeless recipe for a specific item using custom ingredients. " +
+@Description({"Register a new shaped/shapeless recipe for a specific item using custom ingredients. " +
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores." +
         " Used for recipe discovery/unlocking recipes for players. " +
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book. " +
-        "Recipes must be registered in a <b>Skript load event</b>" +
-        "\n<b>NOTE:</b> Recipes with 4 or less ingredients will be craftable in the player's crafting grid.")
-@Examples({"on skript load:",
+        "<b>NOTE:</b> Recipes with 4 or less ingredients will be craftable in the player's crafting grid.",
+        "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the config to whatever you want."})
+@Examples({"on load:",
         "\tregister new shaped recipe for elytra using air, iron chestplate, air, air, iron chestplate and air with id \"elytra\"",
         "\tset {_strong} to emerald named \"&3Strong Emerald\"",
         "\tregister new shaped recipe for {_strong} using emerald, emerald, air, emerald, emerald and air with id \"strong_emerald\"",
@@ -59,10 +57,6 @@ public class EffCraftingRecipe extends Effect {
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
-        if (!ScriptLoader.isCurrentEvent(SkriptStartEvent.class)) {
-            Skript.error("Recipes can only be registered during a Skript load event!");
-            return false;
-        }
         item = (Expression<ItemType>) exprs[0];
         ingredients = (Expression<ItemType>) exprs[1];
         key = (Expression<String>) exprs[2];
@@ -89,6 +83,9 @@ public class EffCraftingRecipe extends Effect {
 
         String group = this.group != null ? this.group.getSingle(event) : null;
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
+
+        // Remove duplicates on script reload
+        RecipeUtil.removeRecipe(key);
 
         if (shaped)
             registerShaped(item, ingredients, key, group);

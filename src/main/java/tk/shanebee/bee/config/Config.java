@@ -44,6 +44,10 @@ public class Config {
         this.ELEMENTS_RECIPE = this.config.getBoolean("elements.recipe");
         this.ELEMENTS_BOUND = this.config.getBoolean("elements.bound");
         this.ELEMENTS_STRUCTURE = this.config.getBoolean("elements.structure");
-        this.RECIPE_NAMESPACE = this.config.getString("recipe.namespace");
+        String namespace = this.config.getString("recipe.namespace");
+        if (namespace == null) {
+            namespace = "skrecipe";
+        }
+        this.RECIPE_NAMESPACE = namespace.toLowerCase();
     }
 }

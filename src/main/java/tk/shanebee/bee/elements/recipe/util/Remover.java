@@ -1,8 +1,9 @@
 package tk.shanebee.bee.elements.recipe.util;
 
+import ch.njol.skript.Skript;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 
-import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -11,27 +12,28 @@ import java.util.Map;
 public class Remover {
 
     private final String VERSION;
-    private final Constructor<?> keyConstructor;
     private final Map<?, Map<?, ?>> recipeMap;
+    private Method getMCKey;
+    private Class<?> CB_KEY;
 
-    public Remover() throws ClassNotFoundException, NoSuchMethodException {
+    public Remover() {
         VERSION = Bukkit.getServer().getClass().getPackage().getName().split("\\.")[3];
-        Class<?> MC_KEY = getNMSClass("MinecraftKey");
-        keyConstructor = MC_KEY.getDeclaredConstructor(String.class);
+        try {
+            CB_KEY = getCBClass("util.CraftNamespacedKey");
+            getMCKey = CB_KEY.getDeclaredMethod("toMinecraft", NamespacedKey.class);
+        } catch (ClassNotFoundException | NoSuchMethodException e) {
+            Skript.warning("[SkRecipe] - Recipe remover failed to load!");
+        }
         recipeMap = getRecipeMap();
     }
 
-    public void removeRecipeByKey(String recipeKey) {
-        if (recipeKey.equals("*")) {
-            removeAll();
-            return;
-        }
+    public void removeRecipeByKey(NamespacedKey recipeKey) {
         Object key;
         try {
-            key = keyConstructor.newInstance(recipeKey);
-        } catch (InstantiationException | IllegalAccessException | InvocationTargetException e) {
+            key = getMCKey.invoke(CB_KEY, recipeKey);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            Skript.error("Recipe cant be removed: " + recipeKey.toString());
             return;
-            //e.printStackTrace();
         }
         recipeMap.values().forEach(recipes -> recipes.entrySet().removeIf(entry -> entry.getKey().equals(key)));
     }
@@ -72,4 +74,5 @@ public class Remover {
         String name = "org.bukkit.craftbukkit." + VERSION + "." + cbClassString;
         return Class.forName(name);
     }
+
 }

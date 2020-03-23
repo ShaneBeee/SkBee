@@ -1,10 +1,12 @@
 package tk.shanebee.bee.elements.recipe.effects;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.*;
-import ch.njol.skript.events.bukkit.SkriptStartEvent;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.RequiredPlugins;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -18,12 +20,13 @@ import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
 
+@SuppressWarnings({"ConstantConditions", "NullableProblems"})
 @Name("Recipe - StoneCutting")
-@Description("Register a new stone cutting recipe. " +
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores." +
-        "Used for recipe discovery/unlocking recipes for players. " +
-        "You may also include an optional group for recipes. These will group the recipes together in the recipe book. " +
-        "Recipes must be registered in a <b>Skript load event</b>")
+@Description({"Register a new stone cutting recipe. " +
+        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores.",
+        "Used for recipe discovery/unlocking recipes for players. ",
+        "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
+        "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the config to whatever you want."})
 @Examples({"on skript load:", "\tregister new stone cutting recipe for diamond using diamond ore with id \"cutting_diamond\""})
 @RequiredPlugins("1.14+")
 @Since("1.0.0")
@@ -47,10 +50,6 @@ public class EffStonecuttingRecipe extends Effect {
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-        if (!ScriptLoader.isCurrentEvent(SkriptStartEvent.class)) {
-            Skript.error("Recipes can only be registered during a Skript load event!");
-            return false;
-        }
         item = (Expression<ItemType>) exprs[0];
         ingredient = (Expression<ItemType>) exprs[1];
         key = (Expression<String>) exprs[2];
@@ -82,6 +81,9 @@ public class EffStonecuttingRecipe extends Effect {
         RecipeChoice.ExactChoice choice = new RecipeChoice.ExactChoice(ingredient.getRandom());
         StonecuttingRecipe recipe = new StonecuttingRecipe(key, item.getRandom(), choice);
         recipe.setGroup(group);
+
+        // Remove duplicates on script reload
+        RecipeUtil.removeRecipe(key);
 
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
