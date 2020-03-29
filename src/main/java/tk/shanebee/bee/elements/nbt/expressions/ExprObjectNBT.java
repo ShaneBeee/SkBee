@@ -61,6 +61,9 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
     public void change(Event event, Object[] delta, ChangeMode mode) {
         Object o = getExpr().getSingle(event);
         String value = delta != null ? ((String) delta[0]) : "{}";
+        if (!NBT_API.validateNBT(value)) {
+            return;
+        }
         switch (mode) {
             case ADD:
                 if (o instanceof ItemStack) {
