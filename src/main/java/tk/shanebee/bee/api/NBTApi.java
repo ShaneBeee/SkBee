@@ -1,6 +1,7 @@
 package tk.shanebee.bee.api;
 
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.lang.Expression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
@@ -14,6 +15,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.reflection.SkReclection;
+import tk.shanebee.bee.api.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +23,35 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class NBTApi {
+
+    @SuppressWarnings("ConstantConditions")
+    public boolean validateNBT(Expression<String> nbt) {
+        for (String nbtString : nbt.getAll(null)) {
+            try {
+                new NBTContainer(nbtString);
+            } catch (Exception ex) {
+                Util.skriptError("&cInvalid NBT: &b" + nbtString + "&c");
+                if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+                    ex.printStackTrace();
+                }
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean validateNBT(String nbtString) {
+        try {
+            new NBTContainer(nbtString);
+        } catch (Exception ex) {
+            Util.skriptError("&cInvalid NBT: &b" + nbtString + "&c");
+            if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+                ex.printStackTrace();
+            }
+            return false;
+        }
+        return true;
+    }
 
     // This is just to force load the api!
     public void forceLoadNBT() {
