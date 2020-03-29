@@ -15,6 +15,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.util.Util;
 
 import javax.annotation.Nullable;
 
@@ -40,7 +41,7 @@ public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         setExpr((Expression<ItemType>) exprs[0]);
         nbt = (Expression<String>) exprs[1];
-        return true;
+        return NBT_API.validateNBT(nbt);
     }
 
     @Override
@@ -61,4 +62,5 @@ public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
     public String toString(@Nullable Event e, boolean debug) {
         return getExpr().toString(e, debug) + " with nbt " + nbt.toString(e, debug);
     }
+
 }

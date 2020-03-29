@@ -43,7 +43,7 @@ public class EffSetBlockNBT extends Effect {
         type = (Expression<ItemType>) exprs[2];
         locations = Direction.combine((Expression<? extends Direction>) exprs[0], (Expression<? extends Location>) exprs[1]);
         nbtString = (Expression<String>) exprs[3];
-        return true;
+        return NBT_API.validateNBT(nbtString);
     }
 
     @Override
