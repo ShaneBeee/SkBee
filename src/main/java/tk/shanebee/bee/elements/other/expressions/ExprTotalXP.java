@@ -21,7 +21,7 @@ import tk.shanebee.bee.api.util.PlayerUtils;
 @Description("Represents the total experience points the player currently has.")
 @Examples({"add 10 to total experience of player", "remove 100 from total experience of player",
         "set total xp of player to 1500", "set {_t} to total experience of player"})
-@Since("INSERT VERSION")
+@Since("1.2.0")
 public class ExprTotalXP extends PropertyExpression<Player, Integer> {
 
     static {
