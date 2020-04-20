@@ -1,7 +1,6 @@
 package tk.shanebee.bee.api.util;
 
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
+import ch.njol.skript.Skript;
 import org.bukkit.entity.Player;
 import tk.shanebee.bee.api.reflection.ReflectionUtils;
 
@@ -53,7 +52,7 @@ public class PlayerUtils {
             Method sendPacket = ReflectionUtils.getNMSClass("PlayerConnection").getMethod("sendPacket", ReflectionUtils.getNMSClass("Packet"));
             sendPacket.invoke(ReflectionUtils.getConnection(player), packet);
         } catch (Exception e) {
-            Bukkit.getConsoleSender().sendMessage("[SurvivalPlus] " + ChatColor.RED + e.getMessage());
+            Skript.error(e.getMessage());
         }
     }
 
@@ -71,7 +70,7 @@ public class PlayerUtils {
             Method sendPacket = ReflectionUtils.getNMSClass("PlayerConnection").getMethod("sendPacket", ReflectionUtils.getNMSClass("Packet"));
             sendPacket.invoke(ReflectionUtils.getConnection(player), packet);
         } catch (Exception e) {
-            Bukkit.getConsoleSender().sendMessage("[SurvivalPlus] " + ChatColor.RED + e.getMessage());
+            Skript.error(e.getMessage());
         }
     }
 
