@@ -5,6 +5,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.effects.EffSpawn;
 import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -12,7 +13,6 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
@@ -43,9 +43,6 @@ public class EffSpawnEntityNBT extends Effect {
     @Nullable
     private Expression<Number> amount;
 
-    @Nullable
-    public static Entity lastSpawned = null;
-
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parser) {
@@ -58,7 +55,6 @@ public class EffSpawnEntityNBT extends Effect {
 
     @Override
     public void execute(final Event e) {
-        lastSpawned = null;
         String value = this.nbtString.getSingle(e);
         final Number a = amount != null ? amount.getSingle(e) : 1;
         if (a == null)
@@ -68,8 +64,8 @@ public class EffSpawnEntityNBT extends Effect {
             assert loc != null : locations;
             for (final EntityType type : et) {
                 for (int i = 0; i < a.doubleValue() * type.getAmount(); i++) {
-                    lastSpawned = type.data.spawn(loc);
-                    NBT_API.addNBT(lastSpawned, value);
+                    EffSpawn.lastSpawned = type.data.spawn(loc);
+                    NBT_API.addNBT(EffSpawn.lastSpawned, value);
                 }
             }
         }
