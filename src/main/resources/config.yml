@@ -22,7 +22,12 @@ elements:
   bound: true
 
   # Enable structure elements
+  # Note: Only available on 1.9.4+
   structure: true
+
+  # Enable VirtualFurnace elements
+  # Note: Only available on 1.13+
+  virtual-furnace: true
 
 recipe:
   # This is the namespace all recipes will be saved under, you can choose whatever you wish

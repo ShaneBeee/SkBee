@@ -2,6 +2,7 @@ package tk.shanebee.bee;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
+import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -14,6 +15,7 @@ import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
 import tk.shanebee.bee.elements.bound.config.BoundConfig;
 import tk.shanebee.bee.elements.bound.objects.Bound;
+import tk.shanebee.bee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import tk.shanebee.bee.metrics.Metrics;
 
 import java.io.IOException;
@@ -30,6 +32,7 @@ public class SkBee extends JavaPlugin {
     private Config config;
     private BoundConfig boundConfig = null;
     private SkriptAddon addon;
+    private VirtualFurnaceAPI virtualFurnaceAPI;
 
     @Override
     public void onEnable() {
@@ -49,6 +52,7 @@ public class SkBee extends JavaPlugin {
             loadBoundElements();
             loadStructureElements();
             loadOtherElements();
+            loadVirtualFurnaceElements();
 
             // Beta check + notice
             if (desc.getVersion().contains("Beta")) {
@@ -153,6 +157,27 @@ public class SkBee extends JavaPlugin {
         }
     }
 
+    private void loadVirtualFurnaceElements() {
+        if (Skript.classExists("org.bukkit.persistence.PersistentDataContainer")) {
+            if (!this.config.ELEMENTS_VIRTUAL_FURNACE) {
+                log("&5Virtual Furnace Elements &cdisabled via config");
+                return;
+            }
+            try {
+                this.virtualFurnaceAPI = new VirtualFurnaceAPI(this, true);
+                pm.registerEvents(new VirtualFurnaceListener(), this);
+                addon.loadClasses("tk.shanebee.bee.elements.virtualfurnace");
+                log("&5Virtual Furnace Elements &asuccessfully loaded");
+            } catch (IOException e) {
+                e.printStackTrace();
+                pm.disablePlugin(this);
+            }
+        } else {
+            log("&5Virtual Furnace Elements &cdisabled");
+            log("&7 - Virtual Furnace elements are only available on 1.13+");
+        }
+    }
+
     private void loadOtherElements() {
         try {
             addon.loadClasses("tk.shanebee.bee.elements.other");
@@ -170,6 +195,9 @@ public class SkBee extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        if (this.virtualFurnaceAPI != null) {
+            this.virtualFurnaceAPI.disableAPI();
+        }
     }
 
     public static SkBee getPlugin() {
@@ -186,6 +214,10 @@ public class SkBee extends JavaPlugin {
 
     public NBTApi getNbtApi() {
         return nbtApi;
+    }
+
+    public VirtualFurnaceAPI getVirtualFurnaceAPI() {
+        return virtualFurnaceAPI;
     }
 
     public static void log(String log) {

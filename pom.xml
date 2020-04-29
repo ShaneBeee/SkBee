@@ -28,6 +28,10 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
+        <repository>
+            <id>shanebeestudios-repo</id>
+            <url>https://shanebeestudios.com/maven/</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -72,6 +76,11 @@
             <version>1.10.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.shanebeestudios</groupId>
+            <artifactId>VirtualFurnace</artifactId>
+            <version>1.0.0-Beta7</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -112,6 +121,10 @@
                         <relocation>
                             <pattern>com.github.shynixn.structureblocklib</pattern>
                             <shadedPattern>tk.shanebee.bee.api.Structure</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>com.shanebeestudios.vf</pattern>
+                            <shadedPattern>tk.shanebee.bee.api.virtualfurnace</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

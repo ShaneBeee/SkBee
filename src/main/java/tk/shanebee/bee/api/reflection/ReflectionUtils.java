@@ -2,6 +2,7 @@ package tk.shanebee.bee.api.reflection;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -71,6 +72,18 @@ public class ReflectionUtils {
         } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public static Object getConnection(Player player)
+            throws SecurityException, NoSuchMethodException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        Field conField = getHandle(player).getClass().getField("playerConnection");
+        return conField.get(getHandle(player));
+    }
+
+    public static Object getHandle(Player player)
+            throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        Method getHandle = player.getClass().getMethod("getHandle");
+        return getHandle.invoke(player);
     }
 
 }

@@ -5,6 +5,8 @@ import org.bukkit.configuration.file.YamlConfiguration;
 import tk.shanebee.bee.SkBee;
 
 import java.io.File;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 
 public class Config {
 
@@ -19,6 +21,7 @@ public class Config {
     public boolean ELEMENTS_RECIPE;
     public boolean ELEMENTS_BOUND;
     public boolean ELEMENTS_STRUCTURE;
+    public boolean ELEMENTS_VIRTUAL_FURNACE;
     public String RECIPE_NAMESPACE;
 
     public Config(SkBee plugin) {
@@ -34,7 +37,36 @@ public class Config {
             plugin.saveResource("config.yml", false);
         }
         config = YamlConfiguration.loadConfiguration(configFile);
+        matchConfig();
         loadConfigs();
+    }
+
+    // Used to update config
+    @SuppressWarnings("ConstantConditions")
+    private void matchConfig() {
+        try {
+            boolean hasUpdated = false;
+            InputStream stream = plugin.getResource(configFile.getName());
+            assert stream != null;
+            InputStreamReader is = new InputStreamReader(stream);
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(is);
+            for (String key : defConfig.getConfigurationSection("").getKeys(true)) {
+                if (!config.contains(key)) {
+                    config.set(key, defConfig.get(key));
+                    hasUpdated = true;
+                }
+            }
+            for (String key : config.getConfigurationSection("").getKeys(true)) {
+                if (!defConfig.contains(key)) {
+                    config.set(key, null);
+                    hasUpdated = true;
+                }
+            }
+            if (hasUpdated)
+                config.save(configFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void loadConfigs() {
@@ -44,6 +76,7 @@ public class Config {
         this.ELEMENTS_RECIPE = this.config.getBoolean("elements.recipe");
         this.ELEMENTS_BOUND = this.config.getBoolean("elements.bound");
         this.ELEMENTS_STRUCTURE = this.config.getBoolean("elements.structure");
+        this.ELEMENTS_VIRTUAL_FURNACE = this.config.getBoolean("elements.virtual-furnace");
         String namespace = this.config.getString("recipe.namespace");
         if (namespace == null) {
             namespace = "skrecipe";
