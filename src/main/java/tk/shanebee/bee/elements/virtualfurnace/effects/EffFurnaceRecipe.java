@@ -29,7 +29,7 @@ import java.util.List;
         "\tregister virtual furnace recipe for cooked chicken using raw chicken with cooktime 15 seconds",
         "on load:",
         "\tregister all virtual furnace recipes"})
-@Since("INSERT VERSION")
+@Since("1.3.0")
 public class EffFurnaceRecipe extends Effect {
 
     private static final RecipeManager RECIPE_MANAGER = SkBee.getPlugin().getVirtualFurnaceAPI().getRecipeManager();

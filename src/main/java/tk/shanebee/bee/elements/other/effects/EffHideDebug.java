@@ -18,7 +18,7 @@ import tk.shanebee.bee.api.util.PlayerUtils;
 @Description("This effect allows you to reduce a big part of the player's debug screen." +
         "This can be useful for survival servers where you dont want your players to know their coords.")
 @Examples({"on join:", "\treduce debug screen for player"})
-@Since("INSERT VERSION")
+@Since("1.3.0")
 public class EffHideDebug extends Effect {
 
     static {

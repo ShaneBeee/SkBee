@@ -28,7 +28,7 @@ import tk.shanebee.bee.SkBee;
         "\tregister furnace fuel coal with burn time 8 minutes",
         "on load:",
         "\tregister all vanilla fuels"})
-@Since("INSERT VERSION")
+@Since("1.3.0")
 public class EffFurnaceFuel extends Effect {
 
     private static final RecipeManager RECIPE_MANAGER = SkBee.getPlugin().getVirtualFurnaceAPI().getRecipeManager();

@@ -28,7 +28,7 @@ import tk.shanebee.bee.SkBee;
         "GUI name will be the name that shows up in the furnace GUI")
 @Examples("give player a virtual furnace item as diamond named \"MyFurnace\" with gui name \"PORTABLE FURNACE\" with " +
         "cook speed multiplier 1.5")
-@Since("INSERT VERSION")
+@Since("1.3.0")
 public class ExprVirtualFurnaceItem extends PropertyExpression<ItemType, ItemType> {
 
     private static final VirtualFurnaceAPI API = SkBee.getPlugin().getVirtualFurnaceAPI();
