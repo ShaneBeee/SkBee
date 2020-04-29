@@ -36,8 +36,7 @@ public class ExprVirtualFurnaceItem extends PropertyExpression<ItemType, ItemTyp
     static {
         Skript.registerExpression(ExprVirtualFurnaceItem.class, ItemType.class, ExpressionType.PROPERTY,
                 "[a] [(1¦glowing)] virtual furnace item as %itemtype% with (inventory|gui) name %string%" +
-                        " [[and ]with cook speed multiplier %number%]" +
-                        " [[and ]with fuel speed multiplier %number%]");
+                        " [[and ]with cook speed multiplier %number%] [[and ]with fuel speed multiplier %number%]");
     }
 
     @SuppressWarnings("null")
@@ -83,7 +82,8 @@ public class ExprVirtualFurnaceItem extends PropertyExpression<ItemType, ItemTyp
 
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return "virtual furnace item as " + getExpr().toString(e, d) + " with inventory name " + this.name.toString(e, d)
+        return (glowing ? "glowing " : "") + "virtual furnace item as " + getExpr().toString(e, d)
+                + " with inventory name " + this.name.toString(e, d)
                 + (this.cookSpeed != null ? " with cook speed " + this.cookSpeed.toString(e, d) : "")
                 + (this.fuelSpeed != null ? " with fuel speed " + this.fuelSpeed.toString(e, d) : "");
     }
