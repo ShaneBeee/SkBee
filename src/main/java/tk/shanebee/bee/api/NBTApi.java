@@ -26,14 +26,15 @@ public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")
     public boolean validateNBT(Expression<String> nbt) {
+        if (nbt == null) {
+            sendError("null", null);
+            return false;
+        }
         for (String nbtString : nbt.getAll(null)) {
             try {
                 new NBTContainer(nbtString);
             } catch (Exception ex) {
-                Util.skriptError("&cInvalid NBT: &b" + nbtString + "&c");
-                if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
-                    ex.printStackTrace();
-                }
+                sendError(nbtString, ex);
                 return false;
             }
         }
@@ -44,13 +45,17 @@ public class NBTApi {
         try {
             new NBTContainer(nbtString);
         } catch (Exception ex) {
-            Util.skriptError("&cInvalid NBT: &b" + nbtString + "&c");
-            if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
-                ex.printStackTrace();
-            }
+            sendError(nbtString, ex);
             return false;
         }
         return true;
+    }
+
+    private void sendError(String error, Exception exception) {
+        Util.skriptError("&cInvalid NBT: &b" + error + "&c");
+        if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG && exception != null) {
+            exception.printStackTrace();
+        }
     }
 
     // This is just to force load the api!
@@ -63,6 +68,7 @@ public class NBTApi {
 
     // ITEM NBT
     public void setNBT(ItemType itemType, String value) {
+        if (!validateNBT(value)) return;
         ItemStack itemStack = new ItemStack(itemType.getMaterial());
 
         NBTItem item = new NBTItem(itemStack);
@@ -71,6 +77,7 @@ public class NBTApi {
     }
 
     public void setNBT(ItemStack itemStack, String value) {
+        if (!validateNBT(value)) return;
         ItemStack stack = new ItemStack(itemStack.getType());
         NBTItem item = new NBTItem(stack);
         item.mergeCompound(new NBTContainer(value));
@@ -78,6 +85,7 @@ public class NBTApi {
     }
 
     public void addNBT(ItemType itemType, String value) {
+        if (!validateNBT(value)) return;
         ItemStack stack = itemType.getRandom();
         if (stack == null) return;
 
@@ -87,6 +95,7 @@ public class NBTApi {
     }
 
     public void addNBT(ItemStack itemStack, String value) {
+        if (!validateNBT(value)) return;
         NBTItem item = new NBTItem(itemStack);
         item.mergeCompound(new NBTContainer(value));
         itemStack.setItemMeta(item.getItem().getItemMeta());
@@ -107,10 +116,12 @@ public class NBTApi {
 
     // ENTITY NBT
     public void setNBT(Entity entity, String newValue) {
+        if (!validateNBT(newValue)) return;
         addNBT(entity, newValue);
     }
 
     public void addNBT(Entity entity, String newValue) {
+        if (!validateNBT(newValue)) return;
         NBTEntity nbtEntity = new NBTEntity(entity);
         nbtEntity.mergeCompound(new NBTContainer(newValue));
     }
@@ -122,10 +133,12 @@ public class NBTApi {
 
     // TILE ENTITY NBT
     public void setNBT(Block block, String newValue) {
+        if (!validateNBT(newValue)) return;
         addNBT(block, newValue);
     }
 
     public void addNBT(Block block, String newValue) {
+        if (!validateNBT(newValue)) return;
         NBTTileEntity tile = new NBTTileEntity(block.getState());
         tile.mergeCompound(new NBTContainer(newValue));
     }
@@ -150,6 +163,7 @@ public class NBTApi {
     }
 
     public void addNBT(String file, String value) {
+        if (!validateNBT(value)) return;
         File file1 = getFile(file);
         if (file1 == null) return;
 
@@ -164,6 +178,7 @@ public class NBTApi {
     }
 
     public void setNBT(String file, String value) {
+        if (!validateNBT(value)) return;
         // TODO fix this up
         addNBT(file, value);
     }
