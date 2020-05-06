@@ -28,7 +28,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"on player armor change:",
         "\tif new armor item is any helmet:",
         "\t\tset armor item to a diamond helmet"})
-@Since("INSERT VERSION")
+@Since("1.3.1")
 @SuppressWarnings("NullableProblems")
 public class ExprArmorChange extends SimpleExpression<ItemType> {
 

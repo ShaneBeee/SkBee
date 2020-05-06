@@ -14,7 +14,7 @@ public class PaperEvents {
                     .examples("on player change armor:",
                             "\tcancel event",
                             "\tset helmet of player to pumpkin")
-                    .since("INSERT VERSION");
+                    .since("1.3.1");
         }
     }
 
