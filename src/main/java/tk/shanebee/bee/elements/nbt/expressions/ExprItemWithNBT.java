@@ -19,6 +19,7 @@ import tk.shanebee.bee.api.util.Util;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("NullableProblems")
 @Name("NBT - Item with NBT")
 @Description("Give players items with NBT or even use items with NBT in GUIs")
 @Examples({"give player diamond sword with nbt \"{Unbreakable:1}\"",
@@ -41,12 +42,13 @@ public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         setExpr((Expression<ItemType>) exprs[0]);
         nbt = (Expression<String>) exprs[1];
-        return NBT_API.validateNBT(nbt);
+        return true;
     }
 
     @Override
     protected ItemType[] get(Event e, ItemType[] source) {
         String nbt = this.nbt.getSingle(e);
+        if (!NBT_API.validateNBT(nbt)) return null;
         return get(source, item -> {
             NBT_API.addNBT(item, nbt);
             return item;

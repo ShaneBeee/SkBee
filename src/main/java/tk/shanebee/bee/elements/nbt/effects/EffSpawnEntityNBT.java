@@ -50,7 +50,7 @@ public class EffSpawnEntityNBT extends Effect {
         types = (Expression<EntityType>) exprs[matchedPattern];
         locations = Direction.combine((Expression<? extends Direction>) exprs[1 + matchedPattern], (Expression<? extends Location>) exprs[2 + matchedPattern]);
         nbtString = (Expression<String>) exprs[3 + matchedPattern];
-        return NBT_API.validateNBT(nbtString);
+        return true;
     }
 
     @Override
