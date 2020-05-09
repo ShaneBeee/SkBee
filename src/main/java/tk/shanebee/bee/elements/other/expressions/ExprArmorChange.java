@@ -16,6 +16,7 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
+import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent.SlotType;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -80,19 +81,15 @@ public class ExprArmorChange extends SimpleExpression<ItemType> {
 
         ItemStack itemStack = item.getRandom();
         PlayerInventory playerInv = ((PlayerArmorChangeEvent) e).getPlayer().getInventory();
-        switch (((PlayerArmorChangeEvent) e).getSlotType()) {
-            case HEAD:
-                playerInv.setHelmet(itemStack);
-                break;
-            case CHEST:
-                playerInv.setChestplate(itemStack);
-                break;
-            case LEGS:
-                playerInv.setLeggings(itemStack);
-                break;
-            case FEET:
-                playerInv.setBoots(itemStack);
-                break;
+        SlotType type = ((PlayerArmorChangeEvent) e).getSlotType();
+        if (type == SlotType.HEAD) {
+            playerInv.setHelmet(itemStack);
+        } else if (type == SlotType.CHEST) {
+            playerInv.setChestplate(itemStack);
+        } else if (type == SlotType.LEGS) {
+            playerInv.setLeggings(itemStack);
+        } else if (type == SlotType.FEET) {
+            playerInv.setBoots(itemStack);
         }
     }
 
