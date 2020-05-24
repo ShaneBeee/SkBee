@@ -16,9 +16,9 @@ import tk.shanebee.bee.elements.board.objects.Board;
 @Name("Board - Line")
 @Description("set/delete a line in a player's scoreboard. Note: line 1 is bottom, line 15 is top. Requires Spigot/Paper 1.13+")
 @Examples({"set line 1 of player's scoreboard to \"oooo I'm a line!!\"",
-        "set line 15 of all player's scoreboards to \"I'm the top line!!!\"",
+        "set line 15 of all players' scoreboards to \"I'm the top line!!!\"",
         "delete line 3 of player's scoreboard",
-        "delete line 4 of all player's scoreboards"})
+        "delete line 4 of all players' scoreboards"})
 @Since("1.0.0")
 public class EffBoardLine extends Effect {
 
