@@ -1,14 +1,21 @@
 package tk.shanebee.bee.elements.recipe.util;
 
+import ch.njol.skript.Skript;
+import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 import tk.shanebee.bee.SkBee;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings("deprecation")
 public class RecipeUtil {
 
-    private static final Remover REMOVER = new Remover();
     private static final String NAMESPACE = SkBee.getPlugin().getPluginConfig().RECIPE_NAMESPACE;
+    private static final boolean BUKKIT_REMOVE = Skript.methodExists(Bukkit.class, "removeRecipe",
+            new Class[]{NamespacedKey.class}, Boolean.class);
 
     public static NamespacedKey getKey(String key) {
         return new NamespacedKey(NAMESPACE, key.toLowerCase());
@@ -28,28 +35,50 @@ public class RecipeUtil {
             removeMCRecipe(recipe);
         } else if (recipe.contains(NAMESPACE + ":")) {
             recipe = recipe.split(":")[1];
-            REMOVER.removeRecipeByKey(getKey(recipe));
+            removeRecipeByKey(getKey(recipe));
         } else if (recipe.contains(":")) {
             NamespacedKey key = getKeyByPlugin(recipe);
             if (key != null) {
-                REMOVER.removeRecipeByKey(key);
+                removeRecipeByKey(key);
             }
         } else {
-            REMOVER.removeRecipeByKey(getKey(recipe));
+            removeRecipeByKey(getKey(recipe));
         }
     }
 
     public static void removeRecipe(NamespacedKey key) {
-        REMOVER.removeRecipeByKey(key);
+        removeRecipeByKey(key);
     }
 
     public static void removeMCRecipe(String recipe) {
         recipe = recipe.replace("minecraft:", "");
-        REMOVER.removeRecipeByKey(NamespacedKey.minecraft(recipe));
+        removeRecipeByKey(NamespacedKey.minecraft(recipe));
+    }
+
+    public static void removeRecipeByKey(NamespacedKey recipeKey) {
+        if (BUKKIT_REMOVE) {
+            Bukkit.removeRecipe(recipeKey);
+        } else {
+            List<Recipe> recipes = new ArrayList<>();
+            Bukkit.recipeIterator().forEachRemaining(recipe -> {
+                if (recipe instanceof Keyed && !((Keyed) recipe).getKey().equals(recipeKey)) {
+                    recipes.add(recipe);
+                }
+            });
+            Bukkit.clearRecipes();
+            recipes.forEach(Bukkit::addRecipe);
+        }
     }
 
     public static void removeAllMCRecipes() {
-        REMOVER.removeAll();
+        List<Recipe> recipes = new ArrayList<>();
+        Bukkit.recipeIterator().forEachRemaining(recipe -> {
+            if (recipe instanceof Keyed && !((Keyed) recipe).getKey().getNamespace().equalsIgnoreCase("minecraft")) {
+                recipes.add(recipe);
+            }
+        });
+        Bukkit.clearRecipes();
+        recipes.forEach(Bukkit::addRecipe);
     }
 
     public static void logRecipe(Recipe recipe, String ingredients) {
