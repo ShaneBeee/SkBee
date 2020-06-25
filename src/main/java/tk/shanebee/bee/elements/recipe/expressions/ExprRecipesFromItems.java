@@ -26,7 +26,7 @@ import java.util.List;
 @Description("Get a list of all recipes from a specific item. " +
         "Due to some items having more than 1 recipe this may return multiple recipes. Requires 1.13+")
 @Examples("set {_recipes::*} to all recipes of iron ingot")
-@Since("INSERT VERSION")
+@Since("1.4.0")
 public class ExprRecipesFromItems extends SimpleExpression<String> {
 
     static {

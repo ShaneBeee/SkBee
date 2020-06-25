@@ -32,7 +32,7 @@ import java.util.List;
 @Examples({"set {_ing::*} to ingredients of recipe \"minecraft:diamond_sword\"",
         "loop recipes for iron ingot:",
         "\tset {_ing::*} to ingredients of recipe %loop-value%"})
-@Since("INSERT VERSION")
+@Since("1.4.0")
 public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
 
     private static final boolean HAS_COOKING = Skript.classExists("org.bukkit.inventory.CookingRecipe");
