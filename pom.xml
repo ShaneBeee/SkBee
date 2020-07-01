@@ -6,7 +6,7 @@
 
     <groupId>tk.shanebee</groupId>
     <artifactId>SkBee</artifactId>
-    <version>1.4.0</version>
+    <version>1.4.1</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>com.shanebeestudios</groupId>
             <artifactId>VirtualFurnace</artifactId>
-            <version>1.0.0-Beta7</version>
+            <version>1.0.0-Beta8</version>
         </dependency>
     </dependencies>
 
