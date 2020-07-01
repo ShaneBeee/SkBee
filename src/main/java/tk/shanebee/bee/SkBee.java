@@ -139,6 +139,11 @@ public class SkBee extends JavaPlugin {
     }
 
     private void loadStructureElements() {
+        // Temp disable Structure elements until API is updated to 1.16.x
+        if (Skript.isRunningMinecraft(1, 16)) {
+            log("&eStructure Elements temporarily disabled in 1.16.x until StructureAPI has been updated!");
+            return;
+        }
         if (Skript.isRunningMinecraft(1, 9, 4)) {
             if (!this.config.ELEMENTS_STRUCTURE) {
                 log("&5Structure Elements &cdisabled via config");
