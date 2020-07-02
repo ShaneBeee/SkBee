@@ -28,7 +28,7 @@ import javax.annotation.Nullable;
 @Examples({"on load:",
         "\tregister new smithing recipe for diamond chestplate using an iron chestplate and a diamond with id \"smith_diamond_chestplate\""})
 @RequiredPlugins("1.16+")
-@Since("INSERT VERSION")
+@Since("1.4.2")
 public class EffSmithingRecipe extends Effect {
 
     static {
