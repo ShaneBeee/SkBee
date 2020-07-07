@@ -103,30 +103,34 @@ public class NBTApi {
 
     public String getNBT(ItemType itemType) {
         ItemStack itemStack = itemType.getRandom();
-        if (itemStack == null) return null;
+        if (itemStack == null || itemStack.getType() == Material.AIR) return null;
 
         NBTItem item = new NBTItem(itemType.getRandom());
         return item.toString();
     }
 
     public String getNBT(ItemStack itemStack) {
+        if (itemStack == null || itemStack.getType() == Material.AIR) return null;
         NBTItem item = new NBTItem(itemStack);
         return item.toString();
     }
 
     // ENTITY NBT
     public void setNBT(Entity entity, String newValue) {
+        if (entity == null || entity.isDead()) return;
         if (!validateNBT(newValue)) return;
         addNBT(entity, newValue);
     }
 
     public void addNBT(Entity entity, String newValue) {
+        if (entity == null || entity.isDead()) return;
         if (!validateNBT(newValue)) return;
         NBTEntity nbtEntity = new NBTEntity(entity);
         nbtEntity.mergeCompound(new NBTContainer(newValue));
     }
 
     public String getNBT(Entity entity) {
+        if (entity == null || entity.isDead()) return null;
         NBTEntity nbtEntity = new NBTEntity(entity);
         return nbtEntity.toString();
     }
