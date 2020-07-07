@@ -203,7 +203,7 @@ public class NBTApi {
         if (nbt == null) return null;
         NBTCompound compound = new NBTContainer(nbt);
         NBTType type = compound.getType(tag);
-        switch (compound.getType(tag)) {
+        switch (type) {
             case NBTTagString:
                 return compound.getString(tag);
             case NBTTagInt:
@@ -217,7 +217,8 @@ public class NBTApi {
             case NBTTagDouble:
                 return compound.getDouble(tag);
             case NBTTagEnd:
-                return compound.toString();
+                //return compound.toString(); // let's leave this here just in case
+                return null;
             case NBTTagLong:
                 return compound.getLong(tag);
             case NBTTagByte:
