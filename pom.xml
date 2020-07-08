@@ -75,7 +75,7 @@
         <dependency>
             <groupId>com.shanebeestudios</groupId>
             <artifactId>VirtualFurnace</artifactId>
-            <version>1.0.0-Beta8</version>
+            <version>1.0.0-Beta9</version>
         </dependency>
     </dependencies>
 
