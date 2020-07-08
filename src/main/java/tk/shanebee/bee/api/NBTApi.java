@@ -20,7 +20,9 @@ import tk.shanebee.bee.api.util.Util;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.UUID;
 
 public class NBTApi {
 
@@ -209,7 +211,12 @@ public class NBTApi {
             case NBTTagInt:
                 return compound.getInteger(tag);
             case NBTTagIntArray:
-                return compound.getIntegerList(tag);
+                UUID uuid = compound.getUUID(tag);
+                if (uuid != null) {
+                    return uuid;
+                } else {
+                    return Collections.singletonList(compound.getIntArray(tag));
+                }
             case NBTTagFloat:
                 return compound.getFloat(tag);
             case NBTTagShort:
