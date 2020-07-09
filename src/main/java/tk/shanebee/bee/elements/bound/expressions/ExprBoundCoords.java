@@ -1,7 +1,7 @@
 package tk.shanebee.bee.elements.bound.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -16,6 +16,8 @@ import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import tk.shanebee.bee.elements.bound.objects.Bound;
+import tk.shanebee.bee.elements.bound.objects.Bound.Axis;
+import tk.shanebee.bee.elements.bound.objects.Bound.Corner;
 
 @Name("Bound - Coords")
 @Description({"The coords and world of a bounding box. You can get the world/coords for a specific bound, you can also " +
@@ -71,36 +73,42 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
     public Class<?> getReturnType() {
         if (WORLD) {
             return World.class;
-        } else  {
+        } else {
             return Integer.class;
         }
     }
 
     @Override
-    public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-        if (!WORLD && mode == Changer.ChangeMode.SET) {
+    public Class<?>[] acceptChange(ChangeMode mode) {
+        if (!WORLD && (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)) {
             return CollectionUtils.array(Number.class);
         }
         return null;
     }
 
     @Override
-    public void change(Event e, Object[] delta, Changer.ChangeMode mode) {
+    public void change(Event e, Object[] delta, ChangeMode mode) {
         for (Bound bound : getExpr().getArray(e)) {
-            final int coord = ((Number) delta[0]).intValue();
-            switch (parse) {
-                case 0:
-                    if (LESSER) bound.setLesserX(coord);
-                    else bound.setGreaterX(coord);
-                    break;
-                case 1:
-                    if (LESSER) bound.setLesserY(coord);
-                    else bound.setGreaterY(coord);
-                    break;
-                case 2:
-                    if (LESSER) bound.setLesserZ(coord);
-                    else bound.setGreaterZ(coord);
-                    break;
+            int coord = ((Number) delta[0]).intValue();
+            Corner corner = LESSER ? Corner.LESSER : Corner.GREATER;
+            Axis axis = parse == 0 ? Axis.X : parse == 1 ? Axis.Y : Axis.Z;
+            if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
+                bound.change(axis, corner, mode == ChangeMode.REMOVE ? -coord : coord);
+            } else {
+                switch (parse) {
+                    case 0:
+                        if (LESSER) bound.setLesserX(coord);
+                        else bound.setGreaterX(coord);
+                        break;
+                    case 1:
+                        if (LESSER) bound.setLesserY(coord);
+                        else bound.setGreaterY(coord);
+                        break;
+                    case 2:
+                        if (LESSER) bound.setLesserZ(coord);
+                        else bound.setGreaterZ(coord);
+                        break;
+                }
             }
         }
     }

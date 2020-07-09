@@ -8,7 +8,11 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.util.BoundingBox;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 
 @SuppressWarnings("unused")
 public class Bound implements ConfigurationSerializable {
@@ -197,6 +201,36 @@ public class Bound implements ConfigurationSerializable {
 
     public void setGreaterZ(int z2) {
         this.z2 = z2;
+    }
+
+    public void change(Axis axis, Corner corner, int amount) {
+        if (axis == Axis.X) {
+            if (corner == Corner.GREATER) {
+                x2 += amount;
+            } else {
+                x += amount;
+            }
+        } else if (axis == Axis.Y) {
+            if (corner == Corner.GREATER) {
+                y2 += amount;
+            } else {
+                y += amount;
+            }
+        } else {
+            if (corner == Corner.GREATER) {
+                z2 += amount;
+            } else {
+                z += amount;
+            }
+        }
+    }
+
+    public enum Axis {
+        X, Y, Z
+    }
+
+    public enum Corner {
+        GREATER, LESSER
     }
 
     public String getId() {
