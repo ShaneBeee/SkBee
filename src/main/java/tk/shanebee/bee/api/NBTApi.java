@@ -44,6 +44,7 @@ public class NBTApi {
     }
 
     public boolean validateNBT(String nbtString) {
+        if (nbtString == null) return false;
         try {
             new NBTContainer(nbtString);
         } catch (Exception ex) {
