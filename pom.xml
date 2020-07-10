@@ -6,7 +6,7 @@
 
     <groupId>tk.shanebee</groupId>
     <artifactId>SkBee</artifactId>
-    <version>1.4.4-Beta1</version>
+    <version>1.4.4</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
