@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -15,8 +16,8 @@ import org.bukkit.inventory.ItemStack;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
 
-@Name("NBT - Item/Entity/Block")
-@Description({"NBT of items, entities, tile entities (such as a furnace, hopper, brewing stand, banner, etc) or files. " +
+@Name("NBT - Item/Inventory Slot/Entity/Block")
+@Description({"NBT of items, inventory slots, entities, tile entities (such as a furnace, hopper, brewing stand, banner, etc) or files. " +
         "Supports get, set, add and reset. Reset will only properly work on an item, not entities or blocks"})
 @Examples({"set {_nbt} to nbt of player's tool", "add \"{Enchantments:[{id:\"\"sharpness\"\",lvl:5}]}\" to nbt of player's tool",
         "reset nbt of player's tool", "set {_nbt} to nbt of target entity", "set {_nbt} to event-entity",
@@ -29,14 +30,16 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
     private static final NBTApi NBT_API;
 
     static {
-        register(ExprObjectNBT.class, String.class, "[(entity|item|block|tile[(-| )]entity|file)(-| )]nbt",
-                "block/entity/itemstack/itemtype/string");
+        register(ExprObjectNBT.class, String.class, "[(entity|item|slot|block|tile[(-| )]entity|file)(-| )]nbt",
+                "block/entity/itemstack/itemtype/slot/string");
         NBT_API = SkBee.getPlugin().getNbtApi();
     }
 
     @Override
     public String convert(Object o) {
-        if (o instanceof ItemStack) {
+        if (o instanceof InventorySlot) {
+            return NBT_API.getNBT(((InventorySlot) o));
+        } else if (o instanceof ItemStack) {
             return NBT_API.getNBT((ItemStack) o);
         } else if (o instanceof ItemType) {
             return NBT_API.getNBT((ItemType) o);
@@ -66,7 +69,9 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
         }
         switch (mode) {
             case ADD:
-                if (o instanceof ItemStack) {
+                if (o instanceof InventorySlot) {
+                    NBT_API.addNBT((InventorySlot) o, value);
+                } else if (o instanceof ItemStack) {
                     NBT_API.addNBT((ItemStack) o, value);
                 } else if (o instanceof ItemType) {
                     NBT_API.addNBT((ItemType) o, value);
@@ -80,7 +85,9 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
                 break;
             case SET:
             case RESET:
-                if (o instanceof ItemStack) {
+                if (o instanceof InventorySlot) {
+                    NBT_API.setNBT((InventorySlot) o, value);
+                } else if (o instanceof ItemStack) {
                     NBT_API.setNBT((ItemStack) o, value);
                 } else if (o instanceof ItemType) {
                     NBT_API.setNBT((ItemType) o, value);

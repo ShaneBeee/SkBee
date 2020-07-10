@@ -2,6 +2,7 @@ package tk.shanebee.bee.api;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.util.slot.InventorySlot;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
@@ -69,6 +70,31 @@ public class NBTApi {
         SkBee.log("&aNBTApi successfully loaded!");
     }
 
+    // INVENTORY SLOT
+    public void setNBT(InventorySlot slot, String value) {
+        if (!validateNBT(value)) return;
+        ItemStack item = slot.getItem();
+        if (item != null) {
+            slot.setItem(setNBT(item, value));
+        }
+    }
+
+    public void addNBT(InventorySlot slot, String value) {
+        if (!validateNBT(value)) return;
+        ItemStack item = slot.getItem();
+        if (item != null) {
+            slot.setItem(addNBT(item, value));
+        }
+    }
+
+    public String getNBT(InventorySlot slot) {
+        ItemStack item = slot.getItem();
+        if (item != null) {
+            return getNBT(item);
+        }
+        return null;
+    }
+
     // ITEM NBT
     public void setNBT(ItemType itemType, String value) {
         if (!validateNBT(value)) return;
@@ -79,12 +105,14 @@ public class NBTApi {
         SkReclection.setMeta(itemType, item.getItem().getItemMeta());
     }
 
-    public void setNBT(ItemStack itemStack, String value) {
-        if (!validateNBT(value)) return;
-        ItemStack stack = new ItemStack(itemStack.getType());
-        NBTItem item = new NBTItem(stack);
-        item.mergeCompound(new NBTContainer(value));
-        itemStack.setItemMeta(item.getItem().getItemMeta());
+    public ItemStack setNBT(ItemStack itemStack, String value) {
+        if (validateNBT(value)) {
+            ItemStack stack = new ItemStack(itemStack.getType());
+            NBTItem item = new NBTItem(stack);
+            item.mergeCompound(new NBTContainer(value));
+            itemStack.setItemMeta(item.getItem().getItemMeta());
+        }
+        return itemStack;
     }
 
     public void addNBT(ItemType itemType, String value) {
@@ -97,11 +125,13 @@ public class NBTApi {
         SkReclection.setMeta(itemType, item.getItem().getItemMeta());
     }
 
-    public void addNBT(ItemStack itemStack, String value) {
-        if (!validateNBT(value)) return;
-        NBTItem item = new NBTItem(itemStack);
-        item.mergeCompound(new NBTContainer(value));
-        itemStack.setItemMeta(item.getItem().getItemMeta());
+    public ItemStack addNBT(ItemStack itemStack, String value) {
+        if (validateNBT(value)) {
+            NBTItem item = new NBTItem(itemStack);
+            item.mergeCompound(new NBTContainer(value));
+            itemStack.setItemMeta(item.getItem().getItemMeta());
+        }
+        return itemStack;
     }
 
     public String getNBT(ItemType itemType) {
