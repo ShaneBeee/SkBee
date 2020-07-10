@@ -2,7 +2,7 @@ package tk.shanebee.bee.api;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
@@ -71,7 +71,7 @@ public class NBTApi {
     }
 
     // INVENTORY SLOT
-    public void setNBT(InventorySlot slot, String value) {
+    public void setNBT(Slot slot, String value) {
         if (!validateNBT(value)) return;
         ItemStack item = slot.getItem();
         if (item != null) {
@@ -79,7 +79,7 @@ public class NBTApi {
         }
     }
 
-    public void addNBT(InventorySlot slot, String value) {
+    public void addNBT(Slot slot, String value) {
         if (!validateNBT(value)) return;
         ItemStack item = slot.getItem();
         if (item != null) {
@@ -87,7 +87,7 @@ public class NBTApi {
         }
     }
 
-    public String getNBT(InventorySlot slot) {
+    public String getNBT(Slot slot) {
         ItemStack item = slot.getItem();
         if (item != null) {
             return getNBT(item);

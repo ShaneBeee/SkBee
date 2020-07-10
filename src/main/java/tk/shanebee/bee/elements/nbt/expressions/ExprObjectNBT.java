@@ -7,7 +7,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -37,8 +37,8 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
 
     @Override
     public String convert(Object o) {
-        if (o instanceof InventorySlot) {
-            return NBT_API.getNBT(((InventorySlot) o));
+        if (o instanceof Slot) {
+            return NBT_API.getNBT(((Slot) o));
         } else if (o instanceof ItemStack) {
             return NBT_API.getNBT((ItemStack) o);
         } else if (o instanceof ItemType) {
@@ -69,8 +69,8 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
         }
         switch (mode) {
             case ADD:
-                if (o instanceof InventorySlot) {
-                    NBT_API.addNBT((InventorySlot) o, value);
+                if (o instanceof Slot) {
+                    NBT_API.addNBT((Slot) o, value);
                 } else if (o instanceof ItemStack) {
                     NBT_API.addNBT((ItemStack) o, value);
                 } else if (o instanceof ItemType) {
@@ -85,8 +85,8 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
                 break;
             case SET:
             case RESET:
-                if (o instanceof InventorySlot) {
-                    NBT_API.setNBT((InventorySlot) o, value);
+                if (o instanceof Slot) {
+                    NBT_API.setNBT((Slot) o, value);
                 } else if (o instanceof ItemStack) {
                     NBT_API.setNBT((ItemStack) o, value);
                 } else if (o instanceof ItemType) {
