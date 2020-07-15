@@ -34,7 +34,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
     static {
         if (Skript.isRunningMinecraft(1, 13)) {
             PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
-                    "block[ ]data [(1¦tags|2¦tag %-string%)]", "blocks");
+                    "block[ ](data|state) [(1¦tags|2¦tag %-string%)]", "blocks");
         }
     }
 
