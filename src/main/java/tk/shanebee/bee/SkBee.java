@@ -2,6 +2,7 @@ package tk.shanebee.bee;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
+import com.github.shynixn.structureblocklib.bukkit.core.VersionSupport;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -142,6 +143,15 @@ public class SkBee extends JavaPlugin {
         if (Skript.isRunningMinecraft(1, 9, 4)) {
             if (!this.config.ELEMENTS_STRUCTURE) {
                 log("&5Structure Elements &cdisabled via config");
+                return;
+            }
+            // Disable if StructureBlockLib is not currently updated for this server version
+            if (VersionSupport.getServerVersion() == null) {
+                String ver = Skript.getMinecraftVersion().toString();
+                log("&5Structure Elements &cDISABLED!");
+                log(" - Your server version [&b" + ver + "&7] is not currently supported by the StructureBlock API");
+                log(" - This is not a bug!");
+                log(" - Structure elements will resume once the API is updated to work with [&b" + ver + "&7]");
                 return;
             }
             try {
