@@ -2,6 +2,8 @@ package tk.shanebee.bee.elements.other.expressions;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -15,6 +17,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -34,24 +37,24 @@ public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
 
     static {
         PropertyExpression.register(ExprStoredEnchant.class, EnchantmentType.class,
-                "stored enchant[ment]s", "itemtypes");
+                "stored enchant[ment]s", "itemstacks/itemtypes");
     }
 
-    private Expression<ItemType> itemTypes;
+    private Expression<?> itemTypes;
 
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-        this.itemTypes = (Expression<ItemType>) exprs[0];
+        this.itemTypes = exprs[0];
         return true;
     }
 
     @Override
     protected EnchantmentType[] get(Event event) {
         List<EnchantmentType> enchants = new ArrayList<>();
-        for (ItemType item : this.itemTypes.getAll(event)) {
-            ItemMeta meta = item.getItemMeta();
+        for (Object item : this.itemTypes.getAll(event)) {
+            ItemMeta meta = (item instanceof ItemType) ? ((ItemType) item).getItemMeta() : ((ItemStack) item).getItemMeta();
             if (meta instanceof EnchantmentStorageMeta) {
                 Map<Enchantment, Integer> stored = ((EnchantmentStorageMeta) meta).getStoredEnchants();
                 for (Enchantment ench : stored.keySet()) {
@@ -87,8 +90,8 @@ public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
             }
         }
 
-        for (ItemType item : this.itemTypes.getAll(e)) {
-            ItemMeta meta = item.getItemMeta();
+        for (Object item : this.itemTypes.getAll(e)) {
+            ItemMeta meta = (item instanceof ItemStack) ? ((ItemStack) item).getItemMeta() : ((ItemType) item).getItemMeta();
             if (!(meta instanceof EnchantmentStorageMeta)) return;
             EnchantmentStorageMeta storageMeta = ((EnchantmentStorageMeta) meta);
 
@@ -102,23 +105,33 @@ public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
                         if (enchant.getType() == null) continue;
                         storageMeta.addStoredEnchant(enchant.getType(), enchant.getLevel(), true);
                     }
-                    item.setItemMeta(storageMeta);
                     break;
                 case REMOVE:
                     for (EnchantmentType enchant : enchants) {
                         if (enchant.getType() == null) continue;
                         storageMeta.removeStoredEnchant(enchant.getType());
                     }
-                    item.setItemMeta(storageMeta);
                     break;
                 case DELETE:
                     for (Enchantment ench : storageMeta.getStoredEnchants().keySet()) {
                         storageMeta.removeStoredEnchant(ench);
                     }
-                    item.setItemMeta(storageMeta);
                     break;
                 default:
                     return;
+            }
+            if ((item instanceof ItemStack)) {
+                ((ItemStack) item).setItemMeta(storageMeta);
+            } else {
+                ((ItemType) item).setItemMeta(storageMeta);
+            }
+            if (ChangerUtils.acceptsChange(itemTypes, ChangeMode.SET, item.getClass())) {
+                Object[] itemDelta = item instanceof ItemStack ? new ItemStack[]{(ItemStack) item} : new ItemType[]{(ItemType) item};
+                itemTypes.change(e, itemDelta, ChangeMode.SET);
+            } else {
+                Object[] itemDelta = item instanceof ItemStack ? new ItemType[]{new ItemType((ItemStack) item)} :
+                        new ItemStack[]{((ItemType) item).getRandom()};
+                itemTypes.change(e, itemDelta, ChangeMode.SET);
             }
         }
     }
