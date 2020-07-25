@@ -34,7 +34,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
     static {
         if (Skript.isRunningMinecraft(1, 13)) {
             PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
-                    "block[ ](data|state) [(1¦tags|2¦tag %-string%)]", "blocks");
+                    "block[ ](data|state) [(1¦tags|2¦tag %-string%|3¦without update[s])]", "blocks");
         }
     }
 
@@ -103,7 +103,6 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
                     } catch (IllegalArgumentException ex) {
                         Skript.error("Could not parse block data: " + newData, ErrorQuality.SEMANTIC_ERROR);
                     }
-
                     break;
                 // Tags
                 case 1:
@@ -113,7 +112,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
                 default:
                     try {
                         blockData = Bukkit.createBlockData(obj);
-                        block.setBlockData(blockData);
+                        block.setBlockData(blockData, parse != 3);
                     } catch (IllegalArgumentException ex) {
                         Skript.error("Could not parse block data: " + obj, ErrorQuality.SEMANTIC_ERROR);
                     }
