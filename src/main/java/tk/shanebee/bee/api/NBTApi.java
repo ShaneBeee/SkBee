@@ -10,6 +10,7 @@ import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import de.tr7zw.changeme.nbtapi.NBTType;
+import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -182,7 +183,11 @@ public class NBTApi {
 
     public String getNBT(Block block) {
         NBTTileEntity tile = new NBTTileEntity(block.getState());
-        return tile.toString();
+        try {
+            return tile.getCompound().toString();
+        } catch (NbtApiException ignore) {
+            return null;
+        }
     }
 
     // FILE NBT
