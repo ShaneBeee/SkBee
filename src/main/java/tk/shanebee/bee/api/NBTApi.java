@@ -178,7 +178,9 @@ public class NBTApi {
     public void addNBT(Block block, String newValue) {
         if (!validateNBT(newValue)) return;
         NBTTileEntity tile = new NBTTileEntity(block.getState());
-        tile.mergeCompound(new NBTContainer(newValue));
+        try {
+            tile.mergeCompound(new NBTContainer(newValue));
+        } catch (NbtApiException ignore) {}
     }
 
     public String getNBT(Block block) {
