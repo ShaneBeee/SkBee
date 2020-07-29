@@ -85,7 +85,7 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         String[] split = tag.split(";");
         Object nbtNew = nbt;
         for (String s : split) {
-            nbtNew = NBT_API.getTag(s, new NBTContainer(nbtNew).toString()); // TODO api for this
+            nbtNew = NBT_API.getTag(s, new NBTContainer(nbtNew.toString()).toString()); // TODO api for this
         }
         return new Object[]{nbtNew};
     }
