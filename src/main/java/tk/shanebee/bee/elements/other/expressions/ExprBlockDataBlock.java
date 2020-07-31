@@ -24,7 +24,10 @@ import java.util.List;
 
 @Name("Block Data - Block")
 @Description({"Get block data from a block. You can get a string of block data, all the tags in a block data or a specific tag. ",
-        "You can also set a block data for a block or set a specific tag for block data. This syntax is only available for MC 1.13+"})
+        "You can also set a block data for a block or set a specific tag for block data. This syntax is only available for MC 1.13+ ",
+        "Skript 2.5 added a new block data system that differs slightly from SkBee. That said, when using that version of Skript ",
+        "the only available syntax here will be 'block data tags', 'block data tag \"tag here\"' and 'block data without updates', ",
+        "these will not be optional."})
 @Examples({"set {_data} to block data of target block of player", "set {_data::*} to block data tags of target block of player",
         "set {_water} to block data tag \"waterlogged\" of event-block", "set block data of target block to \"minecraft:carrots[age=7]\"",
         "set block data tag \"waterlogged\" of event-block to true"})
@@ -33,8 +36,13 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
 
     static {
         if (Skript.isRunningMinecraft(1, 13)) {
-            PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
-                    "block[ ](data|state) [(1¦tags|2¦tag %-string%|3¦without update[s])]", "blocks");
+            if (Skript.classExists("ch.njol.skript.expressions.ExprBlockData")) {
+                PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
+                        "block[ ](data|state) (1¦tags|2¦tag %-string%|3¦without update[s])", "blocks");
+            } else {
+                PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
+                        "block[ ](data|state) [(1¦tags|2¦tag %-string%|3¦without update[s])]", "blocks");
+            }
         }
     }
 
