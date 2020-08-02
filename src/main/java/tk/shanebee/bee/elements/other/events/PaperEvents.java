@@ -12,7 +12,6 @@ public class PaperEvents {
             Skript.registerEvent("Armor Change Event", SimpleEvent.class, PlayerArmorChangeEvent.class, "player change armor")
                     .description("Called when the player themselves change their armor items. Requires Paper 1.12.2+")
                     .examples("on player change armor:",
-                            "\tcancel event",
                             "\tset helmet of player to pumpkin")
                     .since("1.3.1");
         }
