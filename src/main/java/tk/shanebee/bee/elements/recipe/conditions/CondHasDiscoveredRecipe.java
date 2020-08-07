@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
         "if player has discovered recipe \"someplugin:fancy_shovel\":",
         "if all players have not discovered recipe \"minecraft:golden_shovel\":",
         "if player has not discovered recipe \"my_fancy_hoe\":"})
-@Since("INSERT VERSION")
+@Since("1.4.9")
 public class CondHasDiscoveredRecipe extends Condition {
 
     static {
