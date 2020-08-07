@@ -17,6 +17,12 @@ public class RecipeUtil {
     private static final boolean BUKKIT_REMOVE = Skript.methodExists(Bukkit.class, "removeRecipe",
             new Class[]{NamespacedKey.class}, Boolean.class);
 
+    /**
+     * Get a NamespacedKey from string using this plugin as the namespace
+     *
+     * @param key Key for new NamespacedKey, ex: "thisplugin:key"
+     * @return New NamespacedKey
+     */
     public static NamespacedKey getKey(String key) {
         return new NamespacedKey(NAMESPACE, key.toLowerCase());
     }
@@ -45,6 +51,11 @@ public class RecipeUtil {
         return getKey(key);
     }
 
+    /**
+     * Remove a recipe that is currently registered to the server
+     *
+     * @param recipe Recipe to remove
+     */
     public static void removeRecipe(String recipe) {
         recipe = recipe.toLowerCase();
         if (recipe.contains("minecraft:")) {
@@ -66,11 +77,21 @@ public class RecipeUtil {
         removeRecipeByKey(key);
     }
 
+    /**
+     * Remove a Minecraft recipe that is currently registered to the server
+     *
+     * @param recipe Key of recipe to remove
+     */
     public static void removeMCRecipe(String recipe) {
         recipe = recipe.replace("minecraft:", "");
         removeRecipeByKey(NamespacedKey.minecraft(recipe));
     }
 
+    /**
+     * Remove a recipe from the server based on a NamespacedKey
+     *
+     * @param recipeKey NamespacedKey of recipe to remove
+     */
     public static void removeRecipeByKey(NamespacedKey recipeKey) {
         if (BUKKIT_REMOVE) {
             Bukkit.removeRecipe(recipeKey);
@@ -86,6 +107,9 @@ public class RecipeUtil {
         }
     }
 
+    /**
+     * Remove all Minecraft recipes registered to the server
+     */
     public static void removeAllMCRecipes() {
         List<Recipe> recipes = new ArrayList<>();
         Bukkit.recipeIterator().forEachRemaining(recipe -> {
@@ -97,20 +121,42 @@ public class RecipeUtil {
         recipes.forEach(Bukkit::addRecipe);
     }
 
+    /**
+     * Log a recipe to console
+     * Mainly used for debugging purposes
+     *
+     * @param recipe      Recipe to log
+     * @param ingredients Ingredients of recipe to log
+     */
     public static void logRecipe(Recipe recipe, String ingredients) {
         log("&aRegistered new recipe:");
         log(" - &7Result: " + recipe.getResult());
         log(" - &7Ingredients: " + ingredients);
     }
 
+    /**
+     * Send an error to console prefixed with [Recipe]
+     *
+     * @param error Error to log
+     */
     public static void error(String error) {
         log("&c" + error);
     }
 
+    /**
+     * Send an warning to console prefixed with [Recipe]
+     *
+     * @param warning Warning to log
+     */
     public static void warn(String warning) {
         log("&e" + warning);
     }
 
+    /**
+     * Log to console prefixed with [Recipe]
+     *
+     * @param log Message to log
+     */
     public static void log(String log) {
         String prefix = "&7[&bRecipe&7] ";
         SkBee.log(prefix + log);
