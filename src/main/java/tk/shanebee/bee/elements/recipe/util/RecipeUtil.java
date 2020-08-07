@@ -29,6 +29,22 @@ public class RecipeUtil {
         return null;
     }
 
+    /**
+     * Get a NamespacedKey from a string
+     *
+     * @param key Key to get NamespacedKey for
+     * @return NamespacedKey from string
+     */
+    public static NamespacedKey getKeyFromString(String key) {
+        if (key.contains(":")) {
+            String[] split = key.toLowerCase().split(":");
+            if (split[0].equalsIgnoreCase("minecraft"))
+                return NamespacedKey.minecraft(split[1]);
+            return getKeyByPlugin(key);
+        }
+        return getKey(key);
+    }
+
     public static void removeRecipe(String recipe) {
         recipe = recipe.toLowerCase();
         if (recipe.contains("minecraft:")) {
