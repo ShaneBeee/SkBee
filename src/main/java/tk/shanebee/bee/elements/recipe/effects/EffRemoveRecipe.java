@@ -76,7 +76,7 @@ public class EffRemoveRecipe extends Effect {
                 if (config.SETTINGS_DEBUG) {
                     RecipeUtil.log("&aRemoving recipe: " + recipe);
                 }
-                RecipeUtil.removeRecipe(recipe);
+                RecipeUtil.removeRecipeByKey(recipe);
             }
         }
     }

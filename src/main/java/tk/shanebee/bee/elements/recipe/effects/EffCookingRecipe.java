@@ -107,7 +107,7 @@ public class EffCookingRecipe extends Effect {
         float xp = experience != null ? experience.getSingle(event).floatValue() : 0;
 
         // Remove duplicates on script reload
-        RecipeUtil.removeRecipe(key);
+        RecipeUtil.removeRecipeByKey(key);
 
         if (HAS_BLASTING)
             cookingRecipe(event, result, ingredient, group, key, xp);

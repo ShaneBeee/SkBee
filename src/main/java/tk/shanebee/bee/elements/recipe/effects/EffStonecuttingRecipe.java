@@ -83,7 +83,7 @@ public class EffStonecuttingRecipe extends Effect {
         recipe.setGroup(group);
 
         // Remove duplicates on script reload
-        RecipeUtil.removeRecipe(key);
+        RecipeUtil.removeRecipeByKey(key);
 
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {

@@ -79,7 +79,7 @@ public class EffSmithingRecipe extends Effect {
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
 
         //Remove duplicates on script reload
-        RecipeUtil.removeRecipe(key);
+        RecipeUtil.removeRecipeByKey(key);
 
         SmithingRecipe recipe = new SmithingRecipe(key,
                 result.getRandom(),

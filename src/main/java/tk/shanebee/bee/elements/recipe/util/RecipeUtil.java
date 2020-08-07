@@ -56,7 +56,7 @@ public class RecipeUtil {
      *
      * @param recipe Recipe to remove
      */
-    public static void removeRecipe(String recipe) {
+    public static void removeRecipeByKey(String recipe) {
         recipe = recipe.toLowerCase();
         if (recipe.contains("minecraft:")) {
             removeMCRecipe(recipe);
@@ -71,10 +71,6 @@ public class RecipeUtil {
         } else {
             removeRecipeByKey(getKey(recipe));
         }
-    }
-
-    public static void removeRecipe(NamespacedKey key) {
-        removeRecipeByKey(key);
     }
 
     /**

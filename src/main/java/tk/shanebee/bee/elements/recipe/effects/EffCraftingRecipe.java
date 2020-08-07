@@ -85,7 +85,7 @@ public class EffCraftingRecipe extends Effect {
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
 
         // Remove duplicates on script reload
-        RecipeUtil.removeRecipe(key);
+        RecipeUtil.removeRecipeByKey(key);
 
         if (shaped)
             registerShaped(item, ingredients, key, group);
