@@ -15,6 +15,7 @@ import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.event.Event;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.util.Util;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -32,12 +33,14 @@ import java.util.ArrayList;
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 
     private static final NBTApi NBT_API;
+    private static final boolean DEBUG;
 
     static {
         // TODO something about a list
         Skript.registerExpression(ExprTagOfNBT.class, Object.class, ExpressionType.SIMPLE,
                 "tag %string% of %string%", "%string% tag of %string%");
         NBT_API = SkBee.getPlugin().getNbtApi();
+        DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     }
 
     private Expression<String> a;
@@ -85,11 +88,14 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         String[] split = tag.split(";");
         Object nbtNew = nbt;
         for (String s : split) {
-            if (nbtNew == null) {
-                return null;
-            }
             NBTContainer container = new NBTContainer(nbtNew.toString());
             nbtNew = NBT_API.getTag(s, container.toString()); // TODO api for this
+            if (nbtNew == null) {
+                if (DEBUG) {
+                    Util.skriptError("Invalid tag \"&b" + s + "&7\" in &b" + container.toString());
+                }
+                return null;
+            }
         }
         if (nbtNew instanceof ArrayList) {
             return ((ArrayList<?>) nbtNew).toArray();
