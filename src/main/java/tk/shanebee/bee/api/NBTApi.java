@@ -96,6 +96,13 @@ public class NBTApi {
         return null;
     }
 
+    public String getFullNBT(Slot slot) {
+        ItemStack item = slot.getItem();
+        if (item != null)
+            return getFullNBT(item);
+        return null;
+    }
+
     // ITEM NBT
     public void setNBT(ItemType itemType, String value) {
         if (!validateNBT(value)) return;
@@ -137,16 +144,34 @@ public class NBTApi {
 
     public String getNBT(ItemType itemType) {
         ItemStack itemStack = itemType.getRandom();
-        if (itemStack == null || itemStack.getType() == Material.AIR) return null;
-
-        NBTItem item = new NBTItem(itemType.getRandom());
-        return item.toString();
+        return getNBT(itemStack);
     }
 
     public String getNBT(ItemStack itemStack) {
         if (itemStack == null || itemStack.getType() == Material.AIR) return null;
         NBTItem item = new NBTItem(itemStack);
         return item.toString();
+    }
+
+    public String getFullNBT(ItemType itemType) {
+        ItemStack itemStack = itemType.getRandom();
+        return getFullNBT(itemStack);
+    }
+
+    public String getFullNBT(ItemStack itemStack) {
+        if (itemStack == null || itemStack.getType() == Material.AIR) return null;
+        return NBTItem.convertItemtoNBT(itemStack).toString();
+    }
+
+    public ItemType getItemTypeFromNBT(String nbt) {
+        if (!validateNBT(nbt)) return null;
+        return new ItemType(getItemStackFromNBT(nbt));
+    }
+
+    public ItemStack getItemStackFromNBT(String nbt) {
+        if (!validateNBT(nbt)) return null;
+        NBTContainer container = new NBTContainer(nbt);
+        return NBTItem.convertNBTtoItem(container);
     }
 
     // ENTITY NBT
