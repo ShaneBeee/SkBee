@@ -64,8 +64,8 @@ public class EffSpawnEntityNBT extends Effect {
             assert loc != null : locations;
             for (final EntityType type : et) {
                 for (int i = 0; i < a.doubleValue() * type.getAmount(); i++) {
-                    EffSpawn.lastSpawned = type.data.spawn(loc);
-                    NBT_API.addNBT(EffSpawn.lastSpawned, value);
+                    EffSpawn.lastSpawned = loc.getWorld().spawn(loc, type.data.getType(), ent ->
+                            NBT_API.addNBT(ent, value));
                 }
             }
         }
