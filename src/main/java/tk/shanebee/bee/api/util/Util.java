@@ -7,7 +7,8 @@ import org.bukkit.ChatColor;
 
 public class Util {
 
-    private static final String PREFIX = "&7[&bSk&3Bee &cERROR&7] ";
+    private static final String PREFIX = "&7[&bSk&3Bee&7] ";
+    private static final String PREFIX_ERROR = "&7[&bSk&3Bee &cERROR&7] ";
 
     public static String getColString(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
@@ -18,7 +19,7 @@ public class Util {
     }
 
     public static void skriptError(String error) {
-        Skript.error(getColString(PREFIX + error), ErrorQuality.SEMANTIC_ERROR);
+        Skript.error(getColString(PREFIX_ERROR + error), ErrorQuality.SEMANTIC_ERROR);
     }
 
 }
