@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
         "set {_nbt::*} to tag \"Inventory\" of file nbt of \"world/playerdata/some-players-uuid.dat\"",
         "loop {_nbt::*}",
         "\tset {_i} to item from nbt loop-value"})
-@Since("INSERT VERSION")
+@Since("1.4.10")
 public class ExprItemFromNBT extends PropertyExpression<String, ItemType> {
 
     private static final NBTApi NBT_API;

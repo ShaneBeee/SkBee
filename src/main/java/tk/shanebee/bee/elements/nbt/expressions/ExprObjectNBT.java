@@ -23,7 +23,7 @@ import tk.shanebee.bee.api.NBTApi;
 @Description({"NBT of items, inventory slots, entities, tile entities (such as a furnace, hopper, brewing stand, banner, etc) or files. ",
         "Supports get, set, add and reset. Reset will only properly work on an item, not entities or blocks. ",
         "Set should not be used on entities or blocks, it's best to use add. Using set can quite often screw up the entity/block's location. ",
-        "The optional 'full' part (added in INSERT VERSION) will only work on items/slots. When using this, it will return the full NBT of said item, ",
+        "The optional 'full' part (added in 1.4.10) will only work on items/slots. When using this, it will return the full NBT of said item, ",
         "including the item amount as well as the item type."})
 @Examples({"set {_nbt} to nbt of player's tool", "set {_f} to full nbt of player's tool",
         "add \"{Enchantments:[{id:\"\"sharpness\"\",lvl:5}]}\" to nbt of player's tool",
