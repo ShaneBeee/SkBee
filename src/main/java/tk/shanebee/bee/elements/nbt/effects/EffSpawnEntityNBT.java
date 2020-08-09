@@ -13,7 +13,10 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
+import org.bukkit.World;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
+import org.bukkit.util.Consumer;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
 
@@ -64,8 +67,7 @@ public class EffSpawnEntityNBT extends Effect {
             assert loc != null : locations;
             for (final EntityType type : et) {
                 for (int i = 0; i < a.doubleValue() * type.getAmount(); i++) {
-                    EffSpawn.lastSpawned = loc.getWorld().spawn(loc, type.data.getType(), ent ->
-                            NBT_API.addNBT(ent, value));
+                    EffSpawn.lastSpawned = spawn(loc, type.data.getType(), value);
                 }
             }
         }
@@ -75,6 +77,17 @@ public class EffSpawnEntityNBT extends Effect {
     public String toString(Event e, boolean debug) {
         return "spawn " + (amount != null ? amount.toString(e, debug) + " " : "") + types.toString(e, debug) +
                 " " + locations.toString(e, debug) + " " + nbtString.toString(e, debug);
+    }
+
+    private <T extends Entity> Entity spawn(Location loc, Class<T> type, String nbt) {
+        if (Skript.methodExists(World.class, "spawn", Location.class, Class.class, Consumer.class)) {
+            Skript.warning("Testing with consumer");
+            return loc.getWorld().spawn(loc, type, ent -> NBT_API.addNBT(ent, nbt));
+        }
+        Skript.error("No consumer");
+        Entity e = loc.getWorld().spawn(loc, type);
+        NBT_API.addNBT(e, nbt);
+        return e;
     }
 
 }
