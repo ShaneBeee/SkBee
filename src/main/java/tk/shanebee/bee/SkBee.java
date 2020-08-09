@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import com.github.shynixn.structureblocklib.bukkit.core.VersionSupport;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
+import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
@@ -12,6 +13,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import tk.shanebee.bee.api.NBTApi;
 import tk.shanebee.bee.api.listener.BoundBorderListener;
+import tk.shanebee.bee.api.util.LoggerBee;
 import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
 import tk.shanebee.bee.elements.bound.config.BoundConfig;
@@ -39,6 +41,7 @@ public class SkBee extends JavaPlugin {
     public void onEnable() {
         instance = this;
         this.nbtApi = new NBTApi();
+        MinecraftVersion.logger = LoggerBee.getLogger();
         this.pm = Bukkit.getPluginManager();
         this.config = new Config(this);
         PluginDescriptionFile desc = getDescription();
