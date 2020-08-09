@@ -65,10 +65,10 @@ public class NBTApi {
 
     // This is just to force load the api!
     public void forceLoadNBT() {
-        SkBee.log("&aLoading NBTApi!");
+        SkBee.log("&aLoading NBTApi...");
         NBTItem loadingItem = new NBTItem(new ItemStack(Material.STONE));
         loadingItem.mergeCompound(new NBTContainer("{}"));
-        SkBee.log("&aNBTApi successfully loaded!");
+        SkBee.log("&aSuccessfully loaded NBTApi!");
     }
 
     // INVENTORY SLOT
