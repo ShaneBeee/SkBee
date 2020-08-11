@@ -78,8 +78,17 @@ public class SkBee extends JavaPlugin {
             return;
         }
         try {
-            addon.loadClasses("tk.shanebee.bee.elements.nbt");
             nbtApi.forceLoadNBT();
+        } catch (Exception ignore) {
+            String ver = Skript.getMinecraftVersion().toString();
+            log("&5NBT Elements &cDISABLED!");
+            log(" - Your server version [&b" + ver + "&7] is not currently supported by the NBT-API");
+            log(" - This is not a bug!");
+            log(" - NBT elements will resume once the API is updated to work with [&b" + ver + "&7]");
+            return;
+        }
+        try {
+            addon.loadClasses("tk.shanebee.bee.elements.nbt");
             log("&5NBT Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
