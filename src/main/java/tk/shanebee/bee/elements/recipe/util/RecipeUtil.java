@@ -6,6 +6,7 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -155,7 +156,7 @@ public class RecipeUtil {
      */
     public static void log(String log) {
         String prefix = "&7[&bRecipe&7] ";
-        SkBee.log(prefix + log);
+        Util.log(prefix + log);
     }
 
 }
