@@ -44,7 +44,10 @@ public class ExprBlockCuboid extends SimpleExpression<Block> {
 
     @Override
     protected Block[] get(Event e) {
-        ArrayList<Block> list = new ArrayList<>(getBlocks(from.getSingle(e), to.getSingle(e)));
+        Location from = this.from != null ? this.from.getSingle(e) : null;
+        Location to = this.to != null ? this.to.getSingle(e) : null;
+        if (to == null || from == null) return null;
+        ArrayList<Block> list = new ArrayList<>(getBlocks(from, to));
         return list.toArray(new Block[0]);
     }
 
