@@ -24,6 +24,9 @@ import tk.shanebee.bee.metrics.Metrics;
 
 import java.io.IOException;
 
+/**
+ * Main class for SkBee
+ */
 public class SkBee extends JavaPlugin {
 
     static {
@@ -224,22 +227,47 @@ public class SkBee extends JavaPlugin {
         }
     }
 
+    /**
+     * Get an instance of this plugin
+     *
+     * @return Instance of this plugin
+     */
     public static SkBee getPlugin() {
         return instance;
     }
 
+    /**
+     * Get an instance of this plugin's {@link Config}
+     *
+     * @return Instance of this plugin's config
+     */
     public Config getPluginConfig() {
         return this.config;
     }
 
+    /**
+     * Get an instance of the {@link BoundConfig}
+     *
+     * @return Instance of bound config
+     */
     public BoundConfig getBoundConfig() {
         return this.boundConfig;
     }
 
+    /**
+     * Get an instance of the {@link NBTApi}
+     *
+     * @return Instance of the NBT API
+     */
     public NBTApi getNbtApi() {
         return nbtApi;
     }
 
+    /**
+     * Get an instance of the {@link VirtualFurnaceAPI}
+     *
+     * @return Instance of the Virtual Furnace API
+     */
     public VirtualFurnaceAPI getVirtualFurnaceAPI() {
         return virtualFurnaceAPI;
     }
