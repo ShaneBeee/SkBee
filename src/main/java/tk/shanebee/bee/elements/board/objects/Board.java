@@ -7,6 +7,7 @@ import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.util.Validate;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -117,8 +118,7 @@ public class Board {
      * @param text Text to put in line
      */
     public void setLine(int line, String text) {
-        if (line > 15 || line < 1)
-            throw new IllegalArgumentException("Scoreboard lines can only be between 1 and 15");
+        Validate.isBetween(line, 1, 15);
         Team t = lines[line - 1];
         t.setPrefix(getColString(text));
         board.getScore(getColString(entries[line - 1])).setScore(line);
@@ -131,8 +131,7 @@ public class Board {
      * @param line Line to delete (1 - 15)
      */
     public void deleteLine(int line) {
-        if (line > 15 || line < 1)
-            throw new IllegalArgumentException("Scoreboard lines can only be between 1 and 15");
+        Validate.isBetween(line, 1, 15);
         scoreboard.resetScores(getColString(entries[line - 1]));
     }
 
