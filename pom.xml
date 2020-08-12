@@ -62,9 +62,9 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>de.tr7zw</groupId>
-            <artifactId>item-nbt-api</artifactId>
-            <version>2.5.0-SNAPSHOT-SkBee</version>
+            <groupId>com.github.ShaneBeee</groupId>
+            <artifactId>Item-NBT-API</artifactId>
+            <version>feature~custom-logger-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>com.github.shynixn.structureblocklib</groupId>
