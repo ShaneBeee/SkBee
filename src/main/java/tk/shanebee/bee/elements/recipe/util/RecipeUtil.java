@@ -126,7 +126,11 @@ public class RecipeUtil {
      * @param ingredients Ingredients of recipe to log
      */
     public static void logRecipe(Recipe recipe, String ingredients) {
-        log("&aRegistered new recipe:");
+        String name = "";
+        if (recipe instanceof Keyed) {
+            name = "&7(&b" + ((Keyed) recipe).getKey().toString() + "&7)";
+        }
+        log("&aRegistered new recipe: " + name);
         log(" - &7Result: " + recipe.getResult());
         log(" - &7Ingredients: " + ingredients);
     }
