@@ -10,13 +10,13 @@ import tk.shanebee.bee.api.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
 
 @SuppressWarnings("deprecation")
 public class RecipeUtil {
 
     private static final String NAMESPACE = SkBee.getPlugin().getPluginConfig().RECIPE_NAMESPACE;
-    private static final boolean BUKKIT_REMOVE = Skript.methodExists(Bukkit.class, "removeRecipe",
-            new Class[]{NamespacedKey.class}, Boolean.class);
+    private static final boolean BUKKIT_REMOVE = Skript.methodExists(Bukkit.class, "removeRecipe", NamespacedKey.class);
 
     /**
      * Get a NamespacedKey from string using this plugin as the namespace
@@ -93,14 +93,16 @@ public class RecipeUtil {
         if (BUKKIT_REMOVE) {
             Bukkit.removeRecipe(recipeKey);
         } else {
-            List<Recipe> recipes = new ArrayList<>();
-            Bukkit.recipeIterator().forEachRemaining(recipe -> {
-                if (recipe instanceof Keyed && !((Keyed) recipe).getKey().equals(recipeKey)) {
-                    recipes.add(recipe);
-                }
-            });
-            Bukkit.clearRecipes();
-            recipes.forEach(Bukkit::addRecipe);
+            try {
+                List<Recipe> recipes = new ArrayList<>();
+                Bukkit.recipeIterator().forEachRemaining(recipe -> {
+                    if (recipe instanceof Keyed && !((Keyed) recipe).getKey().equals(recipeKey)) {
+                        recipes.add(recipe);
+                    }
+                });
+                Bukkit.clearRecipes();
+                recipes.forEach(Bukkit::addRecipe);
+            } catch (NoSuchElementException ignore) {}
         }
     }
 
@@ -108,14 +110,16 @@ public class RecipeUtil {
      * Remove all Minecraft recipes registered to the server
      */
     public static void removeAllMCRecipes() {
-        List<Recipe> recipes = new ArrayList<>();
-        Bukkit.recipeIterator().forEachRemaining(recipe -> {
-            if (recipe instanceof Keyed && !((Keyed) recipe).getKey().getNamespace().equalsIgnoreCase("minecraft")) {
-                recipes.add(recipe);
-            }
-        });
-        Bukkit.clearRecipes();
-        recipes.forEach(Bukkit::addRecipe);
+        try {
+            List<Recipe> recipes = new ArrayList<>();
+            Bukkit.recipeIterator().forEachRemaining(recipe -> {
+                if (recipe instanceof Keyed && !((Keyed) recipe).getKey().getNamespace().equalsIgnoreCase("minecraft")) {
+                    recipes.add(recipe);
+                }
+            });
+            Bukkit.clearRecipes();
+            recipes.forEach(Bukkit::addRecipe);
+        } catch (NoSuchElementException ignore) {}
     }
 
     /**
