@@ -16,7 +16,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import tk.shanebee.bee.SkBee;
-import tk.shanebee.bee.api.reflection.SkReclection;
+import tk.shanebee.bee.api.reflection.SkReflection;
 import tk.shanebee.bee.api.util.Util;
 
 import java.io.File;
@@ -110,7 +110,7 @@ public class NBTApi {
 
         NBTItem item = new NBTItem(itemStack);
         item.mergeCompound(new NBTContainer(value));
-        SkReclection.setMeta(itemType, item.getItem().getItemMeta());
+        SkReflection.setMeta(itemType, item.getItem().getItemMeta());
     }
 
     public ItemStack setNBT(ItemStack itemStack, String value) {
@@ -130,7 +130,7 @@ public class NBTApi {
 
         NBTItem item = new NBTItem(stack);
         item.mergeCompound(new NBTContainer(value));
-        SkReclection.setMeta(itemType, item.getItem().getItemMeta());
+        SkReflection.setMeta(itemType, item.getItem().getItemMeta());
     }
 
     public ItemStack addNBT(ItemStack itemStack, String value) {

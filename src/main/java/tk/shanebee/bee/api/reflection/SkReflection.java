@@ -6,7 +6,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.lang.reflect.Method;
 
-public class SkReclection {
+public class SkReflection {
 
     private static Method setMetaMethod;
     private static Method getMetaMethod;
