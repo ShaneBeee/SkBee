@@ -108,30 +108,8 @@ public class ExprHiddenFlags extends SimplePropertyExpression<ItemType, ItemType
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
-        String flag = null;
-        switch (parse) {
-            case 0:
-                flag = "all";
-                break;
-            case 1:
-                flag = "enchant";
-                break;
-            case 2:
-                flag = "destroy";
-                break;
-            case 3:
-                flag = "potion effect";
-                break;
-            case 4:
-                flag = "unbreakable";
-                break;
-            case 5:
-                flag = "attribute";
-                break;
-            case 6:
-                flag = "dye";
-        }
-        return getExpr().toString(e, d) + " with " + flag + " flags hidden";
+        String[] flags = new String[]{"all", "enchant", "destroy", "potion effect", "unbreakable", "attribute", "dye"};
+        return getExpr().toString(e, d) + " with " + flags[parse] + " flags hidden";
     }
 
 }
