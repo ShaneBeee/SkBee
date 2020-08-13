@@ -81,10 +81,8 @@ public class EffSpawnEntityNBT extends Effect {
 
     private <T extends Entity> Entity spawn(Location loc, Class<T> type, String nbt) {
         if (Skript.methodExists(World.class, "spawn", Location.class, Class.class, Consumer.class)) {
-            Skript.warning("Testing with consumer");
             return loc.getWorld().spawn(loc, type, ent -> NBT_API.addNBT(ent, nbt));
         }
-        Skript.error("No consumer");
         Entity e = loc.getWorld().spawn(loc, type);
         NBT_API.addNBT(e, nbt);
         return e;
