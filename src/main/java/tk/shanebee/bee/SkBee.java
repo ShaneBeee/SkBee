@@ -59,6 +59,7 @@ public class SkBee extends JavaPlugin {
             loadRecipeElements();
             loadBoardElements();
             loadBoundElements();
+            loadTextElements();
             loadStructureElements();
             loadOtherElements();
             loadVirtualFurnaceElements();
@@ -150,6 +151,20 @@ public class SkBee extends JavaPlugin {
             pm.registerEvents(new BoundBorderListener(this), this);
             addon.loadClasses("tk.shanebee.bee.elements.bound");
             Util.log("&5Bound Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
+    }
+
+    private void loadTextElements() {
+        if (!this.config.ELEMENTS_TEXT_COMPONENT) {
+            Util.log("&5Text Component Elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("tk.shanebee.bee.elements.text");
+            Util.log("&5Text Component Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);

@@ -29,6 +29,9 @@ elements:
   # Note: Only available on 1.13+
   virtual-furnace: true
 
+  # Enable Text Component elements
+  text-component: true
+
 recipe:
   # This is the namespace all recipes will be saved under, you can choose whatever you wish
   # Example, when using the minecraft recipe command `/minecraft:recipe give playerName skrecipe:my_custom_recipe
