@@ -60,6 +60,7 @@ public class SkBee extends JavaPlugin {
             loadBoardElements();
             loadBoundElements();
             loadTextElements();
+            loadPathElements();
             loadStructureElements();
             loadOtherElements();
             loadVirtualFurnaceElements();
@@ -168,6 +169,26 @@ public class SkBee extends JavaPlugin {
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
+        }
+    }
+
+    private void loadPathElements() {
+        if (Skript.classExists("com.destroystokyo.paper.entity.Pathfinder")) {
+            if (!this.config.ELEMENTS_PATHFINDING) {
+                Util.log("&5Pathfinding Elements &cdisabled via config");
+                return;
+            }
+            try {
+
+                addon.loadClasses("tk.shanebee.bee.elements.path");
+                Util.log("&5Pathfinding Elements &asuccessfully loaded");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                pm.disablePlugin(this);
+            }
+        } else {
+            Util.log("&5Pathfinding &cdisabled");
+            Util.log("&7 - Pathfinding elements are only available on Paper 1.13+");
         }
     }
 

@@ -23,6 +23,7 @@ public class Config {
     public boolean ELEMENTS_STRUCTURE;
     public boolean ELEMENTS_VIRTUAL_FURNACE;
     public boolean ELEMENTS_TEXT_COMPONENT;
+    public boolean ELEMENTS_PATHFINDING;
     public String RECIPE_NAMESPACE;
 
     public Config(SkBee plugin) {
@@ -79,6 +80,7 @@ public class Config {
         this.ELEMENTS_STRUCTURE = this.config.getBoolean("elements.structure");
         this.ELEMENTS_VIRTUAL_FURNACE = this.config.getBoolean("elements.virtual-furnace");
         this.ELEMENTS_TEXT_COMPONENT = this.config.getBoolean("elements.text-component");
+        this.ELEMENTS_PATHFINDING = this.config.getBoolean("elements.pathfinding");
         String namespace = this.config.getString("recipe.namespace");
         if (namespace == null) {
             namespace = "skrecipe";
