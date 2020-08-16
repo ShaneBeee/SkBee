@@ -298,11 +298,16 @@ public class NBTApi {
             case NBTTagCompound:
                 return compound.getCompound(tag).toString();
             case NBTTagList:
-                List<String> stringList = new ArrayList<>();
+                List<Object> list = new ArrayList<>();
                 for (NBTCompound comp : compound.getCompoundList(tag)) {
-                    stringList.add(comp.toString());
+                    list.add(comp.toString());
                 }
-                return stringList;
+                list.addAll(compound.getDoubleList(tag));
+                list.addAll(compound.getFloatList(tag));
+                list.addAll(compound.getIntegerList(tag));
+                list.addAll(compound.getStringList(tag));
+                list.addAll(compound.getLongList(tag));
+                return list;
             default:
                 return "null -> type: " + type.toString();
         }
