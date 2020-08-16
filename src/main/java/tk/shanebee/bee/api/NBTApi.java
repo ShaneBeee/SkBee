@@ -1,7 +1,6 @@
 package tk.shanebee.bee.api;
 
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.lang.Expression;
 import ch.njol.skript.util.slot.Slot;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -27,23 +26,6 @@ import java.util.List;
 import java.util.UUID;
 
 public class NBTApi {
-
-    @SuppressWarnings("ConstantConditions")
-    public boolean validateNBT(Expression<String> nbt) {
-        if (nbt == null) {
-            sendError("null", null);
-            return false;
-        }
-        for (String nbtString : nbt.getAll(null)) {
-            try {
-                new NBTContainer(nbtString);
-            } catch (Exception ex) {
-                sendError(nbtString, ex);
-                return false;
-            }
-        }
-        return true;
-    }
 
     public boolean validateNBT(String nbtString) {
         if (nbtString == null) return false;
