@@ -71,7 +71,7 @@ public class Board {
     private final Scoreboard scoreboard;
     private final Objective board;
     private final Team[] lines = new Team[15];
-    private final String[] entries = new String[]{"&1", "&2", "&3", "&4", "&5", "&6", "&7", "&9", "&9", "&0", "&a", "&b", "&c", "&d", "&e"};
+    private final String[] entries = new String[]{"&1", "&2", "&3", "&4", "&5", "&6", "&7", "&8", "&9", "&0", "&a", "&b", "&c", "&d", "&e"};
     private boolean on;
 
     public Board(Player player, boolean load) {
