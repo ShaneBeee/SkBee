@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.reflection.SkReflection;
 import tk.shanebee.bee.api.util.Util;
+import tk.shanebee.bee.config.Config;
 
 import java.io.File;
 import java.io.IOException;
@@ -31,6 +32,12 @@ import java.util.UUID;
  * Main NBT api for SkBee
  */
 public class NBTApi {
+
+    private final Config CONFIG;
+
+    public NBTApi() {
+        CONFIG = SkBee.getPlugin().getPluginConfig();
+    }
 
     /** Validate an NBT string
      * @param nbtString NBT string to validate
@@ -88,7 +95,8 @@ public class NBTApi {
      */
     @Nullable
     public Object addNBT(@NotNull Object object, @NotNull String value, @NotNull ObjectType type) {
-        if (!type.isAssignableFrom(object)) return null;
+        if (!type.isAssignableFrom(object, CONFIG.SETTINGS_DEBUG))
+            return null;
         if (!validateNBT(value)) return null;
         switch (type) {
             case FILE:
@@ -102,7 +110,7 @@ public class NBTApi {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                break;
+                return null;
             case ITEM_STACK:
                 NBTItem item = new NBTItem(((ItemStack) object));
                 item.mergeCompound(new NBTContainer(value));
@@ -131,6 +139,9 @@ public class NBTApi {
                     tile.mergeCompound(new NBTContainer(value));
                 } catch (NbtApiException ignore) {}
                 return object;
+            default:
+                if (CONFIG.SETTINGS_DEBUG)
+                    throw new IllegalArgumentException("Unsupported ObjectType: " + type);
         }
         return null;
     }
@@ -145,7 +156,8 @@ public class NBTApi {
      */
     @Nullable
     public Object setNBT(@NotNull Object object, @NotNull String value, @NotNull ObjectType type) {
-        if (!type.isAssignableFrom(object)) return null;
+        if (!type.isAssignableFrom(object, CONFIG.SETTINGS_DEBUG))
+            return null;
         if (!validateNBT(value)) return null;
         switch (type) {
             case FILE:
@@ -172,6 +184,9 @@ public class NBTApi {
                 return addNBT(object, value, ObjectType.ENTITY);
             case BLOCK:
                 return addNBT(object, value, ObjectType.BLOCK);
+            default:
+                if (CONFIG.SETTINGS_DEBUG)
+                    throw new IllegalArgumentException("Unsupported ObjectType: " + type);
         }
         return null;
     }
@@ -185,7 +200,8 @@ public class NBTApi {
      */
     @Nullable
     public String getNBT(@NotNull Object object, @NotNull ObjectType type) {
-        if (!type.isAssignableFrom(object)) return null;
+        if (!type.isAssignableFrom(object, CONFIG.SETTINGS_DEBUG))
+            return null;
         switch (type) {
             case FILE:
                 File file = getFile(((String) object));
@@ -233,6 +249,9 @@ public class NBTApi {
                 } catch (NbtApiException ignore) {
                     return null;
                 }
+            default:
+                if (CONFIG.SETTINGS_DEBUG)
+                    throw new IllegalArgumentException("Unsupported ObjectType: " + type);
         }
         return null;
     }
@@ -312,8 +331,10 @@ public class NBTApi {
                 list.addAll(compound.getLongList(tag));
                 return list;
             default:
-                throw new IllegalArgumentException("Unknown tag type, please let the dev know -> type: " + type.toString());
+                if (CONFIG.SETTINGS_DEBUG)
+                    throw new IllegalArgumentException("Unknown tag type, please let the dev know -> type: " + type.toString());
         }
+        return null;
     }
 
     /**
@@ -372,8 +393,13 @@ public class NBTApi {
          * @param object Object to compare
          * @return True if object matches the class type
          */
-        public boolean isAssignableFrom(Object object) {
-            return cl.isAssignableFrom(object.getClass());
+        public boolean isAssignableFrom(Object object, boolean debug) {
+            if (cl.isAssignableFrom(object.getClass()))
+                return true;
+            if (debug)
+                throw new IllegalArgumentException("Object is not assignable from ObjectType:\n\tObject: " + object + " = " + object.getClass() +
+                        "\n\tObjectType: " + this + "\n\tAssignableFrom: " + cl);
+            return false;
         }
     }
 
