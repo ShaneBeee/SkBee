@@ -15,8 +15,6 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import tk.shanebee.bee.SkBee;
-import tk.shanebee.bee.api.NBT.NBTEntityOverride;
-import tk.shanebee.bee.api.NBT.NBTFileOverride;
 import tk.shanebee.bee.api.reflection.SkReflection;
 import tk.shanebee.bee.api.util.Util;
 
@@ -160,10 +158,7 @@ public class NBTApi {
 
     // ENTITY NBT
     public void setNBT(Entity entity, String newValue) {
-        if (entity == null || entity.isDead()) return;
-        if (!validateNBT(newValue)) return;
-        NBTEntityOverride nbtEntity = new NBTEntityOverride(entity);
-        nbtEntity.setCompound(new NBTContainer(newValue));
+        addNBT(entity, newValue);
     }
 
     public void addNBT(Entity entity, String newValue) {
@@ -225,24 +220,13 @@ public class NBTApi {
             NBTFile nbtFile = new NBTFile(file1);
             nbtFile.mergeCompound(new NBTContainer(value));
             nbtFile.save();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public void setNBT(String file, String value) {
-        if (!validateNBT(value)) return;
-        File file1 = getFile(file);
-        if (file1 == null) return;
-
-        try {
-            NBTFileOverride nbtFile = new NBTFileOverride(file1);
-            nbtFile.setCompound(new NBTContainer(value));
-            nbtFile.save();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        addNBT(file, value);
     }
 
     // Internal use to get file NBT
