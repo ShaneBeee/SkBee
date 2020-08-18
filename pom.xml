@@ -65,12 +65,32 @@
             <groupId>com.github.ShaneBeee</groupId>
             <artifactId>Item-NBT-API</artifactId>
             <version>feature~custom-logger-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>item-nbt-api-plugin</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>nbt-data-api</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>nbt-injector</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.github.shynixn.structureblocklib</groupId>
             <artifactId>structureblocklib-bukkit-core</artifactId>
             <version>1.11.0</version>
             <scope>compile</scope>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>structureblocklib-bukkit-api</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.shanebeestudios</groupId>
