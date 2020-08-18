@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.NBT.NBTEntityOverride;
 import tk.shanebee.bee.api.NBT.NBTFileOverride;
 import tk.shanebee.bee.api.reflection.SkReflection;
 import tk.shanebee.bee.api.util.Util;
@@ -161,7 +162,8 @@ public class NBTApi {
     public void setNBT(Entity entity, String newValue) {
         if (entity == null || entity.isDead()) return;
         if (!validateNBT(newValue)) return;
-        addNBT(entity, newValue);
+        NBTEntityOverride nbtEntity = new NBTEntityOverride(entity);
+        nbtEntity.setCompound(new NBTContainer(newValue));
     }
 
     public void addNBT(Entity entity, String newValue) {

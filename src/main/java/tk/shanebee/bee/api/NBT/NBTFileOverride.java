@@ -6,7 +6,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
- * Overrides {@link de.tr7zw.changeme.nbtapi.NBTFile} to allow for setting compounds
+ * Overrides {@link NBTFile} to allow for setting compounds
  * <br>
  * {@link NBTFile#setCompound(Object)} is protected, so we're just making it public
  */
