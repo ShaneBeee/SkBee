@@ -13,6 +13,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import tk.shanebee.bee.api.NBTApi;
 import tk.shanebee.bee.api.listener.BoundBorderListener;
+import tk.shanebee.bee.api.listener.EntityListener;
 import tk.shanebee.bee.api.util.LoggerBee;
 import tk.shanebee.bee.api.util.Util;
 import tk.shanebee.bee.config.Config;
@@ -243,6 +244,7 @@ public class SkBee extends JavaPlugin {
 
     private void loadOtherElements() {
         try {
+            pm.registerEvents(new EntityListener(), this);
             addon.loadClasses("tk.shanebee.bee.elements.other");
             Util.log("&5Other Elements &asuccessfully loaded");
         } catch (IOException ex) {
