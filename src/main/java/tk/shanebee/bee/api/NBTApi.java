@@ -15,6 +15,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.NBT.NBTFileOverride;
 import tk.shanebee.bee.api.reflection.SkReflection;
 import tk.shanebee.bee.api.util.Util;
 
@@ -230,8 +231,16 @@ public class NBTApi {
 
     public void setNBT(String file, String value) {
         if (!validateNBT(value)) return;
-        // TODO fix this up
-        addNBT(file, value);
+        File file1 = getFile(file);
+        if (file1 == null) return;
+
+        try {
+            NBTFileOverride nbtFile = new NBTFileOverride(file1);
+            nbtFile.setCompound(new NBTContainer(value));
+            nbtFile.save();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     // Internal use to get file NBT
