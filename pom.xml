@@ -152,6 +152,7 @@
                 <configuration>
                     <links>
                         <link>https://hub.spigotmc.org/javadocs/spigot/</link>
+                        <link>https://shanebeestudios.com/docs/skript/JavaDocs/</link>
                     </links>
                 </configuration>
             </plugin>

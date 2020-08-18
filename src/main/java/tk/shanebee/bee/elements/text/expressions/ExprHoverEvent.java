@@ -20,6 +20,7 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.NBTApi.ObjectType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -72,7 +73,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             if (itemStack == null) return null;
 
             String id = "minecraft:" + itemStack.getType().toString().toLowerCase();
-            String nbt = new NBTApi().getNBT(itemStack);
+            String nbt = new NBTApi().getNBT(itemStack, ObjectType.ITEM_STACK);
             Item item = new Item(id, itemStack.getAmount(), ItemTag.ofNbt(nbt));
             return new HoverEvent[]{new HoverEvent(Action.SHOW_ITEM, item)};
         }

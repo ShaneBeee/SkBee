@@ -16,8 +16,10 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.NBTApi.ObjectType;
 
 @Name("NBT - Item/Inventory Slot/Entity/Block/File")
 @Description({"NBT of items, inventory slots, entities, tile entities (such as a furnace, hopper, brewing stand, banner, etc) or files. ",
@@ -45,74 +47,71 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
     private boolean full;
 
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+    public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
         full = parseResult.mark == 1;
         return super.init(exprs, matchedPattern, isDelayed, parseResult);
     }
 
     @Override
-    public String convert(Object o) {
-        if (o instanceof Slot) {
-            return full ? NBT_API.getFullNBT((Slot) o) : NBT_API.getNBT(((Slot) o));
-        } else if (o instanceof ItemStack) {
-            return full ? NBT_API.getFullNBT((ItemStack) o) : NBT_API.getNBT((ItemStack) o);
-        } else if (o instanceof ItemType) {
-            return full ? NBT_API.getFullNBT((ItemType) o) : NBT_API.getNBT((ItemType) o);
-        } else if (o instanceof Entity) {
-            return NBT_API.getNBT((Entity) o);
-        } else if (o instanceof Block) {
-            return NBT_API.getNBT((Block) o);
-        } else if (o instanceof String) {
-            return NBT_API.getNBT((String) o);
+    public String convert(@NotNull Object object) {
+        ObjectType objectType = null;
+        if (object instanceof Slot) {
+            objectType = full ? ObjectType.SLOT_FULL : ObjectType.SLOT;
+        } else if (object instanceof ItemStack) {
+            objectType = full ? ObjectType.ITEM_STACK_FULL : ObjectType.ITEM_STACK;
+        } else if (object instanceof ItemType) {
+            objectType = full ? ObjectType.ITEM_TYPE_FULL : ObjectType.ITEM_TYPE;
+        } else if (object instanceof Entity) {
+            objectType = ObjectType.ENTITY;
+        } else if (object instanceof Block) {
+            objectType = ObjectType.BLOCK;
+        } else if (object instanceof String) {
+            objectType = ObjectType.FILE;
         }
+        if (objectType != null)
+            return NBT_API.getNBT(object, objectType);
         return null;
     }
 
     @Override
-    public Class<?>[] acceptChange(final ChangeMode mode) {
+    public Class<?>[] acceptChange(final @NotNull ChangeMode mode) {
         if (mode == ChangeMode.ADD || mode == ChangeMode.SET || mode == ChangeMode.RESET)
             return CollectionUtils.array(String.class);
         return null;
     }
 
     @Override
-    public void change(Event event, Object[] delta, ChangeMode mode) {
-        Object o = getExpr().getSingle(event);
+    public void change(@NotNull Event event, Object[] delta, @NotNull ChangeMode mode) {
+        Object object = getExpr().getSingle(event);
+        if (object == null) return;
+
         String value = delta != null ? ((String) delta[0]) : "{}";
         if (!NBT_API.validateNBT(value)) {
             return;
         }
+        ObjectType objectType = null;
+        if (object instanceof Slot) {
+            objectType = ObjectType.SLOT;
+        } else if (object instanceof ItemStack) {
+            objectType = ObjectType.ITEM_STACK;
+        } else if (object instanceof ItemType) {
+            objectType = ObjectType.ITEM_TYPE;
+        } else if (object instanceof Entity) {
+            objectType = ObjectType.ENTITY;
+        } else if (object instanceof Block) {
+            objectType = ObjectType.BLOCK;
+        } else if (object instanceof String) {
+            objectType = ObjectType.FILE;
+        }
         switch (mode) {
             case ADD:
-                if (o instanceof Slot) {
-                    NBT_API.addNBT((Slot) o, value);
-                } else if (o instanceof ItemStack) {
-                    NBT_API.addNBT((ItemStack) o, value);
-                } else if (o instanceof ItemType) {
-                    NBT_API.addNBT((ItemType) o, value);
-                } else if (o instanceof Entity) {
-                    NBT_API.addNBT((Entity) o, value);
-                } else if (o instanceof Block) {
-                    NBT_API.addNBT(((Block) o), value);
-                } else if (o instanceof String) {
-                    NBT_API.addNBT(((String) o), value);
-                }
+                if (objectType != null)
+                    NBT_API.addNBT(object, value, objectType);
                 break;
             case SET:
             case RESET:
-                if (o instanceof Slot) {
-                    NBT_API.setNBT((Slot) o, value);
-                } else if (o instanceof ItemStack) {
-                    NBT_API.setNBT((ItemStack) o, value);
-                } else if (o instanceof ItemType) {
-                    NBT_API.setNBT((ItemType) o, value);
-                } else if (o instanceof Entity) {
-                    NBT_API.setNBT((Entity) o, value);
-                } else if (o instanceof Block) {
-                    NBT_API.setNBT(((Block) o), value);
-                } else if (o instanceof String) {
-                    NBT_API.setNBT(((String) o), value);
-                }
+                if (objectType != null)
+                    NBT_API.setNBT(object, value, objectType);
                 break;
             default:
                 assert false;
@@ -120,12 +119,12 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
     }
 
     @Override
-    protected String getPropertyName() {
+    protected @NotNull String getPropertyName() {
         return "object nbt";
     }
 
     @Override
-    public Class<? extends String> getReturnType() {
+    public @NotNull Class<? extends String> getReturnType() {
         return String.class;
     }
 

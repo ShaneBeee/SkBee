@@ -8,15 +8,17 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.NBTApi.ObjectType;
 
 @Name("NBT - Set Block with NBT")
 @Description("Set a block at a location to a block with NBT. BlockData is also supported when using MC 1.13+ and Skript 2.5+")
@@ -50,7 +52,7 @@ public class EffSetBlockNBT extends Effect {
 
     @SuppressWarnings({"unchecked", "null"})
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parser) {
+    public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parser) {
         type = (Expression<Object>) exprs[2];
         locations = Direction.combine((Expression<? extends Direction>) exprs[0], (Expression<? extends Location>) exprs[1]);
         nbtString = (Expression<String>) exprs[3];
@@ -58,30 +60,31 @@ public class EffSetBlockNBT extends Effect {
     }
 
     @Override
-    public void execute(final Event e) {
-        String value = this.nbtString.getSingle(e);
+    public void execute(final @NotNull Event event) {
+        String value = this.nbtString.getSingle(event);
+        if (value == null) return;
         if (BLOCK_DATA) {
-            final BlockData blockData = ((BlockData) type.getSingle(e));
+            final BlockData blockData = ((BlockData) type.getSingle(event));
             if (blockData == null) return;
-            for (final Location loc : locations.getArray(e)) {
+            for (final Location loc : locations.getArray(event)) {
                 assert loc != null : locations;
                 Block block = loc.getBlock();
                 block.setBlockData(blockData);
-                NBT_API.addNBT(block, value);
+                NBT_API.addNBT(block, value, ObjectType.BLOCK);
             }
         } else {
-            final ItemType block = ((ItemType) type.getSingle(e));
+            final ItemType block = ((ItemType) type.getSingle(event));
             if (block == null) return;
-            for (final Location loc : locations.getArray(e)) {
+            for (final Location loc : locations.getArray(event)) {
                 assert loc != null : locations;
                 block.getBlock().setBlock(loc.getBlock(), true);
-                NBT_API.addNBT(loc.getBlock(), value);
+                NBT_API.addNBT(loc.getBlock(), value, ObjectType.BLOCK);
             }
         }
     }
 
     @Override
-    public String toString(Event e, boolean debug) {
+    public @NotNull String toString(Event e, boolean debug) {
         return "set block " + locations.toString(e, debug) + " to " +
                 type.toString(e, debug) + " with nbt " + nbtString.toString(e, debug);
     }

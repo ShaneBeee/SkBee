@@ -1,6 +1,5 @@
 package tk.shanebee.bee.elements.nbt.expressions;
 
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
@@ -15,7 +14,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
-import tk.shanebee.bee.api.util.Util;
+import tk.shanebee.bee.api.NBTApi.ObjectType;
 
 import javax.annotation.Nullable;
 
@@ -50,7 +49,8 @@ public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
         String nbt = this.nbt.getSingle(e);
         if (!NBT_API.validateNBT(nbt)) return null;
         return get(source, item -> {
-            NBT_API.addNBT(item, nbt);
+            if (nbt != null)
+                NBT_API.addNBT(item, nbt, ObjectType.ITEM_TYPE);
             return item;
         });
     }
