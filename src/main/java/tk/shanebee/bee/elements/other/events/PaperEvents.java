@@ -4,11 +4,13 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import org.bukkit.Location;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -16,6 +18,8 @@ import javax.annotation.Nullable;
 public class PaperEvents {
 
     static {
+        // == PLAYER EVENTS == //
+
         // Player Armor Change Event
         if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerArmorChangeEvent")) {
             Skript.registerEvent("Armor Change Event", SimpleEvent.class, PlayerArmorChangeEvent.class, "player change armor")
@@ -43,6 +47,8 @@ public class PaperEvents {
             }, 0);
         }
 
+        // == ENTITY EVENTS == //
+
         // Entity Pathfind Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityPathfindEvent")) {
             Skript.registerEvent("Entity Pathfind Event", SimpleEvent.class, EntityPathfindEvent.class, "entity start[s] pathfinding")
@@ -62,6 +68,7 @@ public class PaperEvents {
             }, 0);
         }
 
+        // Skeleton Horse Trap Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent")) {
             Skript.registerEvent("Skeleton Horse Trap Event", SimpleEvent.class, SkeletonHorseTrapEvent.class, "skeleton horse trap")
                     .description("Called when a player gets close to a skeleton horse and triggers the lightning trap")
@@ -72,6 +79,25 @@ public class PaperEvents {
                     .since("INSERT VERSION");
         }
 
+        // == BLOCK EVENTS == //
+
+        // Anvil Damaged Event
+        if (Skript.classExists("com.destroystokyo.paper.event.block.AnvilDamagedEvent")) {
+            Skript.registerEvent("Anvil Damaged Event", SimpleEvent.class, AnvilDamagedEvent.class, "anvil damage")
+                    .description("Called when an anvil is damaged from being used.")
+                    .examples("on anvil damage:",
+                            "\tloop viewers of event-inventory:",
+                            "\t\tif loop-player has permission \"no.anvil.break\"",
+                            "\t\t\tcancel event")
+                    .since("INSERT VERSION");
+            EventValues.registerEventValue(AnvilDamagedEvent.class, Inventory.class, new Getter<Inventory, AnvilDamagedEvent>() {
+                @Nullable
+                @Override
+                public Inventory get(@NotNull AnvilDamagedEvent event) {
+                    return event.getInventory();
+                }
+            }, 0);
+        }
     }
 
 }
