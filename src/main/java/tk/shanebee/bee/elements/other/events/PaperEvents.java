@@ -4,8 +4,10 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
+import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -39,6 +41,26 @@ public class PaperEvents {
                 }
             }, 0);
         }
+
+        // Entity Pathfind Event
+        if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityPathfindEvent")) {
+            Skript.registerEvent("Entity Pathfind Event", SimpleEvent.class, EntityPathfindEvent.class, "entity start[s] pathfinding")
+                    .description("Called when an Entity decides to start moving towards a location. This event does not fire for the entities " +
+                            "actual movement. Only when it is choosing to start moving to a location.")
+                    .examples("on entity starts pathfinding:",
+                            "\tif event-entity is a sheep:",
+                            "\t\tcancel event")
+                    .since("INSERT VERSION");
+
+            EventValues.registerEventValue(EntityPathfindEvent.class, Location.class, new Getter<Location, EntityPathfindEvent>() {
+                @Nullable
+                @Override
+                public Location get(@NotNull EntityPathfindEvent event) {
+                    return event.getLoc();
+                }
+            }, 0);
+        }
+
     }
 
 }
