@@ -45,10 +45,10 @@ public class SkBee extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
+        this.config = new Config(this);
         this.nbtApi = new NBTApi();
         MinecraftVersion.logger = LoggerBee.getLogger();
         this.pm = Bukkit.getPluginManager();
-        this.config = new Config(this);
         PluginDescriptionFile desc = getDescription();
 
         final Plugin SKRIPT = pm.getPlugin("Skript");
