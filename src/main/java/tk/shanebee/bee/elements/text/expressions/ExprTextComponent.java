@@ -23,7 +23,7 @@ import java.util.List;
         "set {_comp::2} to text component of \"hover over me for a special message!\"",
         "set hover event of {_comp::2} to hover event to show \"OoO look ma I'm hovering!\"",
         "send component {_comp::*} to player"})
-@Since("INSERT VERSION")
+@Since("1.5.0")
 public class ExprTextComponent extends SimpleExpression<TextComponent> {
 
     static {

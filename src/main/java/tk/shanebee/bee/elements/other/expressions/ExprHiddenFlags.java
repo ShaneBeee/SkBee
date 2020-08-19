@@ -21,7 +21,7 @@ import tk.shanebee.bee.api.reflection.SkReflection;
 import javax.annotation.Nullable;
 
 @Name("Hidden Item Flags")
-@Description("Hides the item flags on items, allowing you to make super duper custom items. Dye item flag added in INSERT VERSION and only available on 1.16.2+.")
+@Description("Hides the item flags on items, allowing you to make super duper custom items. Dye item flag added in 1.5.0 and only available on 1.16.2+.")
 @Examples({"set player's tool to player's tool with attribute flag hidden", "give player 1 diamond sword of sharpness 5 with hidden enchants flag",
         "set {_tool} to player's tool with all flags hidden", "give player potion of harming with hidden potion effects flag",
         "set {_b} to leather boots with dye flag hidden"})

@@ -18,7 +18,7 @@ public class OtherEvents {
                 .examples("on block interact:",
                         "\tif event-entity is a villager:",
                         "\t\tcancel event")
-                .since("INSERT VERSION");
+                .since("1.5.0");
 
         EventValues.registerEventValue(EntityBlockInteractEvent.class, Block.class, new Getter<Block, EntityBlockInteractEvent>() {
             @Nullable

@@ -32,7 +32,7 @@ import java.util.List;
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
         "set hover event of {_t} to a new hover event showing player's tool",
         "send component {_t} to player"})
-@Since("INSERT VERSION")
+@Since("1.5.0")
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
     static {

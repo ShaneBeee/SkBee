@@ -24,7 +24,7 @@ import java.util.List;
 @Name("Pathfinding - Path Points")
 @Description("Get all the points along an entity's pathfinding path.")
 @Examples("set {_path::*} to path points of last spawned sheep")
-@Since("INSERT VERSION")
+@Since("1.5.0")
 public class ExprPath extends SimpleExpression<Location> {
 
     static {

@@ -36,7 +36,7 @@ public class PaperEvents {
                     .examples("on recipe book click:",
                             "\tif event-string = \"minecraft:diamond_sword\":",
                             "\t\tcancel event")
-                    .since("INSERT VERSION");
+                    .since("1.5.0");
 
             EventValues.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, new Getter<String, PlayerRecipeBookClickEvent>() {
                 @Nullable
@@ -57,7 +57,7 @@ public class PaperEvents {
                     .examples("on entity starts pathfinding:",
                             "\tif event-entity is a sheep:",
                             "\t\tcancel event")
-                    .since("INSERT VERSION");
+                    .since("1.5.0");
 
             EventValues.registerEventValue(EntityPathfindEvent.class, Location.class, new Getter<Location, EntityPathfindEvent>() {
                 @Nullable
@@ -76,7 +76,7 @@ public class PaperEvents {
                             "\tloop all players in radius 10 around event-entity:",
                             "\t\tif loop-player is an op:",
                             "\t\t\tcancel event")
-                    .since("INSERT VERSION");
+                    .since("1.5.0");
         }
 
         // == BLOCK EVENTS == //
@@ -89,7 +89,7 @@ public class PaperEvents {
                             "\tloop viewers of event-inventory:",
                             "\t\tif loop-player has permission \"no.anvil.break\"",
                             "\t\t\tcancel event")
-                    .since("INSERT VERSION");
+                    .since("1.5.0");
             EventValues.registerEventValue(AnvilDamagedEvent.class, Inventory.class, new Getter<Inventory, AnvilDamagedEvent>() {
                 @Nullable
                 @Override

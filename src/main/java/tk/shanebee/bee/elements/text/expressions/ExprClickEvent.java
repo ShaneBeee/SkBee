@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
         "set hover event of {_t} to a new hover event showing \"Clicky clicky to go to spawn!\"",
         "set click event of {_t} to a new click event to open url \"https://my.cool.website\"",
         "send component {_t} to player"})
-@Since("INSERT VERSION")
+@Since("1.5.0")
 public class ExprClickEvent extends SimpleExpression<ClickEvent> {
 
     static {

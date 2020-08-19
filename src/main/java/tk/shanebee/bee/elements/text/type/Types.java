@@ -15,7 +15,7 @@ public class Types {
                         "set hover event of {_t} to a new hover event showing \"Clicky Clicky!\"",
                         "set click event of {_t} to a new click event to open url \"https://OurDiscord.com\"",
                         "send component {_t} to player")
-                .since("INSERT VERSION"));
+                .since("1.5.0"));
     }
 
 }

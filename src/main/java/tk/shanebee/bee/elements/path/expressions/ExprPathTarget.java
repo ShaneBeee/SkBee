@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 @Examples({"set path target of event-entity to player", "set path target with speed 1.5 to location of above player",
         "set path targets of all entities to location of player",
         "delete path target of event-entity"})
-@Since("INSERT VERSION")
+@Since("1.5.0")
 public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Location> {
 
     static {
