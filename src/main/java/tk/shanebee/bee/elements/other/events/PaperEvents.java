@@ -5,6 +5,7 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
+import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import org.bukkit.Location;
@@ -59,6 +60,16 @@ public class PaperEvents {
                     return event.getLoc();
                 }
             }, 0);
+        }
+
+        if (Skript.classExists("com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent")) {
+            Skript.registerEvent("Skeleton Horse Trap Event", SimpleEvent.class, SkeletonHorseTrapEvent.class, "skeleton horse trap")
+                    .description("Called when a player gets close to a skeleton horse and triggers the lightning trap")
+                    .examples("on skeleton horse trap:",
+                            "\tloop all players in radius 10 around event-entity:",
+                            "\t\tif loop-player is an op:",
+                            "\t\t\tcancel event")
+                    .since("INSERT VERSION");
         }
 
     }
