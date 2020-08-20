@@ -1,6 +1,7 @@
 package tk.shanebee.bee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -10,58 +11,93 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
 @Name("Text Component - New Text Component")
-@Description("Create a new text component. Can have hover and click events added to it.")
+@Description({"Create a new text component. Can have hover and click events added to it. You can also create a translate component, ",
+        "this will send to the client, and the client will translate based on their language. You can use either an item type or a ",
+        "translate string, you can find these in your Minecraft jar 'assets/minecraft/lang/<lang file>.json'.",
+        "Some components have extra objects, you can use strings or other text components here."})
 @Examples({"set {_comp::1} to text component from \"hi player \"",
         "set {_comp::2} to text component of \"hover over me for a special message!\"",
         "set hover event of {_comp::2} to hover event to show \"OoO look ma I'm hovering!\"",
-        "send component {_comp::*} to player"})
+        "send component {_comp::*} to player", "",
+        "set {_t} to translate component from player's tool",
+        "set {_t} to translate component from \"item.minecraft.milk_bucket\"",
+        "set {_death} to translate component from \"death.fell.accident.ladder\" using player's name",
+        "set {_assist} to translate component \"death.fell.assist\" using victim's name and attacker's name"})
 @Since("1.5.0")
-public class ExprTextComponent extends SimpleExpression<TextComponent> {
+public class ExprTextComponent extends SimpleExpression<BaseComponent> {
 
     static {
-        Skript.registerExpression(ExprTextComponent.class, TextComponent.class, ExpressionType.COMBINED,
-                "[a] [new] text component[s] (from|of) %strings%");
+        Skript.registerExpression(ExprTextComponent.class, BaseComponent.class, ExpressionType.COMBINED,
+                "[a] [new] text component[s] (from|of) %strings%",
+                "[a] [new] translate component[s] (from|of) %itemtypes/strings%",
+                "[a] [new] translate component[s] (from|of) %string% (with|using) %objects%");
     }
 
-    private Expression<String> strings;
+    private int pattern;
+    private Expression<Object> translation;
+    private Expression<Object> objects;
 
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        strings = (Expression<String>) exprs[0];
+    public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
+        pattern = matchedPattern;
+        translation = (Expression<Object>) exprs[0];
+        objects = pattern == 2 ? (Expression<Object>) exprs[1] : null;
         return true;
     }
 
     @Nullable
     @Override
-    protected TextComponent[] get(Event e) {
-        List<TextComponent> components = new ArrayList<>();
-        for (String string : this.strings.getArray(e)) {
-            components.add(new TextComponent(string));
+    protected BaseComponent[] get(@NotNull Event e) {
+        List<BaseComponent> components = new ArrayList<>();
+
+        for (Object object : this.translation.getArray(e)) {
+            BaseComponent component;
+            if (pattern == 0)
+                component = new TextComponent((String) object);
+            else if (pattern == 1) {
+                component = new TranslatableComponent();
+                String translate;
+                if (object instanceof ItemType) {
+                    translate = "item.minecraft." + ((ItemType) object).getRawNames().get(0).replace("minecraft:", "");
+                } else {
+                    translate = (String) object;
+                }
+                ((TranslatableComponent) component).setTranslate(translate);
+            } else {
+                String string = ((String) translation.getSingle(e));
+                Object[] objects = this.objects.getAll(e);
+                component = new TranslatableComponent(string, objects);
+            }
+            components.add(component);
         }
-        return components.toArray(new TextComponent[0]);
+        return components.toArray(new BaseComponent[0]);
     }
 
     @Override
     public boolean isSingle() {
-        return this.strings.isSingle();
+        return this.translation.isSingle();
     }
 
     @Override
-    public Class<? extends TextComponent> getReturnType() {
-        return TextComponent.class;
+    public @NotNull Class<? extends BaseComponent> getReturnType() {
+        return BaseComponent.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
-        return "a new text component from " + strings.toString(e, d);
+    public @NotNull String toString(@Nullable Event e, boolean d) {
+        return "a new text component from " + translation.toString(e, d);
     }
 
 }
