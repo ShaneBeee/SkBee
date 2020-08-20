@@ -124,7 +124,7 @@ public class SkBee extends JavaPlugin {
     }
 
     private void loadBoardElements() {
-        if (Skript.isRunningMinecraft(1, 13)) {
+        if (Skript.isRunningMinecraft(1, 8, 8)) {
             if (!this.config.ELEMENTS_BOARD) {
                 Util.log("&5Scoreboard Elements &cdisabled via config");
                 return;
@@ -139,7 +139,7 @@ public class SkBee extends JavaPlugin {
             }
         } else {
             Util.log("&5Scoreboard Elements &cdisabled");
-            Util.log("&7 - Scoreboard elements are only available on 1.13+");
+            Util.log("&7 - Scoreboard elements are only available on 1.8.8+");
         }
     }
 

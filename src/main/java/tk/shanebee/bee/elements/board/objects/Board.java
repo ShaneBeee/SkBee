@@ -1,5 +1,6 @@
 package tk.shanebee.bee.elements.board.objects;
 
+import ch.njol.skript.Skript;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -17,6 +18,9 @@ import java.util.Map;
  * <p>This class also has a map that holds all player scoreboards</p>
  */
 public class Board {
+
+    private static final boolean LEGACY = !Skript.isRunningMinecraft(1, 13);
+    private static final int MAX = LEGACY ? 32 : 128;
 
     // STATIC STUFF
     private static final Map<Player, Board> BOARD_MAP = new HashMap<>();
@@ -71,7 +75,7 @@ public class Board {
     private final Scoreboard scoreboard;
     private final Objective board;
     private final Team[] lines = new Team[15];
-    private final String[] entries = new String[]{"&1", "&2", "&3", "&4", "&5", "&6", "&7", "&8", "&9", "&0", "&a", "&b", "&c", "&d", "&e"};
+    private final String[] entries = new String[]{"&1&r", "&2&r", "&3&r", "&4&r", "&5&r", "&6&r", "&7&r", "&8&r", "&9&r", "&0&r", "&a&r", "&b&r", "&c&r", "&d&r", "&e&r"};
     private boolean on;
 
     public Board(Player player, boolean load) {
@@ -80,7 +84,11 @@ public class Board {
         if (!load) {
             scoreboard = plugin.getServer().getScoreboardManager().getNewScoreboard();
             this.player.setScoreboard(scoreboard);
-            board = scoreboard.registerNewObjective("Board", "dummy", "Board");
+            if (LEGACY)
+                //noinspection deprecation
+                board = scoreboard.registerNewObjective("Board", "dummy");
+            else
+                board = scoreboard.registerNewObjective("Board", "dummy", "Board");
             board.setDisplaySlot(DisplaySlot.SIDEBAR);
             board.setDisplayName(" ");
 
@@ -120,7 +128,16 @@ public class Board {
     public void setLine(int line, String text) {
         Validate.isBetween(line, 1, 15);
         Team t = lines[line - 1];
-        t.setPrefix(getColString(text));
+        if (ChatColor.stripColor(text).length() > (MAX / 2)) {
+            String prefix = getColString(text.substring(0, (MAX / 2)));
+            t.setPrefix(prefix);
+            String lastColor = ChatColor.getLastColors(prefix);
+            int splitMax = Math.min(text.length(), MAX - lastColor.length());
+            t.setSuffix(getColString(lastColor + text.substring((MAX / 2), splitMax)));
+        } else {
+            t.setPrefix(getColString(text));
+            t.setSuffix("");
+        }
         board.getScore(getColString(entries[line - 1])).setScore(line);
     }
 
