@@ -35,11 +35,13 @@ import java.util.List;
 @Since("1.5.0")
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
+    private static final boolean HAS_ITEM = Skript.classExists("net.md_5.bungee.api.chat.hover.content.Item");
+
     static {
-        if (Skript.classExists("net.md_5.bungee.api.chat.hover.content.Item")) {
+        if (HAS_ITEM) {
             Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
-                    "[a] [new] hover event showing %strings%",
-                    "[a] [new] hover event showing %itemtype%");
+                    "[a] [new] hover event showing %itemtype%",
+                    "[a] [new] hover event showing %strings%");
         } else {
             Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
                     "[a] [new] hover event showing %strings%");
@@ -51,7 +53,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.pattern = matchedPattern;
+        this.pattern = HAS_ITEM ? matchedPattern : 1;
         object = (Expression<Object>) exprs[0];
         return true;
     }
@@ -61,14 +63,14 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     protected HoverEvent[] get(Event e) {
         if (object == null) return null;
 
-        if (pattern == 0) {
+        if (pattern == 1) {
             String[] string = ((String[]) this.object.getArray(e));
             List<Content> texts = new ArrayList<>();
             for (int i = 0; i < string.length; i++) {
                 texts.add(new Text(string[i] + (i < (string.length - 1) ? System.lineSeparator() : "")));
             }
             return new HoverEvent[]{new HoverEvent(Action.SHOW_TEXT, texts)};
-        } else if (pattern == 1) {
+        } else if (pattern == 0) {
             ItemStack itemStack = ((ItemType) object.getSingle(e)).getRandom();
             if (itemStack == null) return null;
 
