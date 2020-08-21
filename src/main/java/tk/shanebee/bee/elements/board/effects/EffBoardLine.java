@@ -9,28 +9,32 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import tk.shanebee.bee.elements.board.objects.Board;
 
 @Name("Board - Line")
-@Description("set/delete a line in a player's scoreboard. Note: line 1 is bottom, line 15 is top. Requires Spigot/Paper 1.13+")
+@Description("set/delete a line in a player's scoreboard. Note: line 1 is bottom, line 15 is top. " +
+        "Accepts texts and text components (text components as of INSERT VERSION).")
 @Examples({"set line 1 of player's scoreboard to \"oooo I'm a line!!\"",
         "set line 15 of all players' scoreboards to \"I'm the top line!!!\"",
         "delete line 3 of player's scoreboard",
-        "delete line 4 of all players' scoreboards"})
+        "delete line 4 of all players' scoreboards", "",
+        "set {_t} to translate component from player's tool",
+        "set line 1 of player's scoreboard to {_t}"})
 @Since("1.0.0")
 public class EffBoardLine extends Effect {
 
     static {
         Skript.registerEffect(EffBoardLine.class,
-                "set line %number% of %players%'[s] [score]board[s] to %string%",
+                "set line %number% of %players%'[s] [score]board[s] to %basecomponent/string%",
                 "delete line %number% of %players%'[s] [score]board[s]");
     }
 
     private Expression<Number> line;
     private Expression<Player> players;
-    private Expression<String> text;
+    private Expression<Object> text;
     private boolean set;
 
     @SuppressWarnings("unchecked")
@@ -40,7 +44,7 @@ public class EffBoardLine extends Effect {
         players = (Expression<Player>) exprs[1];
         set = matchedPattern == 0;
         if (set) {
-            text = (Expression<String>) exprs[2];
+            text = (Expression<Object>) exprs[2];
         }
         return true;
     }
@@ -53,7 +57,12 @@ public class EffBoardLine extends Effect {
 
         String text = "";
         if (set) {
-            text = this.text.getSingle(event);
+            Object object = this.text.getSingle(event);
+            if (object instanceof BaseComponent) {
+                text = ((BaseComponent) object).toLegacyText();
+            } else {
+                text = (String) object;
+            }
         }
 
         for (Player player : players) {
