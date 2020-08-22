@@ -70,7 +70,9 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
                 component = new TranslatableComponent();
                 String translate;
                 if (object instanceof ItemType) {
-                    translate = "item.minecraft." + ((ItemType) object).getRawNames().get(0).replace("minecraft:", "");
+                    ItemType itemType = (ItemType) object;
+                    String type = itemType.getMaterial().isBlock() ? "block" : "item";
+                    translate = type + ".minecraft." + itemType.getRawNames().get(0).replace("minecraft:", "");
                 } else {
                     translate = (String) object;
                 }
