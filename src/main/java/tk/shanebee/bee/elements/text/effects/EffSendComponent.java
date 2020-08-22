@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
 public class EffSendComponent extends Effect {
 
     static {
-        Skript.registerEffect(EffSendComponent.class, "send [text] component[s] %basecomponents% to %players%");
+        Skript.registerEffect(EffSendComponent.class, "send [text] component[s] %basecomponents% [to %players%]");
     }
 
     private Expression<BaseComponent> components;
