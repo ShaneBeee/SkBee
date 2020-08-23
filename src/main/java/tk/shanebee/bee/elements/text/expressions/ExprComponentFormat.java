@@ -30,7 +30,7 @@ import javax.annotation.Nullable;
         "set color format of {_t} to aqua",
         "set color format of {_t} to rgb(100, 0, 160)",
         "set insertion format of {_t} to \"ooooo\""})
-@Since("INSERT VERSION")
+@Since("1.5.1")
 public class ExprComponentFormat extends PropertyExpression<BaseComponent, Object> {
 
     private static final boolean HAS_HEX = Skript.isRunningMinecraft(1, 16);

@@ -16,7 +16,7 @@ import tk.shanebee.bee.elements.board.objects.Board;
 
 @Name("Board - Line")
 @Description("set/delete a line in a player's scoreboard. Note: line 1 is bottom, line 15 is top. " +
-        "Accepts texts and text components (text components as of INSERT VERSION).")
+        "Accepts texts and text components (text components as of 1.5.1).")
 @Examples({"set line 1 of player's scoreboard to \"oooo I'm a line!!\"",
         "set line 15 of all players' scoreboards to \"I'm the top line!!!\"",
         "delete line 3 of player's scoreboard",
