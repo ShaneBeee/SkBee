@@ -15,7 +15,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import tk.shanebee.bee.elements.board.objects.Board;
 
 @Name("Board - Is on")
-@Description("Check if a player's scoreboard is currently toggled on or off. Requires Spigot/Paper 1.13+")
+@Description("Check if a player's scoreboard is currently toggled on or off.")
 @Examples({"if scoreboard of player is on:",
         "\ttoggle scoreboard of player off",
         "if scoreboard of player is off:",

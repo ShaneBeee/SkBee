@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.elements.board.objects.Board;
 
 @Name("Board - Toggle")
-@Description("Toggle the scoreboard of a player on or off. Requires Spigot/Paper 1.13+")
+@Description("Toggle the scoreboard of a player on or off.")
 @Examples({"toggle board of player",
         "if scoreboard of player is on:",
         "\ttoggle scoreboard of player off", "",

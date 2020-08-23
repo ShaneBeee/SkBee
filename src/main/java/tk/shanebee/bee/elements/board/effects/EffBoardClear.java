@@ -15,7 +15,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import tk.shanebee.bee.elements.board.objects.Board;
 
 @Name("Board - Clear")
-@Description("Clear the scoreboard of a player.  Requires Spigot/Paper 1.13+")
+@Description("Clear the scoreboard of a player.")
 @Examples({"clear scoreboard of player",
         "clear scoreboards of all players"})
 @Since("1.0.0")

@@ -15,7 +15,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import tk.shanebee.bee.elements.board.objects.Board;
 
 @Name("Board - Title")
-@Description("Set the title of a player's scoreboard. Requires Spigot/Paper 1.13+")
+@Description("Set the title of a player's scoreboard.")
 @Examples({"set title of player's scoreboard to \"MyServer\"",
         "set title of all players' scoreboards to \"Our Serberder!\""})
 @Since("1.0.0")
