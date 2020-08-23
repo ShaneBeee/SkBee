@@ -22,8 +22,7 @@ import javax.annotation.Nullable;
 
 @Name("Pathfinding - Path Target")
 @Description({"Set the path of an entity to target a specific location, with an optional speed",
-        "Get the location of the paths end.",
-        "Delete will stop the entity from pathfinding."})
+        "Get the location of the paths end. Delete will stop the entity from pathfinding. Requires Paper 1.13+"})
 @Examples({"set path target of event-entity to player", "set path target with speed 1.5 to location of above player",
         "set path targets of all entities to location of player",
         "delete path target of event-entity"})

@@ -22,7 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Pathfinding - Path Points")
-@Description("Get all the points along an entity's pathfinding path.")
+@Description("Get all the points along an entity's pathfinding path. Requires Paper 1.13+")
 @Examples("set {_path::*} to path points of last spawned sheep")
 @Since("1.5.0")
 public class ExprPath extends SimpleExpression<Location> {

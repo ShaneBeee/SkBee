@@ -53,7 +53,7 @@ public class PaperEvents {
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityPathfindEvent")) {
             Skript.registerEvent("Entity Pathfind Event", SimpleEvent.class, EntityPathfindEvent.class, "entity start[s] pathfinding")
                     .description("Called when an Entity decides to start moving towards a location. This event does not fire for the entities " +
-                            "actual movement. Only when it is choosing to start moving to a location.")
+                            "actual movement. Only when it is choosing to start moving to a location. Requires Paper.")
                     .examples("on entity starts pathfinding:",
                             "\tif event-entity is a sheep:",
                             "\t\tcancel event")
@@ -71,7 +71,7 @@ public class PaperEvents {
         // Skeleton Horse Trap Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent")) {
             Skript.registerEvent("Skeleton Horse Trap Event", SimpleEvent.class, SkeletonHorseTrapEvent.class, "skeleton horse trap")
-                    .description("Called when a player gets close to a skeleton horse and triggers the lightning trap")
+                    .description("Called when a player gets close to a skeleton horse and triggers the lightning trap. Requires Paper 1.13+")
                     .examples("on skeleton horse trap:",
                             "\tloop all players in radius 10 around event-entity:",
                             "\t\tif loop-player is an op:",
@@ -84,7 +84,7 @@ public class PaperEvents {
         // Anvil Damaged Event
         if (Skript.classExists("com.destroystokyo.paper.event.block.AnvilDamagedEvent")) {
             Skript.registerEvent("Anvil Damaged Event", SimpleEvent.class, AnvilDamagedEvent.class, "anvil damage")
-                    .description("Called when an anvil is damaged from being used.")
+                    .description("Called when an anvil is damaged from being used. Requires Paper 1.13+")
                     .examples("on anvil damage:",
                             "\tloop viewers of event-inventory:",
                             "\t\tif loop-player has permission \"no.anvil.break\"",
