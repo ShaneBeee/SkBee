@@ -83,7 +83,7 @@
         <dependency>
             <groupId>com.github.shynixn.structureblocklib</groupId>
             <artifactId>structureblocklib-bukkit-core</artifactId>
-            <version>1.12.0</version>
+            <version>1.13.0</version>
             <scope>compile</scope>
             <exclusions>
                 <exclusion>
