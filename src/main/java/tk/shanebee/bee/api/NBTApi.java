@@ -76,7 +76,7 @@ public class NBTApi {
     }
 
     private File getFile(String fileName) {
-        fileName = !fileName.endsWith(".dat") ? fileName + ".dat" : fileName;
+        fileName = !fileName.endsWith(".dat") && !fileName.endsWith(".nbt") ? fileName + ".dat" : fileName;
         File file = new File(fileName);
         if (!file.exists()) {
             return null;
