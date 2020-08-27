@@ -85,6 +85,7 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
     }
 
     private Object[] getNested(String tag, String nbt) {
+        if (nbt == null) return null;
         String[] split = tag.split(";");
         Object nbtNew = nbt;
         for (String s : split) {
