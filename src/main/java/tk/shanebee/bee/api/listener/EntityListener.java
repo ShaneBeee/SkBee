@@ -13,7 +13,7 @@ public class EntityListener implements Listener {
     @EventHandler
     private void onEntityTrample(EntityInteractEvent event) {
 
-        EntityBlockInteractEvent entityBlockInteractEvent = new EntityBlockInteractEvent(event.getEntity(), event.getBlock());
+        EntityBlockInteractEvent entityBlockInteractEvent = new EntityBlockInteractEvent(event.getEntity(), event.getBlock(), event.isCancelled());
         Bukkit.getPluginManager().callEvent(entityBlockInteractEvent);
 
         event.setCancelled(entityBlockInteractEvent.isCancelled());
@@ -23,7 +23,7 @@ public class EntityListener implements Listener {
     private void onPlayerTrample(PlayerInteractEvent event) {
         if (event.getAction() != Action.PHYSICAL) return;
 
-        EntityBlockInteractEvent entityBlockInteractEvent = new EntityBlockInteractEvent(event.getPlayer(), event.getClickedBlock());
+        EntityBlockInteractEvent entityBlockInteractEvent = new EntityBlockInteractEvent(event.getPlayer(), event.getClickedBlock(), event.isCancelled());
         Bukkit.getPluginManager().callEvent(entityBlockInteractEvent);
 
         event.setCancelled(entityBlockInteractEvent.isCancelled());

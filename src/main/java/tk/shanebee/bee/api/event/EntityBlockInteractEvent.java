@@ -16,10 +16,10 @@ public class EntityBlockInteractEvent extends EntityEvent implements Cancellable
     private final Block block;
     private boolean cancel;
 
-    public EntityBlockInteractEvent(@NotNull Entity entity, Block block) {
+    public EntityBlockInteractEvent(@NotNull Entity entity, Block block, boolean cancel) {
         super(entity);
         this.block = block;
-        this.cancel = false;
+        this.cancel = cancel;
     }
 
     /**
