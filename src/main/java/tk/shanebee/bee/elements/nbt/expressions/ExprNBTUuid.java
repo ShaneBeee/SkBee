@@ -28,7 +28,7 @@ import java.util.UUID;
         "set {_u} to uuid int array as string from player",
         "set {_m} to uuid most from target entity",
         "set {_l} to uuid least bits of event-entity"})
-@Since("INSERT VERSION")
+@Since("1.5.2")
 public class ExprNBTUuid extends SimpleExpression<Object> {
 
     static {
