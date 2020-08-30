@@ -14,8 +14,13 @@ import ch.njol.util.Kleenean;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
+import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.jetbrains.annotations.NotNull;
+import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.NBTApi;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -36,6 +41,8 @@ import java.util.List;
         "set {_assist} to translate component \"death.fell.assist\" using victim's name and attacker's name"})
 @Since("1.5.0")
 public class ExprTextComponent extends SimpleExpression<BaseComponent> {
+
+    private static final NBTApi api = SkBee.getPlugin().getNbtApi();
 
     static {
         Skript.registerExpression(ExprTextComponent.class, BaseComponent.class, ExpressionType.COMBINED,
@@ -71,8 +78,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
                 String translate;
                 if (object instanceof ItemType) {
                     ItemType itemType = (ItemType) object;
-                    String type = itemType.getMaterial().isBlock() ? "block" : "item";
-                    translate = type + ".minecraft." + itemType.getRawNames().get(0).replace("minecraft:", "");
+                    translate = translate(itemType);
                 } else {
                     translate = (String) object;
                 }
@@ -100,6 +106,31 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "a new text component from " + translation.toString(e, d);
+    }
+
+    private String translate(ItemType itemType) {
+        Material material = itemType.getMaterial();
+        String type = material.isBlock() ? "block" : "item";
+        String raw = itemType.getRawNames().get(0).replace("minecraft:", "");
+        ItemMeta meta = itemType.getItemMeta();
+        if (meta instanceof PotionMeta) {
+            StringBuilder builder = new StringBuilder("item.minecraft.");
+            String pot = api.getTag("Potion", api.getNBT(itemType, NBTApi.ObjectType.ITEM_TYPE)).toString();
+            if (pot != null) {
+                if (material == Material.POTION) {
+                    builder.append("potion");
+                } else if (material == Material.SPLASH_POTION) {
+                    builder.append("splash_potion");
+                } else if (material == Material.LINGERING_POTION) {
+                    builder.append("lingering_potion");
+                } else if (material == Material.TIPPED_ARROW) {
+                    builder.append("tipped_arrow");
+                }
+                builder.append(".effect.").append(pot.replace("minecraft:", ""));
+                return builder.toString();
+            }
+        }
+        return type + ".minecraft." + raw;
     }
 
 }
