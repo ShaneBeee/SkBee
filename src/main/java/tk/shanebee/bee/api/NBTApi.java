@@ -112,8 +112,10 @@ public class NBTApi {
                 }
                 return null;
             case ITEM_STACK:
-                NBTItem item = new NBTItem(((ItemStack) object));
+                ItemStack itemStack = (ItemStack) object;
+                NBTItem item = new NBTItem(itemStack);
                 item.mergeCompound(new NBTContainer(value));
+                itemStack.setItemMeta(item.getItem().getItemMeta());
                 return item.getItem();
             case ITEM_TYPE:
                 ItemStack stack = ((ItemType) object).getRandom();
