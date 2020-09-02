@@ -47,7 +47,7 @@ public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
     @Override
     protected ItemType[] get(Event e, ItemType[] source) {
         String nbt = this.nbt.getSingle(e);
-        if (!NBT_API.validateNBT(nbt)) return null;
+        if (!NBTApi.validateNBT(nbt)) return null;
         return get(source, item -> {
             if (nbt != null)
                 NBT_API.addNBT(item, nbt, ObjectType.ITEM_TYPE);
