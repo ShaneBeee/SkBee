@@ -2,14 +2,7 @@ package tk.shanebee.bee.api;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.slot.Slot;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NBTEntity;
-import de.tr7zw.changeme.nbtapi.NBTFile;
-import de.tr7zw.changeme.nbtapi.NBTItem;
-import de.tr7zw.changeme.nbtapi.NBTTileEntity;
-import de.tr7zw.changeme.nbtapi.NBTType;
-import de.tr7zw.changeme.nbtapi.NbtApiException;
+import de.tr7zw.changeme.nbtapi.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -39,11 +32,13 @@ public class NBTApi {
         CONFIG = SkBee.getPlugin().getPluginConfig();
     }
 
-    /** Validate an NBT string
+    /**
+     * Validate an NBT string
+     *
      * @param nbtString NBT string to validate
      * @return True if NBT string is valid, otherwise false
      */
-    public boolean validateNBT(String nbtString) {
+    public static boolean validateNBT(String nbtString) {
         if (nbtString == null) return false;
         try {
             new NBTContainer(nbtString);
@@ -54,7 +49,7 @@ public class NBTApi {
         return true;
     }
 
-    private void sendError(String error, Exception exception) {
+    private static void sendError(String error, Exception exception) {
         Util.skriptError("&cInvalid NBT: &b" + error + "&c");
         if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG && exception != null) {
             exception.printStackTrace();
@@ -89,8 +84,8 @@ public class NBTApi {
      * Add NBT to an object.
      *
      * @param object Object to add NBT to
-     * @param value NBT string to add to object
-     * @param type Type of object
+     * @param value  NBT string to add to object
+     * @param type   Type of object
      * @return Object with the new NBT value
      */
     @Nullable
@@ -139,7 +134,8 @@ public class NBTApi {
                 NBTTileEntity tile = new NBTTileEntity(((Block) object).getState());
                 try {
                     tile.mergeCompound(new NBTContainer(value));
-                } catch (NbtApiException ignore) {}
+                } catch (NbtApiException ignore) {
+                }
                 return object;
             default:
                 if (CONFIG.SETTINGS_DEBUG)
@@ -152,8 +148,8 @@ public class NBTApi {
      * Set NBT for an object.
      *
      * @param object Object to set NBT for
-     * @param value NBT string to set to object
-     * @param type Type of object
+     * @param value  NBT string to set to object
+     * @param type   Type of object
      * @return Object with the new NBT value
      */
     @Nullable
@@ -197,7 +193,7 @@ public class NBTApi {
      * Get NBT from an object
      *
      * @param object Object to get NBT from
-     * @param type Type of object
+     * @param type   Type of object
      * @return NBT string of object
      */
     @Nullable
@@ -282,6 +278,146 @@ public class NBTApi {
     }
 
     /**
+     * Get an {@link ItemType} from an {@link NBTCompound}
+     *
+     * @param nbt Full NBT Compound
+     * @return New ItemType from NBT Compound
+     */
+    public ItemType getItemTypeFromNBT(NBTCompound nbt) {
+        return new ItemType(getItemStackFromNBT(nbt));
+    }
+
+    /**
+     * Get an {@link ItemStack} from an {@link NBTCompound}
+     *
+     * @param nbt Full NBT Compound
+     * @return New ItemStack from NBT Compound
+     */
+    public ItemStack getItemStackFromNBT(NBTCompound nbt) {
+        return NBTItem.convertNBTtoItem(nbt);
+    }
+
+    /**
+     * Delete a tag from an {@link NBTCompound}
+     *
+     * @param tag         Tag to delete
+     * @param nbtCompound Compound to remove tag from
+     */
+    public void deleteTag(@NotNull String tag, @NotNull NBTCompound nbtCompound) {
+        NBTCompound compound = nbtCompound;
+        String key = tag;
+        if (tag.contains(";")) {
+            String[] splits = tag.split(";");
+            for (int i = 0; i < splits.length - 1; i++) {
+                if (compound.hasKey(splits[i])) {
+                    compound = compound.getCompound(splits[i]);
+                }
+            }
+            key = splits[splits.length - 1];
+        }
+        compound.removeKey(key);
+    }
+
+    /**
+     * Set a specific tag of an {@link NBTCompound}
+     *
+     * @param tag         Tag that will be set
+     * @param nbtCompound Compound to change
+     * @param object      Value of tag to set to
+     */
+    public void setTag(@NotNull String tag, @NotNull NBTCompound nbtCompound, @NotNull Object[] object) {
+        NBTCompound compound = nbtCompound;
+        String key = tag;
+        if (tag.contains(";")) {
+            String[] splits = tag.split(";");
+            for (int i = 0; i < splits.length - 1; i++) {
+                if (compound.hasKey(splits[i])) {
+                    compound = compound.getCompound(splits[i]);
+                }
+            }
+            key = splits[splits.length - 1];
+        }
+
+        boolean custom = !compound.hasKey(key);
+        boolean isSingle = object.length == 1;
+        NBTType type = compound.getType(key);
+        Object singleObject = object[0];
+
+        if ((type == NBTType.NBTTagString && singleObject instanceof String) || (custom && isSingle && singleObject instanceof String)) {
+            compound.setString(key, ((String) singleObject));
+
+        } else if ((type == NBTType.NBTTagByte && singleObject instanceof Number) ||
+                (custom && isSingle && singleObject instanceof Long && ((Long) singleObject) <= Byte.MAX_VALUE && ((Long) singleObject) >= Byte.MIN_VALUE)) {
+            compound.setByte(key, ((Number) singleObject).byteValue());
+
+        } else if ((type == NBTType.NBTTagShort && singleObject instanceof Number) ||
+                (custom && isSingle && singleObject instanceof Long && ((Long) singleObject) <= Short.MAX_VALUE && ((Long) singleObject) >= Short.MIN_VALUE)) {
+            compound.setShort(key, ((Number) singleObject).shortValue());
+
+        } else if ((type == NBTType.NBTTagInt && singleObject instanceof Number) ||
+                (custom && isSingle && singleObject instanceof Long && ((Long) singleObject) <= Integer.MAX_VALUE && ((Long) singleObject) >= Integer.MIN_VALUE)) {
+            compound.setInteger(key, ((Number) singleObject).intValue());
+
+        } else if ((type == NBTType.NBTTagLong && singleObject instanceof Number) || (custom && isSingle && singleObject instanceof Long)) {
+            compound.setLong(key, ((Number) singleObject).longValue());
+
+        } else if ((type == NBTType.NBTTagFloat && singleObject instanceof Number) ||
+                (custom && isSingle && singleObject instanceof Double && ((Double) singleObject) <= Double.MAX_VALUE && ((Double) singleObject) >= Double.MIN_NORMAL)) {
+            compound.setFloat(key, ((Number) singleObject).floatValue());
+
+        } else if ((type == NBTType.NBTTagDouble && singleObject instanceof Number) || (custom && isSingle && singleObject instanceof Double)) {
+            compound.setDouble(key, ((Number) singleObject).doubleValue());
+
+        } else if (type == NBTType.NBTTagCompound && singleObject instanceof NBTCompound) {
+            NBTCompound comp = compound.getCompound(key);
+            for (String compKey : comp.getKeys()) {
+                comp.removeKey(compKey);
+            }
+            comp.mergeCompound(((NBTCompound) singleObject));
+
+        } else if (type == NBTType.NBTTagIntArray || (custom && !isSingle && (singleObject instanceof Long || singleObject instanceof Integer))) {
+            int[] n = new int[object.length];
+            for (int i = 0; i < object.length; i++) {
+                n[i] = ((Number) object[i]).intValue();
+            }
+            compound.setIntArray(key, n);
+
+        } else if (type == NBTType.NBTTagByteArray) {
+            byte[] n = new byte[object.length];
+            for (int i = 0; i < object.length; i++) {
+                n[i] = (byte) object[i];
+            }
+            compound.setByteArray(key, n);
+
+        } else if (type == NBTType.NBTTagList || (custom && !isSingle)) {
+            if (singleObject instanceof Integer) {
+                NBTList<Integer> list = compound.getIntegerList(key);
+                list.clear();
+                for (Object o : object) {
+                    list.add(((Number) o).intValue());
+                }
+            } else if (singleObject instanceof Double) {
+                NBTList<Double> list = compound.getDoubleList(key);
+                for (Object o : object) {
+                    list.add(((Number) o).doubleValue());
+                }
+            } else if (singleObject instanceof NBTCompound) {
+                NBTCompoundList list = compound.getCompoundList(key);
+                for (Object o : object) {
+                    list.addCompound(((NBTCompound) o));
+                }
+            } else if (singleObject instanceof String) {
+                NBTList<String> list = compound.getStringList(key);
+                for (Object o : object) {
+                    list.add((String) o);
+                }
+            }
+        } else {
+            Util.skriptError("Other-> KEY: " + key + " VALUE: " + singleObject + " VALUE-CLASS: " + object.getClass());
+        }
+    }
+
+    /**
      * Get a specific tag from an NBT string
      *
      * @param tag Tag to check for
@@ -320,12 +456,10 @@ public class NBTApi {
             case NBTTagByteArray:
                 return compound.getByteArray(tag);
             case NBTTagCompound:
-                return compound.getCompound(tag).toString();
+                return compound.getCompound(tag);
             case NBTTagList:
                 List<Object> list = new ArrayList<>();
-                for (NBTCompound comp : compound.getCompoundList(tag)) {
-                    list.add(comp.toString());
-                }
+                list.addAll(compound.getCompoundList(tag));
                 list.addAll(compound.getDoubleList(tag));
                 list.addAll(compound.getFloatList(tag));
                 list.addAll(compound.getIntegerList(tag));
