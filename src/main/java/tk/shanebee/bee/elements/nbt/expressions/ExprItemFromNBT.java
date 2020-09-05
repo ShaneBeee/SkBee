@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
         "It can also be useful for creating your own serializing system. The NBT string required for this must be an item's FULL item NBT ",
         "(This must include the item type and amount, example of full: \"{id:\"minecraft:iron_sword\",tag:{Damage:0},Count:1b}\"",
         " example of partial nbt of the same item: \"{Damage:0}\")."})
-@Examples({"set {_i} to item from nbt \"{id:\"minecraft:iron_sword\",tag:{Damage:0},Count:1b}\"", "\n",
+@Examples({"set {_i} to item from nbt \"{id:\"\"minecraft:iron_sword\"\",tag:{Damage:0},Count:1b}\"", "\n",
         "set {_nbt::*} to tag \"Inventory\" of file nbt of \"world/playerdata/some-players-uuid.dat\"",
         "loop {_nbt::*}",
         "\tset {_i} to item from nbt loop-value"})
