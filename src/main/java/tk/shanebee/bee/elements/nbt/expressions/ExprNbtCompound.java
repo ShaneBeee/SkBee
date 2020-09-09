@@ -66,7 +66,10 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             if (object instanceof Block) {
                 try {
                     compound = new NBTTileEntity(((Block) object).getState());
-                } catch (NbtApiException ignore) {
+                } catch (NbtApiException ex) {
+                    if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+                        ex.printStackTrace();
+                    }
                 }
             } else if (object instanceof Entity) {
                 compound = new NBTEntity(((Entity) object));
