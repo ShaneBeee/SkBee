@@ -23,32 +23,39 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
 
 import javax.annotation.Nullable;
 
 @Name("NBT - Compound of")
-@Description({"Get the nbt compound of a block/entity/item. This is a more advanced version of NBT than just getting an NBT string ",
+@Description({"Get the nbt compound of a block/entity/item/file. This is a more advanced version of NBT than just getting an NBT string ",
         "which allows for better manipulation. Optionally you can return a copy of the compound. This way you can modify it without ",
         "actually modifying the original compound, for example when grabbing the compound from an entity, modifying it and applying to ",
-        "other entities."})
+        "other entities. NBT from files and items will not be the original, but will be a copy."})
 @Examples({"set {_n} to nbt compound of player's tool",
         "set {_nbt} to nbt compound of target entity",
-        "set {_n} to nbt compound of \"{id:\"\"minecraft:diamond_sword\"\",tag:{Damage:0,Enchantments:[{id:\"\"minecraft:sharpness\"\",lvl:3s}]},Count:1b}\""})
+        "set {_n} to nbt compound of \"{id:\"\"minecraft:diamond_sword\"\",tag:{Damage:0,Enchantments:[{id:\"\"minecraft:sharpness\"\",lvl:3s}]},Count:1b}\"",
+        "set {_nbt} to nbt compound of file \"world/playerdata/some-uuid.dat\""})
 @Since("INSERT VERSION")
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
+    private final static NBTApi NBT_API;
     static {
+        NBT_API = SkBee.getPlugin().getNbtApi();
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-                "nbt compound [(1¦copy)] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings%");
+                "nbt compound [(1¦copy)] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings%",
+                "nbt compound (of|from) file[s] %strings%");
     }
 
     private boolean copy;
+    private boolean file;
 
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         setExpr(exprs[0]);
         copy = parseResult.mark == 1;
+        file = matchedPattern == 1;
         return true;
     }
 
@@ -76,8 +83,15 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                     compound = NBTItem.convertItemtoNBT(stack);
                 }
             } else if (object instanceof String) {
-                if (NBTApi.validateNBT(((String) object))) {
-                    compound = new NBTContainer((String) object);
+                if (file) {
+                    String fileNBT = NBT_API.getNBT(object, NBTApi.ObjectType.FILE);
+                    if (fileNBT != null) {
+                        compound = new NBTContainer(fileNBT);
+                    }
+                } else {
+                    if (NBTApi.validateNBT(((String) object))) {
+                        compound = new NBTContainer((String) object);
+                    }
                 }
             }
             if (compound != null) {
