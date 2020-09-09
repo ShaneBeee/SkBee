@@ -368,7 +368,7 @@ public class NBTApi {
         } else if ((type == NBTType.NBTTagDouble && singleObject instanceof Number) || (custom && isSingle && singleObject instanceof Double)) {
             compound.setDouble(key, ((Number) singleObject).doubleValue());
 
-        } else if ((type == NBTType.NBTTagCompound || custom) && singleObject instanceof NBTCompound) {
+        } else if ((type == NBTType.NBTTagCompound || (custom && isSingle)) && singleObject instanceof NBTCompound) {
             NBTCompound comp;
             if (custom) {
                 comp = compound.addCompound(key);
