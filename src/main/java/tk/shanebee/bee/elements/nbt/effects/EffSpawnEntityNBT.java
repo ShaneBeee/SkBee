@@ -33,8 +33,11 @@ import javax.annotation.Nullable;
 public class EffSpawnEntityNBT extends Effect {
 
     private static final NBTApi NBT_API;
+    private static final boolean HAS_CONSUMER;
 
     static {
+        HAS_CONSUMER = Skript.classExists("org.bukkit.util.Consumer") &&
+                Skript.methodExists(World.class, "spawn", Location.class, Class.class, Consumer.class);
         Skript.registerEffect(EffSpawnEntityNBT.class,
                 "spawn %entitytypes% [%directions% %locations%] with nbt %string/nbtcompound%",
                 "spawn %number% of %entitytypes% [%directions% %locations%] with nbt %string/nbtcompound%");
@@ -84,7 +87,7 @@ public class EffSpawnEntityNBT extends Effect {
     }
 
     private <T extends Entity> Entity spawn(Location loc, Class<T> type, String nbt) {
-        if (Skript.methodExists(World.class, "spawn", Location.class, Class.class, Consumer.class)) {
+        if (HAS_CONSUMER) {
             return loc.getWorld().spawn(loc, type, ent -> NBT_API.addNBT(ent, nbt, ObjectType.ENTITY));
         }
         Entity e = loc.getWorld().spawn(loc, type);
