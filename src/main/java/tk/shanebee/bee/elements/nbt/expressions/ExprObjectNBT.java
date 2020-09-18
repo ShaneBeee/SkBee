@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -34,12 +35,12 @@ import tk.shanebee.bee.api.NBTApi.ObjectType;
         "add \"{RequiredPlayerRange:0s}\" to targeted block's nbt", "add \"{SpawnData:{id:\"\"minecraft:wither\"\"}}\" to nbt of clicked block",
         "set {_nbt} to file-nbt of \"world/playerdata/some-uuid-here.dat\""})
 @Since("1.0.0")
-public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
+public class ExprObjectNBT extends SimplePropertyExpression<Object, Object> {
 
     private static final NBTApi NBT_API;
 
     static {
-        register(ExprObjectNBT.class, String.class, "[(1¦full )][(entity|item|slot|block|tile[(-| )]entity|file)(-| )]nbt",
+        register(ExprObjectNBT.class, Object.class, "[(1¦full )][(entity|item|slot|block|tile[(-| )]entity|file)(-| )]nbt",
                 "block/entity/itemstack/itemtype/slot/string");
         NBT_API = SkBee.getPlugin().getNbtApi();
     }
@@ -76,7 +77,7 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
     @Override
     public Class<?>[] acceptChange(final @NotNull ChangeMode mode) {
         if (mode == ChangeMode.ADD || mode == ChangeMode.SET || mode == ChangeMode.RESET)
-            return CollectionUtils.array(String.class);
+            return CollectionUtils.array(Object.class);
         return null;
     }
 
@@ -85,8 +86,13 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, String> {
         Object object = getExpr().getSingle(event);
         if (object == null) return;
 
-        String value = delta != null ? ((String) delta[0]) : "{}";
-        if (!NBT_API.validateNBT(value)) {
+        Object nbtObject = delta != null ? delta[0] : null;
+
+        String value = "{}";
+        if (nbtObject != null) {
+            value = nbtObject instanceof NBTCompound ? nbtObject.toString() : nbtObject instanceof String ? (String) nbtObject : "{}";
+        }
+        if (!NBTApi.validateNBT(value)) {
             return;
         }
         ObjectType objectType = null;

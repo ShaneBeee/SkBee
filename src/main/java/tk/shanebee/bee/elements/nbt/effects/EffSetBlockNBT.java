@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -35,11 +36,11 @@ public class EffSetBlockNBT extends Effect {
         if (Skript.classExists("org.bukkit.block.data.BlockData") && Skript.classExists("ch.njol.skript.expressions.ExprBlockData")) {
             BLOCK_DATA = true;
             Skript.registerEffect(EffSetBlockNBT.class,
-                    "set (nbt[(-| )]block|tile[(-| )]entity) %directions% %locations% to %itemtype/blockdata% with nbt %string%");
+                    "set (nbt[(-| )]block|tile[(-| )]entity) %directions% %locations% to %itemtype/blockdata% with nbt %string/nbtcompound%");
         } else {
             BLOCK_DATA = false;
             Skript.registerEffect(EffSetBlockNBT.class,
-                    "set (nbt[(-| )]block|tile[(-| )]entity) %directions% %locations% to %itemtype% with nbt %string%");
+                    "set (nbt[(-| )]block|tile[(-| )]entity) %directions% %locations% to %itemtype% with nbt %string/nbtcompound%");
         }
         NBT_API = SkBee.getPlugin().getNbtApi();
     }
@@ -47,7 +48,7 @@ public class EffSetBlockNBT extends Effect {
     @SuppressWarnings("null")
     private Expression<Location> locations;
     private Expression<Object> type;
-    private Expression<String> nbtString;
+    private Expression<Object> nbtObject;
 
 
     @SuppressWarnings({"unchecked", "null"})
@@ -55,13 +56,14 @@ public class EffSetBlockNBT extends Effect {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parser) {
         type = (Expression<Object>) exprs[2];
         locations = Direction.combine((Expression<? extends Direction>) exprs[0], (Expression<? extends Location>) exprs[1]);
-        nbtString = (Expression<String>) exprs[3];
+        nbtObject = (Expression<Object>) exprs[3];
         return true;
     }
 
     @Override
     public void execute(final @NotNull Event event) {
-        String value = this.nbtString.getSingle(event);
+        Object nbtObject = this.nbtObject.getSingle(event);
+        String value = nbtObject instanceof NBTCompound ? nbtObject.toString() : ((String) nbtObject);
         if (value == null) return;
         if (BLOCK_DATA) {
             final BlockData blockData = ((BlockData) type.getSingle(event));
@@ -86,7 +88,7 @@ public class EffSetBlockNBT extends Effect {
     @Override
     public @NotNull String toString(Event e, boolean debug) {
         return "set block " + locations.toString(e, debug) + " to " +
-                type.toString(e, debug) + " with nbt " + nbtString.toString(e, debug);
+                type.toString(e, debug) + " with nbt " + nbtObject.toString(e, debug);
     }
 
 }

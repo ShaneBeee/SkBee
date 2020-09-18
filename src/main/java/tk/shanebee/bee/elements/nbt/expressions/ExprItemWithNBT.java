@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
@@ -29,25 +30,26 @@ public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
     private static final NBTApi NBT_API;
     static {
         Skript.registerExpression(ExprItemWithNBT.class, ItemType.class, ExpressionType.PROPERTY,
-                "%itemtype% with [item( |-)]nbt %string%");
+                "%itemtype% with [item( |-)]nbt %string/nbtcompound%");
         NBT_API = SkBee.getPlugin().getNbtApi();
     }
 
     @SuppressWarnings("null")
-    private Expression<String> nbt;
+    private Expression<Object> nbt;
 
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         setExpr((Expression<ItemType>) exprs[0]);
-        nbt = (Expression<String>) exprs[1];
+        nbt = (Expression<Object>) exprs[1];
         return true;
     }
 
     @Override
     protected ItemType[] get(Event e, ItemType[] source) {
-        String nbt = this.nbt.getSingle(e);
-        if (!NBT_API.validateNBT(nbt)) return null;
+        Object object = this.nbt.getSingle(e);
+        String nbt = object instanceof NBTCompound ? object.toString() : ((String) object);
+        if (!NBTApi.validateNBT(nbt)) return null;
         return get(source, item -> {
             if (nbt != null)
                 NBT_API.addNBT(item, nbt, ObjectType.ITEM_TYPE);

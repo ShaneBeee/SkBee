@@ -12,6 +12,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -32,11 +33,14 @@ import javax.annotation.Nullable;
 public class EffSpawnEntityNBT extends Effect {
 
     private static final NBTApi NBT_API;
+    private static final boolean HAS_CONSUMER;
 
     static {
+        HAS_CONSUMER = Skript.classExists("org.bukkit.util.Consumer") &&
+                Skript.methodExists(World.class, "spawn", Location.class, Class.class, Consumer.class);
         Skript.registerEffect(EffSpawnEntityNBT.class,
-                "spawn %entitytypes% [%directions% %locations%] with nbt %string%",
-                "spawn %number% of %entitytypes% [%directions% %locations%] with nbt %string%");
+                "spawn %entitytypes% [%directions% %locations%] with nbt %string/nbtcompound%",
+                "spawn %number% of %entitytypes% [%directions% %locations%] with nbt %string/nbtcompound%");
         NBT_API = SkBee.getPlugin().getNbtApi();
     }
 
@@ -44,7 +48,7 @@ public class EffSpawnEntityNBT extends Effect {
     private Expression<Location> locations;
     @SuppressWarnings("null")
     private Expression<EntityType> types;
-    private Expression<String> nbtString;
+    private Expression<Object> nbt;
     @Nullable
     private Expression<Number> amount;
 
@@ -54,13 +58,14 @@ public class EffSpawnEntityNBT extends Effect {
         amount = matchedPattern == 0 ? null : (Expression<Number>) (exprs[0]);
         types = (Expression<EntityType>) exprs[matchedPattern];
         locations = Direction.combine((Expression<? extends Direction>) exprs[1 + matchedPattern], (Expression<? extends Location>) exprs[2 + matchedPattern]);
-        nbtString = (Expression<String>) exprs[3 + matchedPattern];
+        nbt = (Expression<Object>) exprs[3 + matchedPattern];
         return true;
     }
 
     @Override
     public void execute(final @NotNull Event event) {
-        String value = this.nbtString.getSingle(event);
+        Object nbtObject = this.nbt.getSingle(event);
+        String value = nbtObject instanceof NBTCompound ? nbtObject.toString() : (String) nbtObject;
         final Number a = amount != null ? amount.getSingle(event) : 1;
         if (a == null)
             return;
@@ -78,11 +83,11 @@ public class EffSpawnEntityNBT extends Effect {
     @Override
     public @NotNull String toString(Event e, boolean debug) {
         return "spawn " + (amount != null ? amount.toString(e, debug) + " " : "") + types.toString(e, debug) +
-                " " + locations.toString(e, debug) + " " + nbtString.toString(e, debug);
+                " " + locations.toString(e, debug) + " " + nbt.toString(e, debug);
     }
 
     private <T extends Entity> Entity spawn(Location loc, Class<T> type, String nbt) {
-        if (Skript.methodExists(World.class, "spawn", Location.class, Class.class, Consumer.class)) {
+        if (HAS_CONSUMER) {
             return loc.getWorld().spawn(loc, type, ent -> NBT_API.addNBT(ent, nbt, ObjectType.ENTITY));
         }
         Entity e = loc.getWorld().spawn(loc, type);
