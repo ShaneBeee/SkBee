@@ -6,7 +6,7 @@
 
     <groupId>tk.shanebee</groupId>
     <artifactId>SkBee</artifactId>
-    <version>1.5.2</version>
+    <version>1.6.0</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -64,6 +64,7 @@
         <dependency>
             <groupId>com.github.ShaneBeee</groupId>
             <artifactId>Item-NBT-API</artifactId>
+            <!--suppress MavenModelInspection -->
             <version>feature~custom-logger-SNAPSHOT</version>
             <exclusions>
                 <exclusion>

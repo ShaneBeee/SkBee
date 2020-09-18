@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 @Examples({"set {_p} to pretty nbt from nbt compound of player's tool",
         "send pretty nbt from {_nbt} to player",
         "send pretty nbt from {_nbt} with split \" \" to console"})
-@Since("INSERT VERSION")
+@Since("1.6.0")
 public class ExprPrettyNBT extends PropertyExpression<Object, String> {
 
     static {

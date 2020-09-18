@@ -37,7 +37,7 @@ import javax.annotation.Nullable;
         "set {_nbt} to nbt compound of target entity",
         "set {_n} to nbt compound of \"{id:\"\"minecraft:diamond_sword\"\",tag:{Damage:0,Enchantments:[{id:\"\"minecraft:sharpness\"\",lvl:3s}]},Count:1b}\"",
         "set {_nbt} to nbt compound of file \"world/playerdata/some-uuid.dat\""})
-@Since("INSERT VERSION")
+@Since("1.6.0")
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     private final static NBTApi NBT_API;

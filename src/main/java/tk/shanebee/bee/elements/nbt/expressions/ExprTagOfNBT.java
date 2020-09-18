@@ -27,7 +27,7 @@ import java.util.ArrayList;
 @Name("NBT - Tag")
 @Description({"Returns the value of the specified tag of the specified NBT. Also supports getting nested tags using a semi colon as a delimiter. ",
         "If the return value is a list, you can use it as a list, as it will automatically split it for ya. ",
-        "As of INSERT VERSION you can also set/delete tags, but only with NBT compounds, not NBT strings. Do note that setting the tag of an item ",
+        "As of 1.6.0 you can also set/delete tags, but only with NBT compounds, not NBT strings. Do note that setting the tag of an item ",
         "will not update it, you will have to create a variable for the NBT compound of the item, set the tag of that variable, then set the item back ",
         "using the 'nbt item of' expression. I understand this is a bit convoluted but unfortunately that is just how it works. See examples. ",
         "Also note that you can NOT create custom tags for entities/blocks."})

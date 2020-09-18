@@ -20,7 +20,7 @@ import tk.shanebee.bee.api.NBTApi;
 import javax.annotation.Nullable;
 
 @Name("NBT - Item from NBT")
-@Description({"This expression allows you to grab an item from NBT strings or compounds (compound support added in INSERT VERSION). ",
+@Description({"This expression allows you to grab an item from NBT strings or compounds (compound support added in 1.6.0). ",
         "This can be useful when wanting to grab items from file nbt, or nbt of an entity or an inventory holding block (like a chest or furnace).",
         "It can also be useful for creating your own serializing system. The NBT string required for this must be an item's FULL item NBT ",
         "(This must include the item type and amount, example of full: \"{id:\"minecraft:iron_sword\",tag:{Damage:0},Count:1b}\"",

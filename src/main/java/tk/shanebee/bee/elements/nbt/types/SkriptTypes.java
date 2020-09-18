@@ -22,7 +22,7 @@ public class SkriptTypes {
                 .description("Represents the NBT compound of an entity/block/item.")
                 .usage("{id:\"minecraft:netherite_axe\",tag:{Damage:0,Enchantments:[{id:\"minecraft:unbreaking\",lvl:2s}]},Count:1b}")
                 .examples("set {_a} to nbt compound of player")
-                .since("INSERT VERSION")
+                .since("1.6.0")
                 .parser(new Parser<NBTCompound>() {
 
                     @Override
