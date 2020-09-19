@@ -66,12 +66,17 @@ public class EffSetBlockNBT extends Effect {
         String value = nbtObject instanceof NBTCompound ? nbtObject.toString() : ((String) nbtObject);
         if (value == null) return;
         if (BLOCK_DATA) {
-            final BlockData blockData = ((BlockData) type.getSingle(event));
-            if (blockData == null) return;
+            Object typeObject = type.getSingle(event);
+            if (typeObject == null) return;
             for (final Location loc : locations.getArray(event)) {
                 assert loc != null : locations;
                 Block block = loc.getBlock();
-                block.setBlockData(blockData);
+                if (typeObject instanceof BlockData) {
+                    block.setBlockData(((BlockData) typeObject));
+                } else {
+                    ItemType itemType = ((ItemType) typeObject);
+                    itemType.setBlock(block, true);
+                }
                 NBT_API.addNBT(block, value, ObjectType.BLOCK);
             }
         } else {
