@@ -10,7 +10,6 @@ elements:
   nbt: true
 
   # Enable Scoreboard elements
-  # Note: Only available on 1.13+
   scoreboard: true
 
   # Enable custom recipe elements
