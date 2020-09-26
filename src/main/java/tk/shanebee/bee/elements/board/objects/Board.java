@@ -128,14 +128,23 @@ public class Board {
     public void setLine(int line, String text) {
         Validate.isBetween(line, 1, 15);
         Team t = lines[line - 1];
-        if (ChatColor.stripColor(text).length() > (MAX / 2)) {
+        if (text.length() > (MAX / 2)) {
             String prefix = getColString(text.substring(0, (MAX / 2)));
-            t.setPrefix(prefix);
             String lastColor = ChatColor.getLastColors(prefix);
             int splitMax = Math.min(text.length(), MAX - lastColor.length());
-            t.setSuffix(getColString(lastColor + text.substring((MAX / 2), splitMax)));
+            String suffix = getColString(lastColor + text.substring((MAX / 2), splitMax));
+
+            // Fix for split issues splitting between § and color code
+            if (prefix.substring(((MAX / 2) - 1), MAX / 2).equalsIgnoreCase("§")) {
+                prefix = prefix.substring(0, (MAX / 2) - 1);
+                int length = text.length() > (MAX - 2) ? (MAX - 1) : text.length();
+                suffix = getColString(text.substring((MAX / 2) - 1, length));
+            }
+            t.setPrefix(prefix);
+            t.setSuffix(suffix);
         } else {
-            t.setPrefix(getColString(text));
+            String prefix = getColString(text);
+            t.setPrefix(prefix);
             t.setSuffix("");
         }
         board.getScore(getColString(entries[line - 1])).setScore(line);
