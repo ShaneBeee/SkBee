@@ -142,6 +142,11 @@ public class SkBee extends JavaPlugin {
             Util.log("&7 - Scoreboard elements are only available on 1.8.8+");
         }
     }
+    
+    private void skReload() {
+        return;
+        /* Reload thing */
+    }
 
     private void loadBoundElements() {
         if (!this.config.ELEMENTS_BOUND) {
