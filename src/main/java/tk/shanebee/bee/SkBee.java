@@ -18,6 +18,7 @@ import tk.shanebee.bee.api.util.LoggerBee;
 import tk.shanebee.bee.api.util.Util;
 import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
+import tk.shanebee.bee.elements.board.objects.Board;
 import tk.shanebee.bee.elements.bound.config.BoundConfig;
 import tk.shanebee.bee.elements.bound.objects.Bound;
 import tk.shanebee.bee.elements.virtualfurnace.listener.VirtualFurnaceListener;
@@ -263,6 +264,7 @@ public class SkBee extends JavaPlugin {
         if (this.virtualFurnaceAPI != null) {
             this.virtualFurnaceAPI.disableAPI();
         }
+        Board.clearBoards();
     }
 
     /**
