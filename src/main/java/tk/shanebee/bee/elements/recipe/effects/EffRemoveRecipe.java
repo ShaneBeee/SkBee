@@ -20,7 +20,7 @@ import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
         "but it is best to do so during a server load event. If a recipe is removed whilst a player is online ",
         "it will still show up in their recipe book, but they will not be able to craft it. If need be, you can get ",
         "a list of all recipes by simply typing \"/minecraft:recipe give YourName \" in game.",
-        "You can remove Minecraft recipes, custom recipes and recipes from other plugins."})
+        "You can remove Minecraft recipes, custom recipes and recipes from other plugins. Requires MC 1.13+"})
 @Examples({"remove mc recipe \"acacia_boat\"",
         "remove minecraft recipe \"cooked_chicken_from_campfire_cooking\"",
         "remove recipe \"minecraft:diamond_sword\"",

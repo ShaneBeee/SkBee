@@ -12,8 +12,9 @@ public class EvtRecipe {
         if (Skript.classExists("org.bukkit.event.player.PlayerRecipeDiscoverEvent")) {
             Skript.registerEvent("Recipe - Discover Event", SimpleEvent.class, PlayerRecipeDiscoverEvent.class,
                     "recipe discover[y]")
-                    .description("Called when a player unlocks a recipe. " +
-                            "`event-string` = the recipe namespace (this will also include either \"minecraft:\" or \"mykeyhere:\")")
+                    .description("Called when a player unlocks a recipe. ",
+                            "`event-string` = the recipe namespace (this will also include either \"minecraft:\" or \"mykeyhere:\")",
+                            "Requires MC 1.13+")
                     .examples("on recipe discover:",
                             "\tif event-string = \"minecraft:diamond_block\"",
                             "\t\tcancel event")

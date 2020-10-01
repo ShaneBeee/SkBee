@@ -24,7 +24,7 @@ import javax.annotation.Nullable;
 @Name("Recipe - Smithing")
 @Description("Register a new smithing recipe. " +
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores." +
-        " Used for recipe discovery/unlocking recipes for players. ")
+        " Used for recipe discovery/unlocking recipes for players. Requires MC 1.13+")
 @Examples({"on load:",
         "\tregister new smithing recipe for diamond chestplate using an iron chestplate and a diamond with id \"smith_diamond_chestplate\""})
 @RequiredPlugins("1.16+")

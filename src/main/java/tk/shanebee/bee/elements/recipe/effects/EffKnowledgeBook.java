@@ -23,7 +23,7 @@ import java.util.List;
 
 @Name("Recipe - Knowledge Book")
 @Description({"Add/Remove custom or minecraft recipes to/from a knowledge book item.",
-        "Optional string for plugin name, to add recipes from other plugins."})
+        "Optional string for plugin name, to add recipes from other plugins. Requires MC 1.13+"})
 @Examples({"add custom recipe \"my_recipe\" to player's tool",
         "add minecraft recipe \"cooked_cod_from_campfire_cooking\" to {_book}"})
 @Since("1.0.0")

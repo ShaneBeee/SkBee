@@ -26,7 +26,8 @@ import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores.",
         "Used for recipe discovery/unlocking recipes for players. ",
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
-        "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the config to whatever you want."})
+        "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the config to whatever you want.",
+        "Requires MC 1.13+"})
 @Examples({"on skript load:", "\tregister new stone cutting recipe for diamond using diamond ore with id \"cutting_diamond\""})
 @RequiredPlugins("1.14+")
 @Since("1.0.0")

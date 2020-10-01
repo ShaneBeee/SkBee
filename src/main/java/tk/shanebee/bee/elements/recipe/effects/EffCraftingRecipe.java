@@ -24,12 +24,13 @@ import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
 
 @SuppressWarnings({"NullableProblems", "ConstantConditions"})
 @Name("Recipe - Shaped/Shapeless")
-@Description({"Register a new shaped/shapeless recipe for a specific item using custom ingredients. " +
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores." +
-        " Used for recipe discovery/unlocking recipes for players. " +
-        "You may also include an optional group for recipes. These will group the recipes together in the recipe book. " +
+@Description({"Register a new shaped/shapeless recipe for a specific item using custom ingredients. ",
+        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores.",
+        " Used for recipe discovery/unlocking recipes for players. ",
+        "You may also include an optional group for recipes. These will group the recipes together in the recipe book. ",
         "<b>NOTE:</b> Recipes with 4 or less ingredients will be craftable in the player's crafting grid.",
-        "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the config to whatever you want."})
+        "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the config to whatever you want.",
+        "Requires MC 1.13+"})
 @Examples({"on load:",
         "\tregister new shaped recipe for elytra using air, iron chestplate, air, air, iron chestplate and air with id \"elytra\"",
         "\tset {_strong} to emerald named \"&3Strong Emerald\"",

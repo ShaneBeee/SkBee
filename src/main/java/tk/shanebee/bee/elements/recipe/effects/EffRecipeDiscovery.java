@@ -16,7 +16,7 @@ import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
 
 @Name("Recipe - Discovery")
 @Description("Lock/Unlock recipes for players. This uses the IDs we created earlier when registering recipes, " +
-        "you can also lock/unlock minecraft recipes.")
+        "you can also lock/unlock minecraft recipes. Requires MC 1.13+")
 @Examples({"unlock recipe \"smoking_cod\" for all players",
         "on pickup of diamonds:",
         "\tdiscover recipe \"fancy_diamonds\" for player"})

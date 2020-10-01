@@ -29,9 +29,8 @@ import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
 
 @SuppressWarnings({"deprecation", "NullableProblems", "ConstantConditions"})
 @Name("Recipe - Cooking")
-@Description({"Register new cooking recipes. " +
-        "On 1.13+ you can register recipes for furnaces. " +
-        "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires. " +
+@Description({"Register new cooking recipes. On 1.13+ you can register recipes for furnaces. ",
+        "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires. ",
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores. " +
         "Used for recipe discovery/unlocking recipes for players. " +
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
