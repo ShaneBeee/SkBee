@@ -19,6 +19,8 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -65,7 +67,10 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             NBTCompound compound = null;
             if (object instanceof Block) {
                 try {
-                    compound = new NBTTileEntity(((Block) object).getState());
+                    BlockState state = ((Block) object).getState();
+                    if (state instanceof TileState) {
+                        compound = new NBTTileEntity(state);
+                    }
                 } catch (NbtApiException ex) {
                     if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
                         ex.printStackTrace();
