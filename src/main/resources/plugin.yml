@@ -7,3 +7,4 @@ author: ShaneBee
 website: https://github.com/ShaneBeee/SkBee
 softdepend:
   - Skript
+  - FastAsyncWorldEdit
