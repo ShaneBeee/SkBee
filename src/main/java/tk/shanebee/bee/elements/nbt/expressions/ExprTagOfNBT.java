@@ -18,6 +18,7 @@ import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.NBT.NBTCustomEntity;
 import tk.shanebee.bee.api.NBTApi;
 import tk.shanebee.bee.api.util.Util;
 
@@ -44,12 +45,14 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
 
     private static final NBTApi NBT_API;
     private static final boolean DEBUG;
+    private static final boolean HAS_PERSISTENCE;
 
     static {
         Skript.registerExpression(ExprTagOfNBT.class, Object.class, ExpressionType.SIMPLE,
                 "tag %string% of %string/nbtcompound%", "%string% tag of %string/nbtcompound%");
         NBT_API = SkBee.getPlugin().getNbtApi();
         DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
+        HAS_PERSISTENCE = Skript.isRunningMinecraft(1, 14);
     }
 
     private Expression<String> tag;
@@ -100,8 +103,19 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         if (mode == ChangeMode.SET) {
             if (delta == null) return;
 
+            if (HAS_PERSISTENCE && compound instanceof NBTCustomEntity && tag.equalsIgnoreCase("custom")) {
+                Object custom = delta[0];
+                if (custom instanceof NBTCompound) {
+                    ((NBTCustomEntity) compound).setCustomNBT(((NBTCompound) custom));
+                }
+                return;
+            }
+
             NBT_API.setTag(tag, compound, delta);
         } else if (mode == ChangeMode.DELETE) {
+            if (HAS_PERSISTENCE && compound instanceof NBTCustomEntity && tag.equalsIgnoreCase("custom")) {
+                ((NBTCustomEntity) compound).deleteCustomNBT();
+            }
             NBT_API.deleteTag(tag, compound);
         }
     }

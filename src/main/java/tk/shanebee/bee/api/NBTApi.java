@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.NBT.NBTCustomEntity;
 import tk.shanebee.bee.api.reflection.SkReflection;
 import tk.shanebee.bee.api.util.Util;
 import tk.shanebee.bee.config.Config;
@@ -127,8 +128,14 @@ public class NBTApi {
                 }
                 return object;
             case ENTITY:
-                NBTEntity nbtEntity = new NBTEntity(((Entity) object));
-                nbtEntity.mergeCompound(new NBTContainer(value));
+                NBTCustomEntity nbtEntity = new NBTCustomEntity((Entity) object);
+                NBTCompound nbtCompound = new NBTContainer(value);
+                if (nbtCompound.hasKey("custom")) {
+                    NBTCompound custom = nbtEntity.getCustomNBT();
+                    custom.mergeCompound(nbtCompound.getCompound("custom"));
+                    nbtEntity.setCustomNBT(custom);
+                }
+                nbtEntity.mergeCompound(nbtCompound);
                 return object;
             case BLOCK:
                 NBTTileEntity tile = new NBTTileEntity(((Block) object).getState());

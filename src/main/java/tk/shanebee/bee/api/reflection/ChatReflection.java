@@ -1,6 +1,7 @@
 package tk.shanebee.bee.api.reflection;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.Bukkit;
 
 import java.lang.reflect.InvocationTargetException;
@@ -55,7 +56,7 @@ public class ChatReflection {
         String prettyM = Ver.getPretty(split != null);
         if (prettyM == null) return null;
 
-        Object nmsNBT = compound.getCompound();
+        Object nmsNBT = new NBTContainer(compound.toString()).getCompound();
         Class<?> iChatBaseComponent = ReflectionUtils.getNMSClass("IChatBaseComponent");
         Class<?> craftChatMessageClass = ReflectionUtils.getOBCClass("util.CraftChatMessage");
         try {

@@ -14,7 +14,6 @@ import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NBTEntity;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
@@ -26,6 +25,7 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.NBT.NBTCustomEntity;
 import tk.shanebee.bee.api.NBTApi;
 
 import javax.annotation.Nullable;
@@ -77,7 +77,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                     }
                 }
             } else if (object instanceof Entity) {
-                compound = new NBTEntity(((Entity) object));
+                compound = new NBTCustomEntity(((Entity) object));
             } else if (object instanceof ItemType) {
                 ItemStack stack = ((ItemType) object).getRandom();
                 if (stack != null) {
