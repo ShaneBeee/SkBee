@@ -5,12 +5,15 @@ import ch.njol.skript.util.slot.Slot;
 import de.tr7zw.changeme.nbtapi.*;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBT.NBTCustomEntity;
+import tk.shanebee.bee.api.NBT.NBTCustomTileEntity;
 import tk.shanebee.bee.api.reflection.SkReflection;
 import tk.shanebee.bee.api.util.Util;
 import tk.shanebee.bee.config.Config;
@@ -138,11 +141,17 @@ public class NBTApi {
                 nbtEntity.mergeCompound(nbtCompound);
                 return object;
             case BLOCK:
-                NBTTileEntity tile = new NBTTileEntity(((Block) object).getState());
-                try {
-                    tile.mergeCompound(new NBTContainer(value));
-                } catch (NbtApiException ignore) {
+                BlockState blockState = ((Block) object).getState();
+                if (!(blockState instanceof TileState)) return object;
+
+                NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity(((TileState) blockState));
+                NBTCompound updated = new NBTContainer(value);
+                if (updated.hasKey("custom")) {
+                    NBTCompound custom = nbtBlock.getCustomNBT();
+                    custom.mergeCompound(updated.getCompound("custom"));
+                    nbtBlock.setCustomNBT(custom);
                 }
+                nbtBlock.mergeCompound(updated);
                 return object;
             default:
                 if (CONFIG.SETTINGS_DEBUG)

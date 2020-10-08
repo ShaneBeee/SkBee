@@ -26,6 +26,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBT.NBTCustomEntity;
+import tk.shanebee.bee.api.NBT.NBTCustomTileEntity;
 import tk.shanebee.bee.api.NBTApi;
 
 import javax.annotation.Nullable;
@@ -66,15 +67,9 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
         return get(source, object -> {
             NBTCompound compound = null;
             if (object instanceof Block) {
-                try {
-                    BlockState state = ((Block) object).getState();
-                    if (state instanceof TileState) {
-                        compound = new NBTTileEntity(state);
-                    }
-                } catch (NbtApiException ex) {
-                    if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
-                        ex.printStackTrace();
-                    }
+                BlockState state = ((Block) object).getState();
+                if (state instanceof TileState) {
+                    compound = new NBTCustomTileEntity(((TileState) state));
                 }
             } else if (object instanceof Entity) {
                 compound = new NBTCustomEntity(((Entity) object));

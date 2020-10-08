@@ -19,6 +19,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBT.NBTCustomEntity;
+import tk.shanebee.bee.api.NBT.NBTCustomTileEntity;
 import tk.shanebee.bee.api.NBTApi;
 import tk.shanebee.bee.api.util.Util;
 
@@ -31,7 +32,9 @@ import java.util.ArrayList;
         "As of 1.6.0 you can also set/delete tags, but only with NBT compounds, not NBT strings. Do note that setting the tag of an item ",
         "will not update it, you will have to create a variable for the NBT compound of the item, set the tag of that variable, then set the item back ",
         "using the 'nbt item of' expression. I understand this is a bit convoluted but unfortunately that is just how it works. See examples. ",
-        "Also note that you can NOT create custom tags for entities/blocks."})
+        "Also note that you can NOT create custom tags for entities/blocks. As of INSERT VERSION blocks(tile entities)/entities will be able to hold custom nbt ",
+        "data in the \"custom\" tag of said block/entity. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen. ",
+        "That said, this system is a tad convoluted, see the SkBee WIKI for more details."})
 @Examples({"set {_tag} to tag \"Invulnerable\" of targeted entity's nbt",
         "send \"Tag: %tag \"\"CustomName\"\" of nbt of target entity%\" to player",
         "set {_tag} to \"Enchantments\" tag of nbt of player's tool",
@@ -103,18 +106,33 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         if (mode == ChangeMode.SET) {
             if (delta == null) return;
 
-            if (HAS_PERSISTENCE && compound instanceof NBTCustomEntity && tag.equalsIgnoreCase("custom")) {
+            if (HAS_PERSISTENCE && tag.equalsIgnoreCase("custom")) {
                 Object custom = delta[0];
-                if (custom instanceof NBTCompound) {
-                    ((NBTCustomEntity) compound).setCustomNBT(((NBTCompound) custom));
+                if (compound instanceof NBTCustomEntity) {
+                    if (custom instanceof NBTCompound) {
+                        ((NBTCustomEntity) compound).setCustomNBT(((NBTCompound) custom));
+                    }
+                    return;
                 }
-                return;
+                if (compound instanceof NBTCustomTileEntity) {
+                    if (custom instanceof NBTCompound) {
+                        ((NBTCustomTileEntity) compound).setCustomNBT(((NBTCompound) custom));
+                    }
+                    return;
+                }
             }
 
             NBT_API.setTag(tag, compound, delta);
         } else if (mode == ChangeMode.DELETE) {
-            if (HAS_PERSISTENCE && compound instanceof NBTCustomEntity && tag.equalsIgnoreCase("custom")) {
-                ((NBTCustomEntity) compound).deleteCustomNBT();
+            if (HAS_PERSISTENCE && tag.equalsIgnoreCase("custom")) {
+                if (compound instanceof NBTCustomEntity) {
+                    ((NBTCustomEntity) compound).deleteCustomNBT();
+                    return;
+                }
+                if (compound instanceof NBTCustomTileEntity) {
+                    ((NBTCustomTileEntity) compound).deleteCustomNBT();
+                    return;
+                }
             }
             NBT_API.deleteTag(tag, compound);
         }
