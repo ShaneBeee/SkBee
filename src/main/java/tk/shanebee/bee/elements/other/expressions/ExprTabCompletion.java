@@ -90,12 +90,11 @@ public class ExprTabCompletion extends SimpleExpression<String> {
             position = number.intValue();
         }
 
-        String buff = event.getBuffer();
-        String last = buff.substring(buff.length() - 1);
-        String[] buffers = buff.split(" ");
-
         switch (mode) {
             case SET:
+                String buff = event.getBuffer();
+                String[] buffers = buff.split(" ");
+                String last = buff.substring(buff.length() - 1);
                 if ((position == buffers.length && last.equalsIgnoreCase(" ")) ||
                         (position + 1 == buffers.length && !last.equalsIgnoreCase(" "))) {
                     String arg;
