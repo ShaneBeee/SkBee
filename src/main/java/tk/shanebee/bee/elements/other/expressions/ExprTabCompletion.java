@@ -37,7 +37,7 @@ import java.util.List;
         "on tab complete:",
         "\tif event-string contains \"/ver\":",
         "\t\tremove \"PermissionsEx\" from tab completions"})
-@Since("INSERT VERSION")
+@Since("1.7.0")
 public class ExprTabCompletion extends SimpleExpression<String> {
 
     static {

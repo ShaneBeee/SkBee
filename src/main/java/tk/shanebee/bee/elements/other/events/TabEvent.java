@@ -31,7 +31,7 @@ public class TabEvent extends SkriptEvent {
                             "on tab complete:",
                             "\tif event-string contains \"/ver\":",
                             "\t\tclear tab completions")
-                    .since("INSERT VERSION");
+                    .since("1.7.0");
             EventValues.registerEventValue(TabCompleteEvent.class, Player.class, new Getter<Player, TabCompleteEvent>() {
                 @Nullable
                 @Override

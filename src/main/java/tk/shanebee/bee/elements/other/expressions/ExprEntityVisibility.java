@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 @Examples({"set visibility of target entity to false",
         "set {_v} to visibility of target entity",
         "if visibility of target entity is true:"})
-@Since("INSERT VERSION")
+@Since("1.7.0")
 public class ExprEntityVisibility extends PropertyExpression<Entity, Boolean> {
 
     private static final boolean ITEM_FRAME;

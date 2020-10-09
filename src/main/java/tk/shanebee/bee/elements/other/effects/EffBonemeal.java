@@ -19,7 +19,7 @@ import javax.annotation.Nullable;
 @Name("Bone Meal Effect")
 @Description("Apply the bone meal effect to a block.")
 @Examples("apply bonemeal effect to target block of player")
-@Since("INSERT VERSION")
+@Since("1.7.0")
 public class EffBonemeal extends Effect {
 
     static {

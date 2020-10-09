@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
         "\t\tset tab completions for position 2 to \"butter\", \"peanut_butter\" and \"jam\"",
         "\telse if tab arg-1 = \"eggs\"",
         "\t\tset tab completions for position 2 to \"sunny_side_up\", \"scrambled\" and \"over_easy\""})
-@Since("INSERT VERSION")
+@Since("1.7.0")
 public class ExprTabCompletionArgs extends SimpleExpression<String> {
 
     static {
