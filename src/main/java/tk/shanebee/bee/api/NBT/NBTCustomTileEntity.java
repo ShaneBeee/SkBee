@@ -24,12 +24,12 @@ public class NBTCustomTileEntity extends NBTTileEntity {
         super(tile);
         this.blockState = tile;
         if (HAS_PERSISTENCE) {
+            String data = null;
             PersistentDataContainer container = blockState.getPersistentDataContainer();
             if (container.has(KEY, PersistentDataType.STRING)) {
-                String data = container.get(KEY, PersistentDataType.STRING);
-
-                customNBT = new NBTContainer(data != null ? data : "{}");
+                data = container.get(KEY, PersistentDataType.STRING);
             }
+            customNBT = new NBTContainer(data != null ? data : "{}");
         }
         blockState.update();
     }

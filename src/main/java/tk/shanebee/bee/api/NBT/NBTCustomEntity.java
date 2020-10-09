@@ -25,11 +25,11 @@ public class NBTCustomEntity extends NBTEntity {
         this.entity = entity;
         if (HAS_PERSISTENCE) {
             PersistentDataContainer container = entity.getPersistentDataContainer();
+            String data = null;
             if (container.has(KEY, PersistentDataType.STRING)) {
-                String data = container.get(KEY, PersistentDataType.STRING);
-
-                customNBT = new NBTContainer(data != null ? data : "{}");
+                data = container.get(KEY, PersistentDataType.STRING);
             }
+            customNBT = new NBTContainer(data != null ? data : "{}");
         }
     }
 
