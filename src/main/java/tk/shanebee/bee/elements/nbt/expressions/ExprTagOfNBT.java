@@ -32,7 +32,7 @@ import java.util.ArrayList;
         "As of 1.6.0 you can also set/delete tags, but only with NBT compounds, not NBT strings. Do note that setting the tag of an item ",
         "will not update it, you will have to create a variable for the NBT compound of the item, set the tag of that variable, then set the item back ",
         "using the 'nbt item of' expression. I understand this is a bit convoluted but unfortunately that is just how it works. See examples. ",
-        "Also note that you can NOT create custom tags for entities/blocks. As of INSERT VERSION blocks(tile entities)/entities will be able to hold custom nbt ",
+        "Also note that you can NOT create custom tags for entities/blocks. As of 1.7.1 blocks(tile entities)/entities will be able to hold custom nbt ",
         "data in the \"custom\" tag of said block/entity. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen. ",
         "That said, this system is a tad convoluted, see the SkBee WIKI for more details."})
 @Examples({"set {_tag} to tag \"Invulnerable\" of targeted entity's nbt",
