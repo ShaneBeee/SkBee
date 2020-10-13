@@ -58,7 +58,7 @@ public class ExprTabCompletionArgs extends SimpleExpression<String> {
         String[] buffers = buffer.split(" ");
 
         int position = this.position.getSingle(e).intValue();
-        if (buffers.length == position + 1) {
+        if (buffers.length >= position + 1) {
             return new String[]{buffers[position]};
         }
         return new String[0];
