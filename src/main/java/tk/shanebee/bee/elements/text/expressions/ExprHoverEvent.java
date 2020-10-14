@@ -14,11 +14,13 @@ import ch.njol.util.Kleenean;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.ItemTag;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.api.NBTApi;
 import tk.shanebee.bee.api.NBTApi.ObjectType;
 
@@ -36,6 +38,7 @@ import java.util.List;
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
     private static final boolean HAS_ITEM = Skript.classExists("net.md_5.bungee.api.chat.hover.content.Item");
+    private static final boolean HAS_TEXT = Skript.classExists("net.md_5.bungee.api.chat.hover.content.Text");
 
     static {
         if (HAS_ITEM) {
@@ -51,8 +54,9 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     private int pattern;
     private Expression<Object> object;
 
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+    public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         this.pattern = HAS_ITEM ? matchedPattern : 1;
         object = (Expression<Object>) exprs[0];
         return true;
@@ -65,13 +69,23 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
         if (pattern == 1) {
             String[] string = ((String[]) this.object.getArray(e));
-            List<Content> texts = new ArrayList<>();
-            for (int i = 0; i < string.length; i++) {
-                texts.add(new Text(string[i] + (i < (string.length - 1) ? System.lineSeparator() : "")));
+            if (HAS_TEXT) {
+                List<Content> texts = new ArrayList<>();
+                for (int i = 0; i < string.length; i++) {
+                    texts.add(new Text(string[i] + (i < (string.length - 1) ? System.lineSeparator() : "")));
+                }
+                return new HoverEvent[]{new HoverEvent(Action.SHOW_TEXT, texts)};
+            } else {
+                TextComponent[] comps = new TextComponent[string.length];
+                for (int i = 0; i < string.length; i++) {
+                    comps[i] = new TextComponent(string[i] + (i < (string.length - 1) ? System.lineSeparator() : ""));
+                }
+                return new HoverEvent[]{new HoverEvent(Action.SHOW_TEXT, comps)};
             }
-            return new HoverEvent[]{new HoverEvent(Action.SHOW_TEXT, texts)};
         } else if (pattern == 0) {
-            ItemStack itemStack = ((ItemType) object.getSingle(e)).getRandom();
+            ItemType itemType = (ItemType) object.getSingle(e);
+            assert itemType != null;
+            ItemStack itemStack = itemType.getRandom();
             if (itemStack == null) return null;
 
             String id = "minecraft:" + itemStack.getType().toString().toLowerCase();
@@ -88,12 +102,12 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     }
 
     @Override
-    public Class<? extends HoverEvent> getReturnType() {
+    public @NotNull Class<? extends HoverEvent> getReturnType() {
         return HoverEvent.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "hover event showing " + object.toString(e, d);
     }
 

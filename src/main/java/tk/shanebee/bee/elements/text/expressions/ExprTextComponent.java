@@ -16,11 +16,13 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.reflection.McReflection;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -74,7 +76,6 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
             if (pattern == 0)
                 component = new TextComponent((String) object);
             else if (pattern == 1) {
-                component = new TranslatableComponent();
                 String translate;
                 if (object instanceof ItemType) {
                     ItemType itemType = (ItemType) object;
@@ -82,7 +83,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
                 } else {
                     translate = (String) object;
                 }
-                ((TranslatableComponent) component).setTranslate(translate);
+                component = new TranslatableComponent(translate);
             } else {
                 String string = ((String) translation.getSingle(e));
                 Object[] objects = this.objects.getAll(e);
@@ -109,10 +110,16 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
     }
 
     private String translate(ItemType itemType) {
-        Material material = itemType.getMaterial();
+        ItemStack itemStack = itemType.getRandom();
+        assert itemStack != null;
+        String trans = McReflection.getTranslateKey(itemStack);
+        if (trans != null) {
+            return trans;
+        }
+        Material material = itemStack.getType();
         String type = material.isBlock() ? "block" : "item";
         String raw = itemType.getRawNames().get(0).replace("minecraft:", "");
-        ItemMeta meta = itemType.getItemMeta();
+        ItemMeta meta = itemStack.getItemMeta();
         if (meta instanceof PotionMeta) {
             StringBuilder builder = new StringBuilder("item.minecraft.");
             String pot = api.getTag("Potion", api.getNBT(itemType, NBTApi.ObjectType.ITEM_TYPE)).toString();
@@ -131,6 +138,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
             }
         }
         return type + ".minecraft." + raw;
+
     }
 
 }

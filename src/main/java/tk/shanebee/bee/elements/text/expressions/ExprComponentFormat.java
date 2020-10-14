@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 @Since("1.5.1")
 public class ExprComponentFormat extends PropertyExpression<BaseComponent, Object> {
 
+    private static final boolean HAS_SKRIPT_COLOR = Skript.classExists("ch.njol.skript.util.SkriptColor");
     private static final boolean HAS_HEX = Skript.isRunningMinecraft(1, 16);
     private static final int COLOR = 0, BOLD = 1, ITALIC = 2, OBFUSCATED = 3, STRIKETHROUGH = 4, UNDERLINE = 5, INSERT = 6;
 
@@ -102,12 +103,12 @@ public class ExprComponentFormat extends PropertyExpression<BaseComponent, Objec
             case COLOR:
                 Color color = (Color) object;
                 ChatColor chatColor;
-                if (color instanceof SkriptColor) {
+                if (HAS_SKRIPT_COLOR && color instanceof SkriptColor) {
                     chatColor = ChatUtil.getBungeeFromSkriptColor(((SkriptColor) color));
                 } else if (HAS_HEX) {
                     chatColor = ChatUtil.getBungeeFromColor(color);
                 } else {
-                    chatColor = ChatColor.BLACK;
+                    chatColor = ChatColor.RESET;
                 }
                 for (BaseComponent component : getExpr().getArray(e)) {
                     component.setColor(chatColor);
