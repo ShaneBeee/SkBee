@@ -17,6 +17,7 @@ import com.github.shynixn.structureblocklib.bukkit.api.persistence.entity.Struct
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
+import tk.shanebee.bee.SkBee;
 
 @Name("Structure Block - Load")
 @Description("Load structure block structures that are saved on your server. " +
@@ -85,7 +86,15 @@ public class EffLoadStructure extends Effect {
                 saveConfig.setMirror(StructureMirror.LEFT_RIGHT);
         }
         saveConfig.setIgnoreEntities(!withEntities);
-        boolean structureExists = service.load(saveConfig, loc.getSingle(event));
+        Location location = loc.getSingle(event);
+        if (location == null) {
+            if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+                Skript.error("Could not load structure " + name.toString(event, true) +
+                        " .. location does not exist: " + loc.toString(event, true));
+            }
+            return;
+        }
+        boolean structureExists = service.load(saveConfig, location);
         if (!structureExists) {
             Skript.error("Structure " + name.toString(event, true) + " does not exist!");
         }
