@@ -23,7 +23,7 @@ public class TabEvent extends SkriptEvent {
                     "[skbee] tab complete [(of|for) %strings%]")
                     .description("Called when a player attempts to tab complete the arguments of a command. ",
                             "event-string = the command.")
-                    .examples("on tab complete of \"/mycommand\"",
+                    .examples("on tab complete of \"/mycommand\":",
                             "\tset tab completions for position 1 to \"one\", \"two\" and \"three\"",
                             "\tset tab completions for position 2 to 1, 2 and 3",
                             "\tset tab completions for position 3 to all players",
