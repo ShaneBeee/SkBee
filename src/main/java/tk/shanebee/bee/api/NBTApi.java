@@ -253,7 +253,6 @@ public class NBTApi {
                 return getNBT(slotItemStackFull, ObjectType.ITEM_STACK_FULL);
             case ENTITY:
                 Entity entity = (Entity) object;
-                if (entity.isDead()) return null;
                 NBTEntity nbtEntity = new NBTEntity(entity);
                 return nbtEntity.toString();
             case BLOCK:
