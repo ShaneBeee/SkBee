@@ -2,7 +2,9 @@ package tk.shanebee.bee.api.reflection;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Method;
 
@@ -32,12 +34,20 @@ public class SkReflection {
             } catch (Exception ignore) {}
     }
 
+    @Nullable
     public static ItemMeta getMeta(ItemType i) {
         if (newMeta)
             return i.getItemMeta();
         else
             try {
-                return (ItemMeta) getMetaMethod.invoke(i);
+                ItemMeta itemMeta = (ItemMeta) getMetaMethod.invoke(i);
+                if (itemMeta == null) {
+                    ItemStack itemStack = i.getRandom();
+                    if (itemStack != null) {
+                        itemMeta = itemStack.getItemMeta();
+                    }
+                }
+                return itemMeta;
             } catch (Exception ignore) {
                 return null;
             }

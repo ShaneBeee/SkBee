@@ -11,7 +11,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -60,7 +59,7 @@ public class ExprHiddenFlags extends SimplePropertyExpression<ItemType, ItemType
 
         ItemMeta meta = SkReflection.getMeta(item);
         if (meta == null) {
-            meta = Bukkit.getItemFactory().getItemMeta(item.getMaterial());
+            return item;
         }
         switch (parse) {
             case 0:
