@@ -45,6 +45,7 @@ public class SkBee extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        long start = System.currentTimeMillis();
         instance = this;
         this.config = new Config(this);
         this.nbtApi = new NBTApi();
@@ -78,7 +79,7 @@ public class SkBee extends JavaPlugin {
             return;
         }
         loadMetrics();
-        Util.log("&aSuccessfully enabled v" + desc.getVersion());
+        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", desc.getVersion(), (float)(System.currentTimeMillis() - start) / 1000);
     }
 
     private void loadNBTElements() {
