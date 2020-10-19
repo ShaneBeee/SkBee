@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 @Name("Bone Meal Effect")
-@Description("Apply the bone meal effect to a block.")
+@Description("Apply the bone meal effect to a block. Requires Minecraft 1.16.2+")
 @Examples("apply bonemeal effect to target block of player")
 @Since("1.7.0")
 public class EffBonemeal extends Effect {
