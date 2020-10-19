@@ -133,6 +133,8 @@ public class SkBee extends JavaPlugin {
             try {
                 addon.loadClasses("tk.shanebee.bee.elements.board");
                 pm.registerEvents(new PlayerBoardListener(), this);
+                // If there are players online during a reload, let's give them a board
+                Bukkit.getOnlinePlayers().forEach(Board::createBoard);
                 Util.log("&5Scoreboard Elements &asuccessfully loaded");
             } catch (IOException ex) {
                 ex.printStackTrace();
