@@ -20,6 +20,10 @@ public class Util {
         Bukkit.getConsoleSender().sendMessage(getColString(PREFIX + log));
     }
 
+    public static void log(String format, Object... objects) {
+        log(String.format(format, objects));
+    }
+
     public static void skriptError(String error) {
         Skript.error(getColString(PREFIX_ERROR + error), ErrorQuality.SEMANTIC_ERROR);
     }
