@@ -7,10 +7,13 @@ import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
+import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import org.bukkit.Location;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -94,11 +97,35 @@ public class PaperEvents {
                     .examples("on entity zap:",
                             "\tif event-entity is a pig:",
                             "\t\tspawn 3 zombie pigmen at event-location")
-                    .since("1.0.0");
+                    .since("INSERT VERSION");
             EventValues.registerEventValue(EntityZapEvent.class, Location.class, new Getter<Location, EntityZapEvent>() {
                 @Override
                 public Location get(EntityZapEvent e) {
                     return e.getEntity().getLocation();
+                }
+            }, 0);
+        }
+
+        // Projectile Collide Event
+        if (Skript.classExists("com.destroystokyo.paper.event.entity.ProjectileCollideEvent")) {
+            Skript.registerEvent("Projectile Collide", SimpleEvent.class, ProjectileCollideEvent.class, "projectile collide")
+                    .description("Called when a projectile collides with an entity" +
+                            " (This event is called before entity damage event, and cancelling it will allow the projectile to continue flying)." +
+                            "Requires Paper 1.11.2+")
+                    .examples("on projectile collide:",
+                            "\tif event-entity is a player:",
+                            "\t\tcancel event")
+                    .since("INSERT VERSION");
+            EventValues.registerEventValue(ProjectileCollideEvent.class, Entity.class, new Getter<Entity, ProjectileCollideEvent>() {
+                @Override
+                public Entity get(ProjectileCollideEvent e) {
+                    return e.getCollidedWith();
+                }
+            }, 0);
+            EventValues.registerEventValue(ProjectileCollideEvent.class, Projectile.class, new Getter<Projectile, ProjectileCollideEvent>() {
+                @Override
+                public Projectile get(ProjectileCollideEvent e) {
+                    return e.getEntity();
                 }
             }, 0);
         }
