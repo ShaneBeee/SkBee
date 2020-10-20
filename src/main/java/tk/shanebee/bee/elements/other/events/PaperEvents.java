@@ -12,6 +12,7 @@ import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
 import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
+import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -55,10 +56,21 @@ public class PaperEvents {
         }
 
         // Player shear entity event
-        Skript.registerEvent("Shear Entity", SimpleEvent.class, PlayerShearEntityEvent.class, "[player] shear entity")
-                .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")
-                .examples("on player shear entity:")
-                .since("INSERT VERSION");
+        if (Skript.classExists("org.bukkit.event.player.PlayerShearEntityEvent")) {
+            Skript.registerEvent("Shear Entity", SimpleEvent.class, PlayerShearEntityEvent.class, "[player] shear entity")
+                    .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")
+                    .examples("on player shear entity:")
+                    .since("INSERT VERSION");
+        }
+
+        // Player Pickup XP Event
+        if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent")) {
+            Skript.registerEvent("Player Pickup Experience Orb", SimpleEvent.class, PlayerPickupExperienceEvent.class, "player pickup (experience|xp) [orb]")
+                    .description("Fired when a player is attempting to pick up an experience orb. Requires Paper 1.12.2+")
+                    .examples("on player pickup xp:",
+                            "\tadd 10 to level of player")
+                    .since("INSERT VERSION");
+        }
 
         // == ENTITY EVENTS == //
 
