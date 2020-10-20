@@ -10,6 +10,7 @@ import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import org.bukkit.Location;
+import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
@@ -46,6 +47,12 @@ public class PaperEvents {
                 }
             }, 0);
         }
+
+        // Player shear entity event
+        Skript.registerEvent("Shear Entity", SimpleEvent.class, PlayerShearEntityEvent.class, "[player] shear entity")
+                .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")
+                .examples("on player shear entity:")
+                .since("INSERT VERSION");
 
         // == ENTITY EVENTS == //
 
