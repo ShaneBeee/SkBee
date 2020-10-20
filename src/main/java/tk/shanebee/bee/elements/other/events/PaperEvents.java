@@ -22,8 +22,8 @@ import org.bukkit.entity.Projectile;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 
 public class PaperEvents {
 
@@ -170,6 +170,7 @@ public class PaperEvents {
                     .since("INSERT VERSION");
         }
 
+        // Experience Orb Merge Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent")) {
             Skript.registerEvent("Experience Orb Merge", SimpleEvent.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")
                     .description("Fired anytime the server is about to merge 2 experience orbs into one. Requires Paper 1.12.2+")
