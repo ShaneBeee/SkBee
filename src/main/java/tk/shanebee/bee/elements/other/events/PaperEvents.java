@@ -6,6 +6,7 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
+import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
@@ -84,6 +85,22 @@ public class PaperEvents {
                             "\t\tif loop-player is an op:",
                             "\t\t\tcancel event")
                     .since("1.5.0");
+        }
+
+        // Entity Zap Event
+        if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityZapEvent")) {
+            Skript.registerEvent("Entity Zap", SimpleEvent.class, EntityZapEvent.class, "entity (zap|struck by lightning)")
+                    .description("Fired when lightning strikes an entity. Requires Paper 1.10.2+")
+                    .examples("on entity zap:",
+                            "\tif event-entity is a pig:",
+                            "\t\tspawn 3 zombie pigmen at event-location")
+                    .since("1.0.0");
+            EventValues.registerEventValue(EntityZapEvent.class, Location.class, new Getter<Location, EntityZapEvent>() {
+                @Override
+                public Location get(EntityZapEvent e) {
+                    return e.getEntity().getLocation();
+                }
+            }, 0);
         }
 
         // == BLOCK EVENTS == //
