@@ -8,6 +8,7 @@ import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
+import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
 import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
@@ -137,6 +138,14 @@ public class PaperEvents {
                     .description("Fired when an Entity is knocked back by the hit of another Entity. " +
                             "If this event is cancelled, the entity is not knocked back. Requires Paper 1.12.2+")
                     .examples("on entity knockback:", "\tif event-entity is a cow:", "\t\tcancel event")
+                    .since("INSERT VERSION");
+        }
+
+        if (Skript.classExists("com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent")) {
+            Skript.registerEvent("Experience Orb Merge", SimpleEvent.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")
+                    .description("Fired anytime the server is about to merge 2 experience orbs into one. Requires Paper 1.12.2+")
+                    .examples("on xp merge:",
+                            "\tcancel event")
                     .since("INSERT VERSION");
         }
 
