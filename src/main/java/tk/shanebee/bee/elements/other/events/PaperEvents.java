@@ -5,6 +5,7 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
+import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
@@ -128,6 +129,15 @@ public class PaperEvents {
                     return e.getEntity();
                 }
             }, 0);
+        }
+
+        // Entity Knockback Event
+        if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent")) {
+            Skript.registerEvent("Entity Knockback", SimpleEvent.class, EntityKnockbackByEntityEvent.class, "entity knockback")
+                    .description("Fired when an Entity is knocked back by the hit of another Entity. " +
+                            "If this event is cancelled, the entity is not knocked back. Requires Paper 1.12.2+")
+                    .examples("on entity knockback:", "\tif event-entity is a cow:", "\t\tcancel event")
+                    .since("INSERT VERSION");
         }
 
         // == BLOCK EVENTS == //
