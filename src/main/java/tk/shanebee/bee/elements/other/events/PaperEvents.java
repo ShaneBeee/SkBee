@@ -1,6 +1,7 @@
 package tk.shanebee.bee.elements.other.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
@@ -12,6 +13,7 @@ import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
 import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
+import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import org.bukkit.Location;
@@ -70,6 +72,21 @@ public class PaperEvents {
                     .examples("on player pickup xp:",
                             "\tadd 10 to level of player")
                     .since("INSERT VERSION");
+        }
+
+        // Player Elytra Boost Event
+        if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerElytraBoostEvent")) {
+            Skript.registerEvent("Player Elytra Boost", SimpleEvent.class, PlayerElytraBoostEvent.class, "[player] elytra boost")
+                    .description("Fired when a player boosts elytra flight with a firework. Requires Paper 1.13.2+")
+                    .examples("on elytra boost:",
+                            "\tpush player forward at speed 50")
+                    .since("INSERT VERSION");
+            EventValues.registerEventValue(PlayerElytraBoostEvent.class, ItemType.class, new Getter<ItemType, PlayerElytraBoostEvent>() {
+                @Override
+                public ItemType get(PlayerElytraBoostEvent e) {
+                    return new ItemType(e.getItemStack());
+                }
+            }, 0);
         }
 
         // == ENTITY EVENTS == //
