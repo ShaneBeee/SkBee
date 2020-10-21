@@ -30,7 +30,8 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
                 "[a] [new] click event to run command %string%",
                 "[a] [new] click event to suggest command %string%",
                 "[a] [new] click event to open (link|url) %string%",
-                "[a] [new] click event to copy %string% to clipboard");
+                "[a] [new] click event to copy %string% to clipboard",
+                "[a] [new] click event to change to page %number%");
     }
 
     private int pattern;
@@ -48,7 +49,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
     protected ClickEvent[] get(Event e) {
         if (object == null) return null;
 
-        String value = (String) object.getSingle(e);
+        Object value = object.getSingle(e);
         Action action;
 
         switch (pattern) {
@@ -61,10 +62,14 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
             case 3:
                 action = Action.COPY_TO_CLIPBOARD;
                 break;
+            case 4:
+                action = Action.CHANGE_PAGE;
+                value = "" + (((Number) object.getSingle(e)).intValue());
+                break;
             default:
                 action = Action.RUN_COMMAND;
         }
-        return new ClickEvent[]{new ClickEvent(action, value)};
+        return new ClickEvent[]{new ClickEvent(action, (String) value)};
     }
 
     @Override
@@ -79,7 +84,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
 
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        String[] actions = new String[]{"run command", "suggest command", "open url", "copy to clipboard"};
+        String[] actions = new String[]{"run command", "suggest command", "open url", "copy to clipboard", "change to page"};
         return "click event to " + actions[pattern] + " " + object.toString(e, d);
     }
 
