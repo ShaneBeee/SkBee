@@ -26,7 +26,8 @@ elements:
 
   # Enable VirtualFurnace elements
   # Note: Only available on 1.13+
-  virtual-furnace: true
+  # This feature is semi-experimental, please use with caution
+  virtual-furnace: false
 
   # Enable Text Component elements
   text-component: true
@@ -34,6 +35,12 @@ elements:
   # Enable pathfinding elements
   # Note: Only available on Paper 1.13+
   pathfinding: true
+
+  # Enable world creator elements
+  world-creator: false
+  # Whether or not custom worlds should automatically load on server start
+  # If disabled, you will need to load worlds with the load world effect
+  auto-load-custom-worlds: true
 
 recipe:
   # This is the namespace all recipes will be saved under, you can choose whatever you wish

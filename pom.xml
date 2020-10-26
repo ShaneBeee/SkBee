@@ -98,6 +98,11 @@
             <artifactId>VirtualFurnace</artifactId>
             <version>1.0.0-Beta11</version>
         </dependency>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.5</version>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -131,6 +136,8 @@
                     <include>plugin.yml</include>
                     <include>config.yml</include>
                     <include>bounds.yml</include>
+                    <include>worlds.yml</include>
+                    <include>lang/english.lang</include>
                 </includes>
             </resource>
         </resources>

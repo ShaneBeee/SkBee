@@ -22,6 +22,7 @@ import tk.shanebee.bee.elements.board.objects.Board;
 import tk.shanebee.bee.elements.bound.config.BoundConfig;
 import tk.shanebee.bee.elements.bound.objects.Bound;
 import tk.shanebee.bee.elements.virtualfurnace.listener.VirtualFurnaceListener;
+import tk.shanebee.bee.elements.worldcreator.objects.BeeWorldConfig;
 import tk.shanebee.bee.metrics.Metrics;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class SkBee extends JavaPlugin {
     private BoundConfig boundConfig = null;
     private SkriptAddon addon;
     private VirtualFurnaceAPI virtualFurnaceAPI;
+    private BeeWorldConfig beeWorldConfig;
 
     @Override
     public void onEnable() {
@@ -56,6 +58,7 @@ public class SkBee extends JavaPlugin {
         final Plugin SKRIPT = pm.getPlugin("Skript");
         if (SKRIPT != null && SKRIPT.isEnabled() && Skript.isAcceptRegistrations()) {
             addon = Skript.registerAddon(this);
+            addon.setLanguageFileDirectory("lang");
 
             // Load Skript elements
             loadNBTElements();
@@ -67,6 +70,7 @@ public class SkBee extends JavaPlugin {
             loadStructureElements();
             loadOtherElements();
             loadVirtualFurnaceElements();
+            loadWorldCreatorElements();
 
             // Beta check + notice
             if (desc.getVersion().contains("Beta")) {
@@ -80,6 +84,10 @@ public class SkBee extends JavaPlugin {
         }
         loadMetrics();
         Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", desc.getVersion(), (float)(System.currentTimeMillis() - start) / 1000);
+
+        if (this.beeWorldConfig != null && this.config.AUTO_LOAD_WORLDS) {
+            this.beeWorldConfig.loadCustomWorlds();
+        }
     }
 
     private void loadNBTElements() {
@@ -257,6 +265,21 @@ public class SkBee extends JavaPlugin {
         }
     }
 
+    private void loadWorldCreatorElements() {
+        if (!this.config.ELEMENTS_WORLD_CREATOR) {
+            Util.log("&5World Creator Elements &cdisabled via config");
+            return;
+        }
+        try {
+            this.beeWorldConfig = new BeeWorldConfig(this);
+            addon.loadClasses("tk.shanebee.bee.elements.worldcreator");
+            Util.log("&5World Creator Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
+    }
+
     private void loadMetrics() { //6719
         Metrics metrics = new Metrics(this, 6719);
         metrics.addCustomChart(new Metrics.SimplePie("skript_version", () -> Skript.getVersion().toString()));
@@ -267,6 +290,7 @@ public class SkBee extends JavaPlugin {
         if (this.virtualFurnaceAPI != null) {
             this.virtualFurnaceAPI.disableAPI();
         }
+
         Board.clearBoards();
     }
 
@@ -295,6 +319,11 @@ public class SkBee extends JavaPlugin {
      */
     public BoundConfig getBoundConfig() {
         return this.boundConfig;
+    }
+
+    // TODO notes
+    public BeeWorldConfig getBeeWorldConfig() {
+        return beeWorldConfig;
     }
 
     /**
