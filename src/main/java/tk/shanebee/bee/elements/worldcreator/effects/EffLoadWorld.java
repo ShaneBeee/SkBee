@@ -19,7 +19,6 @@ import tk.shanebee.bee.elements.worldcreator.objects.BeeWorldConfig;
 import tk.shanebee.bee.elements.worldcreator.objects.BeeWorldCreator;
 
 import javax.annotation.Nullable;
-import java.io.File;
 
 @Name("Load/Unload/Delete World")
 @Description("Load a world from a world creator. Worlds created/loaded with a world creator, are saved in the 'plugins/SkBee/worlds.yml' file " +
