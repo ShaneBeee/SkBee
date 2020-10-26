@@ -20,7 +20,7 @@ public class Types {
                 .usage("world creator")
                 .name("World Creator")
                 .description("Used to create new worlds.")
-                .examples("") // TODO examples
+                .examples("set {_creator} to new world creator named \"my-world\"")
                 .since("INSERT VERSION"));
 
         EnumUtils<Environment> environments = new EnumUtils<>(Environment.class, "environment types");
@@ -29,7 +29,7 @@ public class Types {
                 .name("Environment")
                 .description("The environment of a world.")
                 .usage(environments.getAllNames())
-                .examples("")
+                .examples("set environment of {_creator} to nether")
                 .since("INSERT VERSION")
                 .parser(new Parser<Environment>() {
 
@@ -61,7 +61,7 @@ public class Types {
                 .name("World Type")
                 .description("The type of a world")
                 .usage(worldTypes.getAllNames())
-                .examples("")
+                .examples("set world type of {_creator} to flat")
                 .since("INSERT VERSION")
                 .parser(new Parser<WorldType>() {
 
