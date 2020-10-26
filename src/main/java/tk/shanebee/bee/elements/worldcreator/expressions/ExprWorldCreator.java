@@ -9,9 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -50,22 +48,8 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         this.pattern = matchedPattern;
         this.name = (Expression<String>) exprs[0];
-        for (World world : Bukkit.getWorlds()) {
-            if (world.getName().equalsIgnoreCase(this.name.getSingle(null))) {
-                Skript.error("Can not create a world creator with a name matching a currently loaded world", ErrorQuality.SEMANTIC_ERROR);
-                return false;
-            }
-        }
         this.world = pattern == 1 ? (Expression<World>) exprs[1] : null;
         this.clone = pattern == 1 && parseResult.mark == 1;
-        if (pattern == 1) {
-            World cloneWorld = this.world.getSingle(null);
-            if (cloneWorld == null) {
-                String copy = this.clone ? "clone" : "copy";
-                Skript.error("Can not " + copy + " a world that is not currently loaded", ErrorQuality.NONE);
-                return false;
-            }
-        }
         return true;
     }
 
