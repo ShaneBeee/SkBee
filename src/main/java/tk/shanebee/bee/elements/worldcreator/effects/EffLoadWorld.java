@@ -79,13 +79,42 @@ public class EffLoadWorld extends Effect {
         } else if (pattern == 2) {
             if (this.world == null) return;
             World world = this.world.getSingle(e);
-            if (world != null) {
-                Bukkit.unloadWorld(world, this.save);
-            }
+            if (world == null) return;
+
+            unloadWorld(world);
         } else if (pattern == 3) {
             if (this.worldName == null) return;
+            String worldName = this.worldName.getSingle(e);
+            if (worldName == null) return;
+
+            World world = Bukkit.getWorld(worldName);
+            if (world != null) {
+                // Kick players and unload the world before deleting
+                if (!unloadWorld(world)) {
+                    // if world could not unload, we dont wanna delete it
+                    return;
+                }
+            }
             BEE_WORLD_CONFIG.deleteWorld(this.worldName.getSingle(e));
         }
+    }
+
+    private boolean unloadWorld(@NotNull World world) {
+        World mainWorld = Bukkit.getWorlds().get(0);
+        if (world == mainWorld) {
+            if (Bukkit.getWorlds().size() > 1) {
+                mainWorld = Bukkit.getWorlds().get(1);
+            } else {
+                mainWorld = null;
+            }
+        }
+        // Teleport remaining players out of this world to be safe
+        if (mainWorld != null) {
+            World finalMainWorld = mainWorld;
+            world.getPlayers().forEach(player -> player.teleport(finalMainWorld.getSpawnLocation()));
+        }
+
+        return Bukkit.unloadWorld(world, this.save);
     }
 
     @Override

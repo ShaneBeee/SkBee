@@ -128,10 +128,6 @@ public class BeeWorldConfig {
             worldConfig.set("worlds." + worldName, null);
             save();
 
-            // Unload the world first... just in case
-            if (Bukkit.getWorld(worldName) != null) {
-                Bukkit.unloadWorld(worldName, false);
-            }
             File worldFile = new File(Bukkit.getWorldContainer(), worldName);
             if (worldFile.exists() && worldFile.isDirectory()) {
                 try {
