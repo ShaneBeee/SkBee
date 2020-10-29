@@ -25,7 +25,7 @@ import javax.annotation.Nullable;
         "set world type of {_w} to flat",
         "set should generate structures of {_w} to true",
         "load world from creator {_w}"})
-@Since("INSERT VERSION")
+@Since("1.8.0")
 public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCreator, Object> {
 
     static {

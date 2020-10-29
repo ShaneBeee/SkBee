@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
         "",
         "set {_clone} to a new world creator named \"world-clone\" to clone world \"world\"",
         "load world from creator {_clone}"})
-@Since("INSERT VERSION")
+@Since("1.8.0")
 public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
 
     static {

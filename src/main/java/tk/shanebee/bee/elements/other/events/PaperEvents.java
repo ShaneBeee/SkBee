@@ -62,7 +62,7 @@ public class PaperEvents {
             Skript.registerEvent("Shear Entity", SimpleEvent.class, PlayerShearEntityEvent.class, "[player] shear entity")
                     .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")
                     .examples("on player shear entity:")
-                    .since("INSERT VERSION");
+                    .since("1.8.0");
         }
 
         // Player Pickup XP Event
@@ -71,7 +71,7 @@ public class PaperEvents {
                     .description("Fired when a player is attempting to pick up an experience orb. Requires Paper 1.12.2+")
                     .examples("on player pickup xp:",
                             "\tadd 10 to level of player")
-                    .since("INSERT VERSION");
+                    .since("1.8.0");
         }
 
         // Player Elytra Boost Event
@@ -80,7 +80,7 @@ public class PaperEvents {
                     .description("Fired when a player boosts elytra flight with a firework. Requires Paper 1.13.2+")
                     .examples("on elytra boost:",
                             "\tpush player forward at speed 50")
-                    .since("INSERT VERSION");
+                    .since("1.8.0");
             EventValues.registerEventValue(PlayerElytraBoostEvent.class, ItemType.class, new Getter<ItemType, PlayerElytraBoostEvent>() {
                 @Override
                 public ItemType get(PlayerElytraBoostEvent e) {
@@ -128,7 +128,7 @@ public class PaperEvents {
                     .examples("on entity zap:",
                             "\tif event-entity is a pig:",
                             "\t\tspawn 3 zombie pigmen at event-location")
-                    .since("INSERT VERSION");
+                    .since("1.8.0");
             EventValues.registerEventValue(EntityZapEvent.class, Location.class, new Getter<Location, EntityZapEvent>() {
                 @Override
                 public Location get(EntityZapEvent e) {
@@ -146,7 +146,7 @@ public class PaperEvents {
                     .examples("on projectile collide:",
                             "\tif event-entity is a player:",
                             "\t\tcancel event")
-                    .since("INSERT VERSION");
+                    .since("1.8.0");
             EventValues.registerEventValue(ProjectileCollideEvent.class, Entity.class, new Getter<Entity, ProjectileCollideEvent>() {
                 @Override
                 public Entity get(ProjectileCollideEvent e) {
@@ -167,7 +167,7 @@ public class PaperEvents {
                     .description("Fired when an Entity is knocked back by the hit of another Entity. " +
                             "If this event is cancelled, the entity is not knocked back. Requires Paper 1.12.2+")
                     .examples("on entity knockback:", "\tif event-entity is a cow:", "\t\tcancel event")
-                    .since("INSERT VERSION");
+                    .since("1.8.0");
         }
 
         // Experience Orb Merge Event
@@ -176,7 +176,7 @@ public class PaperEvents {
                     .description("Fired anytime the server is about to merge 2 experience orbs into one. Requires Paper 1.12.2+")
                     .examples("on xp merge:",
                             "\tcancel event")
-                    .since("INSERT VERSION");
+                    .since("1.8.0");
         }
 
         // == BLOCK EVENTS == //

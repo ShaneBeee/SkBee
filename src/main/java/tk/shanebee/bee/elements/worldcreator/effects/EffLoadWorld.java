@@ -29,7 +29,7 @@ import javax.annotation.Nullable;
         "load world from world creator {_w}", "",
         "load world \"my-world\"",
         "unload world world(\"my-world\")"})
-@Since("INSERT VERSION")
+@Since("1.8.0")
 public class EffLoadWorld extends Effect {
 
     private static final BeeWorldConfig BEE_WORLD_CONFIG;

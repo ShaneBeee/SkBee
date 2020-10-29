@@ -32,7 +32,7 @@ import javax.annotation.Nullable;
         "set book author of {_i} to \"Bob\"",
         "set book title of {_i} to \"MyBook\"",
         "give player 1 of {_i}"})
-@Since("INSERT VERSION")
+@Since("1.8.0")
 public class ExprBookPages extends SimpleExpression<BaseComponent> {
 
     static {

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Knockback Attacker/Victim")
 @Description("The attacker/victim in an entity knockback event. Paper 1.12.2+")
 @Examples({"on entity knockback:", "\tif knockback attacker is a player:", "\t\tif knockback victim is a sheep:", "\t\t\tcancel event"})
-@Since("INSERT VERSION")
+@Since("1.8.0")
 public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> {
 
     static {

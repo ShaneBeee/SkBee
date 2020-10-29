@@ -19,7 +19,7 @@ import java.io.File;
 @Name("World Exists")
 @Description("Check if a world exists in your world directory.")
 @Examples("if world \"my-world\" exists:")
-@Since("INSERT VERSION")
+@Since("1.8.0")
 public class CondWorldExists extends Condition {
 
     static {
