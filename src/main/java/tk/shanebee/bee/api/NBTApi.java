@@ -9,6 +9,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
@@ -114,14 +115,18 @@ public class NBTApi {
                 ItemStack itemStack = (ItemStack) object;
                 NBTItem item = new NBTItem(itemStack);
                 item.mergeCompound(new NBTContainer(value));
+                ItemMeta meta = item.getItem().getItemMeta();
+                if (meta == null) return itemStack;
                 itemStack.setItemMeta(item.getItem().getItemMeta());
                 return item.getItem();
             case ITEM_TYPE:
                 ItemStack stack = ((ItemType) object).getRandom();
-                if (stack == null) return null;
+                if (stack == null) return object;
 
                 NBTItem nbtItemType = new NBTItem(stack);
                 nbtItemType.mergeCompound(new NBTContainer(value));
+                ItemMeta itemMeta = nbtItemType.getItem().getItemMeta();
+                if (itemMeta == null) return object;
                 SkReflection.setMeta((ItemType) object, nbtItemType.getItem().getItemMeta());
                 return object;
             case SLOT:
