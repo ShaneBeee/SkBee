@@ -137,30 +137,6 @@ public class PaperEvents {
             }, 0);
         }
 
-        // Projectile Collide Event
-        if (Skript.classExists("com.destroystokyo.paper.event.entity.ProjectileCollideEvent")) {
-            Skript.registerEvent("Projectile Collide", SimpleEvent.class, ProjectileCollideEvent.class, "projectile collide")
-                    .description("Called when a projectile collides with an entity" +
-                            " (This event is called before entity damage event, and cancelling it will allow the projectile to continue flying)." +
-                            "Requires Paper 1.11.2+")
-                    .examples("on projectile collide:",
-                            "\tif event-entity is a player:",
-                            "\t\tcancel event")
-                    .since("1.8.0");
-            EventValues.registerEventValue(ProjectileCollideEvent.class, Entity.class, new Getter<Entity, ProjectileCollideEvent>() {
-                @Override
-                public Entity get(ProjectileCollideEvent e) {
-                    return e.getCollidedWith();
-                }
-            }, 0);
-            EventValues.registerEventValue(ProjectileCollideEvent.class, Projectile.class, new Getter<Projectile, ProjectileCollideEvent>() {
-                @Override
-                public Projectile get(ProjectileCollideEvent e) {
-                    return e.getEntity();
-                }
-            }, 0);
-        }
-
         // Entity Knockback Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent")) {
             Skript.registerEvent("Entity Knockback", SimpleEvent.class, EntityKnockbackByEntityEvent.class, "entity knockback")
