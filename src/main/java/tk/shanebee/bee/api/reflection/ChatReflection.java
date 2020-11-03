@@ -19,7 +19,8 @@ public class ChatReflection {
         V_1_14_R1("v1_14_R1", "k", "a"),
         V_1_15_R1("v1_15_R1", "l", "a"),
         V_1_16_R1("v1_16_R1", "l", "a"),
-        V_1_16_R2("v1_16_R2", "l", "a");
+        V_1_16_R2("v1_16_R2", "l", "a"),
+        V_1_16_R3("v1_16_R3", "l", "a");
 
         private final String version;
         private final String pretty;
