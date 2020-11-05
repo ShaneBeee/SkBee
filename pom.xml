@@ -62,10 +62,10 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.ShaneBeee</groupId>
-            <artifactId>Item-NBT-API</artifactId>
+            <groupId>com.github.tr7zw.Item-NBT-API</groupId>
+            <artifactId>item-nbt-api</artifactId>
             <!--suppress MavenModelInspection -->
-            <version>feature~custom-logger-SNAPSHOT</version>
+            <version>2.6.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>

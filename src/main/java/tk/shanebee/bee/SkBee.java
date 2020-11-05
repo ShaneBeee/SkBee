@@ -51,7 +51,7 @@ public class SkBee extends JavaPlugin {
         instance = this;
         this.config = new Config(this);
         this.nbtApi = new NBTApi();
-        MinecraftVersion.logger = LoggerBee.getLogger();
+        MinecraftVersion.replaceLogger(LoggerBee.getLogger());
         this.pm = Bukkit.getPluginManager();
         PluginDescriptionFile desc = getDescription();
 
