@@ -9,15 +9,16 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.github.shynixn.structureblocklib.bukkit.api.StructureBlockApi;
-import com.github.shynixn.structureblocklib.bukkit.api.business.enumeration.StructureMirror;
-import com.github.shynixn.structureblocklib.bukkit.api.business.enumeration.StructureRotation;
-import com.github.shynixn.structureblocklib.bukkit.api.business.service.PersistenceStructureService;
-import com.github.shynixn.structureblocklib.bukkit.api.persistence.entity.StructureSaveConfiguration;
+import com.github.shynixn.structureblocklib.api.bukkit.StructureBlockLibApi;
+import com.github.shynixn.structureblocklib.api.enumeration.StructureMirror;
+import com.github.shynixn.structureblocklib.api.enumeration.StructureRotation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
+
+import java.io.File;
 
 @Name("Structure Block - Load")
 @Description("Load structure block structures that are saved on your server. " +
@@ -28,7 +29,16 @@ import tk.shanebee.bee.SkBee;
 @Since("1.0.0")
 public class EffLoadStructure extends Effect {
 
+    private static final String WORLD;
+    private static final StructureBlockLibApi STRUCTURE_API = StructureBlockLibApi.INSTANCE;
+
     static {
+        String worldContainer = Bukkit.getWorldContainer().getPath();
+        if (worldContainer.equalsIgnoreCase(".")) {
+            WORLD = Bukkit.getServer().getWorlds().get(0).getName();
+        } else {
+            WORLD = worldContainer + File.separator + Bukkit.getServer().getWorlds().get(0).getName();
+        }
         Skript.registerEffect(EffLoadStructure.class,
                 "(load|paste) [structure] %string% at %location% [with rotation (0¦0|1¦90|2¦180|3¦270)] [(|5¦[and] with entities)]",
                 "(load|paste) [structure] %string% at %location% [with rotation (0¦0|1¦90|2¦180|3¦270)] [and] [with] mirror front to back [(|5¦[and] with entities)]",
@@ -44,7 +54,7 @@ public class EffLoadStructure extends Effect {
 
     @SuppressWarnings({"unchecked", "null"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
+    public boolean init(Expression<?> @NotNull [] exprs, int i, @NotNull Kleenean kleenean, ParseResult parseResult) {
         name = (Expression<String>) exprs[0];
         loc = (Expression<Location>) exprs[1];
         rotate = parseResult.mark;
@@ -54,54 +64,62 @@ public class EffLoadStructure extends Effect {
     }
 
     @Override
-    protected void execute(Event event) {
-        PersistenceStructureService service = StructureBlockApi.INSTANCE.getStructurePersistenceService();
-        String world = Bukkit.getServer().getWorlds().get(0).getName();
-        final StructureSaveConfiguration saveConfig = service.createSaveConfiguration("minecraft", name.getSingle(event), world);
-        switch (rotate) {
-            case 0:
-            case 5:
-                saveConfig.setRotation(StructureRotation.NONE);
-                break;
+    protected void execute(@NotNull Event event) {
+        StructureRotation rotation;
+        switch (this.rotate) {
             case 1:
             case 4:
-                saveConfig.setRotation(StructureRotation.ROTATION_90);
+                rotation = StructureRotation.ROTATION_90;
                 break;
             case 2:
             case 7:
-                saveConfig.setRotation(StructureRotation.ROTATION_180);
+                rotation = StructureRotation.ROTATION_180;
                 break;
             case 3:
             case 6:
-                saveConfig.setRotation(StructureRotation.ROTATION_270);
-        }
-        switch (mirror) {
-            case 0:
-                saveConfig.setMirror(StructureMirror.NONE);
+                rotation = StructureRotation.ROTATION_270;
                 break;
+            default:
+                rotation = StructureRotation.NONE;
+        }
+
+        StructureMirror mirror;
+        switch (this.mirror) {
             case 1:
-                saveConfig.setMirror(StructureMirror.FRONT_BACK);
+                mirror = StructureMirror.FRONT_BACK;
                 break;
             case 2:
-                saveConfig.setMirror(StructureMirror.LEFT_RIGHT);
+                mirror = StructureMirror.LEFT_RIGHT;
+                break;
+            default:
+                mirror = StructureMirror.NONE;
         }
-        saveConfig.setIgnoreEntities(!withEntities);
+
+        boolean debug = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
         Location location = loc.getSingle(event);
         if (location == null) {
-            if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+            if (debug) {
                 Skript.error("Could not load structure " + name.toString(event, true) +
                         " .. location does not exist: " + loc.toString(event, true));
             }
             return;
         }
-        boolean structureExists = service.load(saveConfig, location);
-        if (!structureExists) {
-            Skript.error("Structure " + name.toString(event, true) + " does not exist!");
-        }
+        String name = this.name.getSingle(event);
+
+        STRUCTURE_API.loadStructure(SkBee.getPlugin())
+                .at(location).rotation(rotation).mirror(mirror)
+                .includeEntities(withEntities)
+                .loadFromWorld(WORLD, "minecraft", name)
+                .onException(e -> {
+                    Skript.error("Structure " + this.name.toString(event, true) + " does not exist!");
+                    if (debug) {
+                        e.printStackTrace();
+                    }
+                });
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "load structure " + name.toString(e, d) + " at " + loc.toString(e, d);
     }
 
