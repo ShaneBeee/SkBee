@@ -1,8 +1,12 @@
 version: ${project.version}
 
 types:
+	worldcreator: world creator
 	environment: environment type¦s @an
 	worldtype: world type¦s @-
+	bound: bound
+	nbtcompound: nbt compound
+	basecomponent: base component
 
 environment types:
 	normal: normal
