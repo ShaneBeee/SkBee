@@ -7,11 +7,12 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.elements.board.objects.Board;
 
 @Name("Board - Line")
@@ -29,7 +30,9 @@ public class EffBoardLine extends Effect {
     static {
         Skript.registerEffect(EffBoardLine.class,
                 "set line %number% of %players%'[s] [score]board[s] to %basecomponent/string%",
-                "delete line %number% of %players%'[s] [score]board[s]");
+                "set line %number% of [score]board[s] of %players% to %basecomponent/string%",
+                "delete line %number% of %players%'[s] [score]board[s]",
+                "delete line %number% of [score]board[s] of %players%");
     }
 
     private Expression<Number> line;
@@ -39,10 +42,10 @@ public class EffBoardLine extends Effect {
 
     @SuppressWarnings("unchecked")
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean kleenean, @NotNull ParseResult parseResult) {
         line = (Expression<Number>) exprs[0];
         players = (Expression<Player>) exprs[1];
-        set = matchedPattern == 0;
+        set = matchedPattern <= 1;
         if (set) {
             text = (Expression<Object>) exprs[2];
         }
@@ -50,7 +53,7 @@ public class EffBoardLine extends Effect {
     }
 
     @Override
-    protected void execute(Event event) {
+    protected void execute(@NotNull Event event) {
         Player[] players = this.players.getArray(event);
         int line = this.line.getSingle(event).intValue();
         if (line > 15 || line < 1) return; // Only set lines 1-15
@@ -77,7 +80,7 @@ public class EffBoardLine extends Effect {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String set = this.set ? "set" : "delete";
         String string = this.set ? " to " + text.toString(e, d) : "";
         return set + " line " + line.toString(e, d) + " of " + players.toString(e,d) + " scoreboard" + string;
