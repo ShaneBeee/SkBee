@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.github.shynixn.structureblocklib.api.bukkit.StructureBlockLibApi;
+import com.github.shynixn.structureblocklib.api.enumeration.StructureRestriction;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -76,6 +77,7 @@ public class EffSaveStructure extends Effect {
         String name = this.name.getSingle(event);
 
         STRUCTURE_API.saveStructure(SkBee.getPlugin())
+                .restriction(StructureRestriction.UNLIMITED)
                 .at(low).sizeX(x3).sizeY(y3).sizeZ(z3)
                 .includeEntities(true)
                 .saveToWorld(WORLD, "minecraft", name)
