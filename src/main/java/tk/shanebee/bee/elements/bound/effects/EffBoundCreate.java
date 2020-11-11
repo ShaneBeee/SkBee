@@ -61,10 +61,18 @@ public class EffBoundCreate extends Effect {
         if (create) {
             Location lesser = this.loc1.getSingle(event);
             Location greater = this.loc2.getSingle(event);
+            if (lesser == null || greater == null) return;
+
+            // both locations need to be in the same world
+            if (lesser.getWorld() == null || lesser.getWorld() != greater.getWorld()) return;
+
             if (full) {
+                // clone to prevent changing original location variables
+                lesser = lesser.clone();
+                greater = greater.clone();
                 World w = greater.getWorld();
-                assert w != null;
                 int max = w.getMaxHeight() - 1;
+
                 lesser.setY(0);
                 greater.setY(max);
             }
