@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.Version;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -27,8 +28,11 @@ import java.util.List;
 public class ExprBlockCuboid extends SimpleExpression<Block> {
 
     static {
-        Skript.registerExpression(ExprBlockCuboid.class, Block.class, ExpressionType.COMBINED,
-                "[(all [[of] the]|the)] blocks within %location% and %location%");
+        // Skript added this expression in 2.5.1, so we don't need to register it
+        if (Skript.getVersion().isSmallerThan(new Version(2, 5, 1))) {
+            Skript.registerExpression(ExprBlockCuboid.class, Block.class, ExpressionType.COMBINED,
+                    "[(all [[of] the]|the)] blocks within %location% and %location%");
+        }
     }
 
     private Expression<Location> from;
