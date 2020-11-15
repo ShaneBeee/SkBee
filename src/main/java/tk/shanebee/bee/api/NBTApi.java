@@ -124,6 +124,7 @@ public class NBTApi {
                 return null;
             case ITEM_STACK:
                 ItemStack itemStack = (ItemStack) object;
+                if (itemStack.getType() == Material.AIR) return itemStack;
                 NBTItem item = new NBTItem(itemStack);
                 item.mergeCompound(new NBTContainer(value));
                 ItemMeta meta = item.getItem().getItemMeta();
@@ -132,7 +133,7 @@ public class NBTApi {
                 return item.getItem();
             case ITEM_TYPE:
                 ItemStack stack = ((ItemType) object).getRandom();
-                if (stack == null) return object;
+                if (stack == null || stack.getType() == Material.AIR) return object;
 
                 NBTItem nbtItemType = new NBTItem(stack);
                 nbtItemType.mergeCompound(new NBTContainer(value));
@@ -142,7 +143,7 @@ public class NBTApi {
                 return object;
             case SLOT:
                 ItemStack slotItemStack = ((Slot) object).getItem();
-                if (slotItemStack != null) {
+                if (slotItemStack != null && slotItemStack.getType() != Material.AIR) {
                     ((Slot) object).setItem((ItemStack) addNBT(slotItemStack, value, ObjectType.ITEM_STACK));
                 }
                 return object;
