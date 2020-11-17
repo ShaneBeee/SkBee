@@ -471,12 +471,17 @@ public class NBTApi {
             case NBTTagInt:
                 return compound.getInteger(tag);
             case NBTTagIntArray:
-                UUID uuid = compound.getUUID(tag);
-                if (uuid != null) {
-                    return uuid;
-                } else {
-                    return Collections.singletonList(compound.getIntArray(tag));
+                if (compound.getIntArray(tag).length == 4) {
+                    UUID uuid = compound.getUUID(tag);
+                    if (uuid != null) {
+                        return uuid;
+                    }
                 }
+                List<Integer> intArray = new ArrayList<>();
+                for (int i : compound.getIntArray(tag)) {
+                    intArray.add(i);
+                }
+                return intArray;
             case NBTTagFloat:
                 return compound.getFloat(tag);
             case NBTTagShort:
