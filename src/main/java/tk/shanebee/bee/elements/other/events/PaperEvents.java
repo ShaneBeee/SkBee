@@ -6,21 +6,22 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
+import com.destroystokyo.paper.event.block.BeaconEffectEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
-import com.destroystokyo.paper.event.entity.ProjectileCollideEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import org.bukkit.Location;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Projectile;
+import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -171,6 +172,36 @@ public class PaperEvents {
                 @Override
                 public Inventory get(@NotNull AnvilDamagedEvent event) {
                     return event.getInventory();
+                }
+            }, 0);
+        }
+
+        // Beacon Effect Event
+        if (Skript.classExists("com.destroystokyo.paper.event.block.BeaconEffectEvent")) {
+            Skript.registerEvent("Beacon Effect", SimpleEvent.class, BeaconEffectEvent.class, "beacon effect")
+                    .description("Called when a beacon effect is being applied to a player. Requires Paper 1.9+")
+                    .examples("on beacon effect:",
+                            "\tif event-player does not have permission \"my.server.beacons\":",
+                            "\t\tcancel event")
+                    .since("INSERT VERSION");
+            EventValues.registerEventValue(BeaconEffectEvent.class, Player.class, new Getter<Player, BeaconEffectEvent>() {
+                @Override
+                public Player get(BeaconEffectEvent e) {
+                    return e.getPlayer();
+                }
+            }, 0);
+            // TODO These two values will make more sense in the future (Currently have a PR for potion effects in Skript)
+            EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffectType.class, new Getter<PotionEffectType, BeaconEffectEvent>() {
+                @Override
+                public PotionEffectType get(BeaconEffectEvent e) {
+                    return e.getEffect().getType();
+                }
+            }, 0);
+            EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffect.class, new Getter<PotionEffect, BeaconEffectEvent>() {
+                @Nullable
+                @Override
+                public PotionEffect get(BeaconEffectEvent e) {
+                    return e.getEffect();
                 }
             }, 0);
         }
