@@ -68,11 +68,11 @@ public class ExprNBTUuid extends SimpleExpression<Object> {
         if (pattern < 2) {
             int[] uuidIntArray = Util.uuidToIntArray(uuid);
             if (pattern == 0) {
-                List<Object> uuidList = new ArrayList<>();
+                List<Integer> uuidList = new ArrayList<>();
                 for (int i : uuidIntArray) {
                     uuidList.add(i);
                 }
-                return new Object[]{uuidList};
+                return uuidList.toArray(new Integer[0]);
             } else {
                 StringBuilder builder = new StringBuilder("[I;");
                 for (int i = 0; i < 4; i++) {
