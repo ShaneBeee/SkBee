@@ -18,12 +18,14 @@ import tk.shanebee.bee.api.util.Util;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
 @Name("NBT - UUID for NBT")
 @Description({"Allows you to get an entity's UUID which can be represented in an NBT compound. Prior to 1.16 UUIDs were represented ",
-        "as most/least significant bits. As of 1.16, they are now represented as int arrays."})
+        "as most/least significant bits. As of 1.16, they are now represented as int arrays. If the player/entity is excluded, this ",
+        "will return a random UUID."})
 @Examples({"set {_u::*} to uuid int array of player",
         "set {_u} to uuid int array as string from player",
         "set {_m} to uuid most from target entity",
@@ -33,10 +35,11 @@ public class ExprNBTUuid extends SimpleExpression<Object> {
 
     static {
         Skript.registerExpression(ExprNBTUuid.class, Object.class, ExpressionType.SIMPLE,
-                "uuid (int array[(1¦ as string)]|2¦most[ bits]|3¦least[ bits]) (from|of) %offlineplayer/entity%");
+                "uuid (int array[(1¦ as string)]|2¦most[ bits]|3¦least[ bits]) [(from|of) %-offlineplayer/entity%]");
     }
 
     private int pattern;
+    @Nullable
     private Expression<Object> entity;
 
     @SuppressWarnings("unchecked")
@@ -50,29 +53,34 @@ public class ExprNBTUuid extends SimpleExpression<Object> {
     @Nullable
     @Override
     protected Object[] get(@NotNull Event e) {
-        Object object = this.entity.getSingle(e);
-        if (object == null) return null;
-        UUID uuid;
-        if (object instanceof OfflinePlayer) {
-            uuid = ((OfflinePlayer) object).getUniqueId();
-        } else {
-            uuid = ((Entity) object).getUniqueId();
+        UUID uuid = UUID.randomUUID(); // If the entity is null, return a random UUID
+        if (this.entity != null) {
+            Object object = this.entity.getSingle(e);
+            if (object == null) return null;
+
+            if (object instanceof OfflinePlayer) {
+                uuid = ((OfflinePlayer) object).getUniqueId();
+            } else {
+                uuid = ((Entity) object).getUniqueId();
+            }
         }
 
         if (pattern < 2) {
-            List<Integer> test = new ArrayList<>();
-            StringBuilder builder = new StringBuilder("[I;");
-            int[] t = Util.uuidToIntArray(uuid);
-            for (int i = 0; i < 4; i++) {
-                test.add(t[i]);
-                if (i != 0) {
-                    builder.append(",");
-                }
-                builder.append(t[i]);
-            }
+            int[] uuidIntArray = Util.uuidToIntArray(uuid);
             if (pattern == 0) {
-                return test.toArray();
+                List<Object> uuidList = new ArrayList<>();
+                for (int i : uuidIntArray) {
+                    uuidList.add(i);
+                }
+                return new Object[]{uuidList};
             } else {
+                StringBuilder builder = new StringBuilder("[I;");
+                for (int i = 0; i < 4; i++) {
+                    if (i != 0) {
+                        builder.append(",");
+                    }
+                    builder.append(uuidIntArray[i]);
+                }
                 return new String[]{builder.append("]").toString()};
             }
         } else if (pattern == 2) {
