@@ -15,11 +15,8 @@ import ch.njol.util.Kleenean;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
-import de.tr7zw.changeme.nbtapi.NBTTileEntity;
-import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -68,8 +65,9 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             NBTCompound compound = null;
             if (object instanceof Block) {
                 BlockState state = ((Block) object).getState();
-                if (state instanceof TileState) {
-                    compound = new NBTCustomTileEntity(((TileState) state));
+
+                if (NBTApi.isTileEntity(state)) {
+                    compound = new NBTCustomTileEntity(state);
                 }
             } else if (object instanceof Entity) {
                 compound = new NBTCustomEntity(((Entity) object));

@@ -1,5 +1,6 @@
 package tk.shanebee.bee.api;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.slot.Slot;
 import de.tr7zw.changeme.nbtapi.*;
@@ -22,7 +23,6 @@ import tk.shanebee.bee.config.Config;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -31,6 +31,7 @@ import java.util.UUID;
  */
 public class NBTApi {
 
+    public static final boolean HAS_PERSISTENCE = Skript.isRunningMinecraft(1, 14);
     private final Config CONFIG;
 
     public NBTApi() {
@@ -159,16 +160,18 @@ public class NBTApi {
                 return object;
             case BLOCK:
                 BlockState blockState = ((Block) object).getState();
-                if (!(blockState instanceof TileState)) return object;
+                //if (HAS_PERSISTENCE && !(blockState instanceof TileState)) return object;
 
-                NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity(((TileState) blockState));
-                NBTCompound updated = new NBTContainer(value);
-                if (updated.hasKey("custom")) {
-                    NBTCompound custom = nbtBlock.getCustomNBT();
-                    custom.mergeCompound(updated.getCompound("custom"));
-                    nbtBlock.setCustomNBT(custom);
+                if (isTileEntity(blockState)) {
+                    NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity((blockState));
+                    NBTCompound updated = new NBTContainer(value);
+                    if (updated.hasKey("custom")) {
+                        NBTCompound custom = nbtBlock.getCustomNBT();
+                        custom.mergeCompound(updated.getCompound("custom"));
+                        nbtBlock.setCustomNBT(custom);
+                    }
+                    nbtBlock.mergeCompound(updated);
                 }
-                nbtBlock.mergeCompound(updated);
                 return object;
             default:
                 if (CONFIG.SETTINGS_DEBUG)
@@ -513,6 +516,21 @@ public class NBTApi {
                     throw new IllegalArgumentException("Unknown tag type, please let the dev know -> type: " + type.toString());
         }
         return null;
+    }
+
+    /**
+     * Utility method to check if a block is actually a block tile
+     *
+     * @param blockState State to check
+     * @return True if block state is actually a tile
+     */
+    public static boolean isTileEntity(BlockState blockState) {
+        if (HAS_PERSISTENCE) {
+            return blockState instanceof TileState;
+        } else {
+            // Hacky method to check if a BlockState is actually a TileState on legacy versions
+            return !blockState.getClass().getName().endsWith("CraftBlockState");
+        }
     }
 
     /**
