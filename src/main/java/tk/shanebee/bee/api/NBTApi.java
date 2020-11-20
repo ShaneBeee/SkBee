@@ -17,6 +17,7 @@ import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBT.NBTCustomEntity;
 import tk.shanebee.bee.api.NBT.NBTCustomTileEntity;
 import tk.shanebee.bee.api.reflection.SkReflection;
+import tk.shanebee.bee.api.util.MathUtil;
 import tk.shanebee.bee.api.util.Util;
 import tk.shanebee.bee.config.Config;
 
@@ -378,29 +379,25 @@ public class NBTApi {
         NBTType type = compound.getType(key);
         Object singleObject = object[0];
 
-        if ((type == NBTType.NBTTagString && singleObject instanceof String) || (custom && isSingle && singleObject instanceof String)) {
+        if (singleObject instanceof String && (type == NBTType.NBTTagString || custom && isSingle)) {
             compound.setString(key, ((String) singleObject));
 
-        } else if ((type == NBTType.NBTTagByte && singleObject instanceof Number) ||
-                (custom && isSingle && singleObject instanceof Long && ((Long) singleObject) <= Byte.MAX_VALUE && ((Long) singleObject) >= Byte.MIN_VALUE)) {
+        } else if (singleObject instanceof Number && (type == NBTType.NBTTagByte || (custom && isSingle && MathUtil.isByte(singleObject)))) {
             compound.setByte(key, ((Number) singleObject).byteValue());
 
-        } else if ((type == NBTType.NBTTagShort && singleObject instanceof Number) ||
-                (custom && isSingle && singleObject instanceof Long && ((Long) singleObject) <= Short.MAX_VALUE && ((Long) singleObject) >= Short.MIN_VALUE)) {
+        } else if (singleObject instanceof Number && (type == NBTType.NBTTagShort || (custom && isSingle && MathUtil.isShort(singleObject)))) {
             compound.setShort(key, ((Number) singleObject).shortValue());
 
-        } else if ((type == NBTType.NBTTagInt && singleObject instanceof Number) ||
-                (custom && isSingle && singleObject instanceof Long && ((Long) singleObject) <= Integer.MAX_VALUE && ((Long) singleObject) >= Integer.MIN_VALUE)) {
+        } else if (singleObject instanceof Number && (type == NBTType.NBTTagInt || (custom && isSingle && MathUtil.isInt(singleObject)))) {
             compound.setInteger(key, ((Number) singleObject).intValue());
 
-        } else if ((type == NBTType.NBTTagLong && singleObject instanceof Number) || (custom && isSingle && singleObject instanceof Long)) {
+        } else if (singleObject instanceof Number && (type == NBTType.NBTTagLong || (custom && isSingle && singleObject instanceof Long))) {
             compound.setLong(key, ((Number) singleObject).longValue());
 
-        } else if ((type == NBTType.NBTTagFloat && singleObject instanceof Number) ||
-                (custom && isSingle && singleObject instanceof Double && ((Double) singleObject) <= Double.MAX_VALUE && ((Double) singleObject) >= Double.MIN_NORMAL)) {
+        } else if (singleObject instanceof Number && (type == NBTType.NBTTagFloat || (custom && isSingle && MathUtil.isFloat(singleObject)))) {
             compound.setFloat(key, ((Number) singleObject).floatValue());
 
-        } else if ((type == NBTType.NBTTagDouble && singleObject instanceof Number) || (custom && isSingle && singleObject instanceof Double)) {
+        } else if (singleObject instanceof Number && (type == NBTType.NBTTagDouble || (custom && isSingle && singleObject instanceof Double))) {
             compound.setDouble(key, ((Number) singleObject).doubleValue());
 
         } else if ((type == NBTType.NBTTagCompound || (custom && isSingle)) && singleObject instanceof NBTCompound) {
@@ -415,26 +412,23 @@ public class NBTApi {
             }
             comp.mergeCompound(((NBTCompound) singleObject));
 
-        } else if (type == NBTType.NBTTagIntArray || (custom && !isSingle && (singleObject instanceof Long || singleObject instanceof Integer))) {
-            int[] n = new int[object.length];
-            for (int i = 0; i < object.length; i++) {
-                n[i] = ((Number) object[i]).intValue();
-            }
-            compound.setIntArray(key, n);
-
-        } else if (type == NBTType.NBTTagByteArray) {
-            byte[] n = new byte[object.length];
-            for (int i = 0; i < object.length; i++) {
-                n[i] = (byte) object[i];
-            }
-            compound.setByteArray(key, n);
-
         } else if (type == NBTType.NBTTagList || (custom && !isSingle)) {
-            if (singleObject instanceof Integer) {
+            if (MathUtil.isInt(singleObject)) {
                 NBTList<Integer> list = compound.getIntegerList(key);
                 list.clear();
                 for (Object o : object) {
                     list.add(((Number) o).intValue());
+                }
+            } else if (singleObject instanceof Long) {
+                NBTList<Long> list = compound.getLongList(key);
+                list.clear();
+                for (Object o : object) {
+                    list.add(((Number) o).longValue());
+                }
+            } else if (MathUtil.isFloat(singleObject)) {
+                NBTList<Float> list = compound.getFloatList(key);
+                for (Object o : object) {
+                    list.add(((Number) o).floatValue());
                 }
             } else if (singleObject instanceof Double) {
                 NBTList<Double> list = compound.getDoubleList(key);
@@ -452,8 +446,22 @@ public class NBTApi {
                     list.add((String) o);
                 }
             }
+        } else if (singleObject instanceof Number && type == NBTType.NBTTagByteArray) {
+            byte[] n = new byte[object.length];
+            for (int i = 0; i < object.length; i++) {
+                n[i] = ((Number) object[i]).byteValue();
+            }
+            compound.setByteArray(key, n);
+
+        } else if (singleObject instanceof Number && type == NBTType.NBTTagIntArray) {
+            int[] n = new int[object.length];
+            for (int i = 0; i < object.length; i++) {
+                n[i] = ((Number) object[i]).intValue();
+            }
+            compound.setIntArray(key, n);
+
         } else {
-            Util.skriptError("Other-> KEY: " + key + " VALUE: " + singleObject + " VALUE-CLASS: " + object.getClass());
+            Util.skriptError("Other-> KEY: " + key + " VALUE: " + singleObject + " VALUE-CLASS: " + object.getClass() + " TYPE: " + type);
         }
     }
 
@@ -589,6 +597,7 @@ public class NBTApi {
          * @param object Object to compare
          * @return True if object matches the class type
          */
+        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
         public boolean isAssignableFrom(Object object, boolean debug) {
             if (cl.isAssignableFrom(object.getClass()))
                 return true;
