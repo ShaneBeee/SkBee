@@ -427,21 +427,25 @@ public class NBTApi {
                 }
             } else if (MathUtil.isFloat(singleObject)) {
                 NBTList<Float> list = compound.getFloatList(key);
+                list.clear();
                 for (Object o : object) {
                     list.add(((Number) o).floatValue());
                 }
             } else if (singleObject instanceof Double) {
                 NBTList<Double> list = compound.getDoubleList(key);
+                list.clear();
                 for (Object o : object) {
                     list.add(((Number) o).doubleValue());
                 }
             } else if (singleObject instanceof NBTCompound) {
                 NBTCompoundList list = compound.getCompoundList(key);
+                list.clear();
                 for (Object o : object) {
                     list.addCompound(((NBTCompound) o));
                 }
             } else if (singleObject instanceof String) {
                 NBTList<String> list = compound.getStringList(key);
+                list.clear();
                 for (Object o : object) {
                     list.add((String) o);
                 }
