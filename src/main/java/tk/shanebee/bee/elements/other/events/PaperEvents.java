@@ -16,7 +16,10 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
@@ -172,6 +175,20 @@ public class PaperEvents {
                 @Override
                 public Inventory get(@NotNull AnvilDamagedEvent event) {
                     return event.getInventory();
+                }
+            }, 0);
+            EventValues.registerEventValue(AnvilDamagedEvent.class, Block.class, new Getter<Block, AnvilDamagedEvent>() {
+                @Nullable
+                @Override
+                public Block get(AnvilDamagedEvent event) {
+                    return event.getViewers().get(0).getTargetBlockExact(10);
+                }
+            }, 0);
+            EventValues.registerEventValue(AnvilDamagedEvent.class, Player.class, new Getter<Player, AnvilDamagedEvent>() {
+                @Nullable
+                @Override
+                public Player get(AnvilDamagedEvent event) {
+                    return ((Player) event.getViewers().get(0));
                 }
             }, 0);
         }
