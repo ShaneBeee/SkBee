@@ -20,11 +20,11 @@ import javax.annotation.Nullable;
 
 @Name("Tab Completion Argument")
 @Description("Get the argument in a tab complete event.")
-@Examples({"on tab complete of \"/test\":",
+@Examples({"on tab complete of \"/breakfast\":",
         "\tset tab completions for position 1 to \"toast\", \"eggs\" and \"waffles\"",
-        "\tif tab arg-1 = \"toast\"",
+        "\tif tab arg-1 = \"toast\":",
         "\t\tset tab completions for position 2 to \"butter\", \"peanut_butter\" and \"jam\"",
-        "\telse if tab arg-1 = \"eggs\"",
+        "\telse if tab arg-1 = \"eggs\":",
         "\t\tset tab completions for position 2 to \"sunny_side_up\", \"scrambled\" and \"over_easy\""})
 @Since("1.7.0")
 public class ExprTabCompletionArgs extends SimpleExpression<String> {

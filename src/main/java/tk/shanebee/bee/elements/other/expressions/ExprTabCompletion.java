@@ -29,7 +29,7 @@ import java.util.List;
 @Description({"Set the tab completions used in a tab complete event. ",
         "You can specify which position in the command arguments also (will default to position 1). ",
         "You can also remove texts from tab completions."})
-@Examples({"on tab complete of \"/mycommand\"",
+@Examples({"on tab complete of \"/mycommand\":",
         "\tset tab completions for position 1 to \"one\", \"two\" and \"three\"",
         "\tset tab completions for position 2 to 1, 2 and 3",
         "\tset tab completions for position 3 to all players",
