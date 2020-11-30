@@ -412,7 +412,7 @@ public class NBTApi {
             }
             comp.mergeCompound(((NBTCompound) singleObject));
 
-        } else if (type == NBTType.NBTTagList || (custom && !isSingle)) {
+        } else if (type == NBTType.NBTTagList || (custom && !isSingle && !(object instanceof Integer[]) && !(object instanceof Byte[]))) {
             if (MathUtil.isInt(singleObject)) {
                 NBTList<Integer> list = compound.getIntegerList(key);
                 list.clear();
@@ -450,14 +450,14 @@ public class NBTApi {
                     list.add((String) o);
                 }
             }
-        } else if (singleObject instanceof Number && type == NBTType.NBTTagByteArray) {
+        } else if (singleObject instanceof Number && (type == NBTType.NBTTagByteArray || object instanceof Byte[])) {
             byte[] n = new byte[object.length];
             for (int i = 0; i < object.length; i++) {
                 n[i] = ((Number) object[i]).byteValue();
             }
             compound.setByteArray(key, n);
 
-        } else if (singleObject instanceof Number && type == NBTType.NBTTagIntArray) {
+        } else if (singleObject instanceof Number && (type == NBTType.NBTTagIntArray || object instanceof Integer[])) {
             int[] n = new int[object.length];
             for (int i = 0; i < object.length; i++) {
                 n[i] = ((Number) object[i]).intValue();
