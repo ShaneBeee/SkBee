@@ -30,6 +30,9 @@ public class MathUtil {
     }
 
     public static boolean isFloat(Object object) {
+        if (object instanceof Float) {
+            return true;
+        }
         if (object instanceof Double) {
             double d = ((Number) object).doubleValue();
             return d <= Float.MAX_VALUE && d >= Float.MIN_VALUE;
