@@ -200,7 +200,7 @@ public class PaperEvents {
                     .examples("on beacon effect:",
                             "\tif event-player does not have permission \"my.server.beacons\":",
                             "\t\tcancel event")
-                    .since("INSERT VERSION");
+                    .since("1.8.4");
             EventValues.registerEventValue(BeaconEffectEvent.class, Player.class, new Getter<Player, BeaconEffectEvent>() {
                 @Override
                 public Player get(BeaconEffectEvent e) {
