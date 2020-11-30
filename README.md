@@ -15,4 +15,4 @@ This is only a small list of the many things included
 See the [**Wiki**](https://github.com/ShaneBeee/SkBee/wiki) for more detailed info on syntaxes
 
 ## Docs
-Coming soon!
+You can find all the docs on [**SkriptHub**](https://skripthub.net/docs/?addon=SkBee)
