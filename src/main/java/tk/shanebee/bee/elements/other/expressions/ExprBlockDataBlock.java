@@ -10,17 +10,18 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
+import tk.shanebee.bee.api.util.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 @Name("Block Data - Block")
 @Description({"Get block data from a block. You can get a string of block data, all the tags in a block data or a specific tag. ",
@@ -102,14 +103,19 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
             switch (parse) {
                 // Tag "string"
                 case 2:
-                    String newData = block.getType().getKey() + "[" + tag.getSingle(e) + "=" + obj + "]";
-                    try {
-                        blockData = Bukkit.createBlockData(newData);
-                        BlockData oldData = block.getBlockData();
-                        blockData = oldData.merge(blockData);
-                        block.setBlockData(blockData);
-                    } catch (IllegalArgumentException ex) {
-                        Skript.error("Could not parse block data: " + newData, ErrorQuality.SEMANTIC_ERROR);
+                    BlockData oldData = block.getBlockData();
+                    if (oldData.getAsString().contains("[")) { // only attempt to change data for a block that has possible data
+                        String tag = this.tag != null ? this.tag.getSingle(e) : null;
+                        if (tag == null) continue;
+
+                        String newData = block.getType().getKey() + "[" + tag.toLowerCase(Locale.ROOT) + "=" + obj + "]";
+                        try {
+                            blockData = Bukkit.createBlockData(newData);
+                            blockData = oldData.merge(blockData);
+                            block.setBlockData(blockData);
+                        } catch (IllegalArgumentException ex) {
+                            Util.debug("Could not parse block data: %s", newData);
+                        }
                     }
                     break;
                 // Tags
@@ -122,7 +128,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
                         blockData = Bukkit.createBlockData(obj);
                         block.setBlockData(blockData, parse != 3);
                     } catch (IllegalArgumentException ex) {
-                        Skript.error("Could not parse block data: " + obj, ErrorQuality.SEMANTIC_ERROR);
+                        Util.debug("Could not parse block data: %s", obj);
                     }
             }
         }
