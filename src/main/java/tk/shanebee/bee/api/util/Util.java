@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.log.ErrorQuality;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import tk.shanebee.bee.SkBee;
 
 import java.util.UUID;
 
@@ -26,6 +27,16 @@ public class Util {
 
     public static void skriptError(String error) {
         Skript.error(getColString(PREFIX_ERROR + error), ErrorQuality.SEMANTIC_ERROR);
+    }
+
+    public static void debug(String debug) {
+        if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+            Bukkit.getConsoleSender().sendMessage(getColString(PREFIX_ERROR + debug));
+        }
+    }
+
+    public static void debug(String format, Object... objects) {
+        debug(String.format(format, objects));
     }
 
     /**
