@@ -68,7 +68,13 @@ public class TabEvent extends SkriptEvent {
 
         TabCompleteEvent tabEvent = ((TabCompleteEvent) event);
         String command = tabEvent.getBuffer().split(" ")[0];
+        if (command.charAt(0) == '/') {
+            command = command.substring(1);
+        }
         for (String s : commands) {
+            if (s.charAt(0) == '/') {
+                s = s.substring(1);
+            }
             if (s.equalsIgnoreCase(command)) {
                 return true;
             }
