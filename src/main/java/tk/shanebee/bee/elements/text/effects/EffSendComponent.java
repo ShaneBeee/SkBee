@@ -32,7 +32,7 @@ public class EffSendComponent extends Effect {
     static {
         SUPPORTS_SENDER = Skript.classExists("org/bukkit/command/CommandSender$Spigot") &&
                 Skript.methodExists(CommandSender.Spigot.class, "sendMessage", UUID.class, BaseComponent.class);
-        Skript.registerEffect(EffSendComponent.class, "send [text] component[s] %basecomponents% [to %players%] [from %player%]");
+        Skript.registerEffect(EffSendComponent.class, "send [text] component[s] %basecomponents% [to %players%] [from %-player%]");
     }
 
     private Expression<BaseComponent> components;
