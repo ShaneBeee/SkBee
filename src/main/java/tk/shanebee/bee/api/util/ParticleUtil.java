@@ -3,6 +3,7 @@ package tk.shanebee.bee.api.util;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -107,67 +108,15 @@ public class ParticleUtil {
         } else if (t == Particle.DustOptions.class) {
             return "dust-option";
         } else if (t == BlockData.class) {
-            return "blockdata";
+            return "blockdata/itemtype";
         }
         return "";
     }
 
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count) {
-        if (particle.getDataType() != Void.class) return;
-        if (players == null) {
-            World world = location.getWorld();
-            if (world == null) return;
-            world.spawnParticle(particle, location, count);
-        } else {
-            for (Player player : players) {
-                assert player != null;
-                player.spawnParticle(particle, location, count);
-            }
-        }
-    }
-
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Vector offset) {
-        if (offset == null) return;
-        if (particle.getDataType() != Void.class) return;
-
-        double x = offset.getX();
-        double y = offset.getY();
-        double z = offset.getZ();
-        if (players == null) {
-            World world = location.getWorld();
-            if (world == null) return;
-            world.spawnParticle(particle, location, count, x, y, z);
-        } else {
-            for (Player player : players) {
-                assert player != null;
-                player.spawnParticle(particle, location, count, x, y, z);
-            }
-        }
-    }
-
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Vector offset, double extra) {
-        if (offset == null) return;
-        if (particle.getDataType() != Void.class) return;
-
-        double x = offset.getX();
-        double y = offset.getY();
-        double z = offset.getZ();
-        if (players == null) {
-            World world = location.getWorld();
-            if (world == null) return;
-            world.spawnParticle(particle, location, count, x, y, z, extra);
-        } else {
-            for (Player player : players) {
-                assert player != null;
-                player.spawnParticle(particle, location, count, x, y, z, extra);
-            }
-        }
-    }
-
     public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Vector offset, double extra, Object data) {
-        if (offset == null || data == null) return;
+        if (offset == null) return;
         Object particleData = getData(particle, data);
-        if (particleData == null) return;
+        if (particle.getDataType() != Void.class && particleData == null) return;
 
         double x = offset.getX();
         double y = offset.getY();
@@ -185,9 +134,9 @@ public class ParticleUtil {
     }
 
     public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Vector offset, Object data) {
-        if (offset == null || data == null) return;
+        if (offset == null) return;
         Object particleData = getData(particle, data);
-        if (particleData == null) return;
+        if (particle.getDataType() != Void.class && particleData == null) return;
 
         double x = offset.getX();
         double y = offset.getY();
@@ -206,7 +155,7 @@ public class ParticleUtil {
 
     public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data) {
         Object particleData = getData(particle, data);
-        if (particleData == null) return;
+        if (particle.getDataType() != Void.class && particleData == null) return;
 
         if (players == null) {
             World world = location.getWorld();
@@ -224,8 +173,17 @@ public class ParticleUtil {
         Class<?> dataType = particle.getDataType();
         if (dataType == ItemStack.class && data instanceof ItemType) {
             return ((ItemType) data).getRandom();
-        } else if ((dataType == BlockData.class && data instanceof BlockData) || (dataType == Particle.DustOptions.class && data instanceof Particle.DustOptions)) {
+        } else if (dataType == Particle.DustOptions.class && data instanceof Particle.DustOptions) {
             return data;
+        } else if (dataType == BlockData.class) {
+            if (data instanceof BlockData) {
+                return data;
+            } else if (data instanceof ItemType) {
+                Material material = ((ItemType) data).getMaterial();
+                if (material.isBlock()) {
+                    return material.createBlockData();
+                }
+            }
         }
         return null;
     }

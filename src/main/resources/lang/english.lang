@@ -5,10 +5,10 @@ types:
 	environment: environment type¦s @an
 	worldtype: world type¦s @-
 	bound: bound
-	nbtcompound: nbt compound
-	basecomponent: base component
-	particle: particle
-	dustoption: dust option
+	nbtcompound: nbt compound¦s @an
+	basecomponent: base component¦s @-
+	particle: particle¦s @-
+	dustoption: dust option¦s @-
 
 environment types:
 	normal: normal

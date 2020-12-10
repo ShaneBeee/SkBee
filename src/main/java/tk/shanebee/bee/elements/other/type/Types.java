@@ -26,15 +26,15 @@ public class Types {
                             "these are distinguished by their data type within the square brackets.")
                     .usage(ParticleUtil.getNamesAsString())
                     .examples("play 1 of soul at location of player",
-                            "play 10 of dust at location of player using dustOption(green, 10)",
-                            "play 3 of item at location of player using player's tool",
-                            "play 1 of block at location of player using dirt[]")
+                            "play 10 of dust using dustOption(green, 10) at location of player",
+                            "play 3 of item using player's tool at location of player",
+                            "play 1 of block using dirt at location of player")
                     .parser(new Parser<Particle>() {
 
                         @Nullable
                         @Override
                         public Particle parse(String s, ParseContext context) {
-                            return ParticleUtil.parse(s);
+                            return ParticleUtil.parse(s.replace(" ", "_"));
                         }
 
                         @Override
@@ -53,8 +53,10 @@ public class Types {
                         }
                     }));
 
-            Classes.registerClass(new ClassInfo<>(DustOptions.class, "dustoption").name(ClassInfo.NO_DOC));
+            Classes.registerClass(new ClassInfo<>(DustOptions.class, "dustoption")
+                    .name(ClassInfo.NO_DOC).user("dust options?"));
 
+            // Function to create DustOptions
             Functions.registerFunction(new JavaFunction<DustOptions>("dustOption", new Parameter[]{
                     new Parameter<>("color", Classes.getExactClassInfo(Color.class), true, null),
                     new Parameter<>("size", Classes.getExactClassInfo(Number.class), true, null)
