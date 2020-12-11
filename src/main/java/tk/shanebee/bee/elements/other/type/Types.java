@@ -29,6 +29,7 @@ public class Types {
                             "play 10 of dust using dustOption(green, 10) at location of player",
                             "play 3 of item using player's tool at location of player",
                             "play 1 of block using dirt at location of player")
+                    .since("1.9.0")
                     .parser(new Parser<Particle>() {
 
                         @Nullable
@@ -69,7 +70,7 @@ public class Types {
             }.description("Creates a new dust option to be used with 'dust' particle. Color can either be a regular color or an RGB color using",
                     "Skript's rgb() function. Size is the size the particle will be.")
                     .examples("set {_c} to dustOption(red, 1.5)", "set {_c} to dustOption(rgb(1, 255, 1), 3)")
-                    .since("INSERT VERSION"));
+                    .since("1.9.0"));
         }
     }
 

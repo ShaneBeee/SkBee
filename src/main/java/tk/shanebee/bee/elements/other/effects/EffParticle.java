@@ -34,7 +34,7 @@ import tk.shanebee.bee.api.util.ParticleUtil;
         "play 1 of block particle using dirt at location of target block",
         "play 10 of poof at player offset by vector(2, 2, 2) with extra 0.5",
         "play 20 of dust using dustOption(blue, 10) at location above target block"})
-@Since("INSERT VERSION")
+@Since("1.9.0")
 public class EffParticle extends Effect {
 
     static {
