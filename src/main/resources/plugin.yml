@@ -8,3 +8,5 @@ website: https://github.com/ShaneBeee/SkBee
 softdepend:
   - Skript
   - FastAsyncWorldEdit
+loadbefore:
+  - SkQuery
