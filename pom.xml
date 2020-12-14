@@ -42,6 +42,12 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
+            <groupId>io.papermc</groupId>
+            <artifactId>paperlib</artifactId>
+            <version>1.0.6</version>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
             <groupId>com.github.SkriptLang</groupId>
             <artifactId>Skript</artifactId>
             <version>2.5-alpha2</version>
@@ -157,6 +163,10 @@
                 </executions>
                 <configuration>
                     <relocations>
+                        <relocation>
+                            <pattern>io.papermc.lib</pattern>
+                            <shadedPattern>tk.shanebee.bee.api.paperlib</shadedPattern>
+                        </relocation>
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
                             <shadedPattern>tk.shanebee.bee.api.NBT</shadedPattern>
