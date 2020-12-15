@@ -119,23 +119,27 @@ public class Board {
     public void setLine(int line, String text) {
         Validate.isBetween(line, 1, 15);
         Team t = lines[line - 1];
-        if (text.length() > (MAX / 2)) {
-            String prefix = getColString(text.substring(0, (MAX / 2)));
-            String lastColor = ChatColor.getLastColors(prefix);
-            int splitMax = Math.min(text.length(), MAX - lastColor.length());
-            String suffix = getColString(lastColor + text.substring((MAX / 2), splitMax));
+        if (ChatColor.stripColor(text).length() > (MAX / 2)) {
+            // This is on hold for now until we can figure this out
+            // There was a bug with the breakup, due to not checking the length after stripping color
 
-            // Fix for split issues splitting between § and color code
-            if (prefix.substring(((MAX / 2) - 1), MAX / 2).equalsIgnoreCase("§")) {
-                prefix = prefix.substring(0, (MAX / 2) - 1);
-                int length = text.length() > (MAX - 2) ? (MAX - 1) : text.length();
-                suffix = getColString(text.substring((MAX / 2) - 1, length));
-            }
-            t.setPrefix(prefix);
-            t.setSuffix(suffix);
+//            String prefix = getColString(text.substring(0, (MAX / 2)));
+//            String lastColor = ChatColor.getLastColors(prefix);
+//            int splitMax = Math.min(text.length(), MAX - lastColor.length());
+//            String suffix = getColString(lastColor + text.substring((MAX / 2), splitMax));
+//
+//            // Fix for split issues splitting between § and color code
+//            if (prefix.substring(((MAX / 2) - 1), MAX / 2).equalsIgnoreCase("§")) {
+//                prefix = prefix.substring(0, (MAX / 2) - 1);
+//                int length = text.length() > (MAX - 2) ? (MAX - 1) : text.length();
+//                suffix = getColString(text.substring((MAX / 2) - 1, length));
+//            }
+//            t.setPrefix(prefix);
+//            t.setSuffix(suffix);
+            t.setPrefix("");
+            t.setSuffix("");
         } else {
-            String prefix = getColString(text);
-            t.setPrefix(prefix);
+            t.setPrefix(getColString(text));
             t.setSuffix("");
         }
         board.getScore(getColString(entries[line - 1])).setScore(line);
