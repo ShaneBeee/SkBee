@@ -8,6 +8,7 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
+import tk.shanebee.bee.api.reflection.ChatReflection;
 import tk.shanebee.bee.api.util.Validate;
 
 import java.util.HashMap;
@@ -119,25 +120,23 @@ public class Board {
     public void setLine(int line, String text) {
         Validate.isBetween(line, 1, 15);
         Team t = lines[line - 1];
-        if (ChatColor.stripColor(text).length() > (MAX / 2)) {
-            // This is on hold for now until we can figure this out
-            // There was a bug with the breakup, due to not checking the length after stripping color
+        if (LEGACY && text.length() > (MAX / 2)) {
+            String prefix = getColString(text.substring(0, (MAX / 2)));
+            String lastColor = ChatColor.getLastColors(prefix);
+            int splitMax = Math.min(text.length(), MAX - lastColor.length());
+            String suffix = getColString(lastColor + text.substring((MAX / 2), splitMax));
 
-//            String prefix = getColString(text.substring(0, (MAX / 2)));
-//            String lastColor = ChatColor.getLastColors(prefix);
-//            int splitMax = Math.min(text.length(), MAX - lastColor.length());
-//            String suffix = getColString(lastColor + text.substring((MAX / 2), splitMax));
-//
-//            // Fix for split issues splitting between § and color code
-//            if (prefix.substring(((MAX / 2) - 1), MAX / 2).equalsIgnoreCase("§")) {
-//                prefix = prefix.substring(0, (MAX / 2) - 1);
-//                int length = text.length() > (MAX - 2) ? (MAX - 1) : text.length();
-//                suffix = getColString(text.substring((MAX / 2) - 1, length));
-//            }
-//            t.setPrefix(prefix);
-//            t.setSuffix(suffix);
-            t.setPrefix("");
-            t.setSuffix("");
+            // Fix for split issues splitting between § and color code
+            if (prefix.substring(((MAX / 2) - 1), MAX / 2).equalsIgnoreCase("§")) {
+                prefix = prefix.substring(0, (MAX / 2) - 1);
+                int length = text.length() > (MAX - 2) ? (MAX - 1) : text.length();
+                suffix = getColString(text.substring((MAX / 2) - 1, length));
+            }
+            t.setPrefix(prefix);
+            t.setSuffix(suffix);
+
+        } else if (ChatColor.stripColor(text).length() > (MAX / 2)) {
+            ChatReflection.setTeamPrefix(t, getColString(text));
         } else {
             t.setPrefix(getColString(text));
             t.setSuffix("");
