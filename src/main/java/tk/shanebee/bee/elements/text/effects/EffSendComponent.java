@@ -32,17 +32,17 @@ public class EffSendComponent extends Effect {
     static {
         SUPPORTS_SENDER = Skript.classExists("org/bukkit/command/CommandSender$Spigot") &&
                 Skript.methodExists(CommandSender.Spigot.class, "sendMessage", UUID.class, BaseComponent.class);
-        Skript.registerEffect(EffSendComponent.class, "send [text] component[s] %basecomponents% [to %players%] [from %-player%]");
+        Skript.registerEffect(EffSendComponent.class, "send [text] component[s] %basecomponents% [to %commandsenders%] [from %-player%]");
     }
 
     private Expression<BaseComponent> components;
-    private Expression<Player> players;
+    private Expression<CommandSender> players;
     private Expression<Player> sender;
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         components = (Expression<BaseComponent>) exprs[0];
-        players = (Expression<Player>) exprs[1];
+        players = (Expression<CommandSender>) exprs[1];
         sender = (Expression<Player>) exprs[2];
         return true;
     }
@@ -54,12 +54,12 @@ public class EffSendComponent extends Effect {
         Player sender = this.sender != null ? this.sender.getSingle(e) : null;
 
         BaseComponent[] components = this.components.getArray(e);
-        for (Player player : this.players.getArray(e)) {
+        for (CommandSender player : this.players.getArray(e)) {
             sendMessage(player, sender, components);
         }
     }
 
-    private void sendMessage(Player receiver, Player sender, BaseComponent... components) {
+    private void sendMessage(CommandSender receiver, Player sender, BaseComponent... components) {
         if (SUPPORTS_SENDER && sender != null) {
             receiver.spigot().sendMessage(sender.getUniqueId(), components);
         } else {
@@ -73,7 +73,7 @@ public class EffSendComponent extends Effect {
         return String.format("send component[s] %s to %s %s",
                 components.toString(e, d),
                 players.toString(e, d),
-                "from " + (sender != null ? sender.toString(e, d) : ""));
+                sender != null ? "from " + sender.toString(e, d) : "");
     }
 
 }
