@@ -1,8 +1,10 @@
 package tk.shanebee.bee.api.reflection;
 
+import ch.njol.skript.Skript;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.Bukkit;
+import org.bukkit.scoreboard.Team;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -12,6 +14,7 @@ import java.lang.reflect.Method;
  */
 public class ChatReflection {
 
+    private static final boolean LEGACY = !Skript.isRunningMinecraft(1, 13);
     private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
 
     private enum Ver {
@@ -77,6 +80,52 @@ public class ChatReflection {
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             return null;
+        }
+    }
+
+    // Cache these classes/methods to prevent retrieving them too often
+    private static final Class<?> CRAFT_CHAT_MESSAGE = ReflectionUtils.getOBCClass("util.CraftChatMessage");
+    private static final Class<?> CRAFT_TEAM = ReflectionUtils.getOBCClass("scoreboard.CraftTeam");
+    private static final Class<?> NMS_TEAM = ReflectionUtils.getNMSClass("ScoreboardTeam");
+    private static final Class<?> NMS_ICHATBASE = ReflectionUtils.getNMSClass("IChatBaseComponent");
+    private static final Method SET_PREFIX;
+    private static final Method PREFIX_COMP_METHOD;
+
+    static {
+        Method PREFIX_COMP_METHOD1 = null;
+        Method SET_PREFIX1 = null;
+        if (CRAFT_TEAM != null && NMS_TEAM != null && CRAFT_CHAT_MESSAGE != null) {
+            try {
+                SET_PREFIX1 = NMS_TEAM.getDeclaredMethod("setPrefix", NMS_ICHATBASE);
+                PREFIX_COMP_METHOD1 = CRAFT_CHAT_MESSAGE.getDeclaredMethod("fromStringOrNull", String.class);
+            } catch (NoSuchMethodException e) {
+                e.printStackTrace();
+            }
+        }
+        PREFIX_COMP_METHOD = PREFIX_COMP_METHOD1;
+        SET_PREFIX = SET_PREFIX1;
+    }
+
+    /**
+     * Util method for setting team prefixes on 1.13+ with no char limit
+     *
+     * @param team   Team to set prefix for
+     * @param prefix Prefix to set
+     */
+    public static void setTeamPrefix(Team team, String prefix) {
+        if (LEGACY || CRAFT_TEAM == null || PREFIX_COMP_METHOD == null || SET_PREFIX == null) {
+            team.setPrefix("");
+            team.setSuffix("");
+            return;
+        }
+
+        try {
+            Object nmsTeam = ReflectionUtils.getField("team", CRAFT_TEAM, team);
+            Object prefixComp = PREFIX_COMP_METHOD.invoke(null, prefix);
+
+            SET_PREFIX.invoke(nmsTeam, prefixComp);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
         }
     }
 
