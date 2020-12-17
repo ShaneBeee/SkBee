@@ -15,27 +15,28 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Tab Completion Argument")
-@Description("Get the argument in a tab complete event.")
+@Description("Get the argument or a list of all arguments in a tab complete event.")
 @Examples({"on tab complete of \"/breakfast\":",
         "\tset tab completions for position 1 to \"toast\", \"eggs\" and \"waffles\"",
         "\tif tab arg-1 = \"toast\":",
         "\t\tset tab completions for position 2 to \"butter\", \"peanut_butter\" and \"jam\"",
         "\telse if tab arg-1 = \"eggs\":",
-        "\t\tset tab completions for position 2 to \"sunny_side_up\", \"scrambled\" and \"over_easy\""})
+        "\t\tset tab completions for position 2 to \"sunny_side_up\", \"scrambled\" and \"over_easy\"",
+        "", "set {_l::*} to tab args"})
 @Since("1.7.0")
 public class ExprTabCompletionArgs extends SimpleExpression<String> {
 
     static {
         if (Skript.classExists("org.bukkit.event.server.TabCompleteEvent")) {
             Skript.registerExpression(ExprTabCompletionArgs.class, String.class, ExpressionType.SIMPLE,
-                    "tab [complete] arg[ument][(-| )]%number%");
+                    "tab [complete] arg[ument](0¦s|1¦[(-| )]%number%)");
         }
     }
 
+    private int pattern;
     private Expression<Number> position;
 
     @SuppressWarnings("unchecked")
@@ -45,21 +46,28 @@ public class ExprTabCompletionArgs extends SimpleExpression<String> {
             Skript.error("Tab completion arguments are only usable in a tab complete event.", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
-        position = (Expression<Number>) exprs[0];
+        pattern = parseResult.mark;
+        position = pattern == 1 ? (Expression<Number>) exprs[0] : null;
         return true;
     }
 
     @SuppressWarnings("ConstantConditions")
-    @Nullable
     @Override
     protected String[] get(@NotNull Event e) {
         TabCompleteEvent event = ((TabCompleteEvent) e);
         String buffer = event.getBuffer();
         String[] buffers = buffer.split(" ");
 
-        int position = this.position.getSingle(e).intValue();
-        if (buffers.length >= position + 1) {
-            return new String[]{buffers[position]};
+        if (pattern == 0) {
+            String[] args = new String[buffers.length - 1];
+            if (buffers.length - 1 >= 0)
+                System.arraycopy(buffers, 1, args, 0, buffers.length - 1);
+            return args;
+        } else if (pattern == 1) {
+            int position = this.position.getSingle(e).intValue();
+            if (buffers.length >= position + 1) {
+                return new String[]{buffers[position]};
+            }
         }
         return new String[0];
     }
@@ -76,7 +84,8 @@ public class ExprTabCompletionArgs extends SimpleExpression<String> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "tab complete arg-" + position.toString(e, d);
+        String pos = pattern == 1 ? "-" + position.toString(e, d) : "s";
+        return "tab complete arg" + pos;
     }
 
 }
