@@ -379,7 +379,10 @@ public class NBTApi {
         NBTType type = compound.getType(key);
         Object singleObject = object[0];
 
-        if (singleObject instanceof String && (type == NBTType.NBTTagString || custom && isSingle)) {
+        if (singleObject instanceof Boolean && isSingle) {
+            compound.setBoolean(key, ((Boolean) singleObject));
+
+        } else if (singleObject instanceof String && (type == NBTType.NBTTagString || custom && isSingle)) {
             compound.setString(key, ((String) singleObject));
 
         } else if (singleObject instanceof Number && (type == NBTType.NBTTagByte || (custom && isSingle && MathUtil.isByte(singleObject)))) {
