@@ -134,7 +134,7 @@ public class NBTApi {
                 itemStack.setItemMeta(item.getItem().getItemMeta());
                 return item.getItem();
             case ITEM_TYPE:
-                ItemStack stack = ((ItemType) object).getRandom();
+                ItemStack stack = ((ItemType) object).getItem().getRandom();
                 if (stack == null || stack.getType() == Material.AIR) return object;
 
                 NBTItem nbtItemType = new NBTItem(stack);
@@ -257,11 +257,11 @@ public class NBTApi {
             case ITEM_STACK_FULL:
                 return NBTItem.convertItemtoNBT((ItemStack) object).toString();
             case ITEM_TYPE:
-                ItemStack itemTypeStack = ((ItemType) object).getRandom();
+                ItemStack itemTypeStack = ((ItemType) object).getItem().getRandom();
                 if (itemTypeStack == null) return null;
                 return getNBT(itemTypeStack, ObjectType.ITEM_STACK);
             case ITEM_TYPE_FULL:
-                ItemStack itemTypeStackFull = ((ItemType) object).getRandom();
+                ItemStack itemTypeStackFull = ((ItemType) object).getItem().getRandom();
                 if (itemTypeStackFull == null) return null;
                 return getNBT(itemTypeStackFull, ObjectType.ITEM_STACK_FULL);
             case SLOT:
