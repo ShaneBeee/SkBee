@@ -33,7 +33,7 @@ public class EffSendComponent extends Effect {
     private static final boolean SUPPORTS_SENDER;
 
     static {
-        SUPPORTS_COMMAND_SENDER = Skript.classExists("org/bukkit/command/CommandSender$Spigot");
+        SUPPORTS_COMMAND_SENDER = Skript.classExists("org.bukkit.command.CommandSender$Spigot");
         SUPPORTS_SENDER = SUPPORTS_COMMAND_SENDER &&
                 Skript.methodExists(CommandSender.Spigot.class, "sendMessage", UUID.class, BaseComponent.class);
         if (SUPPORTS_SENDER) {
