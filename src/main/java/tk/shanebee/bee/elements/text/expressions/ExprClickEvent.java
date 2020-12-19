@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
@@ -25,7 +26,10 @@ import javax.annotation.Nullable;
 @Since("1.5.0")
 public class ExprClickEvent extends SimpleExpression<ClickEvent> {
 
+    private static final boolean SUPPORTS_CLIPBOARD;
+
     static {
+        SUPPORTS_CLIPBOARD = Skript.fieldExists(ClickEvent.Action.class, "COPY_TO_CLIPBOARD");
         Skript.registerExpression(ExprClickEvent.class, ClickEvent.class, ExpressionType.COMBINED,
                 "[a] [new] click event to run command %string%",
                 "[a] [new] click event to suggest command %string%",
@@ -40,6 +44,10 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         this.pattern = matchedPattern;
+        if (pattern == 3 && !SUPPORTS_CLIPBOARD) {
+            Skript.error("'click event to copy %string% to clipboard' is not supported on your server version", ErrorQuality.SEMANTIC_ERROR);
+            return false;
+        }
         object = (Expression<Object>) exprs[0];
         return true;
     }
