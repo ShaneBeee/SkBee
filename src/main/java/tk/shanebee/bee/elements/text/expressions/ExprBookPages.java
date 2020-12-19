@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 @Examples({"set {_i} to a written book",
         "set {_a} to text component of \"RULES\"",
         "set hover event of {_a} to hover event showing \"make sure to read our rules\"",
-        "set click event of {_a} to click event run command \"/rules\"",
+        "set click event of {_a} to click event to run command \"/rules\"",
         "set page 1 of {_i} to {_a}",
         "set book author of {_i} to \"Bob\"",
         "set book title of {_i} to \"MyBook\"",
