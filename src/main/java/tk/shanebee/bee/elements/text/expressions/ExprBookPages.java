@@ -1,6 +1,7 @@
 package tk.shanebee.bee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.Aliases;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -40,6 +41,8 @@ public class ExprBookPages extends SimpleExpression<BaseComponent> {
                 "page %number% of [book] %itemtype%");
     }
 
+    private final ItemType BOOK = Aliases.javaItemType("book with text");
+
     private Expression<ItemType> item;
     private Expression<Number> page;
 
@@ -57,7 +60,7 @@ public class ExprBookPages extends SimpleExpression<BaseComponent> {
         ItemType item = this.item.getSingle(e);
         if (item == null) return null;
         Material material = item.getMaterial();
-        if (material == Material.WRITABLE_BOOK || material == Material.WRITTEN_BOOK) {
+        if (BOOK.isOfType(material)) {
             BookMeta bookMeta = ((BookMeta) item.getItemMeta());
             Number num = this.page.getSingle(e);
             int page = num == null ? 0 : num.intValue();
@@ -86,7 +89,7 @@ public class ExprBookPages extends SimpleExpression<BaseComponent> {
         if (book == null) return;
 
         Material bookMaterial = book.getMaterial();
-        if (bookMaterial == Material.WRITABLE_BOOK || bookMaterial == Material.WRITTEN_BOOK) {
+        if (BOOK.isOfType(bookMaterial)) {
             BookMeta bookMeta = ((BookMeta) book.getItemMeta());
 
             Number page = this.page.getSingle(e);
