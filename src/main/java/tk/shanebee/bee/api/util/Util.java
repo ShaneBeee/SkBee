@@ -29,6 +29,10 @@ public class Util {
         Skript.error(getColString(PREFIX_ERROR + error), ErrorQuality.SEMANTIC_ERROR);
     }
 
+    public static void skriptError(String format, Object... objects) {
+        skriptError(String.format(format, objects));
+    }
+
     public static void debug(String debug) {
         if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
             Bukkit.getConsoleSender().sendMessage(getColString(PREFIX_ERROR + debug));
