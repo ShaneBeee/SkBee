@@ -13,6 +13,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.BlastingRecipe;
@@ -22,6 +23,8 @@ import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.RecipeChoice.ExactChoice;
+import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.SmokingRecipe;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.config.Config;
@@ -50,19 +53,19 @@ public class EffCookingRecipe extends Effect {
         if (!HAS_BLASTING) {
             Skript.registerEffect(EffCookingRecipe.class,
                     "register [new] furnace recipe for %itemtype% " +
-                            "(using|with ingredient) %itemtype% with id %string% [[and ]with exp[erience] %-number%] " +
+                            "(using|with ingredient) %itemtype/materialchoice% with id %string% [[and ]with exp[erience] %-number%] " +
                             "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
         } else {
             Skript.registerEffect(EffCookingRecipe.class,
                     "register [new] (0¦furnace|1¦(blast furnace|blasting)|2¦smok(er|ing)|3¦campfire) recipe for %itemtype% " +
-                            "(using|with ingredient) %itemtype% with id %string% [[and ]with exp[erience] %-number%] " +
+                            "(using|with ingredient) %itemtype/materialchoice% with id %string% [[and ]with exp[erience] %-number%] " +
                             "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
         }
     }
 
     @SuppressWarnings("null")
     private Expression<ItemType> item;
-    private Expression<ItemType> ingredient;
+    private Expression<Object> ingredient;
     private Expression<String> key;
     private Expression<Number> experience;
     private Expression<Timespan> cookTime;
@@ -73,7 +76,7 @@ public class EffCookingRecipe extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         item = (Expression<ItemType>) exprs[0];
-        ingredient = (Expression<ItemType>) exprs[1];
+        ingredient = (Expression<Object>) exprs[1];
         key = (Expression<String>) exprs[2];
         experience = (Expression<Number>) exprs[3];
         cookTime = (Expression<Timespan>) exprs[4];
@@ -87,7 +90,7 @@ public class EffCookingRecipe extends Effect {
     @Override
     protected void execute(Event event) {
         ItemType res = this.item.getSingle(event);
-        ItemType ing = this.ingredient.getSingle(event);
+        Object ing = this.ingredient.getSingle(event);
         if (res == null) {
             Skript.error("Error registering cooking recipe - result is null");
             Skript.error("Current Item: §6" + this.toString(event, true));
@@ -100,7 +103,22 @@ public class EffCookingRecipe extends Effect {
         }
 
         ItemStack result = res.getRandom();
-        RecipeChoice.ExactChoice ingredient = new RecipeChoice.ExactChoice(ing.getRandom());
+        RecipeChoice ingredient;
+        if (ing instanceof ItemType) {
+            ItemStack itemStack = ((ItemType) ing).getRandom();
+            Material material = itemStack.getType();
+
+            // If ingredient isn't a custom item, just register the material
+            if (itemStack.isSimilar(new ItemStack(material))) {
+                ingredient = new MaterialChoice(material);
+            } else {
+                ingredient = new ExactChoice(itemStack);
+            }
+        } else if (ing instanceof MaterialChoice) {
+            ingredient = ((MaterialChoice) ing);
+        } else {
+            return;
+        }
         String group = this.group != null ? this.group.getSingle(event) : "";
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
         float xp = experience != null ? experience.getSingle(event).floatValue() : 0;
@@ -114,7 +132,7 @@ public class EffCookingRecipe extends Effect {
             furnaceRecipe(event,result, ingredient, group, key, xp);
     }
 
-    private void furnaceRecipe(Event event, ItemStack result, RecipeChoice.ExactChoice ingredient, String group, NamespacedKey key, float xp) {
+    private void furnaceRecipe(Event event, ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp) {
         FurnaceRecipe recipe;
         int cookTime;
         cookTime = this.cookTime != null ? ((int) this.cookTime.getSingle(event).getTicks_i()) : 200;
@@ -123,12 +141,13 @@ public class EffCookingRecipe extends Effect {
         recipe.setGroup(group);
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
-            RecipeUtil.logRecipe(recipe, recipe.getInputChoice().toString());
+            //RecipeUtil.logRecipe(recipe, recipe.getInputChoice().toString());
+            RecipeUtil.logCookingRecipe(recipe);
         }
     }
 
     @SuppressWarnings("rawtypes")
-    private void cookingRecipe(Event event, ItemStack result, RecipeChoice.ExactChoice ingredient, String group, NamespacedKey key, float xp) {
+    private void cookingRecipe(Event event, ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp) {
         Recipe recipe;
         int cookTime;
         switch (recipeType) {
@@ -152,7 +171,8 @@ public class EffCookingRecipe extends Effect {
         ((CookingRecipe) recipe).setGroup(group);
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
-            RecipeUtil.logRecipe(recipe, ((CookingRecipe) recipe).getInputChoice().toString());
+            //RecipeUtil.logRecipe(recipe, ((CookingRecipe) recipe).getInputChoice().toString());
+            RecipeUtil.logCookingRecipe((CookingRecipe) recipe);
         }
     }
 

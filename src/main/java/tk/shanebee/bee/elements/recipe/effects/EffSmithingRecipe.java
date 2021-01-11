@@ -12,54 +12,63 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.RecipeChoice.MaterialChoice;
+import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.SmithingRecipe;
 import org.jetbrains.annotations.NotNull;
+import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
 
 import javax.annotation.Nullable;
 
 @Name("Recipe - Smithing")
-@Description("Register a new smithing recipe. " +
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores." +
-        " Used for recipe discovery/unlocking recipes for players. Requires MC 1.16+")
+@Description({"Register a new smithing recipe.",
+        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores.",
+        "Used for recipe discovery/unlocking recipes for players.",
+        "Note: While 'custom' items will work in these recipes, it appears the smithing table will not recognize them. Requires MC 1.16+"})
 @Examples({"on load:",
         "\tregister new smithing recipe for diamond chestplate using an iron chestplate and a diamond with id \"smith_diamond_chestplate\""})
 @RequiredPlugins("1.16+")
 @Since("1.4.2")
 public class EffSmithingRecipe extends Effect {
 
+    private final Config config = SkBee.getPlugin().getPluginConfig();
+
     static {
         if (Skript.isRunningMinecraft(1, 16)) {
             Skript.registerEffect(EffSmithingRecipe.class,
-                    "register [new] smithing recipe for %itemtype% using %itemtype% and %itemtype% with id %string%");
+                    "register [new] smithing recipe for %itemtype% using %itemtype/materialchoice% and %itemtype/materialchoice% with id %string%");
         }
     }
 
     @SuppressWarnings("null")
     private Expression<ItemType> result;
-    private Expression<ItemType> base;
-    private Expression<ItemType> addition;
+    private Expression<Object> base;
+    private Expression<Object> addition;
     private Expression<String> key;
 
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parse) {
         result = (Expression<ItemType>) exprs[0];
-        base = (Expression<ItemType>) exprs[1];
-        addition = (Expression<ItemType>) exprs[2];
+        base = (Expression<Object>) exprs[1];
+        addition = (Expression<Object>) exprs[2];
         key = (Expression<String>) exprs[3];
         return true;
     }
 
-    @SuppressWarnings({"deprecation", "ConstantConditions"}) // RecipeChoice = draft API
+    @SuppressWarnings("ConstantConditions")
     @Override
     protected void execute(@NotNull Event event) {
         ItemType result = this.result.getSingle(event);
-        ItemType base = this.base.getSingle(event);
-        ItemType addition = this.addition.getSingle(event);
+        Object base = this.base.getSingle(event);
+        Object addition = this.addition.getSingle(event);
         if (result == null) {
             RecipeUtil.error("Error registering smithing recipe - result is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
@@ -81,17 +90,47 @@ public class EffSmithingRecipe extends Effect {
         //Remove duplicates on script reload
         RecipeUtil.removeRecipeByKey(key);
 
-        SmithingRecipe recipe = new SmithingRecipe(key,
-                result.getRandom(),
-                new RecipeChoice.ExactChoice(base.getRandom()),
-                new RecipeChoice.ExactChoice(addition.getRandom()));
+        ItemStack resultStack = result.getRandom();
+        RecipeChoice choiceBase = getChoice(base);
+        RecipeChoice choiceAddition = getChoice(addition);
+        if (resultStack == null || choiceBase == null || choiceAddition == null) return;
+
+        SmithingRecipe recipe = new SmithingRecipe(
+                key,
+                resultStack,
+                choiceBase,
+                choiceAddition);
         Bukkit.addRecipe(recipe);
+        if (config.SETTINGS_DEBUG) {
+            RecipeUtil.logRecipe(recipe, recipe.getBase(), recipe.getAddition());
+        }
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "Register new smithing recipe for " + result.toString(e, d) + " using " + base.toString(e, d) + " and " +
                 addition.toString(e, d) + " with id " + key.toString(e, d);
+    }
+
+    @SuppressWarnings("deprecation") // ExactChoice = draft API
+    private RecipeChoice getChoice(Object object) {
+        if (object instanceof ItemType) {
+            ItemType itemType = ((ItemType) object);
+            ItemStack itemStack = itemType.getRandom();
+            if (itemStack != null) {
+
+                Material material = itemStack.getType();
+                // If ingredient isn't a custom item, just register the material
+                if (itemStack.isSimilar(new ItemStack(material))) {
+                    return new MaterialChoice(material);
+                } else {
+                    return new ExactChoice(itemStack);
+                }
+            }
+        } else if (object instanceof MaterialChoice) {
+            return ((MaterialChoice) object);
+        }
+        return null;
     }
 
 }

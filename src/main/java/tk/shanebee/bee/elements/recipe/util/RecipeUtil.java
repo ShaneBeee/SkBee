@@ -1,10 +1,15 @@
 package tk.shanebee.bee.elements.recipe.util;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.util.Timespan;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
+import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.ShapedRecipe;
+import org.bukkit.inventory.ShapelessRecipe;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.util.Util;
 
@@ -102,7 +107,8 @@ public class RecipeUtil {
                 });
                 Bukkit.clearRecipes();
                 recipes.forEach(Bukkit::addRecipe);
-            } catch (NoSuchElementException ignore) {}
+            } catch (NoSuchElementException ignore) {
+            }
         }
     }
 
@@ -119,7 +125,8 @@ public class RecipeUtil {
             });
             Bukkit.clearRecipes();
             recipes.forEach(Bukkit::addRecipe);
-        } catch (NoSuchElementException ignore) {}
+        } catch (NoSuchElementException ignore) {
+        }
     }
 
     /**
@@ -129,14 +136,80 @@ public class RecipeUtil {
      * @param recipe      Recipe to log
      * @param ingredients Ingredients of recipe to log
      */
-    public static void logRecipe(Recipe recipe, String ingredients) {
-        String name = "";
-        if (recipe instanceof Keyed) {
-            name = "&7(&b" + ((Keyed) recipe).getKey().toString() + "&7)";
+    public static void logRecipe(Recipe recipe, RecipeChoice... ingredients) {
+        if (!(recipe instanceof Keyed)) return;
+        log("&aRegistered new recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
+        log(" - &7Result: &e%s", recipe.getResult());
+        log(" - &7Ingredients:");
+        for (RecipeChoice ingredient : ingredients) {
+            log("   - %s", getFancy(ingredient));
         }
-        log("&aRegistered new recipe: " + name);
-        log(" - &7Result: " + recipe.getResult());
-        log(" - &7Ingredients: " + ingredients);
+
+    }
+
+    public static void logCookingRecipe(CookingRecipe<?> recipe) {
+        log("&aRegistered new cooking recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
+        log(" - &7Result: &e%s", recipe.getResult());
+        String group = recipe.getGroup();
+        if (group.length() > 0) {
+            log(" - &7Group: &r\"&6%s&r\"", group);
+        }
+        log(" - &7CookTime: &b%s", Timespan.fromTicks_i(recipe.getCookingTime()));
+        log(" - &7Experience: &b%s", recipe.getExperience());
+        log(" - &7Ingredients: %s", getFancy(recipe.getInputChoice()));
+    }
+
+    /**
+     * Log a shapeless recipe to console
+     *
+     * @param recipe Recipe to log
+     */
+    public static void logShapelessRecipe(ShapelessRecipe recipe) {
+        log("&aRegistered new shapeless recipe: &7(&b%s&7)", recipe.getKey().toString());
+        log(" - &7Result: &e%s", recipe.getResult());
+        String group = recipe.getGroup();
+        if (group.length() > 0) {
+            log(" - &7Group: &r\"&6%s&r\"", group);
+        }
+        log(" - &7Ingredients:");
+        recipe.getChoiceList().forEach(recipeChoice ->
+                log("   - &6%s", getFancy(recipeChoice)));
+    }
+
+    /**
+     * Log a shaped recipe to console
+     *
+     * @param recipe Recipe to log
+     */
+    @SuppressWarnings("ConfusingArgumentToVarargsMethod")
+    public static void logShapedRecipe(ShapedRecipe recipe) {
+        log("&aRegistered new shaped recipe: &7(&b%s&7)", recipe.getKey().toString());
+        log(" - &7Result: &e%s", recipe.getResult());
+
+        String group = recipe.getGroup();
+        if (group.length() > 0) {
+            log(" - &7Group: &r\"&6%s&r\"", group);
+        }
+
+        String[] shape = recipe.getShape();
+        String grid = " - &7Shape: &r[&d%s&r]&7, &r[&d%s&r]";
+        if (shape.length > 2) grid += "&7, &r[&d%s&r]";
+        log(grid, shape);
+        log(" - &7Ingredients:");
+        recipe.getChoiceMap().forEach((character, recipeChoice) -> {
+            if (recipeChoice != null) {
+                log("   - &r'&d%s&r' = &6%s", character, getFancy(recipeChoice));
+            }
+        });
+    }
+
+    private static String getFancy(RecipeChoice matChoice) {
+        return matChoice.toString()
+                .replace("MaterialChoice{choices=", "")
+                .replace("ExactChoice{choices=", "")
+                .replace("[", "&r[&b")
+                .replace(",", "&r,&b")
+                .replace("]}", "&r]");
     }
 
     /**
@@ -165,6 +238,10 @@ public class RecipeUtil {
     public static void log(String log) {
         String prefix = "&7[&bRecipe&7] ";
         Util.log(prefix + log);
+    }
+
+    public static void log(String format, Object... objects) {
+        log(String.format(format, objects));
     }
 
 }

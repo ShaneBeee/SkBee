@@ -12,9 +12,13 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.RecipeChoice.MaterialChoice;
+import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.config.Config;
@@ -38,13 +42,13 @@ public class EffStonecuttingRecipe extends Effect {
     static {
         if (Skript.isRunningMinecraft(1, 14)) {
             Skript.registerEffect(EffStonecuttingRecipe.class,
-                    "register [new] stone cutt(ing|er) recipe for %itemtype% (using|with ingredient) %itemtype% with id %string% [in group %-string%]");
+                    "register [new] stone[ ]cutt(ing|er) recipe for %itemtype% (using|with ingredient) %itemtype/materialchoice% with id %string% [in group %-string%]");
         }
     }
 
     @SuppressWarnings("null")
     private Expression<ItemType> item;
-    private Expression<ItemType> ingredient;
+    private Expression<Object> ingredient;
     private Expression<String> key;
     private Expression<String> group;
 
@@ -52,7 +56,7 @@ public class EffStonecuttingRecipe extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         item = (Expression<ItemType>) exprs[0];
-        ingredient = (Expression<ItemType>) exprs[1];
+        ingredient = (Expression<Object>) exprs[1];
         key = (Expression<String>) exprs[2];
         group = (Expression<String>) exprs[3];
         return true;
@@ -62,7 +66,7 @@ public class EffStonecuttingRecipe extends Effect {
     @Override
     protected void execute(Event event) {
         ItemType item = this.item.getSingle(event);
-        ItemType ingredient = this.ingredient.getSingle(event);
+        Object ingredient = this.ingredient.getSingle(event);
 
         if (item == null) {
             Skript.error("Error registering stonecutting recipe - result is null");
@@ -79,7 +83,21 @@ public class EffStonecuttingRecipe extends Effect {
 
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
 
-        RecipeChoice.ExactChoice choice = new RecipeChoice.ExactChoice(ingredient.getRandom());
+        RecipeChoice choice;
+        if (ingredient instanceof ItemType) {
+            ItemStack itemStack = ((ItemType) ingredient).getRandom();
+            if (itemStack == null) return;
+            Material material = itemStack.getType();
+
+            // If ingredient isn't a custom item, just register the material
+            if (itemStack.isSimilar(new ItemStack(material))) {
+                choice = new MaterialChoice(material);
+            } else {
+                choice = new ExactChoice(itemStack);
+            }
+        } else {
+            choice = ((MaterialChoice) ingredient);
+        }
         StonecuttingRecipe recipe = new StonecuttingRecipe(key, item.getRandom(), choice);
         recipe.setGroup(group);
 
@@ -88,7 +106,7 @@ public class EffStonecuttingRecipe extends Effect {
 
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
-            RecipeUtil.logRecipe(recipe, recipe.getInputChoice().toString());
+            RecipeUtil.logRecipe(recipe, recipe.getInputChoice());
         }
     }
 

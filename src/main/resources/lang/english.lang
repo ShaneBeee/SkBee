@@ -9,6 +9,8 @@ types:
 	basecomponent: base component¦s @-
 	particle: particle¦s @-
 	dustoption: dust option¦s @-
+	materialchoice: material choice¦s
+	minecrafttag: minecraft tag¦s
 
 environment types:
 	normal: normal
