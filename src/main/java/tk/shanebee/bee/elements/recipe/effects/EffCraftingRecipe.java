@@ -15,6 +15,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -114,19 +115,29 @@ public class EffCraftingRecipe extends Effect {
         }
 
         if (craftingTable) {
-            String one = String.valueOf(keyChar[0]) + keyChar[1] + keyChar[2];
-            String two = String.valueOf(keyChar[3]) + keyChar[4] + keyChar[5];
-            String three = String.valueOf(keyChar[6]) + keyChar[7] + keyChar[8];
-            recipe.shape(one, two, three);
+            String one = "" + keyChar[0] + keyChar[1] + keyChar[2];
+            String two = "" + keyChar[3] + keyChar[4] + keyChar[5];
+            String thr = "" + keyChar[6] + keyChar[7] + keyChar[8];
+            recipe.shape(one, two, thr);
         } else {
-            String one = String.valueOf(keyChar[0]) + keyChar[1];
-            String two = String.valueOf(keyChar[2]) + keyChar[3];
+            String one = "" + keyChar[0] + keyChar[1];
+            String two = "" + keyChar[2] + keyChar[3];
             recipe.shape(one, two);
         }
 
         for (int i = 0; i < ingredients.length; i++) {
-            if (ingredients[i].getMaterial() != Material.AIR) {
-                recipe.setIngredient(keyChar[i], new RecipeChoice.ExactChoice(ingredients[i].getRandom()));
+            ItemStack itemStack = ingredients[i].getRandom();
+            Material material = itemStack.getType();
+
+            // Make sure this item can be used in a recipe
+            if (material != Material.AIR && material.isItem()) {
+
+                // If ingredient isn't a custom item, just register the material
+                if (itemStack.isSimilar(new ItemStack(material))) {
+                    recipe.setIngredient(keyChar[i], material);
+                } else {
+                    recipe.setIngredient(keyChar[i], new RecipeChoice.ExactChoice(itemStack));
+                }
             }
         }
         if (config.SETTINGS_DEBUG) {
@@ -141,14 +152,22 @@ public class EffCraftingRecipe extends Effect {
         if (group != null) recipe.setGroup(group);
 
         for (ItemType ingredient : ingredients) {
-            // Exclude non-items from shapeless recipes (produced IllegalArgumentException)
-            if (ingredient.getMaterial() != Material.AIR && ingredient.getMaterial().isItem()) {
-                recipe.addIngredient(new RecipeChoice.ExactChoice(ingredient.getRandom()));
+            ItemStack itemStack = ingredient.getRandom();
+            Material material = itemStack.getType();
+
+            // Make sure this item can be used in a recipe
+            if (material != Material.AIR && material.isItem()) {
+
+                // If ingredient isn't a custom item, just register the material
+                if (itemStack.isSimilar(new ItemStack(material))) {
+                    recipe.addIngredient(material);
+                } else {
+                    recipe.addIngredient(new RecipeChoice.ExactChoice(ingredient.getRandom()));
+                }
             } else {
                 if (config.SETTINGS_DEBUG) {
-                    RecipeUtil.warn("ERROR LOADING RECIPE:");
-                    RecipeUtil.warn("Non item &b" + ingredient + "&e found in recipe with ID &b" + key.getKey() +
-                            "&e, this item will be removed from the recipe.");
+                    RecipeUtil.warn("ERROR LOADING RECIPE: &7(&b" + key.getKey() + "&7)");
+                    RecipeUtil.warn("Non item &b" + ingredient.toString(0) + "&e found, this item will be removed from the recipe.");
                 }
             }
         }
@@ -160,10 +179,12 @@ public class EffCraftingRecipe extends Effect {
 
     @Override
     public String toString(Event e, boolean d) {
-        String shape = shaped ? "shaped" : "shapeless";
-        String group = this.group != null ? " in group " + this.group.toString(e, d) : "";
-        return "Register new " + shape + " recipe for " + item.toString(e, d) + " using " + ingredients.toString(e, d) +
-                " with id " + key.toString(e, d) + group;
+        return String.format("Register new %s recipe for %s using %s with id '%s' %s",
+                shaped ? "shaped" : "shapeless",
+                item.toString(e, d),
+                ingredients.toString(e, d),
+                key.toString(e, d),
+                this.group != null ? "in group " + this.group.toString(e, d) : "");
     }
 
 }
