@@ -8,11 +8,13 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.util.Util;
 import tk.shanebee.bee.elements.bound.config.BoundConfig;
 import tk.shanebee.bee.elements.bound.objects.Bound;
 
@@ -64,7 +66,17 @@ public class EffBoundCreate extends Effect {
             if (lesser == null || greater == null) return;
 
             // both locations need to be in the same world
-            if (lesser.getWorld() == null || lesser.getWorld() != greater.getWorld()) return;
+            World worldL = lesser.getWorld();
+            World worldG = greater.getWorld();
+            if (worldL == null || worldG == null) return;
+
+            if (worldL != worldG) {
+                String l = Classes.toString(worldL);
+                String g = Classes.toString(worldG);
+                Util.skriptError("&cBounding box locations must be in the same world, but found &7'&b%s&7' &cand &7'&b%s&7' (&6%s&7)",
+                        l, g, toString(event, true));
+                return;
+            }
 
             if (full) {
                 // clone to prevent changing original location variables
@@ -77,6 +89,12 @@ public class EffBoundCreate extends Effect {
                 greater.setY(max);
             }
             Bound bound = new Bound(lesser, greater, id);
+            if (bound.getGreaterY() - bound.getLesserY() < 1 ||
+                    bound.getGreaterX() - bound.getLesserX() < 1 ||
+                    bound.getGreaterZ() - bound.getLesserZ() < 1) {
+                Util.skriptError("&cBounding box must have a size of at least 2x2x2 &7(&6%s&7)", toString(event, true));
+                return;
+            }
             boundConfig.saveBound(bound);
         } else {
             Bound bound = boundConfig.getBoundFromID(id);
