@@ -15,6 +15,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import tk.shanebee.bee.api.NBTApi;
 import tk.shanebee.bee.api.listener.BoundBorderListener;
 import tk.shanebee.bee.api.listener.EntityListener;
+import tk.shanebee.bee.api.listener.NBTListener;
 import tk.shanebee.bee.api.util.LoggerBee;
 import tk.shanebee.bee.api.util.Util;
 import tk.shanebee.bee.config.Config;
@@ -110,6 +111,7 @@ public class SkBee extends JavaPlugin {
             return;
         }
         try {
+            pm.registerEvents(new NBTListener(this), this);
             addon.loadClasses("tk.shanebee.bee.elements.nbt");
             Util.log("&5NBT Elements &asuccessfully loaded");
         } catch (IOException ex) {

@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.slot.Slot;
 import de.tr7zw.changeme.nbtapi.*;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -11,6 +12,7 @@ import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.persistence.PersistentDataHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
@@ -33,6 +35,9 @@ import java.util.UUID;
 public class NBTApi {
 
     public static final boolean HAS_PERSISTENCE = Skript.isRunningMinecraft(1, 14);
+    @SuppressWarnings("ConstantConditions")
+    public static final boolean SUPPORTS_BLOCK_NBT = Skript.isRunningMinecraft(1, 16, 4) &&
+            PersistentDataHolder.class.isAssignableFrom(Chunk.class);
     private final Config CONFIG;
 
     public NBTApi() {
