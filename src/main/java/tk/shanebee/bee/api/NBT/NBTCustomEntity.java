@@ -3,18 +3,16 @@ package tk.shanebee.bee.api.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
-import org.bukkit.NamespacedKey;
+import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.entity.Entity;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
 
-public class NBTCustomEntity extends NBTEntity {
+public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 
     private final Entity entity;
-    private NBTCompound customNBT;
-    private NamespacedKey KEY;
+    private final String KEY = "skbee-custom";
 
     /**
      * @param entity Any valid Bukkit Entity
@@ -23,55 +21,72 @@ public class NBTCustomEntity extends NBTEntity {
         super(entity);
         this.entity = entity;
         if (NBTApi.HAS_PERSISTENCE) {
-            KEY = new NamespacedKey(SkBee.getPlugin(), "custom-nbt");
-            PersistentDataContainer container = entity.getPersistentDataContainer();
-            String data = null;
-            if (container.has(KEY, PersistentDataType.STRING)) {
-                data = container.get(KEY, PersistentDataType.STRING);
-            }
-            customNBT = new NBTContainer(data != null ? data : "{}");
+            convert();
         }
     }
 
+    @Override
     public NBTCompound getCustomNBT() {
-        return customNBT;
+        return getPersistentDataContainer().getOrCreateCompound(KEY);
     }
 
-    public void setCustomNBT(NBTCompound customNBT) {
-        this.customNBT = customNBT;
-        PersistentDataContainer container = entity.getPersistentDataContainer();
-        container.set(KEY, PersistentDataType.STRING, customNBT.toString());
-    }
-
+    @Override
     public void deleteCustomNBT() {
-        PersistentDataContainer container = entity.getPersistentDataContainer();
-        if (container.has(KEY, PersistentDataType.STRING)) {
-            container.remove(KEY);
-        }
+        getPersistentDataContainer().removeKey(KEY);
     }
 
-    public NBTCompound getCustomNBTCompound() {
-        NBTCompound compound = new NBTContainer(this.getCompound().toString());
-        if (compound.hasKey("BukkitValues")) {
-            NBTCompound persist = compound.getCompound("BukkitValues");
-            persist.removeKey("skbee:custom-nbt");
+    private NBTCompound getCustomNBTCompound() {
+        String bukkit = "BukkitValues";
+        NBTCompound compound = new NBTContainer(new NBTEntity(entity).toString());
+        NBTCompound custom = null;
+        if (compound.hasKey(bukkit)) {
+            NBTCompound persist = compound.getCompound(bukkit);
+            persist.removeKey("__nbtapi"); // this is just a placeholder one, so we dont need it
+            if (persist.hasKey(KEY)) {
+                custom = getPersistentDataContainer().getCompound(KEY);
+                persist.removeKey(KEY);
+            }
             if (persist.getKeys().size() == 0) {
-                compound.removeKey("BukkitValues");
+                compound.removeKey(bukkit);
             }
         }
-        NBTCompound customCompound = compound.addCompound("custom");
-        if (customNBT != null) {
-            customCompound.mergeCompound(customNBT);
+        NBTCompound customCompound = compound.getOrCreateCompound("custom");
+        if (custom != null) {
+            customCompound.mergeCompound(custom);
         }
         return compound;
     }
 
     @Override
-    public String toString() {
-        if (NBTApi.HAS_PERSISTENCE) {
-            return getCustomNBTCompound().toString();
+    public NBTCompound getOrCreateCompound(String name) {
+        if (name.equals("custom")) {
+            return getPersistentDataContainer().getOrCreateCompound(KEY);
         }
-        return super.toString();
+        return super.getOrCreateCompound(name);
+    }
+
+    @Override
+    public String toString() {
+        try {
+            if (NBTApi.HAS_PERSISTENCE) {
+                return getCustomNBTCompound().toString();
+            }
+            return super.toString();
+        } catch (NbtApiException ignore) {
+            return null;
+        }
+    }
+
+    private void convert() {
+        PersistentDataContainer container = entity.getPersistentDataContainer();
+        if (container.has(OLD_KEY, PersistentDataType.STRING)) {
+            String data = container.get(OLD_KEY, PersistentDataType.STRING);
+            NBTCompound custom = getOrCreateCompound("custom");
+            if (data != null) {
+                custom.mergeCompound(new NBTContainer(data));
+            }
+            container.remove(OLD_KEY);
+        }
     }
 
 }

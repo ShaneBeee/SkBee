@@ -1,6 +1,5 @@
 package tk.shanebee.bee.elements.nbt.expressions;
 
-
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -18,10 +17,8 @@ import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
-import tk.shanebee.bee.api.NBT.NBTCustomEntity;
-import tk.shanebee.bee.api.NBT.NBTCustomTileEntity;
+import tk.shanebee.bee.api.NBT.NBTCustom;
 import tk.shanebee.bee.api.NBTApi;
-import tk.shanebee.bee.api.util.Util;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -47,14 +44,12 @@ import java.util.ArrayList;
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 
     private static final NBTApi NBT_API;
-    private static final boolean DEBUG;
     private static final boolean HAS_PERSISTENCE;
 
     static {
         Skript.registerExpression(ExprTagOfNBT.class, Object.class, ExpressionType.SIMPLE,
                 "tag %string% of %string/nbtcompound%", "%string% tag of %string/nbtcompound%");
         NBT_API = SkBee.getPlugin().getNbtApi();
-        DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
         HAS_PERSISTENCE = Skript.isRunningMinecraft(1, 14);
     }
 
@@ -74,11 +69,11 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
     protected Object[] get(@NotNull Event e) {
         String t = tag.getSingle(e);
         Object object = nbt.getSingle(e);
-        String n = object instanceof NBTCompound ? object.toString() : (String) object;
-        assert t != null;
-        if (t.contains(";")) {
-            return getNested(t, n);
+        if (object == null) {
+            return null;
         }
+        NBTCompound n = object instanceof NBTCompound ? ((NBTCompound) object) : new NBTContainer((String) object);
+        assert t != null;
         Object nbt = NBT_API.getTag(t, n);
         if (nbt instanceof ArrayList) {
             return ((ArrayList<?>) nbt).toArray();
@@ -106,32 +101,11 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         if (mode == ChangeMode.SET) {
             if (delta == null) return;
 
-            if (HAS_PERSISTENCE && tag.equalsIgnoreCase("custom")) {
-                Object custom = delta[0];
-                if (compound instanceof NBTCustomEntity) {
-                    if (custom instanceof NBTCompound) {
-                        ((NBTCustomEntity) compound).setCustomNBT(((NBTCompound) custom));
-                    }
-                    return;
-                }
-                if (compound instanceof NBTCustomTileEntity) {
-                    if (custom instanceof NBTCompound) {
-                        ((NBTCustomTileEntity) compound).setCustomNBT(((NBTCompound) custom));
-                    }
-                    return;
-                }
-            }
-
             NBT_API.setTag(tag, compound, delta);
         } else if (mode == ChangeMode.DELETE) {
             if (HAS_PERSISTENCE && tag.equalsIgnoreCase("custom")) {
-                if (compound instanceof NBTCustomEntity) {
-                    ((NBTCustomEntity) compound).deleteCustomNBT();
-                    return;
-                }
-                if (compound instanceof NBTCustomTileEntity) {
-                    ((NBTCustomTileEntity) compound).deleteCustomNBT();
-                    return;
+                if (compound instanceof NBTCustom) {
+                    ((NBTCustom) compound).deleteCustomNBT();
                 }
             }
             NBT_API.deleteTag(tag, compound);
@@ -151,26 +125,6 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
     @Override
     public @NotNull Class<?> getReturnType() {
         return Object.class;
-    }
-
-    private Object[] getNested(String tag, String nbt) {
-        if (nbt == null) return null;
-        String[] split = tag.split(";");
-        Object nbtNew = nbt;
-        for (String s : split) {
-            NBTContainer container = new NBTContainer(nbtNew.toString());
-            nbtNew = NBT_API.getTag(s, container.toString()); // TODO api for this
-            if (nbtNew == null) {
-                if (DEBUG) {
-                    Util.skriptError("Invalid tag \"&b" + s + "&7\" in &b" + container.toString());
-                }
-                return null;
-            }
-        }
-        if (nbtNew instanceof ArrayList) {
-            return ((ArrayList<?>) nbtNew).toArray();
-        }
-        return new Object[]{nbtNew};
     }
 
 }

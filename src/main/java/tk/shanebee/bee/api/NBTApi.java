@@ -3,7 +3,16 @@ package tk.shanebee.bee.api;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.slot.Slot;
-import de.tr7zw.changeme.nbtapi.*;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.NBTEntity;
+import de.tr7zw.changeme.nbtapi.NBTFile;
+import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBTList;
+import de.tr7zw.changeme.nbtapi.NBTTileEntity;
+import de.tr7zw.changeme.nbtapi.NBTType;
+import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -16,6 +25,7 @@ import org.bukkit.persistence.PersistentDataHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.NBT.NBTCustomBlock;
 import tk.shanebee.bee.api.NBT.NBTCustomEntity;
 import tk.shanebee.bee.api.NBT.NBTCustomTileEntity;
 import tk.shanebee.bee.api.reflection.SkReflection;
@@ -78,7 +88,6 @@ public class NBTApi {
 
         }
     }
-
 
     /**
      * Force the NBT-API to load
@@ -160,13 +169,12 @@ public class NBTApi {
                 if (nbtCompound.hasKey("custom")) {
                     NBTCompound custom = nbtEntity.getCustomNBT();
                     custom.mergeCompound(nbtCompound.getCompound("custom"));
-                    nbtEntity.setCustomNBT(custom);
+                    nbtCompound.removeKey("custom");
                 }
                 nbtEntity.mergeCompound(nbtCompound);
                 return object;
             case BLOCK:
                 BlockState blockState = ((Block) object).getState();
-                //if (HAS_PERSISTENCE && !(blockState instanceof TileState)) return object;
 
                 if (isTileEntity(blockState)) {
                     NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity((blockState));
@@ -174,9 +182,12 @@ public class NBTApi {
                     if (updated.hasKey("custom")) {
                         NBTCompound custom = nbtBlock.getCustomNBT();
                         custom.mergeCompound(updated.getCompound("custom"));
-                        nbtBlock.setCustomNBT(custom);
+                        updated.removeKey("custom");
                     }
                     nbtBlock.mergeCompound(updated);
+                } else if (SUPPORTS_BLOCK_NBT) {
+                    NBTCustomBlock nbtCustomBlock = new NBTCustomBlock(((Block) object));
+                    nbtCustomBlock.getData().mergeCompound(new NBTContainer(value));
                 }
                 return object;
             default:
@@ -372,9 +383,8 @@ public class NBTApi {
         if (tag.contains(";")) {
             String[] splits = tag.split(";");
             for (int i = 0; i < splits.length - 1; i++) {
-                if (compound.hasKey(splits[i])) {
-                    compound = compound.getCompound(splits[i]);
-                }
+                String split = splits[i];
+                compound = compound.getOrCreateCompound(split);
             }
             key = splits[splits.length - 1];
         }
@@ -479,14 +489,23 @@ public class NBTApi {
 
     /**
      * Get a specific tag from an NBT string
+     * <p>Sub-compounds can be split using ';',
+     * example tag: "custom;sub"</p>
      *
      * @param tag Tag to check for
-     * @param nbt NBT to grab tag from
+     * @param compound NBT to grab tag from
      * @return Object from the NBT string
      */
-    public Object getTag(String tag, String nbt) {
-        if (nbt == null) return null;
-        NBTCompound compound = new NBTContainer(nbt);
+    public Object getTag(String tag, NBTCompound compound) {
+        if (compound == null) return null;
+        if (tag.contains(";")) {
+            String[] splits = tag.split(";");
+            for (int i = 0; i < splits.length - 1; i++) {
+                String split = splits[i];
+                compound = compound.getOrCreateCompound(split);
+            }
+            tag = splits[splits.length - 1];
+        }
         NBTType type = compound.getType(tag);
         switch (type) {
             case NBTTagString:
@@ -512,16 +531,14 @@ public class NBTApi {
             case NBTTagDouble:
                 return compound.getDouble(tag);
             case NBTTagEnd:
-                //return compound.toString(); // let's leave this here just in case
-                return null;
+            case NBTTagCompound:
+                return compound.getOrCreateCompound(tag);
             case NBTTagLong:
                 return compound.getLong(tag);
             case NBTTagByte:
                 return compound.getByte(tag);
             case NBTTagByteArray:
                 return compound.getByteArray(tag);
-            case NBTTagCompound:
-                return compound.getCompound(tag);
             case NBTTagList:
                 List<Object> list = new ArrayList<>();
                 list.addAll(compound.getCompoundList(tag));

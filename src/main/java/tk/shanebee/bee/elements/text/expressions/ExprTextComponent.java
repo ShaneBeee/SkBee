@@ -11,6 +11,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
@@ -122,19 +123,22 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta instanceof PotionMeta) {
             StringBuilder builder = new StringBuilder("item.minecraft.");
-            String pot = api.getTag("Potion", api.getNBT(itemType, NBTApi.ObjectType.ITEM_TYPE)).toString();
-            if (pot != null) {
-                if (material == Material.POTION) {
-                    builder.append("potion");
-                } else if (material == Material.SPLASH_POTION) {
-                    builder.append("splash_potion");
-                } else if (material == Material.LINGERING_POTION) {
-                    builder.append("lingering_potion");
-                } else if (material == Material.TIPPED_ARROW) {
-                    builder.append("tipped_arrow");
+            String nbt = api.getNBT(itemType, NBTApi.ObjectType.ITEM_TYPE);
+            if (nbt != null) {
+                String pot = api.getTag("Potion", new NBTContainer(nbt)).toString();
+                if (pot != null) {
+                    if (material == Material.POTION) {
+                        builder.append("potion");
+                    } else if (material == Material.SPLASH_POTION) {
+                        builder.append("splash_potion");
+                    } else if (material == Material.LINGERING_POTION) {
+                        builder.append("lingering_potion");
+                    } else if (material == Material.TIPPED_ARROW) {
+                        builder.append("tipped_arrow");
+                    }
+                    builder.append(".effect.").append(pot.replace("minecraft:", ""));
+                    return builder.toString();
                 }
-                builder.append(".effect.").append(pot.replace("minecraft:", ""));
-                return builder.toString();
             }
         }
         return type + ".minecraft." + raw;
