@@ -8,6 +8,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
@@ -20,6 +21,11 @@ import tk.shanebee.bee.api.NBTApi;
 
 public class NBTListener implements Listener {
 
+    // Note regarding event priority:
+    // We use EventPriority.MONITOR, to make sure any event
+    // called in Skript is handled before we touch it
+    // This way a user can retrieve the nbt before it's deleted
+
     private final SkBee plugin;
 
     public NBTListener(SkBee plugin) {
@@ -27,14 +33,14 @@ public class NBTListener implements Listener {
     }
 
     // If a player breaks a block with NBT, remove the NBT
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onBlockBreak(BlockBreakEvent event) {
         if (event.isCancelled()) return;
         breakBlock(event.getBlock());
     }
 
     // If an entity breaks a block with NBT, remove the NBT
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onEntityBreakBlock(EntityChangeBlockEvent event) {
         if (event.isCancelled()) return;
         switch (event.getEntity().getType()) {
@@ -49,14 +55,14 @@ public class NBTListener implements Listener {
     }
 
     // If a block explodes, remove NBT from the exploded blocks
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onExplode(BlockExplodeEvent event) {
         if (event.isCancelled()) return;
         event.blockList().forEach(this::breakBlock);
     }
 
     // If an entity explodes, remove NBT from the exploded blocks
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onEntityExplode(EntityExplodeEvent event) {
         if (event.isCancelled()) return;
         event.blockList().forEach(this::breakBlock);
@@ -78,7 +84,7 @@ public class NBTListener implements Listener {
     }
 
     // If a piston moves a block with NBT, we shift the NBT
-    @EventHandler
+    @EventHandler(priority = EventPriority.MONITOR)
     private void onPistonPush(BlockPistonExtendEvent event) {
         if (event.isCancelled()) return;
         Block piston = event.getBlock();
