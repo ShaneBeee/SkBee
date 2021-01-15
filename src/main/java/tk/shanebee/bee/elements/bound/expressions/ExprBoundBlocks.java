@@ -41,7 +41,11 @@ public class ExprBoundBlocks extends SimpleExpression<Block> {
 
     @Override
     protected Block[] get(Event event) {
-        List<Block> list = new ArrayList<>(bound.getSingle(event).getBlocks());
+        Bound single = bound.getSingle(event);
+        if (single == null) {
+            return null;
+        }
+        List<Block> list = new ArrayList<>(single.getBlocks());
         return list.toArray(new Block[0]);
     }
 
