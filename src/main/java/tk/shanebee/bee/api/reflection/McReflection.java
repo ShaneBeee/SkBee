@@ -28,28 +28,40 @@ public class McReflection {
         return !Boolean.parseBoolean(ReflectionUtils.getField("noclip", nmsClass, nmsEntity).toString());
     }
 
-    private static final Class<?> CraftItemStack = ReflectionUtils.getOBCClass("inventory.CraftItemStack");
     private static final Class<?> ChatMessage = ReflectionUtils.getNMSClass("ChatMessage");
+    private static final Method getNMSCopy;
+
+    static {
+        Method getNMSCopy1;
+        try {
+            Class<?> CraftItemStack = ReflectionUtils.getOBCClass("inventory.CraftItemStack");
+            assert CraftItemStack != null;
+            getNMSCopy1 = CraftItemStack.getMethod("asNMSCopy", ItemStack.class);
+        } catch (NoSuchMethodException ignore) {
+            getNMSCopy1 = null;
+        }
+        getNMSCopy = getNMSCopy1;
+    }
 
     public static String getTranslateKey(ItemStack itemStack) {
+        if (getNMSCopy == null || ChatMessage == null) return null;
+
         ItemStack itemStackClone = itemStack.clone();
         ItemMeta itemMeta = itemStackClone.getItemMeta();
         itemMeta.setDisplayName(null);
         itemStackClone.setItemMeta(itemMeta);
 
         try {
-            assert CraftItemStack != null;
-            Method getNMSCopy = CraftItemStack.getMethod("asNMSCopy", ItemStack.class);
-            Object nmsItemStack = getNMSCopy.invoke(CraftItemStack, itemStackClone);
-
+            Object nmsItemStack = getNMSCopy.invoke(null, itemStackClone);
             Method getName = nmsItemStack.getClass().getMethod("getName");
             Object name = getName.invoke(nmsItemStack);
 
-            if (ChatMessage != null && ChatMessage.isInstance(name)) {
+            if (ChatMessage.isInstance(name)) {
                 Method getKey = ChatMessage.getMethod("getKey");
                 return ((String) getKey.invoke(name));
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignore) {}
+        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignore) {
+        }
         return null;
     }
 
