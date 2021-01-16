@@ -24,9 +24,11 @@ import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBTApi;
 import tk.shanebee.bee.api.reflection.McReflection;
+import tk.shanebee.bee.api.util.Util;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Name("Text Component - New Text Component")
@@ -73,10 +75,10 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
         List<BaseComponent> components = new ArrayList<>();
 
         for (Object object : this.translation.getArray(e)) {
-            BaseComponent component;
-            if (pattern == 0)
-                component = new TextComponent((String) object);
-            else if (pattern == 1) {
+            if (pattern == 0) {
+                BaseComponent[] baseComponents = TextComponent.fromLegacyText(Util.getColString((String) object));
+                components.addAll(Arrays.asList(baseComponents));
+            } else if (pattern == 1) {
                 String translate;
                 if (object instanceof ItemType) {
                     ItemType itemType = (ItemType) object;
@@ -84,13 +86,12 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
                 } else {
                     translate = (String) object;
                 }
-                component = new TranslatableComponent(translate);
+                components.add(new TranslatableComponent(translate));
             } else {
                 String string = ((String) translation.getSingle(e));
                 Object[] objects = this.objects.getAll(e);
-                component = new TranslatableComponent(string, objects);
+                components.add(new TranslatableComponent(string, objects));
             }
-            components.add(component);
         }
         return components.toArray(new BaseComponent[0]);
     }
