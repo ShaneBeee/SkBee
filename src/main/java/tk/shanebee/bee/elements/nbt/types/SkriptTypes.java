@@ -9,13 +9,46 @@ import ch.njol.yggdrasil.Fields;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import tk.shanebee.bee.api.NBT.NBTCustomType;
 
 import java.io.StreamCorruptedException;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "NullableProblems"})
 public class SkriptTypes {
 
     static {
+        Classes.registerClass(new ClassInfo<>(NBTCustomType.class, "nbttype")
+                .user("nbt ?types?")
+                .name("NBT - Tag Type")
+                .description("Represents a type of NBT tag.")
+                .usage(NBTCustomType.getNames())
+                .examples("set byte tag \"points\" of {_nbt} to 1",
+                        "set compound tag \"tool\" of {_nbt} to nbt compound of player's tool")
+                .since("INSERT VERSION")
+                .parser(new Parser<NBTCustomType>() {
+
+                    @Nullable
+                    @Override
+                    public NBTCustomType parse(String s, ParseContext context) {
+                        return NBTCustomType.fromName(s);
+                    }
+
+                    @Override
+                    public String toString(NBTCustomType nbtCustomType, int i) {
+                        return nbtCustomType.getName();
+                    }
+
+                    @Override
+                    public String toVariableNameString(NBTCustomType nbtCustomType) {
+                        return toString(nbtCustomType, 0);
+                    }
+
+                    @Override
+                    public String getVariableNamePattern() {
+                        return "\\S";
+                    }
+                }));
         Classes.registerClass(new ClassInfo<>(NBTCompound.class, "nbtcompound")
                 .user("nbt ?compound")
                 .name("NBT - Compound")
@@ -31,17 +64,17 @@ public class SkriptTypes {
                     }
 
                     @Override
-                    public @NotNull String toString(@NotNull NBTCompound nbt, int flags) {
+                    public String toString(@NotNull NBTCompound nbt, int flags) {
                         return nbt.toString();
                     }
 
                     @Override
-                    public @NotNull String toVariableNameString(@NotNull NBTCompound nbt) {
+                    public String toVariableNameString(@NotNull NBTCompound nbt) {
                         return "nbt:" + nbt.toString();
                     }
 
                     @Override
-                    public @NotNull String getVariableNamePattern() {
+                    public String getVariableNamePattern() {
                         return "nbt:.+";
                     }
                 })
@@ -59,7 +92,7 @@ public class SkriptTypes {
                     }
 
                     @Override
-                    protected @NotNull NBTCompound deserialize(@NotNull Fields fields) throws StreamCorruptedException {
+                    protected NBTCompound deserialize(@NotNull Fields fields) throws StreamCorruptedException {
                         String nbt = fields.getObject("nbt", String.class);
                         assert nbt != null;
                         try {

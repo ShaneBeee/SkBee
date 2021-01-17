@@ -6,6 +6,7 @@ types:
 	worldtype: world type¦s @-
 	bound: bound
 	nbtcompound: nbt compound¦s @an
+	nbttype: nbt type¦s @an
 	basecomponent: base component¦s @-
 	particle: particle¦s @-
 	dustoption: dust option¦s @-
