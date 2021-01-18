@@ -25,7 +25,7 @@ public class SkriptTypes {
                 .usage(NBTCustomType.getNames())
                 .examples("set byte tag \"points\" of {_nbt} to 1",
                         "set compound tag \"tool\" of {_nbt} to nbt compound of player's tool")
-                .since("INSERT VERSION")
+                .since("1.10.0")
                 .parser(new Parser<NBTCustomType>() {
 
                     @Nullable

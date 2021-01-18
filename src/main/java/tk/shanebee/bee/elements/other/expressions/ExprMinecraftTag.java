@@ -34,7 +34,7 @@ import java.util.Locale;
         "set {_tag} to \"minecraft:climbable\"", "",
         "loop minecraft tags:",
         "\tsend \"-%loop-value%\" to console"})
-@Since("INSERT VERSION")
+@Since("1.10.0")
 public class ExprMinecraftTag extends SimpleExpression<Object> {
 
     private static final String[] TAG_TYPE = new String[]{Tag.REGISTRY_ITEMS, Tag.REGISTRY_BLOCKS};

@@ -84,7 +84,7 @@ public class Types {
                     .examples("set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
                             "set {_a} to material choice of every sword",
                             "set {_a} to material choice of minecraft tag \"doors\"")
-                    .since("INSERT VERSION")
+                    .since("1.10.0")
                     .parser(new Parser<MaterialChoice>() {
 
                         @Override
@@ -119,7 +119,7 @@ public class Types {
                             "set {_tag} to \"minecraft:climbable\"", "",
                             "loop minecraft tags:",
                             "\tsend \"-%loop-value%\" to console")
-                    .since("INSERT VERSION")
+                    .since("1.10.0")
                     .parser(new Parser<Tag>() {
 
                         @Override

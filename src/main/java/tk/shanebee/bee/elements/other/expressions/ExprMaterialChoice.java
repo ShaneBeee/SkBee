@@ -28,7 +28,7 @@ import java.util.List;
 @Examples({"set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
         "set {_a} to material choice of every sword",
         "set {_a} to material choice of minecraft tag \"doors\""})
-@Since("INSERT VERSION")
+@Since("1.10.0")
 public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
 
     static {

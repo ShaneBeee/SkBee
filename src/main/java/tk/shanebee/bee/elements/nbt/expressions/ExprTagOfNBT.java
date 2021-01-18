@@ -33,9 +33,9 @@ import java.util.ArrayList;
         "Also note that you can NOT create custom tags for entities/blocks. As of 1.7.1 blocks(tile entities)/entities will be able to hold custom nbt",
         "data in the \"custom\" tag of said block/entity. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen.",
         "That said, this system is a tad convoluted, see the SkBee WIKI for more details.",
-        "As of INSERT VERSION you can now add custom NBT to any block (the same as you would for tile entities)(This is only support on 1.16.4+). ",
+        "As of 1.10.0 you can now add custom NBT to any block (the same as you would for tile entities)(This is only support on 1.16.4+). ",
         "Since Minecraft does not natively support this, the NBT is actually stored in the chunk's NBT. See wiki for more info.",
-        "As of INSERT VERSION you can get/set specific tag types of NBT compounds, allowing for more detailed control of what type your tag is going to be."})
+        "As of 1.10.0 you can get/set specific tag types of NBT compounds, allowing for more detailed control of what type your tag is going to be."})
 @Examples({"set {_tag} to tag \"Invulnerable\" of targeted entity's nbt",
         "send \"Tag: %tag \"\"CustomName\"\" of nbt of target entity%\" to player",
         "set {_tag} to \"Enchantments\" tag of nbt of player's tool",

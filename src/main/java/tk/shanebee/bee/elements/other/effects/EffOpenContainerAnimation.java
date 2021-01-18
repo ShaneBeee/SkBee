@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
         "Requires Minecraft 1.16+"})
 @Examples({"play open animation on target block",
         "play close animation on all blocks in radius 3 around player"})
-@Since("INSERT VERSION")
+@Since("1.10.0")
 public class EffOpenContainerAnimation extends Effect {
 
     static {

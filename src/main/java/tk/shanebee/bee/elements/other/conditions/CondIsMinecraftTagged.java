@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"if player's tool is tagged with minecraft tag \"carpets\":",
         "if target block is not tagged as minecraft tag \"fence_gates\"",
         "if clicked block is tagged as minecraft block tag \"doors\" or minecraft block tag \"fence_gates\""})
-@Since("INSERT VERSION")
+@Since("1.10.0")
 public class CondIsMinecraftTagged extends Condition {
 
     static {
