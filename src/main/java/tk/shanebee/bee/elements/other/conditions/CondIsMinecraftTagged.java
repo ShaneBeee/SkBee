@@ -1,5 +1,6 @@
 package tk.shanebee.bee.elements.other.conditions;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
@@ -24,7 +25,9 @@ import org.jetbrains.annotations.Nullable;
 public class CondIsMinecraftTagged extends Condition {
 
     static {
-        PropertyCondition.register(CondIsMinecraftTagged.class, "tagged (with|as) %minecrafttags%", "itemtypes");
+        if (Skript.isRunningMinecraft(1, 13)) {
+            PropertyCondition.register(CondIsMinecraftTagged.class, "tagged (with|as) %minecrafttags%", "itemtypes");
+        }
     }
 
     private Expression<ItemType> itemTypes;
