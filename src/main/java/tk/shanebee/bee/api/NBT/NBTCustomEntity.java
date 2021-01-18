@@ -66,6 +66,14 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     }
 
     @Override
+    public Boolean hasKey(String key) {
+        if (key.equalsIgnoreCase("custom")) {
+            return true;
+        }
+        return super.hasKey(key);
+    }
+
+    @Override
     public String toString() {
         try {
             if (NBTApi.HAS_PERSISTENCE) {

@@ -363,7 +363,7 @@ public class NBTApi {
             String[] splits = tag.split(";");
             for (int i = 0; i < splits.length - 1; i++) {
                 if (compound.hasKey(splits[i])) {
-                    compound = compound.getCompound(splits[i]);
+                    compound = compound.getOrCreateCompound(splits[i]);
                 }
             }
             key = splits[splits.length - 1];
