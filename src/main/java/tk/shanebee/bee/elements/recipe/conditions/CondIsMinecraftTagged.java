@@ -1,4 +1,4 @@
-package tk.shanebee.bee.elements.other.conditions;
+package tk.shanebee.bee.elements.recipe.conditions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;

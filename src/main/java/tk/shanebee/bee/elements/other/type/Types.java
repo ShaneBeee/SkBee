@@ -75,73 +75,7 @@ public class Types {
             Classes.registerClass(new ClassInfo<>(DustOptions.class, "dustoption")
                     .name(ClassInfo.NO_DOC).user("dust options?"));
 
-            Classes.registerClass(new ClassInfo<>(MaterialChoice.class, "materialchoice")
-                    .name("Material Choice")
-                    .user("material choices?")
-                    .description("Represents a set of materials/minecraft tags which can be used in some recipes. ",
-                            "Requires Minecraft 1.13+")
-                    .usage("see material choice expression")
-                    .examples("set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
-                            "set {_a} to material choice of every sword",
-                            "set {_a} to material choice of minecraft tag \"doors\"")
-                    .since("1.10.0")
-                    .parser(new Parser<MaterialChoice>() {
 
-                        @Override
-                        public boolean canParse(ParseContext context) {
-                            return false;
-                        }
-
-                        @Override
-                        public @NotNull String toString(@NotNull MaterialChoice matChoice, int flags) {
-                            return matChoiceToString(matChoice);
-                        }
-
-                        @Override
-                        public String toVariableNameString(MaterialChoice matChoice) {
-                            return "materialchoice:" + toString(matChoice, 0);
-                        }
-
-                        @Override
-                        public String getVariableNamePattern() {
-                            return "materialchoice://s";
-                        }
-                    }));
-
-            Classes.registerClass(new ClassInfo<>(Tag.class, "minecrafttag")
-                    .name("Minecraft Tag")
-                    .user("(minecraft )?tags?")
-                    .description("Represents a tag provided by Minecraft. Requires Minecraft 1.13+")
-                    .usage("see Minecraft tag expression")
-                    .examples("set {_i} to minecraft tag \"doors\"",
-                            "set {_tag} to minecraft tag \"trapdoors\"",
-                            "set {_tags::*} to minecraft tags \"wall_signs\" and \"wooden_doors\"",
-                            "set {_tag} to \"minecraft:climbable\"", "",
-                            "loop minecraft tags:",
-                            "\tsend \"-%loop-value%\" to console")
-                    .since("1.10.0")
-                    .parser(new Parser<Tag>() {
-
-                        @Override
-                        public boolean canParse(ParseContext context) {
-                            return false;
-                        }
-
-                        @Override
-                        public String toString(Tag tag, int flags) {
-                            return tag.getKey().toString();
-                        }
-
-                        @Override
-                        public String toVariableNameString(Tag tag) {
-                            return "minecrafttag:" + toString(tag, 0);
-                        }
-
-                        @Override
-                        public String getVariableNamePattern() {
-                            return "minecrafttag://s";
-                        }
-                    }));
         }
 
         // == FUNCTIONS ==
@@ -162,14 +96,6 @@ public class Types {
                     .examples("set {_c} to dustOption(red, 1.5)", "set {_c} to dustOption(rgb(1, 255, 1), 3)")
                     .since("1.9.0"));
         }
-    }
-
-    private static String matChoiceToString(MaterialChoice materialChoice) {
-        List<String> itemTypes = new ArrayList<>();
-        materialChoice.getChoices().forEach(material -> {
-            itemTypes.add(new ItemType(material).toString());
-        });
-        return String.format("MaterialChoice{choices=[%s]}", StringUtils.join(itemTypes, ", "));
     }
 
 }

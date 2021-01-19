@@ -1,4 +1,4 @@
-package tk.shanebee.bee.elements.other.expressions;
+package tk.shanebee.bee.elements.recipe.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
