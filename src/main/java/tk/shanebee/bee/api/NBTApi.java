@@ -708,6 +708,7 @@ public class NBTApi {
             case NBTTagDouble:
                 return compound.getDouble(tag);
             case NBTTagEnd:
+                return null;
             case NBTTagCompound:
                 return compound.getOrCreateCompound(tag);
             case NBTTagCompoundList:
