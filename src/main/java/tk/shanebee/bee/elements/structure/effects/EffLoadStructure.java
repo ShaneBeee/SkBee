@@ -5,9 +5,14 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.Trigger;
+import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.timings.SkriptTimings;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.github.shynixn.structureblocklib.api.bukkit.StructureBlockLibApi;
 import com.github.shynixn.structureblocklib.api.enumeration.StructureMirror;
@@ -16,17 +21,19 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
 
 import java.io.File;
 
 @Name("Structure Block - Load")
 @Description("Load structure block structures that are saved on your server. " +
-        "Optional values for rotation, mirroring and the inclusion of entities. 1.9.4+ ONLY")
+        "Optional values for rotation, mirroring and the inclusion of entities. Requires Minecraft 1.9.4+")
 @Examples({"load \"house\" at location of player", "load \"barn\" at location 10 infront of player",
         "paste \"house\" at location of player with rotation 90 and with mirror left to right",
         "load \"sheep_pen\" at location below player with rotation 180 and with entities"})
 @Since("1.0.0")
+@SuppressWarnings("NullableProblems")
 public class EffLoadStructure extends Effect {
 
     private static final String WORLD;
@@ -34,10 +41,11 @@ public class EffLoadStructure extends Effect {
 
     static {
         String worldContainer = Bukkit.getWorldContainer().getPath();
+        String worldName = Bukkit.getWorlds().get(0).getName();
         if (worldContainer.equalsIgnoreCase(".")) {
-            WORLD = Bukkit.getServer().getWorlds().get(0).getName();
+            WORLD = worldName;
         } else {
-            WORLD = worldContainer + File.separator + Bukkit.getServer().getWorlds().get(0).getName();
+            WORLD = worldContainer + File.separator + worldName;
         }
         Skript.registerEffect(EffLoadStructure.class,
                 "(load|paste) [structure] %string% at %location% [with rotation (0¦0|1¦90|2¦180|3¦270)] [(|5¦[and] with entities)]",
@@ -65,6 +73,16 @@ public class EffLoadStructure extends Effect {
 
     @Override
     protected void execute(@NotNull Event event) {
+        // Don't need this since we're walking
+    }
+
+    @Nullable
+    @Override
+    protected TriggerItem walk(Event event) {
+        debug(event, true);
+        TriggerItem next = getNext();
+        Delay.addDelayedEvent(event);
+
         StructureRotation rotation;
         switch (this.rotate) {
             case 1:
@@ -102,10 +120,11 @@ public class EffLoadStructure extends Effect {
                 Skript.error("Could not load structure " + name.toString(event, true) +
                         " .. location does not exist: " + loc.toString(event, true));
             }
-            return;
+            return next;
         }
         String name = this.name.getSingle(event);
 
+        Object localVars = Variables.removeLocals(event);
         STRUCTURE_API.loadStructure(SkBee.getPlugin())
                 .at(location).rotation(rotation).mirror(mirror)
                 .includeEntities(withEntities)
@@ -115,7 +134,30 @@ public class EffLoadStructure extends Effect {
                     if (debug) {
                         e.printStackTrace();
                     }
-                });
+                }).onResult(c -> {
+                    if (localVars != null) {
+                        Variables.setLocalVariables(event, localVars);
+                    }
+                    continueWalk(next, event);
+                }
+        );
+
+        return null;
+    }
+
+    private void continueWalk(@Nullable TriggerItem next, Event event) {
+        Object timing = null;
+        if (next != null) {
+            if (SkriptTimings.enabled()) {
+                Trigger trigger = getTrigger();
+                if (trigger != null) {
+                    timing = SkriptTimings.start(trigger.getDebugLabel());
+                }
+            }
+            TriggerItem.walk(next, event);
+        }
+        Variables.removeLocals(event);
+        SkriptTimings.stop(timing);
     }
 
     @Override
