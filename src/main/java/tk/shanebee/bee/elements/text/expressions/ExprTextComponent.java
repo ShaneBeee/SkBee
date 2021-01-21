@@ -77,7 +77,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
         for (Object object : this.translation.getArray(e)) {
             if (pattern == 0) {
                 BaseComponent[] baseComponents = TextComponent.fromLegacyText(Util.getColString((String) object));
-                components.addAll(Arrays.asList(baseComponents));
+                components.add(new TextComponent(baseComponents));
             } else if (pattern == 1) {
                 String translate;
                 if (object instanceof ItemType) {
