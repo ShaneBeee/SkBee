@@ -48,19 +48,21 @@ public class McReflection {
 
         ItemStack itemStackClone = itemStack.clone();
         ItemMeta itemMeta = itemStackClone.getItemMeta();
-        itemMeta.setDisplayName(null);
-        itemStackClone.setItemMeta(itemMeta);
+        if (itemMeta != null) {
+            itemMeta.setDisplayName(null);
+            itemStackClone.setItemMeta(itemMeta);
 
-        try {
-            Object nmsItemStack = getNMSCopy.invoke(null, itemStackClone);
-            Method getName = nmsItemStack.getClass().getMethod("getName");
-            Object name = getName.invoke(nmsItemStack);
+            try {
+                Object nmsItemStack = getNMSCopy.invoke(null, itemStackClone);
+                Method getName = nmsItemStack.getClass().getMethod("getName");
+                Object name = getName.invoke(nmsItemStack);
 
-            if (ChatMessage.isInstance(name)) {
-                Method getKey = ChatMessage.getMethod("getKey");
-                return ((String) getKey.invoke(name));
+                if (ChatMessage.isInstance(name)) {
+                    Method getKey = ChatMessage.getMethod("getKey");
+                    return ((String) getKey.invoke(name));
+                }
+            } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignore) {
             }
-        } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignore) {
         }
         return null;
     }
