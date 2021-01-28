@@ -29,8 +29,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Text Component - Hover Event")
-@Description("Create a new hover event. Can show text or an item to a player. I'm not sure which version 'showing item' " +
-        "was introduced on, so if it doesn't work on your version, your version is probably too old.")
+@Description("Create a new hover event. Can show text or an item to a player. 'showing %itemtype%' requires Minecraft 1.16.2+")
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
         "set hover event of {_t} to a new hover event showing player's tool",
         "send component {_t} to player"})
