@@ -111,8 +111,10 @@ public class SkBee extends JavaPlugin {
             return;
         }
         try {
-            pm.registerEvents(new NBTListener(this), this);
             addon.loadClasses("tk.shanebee.bee.elements.nbt");
+            if (NBTApi.SUPPORTS_BLOCK_NBT) {
+                pm.registerEvents(new NBTListener(this), this);
+            }
             Util.log("&5NBT Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
