@@ -81,8 +81,6 @@ public class EffSaveStructure extends Effect {
             return next;
         }
 
-        Object localVars = Variables.removeLocals(event);
-
         World world = loc1.getWorld();
         int x = Math.min(loc1.getBlockX(), loc2.getBlockX());
         int y = Math.min(loc1.getBlockY(), loc2.getBlockY());
@@ -96,6 +94,7 @@ public class EffSaveStructure extends Effect {
 
         String name = this.name.getSingle(event);
 
+        Object localVars = Variables.removeLocals(event);
         STRUCTURE_API.saveStructure(SkBee.getPlugin())
                 .restriction(StructureRestriction.UNLIMITED)
                 .at(low).sizeX(xDiff).sizeY(yDiff).sizeZ(zDiff)
