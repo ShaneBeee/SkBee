@@ -29,7 +29,6 @@ import tk.shanebee.bee.api.NBT.NBTCustomBlock;
 import tk.shanebee.bee.api.NBT.NBTCustomEntity;
 import tk.shanebee.bee.api.NBT.NBTCustomTileEntity;
 import tk.shanebee.bee.api.NBT.NBTCustomType;
-import tk.shanebee.bee.api.reflection.SkReflection;
 import tk.shanebee.bee.api.util.MathUtil;
 import tk.shanebee.bee.api.util.Util;
 import tk.shanebee.bee.config.Config;
@@ -149,15 +148,16 @@ public class NBTApi {
                 itemStack.setItemMeta(item.getItem().getItemMeta());
                 return item.getItem();
             case ITEM_TYPE:
-                ItemStack stack = ((ItemType) object).getItem().getRandom();
+                ItemType itemType = (ItemType) object;
+                ItemStack stack = itemType.getItem().getRandom();
                 if (stack == null || stack.getType() == Material.AIR) return object;
 
                 NBTItem nbtItemType = new NBTItem(stack);
                 nbtItemType.mergeCompound(new NBTContainer(value));
                 ItemMeta itemMeta = nbtItemType.getItem().getItemMeta();
                 if (itemMeta == null) return object;
-                SkReflection.setMeta((ItemType) object, nbtItemType.getItem().getItemMeta());
-                return object;
+                itemType.setItemMeta(nbtItemType.getItem().getItemMeta());
+                return itemType;
             case SLOT:
                 ItemStack slotItemStack = ((Slot) object).getItem();
                 if (slotItemStack != null && slotItemStack.getType() != Material.AIR) {
@@ -221,11 +221,12 @@ public class NBTApi {
                 ((ItemStack) object).setItemMeta(nbtItemStack.getItem().getItemMeta());
                 return object;
             case ITEM_TYPE:
-                ItemStack itemStack = new ItemStack(((ItemType) object).getMaterial());
+                ItemType itemType = ((ItemType) object);
+                ItemStack itemStack = new ItemStack(itemType.getMaterial());
                 NBTItem nbtItemType = new NBTItem(itemStack);
                 nbtItemType.mergeCompound(new NBTContainer(value));
-                SkReflection.setMeta((ItemType) object, nbtItemType.getItem().getItemMeta());
-                return object;
+                itemType.setItemMeta(nbtItemType.getItem().getItemMeta());
+                return itemType;
             case SLOT:
                 ItemStack slotItemStack = ((Slot) object).getItem();
                 if (slotItemStack != null) {
