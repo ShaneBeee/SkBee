@@ -361,7 +361,7 @@ public class NBTApi {
         NBTCompound compound = nbtCompound;
         String key = tag;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";");
+            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
             for (int i = 0; i < splits.length - 1; i++) {
                 if (compound.hasKey(splits[i])) {
                     compound = compound.getOrCreateCompound(splits[i]);
@@ -376,7 +376,7 @@ public class NBTApi {
         NBTCompound compound = nbtCompound;
         String key = tag;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";");
+            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
             for (int i = 0; i < splits.length - 1; i++) {
                 String split = splits[i];
                 compound = compound.getOrCreateCompound(split);
@@ -522,7 +522,7 @@ public class NBTApi {
         NBTCompound compound = nbtCompound;
         String key = tag;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";");
+            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
             for (int i = 0; i < splits.length - 1; i++) {
                 String split = splits[i];
                 compound = compound.getOrCreateCompound(split);
@@ -640,7 +640,7 @@ public class NBTApi {
     public Object getTag(String tag, NBTCompound compound) {
         if (compound == null) return null;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";");
+            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
             for (int i = 0; i < splits.length - 1; i++) {
                 String split = splits[i];
                 compound = compound.getOrCreateCompound(split);
@@ -667,7 +667,7 @@ public class NBTApi {
     public Object getTag(String tag, NBTCompound compound, NBTCustomType type) {
         if (compound == null) return null;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";");
+            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
             for (int i = 0; i < splits.length - 1; i++) {
                 String split = splits[i];
                 compound = compound.getOrCreateCompound(split);
