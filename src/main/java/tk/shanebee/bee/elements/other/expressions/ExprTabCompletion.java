@@ -41,10 +41,8 @@ import java.util.List;
 public class ExprTabCompletion extends SimpleExpression<String> {
 
     static {
-        if (Skript.classExists("org.bukkit.event.server.TabCompleteEvent")) {
-            Skript.registerExpression(ExprTabCompletion.class, String.class, ExpressionType.SIMPLE,
-                    "[skbee] tab completions [(of|for) position %number%]");
-        }
+        Skript.registerExpression(ExprTabCompletion.class, String.class, ExpressionType.SIMPLE,
+                "[skbee] tab completions [(of|for) position %number%]");
     }
 
     private Expression<Number> position;

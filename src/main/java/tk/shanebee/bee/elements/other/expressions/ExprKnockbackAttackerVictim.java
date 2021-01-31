@@ -22,10 +22,8 @@ import org.jetbrains.annotations.Nullable;
 public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> {
 
     static {
-        if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent")) {
-            Skript.registerExpression(ExprKnockbackAttackerVictim.class, Entity.class, ExpressionType.SIMPLE,
-                    "[the] knockback (0¦attacker|1¦victim)");
-        }
+        Skript.registerExpression(ExprKnockbackAttackerVictim.class, Entity.class, ExpressionType.SIMPLE,
+                "[the] knockback (0¦attacker|1¦victim)");
     }
 
     @SuppressWarnings("null")

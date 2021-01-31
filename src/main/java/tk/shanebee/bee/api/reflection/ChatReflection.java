@@ -1,6 +1,5 @@
 package tk.shanebee.bee.api.reflection;
 
-import ch.njol.skript.Skript;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.Bukkit;
@@ -14,7 +13,6 @@ import java.lang.reflect.Method;
  */
 public class ChatReflection {
 
-    private static final boolean LEGACY = !Skript.isRunningMinecraft(1, 13);
     private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
 
     private enum Ver {
@@ -113,7 +111,7 @@ public class ChatReflection {
      * @param prefix Prefix to set
      */
     public static void setTeamPrefix(Team team, String prefix) {
-        if (LEGACY || CRAFT_TEAM == null || PREFIX_COMP_METHOD == null || SET_PREFIX == null) {
+        if (CRAFT_TEAM == null || PREFIX_COMP_METHOD == null || SET_PREFIX == null) {
             team.setPrefix("");
             team.setSuffix("");
             return;

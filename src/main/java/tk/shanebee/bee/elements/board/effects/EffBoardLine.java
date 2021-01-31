@@ -83,7 +83,7 @@ public class EffBoardLine extends Effect {
     public @NotNull String toString(Event e, boolean d) {
         String set = this.set ? "set" : "delete";
         String string = this.set ? " to " + text.toString(e, d) : "";
-        return set + " line " + line.toString(e, d) + " of " + players.toString(e,d) + " scoreboard" + string;
+        return set + " line " + line.toString(e, d) + " of " + players.toString(e, d) + " scoreboard" + string;
     }
 
 }

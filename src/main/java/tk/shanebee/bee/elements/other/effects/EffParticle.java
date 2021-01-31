@@ -38,12 +38,10 @@ import tk.shanebee.bee.api.util.ParticleUtil;
 public class EffParticle extends Effect {
 
     static {
-        if (Skript.isRunningMinecraft(1, 13)) {
-            Skript.registerEffect(EffParticle.class,
-                    "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% [(for|to) %-players%]",
-                    "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% offset by %vector% [(for|to) %-players%]",
-                    "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% offset by %vector% with extra %number% [(for|to) %-players%]");
-        }
+        Skript.registerEffect(EffParticle.class,
+                "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% [(for|to) %-players%]",
+                "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% offset by %vector% [(for|to) %-players%]",
+                "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% offset by %vector% with extra %number% [(for|to) %-players%]");
     }
 
     private int pattern;

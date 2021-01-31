@@ -1,6 +1,5 @@
 package tk.shanebee.bee.elements.board.objects;
 
-import ch.njol.skript.Skript;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
@@ -19,9 +18,6 @@ import java.util.Map;
  * <p>This class also has a map that holds all player scoreboards</p>
  */
 public class Board {
-
-    private static final boolean LEGACY = !Skript.isRunningMinecraft(1, 13);
-    private static final int MAX = LEGACY ? 32 : 128;
 
     // STATIC STUFF
     private static final Map<Player, Board> BOARD_MAP = new HashMap<>();
@@ -84,11 +80,7 @@ public class Board {
         oldScoreboard = player.getScoreboard();
         scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
         this.player.setScoreboard(scoreboard);
-        if (LEGACY)
-            //noinspection deprecation
-            board = scoreboard.registerNewObjective("Board", "dummy");
-        else
-            board = scoreboard.registerNewObjective("Board", "dummy", "Board");
+        board = scoreboard.registerNewObjective("Board", "dummy", "Board");
         board.setDisplaySlot(DisplaySlot.SIDEBAR);
         board.setDisplayName(" ");
 
@@ -120,22 +112,7 @@ public class Board {
     public void setLine(int line, String text) {
         Validate.isBetween(line, 1, 15);
         Team t = lines[line - 1];
-        if (LEGACY && text.length() > (MAX / 2)) {
-            String prefix = getColString(text.substring(0, (MAX / 2)));
-            String lastColor = ChatColor.getLastColors(prefix);
-            int splitMax = Math.min(text.length(), MAX - lastColor.length());
-            String suffix = getColString(lastColor + text.substring((MAX / 2), splitMax));
-
-            // Fix for split issues splitting between § and color code
-            if (prefix.substring(((MAX / 2) - 1), MAX / 2).equalsIgnoreCase("§")) {
-                prefix = prefix.substring(0, (MAX / 2) - 1);
-                int length = text.length() > (MAX - 2) ? (MAX - 1) : text.length();
-                suffix = getColString(text.substring((MAX / 2) - 1, length));
-            }
-            t.setPrefix(prefix);
-            t.setSuffix(suffix);
-
-        } else if (ChatColor.stripColor(text).length() > (MAX / 2)) {
+        if (ChatColor.stripColor(text).length() > (64)) {
             ChatReflection.setTeamPrefix(t, getColString(text));
         } else {
             t.setPrefix(getColString(text));

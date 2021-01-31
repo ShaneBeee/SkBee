@@ -30,10 +30,8 @@ import org.jetbrains.annotations.Nullable;
 public class ExprTabCompletionArgs extends SimpleExpression<String> {
 
     static {
-        if (Skript.classExists("org.bukkit.event.server.TabCompleteEvent")) {
-            Skript.registerExpression(ExprTabCompletionArgs.class, String.class, ExpressionType.SIMPLE,
-                    "tab [complete] arg[ument](0¦s|1¦[(-| )]%number%)");
-        }
+        Skript.registerExpression(ExprTabCompletionArgs.class, String.class, ExpressionType.SIMPLE,
+                "tab [complete] arg[ument](0¦s|1¦[(-| )]%number%)");
     }
 
     private int pattern;

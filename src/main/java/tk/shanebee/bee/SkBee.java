@@ -59,8 +59,8 @@ public class SkBee extends JavaPlugin {
 
         final Plugin SKRIPT = pm.getPlugin("Skript");
         if (SKRIPT != null && SKRIPT.isEnabled() && Skript.isAcceptRegistrations()) {
-            if (!Skript.isRunningMinecraft(1, 13)) {
-                Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.13+ is supported!", Skript.getMinecraftVersion());
+            if (!Skript.isRunningMinecraft(1, 13, 2)) {
+                Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.13.2+ is supported!", Skript.getMinecraftVersion());
                 pm.disablePlugin(this);
                 return;
             }
@@ -128,43 +128,33 @@ public class SkBee extends JavaPlugin {
     }
 
     private void loadRecipeElements() {
-        if (Skript.isRunningMinecraft(1, 13)) {
-            if (!this.config.ELEMENTS_RECIPE) {
-                Util.log("&5Recipe Elements &cdisabled via config");
-                return;
-            }
-            try {
-                addon.loadClasses("tk.shanebee.bee.elements.recipe");
-                Util.log("&5Recipe Elements &asuccessfully loaded");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        } else {
-            Util.log("&5Recipe Elements &cdisabled");
-            Util.log("&7 - Recipe elements are only available on 1.13+");
+        if (!this.config.ELEMENTS_RECIPE) {
+            Util.log("&5Recipe Elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("tk.shanebee.bee.elements.recipe");
+            Util.log("&5Recipe Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
         }
     }
 
     private void loadBoardElements() {
-        if (Skript.isRunningMinecraft(1, 8, 8)) {
-            if (!this.config.ELEMENTS_BOARD) {
-                Util.log("&5Scoreboard Elements &cdisabled via config");
-                return;
-            }
-            try {
-                addon.loadClasses("tk.shanebee.bee.elements.board");
-                pm.registerEvents(new PlayerBoardListener(), this);
-                // If there are players online during a reload, let's give them a board
-                Bukkit.getOnlinePlayers().forEach(Board::createBoard);
-                Util.log("&5Scoreboard Elements &asuccessfully loaded");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        } else {
-            Util.log("&5Scoreboard Elements &cdisabled");
-            Util.log("&7 - Scoreboard elements are only available on 1.8.8+");
+        if (!this.config.ELEMENTS_BOARD) {
+            Util.log("&5Scoreboard Elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("tk.shanebee.bee.elements.board");
+            pm.registerEvents(new PlayerBoardListener(), this);
+            // If there are players online during a reload, let's give them a board
+            Bukkit.getOnlinePlayers().forEach(Board::createBoard);
+            Util.log("&5Scoreboard Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
         }
     }
 
@@ -199,51 +189,40 @@ public class SkBee extends JavaPlugin {
     }
 
     private void loadPathElements() {
-        if (Skript.classExists("com.destroystokyo.paper.entity.Pathfinder")) {
-            if (!this.config.ELEMENTS_PATHFINDING) {
-                Util.log("&5Pathfinding Elements &cdisabled via config");
-                return;
-            }
-            try {
-
-                addon.loadClasses("tk.shanebee.bee.elements.path");
-                Util.log("&5Pathfinding Elements &asuccessfully loaded");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        } else {
-            Util.log("&5Pathfinding &cdisabled");
-            Util.log("&7 - Pathfinding elements are only available on Paper 1.13+");
+        if (!this.config.ELEMENTS_PATHFINDING) {
+            Util.log("&5Pathfinding Elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("tk.shanebee.bee.elements.path");
+            Util.log("&5Pathfinding Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
         }
     }
 
     private void loadStructureElements() {
-        if (Skript.isRunningMinecraft(1, 9, 4)) {
-            if (!this.config.ELEMENTS_STRUCTURE) {
-                Util.log("&5Structure Elements &cdisabled via config");
-                return;
-            }
-            // Disable if StructureBlockLib is not currently updated for this server version
-            ProxyServiceImpl impl = new ProxyServiceImpl(this);
-            if (impl.getServerVersion() == null) {
-                String ver = Skript.getMinecraftVersion().toString();
-                Util.log("&5Structure Elements &cDISABLED!");
-                Util.log(" - Your server version [&b" + ver + "&7] is not currently supported by the StructureBlock API");
-                Util.log(" - This is not a bug!");
-                Util.log(" - Structure elements will resume once the API is updated to work with [&b" + ver + "&7]");
-                return;
-            }
-            try {
-                addon.loadClasses("tk.shanebee.bee.elements.structure");
-                Util.log("&5Structure Elements &asuccessfully loaded");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        } else {
-            Util.log("&5Structure Elements &cdisabled");
-            Util.log("&7 - Structure elements are only available on 1.9.4+");
+        if (!this.config.ELEMENTS_STRUCTURE) {
+            Util.log("&5Structure Elements &cdisabled via config");
+            return;
+        }
+        // Disable if StructureBlockLib is not currently updated for this server version
+        ProxyServiceImpl impl = new ProxyServiceImpl(this);
+        if (impl.getServerVersion() == null) {
+            String ver = Skript.getMinecraftVersion().toString();
+            Util.log("&5Structure Elements &cDISABLED!");
+            Util.log(" - Your server version [&b" + ver + "&7] is not currently supported by the StructureBlock API");
+            Util.log(" - This is not a bug!");
+            Util.log(" - Structure elements will resume once the API is updated to work with [&b" + ver + "&7]");
+            return;
+        }
+        try {
+            addon.loadClasses("tk.shanebee.bee.elements.structure");
+            Util.log("&5Structure Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
         }
     }
 
@@ -264,7 +243,7 @@ public class SkBee extends JavaPlugin {
             }
         } else {
             Util.log("&5Virtual Furnace Elements &cdisabled");
-            Util.log("&7 - Virtual Furnace elements are only available on 1.13+");
+            Util.log("&7 - Virtual Furnace elements are only available on 1.14+");
         }
     }
 
