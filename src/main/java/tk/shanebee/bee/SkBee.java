@@ -59,6 +59,11 @@ public class SkBee extends JavaPlugin {
 
         final Plugin SKRIPT = pm.getPlugin("Skript");
         if (SKRIPT != null && SKRIPT.isEnabled() && Skript.isAcceptRegistrations()) {
+            if (!Skript.isRunningMinecraft(1, 13)) {
+                Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.13+ is supported!", Skript.getMinecraftVersion());
+                pm.disablePlugin(this);
+                return;
+            }
             addon = Skript.registerAddon(this);
             addon.setLanguageFileDirectory("lang");
 
