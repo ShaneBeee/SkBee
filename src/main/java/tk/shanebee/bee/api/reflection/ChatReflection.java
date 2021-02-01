@@ -87,19 +87,23 @@ public class ChatReflection {
     private static final Class<?> NMS_TEAM = ReflectionUtils.getNMSClass("ScoreboardTeam");
     private static final Class<?> NMS_ICHATBASE = ReflectionUtils.getNMSClass("IChatBaseComponent");
     private static final Method SET_PREFIX;
+    private static final Method SET_SUFFIX;
     private static final Method PREFIX_COMP_METHOD;
 
     static {
+        Method SET_SUFFIX1 = null;
         Method PREFIX_COMP_METHOD1 = null;
         Method SET_PREFIX1 = null;
         if (CRAFT_TEAM != null && NMS_TEAM != null && CRAFT_CHAT_MESSAGE != null) {
             try {
+                SET_SUFFIX1 = NMS_TEAM.getDeclaredMethod("setSuffix", NMS_ICHATBASE);
                 SET_PREFIX1 = NMS_TEAM.getDeclaredMethod("setPrefix", NMS_ICHATBASE);
                 PREFIX_COMP_METHOD1 = CRAFT_CHAT_MESSAGE.getDeclaredMethod("fromStringOrNull", String.class);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
             }
         }
+        SET_SUFFIX = SET_SUFFIX1;
         PREFIX_COMP_METHOD = PREFIX_COMP_METHOD1;
         SET_PREFIX = SET_PREFIX1;
     }
@@ -122,6 +126,23 @@ public class ChatReflection {
             Object prefixComp = PREFIX_COMP_METHOD.invoke(null, prefix);
 
             SET_PREFIX.invoke(nmsTeam, prefixComp);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static void setTeamSuffix(Team team, String suffix) {
+        if (CRAFT_TEAM == null || PREFIX_COMP_METHOD == null || SET_PREFIX == null) {
+            team.setPrefix("");
+            team.setSuffix("");
+            return;
+        }
+
+        try {
+            Object nmsTeam = ReflectionUtils.getField("team", CRAFT_TEAM, team);
+            Object prefixComp = PREFIX_COMP_METHOD.invoke(null, suffix);
+
+            SET_SUFFIX.invoke(nmsTeam, prefixComp);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

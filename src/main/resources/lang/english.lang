@@ -12,6 +12,9 @@ types:
 	dustoption: dust option¦s @-
 	materialchoice: material choice¦s
 	minecrafttag: minecraft tag¦s
+	beeteam: team¦s
+	teamoption: team options¦s
+	teamoptionstatus: team option status¦es
 
 environment types:
 	normal: normal

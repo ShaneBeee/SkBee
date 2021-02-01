@@ -20,6 +20,7 @@ import tk.shanebee.bee.api.util.LoggerBee;
 import tk.shanebee.bee.api.util.Util;
 import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
+import tk.shanebee.bee.elements.board.objects.BeeTeams;
 import tk.shanebee.bee.elements.board.objects.Board;
 import tk.shanebee.bee.elements.bound.config.BoundConfig;
 import tk.shanebee.bee.elements.bound.objects.Bound;
@@ -46,6 +47,7 @@ public class SkBee extends JavaPlugin {
     private SkriptAddon addon;
     private VirtualFurnaceAPI virtualFurnaceAPI;
     private BeeWorldConfig beeWorldConfig;
+    private BeeTeams beeTeams;
 
     @Override
     public void onEnable() {
@@ -147,6 +149,7 @@ public class SkBee extends JavaPlugin {
             return;
         }
         try {
+            beeTeams = new BeeTeams();
             addon.loadClasses("tk.shanebee.bee.elements.board");
             pm.registerEvents(new PlayerBoardListener(), this);
             // If there are players online during a reload, let's give them a board
@@ -337,5 +340,7 @@ public class SkBee extends JavaPlugin {
         return virtualFurnaceAPI;
     }
 
-
+    public BeeTeams getBeeTeams() {
+        return beeTeams;
+    }
 }
