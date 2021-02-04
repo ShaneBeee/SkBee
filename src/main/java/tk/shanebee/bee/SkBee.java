@@ -5,7 +5,6 @@ import ch.njol.skript.SkriptAddon;
 import com.github.shynixn.structureblocklib.bukkit.service.ProxyServiceImpl;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
-import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
@@ -51,6 +50,10 @@ public class SkBee extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        if (Util.unsupportedPlatform()) {
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
         long start = System.currentTimeMillis();
         instance = this;
         this.config = new Config(this);
@@ -87,8 +90,6 @@ public class SkBee extends JavaPlugin {
                 Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
             }
 
-            // Paper Message
-            PaperLib.suggestPaper(this);
         } else {
             Util.log("&cDependency Skript was not found, plugin disabling");
             pm.disablePlugin(this);
@@ -343,4 +344,5 @@ public class SkBee extends JavaPlugin {
     public BeeTeams getBeeTeams() {
         return beeTeams;
     }
+
 }

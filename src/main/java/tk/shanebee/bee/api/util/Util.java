@@ -83,4 +83,16 @@ public class Util {
         return new int[]{(int) (most >> 32), (int) most, (int) (least >> 32), (int) least};
     }
 
+    public static boolean unsupportedPlatform() {
+        String serverName = Bukkit.getName();
+        if (serverName.equalsIgnoreCase("Paper")) {
+            log("&c<============================================================>");
+            log("&cSkBee is not supported on your server platform '%s'", serverName);
+            log("&eSupported platforms include Spigot, Tuinity, Purpur and Yatopia.");
+            log("&c<============================================================>");
+            return true;
+        }
+        return false;
+    }
+
 }
