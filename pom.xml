@@ -128,7 +128,7 @@
                         <version>3.2.0</version>
                         <configuration>
                             <!-- Put here wherever you would like the plugin to build -->
-                            <outputDirectory>/Users/ShaneBee/Desktop/Server/SKRIPT-TESTING/Skript-1164/plugins</outputDirectory>
+                            <outputDirectory>/Users/ShaneBee/Desktop/Server/SKRIPT-TESTING/Skript-1165/plugins</outputDirectory>
                         </configuration>
                     </plugin>
                 </plugins>

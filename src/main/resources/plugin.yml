@@ -8,5 +8,6 @@ website: https://github.com/ShaneBeee/SkBee
 softdepend:
   - Skript
   - FastAsyncWorldEdit
+  - skript-variable-dump
 loadbefore:
   - SkQuery
