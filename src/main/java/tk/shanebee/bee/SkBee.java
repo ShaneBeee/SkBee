@@ -2,8 +2,10 @@ package tk.shanebee.bee;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
+import com.github.goingoffskript.skriptvariabledump.SkriptToYaml;
 import com.github.shynixn.structureblocklib.bukkit.service.ProxyServiceImpl;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
@@ -117,6 +119,11 @@ public class SkBee extends JavaPlugin {
         }
         try {
             addon.loadClasses("tk.shanebee.bee.elements.nbt");
+            // Allow for serializing NBT compounds via 'skript-variable-dump'
+            Plugin plugin = Bukkit.getPluginManager().getPlugin("skript-variable-dump");
+            if (plugin != null && Skript.classExists("com.github.goingoffskript.skriptvariabledump.SkriptToYaml")) {
+                SkriptToYaml.adapts(NBTContainer.class, (compound, map) -> map.put("nbt-compound", compound.toString()));
+            }
             if (NBTApi.SUPPORTS_BLOCK_NBT) {
                 pm.registerEvents(new NBTListener(this), this);
             }
