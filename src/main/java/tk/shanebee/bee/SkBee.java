@@ -86,9 +86,6 @@ public class SkBee extends JavaPlugin {
                 Util.log("&eThis is a BETA build, things may not work as expected, please report any bugs on GitHub");
                 Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
             }
-
-            // Paper Message
-            PaperLib.suggestPaper(this);
         } else {
             Util.log("&cDependency Skript was not found, plugin disabling");
             pm.disablePlugin(this);
