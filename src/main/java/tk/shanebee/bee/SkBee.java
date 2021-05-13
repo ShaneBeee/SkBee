@@ -7,7 +7,6 @@ import com.github.shynixn.structureblocklib.bukkit.service.ProxyServiceImpl;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
-import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
@@ -92,7 +91,7 @@ public class SkBee extends JavaPlugin {
             return;
         }
         loadMetrics();
-        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", desc.getVersion(), (float)(System.currentTimeMillis() - start) / 1000);
+        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", desc.getVersion(), (float) (System.currentTimeMillis() - start) / 1000);
 
         if (this.beeWorldConfig != null && this.config.AUTO_LOAD_WORLDS) {
             this.beeWorldConfig.loadCustomWorlds();
@@ -340,6 +339,5 @@ public class SkBee extends JavaPlugin {
     public VirtualFurnaceAPI getVirtualFurnaceAPI() {
         return virtualFurnaceAPI;
     }
-
 
 }
