@@ -1,5 +1,6 @@
 package tk.shanebee.bee.api.reflection;
 
+import ch.njol.skript.Skript;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.Bukkit;
@@ -14,6 +15,7 @@ import java.lang.reflect.Method;
 public class ChatReflection {
 
     private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
+    private static final boolean NEW_PRETTY_NBT = Skript.isRunningMinecraft(1, 17);
 
     private enum Ver {
         V_1_13_R2("v1_13_R2", "k", "a"),
@@ -55,12 +57,34 @@ public class ChatReflection {
      * @return Pretty string of NBTCompound
      */
     public static String getPrettyNBT(NBTCompound compound, String split) {
+        if (NEW_PRETTY_NBT) {
+            return getPretty_17(compound, split);
+        } else {
+            return getPretty_16(compound, split);
+        }
+    }
+
+    // Cache these classes/methods to prevent retrieving them too often
+    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("IChatBaseComponent");
+    private static final Class<?> CRAFT_CHAT_MESSAGE_CLASS = ReflectionUtils.getOBCClass("util.CraftChatMessage");
+    private static final Method FROM_COMPONENT;
+
+    static {
+        Method from_comp = null;
+        try {
+            assert CRAFT_CHAT_MESSAGE_CLASS != null;
+            from_comp = CRAFT_CHAT_MESSAGE_CLASS.getMethod("fromComponent", ICHAT_BASE_COMPONENT_CLASS);
+        } catch (NoSuchMethodException e) {
+            e.printStackTrace();
+        }
+        FROM_COMPONENT = from_comp;
+    }
+
+    private static String getPretty_16(NBTCompound compound, String split) {
         String prettyM = Ver.getPretty(split != null);
         if (prettyM == null) return null;
 
         Object nmsNBT = new NBTContainer(compound.toString()).getCompound();
-        Class<?> iChatBaseComponent = ReflectionUtils.getNMSClass("IChatBaseComponent");
-        Class<?> craftChatMessageClass = ReflectionUtils.getOBCClass("util.CraftChatMessage");
         try {
             Method prettyMethod;
             Object prettyComponent;
@@ -71,14 +95,16 @@ public class ChatReflection {
                 prettyMethod = nmsNBT.getClass().getMethod(prettyM);
                 prettyComponent = prettyMethod.invoke(nmsNBT);
             }
-            assert craftChatMessageClass != null;
-            Method fromComponent = craftChatMessageClass.getMethod("fromComponent", iChatBaseComponent);
-
-            return ((String) fromComponent.invoke(craftChatMessageClass, prettyComponent));
+            assert CRAFT_CHAT_MESSAGE_CLASS != null;
+            return ((String) FROM_COMPONENT.invoke(CRAFT_CHAT_MESSAGE_CLASS, prettyComponent));
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
             e.printStackTrace();
             return null;
         }
+    }
+
+    private static String getPretty_17(NBTCompound compound, String split) {
+        return compound.toString();
     }
 
     // Cache these classes/methods to prevent retrieving them too often
