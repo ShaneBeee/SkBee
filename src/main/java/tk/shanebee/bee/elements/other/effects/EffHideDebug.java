@@ -15,9 +15,8 @@ import org.eclipse.jdt.annotation.Nullable;
 import tk.shanebee.bee.api.util.PlayerUtils;
 
 @Name("Simplified Debug Screen")
-@Description("This effect allows you to reduce a big part of the player's debug screen." +
-        "This can be useful for survival servers where you dont want your players to know their coords.")
-@Examples({"on join:", "\treduce debug screen for player"})
+@Description("This effect has been removed due to the strugle to keep it alive.")
+@Examples({""})
 @Since("1.3.0")
 public class EffHideDebug extends Effect {
 
@@ -26,31 +25,20 @@ public class EffHideDebug extends Effect {
                 "(0¦reduce|1¦expand) debug [screen] for %players%");
     }
 
-    private Expression<Player> players;
-    private boolean hide;
-
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        players = (Expression<Player>) exprs[0];
-        hide = parseResult.mark == 1;
-        return true;
+        Skript.error("[SkBee] This effect has been removed");
+        return false;
     }
 
     @Override
     protected void execute(Event e) {
-        for (Player player : this.players.getAll(e)) {
-            if (hide) {
-                PlayerUtils.disableF3(player);
-            } else {
-                PlayerUtils.enableF3(player);
-            }
-        }
     }
 
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return (hide ? "hide" : "show") + " debug screen for " + this.players.toString(e, d);
+        return "[REMOVED] hide/show debug screen";
     }
 
 }
