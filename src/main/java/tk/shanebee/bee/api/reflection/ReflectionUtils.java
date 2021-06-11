@@ -33,6 +33,15 @@ public class ReflectionUtils {
         }
     }
 
+    public static Class<?> getNewNMSClass(String nmsClassString) {
+        try {
+            return Class.forName(nmsClassString);
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
     public static Object getNMSHandle(Entity entity) {
         try {
             Method getHandle = entity.getClass().getMethod("getHandle");
