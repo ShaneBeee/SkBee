@@ -65,21 +65,18 @@ public class ChatReflection {
     }
 
     // Cache these classes/methods to prevent retrieving them too often
-    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS;
+    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("IChatBaseComponent", "net.minecraft.network.chat");
     private static final Class<?> CRAFT_CHAT_MESSAGE_CLASS = ReflectionUtils.getOBCClass("util.CraftChatMessage");
     private static final Class<?> TEXT_TAG_VISITOR_CLASS;
-    private static final Class<?> NBT_BASE_CLASS;
+    private static final Class<?> NBT_BASE_CLASS = ReflectionUtils.getNMSClass("NBTBase", "net.minecraft.nbt");
     private static final Method FROM_COMPONENT;
     private static final Method VISIT_METHOD;
 
     static {
+        // new class in MC 1.17
         if (NEW_PRETTY_NBT) {
-            ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNewNMSClass("net.minecraft.network.chat.IChatBaseComponent");
-            TEXT_TAG_VISITOR_CLASS = ReflectionUtils.getNewNMSClass("net.minecraft.nbt.TextComponentTagVisitor");
-            NBT_BASE_CLASS = ReflectionUtils.getNewNMSClass("net.minecraft.nbt.NBTBase");
+            TEXT_TAG_VISITOR_CLASS = ReflectionUtils.getNMSClass("TextComponentTagVisitor", "net.minecraft.nbt");
         } else {
-            ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("IChatBaseComponent");
-            NBT_BASE_CLASS = null;
             TEXT_TAG_VISITOR_CLASS = null;
         }
         Method from_comp = null;
@@ -138,16 +135,11 @@ public class ChatReflection {
     // Cache these classes/methods to prevent retrieving them too often
     private static final Class<?> CRAFT_CHAT_MESSAGE = ReflectionUtils.getOBCClass("util.CraftChatMessage");
     private static final Class<?> CRAFT_TEAM = ReflectionUtils.getOBCClass("scoreboard.CraftTeam");
-    private static final Class<?> NMS_TEAM;
+    private static final Class<?> NMS_TEAM = ReflectionUtils.getNMSClass("ScoreboardTeam", "net.minecraft.world.scores");
     private static final Method SET_PREFIX;
     private static final Method PREFIX_COMP_METHOD;
 
     static {
-        if (NEW_PRETTY_NBT) {
-            NMS_TEAM = ReflectionUtils.getNewNMSClass("net.minecraft.world.scores.ScoreboardTeam");
-        } else {
-            NMS_TEAM = ReflectionUtils.getNMSClass("ScoreboardTeam");
-        }
         Method PREFIX_COMP_METHOD1 = null;
         Method SET_PREFIX1 = null;
         if (CRAFT_TEAM != null && NMS_TEAM != null && CRAFT_CHAT_MESSAGE != null) {

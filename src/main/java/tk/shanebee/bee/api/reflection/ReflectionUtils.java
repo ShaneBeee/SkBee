@@ -1,5 +1,6 @@
 package tk.shanebee.bee.api.reflection;
 
+import ch.njol.skript.Skript;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -12,6 +13,7 @@ import java.lang.reflect.Method;
 public class ReflectionUtils {
 
     private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
+    private static final boolean NEW_NMS = Skript.isRunningMinecraft(1, 17);
 
     public static Class<?> getOBCClass(String obcClassString) {
         String name = "org.bukkit.craftbukkit." + VERSION + obcClassString;
@@ -23,19 +25,13 @@ public class ReflectionUtils {
         }
     }
 
-    public static Class<?> getNMSClass(String nmsClassString) {
-        String name = "net.minecraft.server." + VERSION + nmsClassString;
+    public static Class<?> getNMSClass(String nmsClass, String nmsPackage) {
         try {
-            return Class.forName(name);
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-            return null;
-        }
-    }
-
-    public static Class<?> getNewNMSClass(String nmsClassString) {
-        try {
-            return Class.forName(nmsClassString);
+            if (NEW_NMS) {
+                return Class.forName(nmsPackage + "." + nmsClass);
+            } else {
+                return Class.forName("net.minecraft.server." + VERSION + nmsClass);
+            }
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
             return null;

@@ -12,19 +12,12 @@ public class McReflection {
 
     private static final boolean NEW_NMS = Skript.isRunningMinecraft(1, 17);
 
-    private static final Class<?> ENTITY_NMS_CLASS;
+    private static final Class<?> ENTITY_NMS_CLASS = ReflectionUtils.getNMSClass("Entity", "net.minecraft.world.entity");
     private static final String NO_CLIP = NEW_NMS ? "P" : "noclip"; // "P" will probably change in future versions
-    private static final Class<?> CHAT_MESSAGE_CLASS;
+    private static final Class<?> CHAT_MESSAGE_CLASS = ReflectionUtils.getNMSClass("ChatMessage", "net.minecraft.network.chat");
     private static final Method GET_NMS_COPY_METHOD;
 
     static {
-        if (NEW_NMS) {
-            ENTITY_NMS_CLASS = ReflectionUtils.getNewNMSClass("net.minecraft.world.entity.Entity");
-            CHAT_MESSAGE_CLASS = ReflectionUtils.getNewNMSClass("net.minecraft.network.chat.ChatMessage");
-        } else {
-            ENTITY_NMS_CLASS = ReflectionUtils.getNMSClass("Entity");
-            CHAT_MESSAGE_CLASS = ReflectionUtils.getNMSClass("ChatMessage");
-        }
         Method getNMSCopy1;
         try {
             Class<?> CraftItemStack = ReflectionUtils.getOBCClass("inventory.CraftItemStack");
