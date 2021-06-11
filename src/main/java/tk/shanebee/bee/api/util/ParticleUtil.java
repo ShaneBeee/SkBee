@@ -1,5 +1,6 @@
 package tk.shanebee.bee.api.util;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
 import org.bukkit.Location;
@@ -24,13 +25,19 @@ import java.util.Map;
 public class ParticleUtil {
 
     private static final Map<String, Particle> PARTICLES = new HashMap<>();
+    private static final boolean NEW_NMS = Skript.isRunningMinecraft(1, 17);
 
     // Load and map Minecraft particle names
     // Bukkit does not have any API for getting the Minecraft names of particles (how stupid)
     // This method fetches them from the server and maps them with the Bukkit particle enums
     static {
         Class<?> cbParticle = ReflectionUtils.getOBCClass("CraftParticle");
-        Class<?> mcKey = ReflectionUtils.getNMSClass("MinecraftKey");
+        Class<?> mcKey;
+        if (NEW_NMS) {
+            mcKey = ReflectionUtils.getNewNMSClass("net.minecraft.resources.MinecraftKey");
+        } else {
+            mcKey = ReflectionUtils.getNMSClass("MinecraftKey");
+        }
         try {
             assert cbParticle != null;
             Field mc = cbParticle.getDeclaredField("minecraftKey");
