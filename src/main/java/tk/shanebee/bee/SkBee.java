@@ -3,6 +3,7 @@ package tk.shanebee.bee;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import com.github.goingoffskript.skriptvariabledump.SkriptToYaml;
+import com.github.shynixn.structureblocklib.api.enumeration.Version;
 import com.github.shynixn.structureblocklib.bukkit.service.ProxyServiceImpl;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -212,7 +213,8 @@ public class SkBee extends JavaPlugin {
         }
         // Disable if StructureBlockLib is not currently updated for this server version
         ProxyServiceImpl impl = new ProxyServiceImpl(this);
-        if (impl.getServerVersion() == null) {
+        Version serverVersion = impl.getServerVersion();
+        if (serverVersion == null || serverVersion == Version.VERSION_UNKNOWN) {
             String ver = Skript.getMinecraftVersion().toString();
             Util.log("&5Structure Elements &cDISABLED!");
             Util.log(" - Your server version [&b" + ver + "&7] is not currently supported by the StructureBlock API");
