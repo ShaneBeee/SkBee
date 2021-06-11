@@ -65,19 +65,38 @@ public class ChatReflection {
     }
 
     // Cache these classes/methods to prevent retrieving them too often
-    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("IChatBaseComponent");
+    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS;
     private static final Class<?> CRAFT_CHAT_MESSAGE_CLASS = ReflectionUtils.getOBCClass("util.CraftChatMessage");
+    private static final Class<?> TEXT_TAG_VISITOR_CLASS;
+    private static final Class<?> NBT_BASE_CLASS;
     private static final Method FROM_COMPONENT;
+    private static final Method VISIT_METHOD;
 
     static {
+        if (NEW_PRETTY_NBT) {
+            ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNewNMSClass("net.minecraft.network.chat.IChatBaseComponent");
+            TEXT_TAG_VISITOR_CLASS = ReflectionUtils.getNewNMSClass("net.minecraft.nbt.TextComponentTagVisitor");
+            NBT_BASE_CLASS = ReflectionUtils.getNewNMSClass("net.minecraft.nbt.NBTBase");
+        } else {
+            ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("IChatBaseComponent");
+            NBT_BASE_CLASS = null;
+            TEXT_TAG_VISITOR_CLASS = null;
+        }
         Method from_comp = null;
+        Method visit = null;
         try {
+            if (NEW_PRETTY_NBT) {
+                assert TEXT_TAG_VISITOR_CLASS != null;
+                visit = TEXT_TAG_VISITOR_CLASS.getDeclaredMethod("a", NBT_BASE_CLASS);
+            }
             assert CRAFT_CHAT_MESSAGE_CLASS != null;
             from_comp = CRAFT_CHAT_MESSAGE_CLASS.getMethod("fromComponent", ICHAT_BASE_COMPONENT_CLASS);
         } catch (NoSuchMethodException e) {
             e.printStackTrace();
         }
         FROM_COMPONENT = from_comp;
+        VISIT_METHOD = visit;
+
     }
 
     private static String getPretty_16(NBTCompound compound, String split) {
@@ -104,23 +123,36 @@ public class ChatReflection {
     }
 
     private static String getPretty_17(NBTCompound compound, String split) {
-        return compound.toString();
+        Object nmsNBT = compound.getCompound();
+        String s = split != null ? split : "";
+        try {
+            Object tagVisitorInstance = TEXT_TAG_VISITOR_CLASS.getConstructor(String.class, int.class).newInstance(s, 0);
+            Object prettyComponent = VISIT_METHOD.invoke(tagVisitorInstance, nmsNBT);
+            return ((String) FROM_COMPONENT.invoke(CRAFT_CHAT_MESSAGE_CLASS, prettyComponent));
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     // Cache these classes/methods to prevent retrieving them too often
     private static final Class<?> CRAFT_CHAT_MESSAGE = ReflectionUtils.getOBCClass("util.CraftChatMessage");
     private static final Class<?> CRAFT_TEAM = ReflectionUtils.getOBCClass("scoreboard.CraftTeam");
-    private static final Class<?> NMS_TEAM = ReflectionUtils.getNMSClass("ScoreboardTeam");
-    private static final Class<?> NMS_ICHATBASE = ReflectionUtils.getNMSClass("IChatBaseComponent");
+    private static final Class<?> NMS_TEAM;
     private static final Method SET_PREFIX;
     private static final Method PREFIX_COMP_METHOD;
 
     static {
+        if (NEW_PRETTY_NBT) {
+            NMS_TEAM = ReflectionUtils.getNewNMSClass("net.minecraft.world.scores.ScoreboardTeam");
+        } else {
+            NMS_TEAM = ReflectionUtils.getNMSClass("ScoreboardTeam");
+        }
         Method PREFIX_COMP_METHOD1 = null;
         Method SET_PREFIX1 = null;
         if (CRAFT_TEAM != null && NMS_TEAM != null && CRAFT_CHAT_MESSAGE != null) {
             try {
-                SET_PREFIX1 = NMS_TEAM.getDeclaredMethod("setPrefix", NMS_ICHATBASE);
+                SET_PREFIX1 = NMS_TEAM.getDeclaredMethod("setPrefix", ICHAT_BASE_COMPONENT_CLASS);
                 PREFIX_COMP_METHOD1 = CRAFT_CHAT_MESSAGE.getDeclaredMethod("fromStringOrNull", String.class);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
