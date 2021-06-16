@@ -1,10 +1,12 @@
 package tk.shanebee.bee.api.util;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Vibration;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
@@ -24,6 +26,7 @@ import java.util.Map;
 public class ParticleUtil {
 
     private static final Map<String, Particle> PARTICLES = new HashMap<>();
+    private static final boolean HAS_VIBRATION = Skript.isRunningMinecraft(1, 17);
 
     // Load and map Minecraft particle names
     // Bukkit does not have any API for getting the Minecraft names of particles (how stupid)
@@ -88,7 +91,7 @@ public class ParticleUtil {
     }
 
     /**
-     * Parse a particle by it's Minecraft name
+     * Parse a particle by its Minecraft name
      *
      * @param key Minecraft name of particle
      * @return Bukkit particle from Minecraft name (null if not available)
@@ -109,8 +112,15 @@ public class ParticleUtil {
             return "dust-option";
         } else if (t == BlockData.class) {
             return "blockdata/itemtype";
+        } else if (HAS_VIBRATION) {
+            if (t == Particle.DustTransition.class) {
+                return "dust-transition";
+            } else if (t == Vibration.class) {
+                return "vibration";
+            }
         }
-        return "";
+        // For future particle data additions that haven't been added here yet
+        return "UNKNOWN";
     }
 
     public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Vector offset, double extra, Object data) {
@@ -171,9 +181,16 @@ public class ParticleUtil {
 
     private static Object getData(Particle particle, Object data) {
         Class<?> dataType = particle.getDataType();
+        if (dataType == Void.class) {
+            return null;
+        }
         if (dataType == ItemStack.class && data instanceof ItemType) {
             return ((ItemType) data).getRandom();
         } else if (dataType == Particle.DustOptions.class && data instanceof Particle.DustOptions) {
+            return data;
+        } else if (HAS_VIBRATION && dataType == Particle.DustTransition.class && data instanceof Particle.DustTransition) {
+            return data;
+        } else if (HAS_VIBRATION && dataType == Vibration.class && data instanceof Vibration) {
             return data;
         } else if (dataType == BlockData.class) {
             if (data instanceof BlockData) {
