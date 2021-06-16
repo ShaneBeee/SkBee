@@ -33,15 +33,24 @@ import tk.shanebee.bee.api.util.ParticleUtil;
 @Examples({"play 3 of item particle using diamond at location of player",
         "play 1 of block particle using dirt at location of target block",
         "play 10 of poof at player offset by vector(2, 2, 2) with extra 0.5",
-        "play 20 of dust using dustOption(blue, 10) at location above target block"})
+        "play 20 of dust using dustOption(blue, 10) at location above target block",
+        "play 1 of dust_color_transition using dustTransition(blue, green, 3) at location of player",
+        "play 1 of vibration using vibration({loc1}, {loc2}, 1 second) at {loc1}"})
 @Since("1.9.0")
 public class EffParticle extends Effect {
 
     static {
-        Skript.registerEffect(EffParticle.class,
-                "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% [(for|to) %-players%]",
-                "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% offset by %vector% [(for|to) %-players%]",
-                "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% offset by %vector% with extra %number% [(for|to) %-players%]");
+        if (Skript.isRunningMinecraft(1, 17)) {
+            Skript.registerEffect(EffParticle.class,
+                    "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption/dusttransition/vibration%] %directions% %locations% [(for|to) %-players%]",
+                    "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption/dusttransition/vibration%] %directions% %locations% offset by %vector% [(for|to) %-players%]",
+                    "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption/dusttransition/vibration%] %directions% %locations% offset by %vector% with extra %number% [(for|to) %-players%]");
+        } else {
+            Skript.registerEffect(EffParticle.class,
+                    "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% [(for|to) %-players%]",
+                    "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% offset by %vector% [(for|to) %-players%]",
+                    "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption%] %directions% %locations% offset by %vector% with extra %number% [(for|to) %-players%]");
+        }
     }
 
     private int pattern;

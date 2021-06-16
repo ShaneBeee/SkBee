@@ -10,6 +10,8 @@ types:
 	basecomponent: base component¦s @-
 	particle: particle¦s @-
 	dustoption: dust option¦s @-
+	dusttransition: dust transition¦s @-
+	vibration: vibration¦s @-
 	materialchoice: material choice¦s
 	minecrafttag: minecraft tag¦s
 
@@ -17,6 +19,7 @@ environment types:
 	normal: normal
 	nether: nether, hell
 	the_end: the end, end
+	custom: custom, custom dimension
 
 world types:
 	amplified: amplified
