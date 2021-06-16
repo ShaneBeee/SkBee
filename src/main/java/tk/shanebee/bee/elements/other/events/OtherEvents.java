@@ -72,6 +72,16 @@ public class OtherEvents {
                     }
 
                     @Override
+                    public int getAmount() {
+                        return event.getResult().getAmount();
+                    }
+
+                    @Override
+                    public void setAmount(int amount) {
+                        event.getResult().setAmount(amount);
+                    }
+
+                    @Override
                     public boolean isSameSlot(Slot o) {
                         ItemStack item = o.getItem();
                         return item != null && item.isSimilar(event.getResult());
