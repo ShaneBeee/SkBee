@@ -120,7 +120,7 @@ public class ChatReflection {
     }
 
     private static String getPretty_17(NBTCompound compound, String split) {
-        Object nmsNBT = compound.getCompound();
+        Object nmsNBT = new NBTContainer(compound.toString()).getCompound();
         String s = split != null ? split : "";
         try {
             Object tagVisitorInstance = TEXT_TAG_VISITOR_CLASS.getConstructor(String.class, int.class).newInstance(s, 0);
