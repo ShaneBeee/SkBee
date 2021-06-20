@@ -45,7 +45,7 @@ public class OtherEvents {
                         "\t\t\t\tenchant {_i} with sharpness 6",
                         "\t\t\t\tset event-slot to {_i}",
                         "\t\t\t\tset repair cost of event-inventory to 30")
-                .since("INSERT VERSION");
+                .since("1.11.0");
 
         EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<Player, PrepareAnvilEvent>() {
             @Nullable

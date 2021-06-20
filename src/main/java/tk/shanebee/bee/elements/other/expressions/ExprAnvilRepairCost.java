@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
         "\t\t\t\tenchant {_i} with sharpness 6",
         "\t\t\t\tset event-slot to {_i}",
         "\t\t\t\tset repair cost of event-inventory to 30"})
-@Since("INSERT VERSION")
+@Since("1.11.0")
 public class ExprAnvilRepairCost extends SimplePropertyExpression<Inventory, Number> {
 
     static {

@@ -118,7 +118,7 @@ public class Types {
                             "Color can either be a regular color or an RGB color using Skript's rgb() function.",
                             "Size is the size the particle will be. Requires MC 1.17+")
                     .examples("set {_d} to dustTransition(red, green, 10)", "set {_d} to dustTransition(blue, rgb(1,1,1), 5)")
-                    .since("INSERT VERSION"));
+                    .since("1.11.1"));
 
             // Function to create vibration
             Functions.registerFunction(new JavaFunction<Vibration>("vibration", new Parameter[]{
@@ -140,7 +140,7 @@ public class Types {
                             "TO = the destination location the particle will travel to.",
                             "ARRIVAL TIME = the time it will take to arrive at the destination location. Requires MC 1.17+")
                     .examples("set {_v} to vibration({loc1}, {loc2}, 10 seconds)")
-                    .since("INSERT VERSION"));
+                    .since("1.11.1"));
         }
     }
 
