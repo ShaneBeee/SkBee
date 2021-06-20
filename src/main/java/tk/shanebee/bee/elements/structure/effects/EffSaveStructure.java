@@ -105,21 +105,18 @@ public class EffSaveStructure extends Effect {
                     if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
                         e.printStackTrace();
                     }
-                    if (localVars != null) {
-                        Variables.setLocalVariables(event, localVars);
-                    }
-                    continueWalk(next, event);
+                    continueWalk(next, event, localVars);
                 }).onResult(e -> {
-                    if (localVars != null) {
-                        Variables.setLocalVariables(event, localVars);
-                    }
-                    continueWalk(next, event);
+                    continueWalk(next, event, localVars);
                 }
         );
         return null;
     }
 
-    private void continueWalk(@Nullable TriggerItem next, Event event) {
+    private void continueWalk(@Nullable TriggerItem next, Event event, Object localVars) {
+        if (localVars != null) {
+            Variables.setLocalVariables(event, localVars);
+        }
         Object timing = null;
         if (next != null) {
             if (SkriptTimings.enabled()) {
