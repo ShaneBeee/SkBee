@@ -134,18 +134,19 @@ public class EffLoadStructure extends Effect {
                     if (debug) {
                         e.printStackTrace();
                     }
+                    continueWalk(next, event, localVars);
                 }).onResult(c -> {
-                    if (localVars != null) {
-                        Variables.setLocalVariables(event, localVars);
-                    }
-                    continueWalk(next, event);
+                    continueWalk(next, event, localVars);
                 }
         );
 
         return null;
     }
 
-    private void continueWalk(@Nullable TriggerItem next, Event event) {
+    private void continueWalk(@Nullable TriggerItem next, Event event, Object localVars) {
+        if (localVars != null) {
+            Variables.setLocalVariables(event, localVars);
+        }
         Object timing = null;
         if (next != null) {
             if (SkriptTimings.enabled()) {
