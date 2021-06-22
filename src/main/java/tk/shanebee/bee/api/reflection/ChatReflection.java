@@ -3,7 +3,6 @@ package tk.shanebee.bee.api.reflection;
 import ch.njol.skript.Skript;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
-import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Team;
 
 import java.lang.reflect.InvocationTargetException;
@@ -14,46 +13,16 @@ import java.lang.reflect.Method;
  */
 public class ChatReflection {
 
-    private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3];
     private static final boolean NEW_PRETTY_NBT = Skript.isRunningMinecraft(1, 17);
-
-    private enum Ver {
-        V_1_13_R2("v1_13_R2", "k", "a"),
-        V_1_14_R1("v1_14_R1", "k", "a"),
-        V_1_15_R1("v1_15_R1", "l", "a"),
-        V_1_16_R1("v1_16_R1", "l", "a"),
-        V_1_16_R2("v1_16_R2", "l", "a"),
-        V_1_16_R3("v1_16_R3", "l", "a");
-
-        private final String version;
-        private final String pretty;
-        private final String prettySplit;
-
-        Ver(String version, String pretty, String prettySplit) {
-            this.version = version;
-            this.pretty = pretty;
-            this.prettySplit = prettySplit;
-        }
-
-        private static String getPretty(boolean split) {
-            for (Ver value : values()) {
-                if (value.version.equalsIgnoreCase(VERSION)) {
-                    if (split) {
-                        return value.prettySplit;
-                    } else {
-                        return value.pretty;
-                    }
-                }
-            }
-            return null;
-        }
-    }
 
     /**
      * Get a pretty NBT string
      * <p>This is the same as what vanilla Minecraft outputs when using the '/data' command</p>
      *
      * @param compound Compound to convert to pretty
+     * @param split    When null NBT will print on one long line, if not null NBT compound will be
+     *                 split into lines with JSON style, and this string will start each line off
+     *                 (usually spaces)
      * @return Pretty string of NBTCompound
      */
     public static String getPrettyNBT(NBTCompound compound, String split) {
@@ -84,6 +53,7 @@ public class ChatReflection {
         try {
             if (NEW_PRETTY_NBT) {
                 assert TEXT_TAG_VISITOR_CLASS != null;
+                // "a" may change when 1.18 comes out, we shall see
                 visit = TEXT_TAG_VISITOR_CLASS.getDeclaredMethod("a", NBT_BASE_CLASS);
             }
             assert CRAFT_CHAT_MESSAGE_CLASS != null;
@@ -97,20 +67,11 @@ public class ChatReflection {
     }
 
     private static String getPretty_16(NBTCompound compound, String split) {
-        String prettyM = Ver.getPretty(split != null);
-        if (prettyM == null) return null;
-
         Object nmsNBT = new NBTContainer(compound.toString()).getCompound();
+        String s = split != null ? split : "";
         try {
-            Method prettyMethod;
-            Object prettyComponent;
-            if (split != null) {
-                prettyMethod = nmsNBT.getClass().getMethod(prettyM, String.class, int.class);
-                prettyComponent = prettyMethod.invoke(nmsNBT, split, 0);
-            } else {
-                prettyMethod = nmsNBT.getClass().getMethod(prettyM);
-                prettyComponent = prettyMethod.invoke(nmsNBT);
-            }
+            Method prettyMethod = nmsNBT.getClass().getMethod("a", String.class, int.class);
+            Object prettyComponent = prettyMethod.invoke(nmsNBT, s, 0);
             assert CRAFT_CHAT_MESSAGE_CLASS != null;
             return ((String) FROM_COMPONENT.invoke(CRAFT_CHAT_MESSAGE_CLASS, prettyComponent));
         } catch (NoSuchMethodException | InvocationTargetException | IllegalAccessException e) {
@@ -160,6 +121,7 @@ public class ChatReflection {
      * @param team   Team to set prefix for
      * @param prefix Prefix to set
      */
+    @SuppressWarnings("deprecation") // This is a Paper deprecation
     public static void setTeamPrefix(Team team, String prefix) {
         if (CRAFT_TEAM == null || PREFIX_COMP_METHOD == null || SET_PREFIX == null) {
             team.setPrefix("");
