@@ -17,6 +17,7 @@ import org.bukkit.Particle.DustOptions;
 import org.bukkit.Particle.DustTransition;
 import org.bukkit.Vibration;
 import org.jetbrains.annotations.Nullable;
+import tk.shanebee.bee.api.util.VibrationBee;
 import tk.shanebee.bee.api.util.ParticleUtil;
 import tk.shanebee.bee.api.util.Util;
 
@@ -131,9 +132,9 @@ public class Types {
                 public Vibration[] execute(FunctionEvent e, Object[][] params) {
                     Location origin = (Location) params[0][0];
                     Location destination = (Location) params[1][0];
-                    Vibration.Destination blockDestination = new Vibration.Destination.BlockDestination(destination);
                     int arrivalTime = (int) ((Timespan) params[2][0]).getTicks_i();
-                    return new Vibration[]{new Vibration(origin, blockDestination, arrivalTime)};
+                    VibrationBee vibration = new VibrationBee(origin, destination, arrivalTime);
+                    return new Vibration[]{vibration.get()};
                 }
             }.description("Creates a new vibration to be used with 'vibration' particle.",
                             "FROM = the origin location the particle will start at.",
