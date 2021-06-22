@@ -30,7 +30,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
 
     static {
         register(ExprWorldCreatorOption.class, Object.class,
-                "(0¦environment|1¦world type|2¦seed|3¦gen[erator] settings|4¦generator" +
+                "(0¦environment|1¦world type|2¦world seed|3¦gen[erator] settings|4¦generator" +
                         "|5¦should gen[erate] structures|6¦[is] hardcore|7¦keep spawn loaded)",
                 "worldcreator");
     }
