@@ -52,10 +52,6 @@
                     <artifactId>paper-api</artifactId>
                 </exclusion>
                 <exclusion>
-                    <groupId>io.papermc</groupId>
-                    <artifactId>paperlib</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>com.sk89q.worldguard</groupId>
                     <artifactId>worldguard-legacy</artifactId>
                 </exclusion>
@@ -178,10 +174,6 @@
                 </executions>
                 <configuration>
                     <relocations>
-                        <relocation>
-                            <pattern>io.papermc.lib</pattern>
-                            <shadedPattern>tk.shanebee.bee.api.paperlib</shadedPattern>
-                        </relocation>
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
                             <shadedPattern>tk.shanebee.bee.api.NBT</shadedPattern>
