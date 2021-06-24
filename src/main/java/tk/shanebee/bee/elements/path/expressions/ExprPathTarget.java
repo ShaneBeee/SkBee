@@ -1,5 +1,6 @@
 package tk.shanebee.bee.elements.path.expressions;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -39,6 +40,10 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
+        if (!Skript.classExists("com.destroystokyo.paper.entity.Pathfinder")) {
+            Skript.error("This expression requires a PaperMC server or a fork of.");
+            return false;
+        }
         setExpr((Expression<LivingEntity>) exprs[1]);
         speed = (Expression<Number>) exprs[0];
         Long i;

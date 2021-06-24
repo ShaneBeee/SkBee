@@ -37,6 +37,10 @@ public class ExprPath extends SimpleExpression<Location> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
+        if (!Skript.classExists("com.destroystokyo.paper.entity.Pathfinder")) {
+            Skript.error("This expression requires a PaperMC server or a fork of.");
+            return false;
+        }
         entities = (Expression<LivingEntity>) exprs[0];
         return true;
     }
