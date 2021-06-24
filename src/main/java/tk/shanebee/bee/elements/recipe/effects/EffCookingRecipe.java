@@ -21,7 +21,6 @@ import org.bukkit.inventory.CampfireRecipe;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
@@ -30,13 +29,13 @@ import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.config.Config;
 import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
 
-@SuppressWarnings({"deprecation", "NullableProblems", "ConstantConditions"})
+@SuppressWarnings({"NullableProblems", "ConstantConditions"})
 @Name("Recipe - Cooking")
 @Description({"Register new cooking recipes. On 1.13+ you can register recipes for furnaces. ",
         "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires. ",
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores. " +
-        "Used for recipe discovery/unlocking recipes for players. " +
-        "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
+                "Used for recipe discovery/unlocking recipes for players. " +
+                "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
         "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the config to whatever you want."})
 @Examples({"on skript load:",
         "\tregister new furnace recipe for diamond using dirt with id \"furnace_diamond\"",
@@ -86,7 +85,6 @@ public class EffCookingRecipe extends Effect {
         return true;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void execute(Event event) {
         ItemType res = this.item.getSingle(event);
@@ -122,57 +120,59 @@ public class EffCookingRecipe extends Effect {
         String group = this.group != null ? this.group.getSingle(event) : "";
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
         float xp = experience != null ? experience.getSingle(event).floatValue() : 0;
+        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : getDefaultCookTime(recipeType);
 
         // Remove duplicates on script reload
         RecipeUtil.removeRecipeByKey(key);
 
         if (HAS_BLASTING)
-            cookingRecipe(event, result, ingredient, group, key, xp);
+            cookingRecipe(result, ingredient, group, key, xp, cookTime);
         else
-            furnaceRecipe(event,result, ingredient, group, key, xp);
+            furnaceRecipe(result, ingredient, group, key, xp, cookTime);
     }
 
-    private void furnaceRecipe(Event event, ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp) {
-        FurnaceRecipe recipe;
-        int cookTime;
-        cookTime = this.cookTime != null ? ((int) this.cookTime.getSingle(event).getTicks_i()) : 200;
-        recipe = new FurnaceRecipe(key, result, ingredient, xp, cookTime);
+    private void furnaceRecipe(ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp, int cookTime) {
+        FurnaceRecipe recipe = new FurnaceRecipe(key, result, ingredient, xp, cookTime);
 
         recipe.setGroup(group);
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
-            //RecipeUtil.logRecipe(recipe, recipe.getInputChoice().toString());
             RecipeUtil.logCookingRecipe(recipe);
         }
     }
 
-    @SuppressWarnings("rawtypes")
-    private void cookingRecipe(Event event, ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp) {
-        Recipe recipe;
-        int cookTime;
+    private void cookingRecipe(ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp, int cookTime) {
+        CookingRecipe<?> recipe;
         switch (recipeType) {
             case 1: // BLASTING
-                cookTime = this.cookTime != null ? ((int) this.cookTime.getSingle(event).getTicks_i()) : 100;
                 recipe = new BlastingRecipe(key, result, ingredient, xp, cookTime);
                 break;
             case 2: // SMOKING
-                cookTime = this.cookTime != null ? ((int) this.cookTime.getSingle(event).getTicks_i()) : 100;
                 recipe = new SmokingRecipe(key, result, ingredient, xp, cookTime);
                 break;
             case 3: // CAMPFIRE
-                cookTime = this.cookTime != null ? ((int) this.cookTime.getSingle(event).getTicks_i()) : 600;
                 recipe = new CampfireRecipe(key, result, ingredient, xp, cookTime);
                 break;
             default: // FURNACE
-                cookTime = this.cookTime != null ? ((int) this.cookTime.getSingle(event).getTicks_i()) : 200;
                 recipe = new FurnaceRecipe(key, result, ingredient, xp, cookTime);
         }
 
-        ((CookingRecipe) recipe).setGroup(group);
+        recipe.setGroup(group);
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
-            //RecipeUtil.logRecipe(recipe, ((CookingRecipe) recipe).getInputChoice().toString());
-            RecipeUtil.logCookingRecipe((CookingRecipe) recipe);
+            RecipeUtil.logCookingRecipe(recipe);
+        }
+    }
+
+    private int getDefaultCookTime(int t) {
+        switch (t) {
+            case 1: // BLASTING
+            case 2: // SMOKING
+                return 100;
+            case 3: // CAMPFIRE
+                return 600;
+            default: // FURNACE
+                return 200;
         }
     }
 
