@@ -4,10 +4,10 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.util.EnumUtils;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
 import org.jetbrains.annotations.NotNull;
+import tk.shanebee.bee.api.util.EnumUtils;
 import tk.shanebee.bee.elements.worldcreator.objects.BeeWorldCreator;
 
 import javax.annotation.Nullable;
@@ -23,7 +23,7 @@ public class Types {
                 .examples("set {_creator} to new world creator named \"my-world\"")
                 .since("1.8.0"));
 
-        EnumUtils<Environment> environments = new EnumUtils<>(Environment.class, "environment types");
+        EnumUtils<Environment> environments = new EnumUtils<>(Environment.class);
         Classes.registerClass(new ClassInfo<>(Environment.class, "environment")
                 .user("environments?")
                 .name("Environment")
@@ -55,7 +55,7 @@ public class Types {
                     }
                 }));
 
-        EnumUtils<WorldType> worldTypes = new EnumUtils<>(WorldType.class, "world types");
+        EnumUtils<WorldType> worldTypes = new EnumUtils<>(WorldType.class);
         Classes.registerClass(new ClassInfo<>(WorldType.class, "worldtype")
                 .user("world ?types?")
                 .name("World Type")

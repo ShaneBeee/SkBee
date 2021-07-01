@@ -14,18 +14,3 @@ types:
 	vibration: vibration¦s @-
 	materialchoice: material choice¦s
 	minecrafttag: minecraft tag¦s
-
-environment types:
-	normal: normal
-	nether: nether, hell
-	the_end: the end, end
-	custom: custom, custom dimension
-
-world types:
-	amplified: amplified
-	flat: flat
-	large_biomes: large biomes
-	normal: normal
-	buffet: buffet
-	customized: customized
-	version_1_1: legacy version, version 1 1
