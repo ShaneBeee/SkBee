@@ -45,21 +45,13 @@ import tk.shanebee.bee.elements.recipe.util.RecipeUtil;
 @Since("1.0.0")
 public class EffCookingRecipe extends Effect {
 
-    private static final boolean HAS_BLASTING = Skript.isRunningMinecraft(1, 14);
     private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
-        if (!HAS_BLASTING) {
-            Skript.registerEffect(EffCookingRecipe.class,
-                    "register [new] furnace recipe for %itemtype% " +
-                            "(using|with ingredient) %itemtype/materialchoice% with id %string% [[and ]with exp[erience] %-number%] " +
-                            "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
-        } else {
-            Skript.registerEffect(EffCookingRecipe.class,
-                    "register [new] (0¦furnace|1¦(blast furnace|blasting)|2¦smok(er|ing)|3¦campfire) recipe for %itemtype% " +
-                            "(using|with ingredient) %itemtype/materialchoice% with id %string% [[and ]with exp[erience] %-number%] " +
-                            "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
-        }
+        Skript.registerEffect(EffCookingRecipe.class,
+                "register [new] (0¦furnace|1¦(blast furnace|blasting)|2¦smok(er|ing)|3¦campfire) recipe for %itemtype% " +
+                        "(using|with ingredient) %itemtype/materialchoice% with id %string% [[and ]with exp[erience] %-number%] " +
+                        "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
     }
 
     @SuppressWarnings("null")
@@ -80,8 +72,7 @@ public class EffCookingRecipe extends Effect {
         experience = (Expression<Number>) exprs[3];
         cookTime = (Expression<Timespan>) exprs[4];
         group = (Expression<String>) exprs[5];
-
-        recipeType = !HAS_BLASTING ? 0 : parseResult.mark;
+        recipeType = parseResult.mark;
         return true;
     }
 
@@ -125,20 +116,7 @@ public class EffCookingRecipe extends Effect {
         // Remove duplicates on script reload
         RecipeUtil.removeRecipeByKey(key);
 
-        if (HAS_BLASTING)
-            cookingRecipe(result, ingredient, group, key, xp, cookTime);
-        else
-            furnaceRecipe(result, ingredient, group, key, xp, cookTime);
-    }
-
-    private void furnaceRecipe(ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp, int cookTime) {
-        FurnaceRecipe recipe = new FurnaceRecipe(key, result, ingredient, xp, cookTime);
-
-        recipe.setGroup(group);
-        Bukkit.addRecipe(recipe);
-        if (config.SETTINGS_DEBUG) {
-            RecipeUtil.logCookingRecipe(recipe);
-        }
+        cookingRecipe(result, ingredient, group, key, xp, cookTime);
     }
 
     private void cookingRecipe(ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp, int cookTime) {
