@@ -100,7 +100,7 @@
         <dependency>
             <groupId>com.shanebeestudios</groupId>
             <artifactId>VirtualFurnace</artifactId>
-            <version>1.0.0-Beta11</version>
+            <version>1.0.0-Beta12</version>
             <exclusions>
                 <exclusion>
                     <groupId>org.realityforge.org.jetbrains.annotations</groupId>
