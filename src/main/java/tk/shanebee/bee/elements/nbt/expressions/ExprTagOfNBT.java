@@ -20,8 +20,8 @@ import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.github.shynixn.structureblocklib.lib.org.jetbrains.annotations.NotNull;
-import com.github.shynixn.structureblocklib.lib.org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -223,7 +223,9 @@ public class ExprTagOfNBT<T> extends SimpleExpression<T> {
                     if (compound.getType(tag) == NBTType.NBTTagList && compound.getListType(tag) == NBTType.NBTTagEnd) {
                         if (!hasDelta || delta[0] == null) return;
                         NBTCustomType type;
-                        if (delta[0] instanceof String)
+                        if (hasType)
+                            type = this.nbtType;
+                        else if (delta[0] instanceof String)
                             type = NBTCustomType.NBTTagStringList;
                         else if (delta[0] instanceof Number)
                             if (MathUtil.isInt(delta[0]))
@@ -242,8 +244,11 @@ public class ExprTagOfNBT<T> extends SimpleExpression<T> {
                             NBT_API.setTag(tag, compound, delta, type);
                     } else {
                         NBTCustomType type = NBTCustomType.getByTag(compound, tag);
-                        if (hasType && !this.nbtType.equals(type))
+                        if (hasType && !this.nbtType.equals(type)) {
+                            if (type == NBTCustomType.NBTTagEnd)
+                                NBT_API.setTag(tag, compound, delta, this.nbtType);
                             return;
+                        }
                         this.hasType = true;
                         this.nbtType = type;
                         Object[] listItems = toAdd instanceof ArrayList ? ((ArrayList<?>) toAdd).toArray() : null;
