@@ -2,6 +2,7 @@ package tk.shanebee.bee.elements.nbt.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.classes.Comparator;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -14,19 +15,19 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.lang.util.SimpleLiteral;
-import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.Comparators;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import org.apache.commons.lang.ArrayUtils;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBT.NBTCustom;
 import tk.shanebee.bee.api.NBT.NBTCustomType;
@@ -209,6 +210,11 @@ public class ExprTagOfNBT<T> extends SimpleExpression<T> {
             case ADD:
                 Object toAdd = hasType ? NBT_API.getTag(tag, compound, nbtType) : NBT_API.getTag(tag, compound);
                 if (notSingle || toAdd instanceof ArrayList) {
+                    NBTCustomType type = NBTCustomType.getByTag(compound, tag);
+                    if (hasType && !this.nbtType.equals(type))
+                        return;
+                    this.hasType = true;
+                    this.nbtType = type;
                     Object[] listItems = toAdd instanceof ArrayList ? ((ArrayList<?>) toAdd).toArray() : null;
                     editNBT(e, compound, tag, ChangeMode.SET, hasDelta ? ArrayUtils.addAll(listItems, delta) : listItems);
                 } else if (hasDelta && delta[0] instanceof Number)
@@ -218,15 +224,18 @@ public class ExprTagOfNBT<T> extends SimpleExpression<T> {
             case REMOVE_ALL:
                 Object toRemove = hasType ? NBT_API.getTag(tag, compound, nbtType) : NBT_API.getTag(tag, compound);
                 if (notSingle || toRemove instanceof ArrayList) {
+                    NBTCustomType type = NBTCustomType.getByTag(compound, tag);
+                    if (hasType && !this.nbtType.equals(type))
+                        return;
+                    this.hasType = true;
+                    this.nbtType = type;
                     Object[] newDelta = null;
                     if (toRemove instanceof ArrayList) {
                         ArrayList<Object> list = new ArrayList<>((ArrayList<?>) toRemove);
                         if (hasDelta)
-                            if (mode == ChangeMode.REMOVE)
-                                for (Object o: delta)
-                                    list.remove(o);
-                            else
-                                list.removeAll(Arrays.asList(delta));
+                            Arrays.stream(delta)
+                                    .map(o -> o instanceof Number ? new SkriptNumber((Number) o) : o)
+                                    .forEach(mode == ChangeMode.REMOVE ? list::remove : o -> {while (list.remove(o));});
                         newDelta = list.toArray();
                     }
                     editNBT(e, compound, tag, ChangeMode.SET, newDelta);
@@ -278,7 +287,7 @@ public class ExprTagOfNBT<T> extends SimpleExpression<T> {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         if (isAllTags)
             return "all tags of " + nbt.toString(e, d);
-        String type = this.nbtType != null ? Classes.toString(nbtType) : "tag";
+        String type = this.nbtType != null ? this.nbtType.getName() : "tag";
         String tag = this.tag.toString(e, d);
         String nbt = this.nbt.toString(e, d);
         return String.format("%s %s of %s", type, tag, nbt);
@@ -286,7 +295,7 @@ public class ExprTagOfNBT<T> extends SimpleExpression<T> {
 
     @Override
     public Expression<?> getSource() {
-        return this.source;
+        return source == null ? this : source;
     }
 
 
@@ -294,6 +303,18 @@ public class ExprTagOfNBT<T> extends SimpleExpression<T> {
         ExprArithmetic arithmetic = new ExprArithmetic();
         arithmetic.init(CollectionUtils.array(new SimpleLiteral<>(n1, false), new SimpleLiteral<>(n2, false)), op, null, null);
         return arithmetic.getSingle(e);
+    }
+
+    private static class SkriptNumber {
+        private static final Comparator<? super Number, ? super Number> numberCompare = Comparators.getComparator(Number.class, Number.class);
+        private final Number n;
+        public SkriptNumber(Number n) {
+            this.n = n;
+        }
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof Number && numberCompare.compare(n, (Number) obj) == Comparator.Relation.EQUAL;
+        }
     }
 
 }
