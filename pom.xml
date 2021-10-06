@@ -194,6 +194,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
+                    <excludePackageNames>tk.shanebee.bee.elements.*;tk.shanebee.bee.config;tk.shanebee.bee.metrics</excludePackageNames>
                     <links>
                         <link>https://hub.spigotmc.org/javadocs/spigot/</link>
                         <link>https://shanebeestudios.com/docs/skript/JavaDocs/</link>
