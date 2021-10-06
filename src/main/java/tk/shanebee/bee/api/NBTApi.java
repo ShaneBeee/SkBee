@@ -175,7 +175,8 @@ public class NBTApi {
                 nbtEntity.mergeCompound(nbtCompound);
                 return object;
             case BLOCK:
-                BlockState blockState = ((Block) object).getState();
+                Block block = (Block) object;
+                BlockState blockState = block.getState();
 
                 if (isTileEntity(blockState)) {
                     NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity((blockState));
@@ -186,8 +187,9 @@ public class NBTApi {
                         updated.removeKey("custom");
                     }
                     nbtBlock.mergeCompound(updated);
+                    block.getState().update(true, false);
                 } else if (SUPPORTS_BLOCK_NBT) {
-                    NBTCustomBlock nbtCustomBlock = new NBTCustomBlock(((Block) object));
+                    NBTCustomBlock nbtCustomBlock = new NBTCustomBlock(block);
                     nbtCustomBlock.getData().mergeCompound(new NBTContainer(value));
                 }
                 return object;
