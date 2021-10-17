@@ -25,6 +25,7 @@ import org.bukkit.persistence.PersistentDataHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.NBT.NBTCustom;
 import tk.shanebee.bee.api.NBT.NBTCustomBlock;
 import tk.shanebee.bee.api.NBT.NBTCustomEntity;
 import tk.shanebee.bee.api.NBT.NBTCustomTileEntity;
@@ -652,6 +653,10 @@ public class NBTApi {
         NBTCustomType type = NBTCustomType.getByTag(compound, tag);
         if (type == null) {
             return null;
+        }
+        // Small fix for "custom" tags not being real tags in an NBT compound and showing as NBTTagEnd
+        if (type == NBTCustomType.NBTTagEnd && compound instanceof NBTCustom && tag.equalsIgnoreCase("custom")) {
+            type = NBTCustomType.NBTTagCompound;
         }
         return getTag(tag, compound, type);
     }
