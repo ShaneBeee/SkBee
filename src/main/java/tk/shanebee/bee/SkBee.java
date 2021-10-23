@@ -69,6 +69,7 @@ public class SkBee extends JavaPlugin {
                 Util.log("&cNo clue how this could happen.");
                 Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
                 pm.disablePlugin(this);
+                return;
             }
             if (!Skript.isRunningMinecraft(1, 14, 4)) {
                 Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.14.4+ is supported!", Skript.getMinecraftVersion());
