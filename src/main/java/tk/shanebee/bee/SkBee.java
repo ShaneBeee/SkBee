@@ -60,7 +60,16 @@ public class SkBee extends JavaPlugin {
         PluginDescriptionFile desc = getDescription();
 
         final Plugin SKRIPT = pm.getPlugin("Skript");
-        if (SKRIPT != null && SKRIPT.isEnabled() && Skript.isAcceptRegistrations()) {
+        if (SKRIPT != null && SKRIPT.isEnabled()) {
+            if (!Skript.isAcceptRegistrations()) {
+                // SkBee should be loading right after Skript, during Skript's registration period
+                // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
+                // We need to find the route of this issue, so far the only plugin I know that does this is FAWE
+                Util.log("&cSkript is no longer accepting registrations.");
+                Util.log("&cNo clue how this could happen.");
+                Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
+                pm.disablePlugin(this);
+            }
             if (!Skript.isRunningMinecraft(1, 14, 4)) {
                 Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.14.4+ is supported!", Skript.getMinecraftVersion());
                 pm.disablePlugin(this);
