@@ -2,27 +2,42 @@ package tk.shanebee.bee.elements.nbt.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.classes.Comparator;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.ExprArithmetic;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.lang.util.SimpleLiteral;
+import ch.njol.skript.registrations.Comparators;
+import ch.njol.skript.registrations.Converters;
+import ch.njol.skript.util.Utils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
-import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTCompoundList;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.NBTType;
+import org.apache.commons.lang.ArrayUtils;
+import org.bukkit.event.Event;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBT.NBTCustom;
 import tk.shanebee.bee.api.NBT.NBTCustomType;
 import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.util.MathUtil;
 
-import javax.annotation.Nullable;
-import java.util.ArrayList;
+import java.lang.reflect.Array;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.stream.Stream;
 
 @Name("NBT - Tag")
 @Description({"Returns the value of the specified tag of the specified NBT. Also supports getting nested tags using a semi colon as a delimiter.",
@@ -49,105 +64,307 @@ import java.util.ArrayList;
         "set {_i} to int tag \"Score\" of nbt compound of player",
         "set {_t::*} to compound list tag \"abilities\" of nbt compound of player"})
 @Since("1.0.0")
-public class ExprTagOfNBT extends SimpleExpression<Object> {
+public class ExprTagOfNBT<T> extends SimpleExpression<T> {
 
     private static final NBTApi NBT_API;
     private static final boolean HAS_PERSISTENCE;
 
     static {
-        Skript.registerExpression(ExprTagOfNBT.class, Object.class, ExpressionType.COMBINED,
+        Skript.registerExpression(ExprTagOfNBT.class, Object.class, ExpressionType.PROPERTY,
                 "tag %string% of %string/nbtcompound%",
                 "%string% tag of %string/nbtcompound%",
-                "%nbttype% %string% of %nbtcompound%",
-                "%string% %nbttype% of %nbtcompound%");
+                "%nbttype% %string% of %string/nbtcompound%",
+                "%string% %nbttype% of %string/nbtcompound%",
+                "[all] tags of %string/nbtcompound%");
         NBT_API = SkBee.getPlugin().getNbtApi();
         HAS_PERSISTENCE = Skript.isRunningMinecraft(1, 14);
     }
 
-    private Expression<String> tag;
-    private Expression<Object> nbt;
+    public ExprTagOfNBT() {
+        this(null, (Class<? extends T>) Object.class);
+    }
+
+    public ExprTagOfNBT(ExprTagOfNBT<?> source, Class<? extends T>... types) {
+        this.source = source;
+        if (source != null) {
+            this.nbt = source.nbt;
+            this.tag = source.tag;
+            this.nbtType = source.nbtType;
+            this.isAllTags = source.isAllTags;
+            this.notSingle = source.notSingle;
+            this.hasType = source.hasType;
+            this.literalString = source.literalString;
+        }
+        this.types = types;
+        this.superType = (Class<T>) Utils.getSuperType(types);
+    }
+
+    private final ExprTagOfNBT<?> source;
+    private final Class<? extends T>[] types;
+    private final Class<T> superType;
+
+    private Expression<?> nbt;
     @Nullable
-    private Expression<NBTCustomType> nbtType;
+    private Expression<String> tag;
+    @Nullable
+    private NBTCustomType nbtType;
+    private boolean isAllTags, notSingle, hasType, literalString;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parser) {
-        this.tag = (Expression<String>) exprs[matchedPattern == 2 ? 1 : 0];
-        this.nbt = (Expression<Object>) exprs[matchedPattern < 2 ? 1 : 2];
-        this.nbtType = matchedPattern > 1 ? (Expression<NBTCustomType>) exprs[matchedPattern == 2 ? 0 : 1] : null;
-        return true;
+        this.isAllTags = matchedPattern == 4;
+        this.nbt = exprs[matchedPattern < 2 ? 1 : this.isAllTags ? 0 : 2];
+        this.tag = this.isAllTags ? null : (Expression<String>) exprs[matchedPattern == 2 ? 1 : 0];
+        boolean canInnit = true;
+        if (matchedPattern > 1 && !this.isAllTags) {
+            Expression<?> nbtTypeExpr = exprs[matchedPattern == 3 ? 1 : 0];
+            canInnit = nbtTypeExpr instanceof Literal;
+            if (canInnit)
+                this.nbtType = ((Literal<NBTCustomType>) nbtTypeExpr).getSingle();
+        }
+        this.literalString = this.nbt instanceof VariableString;
+        this.hasType = this.nbtType != null;
+        this.notSingle = isAllTags || (this.hasType && Stream.of("Array", "List").anyMatch(this.nbtType.name()::contains));
+        return canInnit;
     }
 
     @Override
     @Nullable
-    protected Object[] get(@NotNull Event e) {
-        String t = tag.getSingle(e);
+    protected T[] get(Event e) {
         Object object = nbt.getSingle(e);
-        NBTCustomType type = this.nbtType != null ? this.nbtType.getSingle(e) : null;
-        if (object == null) {
-            return null;
+        NBTCompound n = object instanceof NBTCompound ? ((NBTCompound) object) : object != null && NBTApi.validateNBT((String) object) ? new NBTContainer((String) object) : null;
+        if (n == null) return null;
+        if (isAllTags)
+            return convert((Object[]) n.getKeys().toArray(new String[0]));
+        else {
+            String t = this.tag.getSingle(e);
+            if (t == null) return null;
+            Object nbt = hasType ? NBT_API.getTag(t, n, nbtType) : NBT_API.getTag(t, n);
+            if (nbt == null) return null;
+            if (nbt instanceof ArrayList) {
+                ArrayList<?> arr = (ArrayList<?>) nbt;
+                return convert(!hasType ? arr.toArray() : arr.toArray((Object[]) Array.newInstance(fromNBTType(), 0)));
+            }
+            if (hasType) {
+                Object[] toArr = (Object[]) Array.newInstance(fromNBTType(), 1);
+                toArr[0] = nbt;
+                return convert(toArr);
+            }
+            return convert(nbt);
         }
-        NBTCompound n = object instanceof NBTCompound ? ((NBTCompound) object) : new NBTContainer((String) object);
-        assert t != null;
-        Object nbt = type != null ? NBT_API.getTag(t, n, type) : NBT_API.getTag(t, n);
-        if (nbt instanceof ArrayList) {
-            return ((ArrayList<?>) nbt).toArray();
+    }
+
+
+    private T[] convert(Object... objects) {
+        try {
+            return Converters.convertArray(objects, types, superType);
+        } catch (Exception ex) {
+            return (T[]) Array.newInstance(superType, 0);
         }
-        return new Object[]{nbt};
     }
 
     @Nullable
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
-        if (mode == ChangeMode.SET || mode == ChangeMode.DELETE) {
-            return CollectionUtils.array(Object[].class);
-        }
+        if (((mode != ChangeMode.ADD && mode != ChangeMode.REMOVE) || !hasType || notSingle || fromNBTType().isAssignableFrom(Number.class)) && ((mode != ChangeMode.RESET && mode != ChangeMode.REMOVE_ALL) || !hasType || notSingle) && !(isAllTags || literalString))
+            if (hasType)
+                return CollectionUtils.array(notSingle ? Array.newInstance(fromNBTType(),0).getClass() : fromNBTType());
+            else
+                return CollectionUtils.array(Boolean.class, String[].class, Number[].class, NBTCompound[].class);
         return null;
     }
 
     @Override
     public void change(@NotNull Event e, @Nullable Object[] delta, @NotNull ChangeMode mode) {
-        Object object = this.nbt.getSingle(e);
-        if (!(object instanceof NBTCompound)) return;
+        Object object = nbt.getSingle(e);
+        if (object == null && mode != ChangeMode.DELETE) return;
         String tag = this.tag.getSingle(e);
-        NBTCompound compound = ((NBTCompound) object);
         if (tag == null) return;
+        if (!hasType && delta != null && delta.length != 0) {
+            Object[] finalDelta = delta;
+            Class<?> type = Stream.of(Boolean.class, String.class, Number.class, NBTCompound.class).filter(c -> c.isInstance(finalDelta[0])).findFirst().orElse(null);
+            if (type != null)
+                delta = Converters.convertArray(delta, type);
+            else
+                return;
+        }
+        if (nbt instanceof ExprObjectNBT) {
+            ExprObjectNBT nbtExpr = ((ExprObjectNBT) nbt);
+            NBTCompound compound = new NBTContainer(object != null ? object.toString() : "{}");
+            editNBT(e, compound, tag, mode, delta);
+            nbtExpr.change(e, CollectionUtils.array(compound), ChangeMode.SET);
+        } else if (object instanceof NBTCompound) {
+            editNBT(e, (NBTCompound) object, tag, mode, delta);
+        }
+    }
 
-        if (mode == ChangeMode.SET) {
-            if (delta == null) return;
-
-            if (this.nbtType != null) {
-                NBTCustomType type = this.nbtType.getSingle(e);
-                NBT_API.setTag(tag, compound, delta, type);
-            } else {
-                NBT_API.setTag(tag, compound, delta);
-            }
-        } else if (mode == ChangeMode.DELETE) {
-            if (HAS_PERSISTENCE && tag.equalsIgnoreCase("custom")) {
-                if (compound instanceof NBTCustom) {
-                    ((NBTCustom) compound).deleteCustomNBT();
+    private void editNBT(Event e, NBTCompound compound, String tag, ChangeMode mode, Object... delta) {
+        boolean hasDelta = (delta != null && delta.length != 0);
+        switch (mode) {
+            case SET:
+                if (hasDelta) {
+                    if (hasType)
+                        NBT_API.setTag(tag, compound, delta, nbtType);
+                    else {
+                        compound.removeKey(tag);
+                        NBT_API.setTag(tag, compound, delta);
+                    }
+                } else if (notSingle || compound.getType(tag) == NBTType.NBTTagList || !compound.hasKey(tag)) {
+                    compound.removeKey(tag);
+                    NBTCompoundList compoundList = compound.getCompoundList(tag);
+                    compoundList.addCompound();
+                    compoundList.clear();
                 }
-            }
-            NBT_API.deleteTag(tag, compound);
+                return;
+            case ADD:
+                Object toAdd = hasType ? NBT_API.getTag(tag, compound, nbtType) : NBT_API.getTag(tag, compound);
+                if (notSingle || toAdd instanceof ArrayList) {
+                    if (compound.getType(tag) == NBTType.NBTTagList && compound.getListType(tag) == NBTType.NBTTagEnd) {
+                        if (!hasDelta || delta[0] == null) return;
+                        NBTCustomType type;
+                        if (hasType)
+                            type = this.nbtType;
+                        else if (delta[0] instanceof String)
+                            type = NBTCustomType.NBTTagStringList;
+                        else if (delta[0] instanceof Number)
+                            if (MathUtil.isInt(delta[0]))
+                                type = NBTCustomType.NBTTagIntList;
+                            else if (delta[0] instanceof Long)
+                                type = NBTCustomType.NBTTagLongList;
+                            else if (MathUtil.isFloat(delta[0]))
+                                type = NBTCustomType.NBTTagFloatList;
+                            else
+                                type = NBTCustomType.NBTTagDoubleList;
+                        else if (delta[0] instanceof NBTCompound)
+                            type = NBTCustomType.NBTTagCompoundList;
+                        else
+                            type = null;
+                        if (type != null)
+                            NBT_API.setTag(tag, compound, delta, type);
+                    } else {
+                        NBTCustomType type = NBTCustomType.getByTag(compound, tag);
+                        if (hasType && !this.nbtType.equals(type)) {
+                            if (type == NBTCustomType.NBTTagEnd)
+                                NBT_API.setTag(tag, compound, delta, this.nbtType);
+                            return;
+                        }
+                        this.hasType = true;
+                        this.nbtType = type;
+                        Object[] listItems = toAdd instanceof ArrayList ? ((ArrayList<?>) toAdd).toArray() : null;
+                        editNBT(e, compound, tag, ChangeMode.SET, hasDelta ? ArrayUtils.addAll(listItems, delta) : listItems);
+                    }
+                } else if (hasDelta && delta[0] instanceof Number && delta.length == 1)
+                        editNBT(e, compound, tag, ChangeMode.SET, doMath(e, toAdd instanceof Number ? (Number) toAdd : 0, (Number) delta[0], 0));
+                else if (!compound.hasKey(tag)) {
+                    editNBT(e, compound, tag, ChangeMode.SET);
+                    editNBT(e, compound, tag, ChangeMode.ADD, delta);
+                }
+                return;
+            case REMOVE:
+            case REMOVE_ALL:
+                Object toRemove = hasType ? NBT_API.getTag(tag, compound, nbtType) : NBT_API.getTag(tag, compound);
+                if (notSingle || toRemove instanceof ArrayList) {
+                    NBTCustomType type = NBTCustomType.getByTag(compound, tag);
+                    if (hasType && !this.nbtType.equals(type))
+                        return;
+                    this.hasType = true;
+                    this.nbtType = type;
+                    Object[] newDelta = null;
+                    if (toRemove instanceof ArrayList) {
+                        ArrayList<Object> list = new ArrayList<>((ArrayList<?>) toRemove);
+                        if (hasDelta)
+                            Arrays.stream(delta)
+                                    .map(o -> o instanceof Number ? new ComparableNumber((Number) o) : o instanceof NBTCompound ? new ComparableNBTCompound((NBTCompound) o) : o)
+                                    .forEach(mode == ChangeMode.REMOVE ? list::remove : o -> {while (list.remove(o));});
+                        newDelta = list.toArray();
+                    }
+                    editNBT(e, compound, tag, ChangeMode.SET, newDelta);
+                } else if (hasDelta && delta[0] instanceof Number)
+                    editNBT(e, compound, tag, ChangeMode.SET, doMath(e, toRemove instanceof Number ? (Number) toRemove : 0, (Number) delta[0], 1));
+                return;
+            case DELETE:
+                if (HAS_PERSISTENCE && tag.equalsIgnoreCase("custom")) {
+                    if (compound instanceof NBTCustom) {
+                        ((NBTCustom) compound).deleteCustomNBT();
+                    }
+                }
+                NBT_API.deleteTag(tag, compound);
+                return;
+            case RESET:
+                editNBT(e, compound, tag, ChangeMode.SET);
         }
     }
 
     @Override
     public boolean isSingle() {
-        return true;
+        return !notSingle;
+    }
+
+    private Class<?> fromNBTType() {
+        switch (this.nbtType) {
+            case NBTTagString:
+            case NBTTagStringList:
+                return String.class;
+            case NBTTagCompound:
+            case NBTTagCompoundList:
+                return NBTCompound.class;
+        }
+        return Number.class;
     }
 
     @Override
-    public @NotNull Class<?> getReturnType() {
-        return Object.class;
+    public @NotNull Class<? extends T> getReturnType() {
+        return isAllTags ? (Class<? extends T>) String.class : this.nbtType != null ? (Class<? extends T>) fromNBTType() : superType;
+    }
+
+    @Nullable
+    @Override
+    public <R> Expression<? extends R> getConvertedExpression(Class<R>... to) {
+        return isAllTags || hasType ? super.getConvertedExpression(to) : new ExprTagOfNBT<>(this, to);
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String type = this.nbtType != null ? this.nbtType.toString(e, d) : "tag";
+        if (isAllTags)
+            return "all tags of " + nbt.toString(e, d);
+        String type = this.nbtType != null ? this.nbtType.getName() : "tag";
         String tag = this.tag.toString(e, d);
         String nbt = this.nbt.toString(e, d);
         return String.format("%s %s of %s", type, tag, nbt);
     }
 
+    @Override
+    public Expression<?> getSource() {
+        return source == null ? this : source;
+    }
+
+
+    private Number doMath(Event e, Number n1, Number n2, int op) {
+        ExprArithmetic arithmetic = new ExprArithmetic();
+        arithmetic.init(CollectionUtils.array(new SimpleLiteral<>(n1, false), new SimpleLiteral<>(n2, false)), op, null, null);
+        return arithmetic.getSingle(e);
+    }
+
+    private static class ComparableNumber {
+        private static final Comparator<? super Number, ? super Number> numberCompare = Comparators.getComparator(Number.class, Number.class);
+        private final Number n;
+        public ComparableNumber(Number n) {
+            this.n = n;
+        }
+        @Override
+        public boolean equals(Object obj) {
+            return obj instanceof Number && numberCompare.compare(n, (Number) obj) == Comparator.Relation.EQUAL;
+        }
+    }
+    private static class ComparableNBTCompound {
+        private final String nbt;
+        public ComparableNBTCompound(NBTCompound nbt) {
+            this.nbt = nbt.toString();
+        }
+        @Override
+        public boolean equals(Object obj) {
+            return nbt.equals(obj.toString());
+        }
+    }
 }
