@@ -1,4 +1,4 @@
-package tk.shanebee.bee.elements.structure.effects;
+package tk.shanebee.bee.elements.structureold.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -23,11 +23,13 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.util.Util;
 
 import java.io.File;
 
 @Name("Structure Block - Save")
-@Description("Save structure block structures. Requires Minecraft 1.9.4+")
+@Description({"Save structure block structures.",
+        "Requires Minecraft 1.9.4+. No longer available on MC 1.18+, please use new structure system."})
 @Examples("save structure between {loc1} and {loc2} as \"house\"")
 @Since("1.0.0")
 @SuppressWarnings("NullableProblems")
@@ -35,6 +37,7 @@ public class EffSaveStructure extends Effect {
 
     private static final String WORLD;
     private static final StructureBlockLibApi STRUCTURE_API = StructureBlockLibApi.INSTANCE;
+    private static final boolean HAS_NEW_STRUCTURE_API = Skript.classExists("org.bukkit.structure.Structure");
 
     static {
         String worldContainer = Bukkit.getWorldContainer().getPath();
@@ -58,6 +61,9 @@ public class EffSaveStructure extends Effect {
         loc1 = (Expression<Location>) exprs[0];
         loc2 = (Expression<Location>) exprs[1];
         name = (Expression<String>) exprs[2];
+        if (HAS_NEW_STRUCTURE_API) {
+            Util.skriptError("This effect is deprecated and will be removed in the future. Please use the new structure system.");
+        }
         return true;
     }
 
