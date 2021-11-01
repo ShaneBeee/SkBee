@@ -28,7 +28,7 @@ import java.util.List;
 @Examples({"set {_s} to structure named \"my-server:houses/house1\"",
         "set {_s} to structure named \"my-house\"",
         "set {_s::*} to structures named \"house1\" and \"house2\""})
-@Since("INSERT VERSION")
+@Since("1.12.0")
 public class ExprStructureObject extends SimpleExpression<StructureBee> {
 
     private static final StructureBeeManager STRUCTURE_BEE_MANAGER;

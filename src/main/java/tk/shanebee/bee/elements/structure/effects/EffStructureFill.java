@@ -20,7 +20,7 @@ import tk.shanebee.bee.elements.structure.StructureBee;
 @Description("Fill a structure with blocks.")
 @Examples({"fill structure {_s} between {loc1} and {loc2}",
         "fill structure {_s} between location at player and location(10,10,10, world \"world\")"})
-@Since("INSERT VERSION")
+@Since("1.12.0")
 public class EffStructureFill extends Effect {
 
     static {

@@ -16,7 +16,7 @@ import tk.shanebee.bee.elements.structure.StructureBee;
 @Name("Structure - Save")
 @Description("Save a structure to file. Will overwrite if already in that file.")
 @Examples({"save structure {_s}", "save structures {_s::*}"})
-@Since("INSERT VERSION")
+@Since("1.12.0")
 public class EffStructureSave extends Effect {
 
     static {

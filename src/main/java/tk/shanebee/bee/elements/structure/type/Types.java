@@ -20,7 +20,7 @@ public class Types {
                     .name("Structure")
                     .description("Represents a structure that can be saved or pasted into a world.",
                             "Use the 'Structure-Object' expression to get a new/existing structure object.")
-                    .since("INSERT VERSION")
+                    .since("1.12.0")
                     .parser(new Parser<StructureBee>() {
                         @Override
                         public boolean canParse(ParseContext context) {
@@ -50,7 +50,7 @@ public class Types {
                     .description("Represents the different states of mirroring for a structure.")
                     .examples("set mirror of structure {_s} to front back")
                     .usage(mirror.getAllNames())
-                    .since("INSERT VERSION")
+                    .since("1.12.0")
                     .parser(new Parser<Mirror>() {
                         @Nullable
                         @Override
@@ -81,7 +81,7 @@ public class Types {
                     .description("Represents the different states of rotation for a structure.")
                     .examples("set rotation of structure {_s} to clockwise 90")
                     .usage(rotation.getAllNames())
-                    .since("INSERT VERSION")
+                    .since("1.12.0")
                     .parser(new Parser<StructureRotation>() {
                         @Nullable
                         @Override

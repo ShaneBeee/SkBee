@@ -33,7 +33,7 @@ import tk.shanebee.bee.elements.structure.StructureBee;
         "set {_v} to size of {_s}",
         "set include entities of structure {_s} to false",
         "set integrity of structure {_s} to 0.75"})
-@Since("INSERT VERSION")
+@Since("1.12.0")
 public class ExprStructureProperties extends PropertyExpression<StructureBee, Object> {
 
     static {
