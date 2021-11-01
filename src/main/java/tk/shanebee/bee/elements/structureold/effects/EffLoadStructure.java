@@ -1,4 +1,4 @@
-package tk.shanebee.bee.elements.structure.effects;
+package tk.shanebee.bee.elements.structureold.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -23,12 +23,14 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
+import tk.shanebee.bee.api.util.Util;
 
 import java.io.File;
 
 @Name("Structure Block - Load")
-@Description("Load structure block structures that are saved on your server. " +
-        "Optional values for rotation, mirroring and the inclusion of entities. Requires Minecraft 1.9.4+")
+@Description({"Load structure block structures that are saved on your server",
+        "Optional values for rotation, mirroring and the inclusion of entities.",
+        "Requires Minecraft 1.9.4+. No longer available on MC 1.18+, please use new structure system."})
 @Examples({"load \"house\" at location of player", "load \"barn\" at location 10 infront of player",
         "paste \"house\" at location of player with rotation 90 and with mirror left to right",
         "load \"sheep_pen\" at location below player with rotation 180 and with entities"})
@@ -38,6 +40,7 @@ public class EffLoadStructure extends Effect {
 
     private static final String WORLD;
     private static final StructureBlockLibApi STRUCTURE_API = StructureBlockLibApi.INSTANCE;
+    private static final boolean HAS_NEW_STRUCTURE_API = Skript.classExists("org.bukkit.structure.Structure");
 
     static {
         String worldContainer = Bukkit.getWorldContainer().getPath();
@@ -68,6 +71,9 @@ public class EffLoadStructure extends Effect {
         rotate = parseResult.mark;
         mirror = i;
         withEntities = rotate == 5 || rotate == 4 || rotate == 7 || rotate == 6;
+        if (HAS_NEW_STRUCTURE_API) {
+            Util.skriptError("This effect is deprecated and will be removed in the future. Please use the new structure system.");
+        }
         return true;
     }
 

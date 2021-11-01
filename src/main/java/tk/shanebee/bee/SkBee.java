@@ -25,6 +25,7 @@ import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
 import tk.shanebee.bee.elements.board.objects.Board;
 import tk.shanebee.bee.elements.bound.config.BoundConfig;
 import tk.shanebee.bee.elements.bound.objects.Bound;
+import tk.shanebee.bee.elements.structure.StructureBeeManager;
 import tk.shanebee.bee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import tk.shanebee.bee.elements.worldcreator.objects.BeeWorldConfig;
 import tk.shanebee.bee.metrics.Metrics;
@@ -48,6 +49,7 @@ public class SkBee extends JavaPlugin {
     private SkriptAddon addon;
     private VirtualFurnaceAPI virtualFurnaceAPI;
     private BeeWorldConfig beeWorldConfig;
+    private StructureBeeManager structureBeeManager = null;
 
     @Override
     public void onEnable() {
@@ -221,6 +223,27 @@ public class SkBee extends JavaPlugin {
             Util.log("&5Structure Elements &cdisabled via config");
             return;
         }
+
+        // Load new structure system (MC 1.17.1+)
+        if (Skript.classExists("org.bukkit.structure.Structure")) {
+            this.structureBeeManager = new StructureBeeManager();
+            try {
+                addon.loadClasses("tk.shanebee.bee.elements.structure");
+                Util.log("&5New Structure Elements &asuccessfully loaded");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                pm.disablePlugin(this);
+            }
+        }
+
+        // Load old structure system (will be removed in future)
+        // Will not be available on MC 1.18+ (personal choice, use new system instead)
+        if (Skript.isRunningMinecraft(1, 18)) {
+            Util.log("&5Old Structure Elements &cDISABLED!");
+            Util.log(" - Old structure system is no longer available on MC 1.18+");
+            Util.log(" - Please use new structure system");
+            return;
+        }
         // Disable if StructureBlockLib is not currently updated for this server version
         ProxyServiceImpl impl = new ProxyServiceImpl(this);
         Version serverVersion = impl.getServerVersion();
@@ -231,13 +254,16 @@ public class SkBee extends JavaPlugin {
             Util.log(" - This is not a bug!");
             Util.log(" - Structure elements will resume once the API is updated to work with [&b" + ver + "&7]");
             return;
-        }
-        try {
-            addon.loadClasses("tk.shanebee.bee.elements.structure");
-            Util.log("&5Structure Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pm.disablePlugin(this);
+        } else {
+            try {
+                addon.loadClasses("tk.shanebee.bee.elements.structureold");
+                Util.log("&5Old Structure Elements &asuccessfully loaded");
+                Util.log(" - &cThe old system will be removed in the future");
+                Util.log(" - &cPlease use the new structure system (Available on MC 1.17.1+)");
+            } catch (IOException ex) {
+                ex.printStackTrace();
+                pm.disablePlugin(this);
+            }
         }
     }
 
@@ -352,4 +378,7 @@ public class SkBee extends JavaPlugin {
         return virtualFurnaceAPI;
     }
 
+    public StructureBeeManager getStructureBeeManager() {
+        return structureBeeManager;
+    }
 }
