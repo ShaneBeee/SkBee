@@ -27,7 +27,8 @@ import tk.shanebee.bee.elements.structure.StructureBee;
         "Integrity determines how damaged the building should look by randomly skipping blocks to place. This value can range from 0 to 1.",
         "With 0 removing all blocks and 1 spawning the structure in pristine condition.",
         "Include entities determines if saved entities should be spawned into the structure (true by default).",
-        "Size returns a vector offset from the starting point of the structure. This cannot be changed."})
+        "Size returns a vector offset from the starting point of the structure. This cannot be changed.",
+        "Requires MC 1.17.1+"})
 @Examples({"set rotation of {_s} to clockwise 90",
         "set {_r} to rotation of {_s}",
         "set {_v} to size of {_s}",

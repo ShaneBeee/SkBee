@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.elements.structure.StructureBee;
 
 @Name("Structure - Fill")
-@Description("Fill a structure with blocks.")
+@Description({"Fill a structure with blocks. Requires MC 1.17.1+"})
 @Examples({"fill structure {_s} between {loc1} and {loc2}",
         "fill structure {_s} between location at player and location(10,10,10, world \"world\")"})
 @Since("1.12.0")

@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.elements.structure.StructureBee;
 
 @Name("Structure - Place")
-@Description("Place an already created structure into the world.")
+@Description("Place an already created structure into the world. Requires MC 1.17.1+")
 @Examples("place structure {_s} at location above target block of player")
 @Since("1.12.0")
 public class EffStructurePlace extends Effect {

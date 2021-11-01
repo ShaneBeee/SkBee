@@ -24,7 +24,8 @@ import java.util.List;
         "If the file you have specified is not available, it will be created upon saving.",
         "Structures without a namespace (ex: \"tree\") will load from/save to \"(main world folder)/generated/minecraft/structures/\".",
         "Structures with a namespace (ex:\"myname:house\") will load from/save to \"(main world folder)/generated/myname/structures/\".",
-        "To create folders, simply add a slash in your name, ex: \"buildings/house\"."})
+        "To create folders, simply add a slash in your name, ex: \"buildings/house\".",
+        "Requires MC 1.17.1+"})
 @Examples({"set {_s} to structure named \"my-server:houses/house1\"",
         "set {_s} to structure named \"my-house\"",
         "set {_s::*} to structures named \"house1\" and \"house2\""})

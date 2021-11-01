@@ -18,7 +18,7 @@ public class Types {
             Classes.registerClass(new ClassInfo<>(StructureBee.class, "structure")
                     .user("structures?")
                     .name("Structure")
-                    .description("Represents a structure that can be saved or pasted into a world.",
+                    .description("Represents a structure that can be saved or pasted into a world. Requires MC 1.17.1+",
                             "Use the 'Structure-Object' expression to get a new/existing structure object.")
                     .since("1.12.0")
                     .parser(new Parser<StructureBee>() {
@@ -47,7 +47,7 @@ public class Types {
             Classes.registerClass(new ClassInfo<>(Mirror.class, "mirror")
                     .user("mirror?S")
                     .name("Structure - Mirror")
-                    .description("Represents the different states of mirroring for a structure.")
+                    .description("Represents the different states of mirroring for a structure. Requires MC 1.17.1+")
                     .examples("set mirror of structure {_s} to front back")
                     .usage(mirror.getAllNames())
                     .since("1.12.0")
@@ -78,7 +78,7 @@ public class Types {
             Classes.registerClass(new ClassInfo<>(StructureRotation.class, "rotation")
                     .user("rotations?")
                     .name("Structure - Rotation")
-                    .description("Represents the different states of rotation for a structure.")
+                    .description("Represents the different states of rotation for a structure. Requires MC 1.17.1+")
                     .examples("set rotation of structure {_s} to clockwise 90")
                     .usage(rotation.getAllNames())
                     .since("1.12.0")
