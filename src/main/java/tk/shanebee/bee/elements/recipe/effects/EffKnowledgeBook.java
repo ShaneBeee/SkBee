@@ -58,11 +58,16 @@ public class EffKnowledgeBook extends Effect {
             return;
 
         ItemType book = this.book.getSingle(event);
-        String pl = this.plugin.getSingle(event);
-        Plugin plugin = Bukkit.getPluginManager().getPlugin(pl);
+        Plugin plugin = null;
+        if (this.plugin != null) {
+            String pl = this.plugin.getSingle(event);
+            assert pl != null;
+            plugin = Bukkit.getPluginManager().getPlugin(pl);
+        }
         if (plugin == null) {
             plugin = SkBee.getPlugin();
         }
+
         String[] recipes = this.recipes.getAll(event);
         KnowledgeBookMeta meta = ((KnowledgeBookMeta) book.getItemMeta());
 
@@ -85,7 +90,7 @@ public class EffKnowledgeBook extends Effect {
 
     @Override
     public String toString(Event e, boolean d) {
-        return (add ? "add" : "remove") + (minecraft ? " minecraft" : "custom") + " recipe(s) " + recipes.toString(e, d) +
+        return (add ? "add" : "remove") + (minecraft ? " minecraft" : " custom") + " recipe(s) " + recipes.toString(e, d) +
                 (add ? " to " : " from ") + book.toString(e, d);
     }
 
