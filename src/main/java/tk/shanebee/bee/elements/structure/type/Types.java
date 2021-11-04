@@ -15,7 +15,7 @@ public class Types {
 
     static {
         if (Skript.classExists("org.bukkit.structure.Structure")) {
-            Classes.registerClass(new ClassInfo<>(StructureBee.class, "structure")
+            Classes.registerClass(new ClassInfo<>(StructureBee.class, "structurebee")
                     .user("structures?")
                     .name("Structure")
                     .description("Represents a structure that can be saved or pasted into a world. Requires MC 1.17.1+",
@@ -45,7 +45,7 @@ public class Types {
 
             EnumUtils<Mirror> mirror = new EnumUtils<>(Mirror.class);
             Classes.registerClass(new ClassInfo<>(Mirror.class, "mirror")
-                    .user("mirror?S")
+                    .user("mirrors?")
                     .name("Structure - Mirror")
                     .description("Represents the different states of mirroring for a structure. Requires MC 1.17.1+")
                     .examples("set mirror of structure {_s} to front back")
