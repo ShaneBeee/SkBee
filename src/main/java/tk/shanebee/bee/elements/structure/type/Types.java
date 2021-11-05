@@ -15,7 +15,7 @@ public class Types {
 
     static {
         if (Skript.classExists("org.bukkit.structure.Structure")) {
-            Classes.registerClass(new ClassInfo<>(StructureBee.class, "structurebee")
+            Classes.registerClass(new ClassInfo<>(StructureBee.class, "structure")
                     .user("structures?")
                     .name("Structure")
                     .description("Represents a structure that can be saved or pasted into a world. Requires MC 1.17.1+",
