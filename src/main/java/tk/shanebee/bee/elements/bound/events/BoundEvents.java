@@ -17,7 +17,7 @@ public class BoundEvents extends SkriptEvent {
 
     static {
         Skript.registerEvent("Bound - Enter", BoundEvents.class, EnterBoundEvent.class, "(bound enter|enter bound) [with id %-string%]")
-                .description("Called when a player enters a bound. Optional ID of bound.")
+                .description("Called when a player enters a bound. Optional ID of bound. 'event-string' = bound ID.")
                 .examples("on bound enter:",
                         "\tif event-bound = {bounds::spawn}:",
                         "\t\tsend \"You entered spawn!\"",
@@ -36,10 +36,17 @@ public class BoundEvents extends SkriptEvent {
                 return event.getBound();
             }
         }, 0);
+        EventValues.registerEventValue(EnterBoundEvent.class, String.class, new Getter<String, EnterBoundEvent>() {
+            @Nullable
+            @Override
+            public String get(EnterBoundEvent event) {
+                return event.getBound().getId();
+            }
+        }, 0);
 
 
         Skript.registerEvent("Bound - Exit", BoundEvents.class, ExitBoundEvent.class, "(bound exit|exit bound) [with id %-string%]")
-                .description("Called when a player exits a bound. Optional ID of bound.")
+                .description("Called when a player exits a bound. Optional ID of bound. 'event-string' = bound ID.")
                 .examples("on bound exit:",
                         "\tsend \"You left a bound\"",
                         "\tif event-bound = {bound}:",
@@ -57,6 +64,13 @@ public class BoundEvents extends SkriptEvent {
             @Override
             public Bound get(ExitBoundEvent event) {
                 return event.getBound();
+            }
+        }, 0);
+        EventValues.registerEventValue(ExitBoundEvent.class, String.class, new Getter<String, ExitBoundEvent>() {
+            @Nullable
+            @Override
+            public String get(ExitBoundEvent event) {
+                return event.getBound().getId();
             }
         }, 0);
     }
