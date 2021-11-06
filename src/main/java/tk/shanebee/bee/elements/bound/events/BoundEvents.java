@@ -23,7 +23,7 @@ public class BoundEvents extends SkriptEvent {
                         "\t\tsend \"You entered spawn!\"",
                         "on enter bound with id \"spawn\":",
                         "\tcancel event")
-                .since("1.0.0, INSERT VERSION (Bound IDs)");
+                .since("1.0.0, 1.12.2 (Bound IDs)");
         EventValues.registerEventValue(EnterBoundEvent.class, Player.class, new Getter<Player, EnterBoundEvent>() {
             @Override
             public Player get(EnterBoundEvent event) {
@@ -53,7 +53,7 @@ public class BoundEvents extends SkriptEvent {
                         "\t\tsend \"You left Spawn!\"",
                         "on exit bound with id \"spawn\":",
                         "\tcancel event")
-                .since("1.0.0, INSERT VERSION (Bound IDs)");
+                .since("1.0.0, 1.12.2 (Bound IDs)");
         EventValues.registerEventValue(ExitBoundEvent.class, Player.class, new Getter<Player, ExitBoundEvent>() {
             @Override
             public Player get(ExitBoundEvent event) {
