@@ -62,47 +62,55 @@ public class SkBee extends JavaPlugin {
         PluginDescriptionFile desc = getDescription();
 
         final Plugin SKRIPT = pm.getPlugin("Skript");
-        if (SKRIPT != null && SKRIPT.isEnabled()) {
-            if (!Skript.isAcceptRegistrations()) {
-                // SkBee should be loading right after Skript, during Skript's registration period
-                // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
-                // We need to find the route of this issue, so far the only plugin I know that does this is FAWE
-                Util.log("&cSkript is no longer accepting registrations.");
-                Util.log("&cNo clue how this could happen.");
-                Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
-                pm.disablePlugin(this);
-                return;
-            }
-            if (!Skript.isRunningMinecraft(1, 14, 4)) {
-                Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.14.4+ is supported!", Skript.getMinecraftVersion());
-                pm.disablePlugin(this);
-                return;
-            }
-            addon = Skript.registerAddon(this);
-            addon.setLanguageFileDirectory("lang");
 
-            // Load Skript elements
-            loadNBTElements();
-            loadRecipeElements();
-            loadBoardElements();
-            loadBoundElements();
-            loadTextElements();
-            loadPathElements();
-            loadStructureElements();
-            loadOtherElements();
-            loadVirtualFurnaceElements();
-            loadWorldCreatorElements();
-
-            // Beta check + notice
-            if (desc.getVersion().contains("Beta")) {
-                Util.log("&eThis is a BETA build, things may not work as expected, please report any bugs on GitHub");
-                Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
-            }
-        } else {
-            Util.log("&cDependency Skript was not found, plugin disabling");
+        if (SKRIPT == null) {
+            Util.log("&cDependency Skript was not found, plugin disabling.");
             pm.disablePlugin(this);
             return;
         }
+        if (!SKRIPT.isEnabled()) {
+            Util.log("&cDependency Skript is not enabled, plugin disabling.");
+            Util.log("&cThis could mean SkBee is being forced to load before Skript.");
+            pm.disablePlugin(this);
+            return;
+        }
+        if (!Skript.isAcceptRegistrations()) {
+            // SkBee should be loading right after Skript, during Skript's registration period
+            // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
+            // We need to find the route of this issue, so far the only plugin I know that does this is FAWE
+            Util.log("&cSkript is no longer accepting registrations.");
+            Util.log("&cNo clue how this could happen.");
+            Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
+            pm.disablePlugin(this);
+            return;
+        }
+        if (!Skript.isRunningMinecraft(1, 14, 4)) {
+            Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.14.4+ is supported!", Skript.getMinecraftVersion());
+            pm.disablePlugin(this);
+            return;
+        }
+
+        addon = Skript.registerAddon(this);
+        addon.setLanguageFileDirectory("lang");
+
+        // Load Skript elements
+        loadNBTElements();
+        loadRecipeElements();
+        loadBoardElements();
+        loadBoundElements();
+        loadTextElements();
+        loadPathElements();
+        loadStructureElements();
+        loadOtherElements();
+        loadVirtualFurnaceElements();
+        loadWorldCreatorElements();
+
+        // Beta check + notice
+        if (desc.getVersion().contains("Beta")) {
+            Util.log("&eThis is a BETA build, things may not work as expected, please report any bugs on GitHub");
+            Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
+        }
+
         loadMetrics();
         Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", desc.getVersion(), (float) (System.currentTimeMillis() - start) / 1000);
 
