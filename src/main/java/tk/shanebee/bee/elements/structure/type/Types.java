@@ -9,6 +9,7 @@ import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.api.util.EnumUtils;
+import tk.shanebee.bee.elements.structure.BlockStateBee;
 import tk.shanebee.bee.elements.structure.StructureBee;
 
 public class Types {
@@ -104,6 +105,12 @@ public class Types {
                             return "\\S+";
                         }
                     }));
+
+            Classes.registerClass(new ClassInfo<>(BlockStateBee.class, "blockstate")
+                    .user("blockstates?")
+                    .name("BlockState")
+                    .description("Represents the blockstate of a block saved in a structure. Requires MC 1.17.1+")
+                    .since("INSERT VERSION"));
         }
     }
 
