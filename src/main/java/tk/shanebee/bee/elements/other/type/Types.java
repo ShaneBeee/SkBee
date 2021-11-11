@@ -130,6 +130,9 @@ public class Types {
                 @Nullable
                 @Override
                 public Vibration[] execute(FunctionEvent e, Object[][] params) {
+                    if (params[0].length == 0 || params[1].length == 0) {
+                        return null;
+                    }
                     Location origin = (Location) params[0][0];
                     Location destination = (Location) params[1][0];
                     int arrivalTime = (int) ((Timespan) params[2][0]).getTicks_i();
