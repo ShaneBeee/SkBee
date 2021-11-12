@@ -21,7 +21,7 @@ import java.util.List;
 @Name("BlockState - ItemType")
 @Description("Represents the itemtype of a block in a structure. Requires MC 1.17.1+")
 @Examples("set {_type} to itemtype of blockstate {_blockstate}")
-@Since("INSERT VERSION")
+@Since("1.12.3")
 public class ExprBlockStateItemType extends SimpleExpression<ItemType> {
 
     static {

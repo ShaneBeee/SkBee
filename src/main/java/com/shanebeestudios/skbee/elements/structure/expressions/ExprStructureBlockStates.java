@@ -22,7 +22,7 @@ import java.util.List;
 @Description({"Get a list of the blockstates in a structure. This represents the palette of blocks a structure holds.",
         "Requires MC 1.17.1+"})
 @Examples("set {_list::*} to blockstates of structure {_structure}")
-@Since("INSERT VERSION")
+@Since("1.12.3")
 public class ExprStructureBlockStates extends SimpleExpression<BlockStateBee> {
 
     static {

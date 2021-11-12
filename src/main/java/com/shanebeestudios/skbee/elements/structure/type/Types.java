@@ -110,7 +110,7 @@ public class Types {
                     .user("blockstates?")
                     .name("BlockState")
                     .description("Represents the blockstate of a block saved in a structure. Requires MC 1.17.1+")
-                    .since("INSERT VERSION"));
+                    .since("1.12.3"));
         }
     }
 

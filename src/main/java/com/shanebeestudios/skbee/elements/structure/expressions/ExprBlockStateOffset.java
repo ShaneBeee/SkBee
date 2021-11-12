@@ -22,7 +22,7 @@ import java.util.List;
 @Description({"Represents the offset of a block in a structure. This is a vector, distance from the starting block of a structure.",
         "Requires MC 1.17.1+"})
 @Examples("set {_offset} to offset of blockstate {_blockstate}")
-@Since("INSERT VERSION")
+@Since("1.12.3")
 public class ExprBlockStateOffset extends SimpleExpression<Vector> {
 
     static {

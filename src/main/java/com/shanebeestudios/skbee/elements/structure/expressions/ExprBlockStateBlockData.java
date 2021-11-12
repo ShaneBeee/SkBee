@@ -21,7 +21,7 @@ import java.util.List;
 @Name("BlockState - BlockData")
 @Description("Represents the blockdata of a block in a structure. Requires MC 1.17.1+")
 @Examples("set {_data} to blockdata of blockstate {_blockstate}")
-@Since("INSERT VERSION")
+@Since("1.12.3")
 public class ExprBlockStateBlockData extends SimpleExpression<BlockData> {
 
     static {
