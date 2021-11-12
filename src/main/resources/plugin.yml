@@ -1,4 +1,4 @@
-main: tk.shanebee.bee.SkBee
+main: com.shanebeestudios.skbee.SkBee
 name: SkBee
 version: '${project.version}'
 description: "A simple Skript addon to help customize your server to the fullest."
