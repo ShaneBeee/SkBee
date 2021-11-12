@@ -17,7 +17,7 @@ import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import tk.shanebee.bee.api.util.ParticleUtil;
+import tk.shanebee.bee.api.particle.ParticleUtil;
 
 @Name("Particle Spawn")
 @Description({"Spawn a particle. This system is more inline with how Bukkit deals with particles, hence the amount of patterns.",

@@ -17,8 +17,8 @@ import org.bukkit.Particle.DustOptions;
 import org.bukkit.Particle.DustTransition;
 import org.bukkit.Vibration;
 import org.jetbrains.annotations.Nullable;
-import tk.shanebee.bee.api.util.VibrationBee;
-import tk.shanebee.bee.api.util.ParticleUtil;
+import tk.shanebee.bee.api.particle.VibrationBee;
+import tk.shanebee.bee.api.particle.ParticleUtil;
 import tk.shanebee.bee.api.util.Util;
 
 public class Types {

@@ -1,4 +1,4 @@
-package tk.shanebee.bee.api.util;
+package tk.shanebee.bee.api.particle;
 
 import org.bukkit.Location;
 import org.bukkit.Vibration;
@@ -22,6 +22,11 @@ public class VibrationBee {
         this.arrivalTime = arrivalTime;
     }
 
+    /**
+     * Get an instance of a {@link Vibration Bukkit Vibration}
+     *
+     * @return Instance of Vibration
+     */
     public Vibration get() {
         return new Vibration(origin, new BlockDestination(destination), arrivalTime);
     }

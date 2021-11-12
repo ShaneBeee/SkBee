@@ -1,4 +1,4 @@
-package tk.shanebee.bee.api.util;
+package tk.shanebee.bee.api.particle;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
@@ -24,6 +24,9 @@ import java.util.List;
 import java.util.Map;
 
 public class ParticleUtil {
+
+    private ParticleUtil() {
+    }
 
     private static final Map<String, Particle> PARTICLES = new HashMap<>();
     private static final boolean HAS_VIBRATION = Skript.isRunningMinecraft(1, 17);
