@@ -17,7 +17,7 @@ import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
-import tk.shanebee.bee.elements.structure.StructureBee;
+import tk.shanebee.bee.api.structure.StructureBee;
 
 @Name("Structure - Properties")
 @Description({"Represents different properties of a structure, including mirroring, rotation, inclusion of entities and integrity.",

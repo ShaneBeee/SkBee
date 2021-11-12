@@ -12,8 +12,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
-import tk.shanebee.bee.elements.structure.BlockStateBee;
-import tk.shanebee.bee.elements.structure.StructureBee;
+import tk.shanebee.bee.api.structure.BlockStateBee;
+import tk.shanebee.bee.api.structure.StructureBee;
 
 import java.util.ArrayList;
 import java.util.List;

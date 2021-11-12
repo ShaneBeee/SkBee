@@ -1,4 +1,4 @@
-package tk.shanebee.bee.elements.structure;
+package tk.shanebee.bee.api.structure;
 
 import ch.njol.skript.aliases.ItemType;
 import org.bukkit.block.BlockState;

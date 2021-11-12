@@ -1,4 +1,4 @@
-package tk.shanebee.bee.elements.structure;
+package tk.shanebee.bee.api.structure;
 
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;

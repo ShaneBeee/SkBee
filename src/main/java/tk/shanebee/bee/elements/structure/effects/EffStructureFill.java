@@ -14,7 +14,7 @@ import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.bukkit.util.BlockVector;
 import org.jetbrains.annotations.Nullable;
-import tk.shanebee.bee.elements.structure.StructureBee;
+import tk.shanebee.bee.api.structure.StructureBee;
 
 @Name("Structure - Fill")
 @Description({"Fill a structure with blocks. Requires MC 1.17.1+"})

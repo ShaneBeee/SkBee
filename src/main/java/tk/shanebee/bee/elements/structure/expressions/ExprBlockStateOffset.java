@@ -13,7 +13,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
-import tk.shanebee.bee.elements.structure.BlockStateBee;
+import tk.shanebee.bee.api.structure.BlockStateBee;
 
 import java.util.ArrayList;
 import java.util.List;

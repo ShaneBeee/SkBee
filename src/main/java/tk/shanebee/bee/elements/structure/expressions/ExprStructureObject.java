@@ -13,8 +13,8 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.SkBee;
-import tk.shanebee.bee.elements.structure.StructureBee;
-import tk.shanebee.bee.elements.structure.StructureBeeManager;
+import tk.shanebee.bee.api.structure.StructureBee;
+import tk.shanebee.bee.api.structure.StructureBeeManager;
 
 import java.util.ArrayList;
 import java.util.List;

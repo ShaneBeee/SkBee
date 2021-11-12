@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
-import tk.shanebee.bee.elements.structure.StructureBee;
+import tk.shanebee.bee.api.structure.StructureBee;
 
 @Name("Structure - Save")
 @Description("Save a structure to file. Will overwrite if already in that file. Requires MC 1.17.1+")

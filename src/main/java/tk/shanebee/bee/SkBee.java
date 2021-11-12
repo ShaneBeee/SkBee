@@ -25,7 +25,7 @@ import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
 import tk.shanebee.bee.elements.board.objects.Board;
 import tk.shanebee.bee.elements.bound.config.BoundConfig;
 import tk.shanebee.bee.elements.bound.objects.Bound;
-import tk.shanebee.bee.elements.structure.StructureBeeManager;
+import tk.shanebee.bee.api.structure.StructureBeeManager;
 import tk.shanebee.bee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import tk.shanebee.bee.elements.worldcreator.objects.BeeWorldConfig;
 import tk.shanebee.bee.metrics.Metrics;

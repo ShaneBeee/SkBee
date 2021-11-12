@@ -9,8 +9,8 @@ import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
 import org.jetbrains.annotations.Nullable;
 import tk.shanebee.bee.api.util.EnumUtils;
-import tk.shanebee.bee.elements.structure.BlockStateBee;
-import tk.shanebee.bee.elements.structure.StructureBee;
+import tk.shanebee.bee.api.structure.BlockStateBee;
+import tk.shanebee.bee.api.structure.StructureBee;
 
 public class Types {
 
