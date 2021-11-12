@@ -22,13 +22,12 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
-import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.NBT.NBTApi;
 import tk.shanebee.bee.api.reflection.McReflection;
 import tk.shanebee.bee.api.util.Util;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Name("Text Component - New Text Component")

@@ -20,8 +20,8 @@ import org.bukkit.event.Event;
 import org.bukkit.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
-import tk.shanebee.bee.api.NBTApi;
-import tk.shanebee.bee.api.NBTApi.ObjectType;
+import tk.shanebee.bee.api.NBT.NBTApi;
+import tk.shanebee.bee.api.NBT.NBTApi.ObjectType;
 
 import javax.annotation.Nullable;
 

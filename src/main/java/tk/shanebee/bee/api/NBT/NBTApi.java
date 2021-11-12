@@ -1,4 +1,4 @@
-package tk.shanebee.bee.api;
+package tk.shanebee.bee.api.NBT;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;

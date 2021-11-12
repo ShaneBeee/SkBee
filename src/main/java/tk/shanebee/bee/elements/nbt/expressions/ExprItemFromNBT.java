@@ -15,7 +15,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
-import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.NBT.NBTApi;
 
 import javax.annotation.Nullable;
 

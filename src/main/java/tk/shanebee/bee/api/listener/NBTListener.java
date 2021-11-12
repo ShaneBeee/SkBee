@@ -17,7 +17,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBT.NBTCustomBlock;
-import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.NBT.NBTApi;
 
 public class NBTListener implements Listener {
 

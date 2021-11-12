@@ -21,8 +21,8 @@ import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import tk.shanebee.bee.api.NBTApi;
-import tk.shanebee.bee.api.NBTApi.ObjectType;
+import tk.shanebee.bee.api.NBT.NBTApi;
+import tk.shanebee.bee.api.NBT.NBTApi.ObjectType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

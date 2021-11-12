@@ -14,8 +14,8 @@ import ch.njol.util.Kleenean;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import tk.shanebee.bee.SkBee;
-import tk.shanebee.bee.api.NBTApi;
-import tk.shanebee.bee.api.NBTApi.ObjectType;
+import tk.shanebee.bee.api.NBT.NBTApi;
+import tk.shanebee.bee.api.NBT.NBTApi.ObjectType;
 
 import javax.annotation.Nullable;
 

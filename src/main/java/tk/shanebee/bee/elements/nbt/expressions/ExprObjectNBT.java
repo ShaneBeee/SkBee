@@ -19,8 +19,8 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
-import tk.shanebee.bee.api.NBTApi;
-import tk.shanebee.bee.api.NBTApi.ObjectType;
+import tk.shanebee.bee.api.NBT.NBTApi;
+import tk.shanebee.bee.api.NBT.NBTApi.ObjectType;
 
 @Name("NBT - Item/Inventory Slot/Entity/Block/File")
 @Description({"NBT of items, inventory slots, entities, tile entities (such as a furnace, hopper, brewing stand, banner, etc) or files. ",

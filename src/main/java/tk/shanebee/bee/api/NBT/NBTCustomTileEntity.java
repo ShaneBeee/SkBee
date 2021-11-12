@@ -8,7 +8,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
-import tk.shanebee.bee.api.NBTApi;
 
 public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
 

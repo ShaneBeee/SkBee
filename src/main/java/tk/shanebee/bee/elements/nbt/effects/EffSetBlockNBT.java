@@ -18,8 +18,8 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
-import tk.shanebee.bee.api.NBTApi;
-import tk.shanebee.bee.api.NBTApi.ObjectType;
+import tk.shanebee.bee.api.NBT.NBTApi;
+import tk.shanebee.bee.api.NBT.NBTApi.ObjectType;
 
 @Name("NBT - Set Block with NBT")
 @Description("Set a block at a location to a block with NBT. BlockData is also supported when using MC 1.13+ and Skript 2.5+")

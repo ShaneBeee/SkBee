@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBT.NBTCustom;
 import tk.shanebee.bee.api.NBT.NBTCustomType;
-import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.NBT.NBTApi;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;

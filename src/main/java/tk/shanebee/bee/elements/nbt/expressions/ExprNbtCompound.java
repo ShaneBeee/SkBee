@@ -25,7 +25,7 @@ import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBT.NBTCustomBlock;
 import tk.shanebee.bee.api.NBT.NBTCustomEntity;
 import tk.shanebee.bee.api.NBT.NBTCustomTileEntity;
-import tk.shanebee.bee.api.NBTApi;
+import tk.shanebee.bee.api.NBT.NBTApi;
 
 import javax.annotation.Nullable;
 
