@@ -176,15 +176,15 @@
                     <relocations>
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
-                            <shadedPattern>tk.shanebee.bee.api.NBT</shadedPattern>
+                            <shadedPattern>com.shanebeestudios.skbee.api.NBT</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.github.shynixn.structureblocklib</pattern>
-                            <shadedPattern>tk.shanebee.bee.api.Structure</shadedPattern>
+                            <shadedPattern>com.shanebeestudios.skbee.api.structure</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.shanebeestudios.vf</pattern>
-                            <shadedPattern>tk.shanebee.bee.api.virtualfurnace</shadedPattern>
+                            <shadedPattern>com.shanebeestudios.skbee.api.virtualfurnace</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
@@ -194,7 +194,7 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.1.1</version>
                 <configuration>
-                    <excludePackageNames>tk.shanebee.bee.elements.*;tk.shanebee.bee.config;tk.shanebee.bee.metrics;tk.shanebee.bee.api.listener</excludePackageNames>
+                    <excludePackageNames>com.shanebeestudios.skbee.elements.*;com.shanebeestudios.skbee.config;com.shanebeestudios.skbee.metrics;com.shanebeestudios.skbee.api.listener</excludePackageNames>
                     <links>
                         <link>https://hub.spigotmc.org/javadocs/spigot/</link>
                         <link>https://shanebeestudios.com/docs/skript/JavaDocs/</link>
@@ -206,7 +206,5 @@
             </plugin>
         </plugins>
     </build>
-
-
 
 </project>
