@@ -16,5 +16,5 @@ types:
 	minecrafttag: minecraft tag¦s
 	structure: structure¦s
 	mirror: mirror¦s
-	rotation: rotation¦s
+	structurerotation: structure rotation¦s
 	blockstate: blockstate¦s
