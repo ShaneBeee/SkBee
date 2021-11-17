@@ -1,4 +1,4 @@
-version: ${project.version}
+version: 1.12.3
 
 types:
 	worldcreator: world creator
@@ -16,5 +16,5 @@ types:
 	minecrafttag: minecraft tag¦s
 	structure: structure¦s
 	mirror: mirror¦s
-	structurerotation: structure rotation¦s
+	rotation: rotation¦s
 	blockstate: blockstate¦s

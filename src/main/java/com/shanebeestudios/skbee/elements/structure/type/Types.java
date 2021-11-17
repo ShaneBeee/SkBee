@@ -76,8 +76,8 @@ public class Types {
                     }));
 
             EnumUtils<StructureRotation> rotation = new EnumUtils<>(StructureRotation.class);
-            Classes.registerClass(new ClassInfo<>(StructureRotation.class, "rotation")
-                    .user("rotations?")
+            Classes.registerClass(new ClassInfo<>(StructureRotation.class, "structurerotation")
+                    .user("structure ?rotations?")
                     .name("Structure - Rotation")
                     .description("Represents the different states of rotation for a structure. Requires MC 1.17.1+")
                     .examples("set rotation of structure {_s} to clockwise 90")
