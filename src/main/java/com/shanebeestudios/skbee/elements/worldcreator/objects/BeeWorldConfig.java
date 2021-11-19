@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Set;
 
 public class BeeWorldConfig {
 
@@ -40,18 +41,22 @@ public class BeeWorldConfig {
     }
 
     public void loadCustomWorlds() {
-        Util.log("Loading custom worlds...");
         ConfigurationSection section = worldConfig.getConfigurationSection("worlds");
         if (section != null) {
-            for (String key : section.getKeys(false)) {
+            Set<String> keys = section.getKeys(false);
+            if (keys.size() == 0) {
+                return;
+            }
+            Util.log("&6Loading custom worlds...");
+            for (String key : keys) {
                 BeeWorldCreator beeWorldCreator = loadWorld(key);
                 if (beeWorldCreator != null) {
                     WORLDS.put(key, beeWorldCreator);
                 }
             }
+            int size = WORLDS.size();
+            Util.log("&aSuccessfully loaded &b%s &acustom world%s", size, size > 1 ? "s" : "");
         }
-        int size = WORLDS.size();
-        Util.log("&aSuccessfully loaded &b%s &acustom world%s", size, size > 1 ? "s" : "");
     }
 
     public BeeWorldCreator loadWorld(String name) {
