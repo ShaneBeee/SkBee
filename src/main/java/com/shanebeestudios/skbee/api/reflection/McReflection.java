@@ -13,7 +13,6 @@ public class McReflection {
     private static final boolean NEW_NMS = Skript.isRunningMinecraft(1, 17);
 
     private static final Class<?> ENTITY_NMS_CLASS = ReflectionUtils.getNMSClass("Entity", "net.minecraft.world.entity");
-    private static final String NO_CLIP = NEW_NMS ? "P" : "noclip"; // "P" will probably change in future versions
     private static final Class<?> CHAT_MESSAGE_CLASS = ReflectionUtils.getNMSClass("ChatMessage", "net.minecraft.network.chat");
     private static final Method GET_NMS_COPY_METHOD;
 
@@ -33,7 +32,7 @@ public class McReflection {
         if (entity == null || ENTITY_NMS_CLASS == null) return;
         Object nmsEntity = ReflectionUtils.getNMSHandle(entity);
         if (nmsEntity == null) return;
-        ReflectionUtils.setField(NO_CLIP, ENTITY_NMS_CLASS, nmsEntity, !clip);
+        ReflectionUtils.setField(ReflectionConstants.ENTITY_NO_CLIP_FIELD, ENTITY_NMS_CLASS, nmsEntity, !clip);
     }
 
     @SuppressWarnings("ConstantConditions")
@@ -41,7 +40,7 @@ public class McReflection {
         if (entity == null || ENTITY_NMS_CLASS == null) return false;
         Object nmsEntity = ReflectionUtils.getNMSHandle(entity);
         if (nmsEntity == null) return false;
-        return !Boolean.parseBoolean(ReflectionUtils.getField(NO_CLIP, ENTITY_NMS_CLASS, nmsEntity).toString());
+        return !Boolean.parseBoolean(ReflectionUtils.getField(ReflectionConstants.ENTITY_NO_CLIP_FIELD, ENTITY_NMS_CLASS, nmsEntity).toString());
     }
 
     public static String getTranslateKey(ItemStack itemStack) {

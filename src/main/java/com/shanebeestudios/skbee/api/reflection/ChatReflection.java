@@ -53,8 +53,7 @@ public class ChatReflection {
         try {
             if (NEW_PRETTY_NBT) {
                 assert TEXT_TAG_VISITOR_CLASS != null;
-                // "a" may change when 1.18 comes out, we shall see
-                visit = TEXT_TAG_VISITOR_CLASS.getDeclaredMethod("a", NBT_BASE_CLASS);
+                visit = TEXT_TAG_VISITOR_CLASS.getDeclaredMethod(ReflectionConstants.TAG_VISITOR_VISIT_METHOD, NBT_BASE_CLASS);
             }
             assert CRAFT_CHAT_MESSAGE_CLASS != null;
             from_comp = CRAFT_CHAT_MESSAGE_CLASS.getMethod("fromComponent", ICHAT_BASE_COMPONENT_CLASS);
