@@ -42,6 +42,7 @@ public class SkBee extends JavaPlugin {
     }
 
     private static SkBee instance;
+    private Plugin skriptPlugin;
     private NBTApi nbtApi;
     private PluginManager pm;
     private Config config;
@@ -56,19 +57,18 @@ public class SkBee extends JavaPlugin {
         long start = System.currentTimeMillis();
         instance = this;
         this.config = new Config(this);
-        this.nbtApi = new NBTApi();
         MinecraftVersion.replaceLogger(LoggerBee.getLogger());
         this.pm = Bukkit.getPluginManager();
         PluginDescriptionFile desc = getDescription();
 
-        final Plugin SKRIPT = pm.getPlugin("Skript");
+        this.skriptPlugin = pm.getPlugin("Skript");
 
-        if (SKRIPT == null) {
+        if (skriptPlugin == null) {
             Util.log("&cDependency Skript was not found, plugin disabling.");
             pm.disablePlugin(this);
             return;
         }
-        if (!SKRIPT.isEnabled()) {
+        if (!skriptPlugin.isEnabled()) {
             Util.log("&cDependency Skript is not enabled, plugin disabling.");
             Util.log("&cThis could mean SkBee is being forced to load before Skript.");
             pm.disablePlugin(this);
@@ -92,6 +92,7 @@ public class SkBee extends JavaPlugin {
 
         addon = Skript.registerAddon(this);
         addon.setLanguageFileDirectory("lang");
+        this.nbtApi = new NBTApi();
 
         // Load Skript elements
         loadNBTElements();
@@ -343,6 +344,10 @@ public class SkBee extends JavaPlugin {
      */
     public static SkBee getPlugin() {
         return instance;
+    }
+
+    public Plugin getSkriptPlugin() {
+        return this.skriptPlugin;
     }
 
     /**
