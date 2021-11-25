@@ -81,13 +81,13 @@ public class EffCookingRecipe extends Effect {
         ItemType res = this.item.getSingle(event);
         Object ing = this.ingredient.getSingle(event);
         if (res == null) {
-            Skript.error("Error registering cooking recipe - result is null");
-            Skript.error("Current Item: §6" + this.toString(event, true));
+            RecipeUtil.error("Error registering cooking recipe - result is null");
+            RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
         }
         if (ing == null) {
-            Skript.error("Error registering cooking recipe - ingredient is null");
-            Skript.error("Current Item: §6" + this.toString(event, true));
+            RecipeUtil.error("Error registering cooking recipe - ingredient is null");
+            RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
         }
 
@@ -110,6 +110,11 @@ public class EffCookingRecipe extends Effect {
         }
         String group = this.group != null ? this.group.getSingle(event) : "";
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
+        if (key == null) {
+            RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
+            return;
+        }
+
         float xp = experience != null ? experience.getSingle(event).floatValue() : 0;
         int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : getDefaultCookTime(recipeType);
 

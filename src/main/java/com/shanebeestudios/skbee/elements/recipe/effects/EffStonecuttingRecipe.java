@@ -82,6 +82,10 @@ public class EffStonecuttingRecipe extends Effect {
         String group = this.group != null ? this.group.getSingle(event) : "";
 
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
+        if (key == null) {
+            RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
+            return;
+        }
 
         RecipeChoice choice;
         if (ingredient instanceof ItemType) {

@@ -90,6 +90,10 @@ public class EffCraftingRecipe extends Effect {
 
         String group = this.group != null ? this.group.getSingle(event) : null;
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
+        if (key == null) {
+            RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
+            return;
+        }
 
         // Remove duplicates on script reload
         RecipeUtil.removeRecipeByKey(key);
