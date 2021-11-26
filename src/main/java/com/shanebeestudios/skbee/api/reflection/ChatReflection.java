@@ -104,7 +104,7 @@ public class ChatReflection {
         Method SET_PREFIX1 = null;
         if (CRAFT_TEAM != null && NMS_TEAM != null && CRAFT_CHAT_MESSAGE != null) {
             try {
-                SET_PREFIX1 = NMS_TEAM.getDeclaredMethod("setPrefix", ICHAT_BASE_COMPONENT_CLASS);
+                SET_PREFIX1 = NMS_TEAM.getDeclaredMethod(ReflectionConstants.NMS_SCOREBOARD_TEAM_SET_PREFIX_METHOD, ICHAT_BASE_COMPONENT_CLASS);
                 PREFIX_COMP_METHOD1 = CRAFT_CHAT_MESSAGE.getDeclaredMethod("fromStringOrNull", String.class);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
