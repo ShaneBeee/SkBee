@@ -84,8 +84,8 @@ public class SkBee extends JavaPlugin {
             pm.disablePlugin(this);
             return;
         }
-        if (!Skript.isRunningMinecraft(1, 14, 4)) {
-            Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.14.4+ is supported!", Skript.getMinecraftVersion());
+        if (!Skript.isRunningMinecraft(1, 16, 5)) {
+            Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.16.5+ is supported!", Skript.getMinecraftVersion());
             pm.disablePlugin(this);
             return;
         }
