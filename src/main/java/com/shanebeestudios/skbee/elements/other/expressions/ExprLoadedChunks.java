@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Represents all currently loaded chunks in a world.")
 @Examples({"loop loaded chunks of world of player:",
         "set {_chunks} to loaded chunks of world \"world\""})
-@Since("INSERT VERSION")
+@Since("1.13.0")
 public class ExprLoadedChunks extends SimpleExpression<Chunk> {
 
     static {

@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Chunk Coordinates")
 @Description("Represents the coordinates of a chunk.")
 @Examples("set {_x} to chunk x of chunk at player")
-@Since("INSERT VERSION")
+@Since("1.13.0")
 public class ExprChunkCoords extends PropertyExpression<Chunk, Number> {
 
     static {

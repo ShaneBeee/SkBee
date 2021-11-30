@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Represents a block in a chunk. X/Z coords will be a value from 0 to 15.")
 @Examples({"set block at 1,1,1 in chunk at player to stone",
         "set {_b} to block at 8,64,8 in chunk at player"})
-@Since("INSERT VERSION")
+@Since("1.13.0")
 public class ExprBlockInChunk extends SimpleExpression<Block> {
 
     static {
