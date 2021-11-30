@@ -70,7 +70,7 @@
             <artifactId>item-nbt-api</artifactId>
             <!-- Temp 1.18 api -->
             <!--suppress MavenModelInspection -->
-            <version>1.18_WIP-SNAPSHOT</version>
+            <version>master-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
