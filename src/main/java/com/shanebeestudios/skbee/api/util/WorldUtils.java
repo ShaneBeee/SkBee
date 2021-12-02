@@ -5,7 +5,6 @@ import org.bukkit.World;
 
 public class WorldUtils {
 
-    private static final boolean SUPPORT_WORLD_MAX_HEIGHT = ReflectionUtils.methodExists("org.bukkit.generator.WorldInfo", "getMaxHeight");
     private static final boolean SUPPORT_WORLD_MIN_HEIGHT = ReflectionUtils.methodExists("org.bukkit.generator.WorldInfo", "getMinHeight");
 
     public static int getMinHeight(World world) {
@@ -16,10 +15,7 @@ public class WorldUtils {
     }
 
     public static int getMaxHeight(World world) {
-        if (SUPPORT_WORLD_MAX_HEIGHT) {
-            return world.getMaxHeight() - 1;
-        }
-        return 255;
+        return world.getMaxHeight() - 1;
     }
 
 }
