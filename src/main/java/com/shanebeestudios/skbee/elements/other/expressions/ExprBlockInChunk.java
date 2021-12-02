@@ -10,7 +10,9 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.WorldUtils;
 import org.bukkit.Chunk;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +32,7 @@ public class ExprBlockInChunk extends SimpleExpression<Block> {
     private Expression<Chunk> chunk;
     private Expression<Number> x,y,z;
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         x = (Expression<Number>) exprs[0];
@@ -45,9 +48,25 @@ public class ExprBlockInChunk extends SimpleExpression<Block> {
         Chunk chunk = this.chunk.getSingle(e);
         if (chunk == null) return null;
 
-        int x = this.x.getSingle(e).intValue();
-        int y = this.y.getSingle(e).intValue();
-        int z = this.z.getSingle(e).intValue();
+        Number xN = this.x.getSingle(e);
+        Number yN = this.y.getSingle(e);
+        Number zN = this.z.getSingle(e);
+
+        if (xN == null || yN == null || zN == null) {
+            return null;
+        }
+
+        int x = xN.intValue();
+        int y = yN.intValue();
+        int z = zN.intValue();
+        if (x < 0 || x > 15 || z < 0 || z > 15) {
+            return null;
+        }
+
+        World world = chunk.getWorld();
+        if (y < WorldUtils.getMinHeight(world) || y > WorldUtils.getMaxHeight(world)) {
+            return null;
+        }
         return new Block[]{chunk.getBlock(x,y,z)};
     }
 
