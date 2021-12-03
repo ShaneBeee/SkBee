@@ -10,11 +10,11 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.structure.StructureBee;
 import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
-import com.shanebeestudios.skbee.SkBee;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -60,7 +60,10 @@ public class ExprStructureObject extends SimpleExpression<StructureBee> {
         List<StructureBee> structures = new ArrayList<>();
         for (String file : fileString.getAll(e)) {
             assert STRUCTURE_BEE_MANAGER != null;
-            structures.add(STRUCTURE_BEE_MANAGER.getStructure(file));
+            StructureBee structure = STRUCTURE_BEE_MANAGER.getStructure(file);
+            if (structure != null) {
+                structures.add(structure);
+            }
         }
         return structures.toArray(new StructureBee[0]);
     }
