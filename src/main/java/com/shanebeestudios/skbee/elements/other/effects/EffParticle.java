@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Particle Spawn")
 @Description({"Spawn a particle. This system is more inline with how Bukkit deals with particles, hence the amount of patterns.",
+        "DO NOT USE '(spawn|play)' part of syntax, they're horribly slow at parsing and will be removed in the future, use '(lerp|draw|make)' instead.",
         "Some particles may be affected differently by these values, so let's break them down:",
         "\nfirst number = count, how many particles to spawn at once.",
         "\nparticle = the particle to spawn.",
@@ -30,14 +31,17 @@ import org.jetbrains.annotations.Nullable;
         "I believe some particles use the offset to set color. I'm not positive on this.",
         "\nextra = the extra data for this particle, depends on the particle used (normally speed).",
         "\nRequires Minecraft 1.13+"})
-@Examples({"play 3 of item particle using diamond at location of player",
-        "play 1 of block particle using dirt at location of target block",
-        "play 10 of poof at player offset by vector(2, 2, 2) with extra 0.5",
-        "play 20 of dust using dustOption(blue, 10) at location above target block",
-        "play 1 of dust_color_transition using dustTransition(blue, green, 3) at location of player",
-        "play 1 of vibration using vibration({loc1}, {loc2}, 1 second) at {loc1}"})
+@Examples({"make 3 of item particle using diamond at location of player",
+        "make 1 of block particle using dirt at location of target block",
+        "make 10 of poof at player offset by vector(2, 2, 2) with extra 0.5",
+        "draw 20 of dust using dustOption(blue, 10) at location above target block",
+        "draw 1 of dust_color_transition using dustTransition(blue, green, 3) at location of player",
+        "draw 1 of vibration using vibration({loc1}, {loc2}, 1 second) at {loc1}"})
 @Since("1.9.0")
 public class EffParticle extends Effect {
+
+    private static final String NEW_SPAWN = "(lerp|draw|make)";
+    private static final String OLD_SPAWN = "(spawn|play|lerp|draw|make) "; // we shall remove this in the future! (dec 3/2021)
 
     static {
         String moreData = "";
@@ -45,9 +49,9 @@ public class EffParticle extends Effect {
             moreData = "/dusttransition/vibration";
         }
         Skript.registerEffect(EffParticle.class,
-                "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" + moreData + "%] %directions% %locations% [(for|to) %-players%]",
-                "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" + moreData + "%] %directions% %locations% offset by %vector% [(for|to) %-players%]",
-                "(spawn|play) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" + moreData + "%] %directions% %locations% offset by %vector% with extra %number% [(for|to) %-players%]");
+                OLD_SPAWN + "%number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" + moreData + "%] %directions% %locations% [(for|to) %-players%]",
+                OLD_SPAWN + "%number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" + moreData + "%] %directions% %locations% offset by %vector% [(for|to) %-players%]",
+                OLD_SPAWN + "%number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" + moreData + "%] %directions% %locations% offset by %vector% with extra %number% [(for|to) %-players%]");
     }
 
     private int pattern;
@@ -65,6 +69,10 @@ public class EffParticle extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
+        if (parseResult.expr.startsWith("spawn") || parseResult.expr.startsWith("play")) {
+            Skript.error("(spawn|play) are very slow for this effect and will be removed in the future, please consider using new patterns '"
+                    + NEW_SPAWN + "'.");
+        }
         pattern = matchedPattern;
         count = (Expression<Number>) exprs[0];
         particle = (Expression<Particle>) exprs[1];
@@ -110,7 +118,7 @@ public class EffParticle extends Effect {
         String extra = this.extra != null ? "with extra " + this.extra.toString(e, d) : "";
         String players = this.players != null ? "to " + this.players.toString(e, d) : "";
 
-        return String.format("spawn %s of %s %s %s %s %s %s", this.count.toString(e, d), this.particle.toString(e, d),
+        return String.format("draw %s of %s %s %s %s %s %s", this.count.toString(e, d), this.particle.toString(e, d),
                 data, this.location.toString(e, d), offset, extra, players);
     }
 
