@@ -54,11 +54,11 @@ public class McReflection {
 
             try {
                 Object nmsItemStack = GET_NMS_COPY_METHOD.invoke(null, itemStackClone);
-                Method getName = nmsItemStack.getClass().getMethod("getName");
+                Method getName = nmsItemStack.getClass().getMethod(ReflectionConstants.NMS_ITEMSTACK_GET_HOVER_NAME_METHOD);
                 Object name = getName.invoke(nmsItemStack);
 
                 if (CHAT_MESSAGE_CLASS.isInstance(name)) {
-                    Method getKey = CHAT_MESSAGE_CLASS.getMethod("getKey");
+                    Method getKey = CHAT_MESSAGE_CLASS.getMethod(ReflectionConstants.NMS_CHAT_MESSAGE_GET_KEY_METHOD);
                     return ((String) getKey.invoke(name));
                 }
             } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException ignore) {
