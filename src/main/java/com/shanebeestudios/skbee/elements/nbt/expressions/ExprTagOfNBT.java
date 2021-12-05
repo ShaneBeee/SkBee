@@ -15,6 +15,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.NBT.NBTCustom;
+import com.shanebeestudios.skbee.api.NBT.NBTCustomTileEntity;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -121,6 +122,9 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
                 NBT_API.setTag(tag, compound, delta, type);
             } else {
                 NBT_API.setTag(tag, compound, delta);
+            }
+            if (compound instanceof NBTCustomTileEntity) {
+                ((NBTCustomTileEntity) compound).updateBlockstate();
             }
         } else if (mode == ChangeMode.DELETE) {
             if (HAS_PERSISTENCE && tag.equalsIgnoreCase("custom")) {
