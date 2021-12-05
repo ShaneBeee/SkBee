@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.MathUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
@@ -27,7 +28,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.shanebeestudios.skbee.api.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -449,7 +449,12 @@ public class NBTApi {
                 if (singleObject instanceof NBTCompound) {
                     NBTCompound nbt = (NBTCompound) singleObject;
                     compound.removeKey(key);
-                    compound.getOrCreateCompound(key).mergeCompound(nbt);
+                    try {
+                        NBTCompound newCompound = compound.getOrCreateCompound(key);
+                        if (newCompound != null) {
+                            newCompound.mergeCompound(nbt);
+                        }
+                    } catch (NbtApiException ignore) {}
                 }
             case NBTTagIntList:
                 if (singleObject instanceof Number) {
@@ -560,14 +565,16 @@ public class NBTApi {
         } else if ((type == NBTType.NBTTagCompound || (custom && isSingle)) && singleObject instanceof NBTCompound) {
             NBTCompound comp;
             if (custom) {
-                comp = compound.addCompound(key);
+                comp = compound.getOrCreateCompound(key);
             } else {
                 comp = compound.getCompound(key);
                 for (String compKey : comp.getKeys()) {
                     comp.removeKey(compKey);
                 }
             }
-            comp.mergeCompound(((NBTCompound) singleObject));
+            if (comp != null) {
+                comp.mergeCompound(((NBTCompound) singleObject));
+            }
 
         } else if (type == NBTType.NBTTagList || (custom && !isSingle && !(object instanceof Integer[]) && !(object instanceof Byte[]))) {
             if (MathUtil.isInt(singleObject)) {
