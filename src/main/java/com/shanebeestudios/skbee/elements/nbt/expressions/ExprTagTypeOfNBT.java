@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("NBT - Tag Type")
 @Description("Represents the NBT tag type of a tag in an NBT compound. This is mainly useful for debugging purposes.")
 @Examples("set {_type} to tag type of tag \"Pos\" of nbt compound of player")
-@Since("INSERT VERSION")
+@Since("1.13.1")
 public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
 
     static {
