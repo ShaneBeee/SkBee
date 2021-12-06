@@ -68,20 +68,13 @@ public class NBTApi {
     }
 
     private static void sendError(String error, Exception exception) {
-        Util.skriptError("&cInvalid NBT: &b" + error + "&c");
+        Util.skriptError("&cInvalid NBT: &7'&b" + error + "&7'&c");
         if (exception == null) return;
 
         if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
             exception.printStackTrace();
         } else {
-            String cause = exception.getCause().getCause().getCause().toString();
-            if (cause.contains("CommandSyntaxException")) {
-                String[] split = cause.split("CommandSyntaxException: ");
-                if (split.length > 1) {
-                    Util.skriptError("&cCause: &e" + split[1]);
-                }
-            }
-
+            Util.skriptError("&cCause: &e" + exception.getMessage());
         }
     }
 
