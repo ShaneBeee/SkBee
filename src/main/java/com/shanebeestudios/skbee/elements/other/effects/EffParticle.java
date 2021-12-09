@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
         "\nRequires Minecraft 1.13+"})
 @Examples({"make 3 of item particle using diamond at location of player",
         "make 1 of block particle using dirt at location of target block",
-        "make 10 of poof at player offset by vector(2, 2, 2) with extra 0.5",
+        "make 10 of poof at player with offset vector(2, 2, 2) with extra 0.5",
         "draw 20 of dust using dustOption(blue, 10) at location above target block",
         "draw 1 of dust_color_transition using dustTransition(blue, green, 3) at location of player",
         "draw 1 of vibration using vibration({loc1}, {loc2}, 1 second) at {loc1}"})
@@ -42,19 +42,17 @@ public class EffParticle extends Effect {
 
     private static final String NEW_SPAWN = "(lerp|draw|make)";
     private static final String OLD_SPAWN = "(spawn|play|lerp|draw|make) "; // we shall remove this in the future! (dec 3/2021)
+    private static final String OFFSET = "(with offset|1¦offset by)"; // we shall remove this in the future! (dec 8/2021)
 
     static {
         String moreData = "";
         if (Skript.isRunningMinecraft(1, 17)) {
             moreData = "/dusttransition/vibration";
         }
-        Skript.registerEffect(EffParticle.class,
-                OLD_SPAWN + "%number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" + moreData + "%] %directions% %locations% [(for|to) %-players%]",
-                OLD_SPAWN + "%number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" + moreData + "%] %directions% %locations% offset by %vector% [(for|to) %-players%]",
-                OLD_SPAWN + "%number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" + moreData + "%] %directions% %locations% offset by %vector% with extra %number% [(for|to) %-players%]");
+        Skript.registerEffect(EffParticle.class, OLD_SPAWN + "%number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" +
+                moreData + "%] %directions% %locations% [" + OFFSET + " %-vector%] [with extra %-number%] [(for|to) %-players%]");
     }
 
-    private int pattern;
     private Expression<Number> count;
     private Expression<Particle> particle;
     private Expression<Location> location;
@@ -69,18 +67,20 @@ public class EffParticle extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
-        if (parseResult.expr.startsWith("spawn") || parseResult.expr.startsWith("play")) {
+        if (parseResult.expr.startsWith("spawn") || parseResult.expr.startsWith("play")) { // we shall remove this in the future! (dec 3/2021)
             Skript.error("(spawn|play) are very slow for this effect and will be removed in the future, please consider using new patterns '"
                     + NEW_SPAWN + "'.");
         }
-        pattern = matchedPattern;
+        if (parseResult.mark == 1) { // we shall remove this in the future! (dec 8/2021)
+            Skript.error("'offset by %vector%' will not actually work here. Please use 'with offset %vector%' instead!");
+        }
         count = (Expression<Number>) exprs[0];
         particle = (Expression<Particle>) exprs[1];
         data = (Expression<Object>) exprs[2];
         location = Direction.combine((Expression<? extends Direction>) exprs[3], (Expression<? extends Location>) exprs[4]);
-        offset = pattern != 0 ? (Expression<Vector>) exprs[5] : null;
-        extra = pattern == 2 ? (Expression<Number>) exprs[6] : null;
-        players = (Expression<Player>) exprs[pattern + 5];
+        offset = (Expression<Vector>) exprs[5];
+        extra = (Expression<Number>) exprs[6];
+        players = (Expression<Player>) exprs[7];
         return true;
     }
 
@@ -89,24 +89,26 @@ public class EffParticle extends Effect {
     protected void execute(@NotNull Event e) {
         if (this.count == null || this.particle == null || this.location == null) return;
 
+        boolean hasExtra = this.extra != null;
         int count = this.count.getSingle(e).intValue();
         Particle particle = this.particle.getSingle(e);
         Location[] locations = this.location.getArray(e);
         Vector offset = this.offset != null ? this.offset.getSingle(e) : null;
-        double extra = this.extra != null ? this.extra.getSingle(e).doubleValue() : 0.0d;
+        double extra = hasExtra ? this.extra.getSingle(e).doubleValue() : 0.0d;
         Object data = this.data != null ? this.data.getSingle(e) : null;
         Player[] players = this.players != null ? this.players.getArray(e) : null;
 
+        if (hasExtra && offset == null) {
+            offset = new Vector(0, 0, 0);
+        }
+
         for (Location location : locations) {
-            switch (pattern) {
-                case 0:
-                    ParticleUtil.spawnParticle(players, particle, location, count, data);
-                    break;
-                case 1:
-                    ParticleUtil.spawnParticle(players, particle, location, count, offset, data);
-                    break;
-                case 2:
-                    ParticleUtil.spawnParticle(players, particle, location, count, offset, extra, data);
+            if (hasExtra) {
+                ParticleUtil.spawnParticle(players, particle, location, count, data, offset, extra);
+            } else if (offset != null) {
+                ParticleUtil.spawnParticle(players, particle, location, count, data, offset);
+            } else {
+                ParticleUtil.spawnParticle(players, particle, location, count, data);
             }
         }
     }

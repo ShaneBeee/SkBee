@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.reflection.ReflectionConstants;
+import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -14,7 +15,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
-import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -130,7 +130,7 @@ public class ParticleUtil {
         return "UNKNOWN";
     }
 
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Vector offset, double extra, Object data) {
+    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data, Vector offset, double extra) {
         if (offset == null) return;
         Object particleData = getData(particle, data);
         if (particle.getDataType() != Void.class && particleData == null) return;
@@ -150,7 +150,7 @@ public class ParticleUtil {
         }
     }
 
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Vector offset, Object data) {
+    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data, Vector offset) {
         if (offset == null) return;
         Object particleData = getData(particle, data);
         if (particle.getDataType() != Void.class && particleData == null) return;
