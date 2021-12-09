@@ -111,14 +111,9 @@ public class NBTApi {
         Util.log("&aSuccessfully loaded NBTApi!");
     }
 
-    private File getFile(String fileName) {
+    public File getFile(String fileName) {
         fileName = !fileName.endsWith(".dat") && !fileName.endsWith(".nbt") ? fileName + ".dat" : fileName;
-        File file = new File(fileName);
-        if (!file.exists()) {
-            return null;
-        } else {
-            return file;
-        }
+        return new File(fileName);
     }
 
     /**
