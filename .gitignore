@@ -1,3 +1,14 @@
 /dependency-reduced-pom.xml
 /.idea/
 /SkBee.iml
+
+# Compiled class file
+*.class
+
+/.gradle/
+/.settings/
+.project
+.classpath
+/build/
+/bin/
+/target/
