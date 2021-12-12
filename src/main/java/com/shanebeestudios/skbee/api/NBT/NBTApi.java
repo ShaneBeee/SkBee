@@ -40,7 +40,6 @@ import java.util.UUID;
  */
 public class NBTApi {
 
-    public static final boolean HAS_PERSISTENCE = Skript.isRunningMinecraft(1, 14);
     @SuppressWarnings("ConstantConditions")
     public static final boolean SUPPORTS_BLOCK_NBT = Skript.isRunningMinecraft(1, 16, 4) &&
             PersistentDataHolder.class.isAssignableFrom(Chunk.class);
@@ -182,7 +181,7 @@ public class NBTApi {
                 Block block = (Block) object;
                 BlockState blockState = block.getState();
 
-                if (isTileEntity(blockState)) {
+                if (blockState instanceof TileState) {
                     NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity((blockState));
                     NBTCompound updated = new NBTContainer(value);
                     if (updated.hasKey("custom")) {
@@ -729,21 +728,6 @@ public class NBTApi {
                     throw new IllegalArgumentException("Unknown tag type, please let the dev know -> type: " + type.toString());
         }
         return null;
-    }
-
-    /**
-     * Utility method to check if a block is actually a block tile
-     *
-     * @param blockState State to check
-     * @return True if block state is actually a tile
-     */
-    public static boolean isTileEntity(BlockState blockState) {
-        if (HAS_PERSISTENCE) {
-            return blockState instanceof TileState;
-        } else {
-            // Hacky method to check if a BlockState is actually a TileState on legacy versions
-            return !blockState.getClass().getName().endsWith("CraftBlockState");
-        }
     }
 
     /**

@@ -23,6 +23,7 @@ import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -73,7 +74,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 Block block = ((Block) object);
                 BlockState state = block.getState();
 
-                if (NBTApi.isTileEntity(state)) {
+                if (state instanceof TileState) {
                     compound = new NBTCustomTileEntity(state);
                 } else if (NBTApi.SUPPORTS_BLOCK_NBT) {
                     compound = new NBTCustomBlock(block).getData();

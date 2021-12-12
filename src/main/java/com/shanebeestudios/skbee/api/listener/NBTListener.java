@@ -6,6 +6,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.block.TileState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -70,7 +71,7 @@ public class NBTListener implements Listener {
 
     private void breakBlock(Block block) {
         BlockState blockState = block.getState();
-        if (NBTApi.isTileEntity(blockState)) return;
+        if (blockState instanceof TileState) return;
         if (!NBTApi.SUPPORTS_BLOCK_NBT) return;
         NBTCompound chunkContainer = new NBTChunk(block.getChunk()).getPersistentDataContainer();
 
@@ -91,7 +92,7 @@ public class NBTListener implements Listener {
         BlockState blockState = piston.getState();
 
         if (event.isSticky()) return;
-        if (NBTApi.isTileEntity(blockState)) return;
+        if (blockState instanceof TileState) return;
         if (!NBTApi.SUPPORTS_BLOCK_NBT) return;
 
         event.getBlocks().forEach(block -> {

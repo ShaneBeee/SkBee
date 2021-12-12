@@ -19,9 +19,7 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     public NBTCustomEntity(Entity entity) {
         super(entity);
         this.entity = entity;
-        if (NBTApi.HAS_PERSISTENCE) {
-            convert();
-        }
+        convert();
     }
 
     @Override
@@ -79,10 +77,7 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     @Override
     public String toString() {
         try {
-            if (NBTApi.HAS_PERSISTENCE) {
-                return getCustomNBTCompound().toString();
-            }
-            return super.toString();
+            return getCustomNBTCompound().toString();
         } catch (NbtApiException ignore) {
             return null;
         }

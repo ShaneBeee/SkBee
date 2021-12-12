@@ -20,9 +20,7 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     public NBTCustomTileEntity(BlockState tile) {
         super(tile);
         this.blockState = tile;
-        if (NBTApi.HAS_PERSISTENCE) {
-            convert();
-        }
+        convert();
     }
 
     public void updateBlockstate() {
@@ -84,10 +82,7 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     @Override
     public String toString() {
         try {
-            if (NBTApi.HAS_PERSISTENCE) {
-                return getCustomNBTCompound().toString();
-            }
-            return super.toString();
+            return getCustomNBTCompound().toString();
         } catch (NbtApiException ignore) {
             return null;
         }
