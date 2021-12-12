@@ -143,7 +143,7 @@ public class SkBee extends JavaPlugin {
                 SkriptToYaml.adapts(NBTContainer.class, (compound, map) -> map.put("nbt-compound", compound.toString()));
             }
             if (NBTApi.SUPPORTS_BLOCK_NBT) {
-                pm.registerEvents(new NBTListener(this), this);
+                pm.registerEvents(new NBTListener(), this);
             }
             Util.log("&5NBT Elements &asuccessfully loaded");
         } catch (IOException ex) {

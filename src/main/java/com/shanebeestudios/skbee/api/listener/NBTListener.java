@@ -1,13 +1,11 @@
 package com.shanebeestudios.skbee.api.listener;
 
+import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -16,9 +14,6 @@ import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPistonExtendEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.NBT.NBTCustomBlock;
-import com.shanebeestudios.skbee.api.NBT.NBTApi;
 
 public class NBTListener implements Listener {
 
@@ -27,10 +22,7 @@ public class NBTListener implements Listener {
     // called in Skript is handled before we touch it
     // This way a user can retrieve the nbt before it's deleted
 
-    private final SkBee plugin;
-
-    public NBTListener(SkBee plugin) {
-        this.plugin = plugin;
+    public NBTListener() {
     }
 
     // If a player breaks a block with NBT, remove the NBT
@@ -69,22 +61,7 @@ public class NBTListener implements Listener {
         event.blockList().forEach(this::breakBlock);
     }
 
-    private void breakBlock(Block block) {
-        BlockState blockState = block.getState();
-        if (blockState instanceof TileState) return;
-        if (!NBTApi.SUPPORTS_BLOCK_NBT) return;
-        NBTCompound chunkContainer = new NBTChunk(block.getChunk()).getPersistentDataContainer();
-
-        if (chunkContainer.hasKey("blocks")) {
-            NBTCompound blocksContainer = chunkContainer.getCompound("blocks");
-            String blockKey = getKey(block);
-            if (blocksContainer.hasKey(blockKey)) {
-                blocksContainer.removeKey(blockKey);
-            }
-        }
-    }
-
-    // If a piston moves a block with NBT, we shift the NBT
+    // If a piston moves a block with NBT, we remove the NBT
     @EventHandler(priority = EventPriority.MONITOR)
     private void onPistonPush(BlockPistonExtendEvent event) {
         if (event.isCancelled()) return;
@@ -94,33 +71,22 @@ public class NBTListener implements Listener {
         if (event.isSticky()) return;
         if (blockState instanceof TileState) return;
         if (!NBTApi.SUPPORTS_BLOCK_NBT) return;
-
-        event.getBlocks().forEach(block -> {
-            NBTCompound chunkContainer = new NBTChunk(block.getChunk()).getPersistentDataContainer();
-            if (chunkContainer.hasKey("blocks")) {
-                NBTCompound blocksContainer = chunkContainer.getCompound("blocks");
-                if (blocksContainer.hasKey(getKey(block))) {
-                    shiftBlock(block, blocksContainer, event.getDirection());
-                }
-            }
-        });
+        event.getBlocks().forEach(this::breakBlock);
     }
 
-    private void shiftBlock(Block block, NBTCompound compound, BlockFace direction) {
-        BlockData oldBlockData = block.getBlockData();
-        Block newBlock = block.getRelative(direction, 1);
-        NBTCompound oldData = new NBTCustomBlock(block).cloneCustomData();
+    private void breakBlock(Block block) {
+        BlockState blockState = block.getState();
+        if (blockState instanceof TileState) return;
+        if (!NBTApi.SUPPORTS_BLOCK_NBT) return;
+        NBTCompound chunkContainer = new NBTChunk(block.getChunk()).getPersistentDataContainer();
 
-        compound.removeKey(getKey(block));
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            if (newBlock.getBlockData().matches(oldBlockData)) {
-                new NBTCustomBlock(newBlock).getCustomData().mergeCompound(oldData);
+        if (chunkContainer.hasKey("blocks")) {
+            NBTCompound blocksContainer = chunkContainer.getCompound("blocks");
+            String blockKey = String.format("%s_%s_%s", block.getX(), block.getY(), block.getZ());
+            if (blocksContainer.hasKey(blockKey)) {
+                blocksContainer.removeKey(blockKey);
             }
-        }, 5);
-    }
-
-    private String getKey(Block block) {
-        return String.format("%s_%s_%s", block.getX(), block.getY(), block.getZ());
+        }
     }
 
 }
