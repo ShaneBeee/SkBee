@@ -4,9 +4,9 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>tk.shanebee</groupId>
+    <groupId>com.shanebeestudios</groupId>
     <artifactId>SkBee</artifactId>
-    <version>1.12.3</version>
+    <version>1.13.1</version>
 
     <properties>
         <maven.compiler.source>1.8</maven.compiler.source>
@@ -68,8 +68,9 @@
         <dependency>
             <groupId>com.github.tr7zw.Item-NBT-API</groupId>
             <artifactId>item-nbt-api</artifactId>
+            <!-- Temp 1.18 api -->
             <!--suppress MavenModelInspection -->
-            <version>2.8.0</version>
+            <version>master-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -111,8 +112,7 @@
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
-            <version>2.7</version>
-            <scope>provided</scope>
+            <version>2.11.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.goingoffskript</groupId>
@@ -133,7 +133,7 @@
                         <version>3.2.0</version>
                         <configuration>
                             <!-- Put here wherever you would like the plugin to build -->
-                            <outputDirectory>/Users/ShaneBee/Desktop/Server/SKRIPT-TESTING/Skript-117/plugins</outputDirectory>
+                            <outputDirectory>/Users/ShaneBee/Desktop/Server/SKRIPT-TESTING/Skript-118/plugins</outputDirectory>
                         </configuration>
                     </plugin>
                 </plugins>
@@ -192,7 +192,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.1.1</version>
+                <version>3.3.1</version>
                 <configuration>
                     <excludePackageNames>com.shanebeestudios.skbee.elements.*;com.shanebeestudios.skbee.config;com.shanebeestudios.skbee.metrics;com.shanebeestudios.skbee.api.listener</excludePackageNames>
                     <links>

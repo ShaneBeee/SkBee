@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.MathUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
@@ -27,7 +28,6 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.shanebeestudios.skbee.api.util.Util;
 
 import java.io.File;
 import java.io.IOException;
@@ -68,21 +68,34 @@ public class NBTApi {
     }
 
     private static void sendError(String error, Exception exception) {
-        Util.skriptError("&cInvalid NBT: &b" + error + "&c");
+        Util.skriptError("&cInvalid NBT: &7'&b" + error + "&7'&c");
         if (exception == null) return;
 
         if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
             exception.printStackTrace();
         } else {
-            String cause = exception.getCause().getCause().getCause().toString();
-            if (cause.contains("CommandSyntaxException")) {
-                String[] split = cause.split("CommandSyntaxException: ");
-                if (split.length > 1) {
-                    Util.skriptError("&cCause: &e" + split[1]);
-                }
-            }
-
+            Util.skriptError("&cCause: &e" + exception.getMessage());
         }
+    }
+
+    public static NBTCompound getNestedCompound(String tag, NBTCompound compound) {
+        if (compound == null) return null;
+        if (tag.contains(";")) {
+            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
+            for (int i = 0; i < splits.length - 1; i++) {
+                String split = splits[i];
+                compound = compound.getOrCreateCompound(split);
+            }
+        }
+        return compound;
+    }
+
+    public static String getNestedTag(String tag) {
+        if (tag.contains(";")) {
+            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
+            return splits[splits.length - 1];
+        }
+        return tag;
     }
 
     /**
@@ -98,14 +111,9 @@ public class NBTApi {
         Util.log("&aSuccessfully loaded NBTApi!");
     }
 
-    private File getFile(String fileName) {
+    public File getFile(String fileName) {
         fileName = !fileName.endsWith(".dat") && !fileName.endsWith(".nbt") ? fileName + ".dat" : fileName;
-        File file = new File(fileName);
-        if (!file.exists()) {
-            return null;
-        } else {
-            return file;
-        }
+        return new File(fileName);
     }
 
     /**
@@ -359,13 +367,8 @@ public class NBTApi {
         NBTCompound compound = nbtCompound;
         String key = tag;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
-            for (int i = 0; i < splits.length - 1; i++) {
-                if (compound.hasKey(splits[i])) {
-                    compound = compound.getOrCreateCompound(splits[i]);
-                }
-            }
-            key = splits[splits.length - 1];
+            compound = getNestedCompound(tag, compound);
+            key = getNestedTag(tag);
         }
         compound.removeKey(key);
     }
@@ -449,7 +452,12 @@ public class NBTApi {
                 if (singleObject instanceof NBTCompound) {
                     NBTCompound nbt = (NBTCompound) singleObject;
                     compound.removeKey(key);
-                    compound.getOrCreateCompound(key).mergeCompound(nbt);
+                    try {
+                        NBTCompound newCompound = compound.getOrCreateCompound(key);
+                        if (newCompound != null) {
+                            newCompound.mergeCompound(nbt);
+                        }
+                    } catch (NbtApiException ignore) {}
                 }
             case NBTTagIntList:
                 if (singleObject instanceof Number) {
@@ -520,12 +528,8 @@ public class NBTApi {
         NBTCompound compound = nbtCompound;
         String key = tag;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
-            for (int i = 0; i < splits.length - 1; i++) {
-                String split = splits[i];
-                compound = compound.getOrCreateCompound(split);
-            }
-            key = splits[splits.length - 1];
+            compound = getNestedCompound(key, compound);
+            key = getNestedTag(key);
         }
 
         boolean custom = !compound.hasKey(key);
@@ -560,14 +564,16 @@ public class NBTApi {
         } else if ((type == NBTType.NBTTagCompound || (custom && isSingle)) && singleObject instanceof NBTCompound) {
             NBTCompound comp;
             if (custom) {
-                comp = compound.addCompound(key);
+                comp = compound.getOrCreateCompound(key);
             } else {
                 comp = compound.getCompound(key);
                 for (String compKey : comp.getKeys()) {
                     comp.removeKey(compKey);
                 }
             }
-            comp.mergeCompound(((NBTCompound) singleObject));
+            if (comp != null) {
+                comp.mergeCompound(((NBTCompound) singleObject));
+            }
 
         } else if (type == NBTType.NBTTagList || (custom && !isSingle && !(object instanceof Integer[]) && !(object instanceof Byte[]))) {
             if (MathUtil.isInt(singleObject)) {
@@ -638,12 +644,8 @@ public class NBTApi {
     public Object getTag(String tag, NBTCompound compound) {
         if (compound == null) return null;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
-            for (int i = 0; i < splits.length - 1; i++) {
-                String split = splits[i];
-                compound = compound.getOrCreateCompound(split);
-            }
-            tag = splits[splits.length - 1];
+            compound = getNestedCompound(tag, compound);
+            tag = getNestedTag(tag);
         }
         NBTCustomType type = NBTCustomType.getByTag(compound, tag);
         if (type == null) {
@@ -669,12 +671,8 @@ public class NBTApi {
     public Object getTag(String tag, NBTCompound compound, NBTCustomType type) {
         if (compound == null) return null;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
-            for (int i = 0; i < splits.length - 1; i++) {
-                String split = splits[i];
-                compound = compound.getOrCreateCompound(split);
-            }
-            tag = splits[splits.length - 1];
+            compound = getNestedCompound(tag, compound);
+            tag = getNestedTag(tag);
         }
 
         switch (type) {

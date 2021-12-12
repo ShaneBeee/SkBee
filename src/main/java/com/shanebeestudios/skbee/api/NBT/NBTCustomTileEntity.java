@@ -25,6 +25,10 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
         }
     }
 
+    public void updateBlockstate() {
+        blockState.getBlock().getState().update();
+    }
+
     @Override
     public NBTCompound getCustomNBT() {
         return getPersistentDataContainer().getOrCreateCompound(KEY);
@@ -62,7 +66,11 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
         if (name.equals("custom")) {
             return getPersistentDataContainer().getOrCreateCompound(KEY);
         }
-        return super.getOrCreateCompound(name);
+        try {
+            return super.getOrCreateCompound(name);
+        } catch (NbtApiException ignore) {
+            return null;
+        }
     }
 
     @Override

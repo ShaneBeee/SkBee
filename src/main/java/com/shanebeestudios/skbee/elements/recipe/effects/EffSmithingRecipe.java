@@ -86,6 +86,10 @@ public class EffSmithingRecipe extends Effect {
         }
 
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
+        if (key == null) {
+            RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
+            return;
+        }
 
         //Remove duplicates on script reload
         RecipeUtil.removeRecipeByKey(key);

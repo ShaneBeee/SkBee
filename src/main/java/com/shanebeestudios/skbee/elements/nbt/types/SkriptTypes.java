@@ -1,10 +1,12 @@
 package com.shanebeestudios.skbee.elements.nbt.types;
 
+import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -16,6 +18,30 @@ import java.io.StreamCorruptedException;
 
 @SuppressWarnings({"unused", "NullableProblems"})
 public class SkriptTypes {
+
+    public static final Changer<NBTCompound> NBT_COMPOUND_CHANGER = new Changer<NBTCompound>() {
+        @Nullable
+        @Override
+        public Class<?>[] acceptChange(ChangeMode mode) {
+            if (mode == ChangeMode.ADD) {
+                return CollectionUtils.array(NBTCompound.class);
+            }
+            return null;
+        }
+
+        @Override
+        public void change(NBTCompound[] what, @Nullable Object[] delta, ChangeMode mode) {
+            if (delta[0] instanceof NBTCompound) {
+                NBTCompound changer = (NBTCompound) delta[0];
+
+                if (mode == ChangeMode.ADD) {
+                    for (NBTCompound nbtCompound : what) {
+                        nbtCompound.mergeCompound(changer);
+                    }
+                }
+            }
+        }
+    };
 
     static {
         Classes.registerClass(new ClassInfo<>(NBTCustomType.class, "nbttype")
@@ -111,7 +137,8 @@ public class SkriptTypes {
                     protected boolean canBeInstantiated() {
                         return false;
                     }
-                }));
+                })
+                .changer(NBT_COMPOUND_CHANGER));
     }
 
 }

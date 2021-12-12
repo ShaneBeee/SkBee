@@ -30,7 +30,12 @@ public class RecipeUtil {
      * @return New NamespacedKey
      */
     public static NamespacedKey getKey(String key) {
-        return new NamespacedKey(NAMESPACE, key.toLowerCase());
+        try {
+            return new NamespacedKey(NAMESPACE, key.toLowerCase());
+        } catch (IllegalArgumentException ex) {
+            error( ex.getMessage());
+            return null;
+        }
     }
 
     private static NamespacedKey getKeyByPlugin(String key) {

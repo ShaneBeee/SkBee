@@ -43,8 +43,7 @@ elements:
   auto-load-custom-worlds: true
 
 recipe:
-  # This is the namespace all recipes will be saved under, you can choose whatever you wish
-  # Example, when using the minecraft recipe command `/minecraft:recipe give playerName skrecipe:my_custom_recipe
-  # If upgrading to this plugin from SkRecipe, keep this namespace as `skrecipe` to ensure previous recipes
-  # loaded to players will continue to work
-  namespace: "skrecipe"
+  # This is the namespace all recipes will be saved under
+  # You can choose whatever you wish
+  # Example, when using the minecraft recipe command `/minecraft:recipe give playerName skbee:my_custom_recipe`
+  namespace: "skbee"

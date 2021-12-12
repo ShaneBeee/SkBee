@@ -61,7 +61,11 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
         if (name.equals("custom")) {
             return getPersistentDataContainer().getOrCreateCompound(KEY);
         }
-        return super.getOrCreateCompound(name);
+        try {
+            return super.getOrCreateCompound(name);
+        } catch (NbtApiException ignore) {
+            return null;
+        }
     }
 
     @Override

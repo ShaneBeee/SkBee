@@ -91,4 +91,24 @@ public class ReflectionUtils {
         return getHandle.invoke(player);
     }
 
+    /**
+     * Check if a class and method exist
+     *
+     * @param className  Class to check
+     * @param methodName Method to check
+     * @return True if both class and method exist
+     */
+    public static boolean methodExists(String className, String methodName) {
+        if (Skript.classExists(className)) {
+            try {
+                Class<?> clazz = Class.forName(className);
+                if (Skript.methodExists(clazz, methodName)) {
+                    return true;
+                }
+            } catch (ClassNotFoundException ignore) {
+            }
+        }
+        return false;
+    }
+
 }

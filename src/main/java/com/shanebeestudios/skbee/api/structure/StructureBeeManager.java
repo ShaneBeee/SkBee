@@ -1,31 +1,40 @@
 package com.shanebeestudios.skbee.api.structure;
 
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.structure.Structure;
 import org.bukkit.structure.StructureManager;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
+import java.util.Locale;
 import java.util.Map;
 
 public class StructureBeeManager {
 
-    private final Map<String,StructureBee> STRUCTURE_MAP = new HashMap<>();
+    private final Map<String, StructureBee> STRUCTURE_MAP = new HashMap<>();
     private final StructureManager STRUCTURE_MANAGER = Bukkit.getStructureManager();
 
-    @NotNull
     public StructureBee getStructure(String name) {
         if (STRUCTURE_MAP.containsKey(name)) {
             return STRUCTURE_MAP.get(name);
         } else {
+            name = name.toLowerCase(Locale.ROOT);
             NamespacedKey namespacedKey;
-            if (name.contains(":")) {
-                namespacedKey = NamespacedKey.fromString(name);
-            } else {
-                namespacedKey = NamespacedKey.minecraft(name);
+            try {
+                if (name.contains(":")) {
+                    namespacedKey = NamespacedKey.fromString(name);
+                } else {
+                    namespacedKey = NamespacedKey.minecraft(name);
+                }
+            } catch (IllegalArgumentException ex) {
+                Util.skriptError(ex.getMessage());
+                return null;
             }
 
+            if (namespacedKey == null) {
+                return null;
+            }
             Structure structure = STRUCTURE_MANAGER.loadStructure(namespacedKey, true);
             StructureBee structureBee;
             if (structure == null) {

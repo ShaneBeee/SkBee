@@ -15,10 +15,11 @@ public class Util {
     private static final String PREFIX = "&7[&bSk&3Bee&7] ";
     private static final String PREFIX_ERROR = "&7[&bSk&3Bee &cERROR&7] ";
     private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f0-9]){6}>");
+    private static final boolean SKRIPT_IS_THERE = SkBee.getPlugin().getSkriptPlugin() != null;
 
     public static String getColString(String string) {
         Matcher matcher = HEX_PATTERN.matcher(string);
-        if (Skript.isRunningMinecraft(1, 16)) {
+        if (SKRIPT_IS_THERE && Skript.isRunningMinecraft(1, 16)) {
 
             while (matcher.find()) {
                 final ChatColor hexColor = ChatColor.of(matcher.group().substring(1, matcher.group().length() - 1));

@@ -12,7 +12,6 @@ import ch.njol.util.Kleenean;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -20,18 +19,21 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 @Name("Open Sign")
-@Description("Open a sign's GUI to a player, to allow them to edit it. Requires Paper (not sure which version, but at least 1.12.x)")
+@Description({"Open a sign's GUI to a player, to allow them to edit it.",
+        "Requires Paper (not sure which version, but at least 1.12.x).",
+        "Spigot added support for this in MC 1.18"})
 @Examples({"open sign gui of target block to player",
         "open target block's sign gui to player"})
 public class EffOpenSign extends Effect {
 
     static {
-        if (Skript.methodExists(HumanEntity.class, "openSign", Sign.class)) {
+        if (Skript.methodExists(Player.class, "openSign", Sign.class)) {
             Skript.registerEffect(EffOpenSign.class,
                     "open sign [gui] [(for|of)] [%direction%] %location% to %player%",
                     "open [%direction%] %location%'[s] sign [gui] to %player%");
         }
     }
+
     @SuppressWarnings("null")
     private Expression<Location> locations;
     private Expression<Player> player;

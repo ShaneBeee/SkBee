@@ -53,8 +53,7 @@ public class ChatReflection {
         try {
             if (NEW_PRETTY_NBT) {
                 assert TEXT_TAG_VISITOR_CLASS != null;
-                // "a" may change when 1.18 comes out, we shall see
-                visit = TEXT_TAG_VISITOR_CLASS.getDeclaredMethod("a", NBT_BASE_CLASS);
+                visit = TEXT_TAG_VISITOR_CLASS.getDeclaredMethod(ReflectionConstants.TAG_VISITOR_VISIT_METHOD, NBT_BASE_CLASS);
             }
             assert CRAFT_CHAT_MESSAGE_CLASS != null;
             from_comp = CRAFT_CHAT_MESSAGE_CLASS.getMethod("fromComponent", ICHAT_BASE_COMPONENT_CLASS);
@@ -105,7 +104,7 @@ public class ChatReflection {
         Method SET_PREFIX1 = null;
         if (CRAFT_TEAM != null && NMS_TEAM != null && CRAFT_CHAT_MESSAGE != null) {
             try {
-                SET_PREFIX1 = NMS_TEAM.getDeclaredMethod("setPrefix", ICHAT_BASE_COMPONENT_CLASS);
+                SET_PREFIX1 = NMS_TEAM.getDeclaredMethod(ReflectionConstants.NMS_SCOREBOARD_TEAM_SET_PREFIX_METHOD, ICHAT_BASE_COMPONENT_CLASS);
                 PREFIX_COMP_METHOD1 = CRAFT_CHAT_MESSAGE.getDeclaredMethod("fromStringOrNull", String.class);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
