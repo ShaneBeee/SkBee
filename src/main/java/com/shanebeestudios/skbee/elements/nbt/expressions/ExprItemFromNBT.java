@@ -36,8 +36,8 @@ public class ExprItemFromNBT extends PropertyExpression<Object, ItemType> {
 
     static {
         Skript.registerExpression(ExprItemFromNBT.class, ItemType.class, ExpressionType.PROPERTY,
-                "item[s] from nbt[s] %strings/nbtcompounds%",
-                "nbt item[s] from %strings/nbtcompounds%");
+                "item[s] (from|of) nbt[s] %strings/nbtcompounds%",
+                "nbt item[s] (from|of) %strings/nbtcompounds%");
         NBT_API = SkBee.getPlugin().getNbtApi();
     }
 
