@@ -32,11 +32,9 @@ import java.util.List;
 public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
 
     static {
-        if (Skript.isRunningMinecraft(1, 13)) {
-            Skript.registerExpression(ExprMaterialChoice.class, MaterialChoice.class, ExpressionType.COMBINED,
-                    "material choice of %itemtypes%",
-                    "material choice of %minecrafttag%");
-        }
+        Skript.registerExpression(ExprMaterialChoice.class, MaterialChoice.class, ExpressionType.COMBINED,
+                "material choice of %itemtypes%",
+                "material choice of %minecrafttag%");
     }
 
     private int pattern;

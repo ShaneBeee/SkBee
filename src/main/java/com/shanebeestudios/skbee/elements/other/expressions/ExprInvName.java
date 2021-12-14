@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -20,41 +19,40 @@ import org.bukkit.inventory.Inventory;
 @Since("1.0.0")
 public class ExprInvName extends SimplePropertyExpression<Object, String> {
 
-	static {
-		if (Skript.isRunningMinecraft(1, 14))
-			register(ExprInvName.class, String.class, "(custom|inv[entory]) name", "inventories");
-	}
+    static {
+        register(ExprInvName.class, String.class, "(custom|inv[entory]) name", "inventories");
+    }
 
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		setExpr(exprs[0]);
-		return true;
-	}
+    @Override
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        setExpr(exprs[0]);
+        return true;
+    }
 
-	@Override
-	protected String getPropertyName() {
-		return "inventory name";
-	}
+    @Override
+    protected String getPropertyName() {
+        return "inventory name";
+    }
 
-	@Override
-	public String convert(Object o) {
-		if (o instanceof Inventory) {
-			if (!((Inventory) o).getViewers().isEmpty())
-				return ((Inventory) o).getViewers().get(0).getOpenInventory().getTitle();
-			else return null;
-		} else
-			return null;
-	}
+    @Override
+    public String convert(Object o) {
+        if (o instanceof Inventory) {
+            if (!((Inventory) o).getViewers().isEmpty())
+                return ((Inventory) o).getViewers().get(0).getOpenInventory().getTitle();
+            else return null;
+        } else
+            return null;
+    }
 
 
-	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
-	}
+    @Override
+    public Class<? extends String> getReturnType() {
+        return String.class;
+    }
 
-	@Override
-	public String toString(Event e, boolean d) {
-		return "Inventory name of " + getExpr().toString(e, d);
-	}
+    @Override
+    public String toString(Event e, boolean d) {
+        return "Inventory name of " + getExpr().toString(e, d);
+    }
 
 }

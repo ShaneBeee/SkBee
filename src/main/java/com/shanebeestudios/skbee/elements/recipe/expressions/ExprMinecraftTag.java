@@ -40,12 +40,10 @@ public class ExprMinecraftTag extends SimpleExpression<Object> {
     private static final String[] TAG_TYPE = new String[]{Tag.REGISTRY_ITEMS, Tag.REGISTRY_BLOCKS};
 
     static {
-        if (Skript.isRunningMinecraft(1, 13)) {
-            Skript.registerExpression(ExprMinecraftTag.class, Object.class, ExpressionType.COMBINED,
-                    "minecraft [(0¦item|1¦block)] tag[s] %strings%",
-                    "[all] minecraft [(0¦item|1¦block)] tags",
-                    "[all] item[type]s of minecraft [(0¦item|1¦block)] tag[s] %strings%");
-        }
+        Skript.registerExpression(ExprMinecraftTag.class, Object.class, ExpressionType.COMBINED,
+                "minecraft [(0¦item|1¦block)] tag[s] %strings%",
+                "[all] minecraft [(0¦item|1¦block)] tags",
+                "[all] item[type]s of minecraft [(0¦item|1¦block)] tag[s] %strings%");
     }
 
     private int pattern;

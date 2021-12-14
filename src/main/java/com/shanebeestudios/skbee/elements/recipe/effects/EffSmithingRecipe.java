@@ -11,19 +11,19 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.config.Config;
+import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.RecipeChoice.ExactChoice;
+import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.SmithingRecipe;
 import org.jetbrains.annotations.NotNull;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
-import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
 
 import javax.annotation.Nullable;
 
@@ -41,10 +41,8 @@ public class EffSmithingRecipe extends Effect {
     private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
-        if (Skript.isRunningMinecraft(1, 16)) {
-            Skript.registerEffect(EffSmithingRecipe.class,
-                    "register [new] smithing recipe for %itemtype% using %itemtype/materialchoice% and %itemtype/materialchoice% with id %string%");
-        }
+        Skript.registerEffect(EffSmithingRecipe.class,
+                "register [new] smithing recipe for %itemtype% using %itemtype/materialchoice% and %itemtype/materialchoice% with id %string%");
     }
 
     @SuppressWarnings("null")

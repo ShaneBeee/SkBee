@@ -26,18 +26,10 @@ import javax.annotation.Nullable;
 @Since("1.0.0")
 public class ExprHiddenFlags extends SimplePropertyExpression<ItemType, ItemType> {
 
-    private static final boolean HAS_DYE_FLAG = Skript.isRunningMinecraft(1, 16, 2);
-
     static {
-        if (HAS_DYE_FLAG) {
-            Skript.registerExpression(ExprHiddenFlags.class, ItemType.class, ExpressionType.PROPERTY,
-                    "%itemtype% with (0¦all|1¦enchant[s]|2¦destroy[s]|3¦potion[ ]effect[s]|4¦unbreakable|5¦attribute[s]|6¦dye) flag[s] hidden",
-                    "%itemtype% with hidden (0¦all|1¦enchant[s]|2¦destroy[s]|3¦potion[ ]effect[s]|4¦unbreakable|5¦attribute[s]|6¦dye) flag[s]");
-        } else {
-            Skript.registerExpression(ExprHiddenFlags.class, ItemType.class, ExpressionType.PROPERTY,
-                    "%itemtype% with (0¦all|1¦enchant[s]|2¦destroy[s]|3¦potion[ ]effect[s]|4¦unbreakable|5¦attribute[s]) flag[s] hidden",
-                    "%itemtype% with hidden (0¦all|1¦enchant[s]|2¦destroy[s]|3¦potion[ ]effect[s]|4¦unbreakable|5¦attribute[s]) flag[s]");
-        }
+        Skript.registerExpression(ExprHiddenFlags.class, ItemType.class, ExpressionType.PROPERTY,
+                "%itemtype% with (0¦all|1¦enchant[s]|2¦destroy[s]|3¦potion[ ]effect[s]|4¦unbreakable|5¦attribute[s]|6¦dye) flag[s] hidden",
+                "%itemtype% with hidden (0¦all|1¦enchant[s]|2¦destroy[s]|3¦potion[ ]effect[s]|4¦unbreakable|5¦attribute[s]|6¦dye) flag[s]");
     }
 
     @SuppressWarnings("null")
@@ -68,8 +60,7 @@ public class ExprHiddenFlags extends SimplePropertyExpression<ItemType, ItemType
                 meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
                 meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
                 meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-                if (HAS_DYE_FLAG)
-                    meta.addItemFlags(ItemFlag.HIDE_DYE);
+                meta.addItemFlags(ItemFlag.HIDE_DYE);
                 break;
             case 1:
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);

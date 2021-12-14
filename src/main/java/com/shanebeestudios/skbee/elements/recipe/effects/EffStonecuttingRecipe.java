@@ -11,18 +11,18 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.config.Config;
+import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.RecipeChoice.ExactChoice;
+import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
-import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
 
 @SuppressWarnings({"ConstantConditions", "NullableProblems"})
 @Name("Recipe - StoneCutting")
@@ -40,10 +40,8 @@ public class EffStonecuttingRecipe extends Effect {
     private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
-        if (Skript.isRunningMinecraft(1, 14)) {
-            Skript.registerEffect(EffStonecuttingRecipe.class,
-                    "register [new] stone[ ]cutt(ing|er) recipe for %itemtype% (using|with ingredient) %itemtype/materialchoice% with id %string% [in group %-string%]");
-        }
+        Skript.registerEffect(EffStonecuttingRecipe.class,
+                "register [new] stone[ ]cutt(ing|er) recipe for %itemtype% (using|with ingredient) %itemtype/materialchoice% with id %string% [in group %-string%]");
     }
 
     @SuppressWarnings("null")

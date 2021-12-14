@@ -19,8 +19,7 @@ public class Util {
 
     public static String getColString(String string) {
         Matcher matcher = HEX_PATTERN.matcher(string);
-        if (SKRIPT_IS_THERE && Skript.isRunningMinecraft(1, 16)) {
-
+        if (SKRIPT_IS_THERE) {
             while (matcher.find()) {
                 final ChatColor hexColor = ChatColor.of(matcher.group().substring(1, matcher.group().length() - 1));
                 final String before = string.substring(0, matcher.start());

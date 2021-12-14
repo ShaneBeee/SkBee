@@ -41,8 +41,7 @@ import java.util.UUID;
 public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")
-    public static final boolean SUPPORTS_BLOCK_NBT = Skript.isRunningMinecraft(1, 16, 4) &&
-            PersistentDataHolder.class.isAssignableFrom(Chunk.class);
+    public static final boolean SUPPORTS_BLOCK_NBT = PersistentDataHolder.class.isAssignableFrom(Chunk.class);
     private final Config CONFIG;
 
     public NBTApi() {

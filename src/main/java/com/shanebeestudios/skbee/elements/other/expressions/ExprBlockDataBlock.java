@@ -12,11 +12,11 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
-import com.shanebeestudios.skbee.api.util.Util;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -36,14 +36,12 @@ import java.util.Locale;
 public class ExprBlockDataBlock extends SimpleExpression<Object> {
 
     static {
-        if (Skript.isRunningMinecraft(1, 13)) {
-            if (Skript.classExists("ch.njol.skript.expressions.ExprBlockData")) {
-                PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
-                        "block[ ](data|state) (1¦tags|2¦tag %-string%|3¦without update[s])", "blocks");
-            } else {
-                PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
-                        "block[ ](data|state) [(1¦tags|2¦tag %-string%|3¦without update[s])]", "blocks");
-            }
+        if (Skript.classExists("ch.njol.skript.expressions.ExprBlockData")) {
+            PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
+                    "block[ ](data|state) (1¦tags|2¦tag %-string%|3¦without update[s])", "blocks");
+        } else {
+            PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
+                    "block[ ](data|state) [(1¦tags|2¦tag %-string%|3¦without update[s])]", "blocks");
         }
     }
 

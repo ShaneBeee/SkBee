@@ -53,7 +53,6 @@ import java.util.ArrayList;
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 
     private static final NBTApi NBT_API;
-    private static final boolean HAS_PERSISTENCE;
 
     static {
         Skript.registerExpression(ExprTagOfNBT.class, Object.class, ExpressionType.COMBINED,
@@ -62,7 +61,6 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
                 "%nbttype% %string% of %nbtcompound%",
                 "%string% %nbttype% of %nbtcompound%");
         NBT_API = SkBee.getPlugin().getNbtApi();
-        HAS_PERSISTENCE = Skript.isRunningMinecraft(1, 14);
     }
 
     private Expression<String> tag;
@@ -127,7 +125,7 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
                 ((NBTCustomTileEntity) compound).updateBlockstate();
             }
         } else if (mode == ChangeMode.DELETE) {
-            if (HAS_PERSISTENCE && tag.equalsIgnoreCase("custom")) {
+            if (tag.equalsIgnoreCase("custom")) {
                 if (compound instanceof NBTCustom) {
                     ((NBTCustom) compound).deleteCustomNBT();
                 }
