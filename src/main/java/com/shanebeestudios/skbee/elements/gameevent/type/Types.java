@@ -24,7 +24,7 @@ public class Types {
                         "See McWiki for more details -> https://minecraft.fandom.com/wiki/Sculk_Sensor#Vibration_amplitudes")
                 .usage(getGameEventNames())
                 .examples("")
-                .since("INSERT VERSION")
+                .since("1.14.0")
                 .parser(new Parser<GameEvent>() {
 
                     @Override

@@ -22,7 +22,7 @@ import java.io.IOException;
 @Examples({"set {_n} to nbt compound from file \"plugins/maScript/some-data.nbt\"",
         "set tag \"ma-tag\" of {_n} to 32",
         "save nbt file of {_n}"})
-@Since("INSERT VERSION")
+@Since("1.14.0")
 public class EffSaveNBTFile extends Effect {
 
     static {

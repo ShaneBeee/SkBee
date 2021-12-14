@@ -26,7 +26,7 @@ public class EvtGameEvents extends SkriptEvent {
                         "\tset {_e} to event-entity",
                         "\tif {_e} is a player:",
                         "\t\tpush {_e} up with speed 0.5")
-                .since("INSERT VERSION");
+                .since("1.14.0");
         Skript.registerEvent("Block Receive Game Event", EvtGameEvents.class, BlockReceiveGameEvent.class,
                         "block receive game[ ]event [%-gameevent%]")
                 .description("Called when a block receives a Minecraft game event. As of now the only block that receives these are Skulk sensors.",
@@ -36,7 +36,7 @@ public class EvtGameEvents extends SkriptEvent {
                         "\tif {_e} is a player:",
                         "\t\tif event-block is set:",
                         "\t\t\tdamage {_e} by 0.5")
-                .since("INSERT VERSION");
+                .since("1.14.0");
 
         EventValues.registerEventValue(GenericGameEvent.class, Entity.class, new Getter<Entity, GenericGameEvent>() {
             @Nullable

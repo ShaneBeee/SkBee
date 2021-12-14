@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Get/set the radius a game event will broadcast. Requires MC 1.17+")
 @Examples({"on game event:",
         "\tset game event radius to 20"})
-@Since("INSERT VERSION")
+@Since("1.14.0")
 public class ExprGameEventRadius extends SimpleExpression<Number> {
 
     static {
