@@ -89,7 +89,7 @@ public class Config {
         this.AUTO_LOAD_WORLDS = this.config.getBoolean("elements.auto-load-custom-worlds");
         String namespace = this.config.getString("recipe.namespace");
         if (namespace == null) {
-            namespace = "skrecipe";
+            namespace = "skbee";
         }
         this.RECIPE_NAMESPACE = namespace.toLowerCase();
     }
