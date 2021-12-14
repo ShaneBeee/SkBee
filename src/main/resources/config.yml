@@ -42,6 +42,10 @@ elements:
   # If disabled, you will need to load worlds with the load world effect
   auto-load-custom-worlds: true
 
+  # Enable Minecraft GameEvent elements
+  # Note: Only available on MC 1.17+
+  game-event: true
+
 recipe:
   # This is the namespace all recipes will be saved under
   # You can choose whatever you wish

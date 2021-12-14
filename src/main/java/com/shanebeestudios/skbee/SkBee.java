@@ -105,6 +105,7 @@ public class SkBee extends JavaPlugin {
         loadOtherElements();
         loadVirtualFurnaceElements();
         loadWorldCreatorElements();
+        loadGameEventElements();
 
         // Beta check + notice
         if (desc.getVersion().contains("Beta")) {
@@ -320,6 +321,24 @@ public class SkBee extends JavaPlugin {
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
+        }
+    }
+
+    private void loadGameEventElements() {
+        if (!this.config.ELEMENTS_GAME_EVENT) {
+            Util.log("&5Game Event Elements &cdisabled via config");
+            return;
+        }
+        if (Skript.classExists("org.bukkit.GameEvent")) {
+            try {
+                addon.loadClasses("com.shanebeestudios.skbee.elements.gameevent");
+                Util.log("&5Game Event Elements &asuccessfully loaded");
+            } catch (IOException e) {
+                e.printStackTrace();
+                pm.disablePlugin(this);
+            }
+        } else {
+            Util.log("&5Game Event Elements &cdisabled, only available on MC 1.17+");
         }
     }
 

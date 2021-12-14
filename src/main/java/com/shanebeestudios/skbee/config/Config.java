@@ -25,6 +25,7 @@ public class Config {
     public boolean ELEMENTS_TEXT_COMPONENT;
     public boolean ELEMENTS_PATHFINDING;
     public boolean ELEMENTS_WORLD_CREATOR;
+    public boolean ELEMENTS_GAME_EVENT;
     public boolean AUTO_LOAD_WORLDS;
     public String RECIPE_NAMESPACE;
 
@@ -84,6 +85,7 @@ public class Config {
         this.ELEMENTS_TEXT_COMPONENT = this.config.getBoolean("elements.text-component");
         this.ELEMENTS_PATHFINDING = this.config.getBoolean("elements.pathfinding");
         this.ELEMENTS_WORLD_CREATOR = this.config.getBoolean("elements.world-creator");
+        this.ELEMENTS_GAME_EVENT = this.config.getBoolean("elements.game-event");
         this.AUTO_LOAD_WORLDS = this.config.getBoolean("elements.auto-load-custom-worlds");
         String namespace = this.config.getString("recipe.namespace");
         if (namespace == null) {
