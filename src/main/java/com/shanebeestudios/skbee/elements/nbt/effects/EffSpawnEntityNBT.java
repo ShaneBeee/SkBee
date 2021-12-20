@@ -5,7 +5,6 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.effects.EffSpawn;
 import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -14,12 +13,11 @@ import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Location;
-import org.bukkit.World;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
-import org.bukkit.util.Consumer;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -32,11 +30,8 @@ import javax.annotation.Nullable;
 public class EffSpawnEntityNBT extends Effect {
 
     private static final NBTApi NBT_API;
-    private static final boolean HAS_CONSUMER;
 
     static {
-        HAS_CONSUMER = Skript.classExists("org.bukkit.util.Consumer") &&
-                Skript.methodExists(World.class, "spawn", Location.class, Class.class, Consumer.class);
         Skript.registerEffect(EffSpawnEntityNBT.class,
                 "spawn %entitytypes% [%directions% %locations%] with nbt %string/nbtcompound%",
                 "spawn %number% of %entitytypes% [%directions% %locations%] with nbt %string/nbtcompound%");
@@ -73,7 +68,7 @@ public class EffSpawnEntityNBT extends Effect {
             assert loc != null : locations;
             for (final EntityType type : et) {
                 for (int i = 0; i < a.doubleValue() * type.getAmount(); i++) {
-                    EffSpawn.lastSpawned = spawn(loc, type.data.getType(), value);
+                    spawn(loc, type.data.getType(), value);
                 }
             }
         }
@@ -85,13 +80,9 @@ public class EffSpawnEntityNBT extends Effect {
                 " " + locations.toString(e, debug) + " " + nbt.toString(e, debug);
     }
 
-    private <T extends Entity> Entity spawn(Location loc, Class<T> type, String nbt) {
-        if (HAS_CONSUMER) {
-            return loc.getWorld().spawn(loc, type, ent -> NBT_API.addNBT(ent, nbt, NBTApi.ObjectType.ENTITY));
-        }
-        Entity e = loc.getWorld().spawn(loc, type);
-        NBT_API.addNBT(e, nbt, NBTApi.ObjectType.ENTITY);
-        return e;
+    private <T extends Entity> void spawn(Location loc, Class<T> type, String nbt) {
+        Entity entity = loc.getWorld().spawn(loc, type, ent -> NBT_API.addNBT(ent, nbt, NBTApi.ObjectType.ENTITY));
+        SkriptUtils.setLastSpawned(entity);
     }
 
 }
