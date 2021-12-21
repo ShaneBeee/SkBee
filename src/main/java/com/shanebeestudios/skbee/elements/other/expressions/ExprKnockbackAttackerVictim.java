@@ -40,33 +40,21 @@ public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> {
     }
 
     @Override
-    protected Entity[] get(@NotNull Event e) {
-        if (ent == 1) {
-            return new Entity[]{getVictim(e)};
-        } else {
-            return new Entity[]{getAttacker(e)};
+    protected Entity[] get(@NotNull Event event) {
+        if (event instanceof EntityKnockbackByEntityEvent) {
+            EntityKnockbackByEntityEvent knockbackEvent = (EntityKnockbackByEntityEvent) event;
+            if (ent == 1) {
+                return new Entity[]{knockbackEvent.getHitBy()};
+            } else {
+                return new Entity[]{knockbackEvent.getEntity()};
+            }
         }
+        return null;
     }
 
     @Override
     public @NotNull Class<? extends Entity> getReturnType() {
         return Entity.class;
-    }
-
-    @Nullable
-    private static Entity getAttacker(final @Nullable Event e) {
-        if (e instanceof EntityKnockbackByEntityEvent) {
-            return ((EntityKnockbackByEntityEvent) e).getHitBy();
-        }
-        return null;
-    }
-
-    @Nullable
-    private static Entity getVictim(final @Nullable Event e) {
-        if (e instanceof EntityKnockbackByEntityEvent) {
-            return ((EntityKnockbackByEntityEvent) e).getEntity();
-        }
-        return null;
     }
 
     @Override
