@@ -29,40 +29,39 @@ public class EffOpenSign extends Effect {
     static {
         if (Skript.methodExists(Player.class, "openSign", Sign.class)) {
             Skript.registerEffect(EffOpenSign.class,
-                    "open sign [gui] [(for|of)] [%direction%] %location% to %player%",
-                    "open [%direction%] %location%'[s] sign [gui] to %player%");
+                    "open sign [gui] [(for|of)] [%direction%] %location% to %players%",
+                    "open [%direction%] %location%'[s] sign [gui] to %players%");
         }
     }
 
     @SuppressWarnings("null")
     private Expression<Location> locations;
-    private Expression<Player> player;
-
+    private Expression<Player> players;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         locations = Direction.combine((Expression<? extends Direction>) exprs[0], (Expression<? extends Location>) exprs[1]);
-        player = (Expression<Player>) exprs[2];
+        players = (Expression<Player>) exprs[2];
         return true;
     }
 
     @Override
     protected void execute(@NotNull Event e) {
         Location location = locations.getSingle(e);
-        Player player = this.player.getSingle(e);
-        if (location == null || player == null) return;
+        if (location == null) return;
 
         BlockState block = location.getBlock().getState();
         if (block instanceof Sign) {
-            player.openSign(((Sign) block));
+            for (Player player : players.getArray(e)) {
+                player.openSign(((Sign) block));
+            }
         }
-
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "open sign for " + locations.toString(e, d) + " to " + player.toString(e, d);
+        return "open sign for " + locations.toString(e, d) + " to " + players.toString(e, d);
     }
 
 }
