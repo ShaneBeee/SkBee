@@ -10,19 +10,20 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.NBT.NBTApi;
+import com.shanebeestudios.skbee.api.NBT.NBTApi.ObjectType;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.ItemTag;
-import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import com.shanebeestudios.skbee.api.NBT.NBTApi;
-import com.shanebeestudios.skbee.api.NBT.NBTApi.ObjectType;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -36,18 +37,12 @@ import java.util.List;
 @Since("1.5.0")
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
-    private static final boolean HAS_ITEM = Skript.classExists("net.md_5.bungee.api.chat.hover.content.Item");
-    private static final boolean HAS_TEXT = Skript.classExists("net.md_5.bungee.api.chat.hover.content.Text");
+    private static final NBTApi NBT_API = SkBee.getPlugin().getNbtApi();
 
     static {
-        if (HAS_ITEM) {
-            Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
-                    "[a] [new] hover event showing %itemtype%",
-                    "[a] [new] hover event showing %strings%");
-        } else {
-            Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
-                    "[a] [new] hover event showing %strings%");
-        }
+        Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
+                "[a] [new] hover event showing %strings%",
+                "[a] [new] hover event showing %itemtype%");
     }
 
     private int pattern;
@@ -56,7 +51,12 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
-        this.pattern = HAS_ITEM ? matchedPattern : 1;
+        if (matchedPattern == 1 && !NBT_API.isEnabled()) {
+            Skript.error("NBTApi is currently unavailable, thus this expression with ItemType cannot be used right now.",
+                    ErrorQuality.SEMANTIC_ERROR);
+            return false;
+        }
+        this.pattern = matchedPattern;
         object = (Expression<Object>) exprs[0];
         return true;
     }
@@ -66,29 +66,21 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     protected HoverEvent[] get(Event e) {
         if (object == null) return null;
 
-        if (pattern == 1) {
+        if (pattern == 0) {
             String[] string = ((String[]) this.object.getArray(e));
-            if (HAS_TEXT) {
-                List<Content> texts = new ArrayList<>();
-                for (int i = 0; i < string.length; i++) {
-                    texts.add(new Text(string[i] + (i < (string.length - 1) ? System.lineSeparator() : "")));
-                }
-                return new HoverEvent[]{new HoverEvent(Action.SHOW_TEXT, texts)};
-            } else {
-                TextComponent[] comps = new TextComponent[string.length];
-                for (int i = 0; i < string.length; i++) {
-                    comps[i] = new TextComponent(string[i] + (i < (string.length - 1) ? System.lineSeparator() : ""));
-                }
-                return new HoverEvent[]{new HoverEvent(Action.SHOW_TEXT, comps)};
+            List<Content> texts = new ArrayList<>();
+            for (int i = 0; i < string.length; i++) {
+                texts.add(new Text(string[i] + (i < (string.length - 1) ? System.lineSeparator() : "")));
             }
-        } else if (pattern == 0) {
+            return new HoverEvent[]{new HoverEvent(Action.SHOW_TEXT, texts)};
+        } else if (pattern == 1) {
             ItemType itemType = (ItemType) object.getSingle(e);
             assert itemType != null;
             ItemStack itemStack = itemType.getRandom();
             if (itemStack == null) return null;
 
-            String id = "minecraft:" + itemStack.getType().toString().toLowerCase();
-            String nbt = new NBTApi().getNBT(itemStack, ObjectType.ITEM_STACK);
+            String id = itemStack.getType().getKey().toString();
+            String nbt = NBT_API.getNBT(itemStack, ObjectType.ITEM_STACK);
             Item item = new Item(id, itemStack.getAmount(), ItemTag.ofNbt(nbt));
             return new HoverEvent[]{new HoverEvent(Action.SHOW_ITEM, item)};
         }
