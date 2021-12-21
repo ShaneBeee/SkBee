@@ -68,7 +68,16 @@ public class ExprMinecraftTag extends SimpleExpression<Object> {
             Bukkit.getTags(TAG_TYPE[tagPattern], Material.class).forEach(tags::add);
         } else {
             for (String s : strings.getArray(event)) {
-                NamespacedKey key = NamespacedKey.minecraft(s.replace("minecraft:", "").toLowerCase(Locale.ROOT));
+                NamespacedKey key;
+                s = s.toLowerCase(Locale.ROOT);
+                if (s.contains(":")) {
+                    if (s.split(":").length > 2) {
+                        continue;
+                    }
+                    key = NamespacedKey.fromString(s);
+                } else {
+                    key = NamespacedKey.minecraft(s);
+                }
                 Tag<Material> tag = Bukkit.getTag(TAG_TYPE[tagPattern], key, Material.class);
                 if (tag != null) {
                     tags.add(tag);
