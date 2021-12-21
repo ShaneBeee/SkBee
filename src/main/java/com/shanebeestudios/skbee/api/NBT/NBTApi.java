@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.api.NBT;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.SkBee;
@@ -43,9 +42,11 @@ public class NBTApi {
     @SuppressWarnings("ConstantConditions")
     public static final boolean SUPPORTS_BLOCK_NBT = PersistentDataHolder.class.isAssignableFrom(Chunk.class);
     private final Config CONFIG;
+    private final boolean ENABLED;
 
     public NBTApi() {
         CONFIG = SkBee.getPlugin().getPluginConfig();
+        ENABLED = forceLoadNBT();
     }
 
     /**
@@ -96,17 +97,27 @@ public class NBTApi {
         return tag;
     }
 
-    /**
-     * Force the NBT-API to load
-     * <p>This is used to force load the API and make sure its compatible
-     * before actually loading NBT elements. We want to make sure its compatible
-     * before the user actually executes their code.</p>
-     */
-    public void forceLoadNBT() {
+    private boolean forceLoadNBT() {
         Util.log("&aLoading NBTApi...");
-        NBTItem loadingItem = new NBTItem(new ItemStack(Material.STONE));
-        loadingItem.mergeCompound(new NBTContainer("{}"));
+        try {
+            NBTItem loadingItem = new NBTItem(new ItemStack(Material.STONE));
+            loadingItem.mergeCompound(new NBTContainer("{}"));
+        } catch (Exception ignore) {
+            Util.log("&cFailed to load NBTApi!");
+            return false;
+        }
         Util.log("&aSuccessfully loaded NBTApi!");
+        return true;
+    }
+
+    /**
+     * Check if NBTApi is enabled
+     * <p>This will fail if NBT_API is not available on this server version</p>
+     *
+     * @return True if enabled, otherwise false
+     */
+    public boolean isEnabled() {
+        return ENABLED;
     }
 
     public File getFile(String fileName) {
@@ -455,7 +466,8 @@ public class NBTApi {
                         if (newCompound != null) {
                             newCompound.mergeCompound(nbt);
                         }
-                    } catch (NbtApiException ignore) {}
+                    } catch (NbtApiException ignore) {
+                    }
                 }
             case NBTTagIntList:
                 if (singleObject instanceof Number) {

@@ -126,9 +126,7 @@ public class SkBee extends JavaPlugin {
             Util.log("&5NBT Elements &cdisabled via config");
             return;
         }
-        try {
-            nbtApi.forceLoadNBT();
-        } catch (Exception ignore) {
+        if (!this.nbtApi.isEnabled()) {
             String ver = Skript.getMinecraftVersion().toString();
             Util.log("&5NBT Elements &cDISABLED!");
             Util.log(" - Your server version [&b" + ver + "&7] is not currently supported by the NBT-API");
