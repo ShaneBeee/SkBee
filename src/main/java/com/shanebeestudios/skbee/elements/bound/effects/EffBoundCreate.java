@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.WorldUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -20,7 +21,7 @@ import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 
 @Name("Bound - Create/Remove")
 @Description("Create/Remove a bound with id between 2 locations. " +
-        "Optional value \"full\" is a bound from Y=0 to max height of world.")
+        "Optional value \"full\" is a bound from min to max height of world.")
 @Examples({"create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
         "create a full bound with id \"spawn\" between {loc} and location of player",
         "delete bound with id \"my.home\""})
@@ -82,10 +83,10 @@ public class EffBoundCreate extends Effect {
                 // clone to prevent changing original location variables
                 lesser = lesser.clone();
                 greater = greater.clone();
-                World w = greater.getWorld();
-                int max = w.getMaxHeight() - 1;
+                int max = worldG.getMaxHeight() - 1;
+                int min = WorldUtils.getMinHeight(worldG);
 
-                lesser.setY(0);
+                lesser.setY(min);
                 greater.setY(max);
             }
             Bound bound = new Bound(lesser, greater, id);
