@@ -1,7 +1,11 @@
 package com.shanebeestudios.skbee.elements.bound.config;
 
+import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.WorldUtils;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -13,6 +17,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class BoundConfig {
+
+    private static final String UPDATED_18_HEIGHTS = "updated_18_heights";
 
     private final SkBee plugin;
     private File boundFile;
@@ -33,16 +39,42 @@ public class BoundConfig {
         }
         boundConfig = YamlConfiguration.loadConfiguration(boundFile);
         loadBounds();
+
+        // Update heights for 1.18 worlds
+        if (Skript.isRunningMinecraft(1, 18) && !boundConfig.getBoolean(UPDATED_18_HEIGHTS)) {
+            update18Heights();
+        }
     }
 
     private void loadBounds() {
         ConfigurationSection section = boundConfig.getConfigurationSection("bounds");
         if (section == null) return;
-        for (String string : section.getKeys(true)) {
-            if (section.get(string) instanceof Bound) {
-                boundsMap.put(string, ((Bound) section.get(string)));
+        for (String key : section.getKeys(true)) {
+            Object bound = section.get(key);
+            if (bound instanceof Bound) {
+                boundsMap.put(key, ((Bound) bound));
             }
         }
+    }
+
+    private void update18Heights() {
+        Util.log("Updating bounds:");
+        for (Bound bound : boundsMap.values()) {
+            int lesserY = bound.getLesserY();
+            int greaterY = bound.getGreaterY();
+            World world = bound.getWorld();
+            if (lesserY == 0) {
+                int minHeight = WorldUtils.getMinHeight(world);
+                int maxHeight = WorldUtils.getMaxHeight(world);
+                if (greaterY == 255 || greaterY == maxHeight) {
+                    bound.setGreaterY(maxHeight);
+                    bound.setLesserY(minHeight);
+                    Util.log("Updating bound with id '%s'", bound.getId());
+                }
+            }
+        }
+        boundConfig.set(UPDATED_18_HEIGHTS, true);
+        saveAllBounds();
     }
 
     public void saveBound(Bound bound) {
@@ -65,8 +97,10 @@ public class BoundConfig {
 
     public void saveAllBounds() {
         for (Bound bound : boundsMap.values()) {
-            saveBound(bound);
+            boundConfig.set("bounds." + bound.getId(), bound);
+            boundsMap.put(bound.getId(), bound);
         }
+        saveConfig();
     }
 
     private void saveConfig() {
