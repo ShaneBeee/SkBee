@@ -190,6 +190,7 @@ public class BeeWorldCreator {
         File newWorldFile = new File(worldSaveLocation, this.worldName);
         if (worldFile.exists()) {
             try {
+                this.world.save();
                 FileUtils.copyDirectory(worldFile, newWorldFile);
                 File uuidFile = new File(newWorldFile, "uid.dat");
                 if (uuidFile.exists()) {
