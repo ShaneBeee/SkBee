@@ -63,7 +63,7 @@ public class BoundConfig {
             int lesserY = bound.getLesserY();
             int greaterY = bound.getGreaterY();
             World world = bound.getWorld();
-            if (lesserY == 0) {
+            if (lesserY == 0 && world != null) {
                 int minHeight = WorldUtils.getMinHeight(world);
                 int maxHeight = WorldUtils.getMaxHeight(world);
                 if (greaterY == 255 || greaterY == maxHeight) {
