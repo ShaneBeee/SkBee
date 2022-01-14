@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("NBT - Tags")
 @Description("Get all tags of an NBT compound.")
 @Examples({"set {_t::*} to nbt tags of {_n}", "set {_t::*} to nbt tags of nbt compound of player"})
-@Since("INSERT VERSION")
+@Since("1.14.2")
 public class ExprTagsOfNBT extends SimpleExpression<String> {
 
     static {
