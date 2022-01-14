@@ -97,14 +97,17 @@ public class ChatReflection {
     private static final Class<?> CRAFT_TEAM = ReflectionUtils.getOBCClass("scoreboard.CraftTeam");
     private static final Class<?> NMS_TEAM = ReflectionUtils.getNMSClass("ScoreboardTeam", "net.minecraft.world.scores");
     private static final Method SET_PREFIX;
+    private static final Method SET_SUFFIX;
     private static final Method PREFIX_COMP_METHOD;
 
     static {
         Method PREFIX_COMP_METHOD1 = null;
         Method SET_PREFIX1 = null;
+        Method SET_SUFFIX1 = null;
         if (CRAFT_TEAM != null && NMS_TEAM != null && CRAFT_CHAT_MESSAGE != null) {
             try {
                 SET_PREFIX1 = NMS_TEAM.getDeclaredMethod(ReflectionConstants.NMS_SCOREBOARD_TEAM_SET_PREFIX_METHOD, ICHAT_BASE_COMPONENT_CLASS);
+                SET_SUFFIX1 = NMS_TEAM.getDeclaredMethod(ReflectionConstants.NMS_SCOREBOARD_TEAM_SET_SUFFIX_METHOD, ICHAT_BASE_COMPONENT_CLASS);
                 PREFIX_COMP_METHOD1 = CRAFT_CHAT_MESSAGE.getDeclaredMethod("fromStringOrNull", String.class);
             } catch (NoSuchMethodException e) {
                 e.printStackTrace();
@@ -112,6 +115,7 @@ public class ChatReflection {
         }
         PREFIX_COMP_METHOD = PREFIX_COMP_METHOD1;
         SET_PREFIX = SET_PREFIX1;
+        SET_SUFFIX = SET_SUFFIX1;
     }
 
     /**
@@ -133,6 +137,30 @@ public class ChatReflection {
             Object prefixComp = PREFIX_COMP_METHOD.invoke(null, prefix);
 
             SET_PREFIX.invoke(nmsTeam, prefixComp);
+        } catch (IllegalAccessException | InvocationTargetException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Util method for setting team suffixes on 1.13+ with no char limit
+     *
+     * @param team   Team to set suffix for
+     * @param suffix Suffix to set
+     */
+    @SuppressWarnings("deprecation") // This is a Paper deprecation
+    public static void setTeamSuffix(Team team, String suffix) {
+        if (CRAFT_TEAM == null || PREFIX_COMP_METHOD == null || SET_PREFIX == null) {
+            team.setPrefix("");
+            team.setSuffix("");
+            return;
+        }
+
+        try {
+            Object nmsTeam = ReflectionUtils.getField("team", CRAFT_TEAM, team);
+            Object prefixComp = PREFIX_COMP_METHOD.invoke(null, suffix);
+
+            SET_SUFFIX.invoke(nmsTeam, prefixComp);
         } catch (IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }

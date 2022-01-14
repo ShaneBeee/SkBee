@@ -8,6 +8,7 @@ public class ReflectionConstants {
     public static String TAG_VISITOR_VISIT_METHOD = get("null", "a", "a");
     public static String ENTITY_NO_CLIP_FIELD = get("noclip", "P", "Q");
     public static String NMS_SCOREBOARD_TEAM_SET_PREFIX_METHOD = get("setPrefix", "setPrefix", "b");
+    public static String NMS_SCOREBOARD_TEAM_SET_SUFFIX_METHOD = get("setSuffix", "setSuffix", "c"); // TODO c = a guess
     public static String NMS_ITEMSTACK_GET_HOVER_NAME_METHOD = get("getName", "getName", "v");
     public static String NMS_CHAT_MESSAGE_GET_KEY_METHOD = get("getKey", "getKey", "i");
 

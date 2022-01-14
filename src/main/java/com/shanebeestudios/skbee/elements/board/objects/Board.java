@@ -166,6 +166,10 @@ public class Board {
         return this.on;
     }
 
+    public Scoreboard getScoreboard() {
+        return scoreboard;
+    }
+
     private String getColString(String string) {
         return ChatColor.translateAlternateColorCodes('&', string);
     }

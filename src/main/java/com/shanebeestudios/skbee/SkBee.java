@@ -14,6 +14,7 @@ import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.board.listener.PlayerBoardListener;
+import com.shanebeestudios.skbee.elements.board.objects.BeeTeams;
 import com.shanebeestudios.skbee.elements.board.objects.Board;
 import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
@@ -50,6 +51,7 @@ public class SkBee extends JavaPlugin {
     private SkriptAddon addon;
     private VirtualFurnaceAPI virtualFurnaceAPI;
     private BeeWorldConfig beeWorldConfig;
+    private BeeTeams beeTeams;
     private StructureBeeManager structureBeeManager = null;
 
     @Override
@@ -171,8 +173,9 @@ public class SkBee extends JavaPlugin {
             return;
         }
         try {
+            beeTeams = new BeeTeams();
             addon.loadClasses("com.shanebeestudios.skbee.elements.board");
-            pm.registerEvents(new PlayerBoardListener(), this);
+            pm.registerEvents(new PlayerBoardListener(this), this);
             // If there are players online during a reload, let's give them a board
             Bukkit.getOnlinePlayers().forEach(Board::createBoard);
             Util.log("&5Scoreboard Elements &asuccessfully loaded");
@@ -411,4 +414,9 @@ public class SkBee extends JavaPlugin {
     public StructureBeeManager getStructureBeeManager() {
         return structureBeeManager;
     }
+
+    public BeeTeams getBeeTeams() {
+        return beeTeams;
+    }
+
 }
