@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -24,25 +24,19 @@ import java.util.List;
 import java.util.Locale;
 
 @Name("Block Data - Block")
-@Description({"Get block data from a block. You can get a string of block data, all the tags in a block data or a specific tag. ",
-        "You can also set a block data for a block or set a specific tag for block data. This syntax is only available for MC 1.13+ ",
-        "Skript 2.5 added a new block data system that differs slightly from SkBee. That said, when using that version of Skript ",
-        "the only available syntax here will be 'block data tags', 'block data tag \"tag here\"' and 'block data without updates', ",
-        "these will not be optional."})
+@Description({"Customize block data from a block. You can get all the tags in a block data or a specific tag.",
+        "You can set a specific tag of block data, or set blockdata of a block without updates",
+        "(will prevent physics updates of neighbouring blocks.)(This supports blockdata objects and ItemTypes (from Skript) or strings.)"})
 @Examples({"set {_data} to block data of target block of player", "set {_data::*} to block data tags of target block of player",
-        "set {_water} to block data tag \"waterlogged\" of event-block", "set block data of target block to \"minecraft:carrots[age=7]\"",
+        "set {_water} to block data tag \"waterlogged\" of event-block",
+        "set block data without updates of target block to oak_fence[]",
         "set block data tag \"waterlogged\" of event-block to true"})
 @Since("1.0.0")
 public class ExprBlockDataBlock extends SimpleExpression<Object> {
 
     static {
-        if (Skript.classExists("ch.njol.skript.expressions.ExprBlockData")) {
-            PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
-                    "block[ ](data|state) (1¦tags|2¦tag %-string%|3¦without update[s])", "blocks");
-        } else {
-            PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
-                    "block[ ](data|state) [(1¦tags|2¦tag %-string%|3¦without update[s])]", "blocks");
-        }
+        PropertyExpression.register(ExprBlockDataBlock.class, Object.class,
+                "block[ ](data|state) (1¦tags|2¦tag %-string%|3¦without update[s])", "blocks");
     }
 
     private Expression<String> tag;
@@ -61,9 +55,10 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
     @Override
     protected Object[] get(Event event) {
         List<Object> list = new ArrayList<>();
+        String tagString = this.tag != null ? this.tag.getSingle(event) : "";
         for (Block block : blocks.getAll(event)) {
             if (parse == 2) {
-                String tag = getTag(block.getBlockData().getAsString(), this.tag.getSingle(event));
+                String tag = getTag(block.getBlockData().getAsString(), tagString);
                 if (tag == null) return null;
 
                 if (isBoolean(tag)) {
@@ -86,15 +81,15 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-        if (mode == Changer.ChangeMode.SET) {
+    public Class<?>[] acceptChange(ChangeMode mode) {
+        if (mode == ChangeMode.SET) {
             return CollectionUtils.array(Object.class);
         }
         return null;
     }
 
     @Override
-    public void change(Event e, Object[] delta, Changer.ChangeMode mode) {
+    public void change(Event e, Object[] delta, ChangeMode mode) {
         String obj = delta == null ? "" : delta[0].toString();
         for (Block block : blocks.getAll(e)) {
             BlockData blockData;
@@ -120,11 +115,23 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
                 case 1:
                     // Dont think this will work, so we shall ignore it
                     return;
-                // Block Data
-                default:
+                // Block Data without update
+                case 3:
                     try {
-                        blockData = Bukkit.createBlockData(obj);
-                        block.setBlockData(blockData, parse != 3);
+                        if (delta != null) {
+                            Object object = delta[0];
+                            if (object instanceof BlockData) {
+                                blockData = ((BlockData) object);
+                            } else if (object instanceof String) {
+                                blockData = Bukkit.createBlockData(((String) object));
+                            } else if (object instanceof ItemType) {
+                                ItemType itemType = (ItemType) object;
+                                blockData = itemType.getMaterial().createBlockData();
+                            } else {
+                                return;
+                            }
+                            block.setBlockData(blockData, false);
+                        }
                     } catch (IllegalArgumentException ex) {
                         Util.debug("Could not parse block data: %s", obj);
                     }
