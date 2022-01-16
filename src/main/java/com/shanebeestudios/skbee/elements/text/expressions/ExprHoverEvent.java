@@ -42,7 +42,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     static {
         Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
                 "[a] [new] hover event showing %strings%",
-                "[a] [new] hover event showing %itemtype%");
+                "[a] [new] hover event showing [item] %itemtype%");
     }
 
     private int pattern;
@@ -75,7 +75,9 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             return new HoverEvent[]{new HoverEvent(Action.SHOW_TEXT, texts)};
         } else if (pattern == 1) {
             ItemType itemType = (ItemType) object.getSingle(e);
-            assert itemType != null;
+            if (itemType == null) {
+                return null;
+            }
             ItemStack itemStack = itemType.getRandom();
             if (itemStack == null) return null;
 
