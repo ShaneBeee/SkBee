@@ -12,19 +12,21 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.reflection.McReflection;
+import com.shanebeestudios.skbee.api.util.Util;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
+import net.kyori.adventure.translation.Translatable;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Material;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.jetbrains.annotations.NotNull;
-import com.shanebeestudios.skbee.api.NBT.NBTApi;
-import com.shanebeestudios.skbee.api.util.Util;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ import java.util.List;
 @Description({"Create a new text component. Can have hover and click events added to it. You can also create a translate component, ",
         "this will send to the client, and the client will translate based on their language. You can use either an item type or a ",
         "translate string, you can find these in your Minecraft jar 'assets/minecraft/lang/<lang file>.json'.",
+        "As of Paper 1.17.1, several more objects can translate including GameRules, PotionEffectTypes, Attributes, Difficulty, Enchantments, ",
+        "FireworkEffectTypes, Entities and Blocks.",
         "Some components have extra objects, you can use strings or other text components here."})
 @Examples({"set {_comp::1} to text component from \"hi player \"",
         "set {_comp::2} to text component of \"hover over me for a special message!\"",
@@ -47,11 +51,12 @@ import java.util.List;
 public class ExprTextComponent extends SimpleExpression<BaseComponent> {
 
     private static final NBTApi api = SkBee.getPlugin().getNbtApi();
+    private static final boolean HAS_TRANSLATION = Skript.classExists("net.kyori.adventure.translation.Translatable");
 
     static {
         Skript.registerExpression(ExprTextComponent.class, BaseComponent.class, ExpressionType.COMBINED,
                 "[a] [new] text component[s] (from|of) %strings%",
-                "[a] [new] translate component[s] (from|of) %itemtypes/strings%",
+                "[a] [new] translate component[s] (from|of) %objects%",
                 "[a] [new] translate component[s] (from|of) %string% (with|using) %objects%");
     }
 
@@ -78,14 +83,10 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
                 BaseComponent[] baseComponents = TextComponent.fromLegacyText(Util.getColString((String) object));
                 components.add(new TextComponent(baseComponents));
             } else if (pattern == 1) {
-                String translate;
-                if (object instanceof ItemType) {
-                    ItemType itemType = (ItemType) object;
-                    translate = translate(itemType);
-                } else {
-                    translate = (String) object;
+                String translate = getTranslation(object);
+                if (translate != null) {
+                    components.add(new TranslatableComponent(translate));
                 }
-                components.add(new TranslatableComponent(translate));
             } else {
                 String string = ((String) translation.getSingle(e));
                 Object[] objects = this.objects.getAll(e);
@@ -110,7 +111,20 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
         return "a new text component from " + translation.toString(e, d);
     }
 
-    private String translate(ItemType itemType) {
+    private String getTranslation(Object object) {
+        if (object instanceof ItemType) {
+            return translateItemType(((ItemType) object));
+        } else if (HAS_TRANSLATION && object instanceof Translatable) {
+            return ((Translatable) object).translationKey();
+        } else if (HAS_TRANSLATION && object instanceof Entity) {
+            return ((Entity) object).getType().translationKey();
+        } else if (object instanceof String) {
+            return ((String) object);
+        }
+        return null;
+    }
+
+    private String translateItemType(ItemType itemType) {
         ItemStack itemStack = itemType.getRandom();
         assert itemStack != null;
         String trans = McReflection.getTranslateKey(itemStack);
@@ -142,7 +156,6 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
             }
         }
         return type + ".minecraft." + raw;
-
     }
 
 }
