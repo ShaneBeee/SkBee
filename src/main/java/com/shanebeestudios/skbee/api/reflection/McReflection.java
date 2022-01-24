@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.reflection;
 
+import ch.njol.skript.Skript;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -12,6 +13,7 @@ public class McReflection {
     private static final Class<?> ENTITY_NMS_CLASS = ReflectionUtils.getNMSClass("Entity", "net.minecraft.world.entity");
     private static final Class<?> CHAT_MESSAGE_CLASS = ReflectionUtils.getNMSClass("ChatMessage", "net.minecraft.network.chat");
     private static final Method GET_NMS_COPY_METHOD;
+    private static final boolean HAS_PAPER_TRANSLATION_KEY_METHOD = Skript.methodExists(ItemStack.class, "translationKey");
 
     static {
         Method getNMSCopy1;
@@ -42,6 +44,11 @@ public class McReflection {
 
     public static String getTranslateKey(ItemStack itemStack) {
         if (GET_NMS_COPY_METHOD == null || CHAT_MESSAGE_CLASS == null) return null;
+
+        // Paper has a semi-new method for this (added probably in 1.17.x)
+        if (HAS_PAPER_TRANSLATION_KEY_METHOD) {
+            return itemStack.translationKey();
+        }
 
         ItemStack itemStackClone = itemStack.clone();
         ItemMeta itemMeta = itemStackClone.getItemMeta();
