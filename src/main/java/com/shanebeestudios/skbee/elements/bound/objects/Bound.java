@@ -171,7 +171,7 @@ public class Bound implements ConfigurationSerializable {
      * @return Location of greater corner
      */
     public Location getGreaterCorner() {
-        return new Location(Bukkit.getWorld(world), x, y, z);
+        return new Location(Bukkit.getWorld(world), x2, y2, z2);
     }
 
     /**
@@ -180,7 +180,7 @@ public class Bound implements ConfigurationSerializable {
      * @return Location of lesser corner
      */
     public Location getLesserCorner() {
-        return new Location(Bukkit.getWorld(world), x2, y2, z2);
+        return new Location(Bukkit.getWorld(world), x, y, z);
     }
 
     /**
