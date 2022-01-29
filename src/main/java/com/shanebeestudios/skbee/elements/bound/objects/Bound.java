@@ -15,6 +15,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
 
 @SuppressWarnings("unused")
 public class Bound implements ConfigurationSerializable {
@@ -27,6 +28,8 @@ public class Bound implements ConfigurationSerializable {
     private int z2;
     private final String world;
     private String id;
+    private List<UUID> owners = new ArrayList<>();
+    private List<UUID> members = new ArrayList<>();
 
     /**
      * Create a new bounding box between 2 sets of coordinates
@@ -276,6 +279,50 @@ public class Bound implements ConfigurationSerializable {
         this.id = id;
     }
 
+    public List<UUID> getOwners() {
+        return owners;
+    }
+
+    public void setOwners(List<UUID> owners) {
+        this.owners = owners;
+    }
+
+    public void clearOwners() {
+        this.owners.clear();
+    }
+
+    public void addOwner(UUID owner) {
+        if (!this.owners.contains(owner)) {
+            this.owners.add(owner);
+        }
+    }
+
+    public void removeOwner(UUID owner) {
+        this.owners.remove(owner);
+    }
+
+    public List<UUID> getMembers() {
+        return members;
+    }
+
+    public void setMembers(List<UUID> members) {
+        this.members = members;
+    }
+
+    public void clearMembers() {
+        this.members.clear();
+    }
+
+    public void addMember(UUID member) {
+        if (!this.members.contains(member)) {
+            this.members.add(member);
+        }
+    }
+
+    public void removeMember(UUID member) {
+        this.members.remove(member);
+    }
+
     public String toString() {
         return this.id;
     }
@@ -299,6 +346,13 @@ public class Bound implements ConfigurationSerializable {
         result.put("z2", z2);
         result.put("id", id);
 
+        List<String> owners = new ArrayList<>();
+        this.owners.forEach(uuid -> owners.add(uuid.toString()));
+        List<String> members = new ArrayList<>();
+        this.members.forEach(uuid -> members.add(uuid.toString()));
+        result.put("owners", owners);
+        result.put("members", members);
+
         return result;
     }
 
@@ -318,7 +372,29 @@ public class Bound implements ConfigurationSerializable {
         int z2 = ((Number) args.get("z2")).intValue();
         String id = String.valueOf(args.get("id"));
 
-        return new Bound(world, x, y, z, x2, y2, z2, id);
+        Bound bound = new Bound(world, x, y, z, x2, y2, z2, id);
+
+        if (args.containsKey("owners")) {
+            List<String> owners = (List<String>) args.get("owners");
+            List<UUID> ownerUUIDs = new ArrayList<>();
+            owners.forEach(owner -> {
+                UUID uuid = UUID.fromString(owner);
+                ownerUUIDs.add(uuid);
+            });
+            bound.setOwners(ownerUUIDs);
+        }
+
+        if (args.containsKey("members")) {
+            List<String> members = (List<String>) args.get("members");
+            List<UUID> memberUUIDs = new ArrayList<>();
+            members.forEach(member -> {
+                UUID uuid = UUID.fromString(member);
+                memberUUIDs.add(uuid);
+            });
+            bound.setMembers(memberUUIDs);
+        }
+
+        return bound;
     }
 
 }
