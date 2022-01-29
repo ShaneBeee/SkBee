@@ -8,7 +8,6 @@ import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
-import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -130,10 +129,8 @@ public class Bound implements ConfigurationSerializable {
             return null;
         }
         BoundingBox box = new BoundingBox(x, y, z, x2, y2, z2);
-        Vector v = getLesserCorner().toVector().subtract(getGreaterCorner().toVector());
-        Collection<Entity> nearbyEntitiesByType = getGreaterCorner().getNearbyEntitiesByType(type, v.getX(), v.getY(), v.getZ());
-        return new ArrayList<>(nearbyEntitiesByType);
-
+        Collection<Entity> nearbyEntities = world.getNearbyEntities(box, entity -> type.isAssignableFrom(entity.getClass()));
+        return new ArrayList<>(nearbyEntities);
     }
 
     /**
