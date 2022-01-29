@@ -354,7 +354,12 @@ public class SkBee extends JavaPlugin {
             this.virtualFurnaceAPI.disableAPI();
         }
 
-        Board.clearBoards();
+        if (this.config.ELEMENTS_BOARD) {
+            Board.clearBoards();
+        }
+        if (this.boundConfig != null) {
+            this.boundConfig.saveAllBounds();
+        }
     }
 
     /**
