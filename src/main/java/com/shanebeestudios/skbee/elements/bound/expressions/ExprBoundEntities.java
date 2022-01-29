@@ -1,0 +1,73 @@
+package com.shanebeestudios.skbee.elements.bound.expressions;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import ch.njol.skript.entity.EntityData;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import org.bukkit.entity.Entity;
+import org.bukkit.event.Event;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Name("Bound - Entities")
+@Description("Get all the entities within a bound. NOTE: If the chunk in a bound is unloaded, entities will also be unloaded.")
+@Examples({"loop entities of bound with id \"my-bound\":",
+        "\tif loop-entity is a cow or pig:",
+        "\t\tkill loop-entity"})
+@Since("INSERT VERSION")
+public class ExprBoundEntities extends SimpleExpression<Entity> {
+
+    static {
+        Skript.registerExpression(ExprBoundEntities.class, Entity.class, ExpressionType.SIMPLE,
+                "[(all [[of] the]|the)] %*entitydatas% of [bound] %bounds%");
+    }
+
+    private Expression<EntityData<?>> entityDatas;
+    private Expression<Bound> bounds;
+
+    @Override
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        entityDatas = (Expression<EntityData<?>>) exprs[0];
+        bounds = (Expression<Bound>) exprs[1];
+        return true;
+    }
+
+    @Nullable
+    @Override
+    protected Entity[] get(Event event) {
+        List<Entity> entities = new ArrayList<>();
+        for (Bound bound : bounds.getArray(event)) {
+            for (EntityData<?> entityData : entityDatas.getArray(event)) {
+                Class<? extends Entity> type = entityData.getType();
+                entities.addAll(bound.getEntities(type));
+            }
+        }
+        return entities.toArray(new Entity[0]);
+    }
+
+    @Override
+    public boolean isSingle() {
+        return false;
+    }
+
+    @Override
+    public Class<? extends Entity> getReturnType() {
+        return Entity.class;
+    }
+
+    @Override
+    public String toString(@Nullable Event e, boolean d) {
+        return this.entityDatas.toString(e, d) + " of bound[s] " + this.bounds.toString(e, d);
+    }
+
+}

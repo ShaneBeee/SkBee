@@ -1,0 +1,82 @@
+package com.shanebeestudios.skbee.elements.bound.expressions;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
+import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import org.bukkit.event.Event;
+import org.jetbrains.annotations.Nullable;
+
+@Name("Bound - ID")
+@Description({"Get/set the id of a bound. When setting the ID of a bound, if another bound has that ID, this will fail with an error in console.",
+        "You cannot set the IDs of multiple bounds at once."})
+@Examples({"set {_id} to id of first element of bounds at player to \"farm\"",
+        "loop all bounds at player:",
+        "\tset id of loop-bound to \"%player%-%id of loop-bound%\"",
+        "set {_id} to id of event-bound",
+        "send \"You entered bound '%id of loop-bound%'\""})
+@Since("INSERT VERSION")
+public class ExprBoundID extends SimplePropertyExpression<Bound, String> {
+
+    static {
+        register(ExprBoundID.class, String.class, "[bound] id", "bounds");
+    }
+
+    @Nullable
+    @Override
+    public String convert(Bound bound) {
+        return bound.getId();
+    }
+
+    @Nullable
+    @Override
+    public Class<?>[] acceptChange(ChangeMode mode) {
+        if (!getExpr().isSingle()) {
+            Skript.error("Can't set the id of multiple bounds at once!");
+            return null;
+        }
+        if (mode == ChangeMode.SET) {
+            return CollectionUtils.array(String.class);
+        }
+        return null;
+    }
+
+    @Override
+    public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+        if (delta == null || !getExpr().isSingle()) return;
+
+        String id = ((String) delta[0]);
+        Bound bound = getExpr().getSingle(event);
+        if (bound == null) return;
+
+        BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
+        if (boundConfig.boundExists(id)) {
+            // We don't want to rename a bound if the name already exists
+            Util.skriptError("Bound with ID '%s' already exists, you can not rename bound with id '%s' to that.", id, bound.getId());
+            return;
+        }
+        boundConfig.removeBound(bound);
+        bound.setId(id);
+        boundConfig.saveBound(bound);
+
+    }
+
+    @Override
+    protected String getPropertyName() {
+        return "bound id";
+    }
+
+    @Override
+    public Class<? extends String> getReturnType() {
+        return String.class;
+    }
+
+}

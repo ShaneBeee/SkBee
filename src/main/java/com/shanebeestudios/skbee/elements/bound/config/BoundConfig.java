@@ -89,6 +89,10 @@ public class BoundConfig {
         saveConfig();
     }
 
+    public boolean boundExists(String id) {
+        return boundsMap.containsKey(id);
+    }
+
     public Bound getBoundFromID(String id) {
         if (boundsMap.containsKey(id))
             return boundsMap.get(id);

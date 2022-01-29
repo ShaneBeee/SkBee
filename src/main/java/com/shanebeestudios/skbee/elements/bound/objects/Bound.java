@@ -6,9 +6,12 @@ import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,16 +27,18 @@ public class Bound implements ConfigurationSerializable {
     private int y2;
     private int z2;
     private final String world;
-    private final String id;
+    private String id;
 
-    /** Create a new bounding box between 2 sets of coordinates
+    /**
+     * Create a new bounding box between 2 sets of coordinates
+     *
      * @param world World this bound is in
-     * @param x x coord of 1st corner of bound
-     * @param y y coord of 1st corner of bound
-     * @param z z coord of 1st corner of bound
-     * @param x2 x coord of 2nd corner of bound
-     * @param y2 y coord of 2nd corner of bound
-     * @param z2 z coord of 2nd corner of bound
+     * @param x     x coord of 1st corner of bound
+     * @param y     y coord of 1st corner of bound
+     * @param z     z coord of 1st corner of bound
+     * @param x2    x coord of 2nd corner of bound
+     * @param y2    y coord of 2nd corner of bound
+     * @param z2    z coord of 2nd corner of bound
      */
     public Bound(String world, int x, int y, int z, int x2, int y2, int z2, String id) {
         this.world = world;
@@ -46,8 +51,10 @@ public class Bound implements ConfigurationSerializable {
         this.id = id;
     }
 
-    /** Create a new bounding box between 2 locations (must be in same world)
-     * @param location Location 1
+    /**
+     * Create a new bounding box between 2 locations (must be in same world)
+     *
+     * @param location  Location 1
      * @param location2 Location 2
      */
     public Bound(Location location, Location location2, String id) {
@@ -55,7 +62,9 @@ public class Bound implements ConfigurationSerializable {
                 location.getBlockZ(), location2.getBlockX(), location2.getBlockY(), location2.getBlockZ(), id);
     }
 
-    /** Create a bounding box based on a serialized string from {@link #toString()}
+    /**
+     * Create a bounding box based on a serialized string from {@link #toString()}
+     *
      * @param string String to create a new bound from
      */
     public Bound(String string) {
@@ -70,7 +79,9 @@ public class Bound implements ConfigurationSerializable {
         this.id = coords[7];
     }
 
-    /** Check if a location is within the region of this bound
+    /**
+     * Check if a location is within the region of this bound
+     *
      * @param loc Location to check
      * @return True if location is within this bound
      */
@@ -82,14 +93,16 @@ public class Bound implements ConfigurationSerializable {
         return (cx >= x && cx <= x2) && (cy >= y && cy <= y2) && (cz >= z && cz <= z2);
     }
 
-    /** Get location of all blocks of a type within a bound
+    /**
+     * Get location of all blocks of a type within a bound
+     *
      * @param type Material type to check
      * @return ArrayList of locations of all blocks of this type in this bound
      */
     @SuppressWarnings("unused")
     public List<Location> getBlocks(Material type) {
         World w = Bukkit.getWorld(world);
-        ArrayList <Location> array = new ArrayList<>();
+        ArrayList<Location> array = new ArrayList<>();
         for (int x3 = x; x3 <= x2; x3++) {
             for (int y3 = y; y3 <= y2; y3++) {
                 for (int z3 = z; z3 <= z2; z3++) {
@@ -104,12 +117,33 @@ public class Bound implements ConfigurationSerializable {
         return array;
     }
 
-    /** Get a list of blocks within a bound
+    /**
+     * Get the entities within this Bound
+     * <p>Note: If the chunk is unloaded, the entities will also be unloaded</p>
+     *
+     * @param type Type of entity to get
+     * @return List of loaded entities in bound
+     */
+    public List<Entity> getEntities(Class<? extends Entity> type) {
+        World world = Bukkit.getWorld(this.world);
+        if (world == null) {
+            return null;
+        }
+        BoundingBox box = new BoundingBox(x, y, z, x2, y2, z2);
+        Vector v = getLesserCorner().toVector().subtract(getGreaterCorner().toVector());
+        Collection<Entity> nearbyEntitiesByType = getGreaterCorner().getNearbyEntitiesByType(type, v.getX(), v.getY(), v.getZ());
+        return new ArrayList<>(nearbyEntitiesByType);
+
+    }
+
+    /**
+     * Get a list of blocks within a bound
+     *
      * @return List of blocks within bound
      */
     public List<Block> getBlocks() {
         World w = Bukkit.getWorld(world);
-        List <Block> array = new ArrayList<>();
+        List<Block> array = new ArrayList<>();
         for (int x3 = x; x3 <= x2; x3++) {
             for (int y3 = y; y3 <= y2; y3++) {
                 for (int z3 = z; z3 <= z2; z3++) {
@@ -122,32 +156,36 @@ public class Bound implements ConfigurationSerializable {
         return array;
     }
 
-    /** Get the world of this bound
+    /**
+     * Get the world of this bound
+     *
      * @return World of this bound
      */
     public World getWorld() {
         return Bukkit.getWorld(world);
     }
 
-    public String getWorldString() {
-        return this.world;
-    }
-
-    /** Get the greater corner of this bound
+    /**
+     * Get the greater corner of this bound
+     *
      * @return Location of greater corner
      */
     public Location getGreaterCorner() {
         return new Location(Bukkit.getWorld(world), x, y, z);
     }
 
-    /** Get the lesser corner of this bound
+    /**
+     * Get the lesser corner of this bound
+     *
      * @return Location of lesser corner
      */
     public Location getLesserCorner() {
         return new Location(Bukkit.getWorld(world), x2, y2, z2);
     }
 
-    /** Get the center location of this bound
+    /**
+     * Get the center location of this bound
+     *
      * @return The center location
      */
     public Location getCenter() {
@@ -237,11 +275,17 @@ public class Bound implements ConfigurationSerializable {
         return id;
     }
 
+    public void setId(String id) {
+        this.id = id;
+    }
+
     public String toString() {
         return this.id;
     }
 
-    /** Serialize this bound into yaml configuration
+    /**
+     * Serialize this bound into yaml configuration
+     *
      * @return Yaml configuration serialization of this bound
      */
     @SuppressWarnings("NullableProblems")
@@ -261,7 +305,9 @@ public class Bound implements ConfigurationSerializable {
         return result;
     }
 
-    /** Deserialize this bound from yaml configuration
+    /**
+     * Deserialize this bound from yaml configuration
+     *
      * @param args Args from yaml
      * @return New bound from serialized yaml configuration
      */
