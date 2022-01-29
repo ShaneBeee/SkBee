@@ -70,8 +70,12 @@ public class SkriptTypes {
 
                     @Override
                     protected Bound deserialize(Fields fields) throws StreamCorruptedException {
-                        String bound = fields.getObject("boundID", String.class);
-                        return SkBee.getPlugin().getBoundConfig().getBoundFromID(bound);
+                        String boundID = fields.getObject("boundID", String.class);
+                        Bound bound = SkBee.getPlugin().getBoundConfig().getBoundFromID(boundID);
+                        if (bound == null) {
+                            throw new NullPointerException("Unable to find bound with id '" + boundID + "'");
+                        }
+                        return bound;
                     }
 
                     @Override
