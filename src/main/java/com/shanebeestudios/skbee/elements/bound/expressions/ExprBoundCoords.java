@@ -13,6 +13,8 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
@@ -88,6 +90,7 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
 
     @Override
     public void change(Event e, Object[] delta, ChangeMode mode) {
+        BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
         for (Bound bound : getExpr().getArray(e)) {
             int coord = ((Number) delta[0]).intValue();
             Corner corner = LESSER ? Corner.LESSER : Corner.GREATER;
@@ -110,6 +113,7 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
                         break;
                 }
             }
+            boundConfig.saveBound(bound);
         }
     }
 
