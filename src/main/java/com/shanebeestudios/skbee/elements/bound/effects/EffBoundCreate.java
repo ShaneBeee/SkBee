@@ -61,6 +61,11 @@ public class EffBoundCreate extends Effect {
         if (this.id.getSingle(event) == null) return;
         String id = this.id.getSingle(event);
 
+        if (SkBee.getPlugin().getBoundConfig().boundExists(id)) {
+            Util.skriptError("&cBound with id '%s' already exists, cannot overwrite!", id);
+            return;
+        }
+
         if (create) {
             Location lesser = this.loc1.getSingle(event);
             Location greater = this.loc2.getSingle(event);
