@@ -1,14 +1,18 @@
 package com.shanebeestudios.skbee.elements.bound.types;
 
+import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
 
@@ -23,7 +27,6 @@ public class SkriptTypes {
                 .defaultExpression(new EventValueExpression<>(Bound.class))
                 .since("1.0.0")
                 .parser(new Parser<Bound>() {
-
                     @Override
                     public boolean canParse(ParseContext context) {
                         return false;
@@ -81,6 +84,26 @@ public class SkriptTypes {
                         return false;
                     }
 
+                })
+                .changer(new Changer<Bound>() {
+                    @Nullable
+                    @Override
+                    public Class<?>[] acceptChange(ChangeMode mode) {
+                        if (mode == ChangeMode.DELETE) {
+                            return CollectionUtils.array();
+                        }
+                        return null;
+                    }
+
+                    @Override
+                    public void change(Bound[] bounds, @Nullable Object[] delta, ChangeMode mode) {
+                        if (mode == ChangeMode.DELETE) {
+                            BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
+                            for (Bound bound : bounds) {
+                                boundConfig.removeBound(bound);
+                            }
+                        }
+                    }
                 }));
     }
 
