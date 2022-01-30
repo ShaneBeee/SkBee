@@ -36,7 +36,6 @@ public class Types {
                         return o.toLegacyText();
                     }
 
-                    @Override
                     public @NotNull String getVariableNamePattern() {
                         return "";
                     }

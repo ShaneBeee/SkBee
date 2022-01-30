@@ -43,7 +43,6 @@ public class Types {
                         return "materialchoice:" + toString(matChoice, 0);
                     }
 
-                    @Override
                     public String getVariableNamePattern() {
                         return "materialchoice://s";
                     }
@@ -78,7 +77,6 @@ public class Types {
                         return "minecrafttag:" + toString(tag, 0);
                     }
 
-                    @Override
                     public String getVariableNamePattern() {
                         return "minecrafttag://s";
                     }

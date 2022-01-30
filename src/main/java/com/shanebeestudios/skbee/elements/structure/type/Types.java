@@ -38,7 +38,6 @@ public class Types {
                             return structure.toString();
                         }
 
-                        @Override
                         public String getVariableNamePattern() {
                             return "";
                         }
@@ -69,7 +68,6 @@ public class Types {
                             return m.name();
                         }
 
-                        @Override
                         public String getVariableNamePattern() {
                             return "\\S+";
                         }
@@ -100,7 +98,6 @@ public class Types {
                             return structureRotation.name();
                         }
 
-                        @Override
                         public String getVariableNamePattern() {
                             return "\\S+";
                         }

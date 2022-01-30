@@ -28,7 +28,6 @@ public class EnumParser<T extends Enum<T>> extends Parser<T> {
         return toString(o, 0);
     }
 
-    @Override
     public String getVariableNamePattern() {
         return "\\S+";
     }

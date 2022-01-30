@@ -50,7 +50,6 @@ public class Types {
                             return o.name();
                         }
 
-                        @Override
                         public @NotNull String getVariableNamePattern() {
                             return "\\S+";
                         }
@@ -87,7 +86,6 @@ public class Types {
                             return o.name();
                         }
 
-                        @Override
                         public @NotNull String getVariableNamePattern() {
                             return "\\S+";
                         }

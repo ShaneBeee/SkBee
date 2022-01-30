@@ -70,7 +70,6 @@ public class SkriptTypes {
                         return toString(nbtCustomType, 0);
                     }
 
-                    @Override
                     public String getVariableNamePattern() {
                         return "\\S";
                     }
@@ -99,7 +98,6 @@ public class SkriptTypes {
                         return "nbt:" + nbt.toString();
                     }
 
-                    @Override
                     public String getVariableNamePattern() {
                         return "nbt:.+";
                     }

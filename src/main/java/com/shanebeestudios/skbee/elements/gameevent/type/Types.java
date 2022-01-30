@@ -48,7 +48,6 @@ public class Types {
                         return "gameevent:" + gameEvent.getKey().getKey();
                     }
 
-                    @Override
                     public String getVariableNamePattern() {
                         return "gameevent://s";
                     }

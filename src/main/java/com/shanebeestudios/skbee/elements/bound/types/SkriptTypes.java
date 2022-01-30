@@ -45,7 +45,6 @@ public class SkriptTypes {
                         return String.format("bound:%s", bound.getId());
                     }
 
-                    @Override
                     public String getVariableNamePattern() {
                         return "bound:.+";
                     }

@@ -60,7 +60,6 @@ public class Types {
                             return "particle:" + toString(particle, 0);
                         }
 
-                        @Override
                         public String getVariableNamePattern() {
                             return "particle://s";
                         }
