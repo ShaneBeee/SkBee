@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.elements.board.objects.Board;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.bukkit.entity.Player;
@@ -16,8 +17,9 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Board - Line")
-@Description("set/delete a line in a player's scoreboard. Note: line 1 is bottom, line 15 is top. " +
-        "Accepts texts and text components (text components as of 1.5.1).")
+@Description({"set/delete a line in a player's scoreboard. Note: line 1 is bottom, line 15 is top.",
+        "Accepts texts and text components (text components as of 1.5.1, only available if 'text-component'",
+        "is enabled in the SkBee config)."})
 @Examples({"set line 1 of player's scoreboard to \"oooo I'm a line!!\"",
         "set line 15 of all players' scoreboards to \"I'm the top line!!!\"",
         "delete line 3 of player's scoreboard",
@@ -28,9 +30,10 @@ import org.jetbrains.annotations.NotNull;
 public class EffBoardLine extends Effect {
 
     static {
+        String type = SkBee.getPlugin().getPluginConfig().ELEMENTS_TEXT_COMPONENT ? "%basecomponent/string%" : "%string%";
         Skript.registerEffect(EffBoardLine.class,
-                "set line %number% of %players%'[s] [score]board[s] to %basecomponent/string%",
-                "set line %number% of [score]board[s] of %players% to %basecomponent/string%",
+                "set line %number% of %players%'[s] [score]board[s] to " + type,
+                "set line %number% of [score]board[s] of %players% to " + type,
                 "delete line %number% of %players%'[s] [score]board[s]",
                 "delete line %number% of [score]board[s] of %players%");
     }
