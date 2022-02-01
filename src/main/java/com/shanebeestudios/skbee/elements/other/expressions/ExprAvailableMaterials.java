@@ -17,7 +17,10 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Name("Available Materials")
 @Description({"Get a list of all available materials (will return as an itemtype, but it's a mix of blocks and items),",
@@ -32,10 +35,12 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
     private static final List<ItemType> MATERIALS = new ArrayList<>();
     private static final List<ItemType> ITEM_TYPES = new ArrayList<>();
     private static final List<ItemType> BLOCK_TYPES = new ArrayList<>();
-    private static final List<BlockData> BLOCK_DATAS = new ArrayList<>();
+    private static List<BlockData> BLOCK_DATAS = new ArrayList<>();
 
     static {
-        for (Material material : Material.values()) {
+        List<Material> materials = Arrays.asList(Material.values());
+        materials = materials.stream().sorted(Comparator.comparing(Enum::toString)).collect(Collectors.toList());
+        for (Material material : materials) {
             ItemType itemType = new ItemType(material);
             MATERIALS.add(itemType);
             if (material.isItem()) {
