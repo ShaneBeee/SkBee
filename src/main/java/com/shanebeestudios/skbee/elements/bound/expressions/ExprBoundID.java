@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Bound - ID")
 @Description({"Get/set the id of a bound. When setting the ID of a bound, if another bound has that ID, this will fail with an error in console.",
         "You cannot set the IDs of multiple bounds at once."})
-@Examples({"set {_id} to id of first element of bounds at player to \"farm\"",
+@Examples({"set {_id} to id of first element of bounds at player",
         "loop all bounds at player:",
         "\tset id of loop-bound to \"%player%-%id of loop-bound%\"",
         "set {_id} to id of event-bound",
