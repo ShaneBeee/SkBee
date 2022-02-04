@@ -6,6 +6,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -13,6 +14,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -22,9 +25,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Name("Available Materials")
+@Name("Available Objects")
 @Description({"Get a list of all available materials (will return as an itemtype, but it's a mix of blocks and items),",
-        "itemtypes, block types (will return as an item type, but only materials which can be placed use as a block) and block datas."})
+        "itemtypes, block types (will return as an item type, but only materials which can be placed as a block), block datas",
+        "and entity types."})
 @Examples({"give player random element of all available itemtypes",
         "set {_blocks::*} to all available blocktypes",
         "set target block to random element of all available blockdatas"})
@@ -36,6 +40,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
     private static final List<ItemType> ITEM_TYPES = new ArrayList<>();
     private static final List<ItemType> BLOCK_TYPES = new ArrayList<>();
     private static final List<BlockData> BLOCK_DATAS = new ArrayList<>();
+    private static final List<EntityData<?>> ENTITY_DATAS = new ArrayList<>();
 
     static {
         List<Material> materials = Arrays.asList(Material.values());
@@ -51,11 +56,21 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
                 BLOCK_DATAS.add(material.createBlockData());
             }
         }
+        List<EntityType> entityTypes = Arrays.asList(EntityType.values());
+        entityTypes = entityTypes.stream().sorted(Comparator.comparing(Enum::toString)).collect(Collectors.toList());
+        for (EntityType entityType : entityTypes) {
+            Class<? extends Entity> entityClass = entityType.getEntityClass();
+            if (entityClass != null) {
+                EntityData<?> entityData = EntityData.fromClass(entityClass);
+                ENTITY_DATAS.add(entityData);
+            }
+        }
         Skript.registerExpression(ExprAvailableMaterials.class, Object.class, ExpressionType.SIMPLE,
                 "[all] available materials",
                 "[all] available item[ ]types",
                 "[all] available block[ ]types",
-                "[all] available block[ ]datas");
+                "[all] available block[ ]datas",
+                "[all] available entity[ ]types");
     }
 
     private int pattern;
@@ -75,6 +90,8 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
                 return BLOCK_TYPES.toArray(new ItemType[0]);
             case 3:
                 return BLOCK_DATAS.toArray(new BlockData[0]);
+            case 4:
+                return ENTITY_DATAS.toArray(new EntityData[0]);
             default:
                 return MATERIALS.toArray(new ItemType[0]);
         }
@@ -87,7 +104,14 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
     @Override
     public Class<?> getReturnType() {
-        return pattern == 3 ? BlockData.class : ItemType.class;
+        switch (pattern) {
+            case 3:
+                return BlockData.class;
+            case 4:
+                return EntityData.class;
+            default:
+                return ItemType.class;
+        }
     }
 
     @Override
@@ -102,6 +126,9 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
                 break;
             case 3:
                 type = "block datas";
+                break;
+            case 4:
+                type = "entity datas";
         }
         return "all available " + type;
     }
