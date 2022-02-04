@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Examples({"give player random element of all available itemtypes",
         "set {_blocks::*} to all available blocktypes",
         "set target block to random element of all available blockdatas"})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 @SuppressWarnings("NullableProblems")
 public class ExprAvailableMaterials extends SimpleExpression<Object> {
 

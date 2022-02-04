@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
         "Will also ignore fluids. Skript's expression is only for players, this one is for all living entities."})
 @Examples({"set exact target block of player to stone",
         "set {_t} to exact target block of last spawned entity"})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprTargetBlockExact extends SimplePropertyExpression<LivingEntity, Block> {
 
     static {

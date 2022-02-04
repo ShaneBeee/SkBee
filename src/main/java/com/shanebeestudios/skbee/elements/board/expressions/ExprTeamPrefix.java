@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on load:",
         "\tregister new team \"a-team\"",
         "\tset team prefix of team named \"a-team\" to \"[A-TEAM] \""})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprTeamPrefix extends SimplePropertyExpression<BeeTeam, String> {
 
     static {

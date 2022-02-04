@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
         "\tset id of loop-bound to \"%player%-%id of loop-bound%\"",
         "set {_id} to id of event-bound",
         "send \"You entered bound '%id of loop-bound%'\""})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprBoundID extends SimplePropertyExpression<Bound, String> {
 
     static {

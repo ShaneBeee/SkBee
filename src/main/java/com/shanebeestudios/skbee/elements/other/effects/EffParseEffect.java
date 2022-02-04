@@ -19,7 +19,7 @@ import org.bukkit.event.Event;
 @Description("This will parse a string as an effect, and execute it. Works the same as Skript's 'effect commands'.")
 @Examples({"on join:",
         "\tparse effect \"give player a diamond sword\""})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class EffParseEffect extends Effect {
 
     static {

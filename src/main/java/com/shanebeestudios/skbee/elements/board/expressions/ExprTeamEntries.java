@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"add player to team entries of team named \"a-team\"",
         "add all villagers to team entries of team named \"villagers\"",
         "remove all players from team entries of team named \"team-players\""})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprTeamEntries extends SimpleExpression<Entity> {
 
     static {

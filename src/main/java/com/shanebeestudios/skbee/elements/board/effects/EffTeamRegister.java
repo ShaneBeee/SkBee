@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Register a new team. NOTE: Teams are not persistent and will need to created on each server start.")
 @Examples({"on load:",
         "\tregister new team \"a-team\""})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class EffTeamRegister extends Effect {
 
     private static final BeeTeams BEE_TEAMS;

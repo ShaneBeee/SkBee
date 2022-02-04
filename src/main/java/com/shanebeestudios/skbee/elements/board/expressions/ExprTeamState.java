@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Team - State")
 @Description("Represents the friendly fire and can see friendly invisibles states of a team.")
 @Examples("set allow friendly fire team state of team named \"a-team\" to true")
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprTeamState extends SimplePropertyExpression<BeeTeam, Boolean> {
 
     static {

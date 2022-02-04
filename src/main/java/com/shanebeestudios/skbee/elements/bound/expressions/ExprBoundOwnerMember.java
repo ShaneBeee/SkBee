@@ -30,7 +30,7 @@ import java.util.UUID;
         "loop owners of bound with id \"beach\":",
         "\tif loop-offline player is online:",
         "\t\tteleport loop-offline player to spawn of world \"world\""})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
 
     static {

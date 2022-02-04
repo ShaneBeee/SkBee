@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Team - Color")
 @Description("Represents the color of a team. This will be the color of glow (if glowing) as well as display name color.")
 @Examples("set team color of team named \"a-team\" to blue")
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprTeamColor extends SimplePropertyExpression<BeeTeam, Color> {
 
     static {

@@ -25,7 +25,7 @@ import java.util.List;
 @Name("Team - Options")
 @Description("Represents an option for a team.")
 @Examples("set team option name tag visibility of team named \"a-team\" to never")
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprTeamOption extends SimpleExpression<Team.OptionStatus> {
 
     static {

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Get the team by name or of an entity.")
 @Examples({"set {_t} to team named \"a-team\"",
         "set {_t} to team of player"})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprTeam extends SimpleExpression<BeeTeam> {
 
     private static final BeeTeams BEE_TEAMS;

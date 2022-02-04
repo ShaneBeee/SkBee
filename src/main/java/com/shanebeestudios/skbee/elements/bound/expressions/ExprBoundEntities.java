@@ -24,7 +24,7 @@ import java.util.List;
 @Examples({"loop entities of bound with id \"my-bound\":",
         "\tif loop-entity is a cow or pig:",
         "\t\tkill loop-entity"})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprBoundEntities extends SimpleExpression<Entity> {
 
     static {

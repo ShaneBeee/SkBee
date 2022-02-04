@@ -25,7 +25,7 @@ import java.util.List;
         "loop all bounds:",
         "\tif {bounds::%loop-bound%::owner} = player:",
         "\t\tsend \"You own bound %loop-bound%\""})
-@Since("INSERT VERSION")
+@Since("1.15.0")
 public class ExprBoundAllBounds extends SimpleExpression<Object> {
 
     static {
