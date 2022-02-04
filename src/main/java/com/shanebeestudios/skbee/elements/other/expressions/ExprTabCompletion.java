@@ -127,12 +127,12 @@ public class ExprTabCompletion extends SimpleExpression<String> {
                 break;
             case ADD:
                 assert objects != null;
+                List<String> completions = new ArrayList<>();
                 for (Object object : objects) {
-                    try {
-                        event.getCompletions().add(Classes.toString(object));
-                    } catch (Exception ignore) {
-                    } // Had a little issue when adding if none were there yet
+                    completions.add(Classes.toString(object));
                 }
+                completions.addAll(event.getCompletions());
+                event.setCompletions(completions);
                 break;
             case DELETE:
                 event.setCompletions(Collections.singletonList(""));
