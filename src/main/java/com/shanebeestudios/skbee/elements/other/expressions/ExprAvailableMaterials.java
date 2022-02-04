@@ -35,7 +35,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
     private static final List<ItemType> MATERIALS = new ArrayList<>();
     private static final List<ItemType> ITEM_TYPES = new ArrayList<>();
     private static final List<ItemType> BLOCK_TYPES = new ArrayList<>();
-    private static List<BlockData> BLOCK_DATAS = new ArrayList<>();
+    private static final List<BlockData> BLOCK_DATAS = new ArrayList<>();
 
     static {
         List<Material> materials = Arrays.asList(Material.values());
@@ -86,7 +86,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<? extends Object> getReturnType() {
+    public Class<?> getReturnType() {
         return pattern == 3 ? BlockData.class : ItemType.class;
     }
 
