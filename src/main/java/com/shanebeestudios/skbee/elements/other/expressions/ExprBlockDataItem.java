@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -88,55 +88,67 @@ public class ExprBlockDataItem extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-        if (mode == Changer.ChangeMode.SET) {
+    public Class<?>[] acceptChange(ChangeMode mode) {
+        if (mode == ChangeMode.SET) {
             return CollectionUtils.array(Object.class);
         }
         return null;
     }
 
     @Override
-    public void change(Event e, Object[] delta, Changer.ChangeMode mode) {
-        String obj = delta == null ? "" : delta[0].toString();
-        for (ItemType itemType : itemTypes.getAll(e)) {
-            BlockData blockData;
-            switch (parse) {
-                // Tag "string"
-                case 2:
-                    String newData = getBlockForm(itemType.getMaterial()).getKey() + "[" + tag.getSingle(e) + "=" + obj + "]";
-                    try {
-                        blockData = Bukkit.createBlockData(newData);
-                        BlockDataMeta meta = ((BlockDataMeta) itemType.getItemMeta());
-                        BlockData oldData;
-                        if (!meta.hasBlockData()) {
-                            oldData = getBlockForm(itemType.getMaterial()).createBlockData();
-                        } else {
-                            oldData = meta.getBlockData(itemType.getMaterial());
+    public void change(Event e, Object[] delta, ChangeMode mode) {
+        Object object = delta[0];
+        String stringObject = object instanceof String ? ((String) object) : null;
+        switch (parse) {
+            // Tag "string"
+            case 2:
+                if (object instanceof String) {
+                    BlockData blockData;
+                    for (ItemType itemType : itemTypes.getAll(e)) {
+                        String newData = getBlockForm(itemType.getMaterial()).getKey() + "[" + tag.getSingle(e) + "=" + stringObject + "]";
+                        try {
+                            blockData = Bukkit.createBlockData(newData);
+                            BlockDataMeta meta = ((BlockDataMeta) itemType.getItemMeta());
+                            BlockData oldData;
+                            if (!meta.hasBlockData()) {
+                                oldData = getBlockForm(itemType.getMaterial()).createBlockData();
+                            } else {
+                                oldData = meta.getBlockData(itemType.getMaterial());
+                            }
+                            blockData = oldData.merge(blockData);
+                            meta.setBlockData(blockData);
+                            itemType.setItemMeta(meta);
+                        } catch (IllegalArgumentException ex) {
+                            Skript.error("Could not parse block data: " + newData, ErrorQuality.SEMANTIC_ERROR);
                         }
-                        blockData = oldData.merge(blockData);
-                        meta.setBlockData(blockData);
-                        itemType.setItemMeta(meta);
-                    } catch (IllegalArgumentException ex) {
-                        Skript.error("Could not parse block data: " + newData, ErrorQuality.SEMANTIC_ERROR);
                     }
-                    break;
-                // Tags
-                case 1:
-                    // Dont think this will work, so we shall ignore it
-                    return;
-                // Block Data
-                default:
+                }
+                break;
+            // Tags
+            case 1:
+                // Dont think this will work, so we shall ignore it
+                return;
+            // Block Data
+            default:
+                BlockData blockData = null;
+                if (object instanceof BlockData) {
+                    blockData = ((BlockData) object);
+                }
+                for (ItemType itemType : itemTypes.getAll(e)) {
                     try {
-                        blockData = Bukkit.createBlockData(obj);
+                        if (blockData == null && stringObject != null) {
+                            blockData = Bukkit.createBlockData(stringObject);
+                        }
                         BlockDataMeta meta = (BlockDataMeta) itemType.getItemMeta();
-                        meta.setBlockData(blockData);
+                        if (blockData != null) {
+                            meta.setBlockData(blockData);
+                        }
                         itemType.setItemMeta(meta);
                     } catch (IllegalArgumentException ex) {
-                        Skript.error("Could not parse block data: " + obj, ErrorQuality.SEMANTIC_ERROR);
+                        Skript.error("Could not parse block data: " + stringObject, ErrorQuality.SEMANTIC_ERROR);
                     }
-            }
+                }
         }
-
     }
 
     @Override
