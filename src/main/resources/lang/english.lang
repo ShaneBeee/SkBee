@@ -22,3 +22,7 @@ types:
 	beeteam: team¦s
 	teamoption: team options¦s
 	teamoptionstatus: team option status¦es
+	equipmentslot: equipment slot¦s
+	attributeoperation: attribute operation¦s
+	attributepair: attribute pair¦s
+	attributemodifier: attribute modifier¦s
