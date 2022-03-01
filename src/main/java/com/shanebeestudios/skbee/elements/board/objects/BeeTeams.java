@@ -8,7 +8,9 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class BeeTeams {
@@ -37,6 +39,10 @@ public class BeeTeams {
             TEAMS.remove(name);
             updateTeams();
         }
+    }
+
+    public Collection<BeeTeam> getTeams() {
+        return TEAMS.values();
     }
 
     @Nullable

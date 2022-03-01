@@ -19,9 +19,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Team - Get Team")
-@Description("Get the team by name or of an entity.")
+@Description("Get the team by name or of an entity, or get a list of all teams.")
 @Examples({"set {_t} to team named \"a-team\"",
-        "set {_t} to team of player"})
+        "set {_t} to team of player",
+        "set {_teams::*} to all bee teams"})
 @Since("1.15.0")
 public class ExprTeam extends SimpleExpression<BeeTeam> {
 
@@ -30,8 +31,9 @@ public class ExprTeam extends SimpleExpression<BeeTeam> {
     static {
         BEE_TEAMS = SkBee.getPlugin().getBeeTeams();
         Skript.registerExpression(ExprTeam.class, BeeTeam.class, ExpressionType.SIMPLE,
-                "[[sk]bee] team named %string%",
-                "[[sk]bee] team of %entity%");
+                "[[sk]bee[ ]]team named %string%",
+                "[[sk]bee[ ]]team of %entity%",
+                "all [[sk]bee[ ]]teams");
     }
 
     private int pattern;
@@ -60,13 +62,15 @@ public class ExprTeam extends SimpleExpression<BeeTeam> {
             if (entity == null) return null;
 
             return new BeeTeam[]{BEE_TEAMS.getBeeTeamByEntry(entity)};
+        } else if (pattern == 2) {
+            return BEE_TEAMS.getTeams().toArray(new BeeTeam[0]);
         }
         return null;
     }
 
     @Override
     public boolean isSingle() {
-        return true;
+        return pattern != 2;
     }
 
     @Override
@@ -76,6 +80,9 @@ public class ExprTeam extends SimpleExpression<BeeTeam> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
+        if (pattern == 2) {
+            return "all SkBee teams";
+        }
         String from = pattern == 0 ? "named " + this.name.toString(e, d) : "of entity " + this.entity.toString(e, d);
         return "team " + from;
     }
