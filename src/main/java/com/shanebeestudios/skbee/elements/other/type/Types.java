@@ -12,19 +12,33 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Timespan;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
+import com.shanebeestudios.skbee.api.particle.VibrationBee;
+import com.shanebeestudios.skbee.api.util.EnumParser;
+import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.Particle.DustTransition;
 import org.bukkit.Vibration;
+import org.bukkit.event.player.PlayerFishEvent.State;
 import org.jetbrains.annotations.Nullable;
-import com.shanebeestudios.skbee.api.particle.VibrationBee;
-import com.shanebeestudios.skbee.api.util.Util;
 
 public class Types {
 
     static {
         // == TYPES ==
+
+        // Only register if no other addons have registered this class
+        if (Classes.getExactClassInfo(State.class) == null) {
+            EnumUtils<State> FISH_STATE_ENUM = new EnumUtils<>(State.class);
+            Classes.registerClass(new ClassInfo<>(State.class, "fishstate")
+                    .user("fish ?states?")
+                    .name("Fish Event State")
+                    .usage(FISH_STATE_ENUM.getAllNames())
+                    .since("INSERT VERSION")
+                    .parser(new EnumParser<>(FISH_STATE_ENUM)));
+        }
 
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Particle.class) == null) {
@@ -91,7 +105,8 @@ public class Types {
             public DustOptions[] execute(FunctionEvent e, Object[][] params) {
                 org.bukkit.Color color = ((Color) params[0][0]).asBukkitColor();
                 float size = ((Number) params[1][0]).floatValue();
-                return new DustOptions[]{new DustOptions(color, size)};}
+                return new DustOptions[]{new DustOptions(color, size)};
+            }
         }.description("Creates a new dust option to be used with 'dust' particle. Color can either be a regular color or an RGB color using",
                         "Skript's rgb() function. Size is the size the particle will be.")
                 .examples("set {_c} to dustOption(red, 1.5)", "set {_c} to dustOption(rgb(1, 255, 1), 3)")
