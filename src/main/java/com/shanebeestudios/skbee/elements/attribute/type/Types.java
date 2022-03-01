@@ -21,6 +21,7 @@ public class Types {
                     .user("equipment ?slots?")
                     .name("Equipment Slot")
                     .usage(SLOT_ENUM.getAllNames())
+                    .since("INSERT VERSION")
                     .parser(new EnumParser<>(SLOT_ENUM)));
         }
 
@@ -30,6 +31,7 @@ public class Types {
                     .user("attribute ?operations?")
                     .name("Attribute Operation")
                     .usage(OPERATION_ENUM.getAllNames())
+                    .since("INSERT VERSION")
                     .parser(new EnumParser<>(OPERATION_ENUM)));
         }
 
@@ -37,6 +39,7 @@ public class Types {
             Classes.registerClass(new ClassInfo<>(AttributeModifier.class, "attributemodifier")
                     .user("attribute ?modifiers?")
                     .name("Attribute Modifier")
+                    .since("INSERT VERSION")
                     .parser(new Parser<AttributeModifier>() {
 
                         @Override
@@ -69,6 +72,7 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(AttributePair.class, "attributepair")
                 .user("attribute ?pairs?")
                 .name("Attribute Pair")
+                .since("INSERT VERSION")
                 .parser(new Parser<AttributePair>() {
 
                     @Override
