@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Team - Register")
-@Description("Register a new team. NOTE: Teams are not persistent and will need to created on each server start.")
+@Description("Register a new team or unregister an existing team. NOTE: Teams are not persistent and will need to created on each server start.")
 @Examples({"on load:",
         "\tregister new team \"a-team\""})
 @Since("1.15.0")
@@ -26,15 +26,17 @@ public class EffTeamRegister extends Effect {
 
     static {
         BEE_TEAMS = SkBee.getPlugin().getBeeTeams();
-        Skript.registerEffect(EffTeamRegister.class, "register [new] [[sk]bee] team %string%");
+        Skript.registerEffect(EffTeamRegister.class, "(|1¦un)register [new] [[sk]bee[ ]]team %string%");
     }
 
     private Expression<String> name;
+    private boolean register;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.name = (Expression<String>) exprs[0];
+        this.register = parseResult.mark == 0;
         return true;
     }
 
@@ -42,13 +44,18 @@ public class EffTeamRegister extends Effect {
     protected void execute(Event event) {
         String name = this.name.getSingle(event);
         if (name != null) {
-            BEE_TEAMS.registerTeam(name);
+            if (register) {
+                BEE_TEAMS.registerTeam(name);
+            } else {
+                BEE_TEAMS.unregisterTeam(name);
+            }
         }
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "register team " + this.name.toString(e, d);
+        String reg = register ? "register" : "unregister";
+        return reg + " team " + this.name.toString(e, d);
     }
 
 }

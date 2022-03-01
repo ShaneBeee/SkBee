@@ -23,6 +23,22 @@ public class BeeTeams {
         }
     }
 
+    public void unregisterTeam(String name) {
+        if (TEAMS.containsKey(name)) {
+            Bukkit.getOnlinePlayers().forEach(player -> {
+                Board board = Board.getBoard(player);
+                if (board != null) {
+                    Team team = board.getScoreboard().getTeam(name);
+                    if (team != null) {
+                        team.unregister();
+                    }
+                }
+            });
+            TEAMS.remove(name);
+            updateTeams();
+        }
+    }
+
     @Nullable
     public BeeTeam getBeeTeam(String name) {
         if (TEAMS.containsKey(name)) {
