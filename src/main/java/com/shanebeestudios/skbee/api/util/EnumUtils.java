@@ -99,7 +99,7 @@ public final class EnumUtils<E extends Enum<E>> {
     @Nullable
     public final E parse(final String s) {
         validate(false);
-        return parseMap.get(s.toLowerCase(Locale.ROOT));
+        return parseMap.get(s.toLowerCase(Locale.ROOT).replace("_", " "));
     }
 
     @SuppressWarnings({"null", "unused"})
