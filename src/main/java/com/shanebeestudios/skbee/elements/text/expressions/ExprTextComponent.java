@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
@@ -114,6 +115,11 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
     private String getTranslation(Object object) {
         if (object instanceof ItemType) {
             return translateItemType(((ItemType) object));
+        } else if (object instanceof Slot) {
+            ItemStack item = ((Slot) object).getItem();
+            if (HAS_TRANSLATION && item != null) {
+                return ((Translatable) item).translationKey();
+            }
         } else if (HAS_TRANSLATION && object instanceof Translatable) {
             return ((Translatable) object).translationKey();
         } else if (HAS_TRANSLATION && object instanceof Entity) {
