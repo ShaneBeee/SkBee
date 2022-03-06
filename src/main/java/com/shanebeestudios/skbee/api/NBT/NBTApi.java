@@ -102,7 +102,7 @@ public class NBTApi {
         try {
             NBTItem loadingItem = new NBTItem(new ItemStack(Material.STONE));
             loadingItem.mergeCompound(new NBTContainer("{}"));
-        } catch (Exception ignore) {
+        } catch (Exception | ExceptionInInitializerError ignore) {
             Util.log("&cFailed to load NBTApi!");
             return false;
         }
