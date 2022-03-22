@@ -19,6 +19,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import net.kyori.adventure.translation.Translatable;
 import net.md_5.bungee.api.chat.BaseComponent;
+import net.md_5.bungee.api.chat.KeybindComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
 import org.bukkit.Material;
@@ -38,7 +39,7 @@ import java.util.List;
         "this will send to the client, and the client will translate based on their language. You can use either an item type or a ",
         "translate string, you can find these in your Minecraft jar 'assets/minecraft/lang/<lang file>.json'.",
         "As of Paper 1.17.1, several more objects can translate including GameRules, PotionEffectTypes, Attributes, Difficulty, Enchantments, ",
-        "FireworkEffectTypes, Entities and Blocks.",
+        "FireworkEffectTypes, Entities and Blocks. KeyBind components will be replaced with the actual key the client is using.",
         "Some components have extra objects, you can use strings or other text components here."})
 @Examples({"set {_comp::1} to text component from \"hi player \"",
         "set {_comp::2} to text component of \"hover over me for a special message!\"",
@@ -47,7 +48,8 @@ import java.util.List;
         "set {_t} to translate component from player's tool",
         "set {_t} to translate component from \"item.minecraft.milk_bucket\"",
         "set {_death} to translate component from \"death.fell.accident.ladder\" using player's name",
-        "set {_assist} to translate component \"death.fell.assist\" using victim's name and attacker's name"})
+        "set {_assist} to translate component \"death.fell.assist\" using victim's name and attacker's name",
+        "set {_key} to keybind component \"key.jump\""})
 @Since("1.5.0")
 public class ExprTextComponent extends SimpleExpression<BaseComponent> {
 
@@ -57,6 +59,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
     static {
         Skript.registerExpression(ExprTextComponent.class, BaseComponent.class, ExpressionType.COMBINED,
                 "[a] [new] text component[s] (from|of) %strings%",
+                "[a] [new] key[ ]bind component[s] (from|of) %strings%",
                 "[a] [new] translate component[s] (from|of) %objects%",
                 "[a] [new] translate component[s] (from|of) %string% (with|using) %objects%");
     }
@@ -70,7 +73,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         pattern = matchedPattern;
         translation = (Expression<Object>) exprs[0];
-        objects = pattern == 2 ? (Expression<Object>) exprs[1] : null;
+        objects = pattern == 3 ? (Expression<Object>) exprs[1] : null;
         return true;
     }
 
@@ -83,7 +86,9 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
             if (pattern == 0) {
                 BaseComponent[] baseComponents = TextComponent.fromLegacyText(Util.getColString((String) object));
                 components.add(new TextComponent(baseComponents));
-            } else if (pattern == 1) {
+            }  else if (pattern == 1) {
+                components.add(new KeybindComponent((String) object));
+            } else if (pattern ==2) {
                 String translate = getTranslation(object);
                 if (translate != null) {
                     components.add(new TranslatableComponent(translate));
@@ -109,7 +114,10 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "a new text component from " + translation.toString(e, d);
+        String comp = pattern == 0 ? "text" : pattern == 1 ? "keybind" : "translate";
+        String trans = translation.toString(e, d);
+        String obj = objects != null ? "using " + objects.toString(e, d) : "";
+        return String.format("a new %s component from %s %s", comp, trans, obj);
     }
 
     private String getTranslation(Object object) {
