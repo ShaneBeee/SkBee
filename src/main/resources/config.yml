@@ -46,9 +46,6 @@ elements:
   # Note: Only available on MC 1.17+
   game-event: true
 
-  # Enable attribute elements
-  attribute: true
-
 recipe:
   # This is the namespace all recipes will be saved under
   # You can choose whatever you wish

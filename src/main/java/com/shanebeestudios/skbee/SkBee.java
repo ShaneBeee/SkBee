@@ -108,7 +108,6 @@ public class SkBee extends JavaPlugin {
         loadVirtualFurnaceElements();
         loadWorldCreatorElements();
         loadGameEventElements();
-        loadAttributeElements();
 
         // Beta check + notice
         if (desc.getVersion().contains("Beta")) {
@@ -297,20 +296,6 @@ public class SkBee extends JavaPlugin {
         } else {
             Util.log("&5Virtual Furnace Elements &cdisabled");
             Util.log("&7 - Virtual Furnace elements are only available on 1.14+");
-        }
-    }
-
-    private void loadAttributeElements() {
-        if (!this.config.ELEMENTS_ATTRIBUTE) {
-            Util.log("&5Attribute Elements &cdisabled via config");
-            return;
-        }
-        try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.attribute");
-            Util.log("&5Attribute Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pm.disablePlugin(this);
         }
     }
 
