@@ -22,7 +22,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"on fish:",
         "\tif fish event state = caught fish:",
         "\t\tcancel event"})
-@Since("INSERT VERSION")
+@Since("1.15.2")
 public class ExprFishEventState extends SimpleExpression<State> {
 
     static {

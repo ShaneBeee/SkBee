@@ -36,7 +36,7 @@ public class Types {
                     .user("fish ?states?")
                     .name("Fish Event State")
                     .usage(FISH_STATE_ENUM.getAllNames())
-                    .since("INSERT VERSION")
+                    .since("1.15.2")
                     .parser(new EnumParser<>(FISH_STATE_ENUM)));
         }
 
