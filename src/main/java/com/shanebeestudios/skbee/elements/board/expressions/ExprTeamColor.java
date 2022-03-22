@@ -18,15 +18,15 @@ import org.jetbrains.annotations.Nullable;
 @Description("Represents the color of a team. This will be the color of glow (if glowing) as well as display name color.")
 @Examples("set team color of team named \"a-team\" to blue")
 @Since("1.15.0")
-public class ExprTeamColor extends SimplePropertyExpression<BeeTeam, Color> {
+public class ExprTeamColor extends SimplePropertyExpression<BeeTeam, SkriptColor> {
 
     static {
-        register(ExprTeamColor.class, Color.class, "[[sk]bee] team color", "beeteams");
+        register(ExprTeamColor.class, SkriptColor.class, "[[sk]bee] team color", "beeteams");
     }
 
     @Nullable
     @Override
-    public Color convert(BeeTeam beeTeam) {
+    public SkriptColor convert(BeeTeam beeTeam) {
         return beeTeam.getColor();
     }
 
@@ -57,8 +57,8 @@ public class ExprTeamColor extends SimplePropertyExpression<BeeTeam, Color> {
     }
 
     @Override
-    public @NotNull Class<? extends Color> getReturnType() {
-        return Color.class;
+    public @NotNull Class<? extends SkriptColor> getReturnType() {
+        return SkriptColor.class;
     }
 
     @Override
