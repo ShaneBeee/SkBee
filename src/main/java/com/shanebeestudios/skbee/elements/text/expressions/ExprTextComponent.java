@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -9,14 +10,23 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.NBT.NBTApi;
+import com.shanebeestudios.skbee.api.reflection.McReflection;
 import com.shanebeestudios.skbee.api.util.TextUtils;
 import com.shanebeestudios.skbee.api.util.Util;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.KeybindComponent;
 import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.TranslatableComponent;
+import org.bukkit.Material;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.meta.PotionMeta;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -41,6 +51,9 @@ import java.util.List;
         "set {_key} to keybind component \"key.jump\""})
 @Since("1.5.0")
 public class ExprTextComponent extends SimpleExpression<BaseComponent> {
+
+    private static final NBTApi api = SkBee.getPlugin().getNbtApi();
+    private static final boolean HAS_TRANSLATION = Skript.classExists("net.kyori.adventure.translation.Translatable");
 
     static {
         Skript.registerExpression(ExprTextComponent.class, BaseComponent.class, ExpressionType.COMBINED,
@@ -75,7 +88,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
             } else if (pattern == 1) {
                 components.add(new KeybindComponent((String) object));
             } else if (pattern == 2) {
-                String translate = TextUtils.getTranslation(object);
+                String translate = getTranslation(object);
                 if (translate != null) {
                     components.add(new TranslatableComponent(translate));
                 }
@@ -86,6 +99,56 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
             }
         }
         return components.toArray(new BaseComponent[0]);
+    }
+
+    public static String getTranslation(Object object) {
+        if (object instanceof ItemType) {
+            return translateItemType(((ItemType) object));
+        } else if (object instanceof Slot) {
+            ItemStack item = ((Slot) object).getItem();
+            if (HAS_TRANSLATION && item != null) {
+                TextUtils.getTranslationKey(item);
+            }
+        } else if (object instanceof String) {
+            return ((String) object);
+        } else if (HAS_TRANSLATION) {
+            return TextUtils.getTranslationKey(object);
+        }
+        return null;
+    }
+
+    public static String translateItemType(ItemType itemType) {
+        ItemStack itemStack = itemType.getRandom();
+        assert itemStack != null;
+        String trans = McReflection.getTranslateKey(itemStack);
+        if (trans != null) {
+            return trans;
+        }
+        Material material = itemStack.getType();
+        String type = material.isBlock() ? "block" : "item";
+        String raw = itemType.getRawNames().get(0).replace("minecraft:", "");
+        ItemMeta meta = itemStack.getItemMeta();
+        if (meta instanceof PotionMeta) {
+            StringBuilder builder = new StringBuilder("item.minecraft.");
+            String nbt = api.getNBT(itemType, NBTApi.ObjectType.ITEM_TYPE);
+            if (nbt != null) {
+                String pot = api.getTag("Potion", new NBTContainer(nbt)).toString();
+                if (pot != null) {
+                    if (material == Material.POTION) {
+                        builder.append("potion");
+                    } else if (material == Material.SPLASH_POTION) {
+                        builder.append("splash_potion");
+                    } else if (material == Material.LINGERING_POTION) {
+                        builder.append("lingering_potion");
+                    } else if (material == Material.TIPPED_ARROW) {
+                        builder.append("tipped_arrow");
+                    }
+                    builder.append(".effect.").append(pot.replace("minecraft:", ""));
+                    return builder.toString();
+                }
+            }
+        }
+        return type + ".minecraft." + raw;
     }
 
     @Override
