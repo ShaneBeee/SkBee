@@ -28,10 +28,6 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-            <id>shanebeestudios-repo</id>
-            <url>https://shanebeestudios.com/maven/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -97,7 +93,7 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.shanebeestudios</groupId>
+            <groupId>com.github.ShaneBeeStudios</groupId>
             <artifactId>VirtualFurnace</artifactId>
             <version>1.0.0-Beta12</version>
             <exclusions>
