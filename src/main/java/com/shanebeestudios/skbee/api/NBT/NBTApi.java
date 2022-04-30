@@ -33,6 +33,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 /**
  * Main NBT api for SkBee
@@ -41,6 +42,7 @@ public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")
     public static final boolean SUPPORTS_BLOCK_NBT = PersistentDataHolder.class.isAssignableFrom(Chunk.class);
+    private static final Pattern TAG_SEPARATOR = Pattern.compile(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
     private final Config CONFIG;
     private final boolean ENABLED;
 
@@ -80,7 +82,7 @@ public class NBTApi {
     public static NBTCompound getNestedCompound(String tag, NBTCompound compound) {
         if (compound == null) return null;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
+            String[] splits = TAG_SEPARATOR.split(tag);
             for (int i = 0; i < splits.length - 1; i++) {
                 String split = splits[i];
                 compound = compound.getOrCreateCompound(split);
@@ -91,7 +93,7 @@ public class NBTApi {
 
     public static String getNestedTag(String tag) {
         if (tag.contains(";")) {
-            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
+            String[] splits = TAG_SEPARATOR.split(tag);
             return splits[splits.length - 1];
         }
         return tag;
@@ -386,7 +388,7 @@ public class NBTApi {
         NBTCompound compound = nbtCompound;
         String key = tag;
         if (tag.contains(";")) {
-            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
+            String[] splits = TAG_SEPARATOR.split(tag);
             for (int i = 0; i < splits.length - 1; i++) {
                 String split = splits[i];
                 compound = compound.getOrCreateCompound(split);
