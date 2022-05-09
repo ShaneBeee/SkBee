@@ -33,6 +33,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("deprecation")
 @Name("Text Component - New Text Component")
 @Description({"Create a new text component. Can have hover and click events added to it. You can also create a translate component, ",
         "this will send to the client, and the client will translate based on their language. You can use either an item type or a ",
@@ -59,8 +60,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
         Skript.registerExpression(ExprTextComponent.class, BaseComponent.class, ExpressionType.COMBINED,
                 "[a] [new] text component[s] (from|of) %strings%",
                 "[a] [new] key[ ]bind component[s] (from|of) %strings%",
-                "[a] [new] translate component[s] (from|of) %objects%",
-                "[a] [new] translate component[s] (from|of) %string% (with|using) %objects%");
+                "[a] [new] translate component[s] (from|of) %objects% [(with|using) %-objects%]");
     }
 
     private int pattern;
@@ -72,7 +72,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         pattern = matchedPattern;
         translation = (Expression<Object>) exprs[0];
-        objects = pattern == 3 ? (Expression<Object>) exprs[1] : null;
+        objects = pattern == 2 ? (Expression<Object>) exprs[1] : null;
         return true;
     }
 
@@ -90,12 +90,13 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
             } else if (pattern == 2) {
                 String translate = getTranslation(object);
                 if (translate != null) {
-                    components.add(new TranslatableComponent(translate));
+                    if (this.objects != null) {
+                        components.add(new TranslatableComponent(translate, this.objects.getArray(e)));
+                    } else {
+                        components.add(new TranslatableComponent(translate));
+                    }
+
                 }
-            } else {
-                String string = ((String) translation.getSingle(e));
-                Object[] objects = this.objects.getAll(e);
-                components.add(new TranslatableComponent(string, objects));
             }
         }
         return components.toArray(new BaseComponent[0]);
