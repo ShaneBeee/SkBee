@@ -58,7 +58,10 @@ public class EffBoardLine extends Effect {
     @Override
     protected void execute(@NotNull Event event) {
         Player[] players = this.players.getArray(event);
-        int line = this.line.getSingle(event).intValue();
+        Number lineValue = this.line.getSingle(event);
+        if (lineValue == null) return;
+
+        int line = lineValue.intValue();
         if (line > 15 || line < 1) return; // Only set lines 1-15
 
         String text = "";
