@@ -13,7 +13,6 @@ elements:
   scoreboard: true
 
   # Enable custom recipe elements
-  # Note: Only available on 1.13+
   recipe: true
 
   # Enable bound elements
@@ -21,11 +20,9 @@ elements:
   bound: true
 
   # Enable structure elements
-  # Note: Only available on 1.9.4+
   structure: true
 
   # Enable VirtualFurnace elements
-  # Note: Only available on 1.13+
   # This feature is semi-experimental, please use with caution
   virtual-furnace: false
 
@@ -33,7 +30,7 @@ elements:
   text-component: true
 
   # Enable pathfinding elements
-  # Note: Only available on Paper 1.13+
+  # Note: Only available on Paper
   pathfinding: true
 
   # Enable world creator elements
@@ -43,7 +40,6 @@ elements:
   auto-load-custom-worlds: true
 
   # Enable Minecraft GameEvent elements
-  # Note: Only available on MC 1.17+
   game-event: true
 
 recipe:
