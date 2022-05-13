@@ -34,16 +34,16 @@ import javax.annotation.Nullable;
 public class ExprComponentFormat extends PropertyExpression<BaseComponent, Object> {
 
     private static final boolean HAS_SKRIPT_COLOR = Skript.classExists("ch.njol.skript.util.SkriptColor");
-    private static final int COLOR = 0, BOLD = 1, ITALIC = 2, OBFUSCATED = 3, STRIKETHROUGH = 4, UNDERLINE = 5, INSERT = 6;
+    private static final int COLOR = 0, BOLD = 1, ITALIC = 2, OBFUSCATED = 3, STRIKETHROUGH = 4, UNDERLINE = 5, FONT = 6, INSERT = 7;
 
     static {
         if (Skript.methodExists(BaseComponent.class, "setInsertion", String.class)) {
             register(ExprComponentFormat.class, Object.class,
-                    "(color|1¦bold|2¦italic|3¦(obfuscate[d]|magic)|4¦strikethrough|5¦underline[d]|6¦insert[ion]) format",
+                    "(color|1¦bold|2¦italic|3¦(obfuscate[d]|magic)|4¦strikethrough|5¦underline[d]|6¦font|7¦insert[ion]) format",
                     "basecomponents");
         } else {
             register(ExprComponentFormat.class, Object.class,
-                    "(color|1¦bold|2¦italic|3¦(obfuscate[d]|magic)|4¦strikethrough|5¦underline[d]) format",
+                    "(color|1¦bold|2¦italic|3¦(obfuscate[d]|magic)|4¦strikethrough|5¦underline[d]|6¦font) format",
                     "basecomponents");
         }
     }
@@ -79,6 +79,8 @@ public class ExprComponentFormat extends PropertyExpression<BaseComponent, Objec
                     return component.isStrikethrough();
                 case UNDERLINE:
                     return component.isUnderlined();
+                case FONT:
+                    return component.getFont();
                 case INSERT:
                     return component.getInsertion();
             }
@@ -141,9 +143,14 @@ public class ExprComponentFormat extends PropertyExpression<BaseComponent, Objec
                     component.setUnderlined(underline);
                 }
                 break;
+            case FONT:
+                String font = object instanceof String ? ((String) object) : object.toString();
+                for (BaseComponent baseComponent : getExpr().getArray(e)) {
+                    baseComponent.setFont(font);
+                }
             case INSERT:
+                String insert = object instanceof String ? ((String) object) : object.toString();
                 for (BaseComponent component : getExpr().getArray(e)) {
-                    String insert = object instanceof String ? ((String) object) : object.toString();
                     component.setInsertion(insert);
                 }
                 break;
@@ -156,6 +163,7 @@ public class ExprComponentFormat extends PropertyExpression<BaseComponent, Objec
             case COLOR:
                 return Color.class;
             case INSERT:
+            case FONT:
                 return String.class;
             default:
                 return Boolean.class;
@@ -164,7 +172,7 @@ public class ExprComponentFormat extends PropertyExpression<BaseComponent, Objec
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String[] type = new String[]{"color", "bold", "italic", "obfuscated", "strikethrough", "underline", "insertion"};
+        String[] type = new String[]{"color", "bold", "italic", "obfuscated", "strikethrough", "underline", "font", "insertion"};
         return type[pattern] + " format of " + getExpr().toString(e, d);
     }
 
