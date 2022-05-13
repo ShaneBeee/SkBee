@@ -3,8 +3,6 @@ package com.shanebeestudios.skbee;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import com.github.goingoffskript.skriptvariabledump.SkriptToYaml;
-import com.github.shynixn.structureblocklib.api.enumeration.Version;
-import com.github.shynixn.structureblocklib.bukkit.service.ProxyServiceImpl;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
@@ -241,36 +239,6 @@ public class SkBee extends JavaPlugin {
             try {
                 addon.loadClasses("com.shanebeestudios.skbee.elements.structure");
                 Util.log("&5New Structure Elements &asuccessfully loaded");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        }
-
-        // Load old structure system (will be removed in future)
-        // Will not be available on MC 1.18+ (personal choice, use new system instead)
-        if (Skript.isRunningMinecraft(1, 18)) {
-            Util.log("&5Old Structure Elements &cDISABLED!");
-            Util.log(" - Old structure system is no longer available on MC 1.18+");
-            Util.log(" - Please use new structure system");
-            return;
-        }
-        // Disable if StructureBlockLib is not currently updated for this server version
-        ProxyServiceImpl impl = new ProxyServiceImpl(this);
-        Version serverVersion = impl.getServerVersion();
-        if (serverVersion == null || serverVersion == Version.VERSION_UNKNOWN) {
-            String ver = Skript.getMinecraftVersion().toString();
-            Util.log("&5Structure Elements &cDISABLED!");
-            Util.log(" - Your server version [&b" + ver + "&7] is not currently supported by the StructureBlock API");
-            Util.log(" - This is not a bug!");
-            Util.log(" - Structure elements will resume once the API is updated to work with [&b" + ver + "&7]");
-            return;
-        } else {
-            try {
-                addon.loadClasses("com.shanebeestudios.skbee.elements.structureold");
-                Util.log("&5Old Structure Elements &asuccessfully loaded");
-                Util.log(" - &cThe old system will be removed in the future");
-                Util.log(" - &cPlease use the new structure system (Available on MC 1.17.1+)");
             } catch (IOException ex) {
                 ex.printStackTrace();
                 pm.disablePlugin(this);

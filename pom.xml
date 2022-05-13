@@ -81,18 +81,6 @@
             </exclusions>
         </dependency>
         <dependency>
-            <groupId>com.github.shynixn.structureblocklib</groupId>
-            <artifactId>structureblocklib-bukkit-core</artifactId>
-            <version>2.2.2</version>
-            <scope>compile</scope>
-            <exclusions>
-                <exclusion>
-                    <groupId>*</groupId>
-                    <artifactId>structureblocklib-bukkit-api</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
-        <dependency>
             <groupId>com.github.ShaneBeeStudios</groupId>
             <artifactId>VirtualFurnace</artifactId>
             <version>1.0.0-Beta12</version>
@@ -177,10 +165,6 @@
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
                             <shadedPattern>com.shanebeestudios.skbee.api.NBT</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>com.github.shynixn.structureblocklib</pattern>
-                            <shadedPattern>com.shanebeestudios.skbee.api.structure</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>com.shanebeestudios.vf</pattern>
