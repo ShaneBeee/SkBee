@@ -9,9 +9,9 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
-import org.bukkit.util.BoundingBox;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Within Locations")
@@ -29,6 +29,7 @@ public class CondWithinLocations extends Condition {
     private Expression<Location> location;
     private Expression<Location> with1, with2;
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setNegated(matchedPattern == 1);
@@ -45,8 +46,7 @@ public class CondWithinLocations extends Condition {
         Location w2 = with2.getSingle(e);
         if (loc == null || w1 == null || w2 == null) return isNegated();
 
-        BoundingBox box = BoundingBox.of(w1, w2);
-        return isNegated() != box.contains(loc.getX(), loc.getY(), loc.getZ());
+        return isNegated() != MathUtil.isWithin(loc, w1, w2);
     }
 
     @Override
