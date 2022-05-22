@@ -23,26 +23,27 @@ public class NBTCustomBlock extends NBTBlock {
     public NBTCompound getData() {
         NBTCompound data = super.getData();
         if (!data.hasKey("custom")) {
-            setData(data);
+            return setData(data);
         } else if (!data.getString("id").equals(block.getType().getKey().toString())) {
-            setData(data);
+            return setData(data);
         } else if (data.getInteger("x") != block.getX()) {
-            setData(data);
+            return setData(data);
         } else if (data.getInteger("y") != block.getY()) {
-            setData(data);
+            return setData(data);
         } else if (data.getInteger("z") != block.getZ()) {
-            setData(data);
+            return setData(data);
         }
         return data;
     }
 
-    private void setData(NBTCompound data) {
+    private NBTCompound setData(NBTCompound data) {
         data.getKeys().forEach(data::removeKey);
         data.setString("id", block.getType().getKey().toString());
         data.setInteger("x", block.getX());
         data.setInteger("y", block.getY());
         data.setInteger("z", block.getZ());
         data.getOrCreateCompound("custom");
+        return data;
     }
 
     /**
