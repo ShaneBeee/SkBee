@@ -40,17 +40,10 @@ import org.jetbrains.annotations.Nullable;
 @Since("1.9.0")
 public class EffParticle extends Effect {
 
-    private static final String NEW_SPAWN = "(lerp|draw|make)";
-    private static final String OLD_SPAWN = "(spawn|play|lerp|draw|make) "; // we shall remove this in the future! (dec 3/2021)
-    private static final String OFFSET = "(with offset|1¦offset by)"; // we shall remove this in the future! (dec 8/2021)
-
     static {
-        String moreData = "";
-        if (Skript.isRunningMinecraft(1, 17)) {
-            moreData = "/dusttransition/vibration";
-        }
-        Skript.registerEffect(EffParticle.class, OLD_SPAWN + "%number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption" +
-                moreData + "%] %directions% %locations% [" + OFFSET + " %-vector%] [with extra %-number%] [(for|to) %-players%]");
+        Skript.registerEffect(EffParticle.class,
+                "(lerp|draw|make) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption/dusttransition/vibration" +
+                "%] %directions% %locations% [with offset %-vector%] [with extra %-number%] [(for|to) %-players%]");
     }
 
     private Expression<Number> count;
@@ -67,13 +60,6 @@ public class EffParticle extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
-        if (parseResult.expr.startsWith("spawn") || parseResult.expr.startsWith("play")) { // we shall remove this in the future! (dec 3/2021)
-            Skript.error("(spawn|play) are very slow for this effect and will be removed in the future, please consider using new patterns '"
-                    + NEW_SPAWN + "'.");
-        }
-        if (parseResult.mark == 1) { // we shall remove this in the future! (dec 8/2021)
-            Skript.error("'offset by %vector%' will not actually work here. Please use 'with offset %vector%' instead!");
-        }
         count = (Expression<Number>) exprs[0];
         particle = (Expression<Particle>) exprs[1];
         data = (Expression<Object>) exprs[2];
@@ -116,7 +102,7 @@ public class EffParticle extends Effect {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String data = this.data != null ? "using " + this.data.toString(e, d) : "";
-        String offset = this.offset != null ? "offset by " + this.offset.toString(e, d) : "";
+        String offset = this.offset != null ? "with offset " + this.offset.toString(e, d) : "";
         String extra = this.extra != null ? "with extra " + this.extra.toString(e, d) : "";
         String players = this.players != null ? "to " + this.players.toString(e, d) : "";
 
