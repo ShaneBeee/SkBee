@@ -28,6 +28,7 @@ public class EffStructureSave extends Effect {
     private Expression<StructureBee> structures;
     private boolean save;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         structures = (Expression<StructureBee>) exprs[0];
@@ -45,6 +46,7 @@ public class EffStructureSave extends Effect {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
         return String.format("%s structure[s] %s", save ? "save" : "delete", this.structures.toString(e, d));

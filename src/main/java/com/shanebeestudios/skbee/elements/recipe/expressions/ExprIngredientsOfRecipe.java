@@ -58,29 +58,29 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
     @Override
     protected ItemType[] get(Event e) {
         List<ItemType> items = new ArrayList<>();
-        Bukkit.recipeIterator().forEachRemaining(r -> {
-            if (r instanceof Keyed && ((Keyed) r).getKey().toString().equalsIgnoreCase(this.recipe.getSingle(e))) {
-                if (r instanceof ShapedRecipe) {
-                    for (ItemStack ingredient : ((ShapedRecipe) r).getIngredientMap().values()) {
+        Bukkit.recipeIterator().forEachRemaining(recipe -> {
+            if (recipe instanceof Keyed keyed && keyed.getKey().toString().equalsIgnoreCase(this.recipe.getSingle(e))) {
+                if (recipe instanceof ShapedRecipe shapedRecipe) {
+                    for (ItemStack ingredient : shapedRecipe.getIngredientMap().values()) {
                         if (ingredient == null) continue;
                         items.add(new ItemType(ingredient));
                     }
-                } else if (r instanceof ShapelessRecipe) {
-                    for (ItemStack ingredient : ((ShapelessRecipe) r).getIngredientList()) {
+                } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
+                    for (ItemStack ingredient : shapelessRecipe.getIngredientList()) {
                         if (ingredient == null) continue;
                         items.add(new ItemType(ingredient));
                     }
-                } else if (HAS_COOKING && r instanceof CookingRecipe) {
-                    items.add(new ItemType(((CookingRecipe<?>) r).getInput()));
-                } else if (r instanceof FurnaceRecipe) {
-                    items.add(new ItemType(((FurnaceRecipe) r).getInput()));
-                } else if (r instanceof MerchantRecipe) {
-                    for (ItemStack ingredient : ((MerchantRecipe) r).getIngredients()) {
+                } else if (HAS_COOKING && recipe instanceof CookingRecipe cookingRecipe) {
+                    items.add(new ItemType(cookingRecipe.getInput()));
+                } else if (recipe instanceof FurnaceRecipe furnaceRecipe) {
+                    items.add(new ItemType(furnaceRecipe.getInput()));
+                } else if (recipe instanceof MerchantRecipe merchantRecipe) {
+                    for (ItemStack ingredient : merchantRecipe.getIngredients()) {
                         if (ingredient == null) continue;
                         items.add(new ItemType(ingredient));
                     }
-                } else if (HAS_STONECUTTING && r instanceof StonecuttingRecipe) {
-                    items.add(new ItemType(((StonecuttingRecipe) r).getInput()));
+                } else if (HAS_STONECUTTING && recipe instanceof StonecuttingRecipe stonecuttingRecipe) {
+                    items.add(new ItemType(stonecuttingRecipe.getInput()));
                 }
             }
         });

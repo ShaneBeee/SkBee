@@ -37,9 +37,10 @@ public class EffBonemeal extends Effect {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected void execute(Event e) {
-        for (Block block : blocks.getArray(e)) {
+    protected void execute(Event event) {
+        for (Block block : blocks.getArray(event)) {
             block.applyBoneMeal(BlockFace.UP);
         }
     }

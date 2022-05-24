@@ -10,11 +10,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 
 import javax.annotation.Nullable;
 
@@ -48,45 +48,29 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
     @Nullable
     @Override
     public Object convert(@NotNull BeeWorldCreator creator) {
-        switch (pattern) {
-            case 1:
-                return creator.getWorldType();
-            case 2:
-                return creator.getSeed();
-            case 3:
-                return creator.getGeneratorSettings();
-            case 4:
-                return creator.getGenerator();
-            case 5:
-                return creator.isGenStructures();
-            case 6:
-                return creator.isHardcore();
-            case 7:
-                return creator.isKeepSpawnLoaded();
-            default:
-                return creator.getEnvironment();
-        }
+        return switch (pattern) {
+            case 1 -> creator.getWorldType();
+            case 2 -> creator.getSeed();
+            case 3 -> creator.getGeneratorSettings();
+            case 4 -> creator.getGenerator();
+            case 5 -> creator.isGenStructures();
+            case 6 -> creator.isHardcore();
+            case 7 -> creator.isKeepSpawnLoaded();
+            default -> creator.getEnvironment();
+        };
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            switch (pattern) {
-                case 1:
-                    return CollectionUtils.array(WorldType.class);
-                case 2:
-                    return CollectionUtils.array(Number.class);
-                case 3:
-                case 4:
-                    return CollectionUtils.array(String.class);
-                case 5:
-                case 6:
-                case 7:
-                    return CollectionUtils.array(Boolean.class);
-                default:
-                    return CollectionUtils.array(Environment.class);
-            }
+            return switch (pattern) {
+                case 1 -> CollectionUtils.array(WorldType.class);
+                case 2 -> CollectionUtils.array(Number.class);
+                case 3, 4 -> CollectionUtils.array(String.class);
+                case 5, 6, 7 -> CollectionUtils.array(Boolean.class);
+                default -> CollectionUtils.array(Environment.class);
+            };
         }
         return null;
     }
@@ -142,43 +126,27 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
 
     @Override
     public @NotNull Class<?> getReturnType() {
-        switch (pattern) {
-            case 1:
-                return WorldType.class;
-            case 2:
-                return Number.class;
-            case 3:
-            case 4:
-                return String.class;
-            case 5:
-            case 6:
-            case 7:
-                return Boolean.class;
-            default:
-                return Environment.class;
-        }
+        return switch (pattern) {
+            case 1 -> WorldType.class;
+            case 2 -> Number.class;
+            case 3, 4 -> String.class;
+            case 5, 6, 7 -> Boolean.class;
+            default -> Environment.class;
+        };
     }
 
     @Override
     protected @NotNull String getPropertyName() {
-        switch (pattern) {
-            case 1:
-                return "world type";
-            case 2:
-                return "seed";
-            case 3:
-                return "generator settings";
-            case 4:
-                return "generator";
-            case 5:
-                return "should generate structures";
-            case 6:
-                return "hardcore";
-            case 7:
-                return "keep spawn loaded";
-            default:
-                return "environment";
-        }
+        return switch (pattern) {
+            case 1 -> "world type";
+            case 2 -> "seed";
+            case 3 -> "generator settings";
+            case 4 -> "generator";
+            case 5 -> "should generate structures";
+            case 6 -> "hardcore";
+            case 7 -> "keep spawn loaded";
+            default -> "environment";
+        };
     }
 
 }

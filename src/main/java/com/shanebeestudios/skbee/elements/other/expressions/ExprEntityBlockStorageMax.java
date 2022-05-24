@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 @Name("EntityBlockStorage - Max Entities")
 @Description({"Get/Set the max amount of entities which can be stored in a block.",
@@ -36,6 +37,7 @@ public class ExprEntityBlockStorageMax extends SimplePropertyExpression<Block, L
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.RESET) {
@@ -44,25 +46,18 @@ public class ExprEntityBlockStorageMax extends SimplePropertyExpression<Block, L
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public void change(Event e, Object[] delta, ChangeMode mode) {
-        for (Block block : getExpr().getArray(e)) {
+    public void change(Event event, Object[] delta, ChangeMode mode) {
+        for (Block block : getExpr().getArray(event)) {
             int change = delta == null ? getDefault(block) : ((Number) delta[0]).intValue();
             BlockState state = block.getState();
-            if (state instanceof EntityBlockStorage) {
-                EntityBlockStorage<?> storage = ((EntityBlockStorage<?>) state);
+            if (state instanceof EntityBlockStorage<?> storage) {
                 int newVal = storage.getMaxEntities();
                 switch (mode) {
-                    case RESET:
-                    case SET:
-                        newVal = change;
-                        break;
-                    case ADD:
-                        newVal += change;
-                        break;
-                    case REMOVE:
-                        newVal -= change;
-                        break;
+                    case RESET, SET -> newVal = change;
+                    case ADD -> newVal += change;
+                    case REMOVE -> newVal -= change;
                 }
                 storage.setMaxEntities(Math.max(1, newVal));
                 storage.update(true, false);
@@ -71,25 +66,22 @@ public class ExprEntityBlockStorageMax extends SimplePropertyExpression<Block, L
     }
 
     @Override
-    public Class<? extends Long> getReturnType() {
+    public @NotNull Class<? extends Long> getReturnType() {
         return Long.class;
     }
 
     @Override
-    protected String getPropertyName() {
+    protected @NotNull String getPropertyName() {
         return "max entities of entity storage block";
     }
 
     // Simple util method for getting default max entities for a block
     // Future MC versions may include more blocks (like the possible termite block)
     private int getDefault(Block block) {
-        switch (block.getType().toString()) {
-            case "BEEHIVE":
-            case "BEE_NEST":
-                return 3;
-            default:
-                return 0;
-        }
+        return switch (block.getType().toString()) {
+            case "BEEHIVE", "BEE_NEST" -> 3;
+            default -> 0;
+        };
     }
 
 }

@@ -5,6 +5,7 @@ import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.SkriptColor;
 import net.md_5.bungee.api.ChatColor;
 
+@SuppressWarnings("deprecation")
 public enum ChatUtil {
 
     BLACK(SkriptColor.BLACK, ChatColor.BLACK),

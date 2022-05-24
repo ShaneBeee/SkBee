@@ -8,12 +8,13 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 @Name("EntityBlockStorage - Entity Count")
 @Description({"Get the amount of entities currently stored in a storage block.",
@@ -30,13 +31,14 @@ public class ExprEntityBlockStorageCount extends PropertyExpression<Block, Long>
         }
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         setExpr((Expression<Block>) exprs[0]);
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Long[] get(Event event, Block[] blocks) {
         return get(blocks, block -> {
@@ -49,12 +51,12 @@ public class ExprEntityBlockStorageCount extends PropertyExpression<Block, Long>
     }
 
     @Override
-    public Class<? extends Long> getReturnType() {
+    public @NotNull Class<? extends Long> getReturnType() {
         return Long.class;
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "amount of entities stored in " + getExpr().toString(e, d);
     }
 

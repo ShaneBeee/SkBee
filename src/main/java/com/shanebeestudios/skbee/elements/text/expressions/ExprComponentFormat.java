@@ -21,6 +21,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation")
 @Name("Text Component - Format")
 @Description({"Change formatting options of text components. Most of these are pretty straight forward. Insertion means the text ",
         "that will copy to chat when a player shift-clicks the component (Might not be available on all versions). Color supports color ",
@@ -88,7 +89,7 @@ public class ExprComponentFormat extends PropertyExpression<BaseComponent, Objec
         });
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(Object.class);
@@ -104,8 +105,8 @@ public class ExprComponentFormat extends PropertyExpression<BaseComponent, Objec
             case COLOR:
                 Color color = (Color) object;
                 ChatColor chatColor;
-                if (HAS_SKRIPT_COLOR && color instanceof SkriptColor) {
-                    chatColor = ChatUtil.getBungeeFromSkriptColor(((SkriptColor) color));
+                if (HAS_SKRIPT_COLOR && color instanceof SkriptColor skriptColor) {
+                    chatColor = ChatUtil.getBungeeFromSkriptColor(skriptColor);
                 } else {
                     chatColor = ChatUtil.getBungeeFromColor(color);
                 }
@@ -159,15 +160,11 @@ public class ExprComponentFormat extends PropertyExpression<BaseComponent, Objec
 
     @Override
     public @NotNull Class<?> getReturnType() {
-        switch (pattern) {
-            case COLOR:
-                return Color.class;
-            case INSERT:
-            case FONT:
-                return String.class;
-            default:
-                return Boolean.class;
-        }
+        return switch (pattern) {
+            case COLOR -> Color.class;
+            case INSERT, FONT -> String.class;
+            default -> Boolean.class;
+        };
     }
 
     @Override

@@ -16,10 +16,8 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
-import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
@@ -52,10 +50,9 @@ public class PaperEvents {
                             "\t\tcancel event")
                     .since("1.5.0");
 
-            EventValues.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, new Getter<String, PlayerRecipeBookClickEvent>() {
-                @Nullable
+            EventValues.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, new Getter<>() {
                 @Override
-                public String get(@NotNull PlayerRecipeBookClickEvent event) {
+                public @NotNull String get(@NotNull PlayerRecipeBookClickEvent event) {
                     return event.getRecipe().toString();
                 }
             }, 0);
@@ -85,7 +82,7 @@ public class PaperEvents {
                     .examples("on elytra boost:",
                             "\tpush player forward at speed 50")
                     .since("1.8.0");
-            EventValues.registerEventValue(PlayerElytraBoostEvent.class, ItemType.class, new Getter<ItemType, PlayerElytraBoostEvent>() {
+            EventValues.registerEventValue(PlayerElytraBoostEvent.class, ItemType.class, new Getter<>() {
                 @Override
                 public ItemType get(PlayerElytraBoostEvent e) {
                     return new ItemType(e.getItemStack());
@@ -105,10 +102,9 @@ public class PaperEvents {
                             "\t\tcancel event")
                     .since("1.5.0");
 
-            EventValues.registerEventValue(EntityPathfindEvent.class, Location.class, new Getter<Location, EntityPathfindEvent>() {
-                @Nullable
+            EventValues.registerEventValue(EntityPathfindEvent.class, Location.class, new Getter<>() {
                 @Override
-                public Location get(@NotNull EntityPathfindEvent event) {
+                public @NotNull Location get(@NotNull EntityPathfindEvent event) {
                     return event.getLoc();
                 }
             }, 0);
@@ -133,7 +129,7 @@ public class PaperEvents {
                             "\tif event-entity is a pig:",
                             "\t\tspawn 3 zombie pigmen at event-location")
                     .since("1.8.0");
-            EventValues.registerEventValue(EntityZapEvent.class, Location.class, new Getter<Location, EntityZapEvent>() {
+            EventValues.registerEventValue(EntityZapEvent.class, Location.class, new Getter<>() {
                 @Override
                 public Location get(EntityZapEvent e) {
                     return e.getEntity().getLocation();
@@ -170,21 +166,20 @@ public class PaperEvents {
                             "\t\tif loop-player has permission \"no.anvil.break\"",
                             "\t\t\tcancel event")
                     .since("1.5.0");
-            EventValues.registerEventValue(AnvilDamagedEvent.class, Inventory.class, new Getter<Inventory, AnvilDamagedEvent>() {
-                @Nullable
+            EventValues.registerEventValue(AnvilDamagedEvent.class, Inventory.class, new Getter<>() {
                 @Override
-                public Inventory get(@NotNull AnvilDamagedEvent event) {
+                public @NotNull Inventory get(@NotNull AnvilDamagedEvent event) {
                     return event.getInventory();
                 }
             }, 0);
-            EventValues.registerEventValue(AnvilDamagedEvent.class, Block.class, new Getter<Block, AnvilDamagedEvent>() {
+            EventValues.registerEventValue(AnvilDamagedEvent.class, Block.class, new Getter<>() {
                 @Nullable
                 @Override
                 public Block get(AnvilDamagedEvent event) {
                     return event.getViewers().get(0).getTargetBlockExact(10);
                 }
             }, 0);
-            EventValues.registerEventValue(AnvilDamagedEvent.class, Player.class, new Getter<Player, AnvilDamagedEvent>() {
+            EventValues.registerEventValue(AnvilDamagedEvent.class, Player.class, new Getter<>() {
                 @Nullable
                 @Override
                 public Player get(AnvilDamagedEvent event) {
@@ -201,23 +196,22 @@ public class PaperEvents {
                             "\tif event-player does not have permission \"my.server.beacons\":",
                             "\t\tcancel event")
                     .since("1.8.4");
-            EventValues.registerEventValue(BeaconEffectEvent.class, Player.class, new Getter<Player, BeaconEffectEvent>() {
+            EventValues.registerEventValue(BeaconEffectEvent.class, Player.class, new Getter<>() {
                 @Override
                 public Player get(BeaconEffectEvent e) {
                     return e.getPlayer();
                 }
             }, 0);
             // TODO These two values will make more sense in the future (Currently have a PR for potion effects in Skript)
-            EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffectType.class, new Getter<PotionEffectType, BeaconEffectEvent>() {
+            EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffectType.class, new Getter<>() {
                 @Override
                 public PotionEffectType get(BeaconEffectEvent e) {
                     return e.getEffect().getType();
                 }
             }, 0);
-            EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffect.class, new Getter<PotionEffect, BeaconEffectEvent>() {
-                @Nullable
+            EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffect.class, new Getter<>() {
                 @Override
-                public PotionEffect get(BeaconEffectEvent e) {
+                public @NotNull PotionEffect get(BeaconEffectEvent e) {
                     return e.getEffect();
                 }
             }, 0);

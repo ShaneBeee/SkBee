@@ -17,6 +17,7 @@ import org.bukkit.event.Event;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation")
 @Name("Text Component - Click Event")
 @Description("Create a new click event. Supports run command, suggest command, open link and copy to clipboard.")
 @Examples({"set {_t} to text component from \"Check out my cool website\"",
@@ -41,6 +42,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
     private int pattern;
     private Expression<Object> object;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         this.pattern = matchedPattern;
@@ -52,30 +54,23 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
         return true;
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected ClickEvent[] get(Event e) {
+    protected ClickEvent[] get(Event event) {
         if (object == null) return null;
 
-        Object value = object.getSingle(e);
+        Object value = object.getSingle(event);
         Action action;
 
         switch (pattern) {
-            case 1:
-                action = Action.SUGGEST_COMMAND;
-                break;
-            case 2:
-                action = Action.OPEN_URL;
-                break;
-            case 3:
-                action = Action.COPY_TO_CLIPBOARD;
-                break;
-            case 4:
+            case 1 -> action = Action.SUGGEST_COMMAND;
+            case 2 -> action = Action.OPEN_URL;
+            case 3 -> action = Action.COPY_TO_CLIPBOARD;
+            case 4 -> {
                 action = Action.CHANGE_PAGE;
-                value = "" + (((Number) object.getSingle(e)).intValue());
-                break;
-            default:
-                action = Action.RUN_COMMAND;
+                value = "" + (((Number) object.getSingle(event)).intValue());
+            }
+            default -> action = Action.RUN_COMMAND;
         }
         return new ClickEvent[]{new ClickEvent(action, (String) value)};
     }

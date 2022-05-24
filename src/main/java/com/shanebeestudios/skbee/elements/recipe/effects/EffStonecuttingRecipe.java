@@ -60,7 +60,6 @@ public class EffStonecuttingRecipe extends Effect {
         return true;
     }
 
-    @SuppressWarnings("deprecation")
     @Override
     protected void execute(Event event) {
         ItemType item = this.item.getSingle(event);

@@ -13,6 +13,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Loaded Chunks")
@@ -29,16 +30,18 @@ public class ExprLoadedChunks extends SimpleExpression<Chunk> {
 
     private Expression<World> world;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         world = (Expression<World>) exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
-    protected Chunk[] get(Event e) {
-        World world = this.world.getSingle(e);
+    protected Chunk[] get(Event event) {
+        World world = this.world.getSingle(event);
         if (world != null) {
             return world.getLoadedChunks();
         }
@@ -51,12 +54,12 @@ public class ExprLoadedChunks extends SimpleExpression<Chunk> {
     }
 
     @Override
-    public Class<? extends Chunk> getReturnType() {
+    public @NotNull Class<? extends Chunk> getReturnType() {
         return Chunk.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "loaded chunks of world '" + world.toString(e, d) + "'";
     }
 

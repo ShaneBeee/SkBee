@@ -15,6 +15,7 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +41,14 @@ public class ExprBlockCuboid extends SimpleExpression<Block> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int i, @NotNull Kleenean kleenean, SkriptParser.@NotNull ParseResult parseResult) {
         from = (Expression<Location>) exprs[0];
         to = (Expression<Location>) exprs[1];
         return true;
     }
 
     @Override
-    protected Block[] get(Event e) {
+    protected Block @NotNull [] get(@NotNull Event e) {
         Location from = this.from != null ? this.from.getSingle(e) : null;
         Location to = this.to != null ? this.to.getSingle(e) : null;
         if (to == null || from == null) return null;
@@ -56,7 +57,7 @@ public class ExprBlockCuboid extends SimpleExpression<Block> {
     }
 
     @Override
-    public Class<? extends Block> getReturnType() {
+    public @NotNull Class<? extends Block> getReturnType() {
         return Block.class;
     }
 
@@ -66,7 +67,7 @@ public class ExprBlockCuboid extends SimpleExpression<Block> {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "cuboid blocks within " + from.toString(e, d) + " and " + to.toString(e, d);
     }
 

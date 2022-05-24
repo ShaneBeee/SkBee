@@ -46,8 +46,6 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
         }
         setExpr((Expression<LivingEntity>) exprs[1]);
         speed = (Expression<Number>) exprs[0];
-        Long i;
-
         return true;
     }
 
@@ -64,15 +62,13 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
         return mob.getLocation();
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
-        switch (mode) {
-            case SET:
-            case DELETE:
-                return CollectionUtils.array(Location.class);
-        }
-        return null;
+        return switch (mode) {
+            case SET, DELETE -> CollectionUtils.array(Location.class);
+            default -> null;
+        };
     }
 
     @Override
@@ -80,9 +76,8 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
         Location location = delta != null ? (Location) delta[0] : null;
         Number number = this.speed != null ? this.speed.getSingle(e) : 0;
         for (LivingEntity entity : getExpr().getArray(e)) {
-            if (!(entity instanceof Mob)) return;
+            if (!(entity instanceof Mob mob)) return;
 
-            Mob mob = ((Mob) entity);
             switch (mode) {
                 case SET:
                     if (location != null)

@@ -45,7 +45,7 @@ public class ExprPath extends SimpleExpression<Location> {
         return true;
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Location[] get(@NotNull Event e) {
         List<Location> locations = new ArrayList<>();

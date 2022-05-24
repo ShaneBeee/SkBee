@@ -32,17 +32,19 @@ public class ExprBlockStateOffset extends SimpleExpression<Vector> {
 
     private Expression<BlockStateBee> blockstate;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         blockstate = (Expression<BlockStateBee>) exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
-    protected Vector[] get(Event e) {
+    protected Vector[] get(Event event) {
         List<Vector> offsets = new ArrayList<>();
-        for (BlockStateBee blockState : blockstate.getAll(e)) {
+        for (BlockStateBee blockState : blockstate.getAll(event)) {
             offsets.add(blockState.getOffset());
         }
         return offsets.toArray(new Vector[0]);
@@ -53,14 +55,16 @@ public class ExprBlockStateOffset extends SimpleExpression<Vector> {
         return blockstate.isSingle();
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<? extends Vector> getReturnType() {
         return Vector.class;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return "offset of blockstate " + blockstate.toString(e,d);
+        return "offset of blockstate " + blockstate.toString(e, d);
     }
 
 }

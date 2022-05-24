@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation")
 @Name("Book Pages")
 @Description("Allows you to set pages in a book to text components. You can also retrieve the pages. " +
         "Based on testing, a book's author/title needs to be set AFTER setting the pages, why? I have no idea!")
@@ -72,7 +73,7 @@ public class ExprBookPages extends SimpleExpression<BaseComponent> {
         return null;
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET) {

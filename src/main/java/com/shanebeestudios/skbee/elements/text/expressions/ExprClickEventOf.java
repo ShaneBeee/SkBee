@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation")
 @Name("Text Component - Click Event Of")
 @Description("Set the click event of a text component.")
 @Examples({"set {_t} to text component from \"Check out this cool thing at SPAWN!\"",
@@ -30,18 +31,20 @@ public class ExprClickEventOf extends PropertyExpression<BaseComponent, ClickEve
         register(ExprClickEventOf.class, ClickEvent.class, "click event", "basecomponents");
     }
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setExpr((Expression<BaseComponent>) exprs[0]);
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected ClickEvent @NotNull [] get(Event e, BaseComponent[] source) {
         return get(source, BaseComponent::getClickEvent);
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET)
@@ -49,6 +52,7 @@ public class ExprClickEventOf extends PropertyExpression<BaseComponent, ClickEve
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
         ClickEvent clickEvent = delta != null ? ((ClickEvent) delta[0]) : null;

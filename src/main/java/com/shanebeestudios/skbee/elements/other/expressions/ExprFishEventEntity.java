@@ -16,6 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Fish Event Entity")
 @Description("Represents the caught entity or hook in a fish event.")
@@ -33,6 +34,7 @@ public class ExprFishEventEntity extends SimpleExpression<Entity> {
 
     private int pattern;
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!ParserInstance.get().isCurrentEvent(PlayerFishEvent.class)) {
@@ -43,12 +45,12 @@ public class ExprFishEventEntity extends SimpleExpression<Entity> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable Entity[] get(Event event) {
-        if (!(event instanceof PlayerFishEvent)) {
+        if (!(event instanceof PlayerFishEvent fishEvent)) {
             return null;
         }
-        PlayerFishEvent fishEvent = (PlayerFishEvent) event;
         return new Entity[]{pattern == 0 ? fishEvent.getCaught() : fishEvent.getHook()};
     }
 
@@ -58,12 +60,12 @@ public class ExprFishEventEntity extends SimpleExpression<Entity> {
     }
 
     @Override
-    public Class<? extends Entity> getReturnType() {
+    public @NotNull Class<? extends Entity> getReturnType() {
         return Entity.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean debug) {
+    public @NotNull String toString(@Nullable Event e, boolean debug) {
         String entity = pattern == 0 ? "caught entity" : "fish hook";
         return "fish event " + entity;
     }

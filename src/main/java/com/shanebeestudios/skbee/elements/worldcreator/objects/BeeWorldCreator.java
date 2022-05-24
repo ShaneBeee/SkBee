@@ -163,10 +163,10 @@ public class BeeWorldCreator {
             if (seed == -1) {
                 seed = world.getSeed();
             }
-            if (!genStructures.isPresent()) {
+            if (genStructures.isEmpty()) {
                 genStructures = Optional.of(world.canGenerateStructures());
             }
-            if (!hardcore.isPresent()) {
+            if (hardcore.isEmpty()) {
                 hardcore = Optional.of(world.isHardcore());
             }
 

@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import org.bukkit.Chunk;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Chunk Coordinates")
@@ -35,7 +36,7 @@ public class ExprChunkCoords extends PropertyExpression<Chunk, Number> {
     }
 
     @Override
-    protected Number[] get(Event e, Chunk[] source) {
+    protected Number @NotNull [] get(Event event, Chunk[] source) {
         return get(source, chunk -> parseMark == 0 ? chunk.getX() : chunk.getZ());
     }
 
@@ -45,7 +46,7 @@ public class ExprChunkCoords extends PropertyExpression<Chunk, Number> {
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "chunk X/Z coord of " + getExpr().toString(e, d);
     }
 

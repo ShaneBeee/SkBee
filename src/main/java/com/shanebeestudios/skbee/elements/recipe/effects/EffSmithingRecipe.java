@@ -114,20 +114,16 @@ public class EffSmithingRecipe extends Effect {
                 addition.toString(e, d) + " with id " + key.toString(e, d);
     }
 
-    @SuppressWarnings("deprecation") // ExactChoice = draft API
     private RecipeChoice getChoice(Object object) {
-        if (object instanceof ItemType) {
-            ItemType itemType = ((ItemType) object);
+        if (object instanceof ItemType itemType) {
             ItemStack itemStack = itemType.getRandom();
-            if (itemStack != null) {
 
-                Material material = itemStack.getType();
-                // If ingredient isn't a custom item, just register the material
-                if (itemStack.isSimilar(new ItemStack(material))) {
-                    return new MaterialChoice(material);
-                } else {
-                    return new ExactChoice(itemStack);
-                }
+            Material material = itemStack.getType();
+            // If ingredient isn't a custom item, just register the material
+            if (itemStack.isSimilar(new ItemStack(material))) {
+                return new MaterialChoice(material);
+            } else {
+                return new ExactChoice(itemStack);
             }
         } else if (object instanceof MaterialChoice) {
             return ((MaterialChoice) object);

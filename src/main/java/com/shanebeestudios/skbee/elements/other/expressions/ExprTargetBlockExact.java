@@ -11,6 +11,7 @@ import ch.njol.skript.lang.ExpressionType;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Target Block Exact")
@@ -35,12 +36,12 @@ public class ExprTargetBlockExact extends SimplePropertyExpression<LivingEntity,
     }
 
     @Override
-    public Class<? extends Block> getReturnType() {
+    public @NotNull Class<? extends Block> getReturnType() {
         return Block.class;
     }
 
     @Override
-    protected String getPropertyName() {
+    protected @NotNull String getPropertyName() {
         return "exact target block";
     }
 

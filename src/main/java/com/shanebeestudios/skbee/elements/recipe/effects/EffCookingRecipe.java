@@ -125,20 +125,16 @@ public class EffCookingRecipe extends Effect {
     }
 
     private void cookingRecipe(ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp, int cookTime) {
-        CookingRecipe<?> recipe;
-        switch (recipeType) {
-            case 1: // BLASTING
-                recipe = new BlastingRecipe(key, result, ingredient, xp, cookTime);
-                break;
-            case 2: // SMOKING
-                recipe = new SmokingRecipe(key, result, ingredient, xp, cookTime);
-                break;
-            case 3: // CAMPFIRE
-                recipe = new CampfireRecipe(key, result, ingredient, xp, cookTime);
-                break;
-            default: // FURNACE
-                recipe = new FurnaceRecipe(key, result, ingredient, xp, cookTime);
-        }
+        CookingRecipe<?> recipe = switch (recipeType) {
+            case 1 -> // BLASTING
+                    new BlastingRecipe(key, result, ingredient, xp, cookTime);
+            case 2 -> // SMOKING
+                    new SmokingRecipe(key, result, ingredient, xp, cookTime);
+            case 3 -> // CAMPFIRE
+                    new CampfireRecipe(key, result, ingredient, xp, cookTime);
+            default -> // FURNACE
+                    new FurnaceRecipe(key, result, ingredient, xp, cookTime);
+        };
 
         recipe.setGroup(group);
         Bukkit.addRecipe(recipe);
@@ -148,33 +144,24 @@ public class EffCookingRecipe extends Effect {
     }
 
     private int getDefaultCookTime(int t) {
-        switch (t) {
-            case 1: // BLASTING
-            case 2: // SMOKING
-                return 100;
-            case 3: // CAMPFIRE
-                return 600;
-            default: // FURNACE
-                return 200;
-        }
+        return switch (t) { // BLASTING
+            case 1, 2 -> // SMOKING
+                    100;
+            case 3 -> // CAMPFIRE
+                    600;
+            default -> // FURNACE
+                    200;
+        };
     }
 
     @Override
     public String toString(Event e, boolean d) {
-        String type;
-        switch (recipeType) {
-            case 1:
-                type = "blasting";
-                break;
-            case 2:
-                type = "smoking";
-                break;
-            case 3:
-                type = "campfire";
-                break;
-            default:
-                type = "furnace";
-        }
+        String type = switch (recipeType) {
+            case 1 -> "blasting";
+            case 2 -> "smoking";
+            case 3 -> "campfire";
+            default -> "furnace";
+        };
         String xp = experience != null ? " and with xp " + experience.toString(e, d) : "";
         String cook = cookTime != null ? " and with cooktime " + cookTime.toString(e, d) : "";
         return "register new " + type + " recipe for " + item.toString(e, d) + " using " + ingredient.toString(e, d) +

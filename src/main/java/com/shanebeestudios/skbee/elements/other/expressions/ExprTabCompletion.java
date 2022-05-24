@@ -58,24 +58,18 @@ public class ExprTabCompletion extends SimpleExpression<String> {
         return true;
     }
 
-    @Nullable
     @Override
-    protected String[] get(@NotNull Event event) {
+    protected String @NotNull [] get(@NotNull Event event) {
         return ((TabCompleteEvent) event).getCompletions().toArray(new String[0]);
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
-        switch (mode) {
-            case SET:
-            case REMOVE:
-            case DELETE:
-            case ADD:
-            case REMOVE_ALL:
-                return CollectionUtils.array(Object[].class);
-        }
-        return null;
+        return switch (mode) {
+            case SET, REMOVE, DELETE, ADD, REMOVE_ALL -> CollectionUtils.array(Object[].class);
+            default -> null;
+        };
     }
 
     @Override
@@ -89,7 +83,7 @@ public class ExprTabCompletion extends SimpleExpression<String> {
         }
 
         switch (mode) {
-            case SET:
+            case SET -> {
                 String buff = event.getBuffer();
                 String[] buffers = buff.split(" ");
                 String last = buff.substring(buff.length() - 1);
@@ -115,8 +109,8 @@ public class ExprTabCompletion extends SimpleExpression<String> {
                     }
                     event.setCompletions(completions);
                 }
-                break;
-            case REMOVE:
+            }
+            case REMOVE -> {
                 assert objects != null;
                 for (Object object : objects) {
                     try {
@@ -124,8 +118,8 @@ public class ExprTabCompletion extends SimpleExpression<String> {
                     } catch (Exception ignore) {
                     } // Had a little issue when removing from a blank list
                 }
-                break;
-            case ADD:
+            }
+            case ADD -> {
                 assert objects != null;
                 List<String> completions = new ArrayList<>();
                 for (Object object : objects) {
@@ -133,10 +127,8 @@ public class ExprTabCompletion extends SimpleExpression<String> {
                 }
                 completions.addAll(event.getCompletions());
                 event.setCompletions(completions);
-                break;
-            case DELETE:
-                event.setCompletions(Collections.singletonList(""));
-                break;
+            }
+            case DELETE -> event.setCompletions(Collections.singletonList(""));
         }
     }
 

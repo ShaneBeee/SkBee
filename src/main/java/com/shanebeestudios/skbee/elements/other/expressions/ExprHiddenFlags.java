@@ -54,32 +54,20 @@ public class ExprHiddenFlags extends SimplePropertyExpression<ItemType, ItemType
             return item;
         }
         switch (parse) {
-            case 0:
+            case 0 -> {
                 meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
                 meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
                 meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
                 meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
                 meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
                 meta.addItemFlags(ItemFlag.HIDE_DYE);
-                break;
-            case 1:
-                meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
-                break;
-            case 2:
-                meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
-                break;
-            case 3:
-                meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
-                break;
-            case 4:
-                meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
-                break;
-            case 5:
-                meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
-                break;
-            case 6:
-                meta.addItemFlags(ItemFlag.HIDE_DYE);
-                break;
+            }
+            case 1 -> meta.addItemFlags(ItemFlag.HIDE_ENCHANTS);
+            case 2 -> meta.addItemFlags(ItemFlag.HIDE_DESTROYS);
+            case 3 -> meta.addItemFlags(ItemFlag.HIDE_POTION_EFFECTS);
+            case 4 -> meta.addItemFlags(ItemFlag.HIDE_UNBREAKABLE);
+            case 5 -> meta.addItemFlags(ItemFlag.HIDE_ATTRIBUTES);
+            case 6 -> meta.addItemFlags(ItemFlag.HIDE_DYE);
         }
 
         item.setItemMeta(meta);

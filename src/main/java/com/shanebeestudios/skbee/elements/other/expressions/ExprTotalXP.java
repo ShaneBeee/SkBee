@@ -16,6 +16,7 @@ import com.shanebeestudios.skbee.api.util.PlayerUtils;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Total Experience")
 @Description("Represents the total experience points the player currently has.")
@@ -62,27 +63,21 @@ public class ExprTotalXP extends PropertyExpression<Player, Integer> {
         for (Player player : getExpr().getArray(e)) {
             int value = PlayerUtils.getTotalXP(player);
             switch (mode) {
-                case ADD:
-                    value += change;
-                    break;
-                case REMOVE:
-                    value -= change;
-                    break;
-                case SET:
-                    value = change;
-                    break;
+                case ADD -> value += change;
+                case REMOVE -> value -= change;
+                case SET -> value = change;
             }
             PlayerUtils.setTotalXP(player, value);
         }
     }
 
     @Override
-    public Class<? extends Integer> getReturnType() {
+    public @NotNull Class<? extends Integer> getReturnType() {
         return Integer.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "total experience points of " + getExpr().toString(e, d);
     }
 

@@ -10,10 +10,10 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 
 import javax.annotation.Nullable;
 
@@ -43,7 +43,7 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
     private Expression<World> world;
     private boolean clone;
 
-    @SuppressWarnings({"unchecked", "ConstantConditions"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         this.pattern = matchedPattern;
@@ -53,7 +53,7 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
         return true;
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     protected BeeWorldCreator[] get(@NotNull Event e) {
         String name = this.name.getSingle(e);

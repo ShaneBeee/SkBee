@@ -13,6 +13,7 @@ import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Anvil Repair Cost")
@@ -40,8 +41,9 @@ public class ExprAnvilRepairCost extends SimplePropertyExpression<Inventory, Num
 
     private int pattern;
 
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = parseResult.mark;
         setExpr((Expression<? extends Inventory>) exprs[0]);
         return true;
@@ -54,20 +56,16 @@ public class ExprAnvilRepairCost extends SimplePropertyExpression<Inventory, Num
         return pattern == 0 ? ((AnvilInventory) inv).getRepairCost() : ((AnvilInventory) inv).getMaximumRepairCost();
     }
 
-    @Nullable
     @Override
-    public Class<?>[] acceptChange(ChangeMode mode) {
-        switch (mode) {
-            case SET:
-            case ADD:
-            case REMOVE:
-                return CollectionUtils.array(Number.class);
-        }
-        return null;
+    public Class<?> @NotNull [] acceptChange(@NotNull ChangeMode mode) {
+        return switch (mode) {
+            case SET, ADD, REMOVE -> CollectionUtils.array(Number.class);
+            default -> null;
+        };
     }
 
     @Override
-    public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+    public void change(@NotNull Event e, Object @NotNull [] delta, @NotNull ChangeMode mode) {
         Number number = (Number) delta[0];
         if (number == null) return;
 
@@ -79,36 +77,26 @@ public class ExprAnvilRepairCost extends SimplePropertyExpression<Inventory, Num
 
         if (pattern == 0) {
             switch (mode) {
-                case SET:
-                    anvilInv.setRepairCost(cost);
-                    break;
-                case ADD:
-                    anvilInv.setRepairCost(anvilInv.getRepairCost() + cost);
-                    break;
-                case REMOVE:
-                    anvilInv.setRepairCost(Math.max(anvilInv.getRepairCost() - cost, 0));
+                case SET -> anvilInv.setRepairCost(cost);
+                case ADD -> anvilInv.setRepairCost(anvilInv.getRepairCost() + cost);
+                case REMOVE -> anvilInv.setRepairCost(Math.max(anvilInv.getRepairCost() - cost, 0));
             }
         } else {
             switch (mode) {
-                case SET:
-                    anvilInv.setMaximumRepairCost(cost);
-                    break;
-                case ADD:
-                    anvilInv.setMaximumRepairCost(anvilInv.getMaximumRepairCost() + cost);
-                    break;
-                case REMOVE:
-                    anvilInv.setMaximumRepairCost(Math.max(anvilInv.getMaximumRepairCost() - cost, 0));
+                case SET -> anvilInv.setMaximumRepairCost(cost);
+                case ADD -> anvilInv.setMaximumRepairCost(anvilInv.getMaximumRepairCost() + cost);
+                case REMOVE -> anvilInv.setMaximumRepairCost(Math.max(anvilInv.getMaximumRepairCost() - cost, 0));
             }
         }
     }
 
     @Override
-    public Class<? extends Number> getReturnType() {
+    public @NotNull Class<? extends Number> getReturnType() {
         return Number.class;
     }
 
     @Override
-    protected String getPropertyName() {
+    protected @NotNull String getPropertyName() {
         String cost = pattern == 0 ? "repair cost" : "max repair cost";
         return String.format("anvil inventory %s", cost);
     }

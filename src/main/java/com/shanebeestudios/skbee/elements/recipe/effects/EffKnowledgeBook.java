@@ -41,7 +41,7 @@ public class EffKnowledgeBook extends Effect {
     private boolean minecraft;
     private boolean add;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int pattern, Kleenean kleenean, ParseResult parseResult) {
         recipes = (Expression<String>) exprs[0];
@@ -52,6 +52,7 @@ public class EffKnowledgeBook extends Effect {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         if (book.getSingle(event).getMaterial() != Material.KNOWLEDGE_BOOK)
@@ -88,6 +89,7 @@ public class EffKnowledgeBook extends Effect {
         book.setItemMeta(meta);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(Event e, boolean d) {
         return (add ? "add" : "remove") + (minecraft ? " minecraft" : " custom") + " recipe(s) " + recipes.toString(e, d) +

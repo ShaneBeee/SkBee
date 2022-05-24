@@ -8,6 +8,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.EnchantmentType;
 import org.bukkit.enchantments.Enchantment;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Enchantment")
 @Description("Get the type of enchantment from an Enchantment Type.")
@@ -27,12 +28,12 @@ public class ExprEnchantment extends SimplePropertyExpression<EnchantmentType, E
     }
 
     @Override
-    public Class<? extends Enchantment> getReturnType() {
+    public @NotNull Class<? extends Enchantment> getReturnType() {
         return Enchantment.class;
     }
 
     @Override
-    protected String getPropertyName() {
+    protected @NotNull String getPropertyName() {
         return "enchantment";
     }
 

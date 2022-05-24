@@ -39,19 +39,21 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
 
     private int pattern;
     private Expression<ItemType> itemTypes;
-    private Expression<Tag> tags;
+    private Expression<Tag<Material>> tags;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         pattern = matchedPattern;
         if (pattern == 0) {
             itemTypes = (Expression<ItemType>) exprs[0];
         } else if (pattern == 1) {
-            tags = (Expression<Tag>) exprs[0];
+            tags = (Expression<Tag<Material>>) exprs[0];
         }
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     protected MaterialChoice[] get(Event event) {
@@ -80,11 +82,13 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<? extends MaterialChoice> getReturnType() {
         return MaterialChoice.class;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
         return String.format("material choice of %s",

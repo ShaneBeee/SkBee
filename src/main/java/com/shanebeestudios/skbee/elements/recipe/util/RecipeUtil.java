@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.recipe.util;
 import ch.njol.skript.Skript;
 import ch.njol.skript.util.Timespan;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
@@ -11,13 +12,11 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import com.shanebeestudios.skbee.api.util.Util;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@SuppressWarnings("deprecation")
 public class RecipeUtil {
 
     private static final String NAMESPACE = SkBee.getPlugin().getPluginConfig().RECIPE_NAMESPACE;
@@ -33,7 +32,7 @@ public class RecipeUtil {
         try {
             return new NamespacedKey(NAMESPACE, key.toLowerCase());
         } catch (IllegalArgumentException ex) {
-            error( ex.getMessage());
+            error(ex.getMessage());
             return null;
         }
     }

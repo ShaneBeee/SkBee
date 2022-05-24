@@ -119,8 +119,8 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
             return getTranslation(itemStack, event);
         } else if (object instanceof ExprTool tool) {
             return getTranslation(tool.getSingle(event), event);
-        } else if (object instanceof String) {
-            return ((String) object);
+        } else if (object instanceof String string) {
+            return string;
         } else if (HAS_TRANSLATION) {
             return TextUtils.getTranslationKey(object);
         }

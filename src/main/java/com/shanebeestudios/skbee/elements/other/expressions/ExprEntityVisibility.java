@@ -47,27 +47,27 @@ public class ExprEntityVisibility extends PropertyExpression<Entity, Boolean> {
 
     @Override
     protected Boolean @NotNull [] get(@NotNull Event e, Entity @NotNull [] source) {
-        return get(source, new Getter<Boolean, Entity>() {
+        return get(source, new Getter<>() {
             @Nullable
             @Override
             public Boolean get(@NotNull Entity entity) {
-                if (entity instanceof ArmorStand) {
-                    return ((ArmorStand) entity).isVisible();
-                } else if (entity instanceof ItemFrame && ITEM_FRAME) {
-                    return ((ItemFrame) entity).isVisible();
-                } else if (entity instanceof LivingEntity && LIVING_ENTITY) {
-                    return !((LivingEntity) entity).isInvisible();
+                if (entity instanceof ArmorStand armorStand) {
+                    return armorStand.isVisible();
+                } else if (entity instanceof ItemFrame itemFrame && ITEM_FRAME) {
+                    return itemFrame.isVisible();
+                } else if (entity instanceof LivingEntity livingEntity && LIVING_ENTITY) {
+                    return !livingEntity.isInvisible();
                 }
                 return null;
             }
         });
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-           return CollectionUtils.array(Boolean[].class);
+            return CollectionUtils.array(Boolean[].class);
         }
         return null;
     }
@@ -76,12 +76,12 @@ public class ExprEntityVisibility extends PropertyExpression<Entity, Boolean> {
     public void change(@NotNull Event event, @Nullable Object[] delta, @NotNull ChangeMode mode) {
         boolean visible = delta != null && ((boolean) delta[0]);
         for (Entity entity : getExpr().getArray(event)) {
-            if (entity instanceof ArmorStand) {
-                ((ArmorStand) entity).setVisible(visible);
-            } else if (entity instanceof ItemFrame && ITEM_FRAME) {
-                ((ItemFrame) entity).setVisible(visible);
-            } else if (entity instanceof LivingEntity && LIVING_ENTITY) {
-                ((LivingEntity) entity).setInvisible(!visible);
+            if (entity instanceof ArmorStand armorStand) {
+                armorStand.setVisible(visible);
+            } else if (entity instanceof ItemFrame itemFrame && ITEM_FRAME) {
+                itemFrame.setVisible(visible);
+            } else if (entity instanceof LivingEntity livingEntity && LIVING_ENTITY) {
+                livingEntity.setInvisible(!visible);
             }
         }
     }

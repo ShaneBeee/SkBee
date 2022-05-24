@@ -2,7 +2,10 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.*;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -13,7 +16,6 @@ import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Name("Knockback Attacker/Victim")
 @Description("The attacker/victim in an entity knockback event. Paper 1.12.2+")
@@ -39,10 +41,10 @@ public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Entity[] get(@NotNull Event event) {
-        if (event instanceof EntityKnockbackByEntityEvent) {
-            EntityKnockbackByEntityEvent knockbackEvent = (EntityKnockbackByEntityEvent) event;
+        if (event instanceof EntityKnockbackByEntityEvent knockbackEvent) {
             if (ent == 1) {
                 return new Entity[]{knockbackEvent.getHitBy()};
             } else {

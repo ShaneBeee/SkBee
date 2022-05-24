@@ -50,6 +50,7 @@ public class ExprMinecraftTag extends SimpleExpression<Object> {
     private Expression<String> strings;
     private int tagPattern;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         pattern = matchedPattern;
@@ -60,6 +61,7 @@ public class ExprMinecraftTag extends SimpleExpression<Object> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     protected Object[] get(Event event) {
@@ -109,17 +111,15 @@ public class ExprMinecraftTag extends SimpleExpression<Object> {
         return pattern == 2 ? ItemType.class : Tag.class;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        switch (pattern) {
-            case 0:
-                return String.format("minecraft %s tag[s] %s", TAG_TYPE[tagPattern], strings.toString(e, d));
-            case 1:
-                return String.format("all minecraft %s tag[s]", TAG_TYPE[tagPattern]);
-            case 2:
-                return String.format("all itemtypes of minecraft %s tag[s] %s", TAG_TYPE[tagPattern], strings.toString(e, d));
-        }
-        return null;
+        return switch (pattern) {
+            case 0 -> String.format("minecraft %s tag[s] %s", TAG_TYPE[tagPattern], strings.toString(e, d));
+            case 1 -> String.format("all minecraft %s tag[s]", TAG_TYPE[tagPattern]);
+            case 2 -> String.format("all itemtypes of minecraft %s tag[s] %s", TAG_TYPE[tagPattern], strings.toString(e, d));
+            default -> null;
+        };
     }
 
 }

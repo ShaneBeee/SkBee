@@ -16,6 +16,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.world.GenericGameEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Game Event - Radius")
@@ -31,6 +32,7 @@ public class ExprGameEventRadius extends SimpleExpression<Number> {
     }
 
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!ScriptLoader.isCurrentEvent(GenericGameEvent.class)) {
@@ -40,48 +42,37 @@ public class ExprGameEventRadius extends SimpleExpression<Number> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     protected Number[] get(Event event) {
-        if (event instanceof GenericGameEvent) {
-            GenericGameEvent gameEvent = (GenericGameEvent) event;
+        if (event instanceof GenericGameEvent gameEvent) {
             return new Number[]{gameEvent.getRadius()};
         }
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
-        switch (mode) {
-            case SET:
-            case ADD:
-            case REMOVE:
-            case DELETE:
-                return CollectionUtils.array(Number[].class);
-        }
-        return null;
+        return switch (mode) {
+            case SET, ADD, REMOVE, DELETE -> CollectionUtils.array(Number[].class);
+            default -> null;
+        };
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (event instanceof GenericGameEvent && delta != null) {
-            GenericGameEvent gameEvent = (GenericGameEvent) event;
+        if (event instanceof GenericGameEvent gameEvent && delta != null) {
             int radiusChange = delta[0] instanceof Number ? ((Number) delta[0]).intValue() : 0;
             int radius = gameEvent.getRadius();
             switch (mode) {
-                case SET:
-                    radius = radiusChange;
-                    break;
-                case ADD:
-                    radius += radiusChange;
-                    break;
-                case REMOVE:
-                    radius -= radiusChange;
-                    break;
-                case DELETE:
-                    radius = 0;
-                    break;
+                case SET -> radius = radiusChange;
+                case ADD -> radius += radiusChange;
+                case REMOVE -> radius -= radiusChange;
+                case DELETE -> radius = 0;
             }
             if (radius < 0) {
                 radius = 0;
@@ -96,12 +87,12 @@ public class ExprGameEventRadius extends SimpleExpression<Number> {
     }
 
     @Override
-    public Class<? extends Number> getReturnType() {
+    public @NotNull Class<? extends Number> getReturnType() {
         return Number.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean debug) {
+    public @NotNull String toString(@Nullable Event e, boolean debug) {
         return "game event radius";
     }
 

@@ -63,6 +63,7 @@ public class EffSendComponent extends Effect {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event e) {
         if (components == null) return;
@@ -90,8 +91,8 @@ public class EffSendComponent extends Effect {
     }
 
     private void sendMessage(CommandSender receiver, Player sender, BaseComponent... components) {
-        if (action && receiver instanceof Player) {
-            ((Player) receiver).sendMessage(ChatMessageType.ACTION_BAR, components);
+        if (action && receiver instanceof Player player) {
+            player.sendMessage(ChatMessageType.ACTION_BAR, components);
         } else if (sender != null) {
             receiver.spigot().sendMessage(sender.getUniqueId(), components);
         } else {

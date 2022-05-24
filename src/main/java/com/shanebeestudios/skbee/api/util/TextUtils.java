@@ -9,10 +9,10 @@ import org.bukkit.entity.Entity;
 public class TextUtils {
 
     public static String getTranslationKey(Object object) {
-        if (object instanceof Translatable) {
-            return ((Translatable) object).translationKey();
-        } else if (object instanceof Entity) {
-            return ((Entity) object).getType().translationKey();
+        if (object instanceof Translatable translatable) {
+            return translatable.translationKey();
+        } else if (object instanceof Entity entity) {
+            return entity.getType().translationKey();
         }
         return null;
     }

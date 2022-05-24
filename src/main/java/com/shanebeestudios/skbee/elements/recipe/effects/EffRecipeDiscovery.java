@@ -35,7 +35,7 @@ public class EffRecipeDiscovery extends Effect {
     private boolean discover;
     private boolean minecraft;
 
-    @SuppressWarnings({"unchecked", "null"})
+    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int pattern, Kleenean kleenean, ParseResult parseResult) {
         recipes = (Expression<String>) exprs[0];
@@ -45,6 +45,7 @@ public class EffRecipeDiscovery extends Effect {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Player[] players = this.players.getAll(event);
@@ -65,6 +66,7 @@ public class EffRecipeDiscovery extends Effect {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(Event e, boolean d) {
         String disc = discover ? "discover" : "undiscover";

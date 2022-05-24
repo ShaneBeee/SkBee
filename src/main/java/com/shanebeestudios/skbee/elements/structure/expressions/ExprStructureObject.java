@@ -47,18 +47,19 @@ public class ExprStructureObject extends SimpleExpression<StructureBee> {
     @SuppressWarnings("null")
     private Expression<String> fileString;
 
-    @SuppressWarnings({"unchecked", "null"})
+    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         fileString = (Expression<String>) exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
-    protected StructureBee[] get(Event e) {
+    protected StructureBee[] get(Event event) {
         List<StructureBee> structures = new ArrayList<>();
-        for (String file : fileString.getAll(e)) {
+        for (String file : fileString.getAll(event)) {
             assert STRUCTURE_BEE_MANAGER != null;
             StructureBee structure = STRUCTURE_BEE_MANAGER.getStructure(file);
             if (structure != null) {
@@ -73,11 +74,13 @@ public class ExprStructureObject extends SimpleExpression<StructureBee> {
         return fileString.isSingle();
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<? extends StructureBee> getReturnType() {
         return StructureBee.class;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
         return "structure[s] named " + fileString.toString(e, d);

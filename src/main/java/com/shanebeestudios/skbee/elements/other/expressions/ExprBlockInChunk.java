@@ -15,6 +15,7 @@ import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Block in Chunk")
@@ -42,7 +43,7 @@ public class ExprBlockInChunk extends SimpleExpression<Block> {
         return true;
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Block[] get(Event e) {
         Chunk chunk = this.chunk.getSingle(e);
@@ -76,12 +77,12 @@ public class ExprBlockInChunk extends SimpleExpression<Block> {
     }
 
     @Override
-    public Class<? extends Block> getReturnType() {
+    public @NotNull Class<? extends Block> getReturnType() {
         return Block.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return String.format("Block at %s,%s,%s in chunk %s",
                 this.x.toString(e,d),
                 this.y.toString(e,d),

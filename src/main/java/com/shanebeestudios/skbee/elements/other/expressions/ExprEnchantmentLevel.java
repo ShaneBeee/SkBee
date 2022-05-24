@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.EnchantmentType;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Enchantment Level")
 @Description("Get the enchantment level from an Enchantment Type.")
@@ -26,12 +27,12 @@ public class ExprEnchantmentLevel extends SimplePropertyExpression<EnchantmentTy
     }
 
     @Override
-    public Class<? extends Number> getReturnType() {
+    public @NotNull Class<? extends Number> getReturnType() {
         return Number.class;
     }
 
     @Override
-    protected String getPropertyName() {
+    protected @NotNull String getPropertyName() {
         return "enchantment level";
     }
 

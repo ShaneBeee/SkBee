@@ -32,16 +32,18 @@ public class ExprStructureBlockStates extends SimpleExpression<BlockStateBee> {
 
     private Expression<StructureBee> structure;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         structure = (Expression<StructureBee>) exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
-    protected BlockStateBee[] get(Event e) {
-        StructureBee structure = this.structure.getSingle(e);
+    protected BlockStateBee[] get(Event event) {
+        StructureBee structure = this.structure.getSingle(event);
         if (structure != null) {
             List<BlockStateBee> blocks = new ArrayList<>();
             structure.getBukkitStructure().getPalettes().get(0).getBlocks().forEach(state -> blocks.add(new BlockStateBee(state)));
@@ -55,13 +57,15 @@ public class ExprStructureBlockStates extends SimpleExpression<BlockStateBee> {
         return false;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<? extends BlockStateBee> getReturnType() {
         return BlockStateBee.class;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return "blockstates of structure " + structure.toString(e,d);
+        return "blockstates of structure " + structure.toString(e, d);
     }
 }

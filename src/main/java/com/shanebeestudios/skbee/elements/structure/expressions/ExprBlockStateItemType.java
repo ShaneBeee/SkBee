@@ -31,17 +31,19 @@ public class ExprBlockStateItemType extends SimpleExpression<ItemType> {
 
     private Expression<BlockStateBee> blockState;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         blockState = (Expression<BlockStateBee>) exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
-    protected ItemType[] get(Event e) {
+    protected ItemType[] get(Event event) {
         List<ItemType> itemTypes = new ArrayList<>();
-        for (BlockStateBee blockState : blockState.getAll(e)) {
+        for (BlockStateBee blockState : blockState.getAll(event)) {
             itemTypes.add(blockState.getItemType());
         }
         return itemTypes.toArray(new ItemType[0]);
@@ -52,14 +54,16 @@ public class ExprBlockStateItemType extends SimpleExpression<ItemType> {
         return blockState.isSingle();
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<? extends ItemType> getReturnType() {
         return ItemType.class;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return "itemtype of blockstate[s] " + blockState.toString(e,d);
+        return "itemtype of blockstate[s] " + blockState.toString(e, d);
     }
 
 }

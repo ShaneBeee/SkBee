@@ -7,6 +7,7 @@ import ch.njol.skript.registrations.Classes;
 import net.md_5.bungee.api.chat.BaseComponent;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 public class Types {
 
     static {

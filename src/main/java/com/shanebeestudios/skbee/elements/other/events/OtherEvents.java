@@ -5,6 +5,7 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.slot.Slot;
+import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -12,20 +13,19 @@ import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 
 public class OtherEvents {
 
     static {
         Skript.registerEvent("Block Physical Interact Event", SimpleEvent.class, EntityBlockInteractEvent.class,
-                "block (interact|trample)")
+                        "block (interact|trample)")
                 .description("Called when an entity physically interacts with a block, for example, trampling.")
                 .examples("on block interact:",
                         "\tif event-entity is a villager:",
                         "\t\tcancel event")
                 .since("1.5.0");
 
-        EventValues.registerEventValue(EntityBlockInteractEvent.class, Block.class, new Getter<Block, EntityBlockInteractEvent>() {
+        EventValues.registerEventValue(EntityBlockInteractEvent.class, Block.class, new Getter<>() {
             @Nullable
             @Override
             public Block get(EntityBlockInteractEvent event) {
@@ -47,7 +47,7 @@ public class OtherEvents {
                         "\t\t\t\tset repair cost of event-inventory to 30")
                 .since("1.11.0");
 
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<Player, PrepareAnvilEvent>() {
+        EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
             @Nullable
             @Override
             public Player get(PrepareAnvilEvent event) {
@@ -55,8 +55,7 @@ public class OtherEvents {
             }
         }, 0);
 
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Slot.class, new Getter<Slot, PrepareAnvilEvent>() {
-            @Nullable
+        EventValues.registerEventValue(PrepareAnvilEvent.class, Slot.class, new Getter<>() {
             @Override
             public Slot get(PrepareAnvilEvent event) {
                 return new Slot() {
@@ -95,8 +94,7 @@ public class OtherEvents {
             }
         }, 0);
 
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Inventory.class, new Getter<Inventory, PrepareAnvilEvent>() {
-            @Nullable
+        EventValues.registerEventValue(PrepareAnvilEvent.class, Inventory.class, new Getter<>() {
             @Override
             public Inventory get(PrepareAnvilEvent event) {
                 return event.getInventory();

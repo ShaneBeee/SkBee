@@ -76,8 +76,8 @@ public class ExprAllRecipes extends SimpleExpression<String> {
             ItemStack itemStack = itemType.getRandom();
             assert itemStack != null;
             for (Recipe recipe : Bukkit.getRecipesFor(itemStack)) {
-                if (recipe instanceof Keyed) {
-                    NamespacedKey key = ((Keyed) recipe).getKey();
+                if (recipe instanceof Keyed keyed) {
+                    NamespacedKey key = keyed.getKey();
                     if (pattern == 0 || isMinecraft(key) || isCustom(key)) {
                         recipes.add(key.toString());
                     }

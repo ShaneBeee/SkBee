@@ -49,7 +49,7 @@ public class ExprTabCompletionArgs extends SimpleExpression<String> {
         return true;
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings("NullableProblems")
     @Override
     protected String[] get(@NotNull Event e) {
         TabCompleteEvent event = ((TabCompleteEvent) e);

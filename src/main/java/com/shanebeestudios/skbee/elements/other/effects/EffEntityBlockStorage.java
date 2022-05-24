@@ -48,7 +48,7 @@ public class EffEntityBlockStorage extends Effect {
     private Expression<?> var;
     private boolean release;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         this.entities = i == 0 ? null : (Expression<Entity>) exprs[0];
@@ -59,7 +59,7 @@ public class EffEntityBlockStorage extends Effect {
         return true;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     protected void execute(Event event) {
         if (this.release) {
@@ -92,6 +92,7 @@ public class EffEntityBlockStorage extends Effect {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(Event e, boolean d) {
         String time = this.timespan != null ? " for " + this.timespan.toString(e, d) : "";

@@ -11,6 +11,9 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.config.Config;
+import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -20,9 +23,6 @@ import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
-import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
 
 @SuppressWarnings({"NullableProblems", "ConstantConditions"})
 @Name("Recipe - Shaped/Shapeless")
@@ -104,7 +104,6 @@ public class EffCraftingRecipe extends Effect {
             registerShapeless(item, ingredients, key, group);
     }
 
-    @SuppressWarnings("deprecation")
     private void registerShaped(ItemType item, Object[] ingredients, NamespacedKey key, String group) {
         boolean craftingTable = ingredients.length > 4;
 
@@ -161,7 +160,6 @@ public class EffCraftingRecipe extends Effect {
         Bukkit.addRecipe(recipe);
     }
 
-    @SuppressWarnings("deprecation")
     private void registerShapeless(ItemType item, Object[] ingredients, NamespacedKey key, String group) {
         ShapelessRecipe recipe = new ShapelessRecipe(key, item.getRandom());
         if (group != null) recipe.setGroup(group);

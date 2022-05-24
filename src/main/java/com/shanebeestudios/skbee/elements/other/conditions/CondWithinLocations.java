@@ -29,7 +29,7 @@ public class CondWithinLocations extends Condition {
     private Expression<Location> location;
     private Expression<Location> with1, with2;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setNegated(matchedPattern == 1);
@@ -39,16 +39,18 @@ public class CondWithinLocations extends Condition {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public boolean check(Event e) {
-        Location loc = location.getSingle(e);
-        Location w1 = with1.getSingle(e);
-        Location w2 = with2.getSingle(e);
+    public boolean check(Event event) {
+        Location loc = location.getSingle(event);
+        Location w1 = with1.getSingle(event);
+        Location w2 = with2.getSingle(event);
         if (loc == null || w1 == null || w2 == null) return isNegated();
 
         return isNegated() != MathUtil.isWithin(loc, w1, w2);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
         String l1 = location.toString(e, d);

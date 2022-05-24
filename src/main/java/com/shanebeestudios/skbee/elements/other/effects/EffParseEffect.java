@@ -31,7 +31,7 @@ public class EffParseEffect extends Effect {
     private Expression<String> effects;
     private Expression<CommandSender> sender;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         effects = (Expression<String>) exprs[0];
@@ -39,6 +39,7 @@ public class EffParseEffect extends Effect {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         CommandSender sender = this.sender.getSingle(event);
@@ -57,6 +58,7 @@ public class EffParseEffect extends Effect {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(Event e, boolean d) {
         return "parse effect '" + this.effects.toString(e, d) + "' from " + this.sender.toString(e, d);

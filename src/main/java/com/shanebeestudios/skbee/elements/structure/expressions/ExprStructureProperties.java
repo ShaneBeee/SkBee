@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.elements.structure.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.classes.Converter;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -49,6 +48,7 @@ public class ExprStructureProperties extends PropertyExpression<StructureBee, Ob
     private int pattern;
     private Expression<StructureBee> structures;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         pattern = matchedPattern;
@@ -57,62 +57,45 @@ public class ExprStructureProperties extends PropertyExpression<StructureBee, Ob
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected Object[] get(Event e, StructureBee[] source) {
-        return get(source, new Converter<StructureBee, Object>() {
-            @Nullable
-            @Override
-            public Object convert(StructureBee structure) {
-                switch (pattern) {
-                    case 0:
-                        return structure.getMirror();
-                    case 1:
-                        return structure.getRotation();
-                    case 2:
-                        return structure.getIntegrity();
-                    case 3:
-                        return structure.isIncludeEntities();
-                    case 4:
-                        return structure.getSize();
-                }
-                return null;
-            }
+    protected Object[] get(Event event, StructureBee[] source) {
+        return get(source, structure -> switch (pattern) {
+            case 0 -> structure.getMirror();
+            case 1 -> structure.getRotation();
+            case 2 -> structure.getIntegrity();
+            case 3 -> structure.isIncludeEntities();
+            case 4 -> structure.getSize();
+            default -> null;
         });
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            switch (pattern) {
-                case 0:
-                    return new Class[]{Mirror.class};
-                case 1:
-                    return new Class[]{StructureRotation.class};
-                case 2:
-                    return new Class[]{Number.class};
-                case 3:
-                    return new Class[]{Boolean.class};
-                default:
-                    return null;
-            }
+            return switch (pattern) {
+                case 0 -> new Class[]{Mirror.class};
+                case 1 -> new Class[]{StructureRotation.class};
+                case 2 -> new Class[]{Number.class};
+                case 3 -> new Class[]{Boolean.class};
+                default -> null;
+            };
         }
         return super.acceptChange(mode);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
+    public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (mode == ChangeMode.SET) {
             Object object = delta[0];
-            for (StructureBee structure : getExpr().getArray(e)) {
+            for (StructureBee structure : getExpr().getArray(event)) {
                 switch (pattern) {
-                    case 0:
-                        structure.setMirror(((Mirror) object));
-                        break;
-                    case 1:
-                        structure.setRotation(((StructureRotation) object));
-                        break;
-                    case 2:
+                    case 0 -> structure.setMirror(((Mirror) object));
+                    case 1 -> structure.setRotation(((StructureRotation) object));
+                    case 2 -> {
                         Number num = (Number) object;
                         float integrity = 1f;
                         if (num != null) {
@@ -122,52 +105,37 @@ public class ExprStructureProperties extends PropertyExpression<StructureBee, Ob
                             }
                         }
                         structure.setIntegrity(integrity);
-                        break;
-                    case 3:
-                        structure.setIncludeEntities(((Boolean) object));
-                        break;
+                    }
+                    case 3 -> structure.setIncludeEntities(((Boolean) object));
                 }
             }
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> getReturnType() {
-        switch (pattern) {
-            case 0:
-                return Mirror.class;
-            case 1:
-                return StructureRotation.class;
-            case 2:
-                return Number.class;
-            case 3:
-                return Boolean.class;
-            case 4:
-                return Vector.class;
-            default:
-                return null;
-        }
+        return switch (pattern) {
+            case 0 -> Mirror.class;
+            case 1 -> StructureRotation.class;
+            case 2 -> Number.class;
+            case 3 -> Boolean.class;
+            case 4 -> Vector.class;
+            default -> null;
+        };
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        String property = "";
-        switch (pattern) {
-            case 0:
-                property = "mirror";
-                break;
-            case 1:
-                property = "rotation";
-                break;
-            case 2:
-                property = "integrity";
-                break;
-            case 3:
-                property = "include entities";
-                break;
-            case 4:
-                property = "size";
-        }
+        String property = switch (pattern) {
+            case 0 -> "mirror";
+            case 1 -> "rotation";
+            case 2 -> "integrity";
+            case 3 -> "include entities";
+            case 4 -> "size";
+            default -> "";
+        };
         return String.format("%s property of structure %s", property, this.structures.toString(e, d));
     }
 

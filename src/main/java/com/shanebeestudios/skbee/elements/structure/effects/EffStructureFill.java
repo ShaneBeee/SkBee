@@ -33,6 +33,7 @@ public class EffStructureFill extends Effect {
     private Expression<Location> loc1;
     private Expression<Location> loc2;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         structure = (Expression<StructureBee>) exprs[0];
@@ -41,11 +42,12 @@ public class EffStructureFill extends Effect {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected void execute(Event e) {
-        StructureBee structure = this.structure.getSingle(e);
-        Location loc1 = this.loc1.getSingle(e);
-        Location loc2 = this.loc2.getSingle(e);
+    protected void execute(Event event) {
+        StructureBee structure = this.structure.getSingle(event);
+        Location loc1 = this.loc1.getSingle(event);
+        Location loc2 = this.loc2.getSingle(event);
 
         if (structure == null || loc1 == null || loc2 == null) {
             return;
@@ -71,6 +73,7 @@ public class EffStructureFill extends Effect {
         structure.fill(low, offset);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
         return String.format("fill structure %s between %s and %s",

@@ -19,7 +19,7 @@ public class TabEvent extends SkriptEvent {
 
     static {
         Skript.registerEvent("Tab Complete", TabEvent.class, TabCompleteEvent.class,
-                "[skbee] tab complete [(of|for) %strings%]")
+                        "[skbee] tab complete [(of|for) %strings%]")
                 .description("Called when a player attempts to tab complete the arguments of a command. ",
                         "event-string = the command.")
                 .examples("on tab complete of \"/mycommand\":",
@@ -31,7 +31,7 @@ public class TabEvent extends SkriptEvent {
                         "\tif event-string contains \"/ver\":",
                         "\t\tclear tab completions")
                 .since("1.7.0");
-        EventValues.registerEventValue(TabCompleteEvent.class, Player.class, new Getter<Player, TabCompleteEvent>() {
+        EventValues.registerEventValue(TabCompleteEvent.class, Player.class, new Getter<>() {
             @Nullable
             @Override
             public Player get(@NotNull TabCompleteEvent event) {
@@ -42,7 +42,7 @@ public class TabEvent extends SkriptEvent {
                 return null;
             }
         }, 0);
-        EventValues.registerEventValue(TabCompleteEvent.class, String.class, new Getter<String, TabCompleteEvent>() {
+        EventValues.registerEventValue(TabCompleteEvent.class, String.class, new Getter<>() {
             @Nullable
             @Override
             public String get(@NotNull TabCompleteEvent event) {
@@ -56,7 +56,7 @@ public class TabEvent extends SkriptEvent {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?> @NotNull [] args, int matchedPattern, @NotNull ParseResult parseResult) {
-        commands = args[0] == null ? null : ((Literal<String>)args[0]).getAll();
+        commands = args[0] == null ? null : ((Literal<String>) args[0]).getAll();
         return true;
     }
 

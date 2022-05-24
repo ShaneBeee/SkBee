@@ -30,6 +30,7 @@ public class EffStructurePlace extends Effect {
     private Expression<StructureBee> structure;
     private Expression<Location> location;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         structure = (Expression<StructureBee>) exprs[0];
@@ -37,10 +38,11 @@ public class EffStructurePlace extends Effect {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected void execute(Event e) {
-        StructureBee structure = this.structure.getSingle(e);
-        Location location = this.location.getSingle(e);
+    protected void execute(Event event) {
+        StructureBee structure = this.structure.getSingle(event);
+        Location location = this.location.getSingle(event);
 
         if (structure == null || location == null) {
             return;
@@ -48,6 +50,7 @@ public class EffStructurePlace extends Effect {
         structure.place(location);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
         return "paste " + structure.toString(e,d) + " at " + location.toString(e,d);

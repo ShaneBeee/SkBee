@@ -83,18 +83,13 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
     @Override
     protected @Nullable Object[] get(Event e) {
-        switch (pattern) {
-            case 1:
-                return ITEM_TYPES.toArray(new ItemType[0]);
-            case 2:
-                return BLOCK_TYPES.toArray(new ItemType[0]);
-            case 3:
-                return BLOCK_DATAS.toArray(new BlockData[0]);
-            case 4:
-                return ENTITY_DATAS.toArray(new EntityData[0]);
-            default:
-                return MATERIALS.toArray(new ItemType[0]);
-        }
+        return switch (pattern) {
+            case 1 -> ITEM_TYPES.toArray(new ItemType[0]);
+            case 2 -> BLOCK_TYPES.toArray(new ItemType[0]);
+            case 3 -> BLOCK_DATAS.toArray(new BlockData[0]);
+            case 4 -> ENTITY_DATAS.toArray(new EntityData[0]);
+            default -> MATERIALS.toArray(new ItemType[0]);
+        };
     }
 
     @Override
@@ -104,32 +99,22 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
     @Override
     public Class<?> getReturnType() {
-        switch (pattern) {
-            case 3:
-                return BlockData.class;
-            case 4:
-                return EntityData.class;
-            default:
-                return ItemType.class;
-        }
+        return switch (pattern) {
+            case 3 -> BlockData.class;
+            case 4 -> EntityData.class;
+            default -> ItemType.class;
+        };
     }
 
     @Override
     public String toString(@Nullable Event e, boolean debug) {
-        String type = "materials";
-        switch (pattern) {
-            case 1:
-                type = "itemtypes";
-                break;
-            case 2:
-                type = "block types";
-                break;
-            case 3:
-                type = "block datas";
-                break;
-            case 4:
-                type = "entity datas";
-        }
+        String type = switch (pattern) {
+            case 1 -> "itemtypes";
+            case 2 -> "block types";
+            case 3 -> "block datas";
+            case 4 -> "entity datas";
+            default -> "materials";
+        };
         return "all available " + type;
     }
 

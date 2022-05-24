@@ -12,8 +12,10 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockReceiveGameEvent;
 import org.bukkit.event.world.GenericGameEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("Convert2Diamond")
 public class EvtGameEvents extends SkriptEvent {
 
     static {
@@ -81,6 +83,7 @@ public class EvtGameEvents extends SkriptEvent {
 
     private Literal<GameEvent> gameEvents;
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
         if (args[0] != null) {
@@ -89,6 +92,7 @@ public class EvtGameEvents extends SkriptEvent {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
         if (event instanceof GenericGameEvent) {
@@ -110,7 +114,7 @@ public class EvtGameEvents extends SkriptEvent {
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "generic/block receive game event" + ((gameEvents != null) ? " " + gameEvents.toString(e, d) : "");
     }
 }

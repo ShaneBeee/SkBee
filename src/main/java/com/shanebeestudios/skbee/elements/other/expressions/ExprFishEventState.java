@@ -16,6 +16,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Fish Event State")
 @Description("Represents the state of a fishing event.")
@@ -30,6 +31,7 @@ public class ExprFishEventState extends SimpleExpression<State> {
                 "fish[ing] [event] state");
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!ParserInstance.get().isCurrentEvent(PlayerFishEvent.class)) {
@@ -39,12 +41,13 @@ public class ExprFishEventState extends SimpleExpression<State> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable State[] get(Event event) {
-        if (!(event instanceof PlayerFishEvent)) {
+        if (!(event instanceof PlayerFishEvent playerFishEvent)) {
             return null;
         }
-        return new State[]{((PlayerFishEvent) event).getState()};
+        return new State[]{playerFishEvent.getState()};
     }
 
     @Override
@@ -53,12 +56,12 @@ public class ExprFishEventState extends SimpleExpression<State> {
     }
 
     @Override
-    public Class<? extends State> getReturnType() {
+    public @NotNull Class<? extends State> getReturnType() {
         return State.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean debug) {
+    public @NotNull String toString(@Nullable Event e, boolean debug) {
         return "fish event state";
     }
 

@@ -54,6 +54,7 @@ public class ExprBlockDataItem extends SimpleExpression<Object> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Object[] get(Event event) {
         List<Object> list = new ArrayList<>();
@@ -87,6 +88,7 @@ public class ExprBlockDataItem extends SimpleExpression<Object> {
         return list.toArray();
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
@@ -95,8 +97,9 @@ public class ExprBlockDataItem extends SimpleExpression<Object> {
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public void change(Event e, Object[] delta, ChangeMode mode) {
+    public void change(Event event, Object[] delta, ChangeMode mode) {
         Object object = delta[0];
         String stringObject = object instanceof String ? ((String) object) : null;
         switch (parse) {
@@ -104,8 +107,8 @@ public class ExprBlockDataItem extends SimpleExpression<Object> {
             case 2:
                 if (object instanceof String) {
                     BlockData blockData;
-                    for (ItemType itemType : itemTypes.getAll(e)) {
-                        String newData = getBlockForm(itemType.getMaterial()).getKey() + "[" + tag.getSingle(e) + "=" + stringObject + "]";
+                    for (ItemType itemType : itemTypes.getAll(event)) {
+                        String newData = getBlockForm(itemType.getMaterial()).getKey() + "[" + tag.getSingle(event) + "=" + stringObject + "]";
                         try {
                             blockData = Bukkit.createBlockData(newData);
                             BlockDataMeta meta = ((BlockDataMeta) itemType.getItemMeta());
@@ -134,7 +137,7 @@ public class ExprBlockDataItem extends SimpleExpression<Object> {
                 if (object instanceof BlockData) {
                     blockData = ((BlockData) object);
                 }
-                for (ItemType itemType : itemTypes.getAll(e)) {
+                for (ItemType itemType : itemTypes.getAll(event)) {
                     try {
                         if (blockData == null && stringObject != null) {
                             blockData = Bukkit.createBlockData(stringObject);
@@ -201,24 +204,16 @@ public class ExprBlockDataItem extends SimpleExpression<Object> {
 
     private Material getBlockForm(Material item) {
         if (item.isBlock()) return item;
-        switch (item) {
-            case WHEAT_SEEDS:
-                return Material.WHEAT;
-            case POTATO:
-                return Material.POTATOES;
-            case CARROT:
-                return Material.CARROTS;
-            case BEETROOT_SEEDS:
-                return Material.BEETROOTS;
-            case PUMPKIN_SEEDS:
-                return Material.PUMPKIN_STEM;
-            case MELON_SEEDS:
-                return Material.MELON_STEM;
-            case SWEET_BERRIES:
-                return Material.SWEET_BERRY_BUSH;
-            default:
-                return item;
-        }
+        return switch (item) {
+            case WHEAT_SEEDS -> Material.WHEAT;
+            case POTATO -> Material.POTATOES;
+            case CARROT -> Material.CARROTS;
+            case BEETROOT_SEEDS -> Material.BEETROOTS;
+            case PUMPKIN_SEEDS -> Material.PUMPKIN_STEM;
+            case MELON_SEEDS -> Material.MELON_STEM;
+            case SWEET_BERRIES -> Material.SWEET_BERRY_BUSH;
+            default -> item;
+        };
     }
 
 }

@@ -17,6 +17,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,7 +46,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
 
     @SuppressWarnings("unchecked")
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int i, @NotNull Kleenean kleenean, ParseResult parseResult) {
         this.tag = (Expression<String>) exprs[0];
         this.blocks = (Expression<Block>) exprs[1];
         this.parse = parseResult.mark;
@@ -53,7 +54,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
     }
 
     @Override
-    protected Object[] get(Event event) {
+    protected Object @NotNull [] get(@NotNull Event event) {
         List<Object> list = new ArrayList<>();
         String tagString = this.tag != null ? this.tag.getSingle(event) : "";
         for (Block block : blocks.getAll(event)) {
@@ -81,7 +82,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @NotNull [] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET) {
             return CollectionUtils.array(Object.class);
         }
@@ -89,7 +90,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
     }
 
     @Override
-    public void change(Event e, Object[] delta, ChangeMode mode) {
+    public void change(@NotNull Event e, Object @NotNull [] delta, @NotNull ChangeMode mode) {
         String obj = delta == null ? "" : delta[0].toString();
         for (Block block : blocks.getAll(e)) {
             BlockData blockData;
@@ -141,7 +142,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<?> getReturnType() {
+    public @NotNull Class<?> getReturnType() {
         return Object.class;
     }
 
@@ -151,7 +152,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "block data" + (parse == 1 ? " tags" : parse == 2 ? " tag " +
                 tag.toString(e, d) : "") + " of block " + blocks.toString(e, d);
     }

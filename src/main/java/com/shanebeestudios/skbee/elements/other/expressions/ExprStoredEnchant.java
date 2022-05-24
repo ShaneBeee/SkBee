@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
 import ch.njol.skript.doc.Description;
@@ -20,6 +19,7 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.EnchantmentStorageMeta;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,13 +43,14 @@ public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
     private Expression<?> itemTypes;
 
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         this.itemTypes = exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected EnchantmentType[] get(Event event) {
         List<EnchantmentType> enchants = new ArrayList<>();
@@ -65,20 +66,18 @@ public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
         return enchants.toArray(new EnchantmentType[0]);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public Class<?>[] acceptChange(Changer.ChangeMode mode) {
-        switch (mode) {
-            case SET:
-            case ADD:
-            case REMOVE:
-            case DELETE:
-                return CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
-        }
-        return null;
+    public Class<?>[] acceptChange(ChangeMode mode) {
+        return switch (mode) {
+            case SET, ADD, REMOVE, DELETE -> CollectionUtils.array(Enchantment[].class, EnchantmentType[].class);
+            default -> null;
+        };
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public void change(Event e, Object[] delta, Changer.ChangeMode mode) {
+    public void change(Event event, Object[] delta, ChangeMode mode) {
         EnchantmentType[] enchants = new EnchantmentType[delta != null ? delta.length : 0];
 
         if (delta != null && delta.length != 0) {
@@ -90,10 +89,9 @@ public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
             }
         }
 
-        for (Object item : this.itemTypes.getAll(e)) {
+        for (Object item : this.itemTypes.getAll(event)) {
             ItemMeta meta = (item instanceof ItemStack) ? ((ItemStack) item).getItemMeta() : ((ItemType) item).getItemMeta();
-            if (!(meta instanceof EnchantmentStorageMeta)) return;
-            EnchantmentStorageMeta storageMeta = ((EnchantmentStorageMeta) meta);
+            if (!(meta instanceof EnchantmentStorageMeta storageMeta)) return;
 
             switch (mode) {
                 case SET:
@@ -127,11 +125,11 @@ public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
             }
             if (ChangerUtils.acceptsChange(itemTypes, ChangeMode.SET, item.getClass())) {
                 Object[] itemDelta = item instanceof ItemStack ? new ItemStack[]{(ItemStack) item} : new ItemType[]{(ItemType) item};
-                itemTypes.change(e, itemDelta, ChangeMode.SET);
+                itemTypes.change(event, itemDelta, ChangeMode.SET);
             } else {
                 Object[] itemDelta = item instanceof ItemStack ? new ItemType[]{new ItemType((ItemStack) item)} :
                         new ItemStack[]{((ItemType) item).getRandom()};
-                itemTypes.change(e, itemDelta, ChangeMode.SET);
+                itemTypes.change(event, itemDelta, ChangeMode.SET);
             }
         }
     }
@@ -142,12 +140,12 @@ public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
     }
 
     @Override
-    public Class<? extends EnchantmentType> getReturnType() {
+    public @NotNull Class<? extends EnchantmentType> getReturnType() {
         return EnchantmentType.class;
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "stored enchantments of " + this.itemTypes.toString(e, d);
     }
 
