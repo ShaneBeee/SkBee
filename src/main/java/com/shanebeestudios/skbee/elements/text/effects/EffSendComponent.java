@@ -12,7 +12,10 @@ import ch.njol.util.Kleenean;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.TextComponent;
+import org.bukkit.Bukkit;
+import org.bukkit.Server;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +26,7 @@ import java.util.List;
 
 @SuppressWarnings("deprecation") // Paper uses their own API
 @Name("TextComponent - Send")
-@Description({"Send text components to players/console.",
+@Description({"Send text components to players/console. You can also broadcast components as well.",
         "The optional sender (supported in Minecraft 1.16.4+) allows you to send components from a specific player.",
         "This is useful to make sure players can block messages using 1.16.4's new player chat ignore system.",
         "As of INSERT VERSION you can also send action bar components to players and you can also send normal strings."})
@@ -38,28 +41,31 @@ public class EffSendComponent extends Effect {
 
     static {
         Skript.registerEffect(EffSendComponent.class,
-                "send [(text|1¦action[[ ]bar])] component[s] %objects% [to %commandsenders%] [from %-player%]");
+                "send [(text|1¦action[[ ]bar])] component[s] %objects% [to %commandsenders%] [from %-player%]",
+                "broadcast [text] component[s] %objects% [from %-player%]");
     }
 
     private Expression<Object> components;
-    private Expression<CommandSender> players;
+    private Expression<CommandSender> receivers;
     @Nullable
     private Expression<Player> sender;
     private boolean action;
+    private boolean broadcast;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         components = (Expression<Object>) exprs[0];
-        players = (Expression<CommandSender>) exprs[1];
-        sender = (Expression<Player>) exprs[2];
-        action = parseResult.mark == 1;
+        receivers = matchedPattern == 0 ? (Expression<CommandSender>) exprs[1] : null;
+        sender = (Expression<Player>) exprs[matchedPattern == 0 ? 2 : 1];
+        action = matchedPattern == 0 && parseResult.mark == 1;
+        broadcast = matchedPattern == 1;
         return true;
     }
 
     @Override
     protected void execute(Event e) {
-        if (components == null || players == null) return;
+        if (components == null) return;
 
         Player sender = this.sender != null ? this.sender.getSingle(e) : null;
 
@@ -73,8 +79,13 @@ public class EffSendComponent extends Effect {
         }
 
         BaseComponent[] baseComponents = components.toArray(new BaseComponent[0]);
-        for (CommandSender player : this.players.getArray(e)) {
-            sendMessage(player, sender, baseComponents);
+
+        if (broadcast) {
+            broadcast(sender, baseComponents);
+        } else {
+            for (CommandSender player : this.receivers.getArray(e)) {
+                sendMessage(player, sender, baseComponents);
+            }
         }
     }
 
@@ -88,12 +99,20 @@ public class EffSendComponent extends Effect {
         }
     }
 
+    private void broadcast(@Nullable Player sender, BaseComponent... components) {
+        Server server = Bukkit.getServer();
+        ConsoleCommandSender consoleSender = server.getConsoleSender();
+        server.getOnlinePlayers().forEach(player -> sendMessage(player, sender, components));
+        sendMessage(consoleSender, sender, components);
+    }
+
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return String.format("send %s component[s] %s to %s %s",
+        return String.format("%s %s component[s] %s to %s %s",
+                broadcast ? "broadcast" : "send",
                 action ? "action bar" : "text",
                 components.toString(e, d),
-                players.toString(e, d),
+                receivers.toString(e, d),
                 sender != null ? "from " + sender.toString(e, d) : "");
     }
 
