@@ -6,6 +6,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.ExprTool;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -32,6 +33,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @SuppressWarnings("deprecation")
 @Name("Text Component - New Text Component")
@@ -76,7 +78,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
         return true;
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     protected BaseComponent[] get(@NotNull Event e) {
         List<BaseComponent> components = new ArrayList<>();
@@ -88,7 +90,7 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
             } else if (pattern == 1) {
                 components.add(new KeybindComponent((String) object));
             } else if (pattern == 2) {
-                String translate = getTranslation(object);
+                String translate = getTranslation(object, e);
                 if (translate != null) {
                     if (this.objects != null) {
                         components.add(new TranslatableComponent(translate, this.objects.getArray(e)));
@@ -102,14 +104,21 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
         return components.toArray(new BaseComponent[0]);
     }
 
-    public static String getTranslation(Object object) {
-        if (object instanceof ItemType) {
-            return translateItemType(((ItemType) object));
-        } else if (object instanceof Slot) {
-            ItemStack item = ((Slot) object).getItem();
-            if (HAS_TRANSLATION && item != null) {
-                TextUtils.getTranslationKey(item);
+    public static String getTranslation(Object object, Event event) {
+        if (object instanceof ItemStack itemStack) {
+            if (HAS_TRANSLATION) {
+                return TextUtils.getTranslationKey(itemStack);
+            } else {
+                return translateItemStack(itemStack);
             }
+        } else if (object instanceof ItemType itemType) {
+            ItemStack itemStack = itemType.getRandom();
+            return getTranslation(itemStack, event);
+        } else if (object instanceof Slot slot) {
+            ItemStack itemStack = slot.getItem();
+            return getTranslation(itemStack, event);
+        } else if (object instanceof ExprTool tool) {
+            return getTranslation(tool.getSingle(event), event);
         } else if (object instanceof String) {
             return ((String) object);
         } else if (HAS_TRANSLATION) {
@@ -118,20 +127,18 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
         return null;
     }
 
-    public static String translateItemType(ItemType itemType) {
-        ItemStack itemStack = itemType.getRandom();
-        assert itemStack != null;
+    public static String translateItemStack(ItemStack itemStack) {
         String trans = McReflection.getTranslateKey(itemStack);
         if (trans != null) {
             return trans;
         }
         Material material = itemStack.getType();
         String type = material.isBlock() ? "block" : "item";
-        String raw = itemType.getRawNames().get(0).replace("minecraft:", "");
+        String raw = material.name().toLowerCase(Locale.ROOT);
         ItemMeta meta = itemStack.getItemMeta();
         if (meta instanceof PotionMeta) {
             StringBuilder builder = new StringBuilder("item.minecraft.");
-            String nbt = api.getNBT(itemType, NBTApi.ObjectType.ITEM_TYPE);
+            String nbt = api.getNBT(itemStack, NBTApi.ObjectType.ITEM_STACK);
             if (nbt != null) {
                 String pot = api.getTag("Potion", new NBTContainer(nbt)).toString();
                 if (pot != null) {
