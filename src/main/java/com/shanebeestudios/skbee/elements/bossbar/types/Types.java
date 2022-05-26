@@ -72,9 +72,10 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
                 .user("boss ?bar ?colors?")
                 .name("BossBar Color")
-                .description("Represents the color options of a BossBar.")
+                .description("Represents the color options of a BossBar. ",
+                        "Colors are prefixed with \"bar\" (such as `bar blue`) to differentiate from Skript colors")
                 .usage(BAR_COLOR_ENUM.getAllNames())
-                .examples("set bar color of {_bar} to blue")
+                .examples("set bar color of {_bar} to bar blue")
                 .since("INSERT VERSION")
                 .parser(new EnumParser<>(BAR_COLOR_ENUM)));
 

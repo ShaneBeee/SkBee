@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
         "BossBar colors are not the same as Skript colors, see docs for BossBar color options."})
 @Examples({"add all players to bar players of {_bar}",
         "remove player from bar players of {_bar}",
-        "set bar color of {_bar} to blue",
+        "set bar color of {_bar} to bar blue",
         "set bar style of {_bar} to segmented 20",
         "set bar title of {_bar} to \"Le-Title\"",
         "reset bar title of {_bar}",
