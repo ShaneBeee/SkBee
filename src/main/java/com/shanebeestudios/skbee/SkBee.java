@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
+import ch.njol.skript.registrations.Classes;
 import com.github.goingoffskript.skriptvariabledump.SkriptToYaml;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
@@ -23,6 +24,7 @@ import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -106,6 +108,7 @@ public class SkBee extends JavaPlugin {
         loadVirtualFurnaceElements();
         loadWorldCreatorElements();
         loadGameEventElements();
+        loadBossBarElements();
 
         // Beta check + notice
         if (desc.getVersion().contains("Beta")) {
@@ -309,6 +312,27 @@ public class SkBee extends JavaPlugin {
         } else {
             Util.log("&5Game Event Elements &cdisabled, only available on MC 1.17+");
         }
+    }
+
+    private void loadBossBarElements() {
+        if (!this.config.ELEMENTS_BOSS_BAR) {
+            Util.log("&5BossBar Elements &cdisabled via config");
+            return;
+        }
+        if (Classes.getClassInfoNoError("bossbar") != null || Classes.getExactClassInfo(BossBar.class) != null) {
+            Util.log("&5BossBar Elements &cdisabled");
+            Util.log("&7It appears another Skript addon may have registered BossBar syntax.");
+            Util.log("&7To use SkBee BossBars, please remove the addon which has registered BossBars already.");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.bossbar");
+            Util.log("&5BossBar Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
+
     }
 
     private void loadMetrics() { //6719

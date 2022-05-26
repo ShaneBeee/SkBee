@@ -42,6 +42,9 @@ elements:
   # Enable Minecraft GameEvent elements
   game-event: true
 
+  # Enable boss bar elements
+  boss-bar: true
+
 recipe:
   # This is the namespace all recipes will be saved under
   # You can choose whatever you wish
