@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
         "Progress is a number between 0-100",
         "NOTE: Custom BossBars are not persistent and will not be saved on server stop/restart."})
 @Examples({"set {_bar} to boss bar named \"le-bar\"",
+        "set {_bar} to boss bar named \"le-bar\" with title \"Le Title\" with color bar blue with progress 50",
         "delete boss bar named \"le-bar\"",
         "set {_bar} to boss bar of target entity"})
 @Since("INSERT VERSION")
@@ -37,7 +38,7 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
     static {
         Skript.registerExpression(ExprBossBar.class, BossBar.class, ExpressionType.COMBINED,
                 "boss[ ]bar of %entity%",
-                "[new] boss[ ]bar named %string% [named %-string%] [with color %-bossbarcolor%] " +
+                "[new] boss[ ]bar named %string% [with title %-string%] [with color %-bossbarcolor%] " +
                         "[with style %-bossbarstyle%] [with progress %-number%]");
     }
 
