@@ -29,7 +29,7 @@ import java.util.List;
 @Description({"Send text components to players/console. You can also broadcast components as well.",
         "The optional sender (supported in Minecraft 1.16.4+) allows you to send components from a specific player.",
         "This is useful to make sure players can block messages using 1.16.4's new player chat ignore system.",
-        "As of INSERT VERSION you can also send action bar components to players and you can also send normal strings."})
+        "As of 1.16.0 you can also send action bar components to players and you can also send normal strings."})
 @Examples({"set {_comp::1} to text component of \"hi player \"",
         "set {_comp::2} to text component of \"hover over me for a special message!\"",
         "set hover event of {_comp::2} to hover event to show \"OoO look ma I'm hovering!\"",

@@ -17,7 +17,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Name("Within Locations")
 @Description("Check if a location is within 2 other locations.")
 @Examples("if location of player is within {_loc1} and {_loc2}:")
-@Since("INSERT VERSION")
+@Since("1.16.0")
 public class CondWithinLocations extends Condition {
 
     static {

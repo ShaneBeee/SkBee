@@ -34,7 +34,7 @@ import org.jetbrains.annotations.NotNull;
         "reset bar title of {_bar}",
         "set bar progress of {_bar} to 100",
         "set bar flag darken sky of {_bar} to true"})
-@Since("INSERT VERSION")
+@Since("1.16.0")
 public class ExprBossBarProperties extends SimpleExpression<Object> {
 
     static {

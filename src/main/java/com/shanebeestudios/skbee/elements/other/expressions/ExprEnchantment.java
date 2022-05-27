@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"loop enchantments of player's tool:",
         "\tset {_level} to enchantment level of loop-value",
         "\tset {_enchant} to enchantment of loop-value"})
-@Since("INSERT VERSION")
+@Since("1.16.0")
 public class ExprEnchantment extends SimplePropertyExpression<EnchantmentType, Enchantment> {
 
     static {

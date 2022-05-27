@@ -26,7 +26,7 @@ public class Types {
                         "Custom BossBars can be deleted, BossBars of entities can't be deleted.",
                         "NOTE: Custom BossBars are not persistent and won't be saved across server restart/stop.")
                 .examples("set {_bar} to boss bar named \"le-bar\"")
-                .since("INSERT VERSION")
+                .since("1.16.0")
                 .parser(new Parser<>() {
 
                     @Override
@@ -76,7 +76,7 @@ public class Types {
                         "Colors are prefixed with \"bar\" (such as `bar blue`) to differentiate from Skript colors")
                 .usage(BAR_COLOR_ENUM.getAllNames())
                 .examples("set bar color of {_bar} to bar blue")
-                .since("INSERT VERSION")
+                .since("1.16.0")
                 .parser(new EnumParser<>(BAR_COLOR_ENUM)));
 
         EnumUtils<BarStyle> BAR_STYLE_ENUM = new EnumUtils<>(BarStyle.class);
@@ -86,7 +86,7 @@ public class Types {
                 .description("Represents the style options of a BossBar.")
                 .usage(BAR_STYLE_ENUM.getAllNames())
                 .examples("set bar style of {_bar} to segmented 20")
-                .since("INSERT VERSION")
+                .since("1.16.0")
                 .parser(new EnumParser<>(BAR_STYLE_ENUM)));
 
         EnumUtils<BarFlag> BAR_FLAG_ENUM = new EnumUtils<>(BarFlag.class);
@@ -96,7 +96,7 @@ public class Types {
                 .description("Represents the flag options of a BossBar.")
                 .usage(BAR_FLAG_ENUM.getAllNames())
                 .examples("set bar flag darken sky of {_bar} to true")
-                .since("INSERT VERSION")
+                .since("1.16.0")
                 .parser(new EnumParser<>(BAR_FLAG_ENUM)));
     }
 }

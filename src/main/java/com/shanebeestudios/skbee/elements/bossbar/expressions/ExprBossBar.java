@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
         "set {_bar} to boss bar named \"le-bar\" with title \"Le Title\" with color bar blue with progress 50",
         "delete boss bar named \"le-bar\"",
         "set {_bar} to boss bar of target entity"})
-@Since("INSERT VERSION")
+@Since("1.16.0")
 public class ExprBossBar extends SimpleExpression<BossBar> {
 
 
