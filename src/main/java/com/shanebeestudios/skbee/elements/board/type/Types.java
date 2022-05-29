@@ -24,7 +24,7 @@ public class Types {
                     .name("Team - Option")
                     .usage(TEAM_OPTIONS.getAllNames())
                     .description("Represents an option for a team.")
-                    .parser(new EnumParser<>(TEAM_OPTIONS)));
+                    .parser(TEAM_OPTIONS.getParser()));
         }
 
         if (Classes.getExactClassInfo(OptionStatus.class) == null) {
@@ -34,7 +34,7 @@ public class Types {
                     .name("Team - Option Status")
                     .usage(TEAM_OPTION_STATUS.getAllNames())
                     .description("Represents an option status for a team option")
-                    .parser(new EnumParser<>(TEAM_OPTION_STATUS)));
+                    .parser(TEAM_OPTION_STATUS.getParser()));
         }
     }
 

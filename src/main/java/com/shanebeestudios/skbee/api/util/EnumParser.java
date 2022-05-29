@@ -4,6 +4,11 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Standardized {@link Parser} for Enums
+ *
+ * @param <T> Enum class
+ */
 public class EnumParser<T extends Enum<T>> extends Parser<T> {
 
     EnumUtils<T> enumUtils;

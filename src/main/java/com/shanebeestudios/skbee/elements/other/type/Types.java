@@ -37,7 +37,7 @@ public class Types {
                     .name("Fish Event State")
                     .usage(FISH_STATE_ENUM.getAllNames())
                     .since("1.15.2")
-                    .parser(new EnumParser<>(FISH_STATE_ENUM)));
+                    .parser(FISH_STATE_ENUM.getParser()));
         }
 
         // Only register if no other addons have registered this class

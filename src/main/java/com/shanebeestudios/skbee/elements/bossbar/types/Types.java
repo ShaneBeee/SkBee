@@ -77,7 +77,7 @@ public class Types {
                 .usage(BAR_COLOR_ENUM.getAllNames())
                 .examples("set bar color of {_bar} to bar blue")
                 .since("1.16.0")
-                .parser(new EnumParser<>(BAR_COLOR_ENUM)));
+                .parser(BAR_COLOR_ENUM.getParser()));
 
         EnumUtils<BarStyle> BAR_STYLE_ENUM = new EnumUtils<>(BarStyle.class);
         Classes.registerClass(new ClassInfo<>(BarStyle.class, "bossbarstyle")
@@ -87,7 +87,7 @@ public class Types {
                 .usage(BAR_STYLE_ENUM.getAllNames())
                 .examples("set bar style of {_bar} to segmented 20")
                 .since("1.16.0")
-                .parser(new EnumParser<>(BAR_STYLE_ENUM)));
+                .parser(BAR_STYLE_ENUM.getParser()));
 
         EnumUtils<BarFlag> BAR_FLAG_ENUM = new EnumUtils<>(BarFlag.class);
         Classes.registerClass(new ClassInfo<>(BarFlag.class, "bossbarflag")
@@ -97,6 +97,6 @@ public class Types {
                 .usage(BAR_FLAG_ENUM.getAllNames())
                 .examples("set bar flag darken sky of {_bar} to true")
                 .since("1.16.0")
-                .parser(new EnumParser<>(BAR_FLAG_ENUM)));
+                .parser(BAR_FLAG_ENUM.getParser()));
     }
 }

@@ -1,21 +1,19 @@
 package com.shanebeestudios.skbee.api.util;
 
+import ch.njol.skript.localization.Language;
+import ch.njol.util.StringUtils;
+import org.eclipse.jdt.annotation.NonNull;
+import org.eclipse.jdt.annotation.Nullable;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import org.eclipse.jdt.annotation.NonNull;
-import org.eclipse.jdt.annotation.Nullable;
-
-import ch.njol.skript.localization.Language;
-import ch.njol.util.StringUtils;
-
 /**
  * @author Peter Güttinger
- * This class is copied from Skript, and modified to allow for
- * not using language nodes
+ * This class is copied from Skript, and modified to allow for not using language nodes
  * https://github.com/SkriptDev/Skript/blob/master/src/main/java/ch/njol/skript/util/EnumUtils.java
  */
 public final class EnumUtils<E extends Enum<E>> {
@@ -97,7 +95,7 @@ public final class EnumUtils<E extends Enum<E>> {
     }
 
     @Nullable
-    public final E parse(final String s) {
+    public E parse(final String s) {
         validate(false);
         return parseMap.get(s.toLowerCase(Locale.ROOT).replace("_", " "));
     }
@@ -114,6 +112,15 @@ public final class EnumUtils<E extends Enum<E>> {
         Collections.addAll(names, this.names);
         Collections.sort(names);
         return StringUtils.join(names, ", ");
+    }
+
+    /**
+     * Get an instance of the {@link EnumParser} for this Enum
+     *
+     * @return EnumParser for this Enum
+     */
+    public EnumParser<E> getParser() {
+        return new EnumParser<>(this);
     }
 
 }
