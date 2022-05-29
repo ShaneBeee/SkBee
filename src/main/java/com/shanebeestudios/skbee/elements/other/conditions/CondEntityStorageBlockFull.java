@@ -23,10 +23,8 @@ import org.bukkit.event.Event;
 public class CondEntityStorageBlockFull extends Condition {
 
     static {
-        if (Skript.classExists("org.bukkit.block.EntityBlockStorage")) {
-            Skript.registerCondition(CondEntityStorageBlockFull.class,
-                    "entity storage of %block% is full", "entity storage of %block% is(n't| not) full");
-        }
+        Skript.registerCondition(CondEntityStorageBlockFull.class,
+                "entity storage of %block% is full", "entity storage of %block% is(n't| not) full");
     }
 
     private Expression<Block> block;

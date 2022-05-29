@@ -35,13 +35,9 @@ public class ExprStructureObject extends SimpleExpression<StructureBee> {
     private static final StructureBeeManager STRUCTURE_BEE_MANAGER;
 
     static {
-        if (Skript.classExists("org.bukkit.structure.Structure")) {
-            STRUCTURE_BEE_MANAGER = SkBee.getPlugin().getStructureBeeManager();
-            Skript.registerExpression(ExprStructureObject.class, StructureBee.class, ExpressionType.SIMPLE,
-                    "structure[s] named %strings%");
-        } else {
-            STRUCTURE_BEE_MANAGER = null;
-        }
+        STRUCTURE_BEE_MANAGER = SkBee.getPlugin().getStructureBeeManager();
+        Skript.registerExpression(ExprStructureObject.class, StructureBee.class, ExpressionType.SIMPLE,
+                "structure[s] named %strings%");
     }
 
     @SuppressWarnings("null")

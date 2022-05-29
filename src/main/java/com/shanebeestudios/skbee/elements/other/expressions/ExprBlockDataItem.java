@@ -35,10 +35,8 @@ import java.util.List;
 public class ExprBlockDataItem extends SimpleExpression<Object> {
 
     static {
-        if (Skript.classExists("org.bukkit.inventory.meta.BlockDataMeta")) {
-            PropertyExpression.register(ExprBlockDataItem.class, Object.class,
-                    "item [block[ ]](data|state) [(1¦tags|2¦tag %-string%)]", "itemtypes");
-        }
+        PropertyExpression.register(ExprBlockDataItem.class, Object.class,
+                "item [block[ ]](data|state) [(1¦tags|2¦tag %-string%)]", "itemtypes");
     }
 
     private Expression<String> tag;

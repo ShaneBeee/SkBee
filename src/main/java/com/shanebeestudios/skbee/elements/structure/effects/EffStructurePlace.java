@@ -21,10 +21,8 @@ import org.jetbrains.annotations.Nullable;
 public class EffStructurePlace extends Effect {
 
     static {
-        if (Skript.classExists("org.bukkit.structure.Structure")) {
-            Skript.registerEffect(EffStructurePlace.class,
-                    "place [structure] %structure% at %location%");
-        }
+        Skript.registerEffect(EffStructurePlace.class,
+                "place [structure] %structure% at %location%");
     }
 
     private Expression<StructureBee> structure;
@@ -53,7 +51,7 @@ public class EffStructurePlace extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return "paste " + structure.toString(e,d) + " at " + location.toString(e,d);
+        return "paste " + structure.toString(e, d) + " at " + location.toString(e, d);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -23,9 +22,7 @@ import org.jetbrains.annotations.NotNull;
 public class ExprEntityBlockStorageMax extends SimplePropertyExpression<Block, Long> {
 
     static {
-        if (Skript.classExists("org.bukkit.block.EntityBlockStorage")) {
-            register(ExprEntityBlockStorageMax.class, Long.class, "max entit(ies|y storage)", "blocks");
-        }
+        register(ExprEntityBlockStorageMax.class, Long.class, "max entit(ies|y storage)", "blocks");
     }
 
     @Override

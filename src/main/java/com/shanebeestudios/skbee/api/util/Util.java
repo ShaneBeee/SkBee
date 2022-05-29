@@ -63,17 +63,6 @@ public class Util {
      * Convert a UUID to an int array
      * <p>Used for Minecraft 1.16+</p>
      *
-     * @param uuid String UUID to convert
-     * @return int array from UUID
-     */
-    public static int[] uuidToIntArray(String uuid) {
-        return uuidToIntArray(UUID.fromString(uuid));
-    }
-
-    /**
-     * Convert a UUID to an int array
-     * <p>Used for Minecraft 1.16+</p>
-     *
      * @param uuid UUID to convert
      * @return int array from UUID
      */

@@ -25,10 +25,8 @@ import org.jetbrains.annotations.NotNull;
 public class ExprEntityBlockStorageCount extends PropertyExpression<Block, Long> {
 
     static {
-        if (Skript.classExists("org.bukkit.block.EntityBlockStorage")) {
-            Skript.registerExpression(ExprEntityBlockStorageCount.class, Long.class, ExpressionType.PROPERTY,
-                    "(size|amount) of [all] (stored entities|entities stored) in %blocks%");
-        }
+        Skript.registerExpression(ExprEntityBlockStorageCount.class, Long.class, ExpressionType.PROPERTY,
+                "(size|amount) of [all] (stored entities|entities stored) in %blocks%");
     }
 
     @SuppressWarnings({"unchecked", "NullableProblems"})

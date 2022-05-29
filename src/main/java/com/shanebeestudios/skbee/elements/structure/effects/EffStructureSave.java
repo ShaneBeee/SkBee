@@ -20,9 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffStructureSave extends Effect {
 
     static {
-        if (Skript.classExists("org.bukkit.structure.Structure")) {
-            Skript.registerEffect(EffStructureSave.class, "(save|1¦delete) [structure[s]] %structures%");
-        }
+        Skript.registerEffect(EffStructureSave.class, "(save|1¦delete) [structure[s]] %structures%");
     }
 
     private Expression<StructureBee> structures;

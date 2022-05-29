@@ -10,6 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -100,6 +101,12 @@ public class OtherEvents {
                 return event.getInventory();
             }
         }, 0);
+
+        // Player shear entity event
+        Skript.registerEvent("Shear Entity", SimpleEvent.class, PlayerShearEntityEvent.class, "[player] shear entity")
+                .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")
+                .examples("on player shear entity:")
+                .since("1.8.0");
     }
 
 }

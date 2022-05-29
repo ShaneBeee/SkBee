@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.type;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
@@ -12,8 +11,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Timespan;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
-import com.shanebeestudios.skbee.api.particle.VibrationBee;
-import com.shanebeestudios.skbee.api.util.EnumParser;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
@@ -21,6 +18,7 @@ import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.Particle.DustTransition;
 import org.bukkit.Vibration;
+import org.bukkit.Vibration.Destination.BlockDestination;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.jetbrains.annotations.Nullable;
 
@@ -85,13 +83,11 @@ public class Types {
 
         Classes.registerClass(new ClassInfo<>(DustOptions.class, "dustoption")
                 .name(ClassInfo.NO_DOC).user("dust ?options?"));
+        Classes.registerClass(new ClassInfo<>(DustTransition.class, "dusttransition")
+                .name(ClassInfo.NO_DOC).user("dust ?transitions?"));
+        Classes.registerClass(new ClassInfo<>(Vibration.class, "vibration")
+                .name(ClassInfo.NO_DOC).user("vibrations?"));
 
-        if (Skript.isRunningMinecraft(1, 17)) {
-            Classes.registerClass(new ClassInfo<>(DustTransition.class, "dusttransition")
-                    .name(ClassInfo.NO_DOC).user("dust ?transitions?"));
-            Classes.registerClass(new ClassInfo<>(Vibration.class, "vibration")
-                    .name(ClassInfo.NO_DOC).user("vibrations?"));
-        }
 
         // == FUNCTIONS ==
 
@@ -112,54 +108,54 @@ public class Types {
                 .examples("set {_c} to dustOption(red, 1.5)", "set {_c} to dustOption(rgb(1, 255, 1), 3)")
                 .since("1.9.0"));
 
-        if (Skript.isRunningMinecraft(1, 17)) {
-            // Function to create DustTransition
-            Functions.registerFunction(new JavaFunction<DustTransition>("dustTransition", new Parameter[]{
-                    new Parameter<>("fromColor", Classes.getExactClassInfo(Color.class), true, null),
-                    new Parameter<>("toColor", Classes.getExactClassInfo(Color.class), true, null),
-                    new Parameter<>("size", Classes.getExactClassInfo(Number.class), true, null)
-            }, Classes.getExactClassInfo(DustTransition.class), true) {
-                @Nullable
-                @Override
-                public DustTransition[] execute(FunctionEvent e, Object[][] params) {
-                    org.bukkit.Color fromColor = ((Color) params[0][0]).asBukkitColor();
-                    org.bukkit.Color toColor = ((Color) params[1][0]).asBukkitColor();
-                    float size = ((Number) params[2][0]).floatValue();
-                    return new DustTransition[]{
-                            new DustTransition(fromColor, toColor, size)
-                    };
-                }
-            }.description("Creates a new dust transition to be used with 'dust_color_transition' particle.",
-                            "Color can either be a regular color or an RGB color using Skript's rgb() function.",
-                            "Size is the size the particle will be. Requires MC 1.17+")
-                    .examples("set {_d} to dustTransition(red, green, 10)", "set {_d} to dustTransition(blue, rgb(1,1,1), 5)")
-                    .since("1.11.1"));
 
-            // Function to create vibration
-            Functions.registerFunction(new JavaFunction<Vibration>("vibration", new Parameter[]{
-                    new Parameter<>("from", Classes.getExactClassInfo(Location.class), true, null),
-                    new Parameter<>("to", Classes.getExactClassInfo(Location.class), true, null),
-                    new Parameter<>("arrivalTime", Classes.getExactClassInfo(Timespan.class), true, null)
-            }, Classes.getExactClassInfo(Vibration.class), true) {
-                @Nullable
-                @Override
-                public Vibration[] execute(FunctionEvent e, Object[][] params) {
-                    if (params[0].length == 0 || params[1].length == 0) {
-                        return null;
-                    }
-                    Location origin = (Location) params[0][0];
-                    Location destination = (Location) params[1][0];
-                    int arrivalTime = (int) ((Timespan) params[2][0]).getTicks_i();
-                    VibrationBee vibration = new VibrationBee(origin, destination, arrivalTime);
-                    return new Vibration[]{vibration.get()};
+        // Function to create DustTransition
+        Functions.registerFunction(new JavaFunction<DustTransition>("dustTransition", new Parameter[]{
+                new Parameter<>("fromColor", Classes.getExactClassInfo(Color.class), true, null),
+                new Parameter<>("toColor", Classes.getExactClassInfo(Color.class), true, null),
+                new Parameter<>("size", Classes.getExactClassInfo(Number.class), true, null)
+        }, Classes.getExactClassInfo(DustTransition.class), true) {
+            @Nullable
+            @Override
+            public DustTransition[] execute(FunctionEvent e, Object[][] params) {
+                org.bukkit.Color fromColor = ((Color) params[0][0]).asBukkitColor();
+                org.bukkit.Color toColor = ((Color) params[1][0]).asBukkitColor();
+                float size = ((Number) params[2][0]).floatValue();
+                return new DustTransition[]{
+                        new DustTransition(fromColor, toColor, size)
+                };
+            }
+        }.description("Creates a new dust transition to be used with 'dust_color_transition' particle.",
+                        "Color can either be a regular color or an RGB color using Skript's rgb() function.",
+                        "Size is the size the particle will be. Requires MC 1.17+")
+                .examples("set {_d} to dustTransition(red, green, 10)", "set {_d} to dustTransition(blue, rgb(1,1,1), 5)")
+                .since("1.11.1"));
+
+        // Function to create Vibration
+        Functions.registerFunction(new JavaFunction<Vibration>("vibration", new Parameter[]{
+                new Parameter<>("from", Classes.getExactClassInfo(Location.class), true, null),
+                new Parameter<>("to", Classes.getExactClassInfo(Location.class), true, null),
+                new Parameter<>("arrivalTime", Classes.getExactClassInfo(Timespan.class), true, null)
+        }, Classes.getExactClassInfo(Vibration.class), true) {
+            @Nullable
+            @Override
+            public Vibration[] execute(FunctionEvent e, Object[][] params) {
+                if (params[0].length == 0 || params[1].length == 0) {
+                    return null;
                 }
-            }.description("Creates a new vibration to be used with 'vibration' particle.",
-                            "FROM = the origin location the particle will start at.",
-                            "TO = the destination location the particle will travel to.",
-                            "ARRIVAL TIME = the time it will take to arrive at the destination location. Requires MC 1.17+")
-                    .examples("set {_v} to vibration({loc1}, {loc2}, 10 seconds)")
-                    .since("1.11.1"));
-        }
+                Location origin = (Location) params[0][0];
+                Location destination = (Location) params[1][0];
+                int arrivalTime = (int) ((Timespan) params[2][0]).getTicks_i();
+                Vibration vibration = new Vibration(origin, new BlockDestination(destination), arrivalTime);
+                return new Vibration[]{vibration};
+            }
+        }.description("Creates a new vibration to be used with 'vibration' particle.",
+                        "FROM = the origin location the particle will start at.",
+                        "TO = the destination location the particle will travel to.",
+                        "ARRIVAL TIME = the time it will take to arrive at the destination location. Requires MC 1.17+")
+                .examples("set {_v} to vibration({loc1}, {loc2}, 10 seconds)")
+                .since("1.11.1"));
+
     }
 
 }

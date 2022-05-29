@@ -24,9 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffStructureFill extends Effect {
 
     static {
-        if (Skript.classExists("org.bukkit.structure.Structure")) {
-            Skript.registerEffect(EffStructureFill.class, "fill [structure] %structure% between %location% and %location%");
-        }
+        Skript.registerEffect(EffStructureFill.class, "fill [structure] %structure% between %location% and %location%");
     }
 
     private Expression<StructureBee> structure;
@@ -77,7 +75,7 @@ public class EffStructureFill extends Effect {
     @Override
     public String toString(@Nullable Event e, boolean d) {
         return String.format("fill structure %s between %s and %s",
-                structure.toString(e, d), loc1.toString(e,d), loc2.toString(e,d));
+                structure.toString(e, d), loc1.toString(e, d), loc2.toString(e, d));
     }
 
 }

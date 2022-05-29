@@ -34,11 +34,9 @@ import java.util.List;
 public class EffEntityBlockStorage extends Effect {
 
     static {
-        if (Skript.classExists("org.bukkit.block.EntityBlockStorage")) {
-            Skript.registerEffect(EffEntityBlockStorage.class,
-                    "release [all] entities from [storage of] %blocks% [for %-timespan%] [into %-objects%]",
-                    "add %entities% to [storage of] %block%");
-        }
+        Skript.registerEffect(EffEntityBlockStorage.class,
+                "release [all] entities from [storage of] %blocks% [for %-timespan%] [into %-objects%]",
+                "add %entities% to [storage of] %block%");
     }
 
     @SuppressWarnings("null")
@@ -71,7 +69,8 @@ public class EffEntityBlockStorage extends Effect {
                     List<Entity> entities = ((EntityBlockStorage<Entity>) state).releaseEntities();
                     for (Entity entity : entities) {
                         if (entity instanceof Bee && ticks > 0) {
-                            ((Bee) entity).setCannotEnterHiveTicks(((int) ticks));;
+                            ((Bee) entity).setCannotEnterHiveTicks(((int) ticks));
+                            ;
                         }
                     }
                     if (var != null) {
@@ -97,7 +96,7 @@ public class EffEntityBlockStorage extends Effect {
     public String toString(Event e, boolean d) {
         String time = this.timespan != null ? " for " + this.timespan.toString(e, d) : "";
         String var = this.var != null ? " into " + this.var.toString(e, d) : "";
-        return this.release ? "Release all entities from " + this.blocks.toString(e, d) + time + var:
+        return this.release ? "Release all entities from " + this.blocks.toString(e, d) + time + var :
                 "Add " + this.entities.toString(e, d) + " to storage of " + this.blocks.toString(e, d);
     }
 

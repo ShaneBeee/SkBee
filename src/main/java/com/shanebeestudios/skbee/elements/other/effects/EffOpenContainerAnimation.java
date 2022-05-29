@@ -26,9 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffOpenContainerAnimation extends Effect {
 
     static {
-        if (Skript.classExists("org.bukkit.block.Lidded")) {
-            Skript.registerEffect(EffOpenContainerAnimation.class, "play (0¦open|1¦close) animation on %blocks%");
-        }
+        Skript.registerEffect(EffOpenContainerAnimation.class, "play (0¦open|1¦close) animation on %blocks%");
     }
 
     private boolean open;
@@ -41,6 +39,7 @@ public class EffOpenContainerAnimation extends Effect {
         this.blocks = (Expression<Block>) exprs[0];
         return true;
     }
+
     @Override
     protected void execute(Event e) {
         for (Block block : this.blocks.getArray(e)) {

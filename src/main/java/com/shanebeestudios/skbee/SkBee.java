@@ -86,8 +86,8 @@ public class SkBee extends JavaPlugin {
             pm.disablePlugin(this);
             return;
         }
-        if (!Skript.isRunningMinecraft(1, 16, 5)) {
-            Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.16.5+ is supported!", Skript.getMinecraftVersion());
+        if (!Skript.isRunningMinecraft(1, 17, 1)) {
+            Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.17.1+ is supported!", Skript.getMinecraftVersion());
             pm.disablePlugin(this);
             return;
         }
@@ -236,16 +236,13 @@ public class SkBee extends JavaPlugin {
             return;
         }
 
-        // Load new structure system (MC 1.17.1+)
-        if (Skript.classExists("org.bukkit.structure.Structure")) {
-            this.structureBeeManager = new StructureBeeManager();
-            try {
-                addon.loadClasses("com.shanebeestudios.skbee.elements.structure");
-                Util.log("&5New Structure Elements &asuccessfully loaded");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                pm.disablePlugin(this);
-            }
+        this.structureBeeManager = new StructureBeeManager();
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.structure");
+            Util.log("&5New Structure Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
         }
     }
 
@@ -301,17 +298,14 @@ public class SkBee extends JavaPlugin {
             Util.log("&5Game Event Elements &cdisabled via config");
             return;
         }
-        if (Skript.classExists("org.bukkit.GameEvent")) {
-            try {
-                addon.loadClasses("com.shanebeestudios.skbee.elements.gameevent");
-                Util.log("&5Game Event Elements &asuccessfully loaded");
-            } catch (IOException e) {
-                e.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        } else {
-            Util.log("&5Game Event Elements &cdisabled, only available on MC 1.17+");
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.gameevent");
+            Util.log("&5Game Event Elements &asuccessfully loaded");
+        } catch (IOException e) {
+            e.printStackTrace();
+            pm.disablePlugin(this);
         }
+
     }
 
     private void loadBossBarElements() {

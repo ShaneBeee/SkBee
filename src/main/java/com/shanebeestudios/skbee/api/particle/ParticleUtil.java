@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.api.particle;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.reflection.ReflectionConstants;
@@ -31,7 +30,6 @@ public class ParticleUtil {
     }
 
     private static final Map<String, Particle> PARTICLES = new HashMap<>();
-    private static final boolean HAS_VIBRATION = Skript.isRunningMinecraft(1, 17);
 
     // Load and map Minecraft particle names
     // Bukkit does not have any API for getting the Minecraft names of particles (how stupid)
@@ -112,19 +110,18 @@ public class ParticleUtil {
     }
 
     private static String getDataType(Particle particle) {
-        Class<?> t = particle.getDataType();
-        if (t == ItemStack.class) {
+        Class<?> dataType = particle.getDataType();
+        if (dataType == ItemStack.class) {
             return "itemtype";
-        } else if (t == Particle.DustOptions.class) {
+        } else if (dataType == Particle.DustOptions.class) {
             return "dust-option";
-        } else if (t == BlockData.class) {
+        } else if (dataType == BlockData.class) {
             return "blockdata/itemtype";
-        } else if (HAS_VIBRATION) {
-            if (t == Particle.DustTransition.class) {
-                return "dust-transition";
-            } else if (t == Vibration.class) {
-                return "vibration";
-            }
+        } else if (dataType == Particle.DustTransition.class) {
+            return "dust-transition";
+        } else if (dataType == Vibration.class) {
+            return "vibration";
+
         }
         // For future particle data additions that haven't been added here yet
         return "UNKNOWN";
@@ -195,9 +192,9 @@ public class ParticleUtil {
             return ((ItemType) data).getRandom();
         } else if (dataType == Particle.DustOptions.class && data instanceof Particle.DustOptions) {
             return data;
-        } else if (HAS_VIBRATION && dataType == Particle.DustTransition.class && data instanceof Particle.DustTransition) {
+        } else if (dataType == Particle.DustTransition.class && data instanceof Particle.DustTransition) {
             return data;
-        } else if (HAS_VIBRATION && dataType == Vibration.class && data instanceof Vibration) {
+        } else if (dataType == Vibration.class && data instanceof Vibration) {
             return data;
         } else if (dataType == BlockData.class) {
             if (data instanceof BlockData) {

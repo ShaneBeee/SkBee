@@ -58,14 +58,6 @@ public class PaperEvents {
             }, 0);
         }
 
-        // Player shear entity event
-        if (Skript.classExists("org.bukkit.event.player.PlayerShearEntityEvent")) {
-            Skript.registerEvent("Shear Entity", SimpleEvent.class, PlayerShearEntityEvent.class, "[player] shear entity")
-                    .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")
-                    .examples("on player shear entity:")
-                    .since("1.8.0");
-        }
-
         // Player Pickup XP Event
         if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent")) {
             Skript.registerEvent("Player Pickup Experience Orb", SimpleEvent.class, PlayerPickupExperienceEvent.class, "player pickup (experience|xp) [orb]")
