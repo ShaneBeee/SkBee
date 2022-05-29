@@ -14,6 +14,7 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 import org.bukkit.World;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -36,6 +37,7 @@ public class ExprBoundAllBounds extends SimpleExpression<Object> {
     private boolean ID;
     private Expression<World> world;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         ID = matchedPattern == 1;
@@ -89,7 +91,7 @@ public class ExprBoundAllBounds extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<?> getReturnType() {
+    public @NotNull Class<?> getReturnType() {
         if (ID) {
             return String.class;
         }
@@ -97,7 +99,7 @@ public class ExprBoundAllBounds extends SimpleExpression<Object> {
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "bound" + (ID ? " ids" : "s" + (this.world != null ? " in world[s] " + this.world.toString(e, d) : ""));
     }
 

@@ -8,12 +8,13 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -35,13 +36,15 @@ public class ExprBoundEntities extends SimpleExpression<Entity> {
     private Expression<EntityData<?>> entityDatas;
     private Expression<Bound> bounds;
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         entityDatas = (Expression<EntityData<?>>) exprs[0];
         bounds = (Expression<Bound>) exprs[1];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     protected Entity[] get(Event event) {
@@ -61,12 +64,12 @@ public class ExprBoundEntities extends SimpleExpression<Entity> {
     }
 
     @Override
-    public Class<? extends Entity> getReturnType() {
+    public @NotNull Class<? extends Entity> getReturnType() {
         return Entity.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return this.entityDatas.toString(e, d) + " of bound[s] " + this.bounds.toString(e, d);
     }
 

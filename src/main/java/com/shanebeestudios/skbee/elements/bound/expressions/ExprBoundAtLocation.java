@@ -14,6 +14,7 @@ import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class ExprBoundAtLocation extends SimpleExpression<Object> {
     private Expression<Location> location;
     private boolean ID;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int pattern, Kleenean kleenean, ParseResult parse) {
         this.location = (Expression<Location>) exprs[0];
@@ -41,6 +42,7 @@ public class ExprBoundAtLocation extends SimpleExpression<Object> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Object[] get(Event event) {
         if (this.location == null) {
@@ -72,7 +74,7 @@ public class ExprBoundAtLocation extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<?> getReturnType() {
+    public @NotNull Class<?> getReturnType() {
         if (ID)
             return String.class;
         else
@@ -80,7 +82,7 @@ public class ExprBoundAtLocation extends SimpleExpression<Object> {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "bound" + (ID ? " ids" : "s" + " at location " + this.location.toString(e, d));
     }
 

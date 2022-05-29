@@ -13,6 +13,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Is Minecraft Tagged")
@@ -30,6 +31,7 @@ public class CondIsMinecraftTagged extends Condition {
     private Expression<ItemType> itemTypes;
     private Expression<Tag> tags;
 
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         itemTypes = (Expression<ItemType>) exprs[0];
@@ -38,8 +40,9 @@ public class CondIsMinecraftTagged extends Condition {
         return true;
     }
 
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean check(Event event) {
+    public boolean check(@NotNull Event event) {
         return itemTypes.check(event, item -> {
             Material material = item.getMaterial();
             return tags.check(event, tag -> tag.isTagged(material));

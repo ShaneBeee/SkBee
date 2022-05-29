@@ -13,6 +13,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Bound - From ID")
 @Description("Get a bound object from a bound ID")
@@ -27,13 +28,14 @@ public class ExprBoundFromID extends SimpleExpression<Bound> {
 
     private Expression<String> id;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         this.id = (Expression<String>) exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Bound[] get(Event event) {
         String id = this.id.getSingle(event);
@@ -46,12 +48,12 @@ public class ExprBoundFromID extends SimpleExpression<Bound> {
     }
 
     @Override
-    public Class<? extends Bound> getReturnType() {
+    public @NotNull Class<? extends Bound> getReturnType() {
         return Bound.class;
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "bound from id " + this.id.toString(e, d);
     }
 

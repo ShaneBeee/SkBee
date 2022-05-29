@@ -17,6 +17,7 @@ import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -41,6 +42,7 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
     private Expression<Bound> bound;
     private boolean owners;
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         bound = (Expression<Bound>) exprs[0];
@@ -48,6 +50,7 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     protected OfflinePlayer[] get(Event e) {
@@ -66,6 +69,7 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
         return players.toArray(new OfflinePlayer[0]);
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
@@ -79,6 +83,7 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
         Bound bound = this.bound.getSingle(e);
@@ -134,12 +139,12 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
     }
 
     @Override
-    public Class<? extends OfflinePlayer> getReturnType() {
+    public @NotNull Class<? extends OfflinePlayer> getReturnType() {
         return OfflinePlayer.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return (owners ? "owners" : "members") + " of bound " + this.bound.toString(e, d);
     }
 

@@ -362,6 +362,7 @@ public class Bound implements ConfigurationSerializable {
      * @param args Args from yaml
      * @return New bound from serialized yaml configuration
      */
+    @SuppressWarnings("unchecked")
     public static Bound deserialize(Map<String, Object> args) {
         String world = ((String) args.get("world"));
         int x = ((Number) args.get("x1")).intValue();

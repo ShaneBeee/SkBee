@@ -13,6 +13,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,13 +33,14 @@ public class ExprBoundBlocks extends SimpleExpression<Block> {
 
     private Expression<Bound> bound;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         bound = (Expression<Bound>) exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Block[] get(Event event) {
         Bound single = bound.getSingle(event);
@@ -50,7 +52,7 @@ public class ExprBoundBlocks extends SimpleExpression<Block> {
     }
 
     @Override
-    public Class<? extends Block> getReturnType() {
+    public @NotNull Class<? extends Block> getReturnType() {
         return Block.class;
     }
 
@@ -60,7 +62,7 @@ public class ExprBoundBlocks extends SimpleExpression<Block> {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "the blocks within bound " + bound.toString(e, d);
     }
 

@@ -14,6 +14,7 @@ import ch.njol.util.Kleenean;
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ClickEvent.Action;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -81,12 +82,12 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
     }
 
     @Override
-    public Class<? extends ClickEvent> getReturnType() {
+    public @NotNull Class<? extends ClickEvent> getReturnType() {
         return ClickEvent.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         String[] actions = new String[]{"run command", "suggest command", "open url", "copy to clipboard", "change to page"};
         return "click event to " + actions[pattern] + " " + object.toString(e, d);
     }

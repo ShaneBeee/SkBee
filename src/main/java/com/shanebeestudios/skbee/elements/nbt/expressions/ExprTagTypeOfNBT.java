@@ -14,6 +14,7 @@ import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("NBT - Tag Type")
@@ -30,6 +31,7 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
     private Expression<String> tag;
     private Expression<NBTCompound> compound;
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.tag = (Expression<String>) exprs[0];
@@ -59,12 +61,12 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
     }
 
     @Override
-    public Class<? extends NBTCustomType> getReturnType() {
+    public @NotNull Class<? extends NBTCustomType> getReturnType() {
         return NBTCustomType.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "nbt tag type of tag " + this.tag.toString(e, d) + " of nbt compound " + this.compound.toString(e, d);
     }
 

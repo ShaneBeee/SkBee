@@ -20,6 +20,7 @@ import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound.Axis;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound.Corner;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Bound - Coords")
 @Description({"The coords and world of a bounding box. You can get the world/coords for a specific bound, you can also " +
@@ -40,7 +41,7 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
     private boolean LESSER;
     private int parse;
 
-    @SuppressWarnings({"unchecked", "null"})
+    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         setExpr((Expression<Bound>) exprs[0]);
@@ -50,29 +51,27 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Object[] get(Event event, Bound[] bounds) {
-        return get(bounds, new Getter<Object, Bound>() {
+        return get(bounds, new Getter<>() {
             @Override
             public Object get(Bound bound) {
                 if (WORLD) {
                     return bound.getWorld();
                 } else {
-                    switch (parse) {
-                        case 0:
-                            return LESSER ? bound.getLesserX() : bound.getGreaterX();
-                        case 1:
-                            return LESSER ? bound.getLesserY() : bound.getGreaterY();
-                        default:
-                            return LESSER ? bound.getLesserZ() : bound.getGreaterZ();
-                    }
+                    return switch (parse) {
+                        case 0 -> LESSER ? bound.getLesserX() : bound.getGreaterX();
+                        case 1 -> LESSER ? bound.getLesserY() : bound.getGreaterY();
+                        default -> LESSER ? bound.getLesserZ() : bound.getGreaterZ();
+                    };
                 }
             }
         });
     }
 
     @Override
-    public Class<?> getReturnType() {
+    public @NotNull Class<?> getReturnType() {
         if (WORLD) {
             return World.class;
         } else {
@@ -80,6 +79,7 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
         if (!WORLD && (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)) {
@@ -88,6 +88,7 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event e, Object[] delta, ChangeMode mode) {
         BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
@@ -118,7 +119,7 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String type = "";
         String lesser = "";
         if (WORLD) {

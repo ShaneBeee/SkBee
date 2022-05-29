@@ -13,6 +13,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Bound - ID")
@@ -36,6 +37,7 @@ public class ExprBoundID extends SimplePropertyExpression<Bound, String> {
         return bound.getId();
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
@@ -49,6 +51,7 @@ public class ExprBoundID extends SimplePropertyExpression<Bound, String> {
         return null;
     }
 
+    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta == null || !getExpr().isSingle()) return;
@@ -70,12 +73,12 @@ public class ExprBoundID extends SimplePropertyExpression<Bound, String> {
     }
 
     @Override
-    protected String getPropertyName() {
+    protected @NotNull String getPropertyName() {
         return "bound id";
     }
 
     @Override
-    public Class<? extends String> getReturnType() {
+    public @NotNull Class<? extends String> getReturnType() {
         return String.class;
     }
 
