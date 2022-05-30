@@ -9,8 +9,11 @@ elements:
   # Enable NBT elements
   nbt: true
 
-  # Enable Scoreboard and Team elements
+  # Enable Scoreboard elements
   scoreboard: true
+
+  # Enable Team elements
+  team: true
 
   # Enable custom recipe elements
   recipe: true

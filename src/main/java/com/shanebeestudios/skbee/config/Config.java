@@ -18,6 +18,7 @@ public class Config {
     public boolean SETTINGS_DEBUG;
     public boolean ELEMENTS_NBT;
     public boolean ELEMENTS_BOARD;
+    public boolean ELEMENTS_TEAM;
     public boolean ELEMENTS_RECIPE;
     public boolean ELEMENTS_BOUND;
     public boolean ELEMENTS_STRUCTURE;
@@ -79,6 +80,7 @@ public class Config {
         this.SETTINGS_DEBUG = this.config.getBoolean("settings.debug");
         this.ELEMENTS_NBT = this.config.getBoolean("elements.nbt");
         this.ELEMENTS_BOARD = this.config.getBoolean("elements.scoreboard");
+        this.ELEMENTS_TEAM = this.config.getBoolean("elements.team");
         this.ELEMENTS_RECIPE = this.config.getBoolean("elements.recipe");
         this.ELEMENTS_BOUND = this.config.getBoolean("elements.bound");
         this.ELEMENTS_STRUCTURE = this.config.getBoolean("elements.structure");

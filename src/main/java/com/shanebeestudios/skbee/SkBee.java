@@ -12,7 +12,6 @@ import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
-import com.shanebeestudios.skbee.elements.board.objects.BeeTeams;
 import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 import com.shanebeestudios.skbee.elements.scoreboard.objects.BoardManager;
@@ -29,6 +28,7 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scoreboard.Team;
 
 import java.io.IOException;
 
@@ -50,7 +50,6 @@ public class SkBee extends JavaPlugin {
     private SkriptAddon addon;
     private VirtualFurnaceAPI virtualFurnaceAPI;
     private BeeWorldConfig beeWorldConfig;
-    private BeeTeams beeTeams = null;// TODO remove after proper testing
     private StructureBeeManager structureBeeManager = null;
 
     @Override
@@ -100,6 +99,7 @@ public class SkBee extends JavaPlugin {
         loadRecipeElements();
         //loadBoardElements(); TODO remove after proper testing
         loadScoreboardElements();
+        loadTeamElements();
         loadBoundElements();
         loadTextElements();
         loadPathElements();
@@ -168,24 +168,6 @@ public class SkBee extends JavaPlugin {
         }
     }
 
-//    private void loadBoardElements() { TODO remove after proper testing
-//        if (!this.config.ELEMENTS_BOARD) {
-//            Util.log("&5Scoreboard Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            //beeTeams = new BeeTeams();
-//            addon.loadClasses("com.shanebeestudios.skbee.elements.board");
-//            pm.registerEvents(new PlayerBoardListener(this), this);
-//            // If there are players online during a reload, let's give them a board
-//            Bukkit.getOnlinePlayers().forEach(Board::createBoard);
-//            Util.log("&5Scoreboard Elements &asuccessfully loaded");
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//            pm.disablePlugin(this);
-//        }
-//    }
-
     private void loadScoreboardElements() {
         if (!this.config.ELEMENTS_BOARD) {
             Util.log("&5Scoreboard Elements &cdisabled via config");
@@ -195,6 +177,26 @@ public class SkBee extends JavaPlugin {
             addon.loadClasses("com.shanebeestudios.skbee.elements.scoreboard");
             pm.registerEvents(new BoardManager(), this);
             Util.log("&5Scoreboard Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
+    }
+
+    private void loadTeamElements() {
+        if (!this.config.ELEMENTS_TEAM) {
+            Util.log("&5Team Elements &cdisabled via config");
+            return;
+        }
+        if (Classes.getClassInfoNoError("team") != null || Classes.getExactClassInfo(Team.class) != null) {
+            Util.log("&5Team Elements &cdisabled");
+            Util.log("&7It appears another Skript addon may have registered Team syntax.");
+            Util.log("&7To use SkBee Teams, please remove the addon which has registered Teams already.");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.team");
+            Util.log("&5Team Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -354,10 +356,6 @@ public class SkBee extends JavaPlugin {
         if (this.virtualFurnaceAPI != null) {
             this.virtualFurnaceAPI.disableAPI();
         }
-
-//        if (this.config.ELEMENTS_BOARD) { TODO remove after proper testing
-//            Board.clearBoards();
-//        }
         if (this.boundConfig != null) {
             this.boundConfig.saveAllBounds();
         }
@@ -419,10 +417,6 @@ public class SkBee extends JavaPlugin {
 
     public StructureBeeManager getStructureBeeManager() {
         return structureBeeManager;
-    }
-
-    public BeeTeams getBeeTeams() { //TODO remove after proper testing
-        return beeTeams;
     }
 
 }

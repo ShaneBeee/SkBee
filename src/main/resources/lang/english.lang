@@ -19,7 +19,7 @@ types:
 	structurerotation: structure rotation¦s
 	blockstate: blockstate¦s
 	gameevent: game event¦s
-	beeteam: team¦s
+	team: team¦s
 	teamoption: team options¦s
 	teamoptionstatus: team option status¦es
 	equipmentslot: equipment slot¦s

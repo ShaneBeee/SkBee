@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.board.expressions;
+package com.shanebeestudios.skbee.elements.team.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -10,21 +10,20 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.elements.board.objects.BeeTeam;
 import org.bukkit.event.Event;
+import org.bukkit.scoreboard.Team;
+import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Name("Team - State")
 @Description("Represents the friendly fire and can see friendly invisibles states of a team.")
 @Examples("set allow friendly fire team state of team named \"a-team\" to true")
-@Since("1.15.0")
-public class ExprTeamState extends SimplePropertyExpression<BeeTeam, Boolean> {
+@Since("1.16.0")
+public class ExprTeamState extends SimplePropertyExpression<Team, Boolean> {
 
     static {
         register(ExprTeamState.class, Boolean.class,
-                "(0¦allow friendly fire|1¦can see friendly invisibles) team state",
-                "beeteams");
+                "(0¦allow friendly fire|1¦can see friendly invisibles) team state", "teams");
     }
 
     private int pattern;
@@ -35,32 +34,30 @@ public class ExprTeamState extends SimplePropertyExpression<BeeTeam, Boolean> {
         return super.init(exprs, matchedPattern, isDelayed, parseResult);
     }
 
-
-    @Nullable
     @Override
-    public Boolean convert(@NotNull BeeTeam beeTeam) {
-        return pattern == 0 ? beeTeam.isFriendlyFire() : beeTeam.isFriendlyInvisibles();
+    public @Nullable Boolean convert(Team team) {
+        return pattern == 0 ? team.allowFriendlyFire() : team.canSeeFriendlyInvisibles();
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
-    public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
+    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
             return CollectionUtils.array(Boolean.class);
         }
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public void change(@NotNull Event event, @Nullable Object[] delta, @NotNull ChangeMode mode) {
-        if (delta == null) return;
-
-        boolean state = ((boolean) delta[0]);
-        for (BeeTeam team : getExpr().getArray(event)) {
+    public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+        if (delta[0] == null) return;
+        boolean state = (boolean) delta[0];
+        for (Team team : getExpr().getArray(event)) {
             if (pattern == 0) {
-                team.setFriendlyFire(state);
+                team.setAllowFriendlyFire(state);
             } else {
-                team.setFriendlyInvisibles(state);
+                team.setCanSeeFriendlyInvisibles(state);
             }
         }
     }
