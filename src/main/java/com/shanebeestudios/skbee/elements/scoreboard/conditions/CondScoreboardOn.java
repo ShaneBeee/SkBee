@@ -9,7 +9,6 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.elements.board.conditions.CondBoardOn;
 import com.shanebeestudios.skbee.elements.scoreboard.objects.Board;
 import com.shanebeestudios.skbee.elements.scoreboard.objects.BoardManager;
 import org.bukkit.entity.Player;
@@ -25,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class CondScoreboardOn extends Condition {
 
     static {
-        Skript.registerCondition(CondBoardOn.class,
+        Skript.registerCondition(CondScoreboardOn.class,
                 "[score]board of %player% is (on|true)",
                 "[score]board of %player% is(n't| not) on",
                 "[score]board of %player% is (off|false)");
