@@ -12,11 +12,10 @@ import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
-import com.shanebeestudios.skbee.elements.board.listener.PlayerBoardListener;
 import com.shanebeestudios.skbee.elements.board.objects.BeeTeams;
-import com.shanebeestudios.skbee.elements.board.objects.Board;
 import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import com.shanebeestudios.skbee.elements.scoreboard.objects.BoardManager;
 import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.skbee.metrics.Metrics;
@@ -51,7 +50,7 @@ public class SkBee extends JavaPlugin {
     private SkriptAddon addon;
     private VirtualFurnaceAPI virtualFurnaceAPI;
     private BeeWorldConfig beeWorldConfig;
-    private BeeTeams beeTeams;
+    private BeeTeams beeTeams = null;// TODO remove after proper testing
     private StructureBeeManager structureBeeManager = null;
 
     @Override
@@ -99,7 +98,8 @@ public class SkBee extends JavaPlugin {
         // Load Skript elements
         loadNBTElements();
         loadRecipeElements();
-        loadBoardElements();
+        //loadBoardElements(); TODO remove after proper testing
+        loadScoreboardElements();
         loadBoundElements();
         loadTextElements();
         loadPathElements();
@@ -168,17 +168,32 @@ public class SkBee extends JavaPlugin {
         }
     }
 
-    private void loadBoardElements() {
+//    private void loadBoardElements() { TODO remove after proper testing
+//        if (!this.config.ELEMENTS_BOARD) {
+//            Util.log("&5Scoreboard Elements &cdisabled via config");
+//            return;
+//        }
+//        try {
+//            //beeTeams = new BeeTeams();
+//            addon.loadClasses("com.shanebeestudios.skbee.elements.board");
+//            pm.registerEvents(new PlayerBoardListener(this), this);
+//            // If there are players online during a reload, let's give them a board
+//            Bukkit.getOnlinePlayers().forEach(Board::createBoard);
+//            Util.log("&5Scoreboard Elements &asuccessfully loaded");
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//            pm.disablePlugin(this);
+//        }
+//    }
+
+    private void loadScoreboardElements() {
         if (!this.config.ELEMENTS_BOARD) {
             Util.log("&5Scoreboard Elements &cdisabled via config");
             return;
         }
         try {
-            beeTeams = new BeeTeams();
-            addon.loadClasses("com.shanebeestudios.skbee.elements.board");
-            pm.registerEvents(new PlayerBoardListener(this), this);
-            // If there are players online during a reload, let's give them a board
-            Bukkit.getOnlinePlayers().forEach(Board::createBoard);
+            addon.loadClasses("com.shanebeestudios.skbee.elements.scoreboard");
+            pm.registerEvents(new BoardManager(), this);
             Util.log("&5Scoreboard Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -340,9 +355,9 @@ public class SkBee extends JavaPlugin {
             this.virtualFurnaceAPI.disableAPI();
         }
 
-        if (this.config.ELEMENTS_BOARD) {
-            Board.clearBoards();
-        }
+//        if (this.config.ELEMENTS_BOARD) { TODO remove after proper testing
+//            Board.clearBoards();
+//        }
         if (this.boundConfig != null) {
             this.boundConfig.saveAllBounds();
         }
@@ -406,7 +421,7 @@ public class SkBee extends JavaPlugin {
         return structureBeeManager;
     }
 
-    public BeeTeams getBeeTeams() {
+    public BeeTeams getBeeTeams() { //TODO remove after proper testing
         return beeTeams;
     }
 

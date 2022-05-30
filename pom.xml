@@ -81,6 +81,11 @@
             </exclusions>
         </dependency>
         <dependency>
+            <groupId>fr.mrmicky</groupId>
+            <artifactId>fastboard</artifactId>
+            <version>1.2.1</version>
+        </dependency>
+        <dependency>
             <groupId>com.github.ShaneBeeStudios</groupId>
             <artifactId>VirtualFurnace</artifactId>
             <version>1.0.0-Beta12</version>
@@ -169,6 +174,10 @@
                         <relocation>
                             <pattern>com.shanebeestudios.vf</pattern>
                             <shadedPattern>com.shanebeestudios.skbee.api.virtualfurnace</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>fr.mrmicky.fastboard</pattern>
+                            <shadedPattern>com.shanebeestudios.skbee.api.fastboard</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
