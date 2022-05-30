@@ -97,7 +97,6 @@ public class SkBee extends JavaPlugin {
         // Load Skript elements
         loadNBTElements();
         loadRecipeElements();
-        //loadBoardElements(); TODO remove after proper testing
         loadScoreboardElements();
         loadTeamElements();
         loadBoundElements();
@@ -392,7 +391,11 @@ public class SkBee extends JavaPlugin {
         return this.boundConfig;
     }
 
-    // TODO notes
+    /**
+     * Get an instance of the {@link BeeWorldConfig}
+     *
+     * @return Instance of BeeWorld config
+     */
     public BeeWorldConfig getBeeWorldConfig() {
         return beeWorldConfig;
     }
