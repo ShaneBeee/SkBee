@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.elements.team.type;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
+import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import org.bukkit.scoreboard.Team;
@@ -17,6 +18,12 @@ public class Types {
                 .description("Represents a scoreboard team.")
                 .since("1.16.0")
                 .parser(new Parser<>() {
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
+                    }
+
                     @Override
                     public @NotNull String toString(Team team, int flags) {
                         return team.getName();
