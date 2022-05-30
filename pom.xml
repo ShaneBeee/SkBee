@@ -166,6 +166,14 @@
                     </execution>
                 </executions>
                 <configuration>
+                    <filters>
+                        <filter>
+                            <artifact>com.shanebeestudios.vf:*</artifact>
+                            <excludes>
+                                <exclude>/plugin.yml</exclude>
+                            </excludes>
+                        </filter>
+                    </filters>
                     <relocations>
                         <relocation>
                             <pattern>de.tr7zw.changeme.nbtapi</pattern>
