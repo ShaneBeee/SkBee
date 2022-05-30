@@ -15,7 +15,6 @@ import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Team - Register")
 @Description({"Register a new team or unregister an existing team.",
-        "NOTE: Teams are not persistent and will need to created on each server start.",
         "NOTE: You can also use the team expression to get a team, which will register a new team",
         "if that team does not exist already."})
 @Examples({"on load:",
