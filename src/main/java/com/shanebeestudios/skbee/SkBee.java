@@ -255,7 +255,7 @@ public class SkBee extends JavaPlugin {
         this.structureBeeManager = new StructureBeeManager();
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.structure");
-            Util.log("&5New Structure Elements &asuccessfully loaded");
+            Util.log("&5Structure Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
