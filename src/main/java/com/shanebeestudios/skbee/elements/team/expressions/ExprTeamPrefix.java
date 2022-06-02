@@ -27,7 +27,7 @@ public class ExprTeamPrefix extends SimplePropertyExpression<Team, String> {
 
     static {
         register(ExprTeamPrefix.class, String.class,
-                "[[sk]bee] team (0¦prefix|1¦suffix)", "team");
+                "team (0¦prefix|1¦suffix)", "team");
     }
 
     private int pattern;

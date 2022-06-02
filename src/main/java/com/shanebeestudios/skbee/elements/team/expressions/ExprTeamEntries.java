@@ -28,8 +28,8 @@ public class ExprTeamEntries extends SimpleExpression<Entity> {
 
     static {
         Skript.registerExpression(ExprTeamEntries.class, Entity.class, ExpressionType.PROPERTY,
-                "[[sk]bee] team entries of %team%",
-                "%team%'[s] [[sk]bee] team entries");
+                "team entries of %team%",
+                "%team%'[s] team entries");
     }
 
     private Expression<Team> team;

@@ -29,9 +29,9 @@ public class ExprTeam extends SimpleExpression<Team> {
 
     static {
         Skript.registerExpression(ExprTeam.class, Team.class, ExpressionType.SIMPLE,
-                "[[sk]bee[ ]]team named %string%",
-                "[[sk]bee[ ]]team of %entity%",
-                "all [[sk]bee[ ]]teams");
+                "team named %string%",
+                "team of %entity%",
+                "all teams");
     }
 
     private int pattern;

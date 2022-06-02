@@ -23,7 +23,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class EffTeamRegister extends Effect {
 
     static {
-        Skript.registerEffect(EffTeamRegister.class, "(|1¦un)register [new] [[sk]bee[ ]]team %string%");
+        Skript.registerEffect(EffTeamRegister.class, "(|1¦un)register [new] team %string%");
     }
 
     private Expression<String> name;

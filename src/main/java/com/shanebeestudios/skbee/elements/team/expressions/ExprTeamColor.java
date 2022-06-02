@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 public class ExprTeamColor extends SimplePropertyExpression<Team, SkriptColor> {
 
     static {
-        register(ExprTeamColor.class, SkriptColor.class, "[[sk]bee] team color", "teams");
+        register(ExprTeamColor.class, SkriptColor.class, "team color", "teams");
     }
 
     @Override
