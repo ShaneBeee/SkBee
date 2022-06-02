@@ -17,7 +17,7 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("deprecation")
-@Name("Team - Name")
+@Name("Team - Color")
 @Description("Get/set the color of a team.")
 @Examples("set team color of {_team} to blue")
 @Since("1.16.0")
