@@ -44,10 +44,13 @@ public class Types {
 
                     @Override
                     public @NotNull String toString(BossBar bossBar, int flags) {
+                        String bar;
                         if (bossBar instanceof KeyedBossBar keyedBossBar) {
-                            return keyedBossBar.getKey().toString();
+                            bar = keyedBossBar.getKey().toString();
+                        } else {
+                            bar = "nokey:" + bossBar.getTitle();
                         }
-                        return "nokey:" + bossBar.getTitle();
+                        return "BossBar[" + bar + "]";
                     }
 
                     @Override
@@ -101,10 +104,15 @@ public class Types {
                     protected BossBar deserialize(Fields fields) throws StreamCorruptedException {
                         String name = fields.getObject("namespace", String.class);
                         String key = fields.getObject("key", String.class);
-                        if (name == null || key == null) return null;
 
+                        assert name != null;
+                        assert key != null;
                         NamespacedKey namespacedKey = new NamespacedKey(name, key);
-                        return Bukkit.getBossBar(namespacedKey);
+                        KeyedBossBar bossBar = Bukkit.getBossBar(namespacedKey);
+                        if (bossBar == null) {
+                            throw new StreamCorruptedException("Missing Bossbar: [" + name + ":" + key + "]");
+                        }
+                        return bossBar;
                     }
 
                     @Override
