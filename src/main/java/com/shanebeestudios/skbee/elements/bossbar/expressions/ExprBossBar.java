@@ -25,7 +25,9 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("BossBar")
 @Description({"Get a BossBar from an entity (such as a wither) or create your own custom BossBar.",
-        "Progress is a number between 0-100"})
+        "Progress is a number between 0-100",
+        "NOTE: BossBars from entities cannot be saved in global variables, as the entity may not be loaded on the",
+        "server when that variable is trying to load. Custom BossBars can be saved in variables."})
 @Examples({"set {_bar} to boss bar named \"le-bar\"",
         "set {_bar} to boss bar named \"le-bar\" with title \"Le Title\" with color bar blue with progress 50",
         "delete boss bar named \"le-bar\"",

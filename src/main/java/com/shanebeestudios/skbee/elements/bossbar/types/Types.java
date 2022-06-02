@@ -3,19 +3,25 @@ package com.shanebeestudios.skbee.elements.bossbar.types;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.EnumParser;
+import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
 import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
 
+import java.io.StreamCorruptedException;
+
+@SuppressWarnings("unused")
 public class Types {
 
     static {
@@ -24,18 +30,20 @@ public class Types {
                 .name("BossBar")
                 .description("Represents a BossBar. Either from an entity or a custom one.",
                         "Custom BossBars can be deleted, BossBars of entities can't be deleted.",
-                        "NOTE: Custom BossBars are not persistent and won't be saved across server restart/stop.")
+                        "NOTE: BossBars from entities cannot be saved in global variables, as the entity may not be loaded",
+                        "on the server when that variable is trying to load. Custom BossBars can be saved in variables.")
                 .examples("set {_bar} to boss bar named \"le-bar\"")
                 .since("1.16.0")
                 .parser(new Parser<>() {
 
+                    @SuppressWarnings("NullableProblems")
                     @Override
                     public boolean canParse(ParseContext context) {
                         return false;
                     }
 
                     @Override
-                    public String toString(BossBar bossBar, int flags) {
+                    public @NotNull String toString(BossBar bossBar, int flags) {
                         if (bossBar instanceof KeyedBossBar keyedBossBar) {
                             return keyedBossBar.getKey().toString();
                         }
@@ -43,17 +51,19 @@ public class Types {
                     }
 
                     @Override
-                    public String toVariableNameString(BossBar o) {
-                        return "";
+                    public @NotNull String toVariableNameString(BossBar bossBar) {
+                        return toString(bossBar, 0);
                     }
                 })
                 .changer(new Changer<>() {
+                    @SuppressWarnings("NullableProblems")
                     @Override
                     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
                         if (mode == ChangeMode.DELETE) return CollectionUtils.array();
                         return null;
                     }
 
+                    @SuppressWarnings("NullableProblems")
                     @Override
                     public void change(BossBar[] what, @Nullable Object[] delta, ChangeMode mode) {
                         if (mode == ChangeMode.DELETE) {
@@ -64,6 +74,47 @@ public class Types {
                                 }
                             }
                         }
+                    }
+                })
+                .serializer(new Serializer<>() {
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public Fields serialize(BossBar bossBar) {
+                        Fields fields = new Fields();
+                        if (bossBar instanceof KeyedBossBar keyedBossBar) {
+                            NamespacedKey key = keyedBossBar.getKey();
+                            fields.putObject("namespace", key.getNamespace());
+                            fields.putObject("key", key.getKey());
+                            return fields;
+                        }
+                        return null;
+                    }
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public void deserialize(BossBar o, Fields f) {
+                    }
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    protected BossBar deserialize(Fields fields) throws StreamCorruptedException {
+                        String name = fields.getObject("namespace", String.class);
+                        String key = fields.getObject("key", String.class);
+                        if (name == null || key == null) return null;
+
+                        NamespacedKey namespacedKey = new NamespacedKey(name, key);
+                        return Bukkit.getBossBar(namespacedKey);
+                    }
+
+                    @Override
+                    public boolean mustSyncDeserialization() {
+                        return false;
+                    }
+
+                    @Override
+                    protected boolean canBeInstantiated() {
+                        return false;
                     }
                 }));
 
