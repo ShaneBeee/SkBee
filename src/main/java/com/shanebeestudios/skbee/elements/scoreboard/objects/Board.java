@@ -45,7 +45,10 @@ public class Board {
     }
 
     public void clear() {
+        this.title = "";
         this.lines = new String[15];
+        this.fastBoard.updateTitle("");
+        this.fastBoard.updateLines();
     }
 
     public void hide() {
