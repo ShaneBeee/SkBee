@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.scoreboard;
+package com.shanebeestudios.skbee.elements.scoreboard.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
