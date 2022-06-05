@@ -9,6 +9,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
@@ -127,35 +128,51 @@ public class Types {
                 }));
 
 
-        EnumUtils<BarColor> BAR_COLOR_ENUM = new EnumUtils<>(BarColor.class, "bar", "");
-        Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
-                .user("boss ?bar ?colors?")
-                .name("BossBar Color")
-                .description("Represents the color options of a BossBar. ",
-                        "Colors are prefixed with \"bar\" (such as `bar blue`) to differentiate from Skript colors")
-                .usage(BAR_COLOR_ENUM.getAllNames())
-                .examples("set bar color of {_bar} to bar blue")
-                .since("1.16.0")
-                .parser(BAR_COLOR_ENUM.getParser()));
+        if (Classes.getClassInfoNoError("bossbarcolor") == null && Classes.getExactClassInfo(BarColor.class) == null) {
+            EnumUtils<BarColor> BAR_COLOR_ENUM = new EnumUtils<>(BarColor.class, "bar", "");
+            Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
+                    .user("boss ?bar ?colors?")
+                    .name("BossBar Color")
+                    .description("Represents the color options of a BossBar. ",
+                            "Colors are prefixed with \"bar\" (such as `bar blue`) to differentiate from Skript colors")
+                    .usage(BAR_COLOR_ENUM.getAllNames())
+                    .examples("set bar color of {_bar} to bar blue")
+                    .since("1.16.0")
+                    .parser(BAR_COLOR_ENUM.getParser()));
+        } else {
+            Util.log("&eIt looks like another addon registered 'boss bar color' already.");
+            Util.log("&eYou may have to use their BossBar colors in SkBee's BossBar elements.");
+        }
 
-        EnumUtils<BarStyle> BAR_STYLE_ENUM = new EnumUtils<>(BarStyle.class);
-        Classes.registerClass(new ClassInfo<>(BarStyle.class, "bossbarstyle")
-                .user("boss ?bar ?styles?")
-                .name("BossBar Style")
-                .description("Represents the style options of a BossBar.")
-                .usage(BAR_STYLE_ENUM.getAllNames())
-                .examples("set bar style of {_bar} to segmented 20")
-                .since("1.16.0")
-                .parser(BAR_STYLE_ENUM.getParser()));
+        if (Classes.getClassInfoNoError("bossbarstyle") == null && Classes.getExactClassInfo(BarStyle.class) == null) {
+            EnumUtils<BarStyle> BAR_STYLE_ENUM = new EnumUtils<>(BarStyle.class);
+            Classes.registerClass(new ClassInfo<>(BarStyle.class, "bossbarstyle")
+                    .user("boss ?bar ?styles?")
+                    .name("BossBar Style")
+                    .description("Represents the style options of a BossBar.")
+                    .usage(BAR_STYLE_ENUM.getAllNames())
+                    .examples("set bar style of {_bar} to segmented 20")
+                    .since("1.16.0")
+                    .parser(BAR_STYLE_ENUM.getParser()));
+        } else {
+            Util.log("&eIt looks like another addon registered 'boss bar style' already.");
+            Util.log("&eYou may have to use their BossBar styles in SkBee's BossBar elements.");
+        }
 
-        EnumUtils<BarFlag> BAR_FLAG_ENUM = new EnumUtils<>(BarFlag.class);
-        Classes.registerClass(new ClassInfo<>(BarFlag.class, "bossbarflag")
-                .user("boss ?bar ?flags?")
-                .name("BossBar Flag")
-                .description("Represents the flag options of a BossBar.")
-                .usage(BAR_FLAG_ENUM.getAllNames())
-                .examples("set bar flag darken sky of {_bar} to true")
-                .since("1.16.0")
-                .parser(BAR_FLAG_ENUM.getParser()));
+        if (Classes.getClassInfoNoError("bossbarflag") == null && Classes.getExactClassInfo(BarFlag.class) == null) {
+            EnumUtils<BarFlag> BAR_FLAG_ENUM = new EnumUtils<>(BarFlag.class);
+            Classes.registerClass(new ClassInfo<>(BarFlag.class, "bossbarflag")
+                    .user("boss ?bar ?flags?")
+                    .name("BossBar Flag")
+                    .description("Represents the flag options of a BossBar.")
+                    .usage(BAR_FLAG_ENUM.getAllNames())
+                    .examples("set bar flag darken sky of {_bar} to true")
+                    .since("1.16.0")
+                    .parser(BAR_FLAG_ENUM.getParser()));
+        } else {
+            Util.log("&eIt looks like another addon registered 'boss bar flag' already.");
+            Util.log("&eYou may have to use their BossBar flags in SkBee's BossBar elements.");
+        }
     }
+
 }
