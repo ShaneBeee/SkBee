@@ -9,7 +9,7 @@ import java.util.List;
 public class Board {
 
     private final FastBoard fastBoard;
-    private String title;
+    private String title = "";
     private String[] lines;
     private boolean visible = true;
 
