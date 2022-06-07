@@ -43,12 +43,12 @@ public class McReflection {
     }
 
     public static String getTranslateKey(ItemStack itemStack) {
-        if (GET_NMS_COPY_METHOD == null || CHAT_MESSAGE_CLASS == null) return null;
-
         // Paper has a semi-new method for this (added probably in 1.17.x)
         if (HAS_PAPER_TRANSLATION_KEY_METHOD) {
             return itemStack.translationKey();
         }
+
+        if (GET_NMS_COPY_METHOD == null || CHAT_MESSAGE_CLASS == null) return null;
 
         ItemStack itemStackClone = itemStack.clone();
         ItemMeta itemMeta = itemStackClone.getItemMeta();
