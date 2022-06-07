@@ -64,7 +64,7 @@
         <dependency>
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api</artifactId>
-            <version>2.9.2</version>
+            <version>2.10.0-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>*</groupId>
@@ -126,7 +126,7 @@
                         <version>3.2.0</version>
                         <configuration>
                             <!-- Put here wherever you would like the plugin to build -->
-                            <outputDirectory>/Users/ShaneBee/Desktop/Server/Skript/1-18-2/plugins</outputDirectory>
+                            <outputDirectory>/Users/ShaneBee/Desktop/Server/Skript/1-19/plugins</outputDirectory>
                         </configuration>
                     </plugin>
                 </plugins>
