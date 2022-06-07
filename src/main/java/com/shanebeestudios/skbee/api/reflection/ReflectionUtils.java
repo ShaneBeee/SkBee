@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.reflection;
 
 import ch.njol.skript.Skript;
+import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -14,13 +15,16 @@ public class ReflectionUtils {
 
     private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
     private static final boolean NEW_NMS = Skript.isRunningMinecraft(1, 17);
+    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     public static Class<?> getOBCClass(String obcClassString) {
         String name = "org.bukkit.craftbukkit." + VERSION + obcClassString;
         try {
             return Class.forName(name);
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            if (DEBUG) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -33,7 +37,9 @@ public class ReflectionUtils {
                 return Class.forName("net.minecraft.server." + VERSION + nmsClass);
             }
         } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            if (DEBUG) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -43,7 +49,9 @@ public class ReflectionUtils {
             Method getHandle = entity.getClass().getMethod("getHandle");
             return getHandle.invoke(entity);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            e.printStackTrace();
+            if (DEBUG) {
+                e.printStackTrace();
+            }
             return null;
         }
     }
@@ -54,7 +62,9 @@ public class ReflectionUtils {
             f.setAccessible(true);
             return f.get(object);
         } catch (IllegalAccessException | NoSuchFieldException ex) {
-            ex.printStackTrace();
+            if (DEBUG) {
+                ex.printStackTrace();
+            }
             return null;
         }
     }
@@ -65,7 +75,9 @@ public class ReflectionUtils {
             f.setAccessible(true);
             f.set(object, toSet);
         } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException ex) {
-            ex.printStackTrace();
+            if (DEBUG) {
+                ex.printStackTrace();
+            }
         }
     }
 
@@ -75,7 +87,9 @@ public class ReflectionUtils {
             f.setAccessible(true);
             f.set(object, toSet);
         } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException ex) {
-            ex.printStackTrace();
+            if (DEBUG) {
+                ex.printStackTrace();
+            }
         }
     }
 
