@@ -92,7 +92,7 @@ public class EffSendComponent extends Effect {
 
     private void sendMessage(CommandSender receiver, Player sender, BaseComponent... components) {
         if (action && receiver instanceof Player player) {
-            player.sendMessage(ChatMessageType.ACTION_BAR, components);
+            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, components);
         } else if (sender != null) {
             receiver.spigot().sendMessage(sender.getUniqueId(), components);
         } else {
