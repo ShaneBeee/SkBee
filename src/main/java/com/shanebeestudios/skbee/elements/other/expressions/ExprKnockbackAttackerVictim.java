@@ -34,7 +34,7 @@ public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> {
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, @NotNull ParseResult parseResult) {
         if (!ScriptLoader.isCurrentEvent(EntityKnockbackByEntityEvent.class)) {
-            Skript.error("Can not use 'knockback attacker/victim' outside of knockback event", ErrorQuality.SEMANTIC_ERROR);
+            Skript.error("Cannot use 'knockback attacker/victim' outside of knockback event", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
         ent = parseResult.mark;
@@ -45,7 +45,7 @@ public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> {
     @Override
     protected Entity[] get(@NotNull Event event) {
         if (event instanceof EntityKnockbackByEntityEvent knockbackEvent) {
-            if (ent == 1) {
+            if (ent == 0) {
                 return new Entity[]{knockbackEvent.getHitBy()};
             } else {
                 return new Entity[]{knockbackEvent.getEntity()};
