@@ -1,3 +1,9 @@
 # This file will save all bounds
 
+# Checks if old bound height needs to be changed
+# This is used internally and can be ignored
+# This value should not be changed manually
+updated_18_heights: true
+
+# A list of all bounds
 bounds:
