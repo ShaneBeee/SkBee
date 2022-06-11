@@ -1,17 +1,20 @@
 package com.shanebeestudios.skbee.api.structure;
 
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
+import org.bukkit.structure.Palette;
 import org.bukkit.structure.Structure;
 import org.bukkit.structure.StructureManager;
 import org.bukkit.util.BlockVector;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.util.Util;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
@@ -63,6 +66,22 @@ public class StructureBee {
                 e.printStackTrace();
             }
         }
+    }
+
+    /**
+     * Get a list of available {@link BlockStateBee BlockStates} of this {@link Structure}
+     * <br>
+     * Will return an empty list of no blocks have been filled
+     *
+     * @return List of available BlockStates
+     */
+    public List<BlockStateBee> getBlockStates() {
+        List<BlockStateBee> blocks = new ArrayList<>();
+        if (structure.getPaletteCount() > 0) {
+            Palette palette = structure.getPalettes().get(0);
+            palette.getBlocks().forEach(blockState -> blocks.add(new BlockStateBee(blockState)));
+        }
+        return blocks;
     }
 
     public Structure getBukkitStructure() {
@@ -118,4 +137,5 @@ public class StructureBee {
         return String.format("Structure{key=\"%s\", rotation=%s, mirror=%s, integrity=%s, includeEntities=%s (%s), size=[%s]}",
                 key, rotation, mirror, integrity, includeEntities, structure.getEntityCount(), structure.getSize());
     }
+
 }
