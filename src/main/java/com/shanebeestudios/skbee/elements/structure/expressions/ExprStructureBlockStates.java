@@ -45,9 +45,7 @@ public class ExprStructureBlockStates extends SimpleExpression<BlockStateBee> {
     protected BlockStateBee[] get(Event event) {
         StructureBee structure = this.structure.getSingle(event);
         if (structure != null) {
-            List<BlockStateBee> blocks = new ArrayList<>();
-            structure.getBukkitStructure().getPalettes().get(0).getBlocks().forEach(state -> blocks.add(new BlockStateBee(state)));
-            return blocks.toArray(new BlockStateBee[0]);
+            return structure.getBlockStates().toArray(new BlockStateBee[0]);
         }
         return null;
     }
