@@ -48,6 +48,9 @@ elements:
   # Enable boss bar elements
   boss-bar: true
 
+  # Enable statistic elements
+  statistic: true
+
 recipe:
   # This is the namespace all recipes will be saved under
   # You can choose whatever you wish

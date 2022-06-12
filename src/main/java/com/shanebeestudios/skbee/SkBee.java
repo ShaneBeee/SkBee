@@ -22,6 +22,7 @@ import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
+import org.bukkit.Statistic;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
@@ -108,6 +109,7 @@ public class SkBee extends JavaPlugin {
         loadWorldCreatorElements();
         loadGameEventElements();
         loadBossBarElements();
+        loadStatisticElements();
 
         // Beta check + notice
         if (desc.getVersion().contains("Beta")) {
@@ -343,6 +345,26 @@ public class SkBee extends JavaPlugin {
             pm.disablePlugin(this);
         }
 
+    }
+
+    private void loadStatisticElements() {
+        if (!this.config.ELEMENTS_STATISTIC) {
+            Util.log("&5Statistic Elements &cdisabled via config");
+            return;
+        }
+        if (Classes.getClassInfoNoError("statistic") != null || Classes.getExactClassInfo(Statistic.class) != null) {
+            Util.log("&5Statistic Elements &cdisabled");
+            Util.log("&7It appears another Skript addon may have registered Statistic syntax.");
+            Util.log("&7To use SkBee Statistics, please remove the addon which has registered Statistic already.");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.statistic");
+            Util.log("&5Statistic Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
     }
 
     private void loadMetrics() { //6719
