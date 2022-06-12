@@ -112,7 +112,7 @@ public class SkBee extends JavaPlugin {
         loadStatisticElements();
 
         // Beta check + notice
-        if (desc.getVersion().contains("Beta")) {
+        if (desc.getVersion().contains("-")) {
             Util.log("&eThis is a BETA build, things may not work as expected, please report any bugs on GitHub");
             Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
         }

@@ -16,6 +16,7 @@ import de.tr7zw.changeme.nbtapi.NBTList;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
+import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -99,10 +100,8 @@ public class NBTApi {
 
     private boolean forceLoadNBT() {
         Util.log("&aLoading NBTApi...");
-        try {
-            NBTItem loadingItem = new NBTItem(new ItemStack(Material.STONE));
-            loadingItem.mergeCompound(new NBTContainer("{}"));
-        } catch (Exception | ExceptionInInitializerError ignore) {
+        MinecraftVersion version = MinecraftVersion.getVersion();
+        if (version == MinecraftVersion.UNKNOWN) {
             Util.log("&cFailed to load NBTApi!");
             return false;
         }
