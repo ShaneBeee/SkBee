@@ -76,25 +76,30 @@ public class Config {
         }
     }
 
+    private boolean getElement(String element) {
+        return this.config.getBoolean("elements." + element);
+    }
+
     private void loadConfigs() {
         this.SETTINGS_DEBUG = this.config.getBoolean("settings.debug");
-        this.ELEMENTS_NBT = this.config.getBoolean("elements.nbt");
-        this.ELEMENTS_BOARD = this.config.getBoolean("elements.scoreboard");
-        this.ELEMENTS_TEAM = this.config.getBoolean("elements.team");
-        this.ELEMENTS_RECIPE = this.config.getBoolean("elements.recipe");
-        this.ELEMENTS_BOUND = this.config.getBoolean("elements.bound");
-        this.ELEMENTS_STRUCTURE = this.config.getBoolean("elements.structure");
-        this.ELEMENTS_VIRTUAL_FURNACE = this.config.getBoolean("elements.virtual-furnace");
-        this.ELEMENTS_TEXT_COMPONENT = this.config.getBoolean("elements.text-component");
-        this.ELEMENTS_PATHFINDING = this.config.getBoolean("elements.pathfinding");
-        this.ELEMENTS_WORLD_CREATOR = this.config.getBoolean("elements.world-creator");
-        this.ELEMENTS_GAME_EVENT = this.config.getBoolean("elements.game-event");
-        this.ELEMENTS_BOSS_BAR = this.config.getBoolean("elements.boss-bar");
-        this.AUTO_LOAD_WORLDS = this.config.getBoolean("elements.auto-load-custom-worlds");
+        this.ELEMENTS_NBT = getElement("nbt");
+        this.ELEMENTS_BOARD = getElement("scoreboard");
+        this.ELEMENTS_TEAM = getElement("team");
+        this.ELEMENTS_RECIPE = getElement("recipe");
+        this.ELEMENTS_BOUND = getElement("bound");
+        this.ELEMENTS_STRUCTURE = getElement("structure");
+        this.ELEMENTS_VIRTUAL_FURNACE = getElement("virtual-furnace");
+        this.ELEMENTS_TEXT_COMPONENT = getElement("text-component");
+        this.ELEMENTS_PATHFINDING = getElement("pathfinding");
+        this.ELEMENTS_WORLD_CREATOR = getElement("world-creator");
+        this.ELEMENTS_GAME_EVENT = getElement("game-event");
+        this.ELEMENTS_BOSS_BAR = getElement("boss-bar");
+        this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
         String namespace = this.config.getString("recipe.namespace");
         if (namespace == null) {
             namespace = "skbee";
         }
         this.RECIPE_NAMESPACE = namespace.toLowerCase();
     }
+
 }
