@@ -30,20 +30,22 @@ import org.jetbrains.annotations.Nullable;
         "\noffset = a vector with the maximum random offset. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.",
         "I believe some particles use the offset to set color. I'm not positive on this.",
         "\nextra = the extra data for this particle, depends on the particle used (normally speed).",
+        "\nforce = whether to send the particle to players within an extended range and encourage ",
+        "their client to render it regardless of settings (this only works when not using `for player[s]`) (default = false)",
         "\nRequires Minecraft 1.13+"})
 @Examples({"make 3 of item particle using diamond at location of player",
         "make 1 of block particle using dirt at location of target block",
         "make 10 of poof at player with offset vector(2, 2, 2) with extra 0.5",
         "draw 20 of dust using dustOption(blue, 10) at location above target block",
         "draw 1 of dust_color_transition using dustTransition(blue, green, 3) at location of player",
-        "draw 1 of vibration using vibration({loc1}, {loc2}, 1 second) at {loc1}"})
+        "draw 1 of vibration using vibration({loc1}, {loc2}, 1 second) at {loc1} with force"})
 @Since("1.9.0")
 public class EffParticle extends Effect {
 
     static {
         Skript.registerEffect(EffParticle.class,
                 "(lerp|draw|make) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption/dusttransition/vibration" +
-                "%] %directions% %locations% [with offset %-vector%] [with extra %-number%] [(for|to) %-players%]");
+                        "%] %directions% %locations% [with offset %-vector%] [with extra %-number%] [(1¦with force)] [(for|to) %-players%]");
     }
 
     private Expression<Number> count;
@@ -56,6 +58,7 @@ public class EffParticle extends Effect {
     private Expression<Object> data;
     @Nullable
     private Expression<Player> players;
+    private boolean force;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -67,6 +70,7 @@ public class EffParticle extends Effect {
         offset = (Expression<Vector>) exprs[5];
         extra = (Expression<Number>) exprs[6];
         players = (Expression<Player>) exprs[7];
+        force = parseResult.mark == 1;
         return true;
     }
 
@@ -79,23 +83,13 @@ public class EffParticle extends Effect {
         int count = this.count.getSingle(e).intValue();
         Particle particle = this.particle.getSingle(e);
         Location[] locations = this.location.getArray(e);
-        Vector offset = this.offset != null ? this.offset.getSingle(e) : null;
-        double extra = hasExtra ? this.extra.getSingle(e).doubleValue() : 0.0d;
+        Vector offset = this.offset != null ? this.offset.getSingle(e) : new Vector(0, 0, 0);
+        double extra = hasExtra ? this.extra.getSingle(e).doubleValue() : 1;
         Object data = this.data != null ? this.data.getSingle(e) : null;
         Player[] players = this.players != null ? this.players.getArray(e) : null;
 
-        if (hasExtra && offset == null) {
-            offset = new Vector(0, 0, 0);
-        }
-
         for (Location location : locations) {
-            if (hasExtra) {
-                ParticleUtil.spawnParticle(players, particle, location, count, data, offset, extra);
-            } else if (offset != null) {
-                ParticleUtil.spawnParticle(players, particle, location, count, data, offset);
-            } else {
-                ParticleUtil.spawnParticle(players, particle, location, count, data);
-            }
+            ParticleUtil.spawnParticle(players, particle, location, count, data, offset, extra, force);
         }
     }
 

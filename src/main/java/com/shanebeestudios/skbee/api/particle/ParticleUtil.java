@@ -127,8 +127,7 @@ public class ParticleUtil {
         return "UNKNOWN";
     }
 
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data, Vector offset, double extra) {
-        if (offset == null) return;
+    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data, Vector offset, double extra, boolean force) {
         Object particleData = getData(particle, data);
         if (particle.getDataType() != Void.class && particleData == null) return;
 
@@ -138,47 +137,11 @@ public class ParticleUtil {
         if (players == null) {
             World world = location.getWorld();
             if (world == null) return;
-            world.spawnParticle(particle, location, count, x, y, z, extra, particleData);
+            world.spawnParticle(particle, location, count, x, y, z, extra, particleData, force);
         } else {
             for (Player player : players) {
                 assert player != null;
                 player.spawnParticle(particle, location, count, x, y, z, extra, particleData);
-            }
-        }
-    }
-
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data, Vector offset) {
-        if (offset == null) return;
-        Object particleData = getData(particle, data);
-        if (particle.getDataType() != Void.class && particleData == null) return;
-
-        double x = offset.getX();
-        double y = offset.getY();
-        double z = offset.getZ();
-        if (players == null) {
-            World world = location.getWorld();
-            if (world == null) return;
-            world.spawnParticle(particle, location, count, x, y, z, particleData);
-        } else {
-            for (Player player : players) {
-                assert player != null;
-                player.spawnParticle(particle, location, count, x, y, z, particleData);
-            }
-        }
-    }
-
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data) {
-        Object particleData = getData(particle, data);
-        if (particle.getDataType() != Void.class && particleData == null) return;
-
-        if (players == null) {
-            World world = location.getWorld();
-            if (world == null) return;
-            world.spawnParticle(particle, location, count, particleData);
-        } else {
-            for (Player player : players) {
-                assert player != null;
-                player.spawnParticle(particle, location, count, particleData);
             }
         }
     }
