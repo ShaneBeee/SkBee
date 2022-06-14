@@ -5,6 +5,7 @@ import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.registrations.Classes;
 import com.github.goingoffskript.skriptvariabledump.SkriptToYaml;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
+import com.shanebeestudios.skbee.api.command.SkBeeInfo;
 import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
@@ -26,7 +27,6 @@ import org.bukkit.Statistic;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scoreboard.Team;
@@ -60,8 +60,6 @@ public class SkBee extends JavaPlugin {
         this.config = new Config(this);
         MinecraftVersion.replaceLogger(LoggerBee.getLogger());
         this.pm = Bukkit.getPluginManager();
-        PluginDescriptionFile desc = getDescription();
-
         this.skriptPlugin = pm.getPlugin("Skript");
 
         if (skriptPlugin == null) {
@@ -111,14 +109,18 @@ public class SkBee extends JavaPlugin {
         loadBossBarElements();
         loadStatisticElements();
 
+        //noinspection ConstantConditions
+        getCommand("skbee").setExecutor(new SkBeeInfo(this));
+
         // Beta check + notice
-        if (desc.getVersion().contains("-")) {
+        String version = getDescription().getVersion();
+        if (version.contains("-")) {
             Util.log("&eThis is a BETA build, things may not work as expected, please report any bugs on GitHub");
             Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
         }
 
         loadMetrics();
-        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", desc.getVersion(), (float) (System.currentTimeMillis() - start) / 1000);
+        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", version, (float) (System.currentTimeMillis() - start) / 1000);
 
         if (this.beeWorldConfig != null && this.config.AUTO_LOAD_WORLDS) {
             this.beeWorldConfig.loadCustomWorlds();
@@ -127,15 +129,15 @@ public class SkBee extends JavaPlugin {
 
     private void loadNBTElements() {
         if (!this.config.ELEMENTS_NBT) {
-            Util.log("&5NBT Elements &cdisabled via config");
+            Util.logLoading("&5NBT Elements &cdisabled via config");
             return;
         }
         if (!this.nbtApi.isEnabled()) {
             String ver = Skript.getMinecraftVersion().toString();
-            Util.log("&5NBT Elements &cDISABLED!");
-            Util.log(" - Your server version [&b" + ver + "&7] is not currently supported by the NBT-API");
-            Util.log(" - This is not a bug!");
-            Util.log(" - NBT elements will resume once the API is updated to work with [&b" + ver + "&7]");
+            Util.logLoading("&5NBT Elements &cDISABLED!");
+            Util.logLoading(" - Your server version [&b" + ver + "&7] is not currently supported by the NBT-API");
+            Util.logLoading(" - This is not a bug!");
+            Util.logLoading(" - NBT elements will resume once the API is updated to work with [&b" + ver + "&7]");
             return;
         }
         try {
@@ -148,7 +150,7 @@ public class SkBee extends JavaPlugin {
             if (NBTApi.SUPPORTS_BLOCK_NBT) {
                 pm.registerEvents(new NBTListener(), this);
             }
-            Util.log("&5NBT Elements &asuccessfully loaded");
+            Util.logLoading("&5NBT Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -157,12 +159,12 @@ public class SkBee extends JavaPlugin {
 
     private void loadRecipeElements() {
         if (!this.config.ELEMENTS_RECIPE) {
-            Util.log("&5Recipe Elements &cdisabled via config");
+            Util.logLoading("&5Recipe Elements &cdisabled via config");
             return;
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.recipe");
-            Util.log("&5Recipe Elements &asuccessfully loaded");
+            Util.logLoading("&5Recipe Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -171,13 +173,13 @@ public class SkBee extends JavaPlugin {
 
     private void loadScoreboardElements() {
         if (!this.config.ELEMENTS_BOARD) {
-            Util.log("&5Scoreboard Elements &cdisabled via config");
+            Util.logLoading("&5Scoreboard Elements &cdisabled via config");
             return;
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.scoreboard");
             pm.registerEvents(new BoardManager(), this);
-            Util.log("&5Scoreboard Elements &asuccessfully loaded");
+            Util.logLoading("&5Scoreboard Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -186,18 +188,18 @@ public class SkBee extends JavaPlugin {
 
     private void loadTeamElements() {
         if (!this.config.ELEMENTS_TEAM) {
-            Util.log("&5Team Elements &cdisabled via config");
+            Util.logLoading("&5Team Elements &cdisabled via config");
             return;
         }
         if (Classes.getClassInfoNoError("team") != null || Classes.getExactClassInfo(Team.class) != null) {
-            Util.log("&5Team Elements &cdisabled");
-            Util.log("&7It appears another Skript addon may have registered Team syntax.");
-            Util.log("&7To use SkBee Teams, please remove the addon which has registered Teams already.");
+            Util.logLoading("&5Team Elements &cdisabled");
+            Util.logLoading("&7It appears another Skript addon may have registered Team syntax.");
+            Util.logLoading("&7To use SkBee Teams, please remove the addon which has registered Teams already.");
             return;
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.team");
-            Util.log("&5Team Elements &asuccessfully loaded");
+            Util.logLoading("&5Team Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -206,14 +208,14 @@ public class SkBee extends JavaPlugin {
 
     private void loadBoundElements() {
         if (!this.config.ELEMENTS_BOUND) {
-            Util.log("&5Bound Elements &cdisabled via config");
+            Util.logLoading("&5Bound Elements &cdisabled via config");
             return;
         }
         try {
             this.boundConfig = new BoundConfig(this);
             pm.registerEvents(new BoundBorderListener(this), this);
             addon.loadClasses("com.shanebeestudios.skbee.elements.bound");
-            Util.log("&5Bound Elements &asuccessfully loaded");
+            Util.logLoading("&5Bound Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -222,12 +224,12 @@ public class SkBee extends JavaPlugin {
 
     private void loadTextElements() {
         if (!this.config.ELEMENTS_TEXT_COMPONENT) {
-            Util.log("&5Text Component Elements &cdisabled via config");
+            Util.logLoading("&5Text Component Elements &cdisabled via config");
             return;
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.text");
-            Util.log("&5Text Component Elements &asuccessfully loaded");
+            Util.logLoading("&5Text Component Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -236,12 +238,12 @@ public class SkBee extends JavaPlugin {
 
     private void loadPathElements() {
         if (!this.config.ELEMENTS_PATHFINDING) {
-            Util.log("&5Pathfinding Elements &cdisabled via config");
+            Util.logLoading("&5Pathfinding Elements &cdisabled via config");
             return;
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.path");
-            Util.log("&5Pathfinding Elements &asuccessfully loaded");
+            Util.logLoading("&5Pathfinding Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -250,14 +252,14 @@ public class SkBee extends JavaPlugin {
 
     private void loadStructureElements() {
         if (!this.config.ELEMENTS_STRUCTURE) {
-            Util.log("&5Structure Elements &cdisabled via config");
+            Util.logLoading("&5Structure Elements &cdisabled via config");
             return;
         }
 
         this.structureBeeManager = new StructureBeeManager();
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.structure");
-            Util.log("&5Structure Elements &asuccessfully loaded");
+            Util.logLoading("&5Structure Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -265,23 +267,18 @@ public class SkBee extends JavaPlugin {
     }
 
     private void loadVirtualFurnaceElements() {
-        if (Skript.classExists("org.bukkit.persistence.PersistentDataContainer")) {
-            if (!this.config.ELEMENTS_VIRTUAL_FURNACE) {
-                Util.log("&5Virtual Furnace Elements &cdisabled via config");
-                return;
-            }
-            try {
-                this.virtualFurnaceAPI = new VirtualFurnaceAPI(this, true);
-                pm.registerEvents(new VirtualFurnaceListener(), this);
-                addon.loadClasses("com.shanebeestudios.skbee.elements.virtualfurnace");
-                Util.log("&5Virtual Furnace Elements &asuccessfully loaded");
-            } catch (IOException e) {
-                e.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        } else {
-            Util.log("&5Virtual Furnace Elements &cdisabled");
-            Util.log("&7 - Virtual Furnace elements are only available on 1.14+");
+        if (!this.config.ELEMENTS_VIRTUAL_FURNACE) {
+            Util.logLoading("&5Virtual Furnace Elements &cdisabled via config");
+            return;
+        }
+        try {
+            this.virtualFurnaceAPI = new VirtualFurnaceAPI(this, true);
+            pm.registerEvents(new VirtualFurnaceListener(), this);
+            addon.loadClasses("com.shanebeestudios.skbee.elements.virtualfurnace");
+            Util.logLoading("&5Virtual Furnace Elements &asuccessfully loaded");
+        } catch (IOException e) {
+            e.printStackTrace();
+            pm.disablePlugin(this);
         }
     }
 
@@ -289,7 +286,7 @@ public class SkBee extends JavaPlugin {
         try {
             pm.registerEvents(new EntityListener(), this);
             addon.loadClasses("com.shanebeestudios.skbee.elements.other");
-            Util.log("&5Other Elements &asuccessfully loaded");
+            Util.logLoading("&5Other Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -298,13 +295,13 @@ public class SkBee extends JavaPlugin {
 
     private void loadWorldCreatorElements() {
         if (!this.config.ELEMENTS_WORLD_CREATOR) {
-            Util.log("&5World Creator Elements &cdisabled via config");
+            Util.logLoading("&5World Creator Elements &cdisabled via config");
             return;
         }
         try {
             this.beeWorldConfig = new BeeWorldConfig(this);
             addon.loadClasses("com.shanebeestudios.skbee.elements.worldcreator");
-            Util.log("&5World Creator Elements &asuccessfully loaded");
+            Util.logLoading("&5World Creator Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -313,12 +310,12 @@ public class SkBee extends JavaPlugin {
 
     private void loadGameEventElements() {
         if (!this.config.ELEMENTS_GAME_EVENT) {
-            Util.log("&5Game Event Elements &cdisabled via config");
+            Util.logLoading("&5Game Event Elements &cdisabled via config");
             return;
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.gameevent");
-            Util.log("&5Game Event Elements &asuccessfully loaded");
+            Util.logLoading("&5Game Event Elements &asuccessfully loaded");
         } catch (IOException e) {
             e.printStackTrace();
             pm.disablePlugin(this);
@@ -328,18 +325,18 @@ public class SkBee extends JavaPlugin {
 
     private void loadBossBarElements() {
         if (!this.config.ELEMENTS_BOSS_BAR) {
-            Util.log("&5BossBar Elements &cdisabled via config");
+            Util.logLoading("&5BossBar Elements &cdisabled via config");
             return;
         }
         if (Classes.getClassInfoNoError("bossbar") != null || Classes.getExactClassInfo(BossBar.class) != null) {
-            Util.log("&5BossBar Elements &cdisabled");
-            Util.log("&7It appears another Skript addon may have registered BossBar syntax.");
-            Util.log("&7To use SkBee BossBars, please remove the addon which has registered BossBars already.");
+            Util.logLoading("&5BossBar Elements &cdisabled");
+            Util.logLoading("&7It appears another Skript addon may have registered BossBar syntax.");
+            Util.logLoading("&7To use SkBee BossBars, please remove the addon which has registered BossBars already.");
             return;
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.bossbar");
-            Util.log("&5BossBar Elements &asuccessfully loaded");
+            Util.logLoading("&5BossBar Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
@@ -349,18 +346,18 @@ public class SkBee extends JavaPlugin {
 
     private void loadStatisticElements() {
         if (!this.config.ELEMENTS_STATISTIC) {
-            Util.log("&5Statistic Elements &cdisabled via config");
+            Util.logLoading("&5Statistic Elements &cdisabled via config");
             return;
         }
         if (Classes.getClassInfoNoError("statistic") != null || Classes.getExactClassInfo(Statistic.class) != null) {
-            Util.log("&5Statistic Elements &cdisabled");
-            Util.log("&7It appears another Skript addon may have registered Statistic syntax.");
-            Util.log("&7To use SkBee Statistics, please remove the addon which has registered Statistic already.");
+            Util.logLoading("&5Statistic Elements &cdisabled");
+            Util.logLoading("&7It appears another Skript addon may have registered Statistic syntax.");
+            Util.logLoading("&7To use SkBee Statistics, please remove the addon which has registered Statistic already.");
             return;
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.statistic");
-            Util.log("&5Statistic Elements &asuccessfully loaded");
+            Util.logLoading("&5Statistic Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);

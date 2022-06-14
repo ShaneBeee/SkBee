@@ -21,7 +21,7 @@ public class LoggerBee extends Logger {
     @Override
     public void info(String msg) {
         String prefix = msg.replace("[NBTAPI]", "&7[&bNBT&3API&7]");
-        Util.log(prefix);
+        Util.logLoading(prefix);
     }
 
 }
