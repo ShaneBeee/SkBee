@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.other.expressions;
+package com.shanebeestudios.skbee.elements.villager.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;

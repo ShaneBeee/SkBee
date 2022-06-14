@@ -108,6 +108,7 @@ public class SkBee extends JavaPlugin {
         loadGameEventElements();
         loadBossBarElements();
         loadStatisticElements();
+        loadVillagerElements();
 
         //noinspection ConstantConditions
         getCommand("skbee").setExecutor(new SkBeeInfo(this));
@@ -358,6 +359,20 @@ public class SkBee extends JavaPlugin {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.statistic");
             Util.logLoading("&5Statistic Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
+    }
+
+    private void loadVillagerElements() {
+        if (!this.config.ELEMENTS_VILLAGER) {
+            Util.logLoading("&5Villager Elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.villager");
+            Util.logLoading("&5Villager Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);

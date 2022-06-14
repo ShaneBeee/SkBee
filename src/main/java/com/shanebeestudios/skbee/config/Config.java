@@ -29,6 +29,7 @@ public class Config {
     public boolean ELEMENTS_GAME_EVENT;
     public boolean ELEMENTS_BOSS_BAR;
     public boolean ELEMENTS_STATISTIC;
+    public boolean ELEMENTS_VILLAGER;
     public boolean AUTO_LOAD_WORLDS;
     public String RECIPE_NAMESPACE;
 
@@ -96,6 +97,7 @@ public class Config {
         this.ELEMENTS_GAME_EVENT = getElement("game-event");
         this.ELEMENTS_BOSS_BAR = getElement("boss-bar");
         this.ELEMENTS_STATISTIC = getElement("statistic");
+        this.ELEMENTS_VILLAGER = getElement("villager");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
         String namespace = this.config.getString("recipe.namespace");
         if (namespace == null) {

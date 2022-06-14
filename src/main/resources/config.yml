@@ -51,6 +51,9 @@ elements:
   # Enable statistic elements
   statistic: true
 
+  # Enable villager/merchant elements
+  villager: true
+
 recipe:
   # This is the namespace all recipes will be saved under
   # You can choose whatever you wish
