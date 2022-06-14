@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.other.effects;
+package com.shanebeestudios.skbee.elements.villager.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
