@@ -1,13 +1,12 @@
 package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.SkBee;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
-import com.shanebeestudios.skbee.SkBee;
 
 import java.io.File;
 import java.io.IOException;
@@ -198,7 +197,6 @@ public class BeeWorldCreator {
                         FileUtils.copyDirectory(file, new File(newWorldFile.getName(), file.getName()));
                     } else if (!file.getName().contains("session") && !file.getName().contains("uid.dat")) {
                         FileUtils.copyFile(file, new File(newWorldFile.getName(), file.getName()));
-                        Util.log("Copying file: " + file.getName());
                     }
                 }
 //                FileUtils.copyDirectory(worldFile, newWorldFile);
