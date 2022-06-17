@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
+import com.shanebeestudios.skbee.api.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -10,6 +11,7 @@ import com.shanebeestudios.skbee.SkBee;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -191,12 +193,20 @@ public class BeeWorldCreator {
         if (worldFile.exists()) {
             try {
                 this.world.save();
-                FileUtils.copyDirectory(worldFile, newWorldFile);
-                File uuidFile = new File(newWorldFile, "uid.dat");
-                if (uuidFile.exists()) {
-                    //noinspection ResultOfMethodCallIgnored
-                    uuidFile.delete();
+                for (File file : Objects.requireNonNull(worldFile.listFiles())) {
+                    if (file.isDirectory()) {
+                        FileUtils.copyDirectory(file, new File(newWorldFile.getName(), file.getName()));
+                    } else if (!file.getName().contains("session") && !file.getName().contains("uid.dat")) {
+                        FileUtils.copyFile(file, new File(newWorldFile.getName(), file.getName()));
+                        Util.log("Copying file: " + file.getName());
+                    }
                 }
+//                FileUtils.copyDirectory(worldFile, newWorldFile);
+//                File uuidFile = new File(newWorldFile, "uid.dat");
+//                if (uuidFile.exists()) {
+//                    //noinspection ResultOfMethodCallIgnored
+//                    uuidFile.delete();
+//                }
                 return new WorldCreator(this.worldName);
             } catch (IOException e) {
                 e.printStackTrace();
