@@ -63,7 +63,9 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
         if (pattern == 0) {
             return new BeeWorldCreator[]{new BeeWorldCreator(name)};
         } else if (pattern == 1 && this.world != null) {
-            return new BeeWorldCreator[]{new BeeWorldCreator(this.world.getSingle(e), name, this.clone)};
+            World world = this.world.getSingle(e);
+            if (world == null) return null;
+            return new BeeWorldCreator[]{new BeeWorldCreator(world, name, this.clone)};
         }
         return null;
     }

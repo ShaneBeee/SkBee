@@ -7,6 +7,7 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
@@ -36,7 +37,7 @@ public class BeeWorldCreator {
         this.keepSpawnLoaded = Optional.empty();
     }
 
-    public BeeWorldCreator(World world, String name, boolean clone) {
+    public BeeWorldCreator(@NotNull World world, String name, boolean clone) {
         this.worldName = name;
         //noinspection deprecation
         this.worldType = world.getWorldType();
@@ -209,6 +210,7 @@ public class BeeWorldCreator {
         return null;
     }
 
+    @SuppressWarnings("StringBufferReplaceableByString")
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("WorldCreator{");
