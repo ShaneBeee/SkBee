@@ -49,10 +49,9 @@ public class OtherEvents {
                 .since("1.11.0");
 
         EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
-            @Nullable
             @Override
             public Player get(PrepareAnvilEvent event) {
-                return (Player) event.getViewers().get(0);
+                return (Player) event.getView().getPlayer();
             }
         }, 0);
 
