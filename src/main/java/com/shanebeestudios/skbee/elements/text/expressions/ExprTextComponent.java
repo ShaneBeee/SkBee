@@ -17,7 +17,7 @@ import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.reflection.McReflection;
 import com.shanebeestudios.skbee.api.util.TextUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
 import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.KeybindComponent;
 import net.md_5.bungee.api.chat.TextComponent;
@@ -136,22 +136,13 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta instanceof PotionMeta) {
             StringBuilder builder = new StringBuilder("item.minecraft.");
-            String nbt = NBTApi.getItemStackNBT(itemStack);
-            if (nbt != null) {
-                String pot = NBTApi.getTag("Potion", new NBTContainer(nbt)).toString();
-                if (pot != null) {
-                    if (material == Material.POTION) {
-                        builder.append("potion");
-                    } else if (material == Material.SPLASH_POTION) {
-                        builder.append("splash_potion");
-                    } else if (material == Material.LINGERING_POTION) {
-                        builder.append("lingering_potion");
-                    } else if (material == Material.TIPPED_ARROW) {
-                        builder.append("tipped_arrow");
-                    }
-                    builder.append(".effect.").append(pot.replace("minecraft:", ""));
-                    return builder.toString();
-                }
+            NBTCompound nbt = NBTApi.getItemStackNBT(itemStack);
+            String pot = NBTApi.getTag("tag;Potion", nbt).toString();
+            if (pot != null) {
+                builder.append(material.toString().toLowerCase(Locale.ROOT));
+                builder.append(".effect.");
+                builder.append(pot.replace("minecraft:", ""));
+                return builder.toString();
             }
         }
         return type + ".minecraft." + raw;

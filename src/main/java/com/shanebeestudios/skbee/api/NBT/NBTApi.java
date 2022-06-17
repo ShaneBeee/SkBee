@@ -37,6 +37,11 @@ public class NBTApi {
     private static boolean ENABLED;
     private static boolean DEBUG;
 
+    /**
+     * Initialize this NBT API
+     * <br>
+     * This should NOT be used by other plugins.
+     */
     public static void initializeAPI() {
         Util.log("&aLoading NBTApi...");
         MinecraftVersion version = MinecraftVersion.getVersion();
@@ -112,8 +117,14 @@ public class NBTApi {
         return tag;
     }
 
+    /**
+     * Get an {@link NBTFile}
+     *
+     * @param fileName Name of file
+     * @return new NBTFile
+     */
     public static NBTFile getNBTFile(String fileName) {
-        fileName = !fileName.endsWith(".dat") && !fileName.endsWith(".nbt") ? fileName + ".dat" : fileName;
+        fileName = !fileName.endsWith(".dat") && !fileName.endsWith(".nbt") ? fileName + ".nbt" : fileName;
         try {
             return new NBTFile(new File(fileName));
         } catch (IOException e) {
@@ -121,6 +132,13 @@ public class NBTApi {
         }
     }
 
+    /**
+     * Merge an {@link NBTCompound} into an {@link ItemType}
+     *
+     * @param itemType    ItemType to add NBT to
+     * @param nbtCompound NBT to add to ItemType
+     * @return ItemType with NBT merged into
+     */
     public static ItemType getItemTypeWithNBT(ItemType itemType, NBTCompound nbtCompound) {
         NBTContainer itemNBT = NBTItem.convertItemtoNBT(itemType.getRandom());
 
@@ -159,8 +177,14 @@ public class NBTApi {
         return NBTItem.convertNBTtoItem(nbt);
     }
 
-    public static String getItemStackNBT(ItemStack itemStack) {
-        return NBTItem.convertItemtoNBT(itemStack).toString();
+    /**
+     * Get an {@link NBTCompound} from an {@link ItemStack}
+     *
+     * @param itemStack ItemStack to grab NBT from
+     * @return NBT compound from ItemStack
+     */
+    public static NBTCompound getItemStackNBT(ItemStack itemStack) {
+        return NBTItem.convertItemtoNBT(itemStack);
     }
 
     /**
@@ -183,6 +207,14 @@ public class NBTApi {
         compound.removeKey(key);
     }
 
+    /**
+     * Set a specific tag of an {@link NBTCompound}
+     *
+     * @param tag         Tag that will be set
+     * @param nbtCompound Compound to change
+     * @param object      Value of tag to set to
+     * @param type        Type of tag to set
+     */
     @SuppressWarnings("RegExpRedundantEscape")
     public static void setTag(@NotNull String tag, @NotNull NBTCompound nbtCompound, @NotNull Object[] object, NBTCustomType type) {
         NBTCompound compound = nbtCompound;
@@ -541,6 +573,14 @@ public class NBTApi {
         return null;
     }
 
+    /**
+     * Add NBT to a {@link Block}
+     * <br>
+     * This will merge an {@link NBTCompound} into the compound of a block
+     *
+     * @param block    Block to merge NBT into
+     * @param compound Compound to merge
+     */
     public static void addNBTToBlock(Block block, NBTCompound compound) {
         if (block.getState() instanceof TileState tileState) {
             NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity(tileState);
@@ -558,6 +598,14 @@ public class NBTApi {
         }
     }
 
+    /**
+     * Add NBT to an {@link Entity}
+     * <br>
+     * This will merge an {@link NBTCompound} into the compound of an entity
+     *
+     * @param entity   Entity to merge NBT into
+     * @param compound Compound to merge
+     */
     public static void addNBTToEntity(Entity entity, NBTCompound compound) {
         NBTCustomEntity nbtEntity = new NBTCustomEntity(entity);
         NBTCompound compoundCopy = new NBTContainer(compound.toString());

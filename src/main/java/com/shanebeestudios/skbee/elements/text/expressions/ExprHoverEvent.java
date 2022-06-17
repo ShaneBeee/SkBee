@@ -78,7 +78,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             ItemStack itemStack = itemType.getRandom();
 
             String id = itemStack.getType().getKey().toString();
-            String nbt = NBTApi.getItemStackNBT(itemStack);
+            String nbt = NBTApi.getItemStackNBT(itemStack).toString();
             Item item = new Item(id, itemStack.getAmount(), ItemTag.ofNbt(nbt));
             return new HoverEvent[]{new HoverEvent(Action.SHOW_ITEM, item)};
         }
