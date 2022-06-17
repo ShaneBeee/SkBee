@@ -189,22 +189,18 @@ public class BeeWorldCreator {
         File worldSaveLocation = Bukkit.getWorldContainer();
         File worldFile = this.world.getWorldFolder();
         File newWorldFile = new File(worldSaveLocation, this.worldName);
+        String newWorldFileName = newWorldFile.getName();
         if (worldFile.exists()) {
             try {
                 this.world.save();
                 for (File file : Objects.requireNonNull(worldFile.listFiles())) {
+                    String fileName = file.getName();
                     if (file.isDirectory()) {
-                        FileUtils.copyDirectory(file, new File(newWorldFile.getName(), file.getName()));
-                    } else if (!file.getName().contains("session") && !file.getName().contains("uid.dat")) {
-                        FileUtils.copyFile(file, new File(newWorldFile.getName(), file.getName()));
+                        FileUtils.copyDirectory(file, new File(newWorldFileName, fileName));
+                    } else if (!fileName.contains("session") && !fileName.contains("uid.dat")) {
+                        FileUtils.copyFile(file, new File(newWorldFileName, fileName));
                     }
                 }
-//                FileUtils.copyDirectory(worldFile, newWorldFile);
-//                File uuidFile = new File(newWorldFile, "uid.dat");
-//                if (uuidFile.exists()) {
-//                    //noinspection ResultOfMethodCallIgnored
-//                    uuidFile.delete();
-//                }
                 return new WorldCreator(this.worldName);
             } catch (IOException e) {
                 e.printStackTrace();
