@@ -19,7 +19,7 @@ import java.io.StreamCorruptedException;
 @SuppressWarnings({"unused", "NullableProblems"})
 public class SkriptTypes {
 
-    public static final Changer<NBTCompound> NBT_COMPOUND_CHANGER = new Changer<NBTCompound>() {
+    public static final Changer<NBTCompound> NBT_COMPOUND_CHANGER = new Changer<>() {
         @Nullable
         @Override
         public Class<?>[] acceptChange(ChangeMode mode) {
@@ -31,9 +31,7 @@ public class SkriptTypes {
 
         @Override
         public void change(NBTCompound[] what, @Nullable Object[] delta, ChangeMode mode) {
-            if (delta[0] instanceof NBTCompound) {
-                NBTCompound changer = (NBTCompound) delta[0];
-
+            if (delta[0] instanceof NBTCompound changer) {
                 if (mode == ChangeMode.ADD) {
                     for (NBTCompound nbtCompound : what) {
                         nbtCompound.mergeCompound(changer);
@@ -95,14 +93,14 @@ public class SkriptTypes {
 
                     @Override
                     public String toVariableNameString(@NotNull NBTCompound nbt) {
-                        return "nbt:" + nbt.toString();
+                        return "nbt:" + nbt;
                     }
 
                     public String getVariableNamePattern() {
                         return "nbt:.+";
                     }
                 })
-                .serializer(new Serializer<NBTCompound>() {
+                .serializer(new Serializer<>() {
                     @Override
                     public @NotNull Fields serialize(@NotNull NBTCompound nbt) {
                         Fields fields = new Fields();

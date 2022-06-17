@@ -12,17 +12,14 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomBlock;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomEntity;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomTileEntity;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -30,8 +27,6 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.io.File;
-import java.io.IOException;
 
 @Name("NBT - Compound of")
 @Description({"Get the nbt compound of a block/entity/item/file. This is a more advanced version of NBT than just getting an NBT string ",
@@ -46,10 +41,7 @@ import java.io.IOException;
 @Since("1.6.0")
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
-    private final static NBTApi NBT_API;
-
     static {
-        NBT_API = SkBee.getPlugin().getNbtApi();
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
                 "nbt compound [(1¦copy)] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings%",
                 "nbt compound [(1¦copy)] (of|from) file[s] %strings%");
@@ -70,43 +62,28 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
     protected NBTCompound @NotNull [] get(@NotNull Event e, Object @NotNull [] source) {
         return get(source, object -> {
             NBTCompound compound = null;
-            if (object instanceof Block) {
-                Block block = ((Block) object);
-                BlockState state = block.getState();
-
-                if (state instanceof TileState) {
-                    compound = new NBTCustomTileEntity(state);
-                } else if (NBTApi.SUPPORTS_BLOCK_NBT) {
+            if (object instanceof Block block) {
+                if (block.getState() instanceof TileState tileState) {
+                    compound = new NBTCustomTileEntity(tileState);
+                } else if (NBTApi.supportsBlockNBT()) {
                     compound = new NBTCustomBlock(block).getData();
                 }
-            } else if (object instanceof Entity) {
-                compound = new NBTCustomEntity(((Entity) object));
-            } else if (object instanceof ItemType) {
-                ItemStack stack = ((ItemType) object).getRandom();
+            } else if (object instanceof Entity entity) {
+                compound = new NBTCustomEntity(entity);
+            } else if (object instanceof ItemType itemType) {
+                compound = NBTItem.convertItemtoNBT(itemType.getRandom());
+            } else if (object instanceof ItemStack itemStack) {
+                return NBTItem.convertItemtoNBT(itemStack);
+            } else if (object instanceof Slot slot) {
+                ItemStack stack = slot.getItem();
                 if (stack != null) {
                     compound = NBTItem.convertItemtoNBT(stack);
                 }
-            } else if (object instanceof ItemStack) {
-                return NBTItem.convertItemtoNBT(((ItemStack) object));
-            } else if (object instanceof Slot) {
-                ItemStack stack = ((Slot) object).getItem();
-                if (stack != null) {
-                    compound = NBTItem.convertItemtoNBT(stack);
-                }
-            } else if (object instanceof String) {
-                String nbtString = (String) object;
+            } else if (object instanceof String nbtString) {
                 if (file) {
-                    File nbtFile = NBT_API.getFile(nbtString);
-                    if (nbtFile != null) {
-                        try {
-                            compound = new NBTFile(nbtFile);
-                        } catch (IOException ignore) {
-                        }
-                    }
+                    compound = NBTApi.getNBTFile(nbtString);
                 } else {
-                    if (NBTApi.validateNBT(nbtString)) {
-                        compound = new NBTContainer(nbtString);
-                    }
+                    compound = NBTApi.validateNBT(nbtString);
                 }
             }
             if (compound != null) {

@@ -1,33 +1,25 @@
 package com.shanebeestudios.skbee.api.NBT;
 
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.Config;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NBTEntity;
 import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
-import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Chunk;
-import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -41,43 +33,64 @@ import java.util.UUID;
 public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")
-    public static final boolean SUPPORTS_BLOCK_NBT = PersistentDataHolder.class.isAssignableFrom(Chunk.class);
-    private final Config CONFIG;
-    private final boolean ENABLED;
+    private static final boolean SUPPORTS_BLOCK_NBT = PersistentDataHolder.class.isAssignableFrom(Chunk.class);
+    private static boolean ENABLED;
+    private static boolean DEBUG;
 
-    public NBTApi() {
-        CONFIG = SkBee.getPlugin().getPluginConfig();
-        ENABLED = forceLoadNBT();
+    public static void initializeAPI() {
+        Util.log("&aLoading NBTApi...");
+        MinecraftVersion version = MinecraftVersion.getVersion();
+        if (version == MinecraftVersion.UNKNOWN) {
+            Util.log("&cFailed to load NBTApi!");
+            ENABLED = false;
+        }
+        Util.log("&aSuccessfully loaded NBTApi!");
+        ENABLED = true;
+        DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
+    }
+
+    /**
+     * Check if NBTApi is enabled
+     * <p>This will fail if NBT_API is not available on this server version</p>
+     *
+     * @return True if enabled, otherwise false
+     */
+    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
+    public static boolean isEnabled() {
+        return ENABLED;
+    }
+
+    public static boolean supportsBlockNBT() {
+        return SUPPORTS_BLOCK_NBT;
     }
 
     /**
      * Validate an NBT string
+     * <br>
+     * If the NBT is invalid, and error will be thrown.
      *
      * @param nbtString NBT string to validate
-     * @return True if NBT string is valid, otherwise false
+     * @return NBTCompound if NBT string is valid, otherwise null
      */
-    public static boolean validateNBT(String nbtString) {
-        if (nbtString == null) return false;
+    public static NBTCompound validateNBT(String nbtString) {
+        if (nbtString == null) return null;
+        NBTCompound compound;
         try {
-            new NBTContainer(nbtString);
+            compound = new NBTContainer(nbtString);
         } catch (Exception ex) {
-            sendError(nbtString, ex);
-            return false;
+            Util.skriptError("&cInvalid NBT: &7'&b" + nbtString + "&7'&c");
+
+            if (DEBUG) {
+                ex.printStackTrace();
+            } else {
+                Util.skriptError("&cCause: &e" + ex.getMessage());
+            }
+            return null;
         }
-        return true;
+        return compound;
     }
 
-    private static void sendError(String error, Exception exception) {
-        Util.skriptError("&cInvalid NBT: &7'&b" + error + "&7'&c");
-        if (exception == null) return;
-
-        if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
-            exception.printStackTrace();
-        } else {
-            Util.skriptError("&cCause: &e" + exception.getMessage());
-        }
-    }
-
+    @SuppressWarnings("RegExpRedundantEscape")
     public static NBTCompound getNestedCompound(String tag, NBTCompound compound) {
         if (compound == null) return null;
         if (tag.contains(";")) {
@@ -90,6 +103,7 @@ public class NBTApi {
         return compound;
     }
 
+    @SuppressWarnings("RegExpRedundantEscape")
     public static String getNestedTag(String tag) {
         if (tag.contains(";")) {
             String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
@@ -98,251 +112,31 @@ public class NBTApi {
         return tag;
     }
 
-    private boolean forceLoadNBT() {
-        Util.log("&aLoading NBTApi...");
-        MinecraftVersion version = MinecraftVersion.getVersion();
-        if (version == MinecraftVersion.UNKNOWN) {
-            Util.log("&cFailed to load NBTApi!");
-            return false;
-        }
-        Util.log("&aSuccessfully loaded NBTApi!");
-        return true;
-    }
-
-    /**
-     * Check if NBTApi is enabled
-     * <p>This will fail if NBT_API is not available on this server version</p>
-     *
-     * @return True if enabled, otherwise false
-     */
-    public boolean isEnabled() {
-        return ENABLED;
-    }
-
-    public File getFile(String fileName) {
+    public static NBTFile getNBTFile(String fileName) {
         fileName = !fileName.endsWith(".dat") && !fileName.endsWith(".nbt") ? fileName + ".dat" : fileName;
-        return new File(fileName);
+        try {
+            return new NBTFile(new File(fileName));
+        } catch (IOException e) {
+            return null;
+        }
     }
 
-    /**
-     * Add NBT to an object.
-     *
-     * @param object Object to add NBT to
-     * @param value  NBT string to add to object
-     * @param type   Type of object
-     * @return Object with the new NBT value
-     */
-    @Nullable
-    public Object addNBT(@NotNull Object object, @NotNull String value, @NotNull ObjectType type) {
-        if (!type.isAssignableFrom(object, CONFIG.SETTINGS_DEBUG))
-            return null;
-        if (!validateNBT(value)) return null;
-        switch (type) {
-            case FILE:
-                File file = getFile(((String) object));
-                if (file == null) return null;
+    public static ItemType getItemTypeWithNBT(ItemType itemType, NBTCompound nbtCompound) {
+        NBTContainer itemNBT = NBTItem.convertItemtoNBT(itemType.getRandom());
 
-                try {
-                    NBTFile nbtFile = new NBTFile(file);
-                    nbtFile.mergeCompound(new NBTContainer(value));
-                    nbtFile.save();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                return null;
-            case ITEM_STACK:
-                ItemStack itemStack = (ItemStack) object;
-                if (itemStack.getType() == Material.AIR) return itemStack;
-                NBTItem item = new NBTItem(itemStack);
-                item.mergeCompound(new NBTContainer(value));
-                ItemMeta meta = item.getItem().getItemMeta();
-                if (meta == null) return itemStack;
-                itemStack.setItemMeta(item.getItem().getItemMeta());
-                return item.getItem();
-            case ITEM_TYPE:
-                ItemType itemType = (ItemType) object;
-                ItemStack stack = itemType.getItem().getRandom();
-                if (stack == null || stack.getType() == Material.AIR) return object;
-
-                NBTItem nbtItemType = new NBTItem(stack);
-                nbtItemType.mergeCompound(new NBTContainer(value));
-                ItemMeta itemMeta = nbtItemType.getItem().getItemMeta();
-                if (itemMeta == null) return object;
-                itemType.setItemMeta(nbtItemType.getItem().getItemMeta());
+        // Full NBT
+        if (nbtCompound.hasKey("Count") && nbtCompound.hasKey("id")) {
+            if (!itemNBT.getString("id").equalsIgnoreCase(nbtCompound.getString("id"))) {
+                // NBT compounds not the same item
                 return itemType;
-            case SLOT:
-                ItemStack slotItemStack = ((Slot) object).getItem();
-                if (slotItemStack != null && slotItemStack.getType() != Material.AIR) {
-                    ((Slot) object).setItem((ItemStack) addNBT(slotItemStack, value, ObjectType.ITEM_STACK));
-                }
-                return object;
-            case ENTITY:
-                NBTCustomEntity nbtEntity = new NBTCustomEntity((Entity) object);
-                NBTCompound nbtCompound = new NBTContainer(value);
-                if (nbtCompound.hasKey("custom")) {
-                    NBTCompound custom = nbtEntity.getCustomNBT();
-                    custom.mergeCompound(nbtCompound.getCompound("custom"));
-                    nbtCompound.removeKey("custom");
-                }
-                nbtEntity.mergeCompound(nbtCompound);
-                return object;
-            case BLOCK:
-                Block block = (Block) object;
-                BlockState blockState = block.getState();
-
-                if (blockState instanceof TileState) {
-                    NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity((blockState));
-                    NBTCompound updated = new NBTContainer(value);
-                    if (updated.hasKey("custom")) {
-                        NBTCompound custom = nbtBlock.getCustomNBT();
-                        custom.mergeCompound(updated.getCompound("custom"));
-                        updated.removeKey("custom");
-                    }
-                    nbtBlock.mergeCompound(updated);
-                    block.getState().update(true, false);
-                } else if (SUPPORTS_BLOCK_NBT) {
-                    NBTCustomBlock nbtCustomBlock = new NBTCustomBlock(block);
-                    nbtCustomBlock.getData().mergeCompound(new NBTContainer(value));
-                }
-                return object;
-            default:
-                if (CONFIG.SETTINGS_DEBUG)
-                    throw new IllegalArgumentException("Unsupported ObjectType: " + type);
+            }
+            itemNBT.mergeCompound(nbtCompound);
+        } else {
+            // Tag portion of NBT
+            itemNBT.getCompound("tag").mergeCompound(nbtCompound);
         }
-        return null;
-    }
-
-    /**
-     * Set NBT for an object.
-     *
-     * @param object Object to set NBT for
-     * @param value  NBT string to set to object
-     * @param type   Type of object
-     * @return Object with the new NBT value
-     */
-    @Nullable
-    public Object setNBT(@NotNull Object object, @NotNull String value, @NotNull ObjectType type) {
-        if (!type.isAssignableFrom(object, CONFIG.SETTINGS_DEBUG))
-            return null;
-        if (!validateNBT(value)) return null;
-        switch (type) {
-            case FILE:
-                return addNBT(object, value, ObjectType.FILE);
-            case ITEM_STACK:
-                ItemStack stack = new ItemStack(((ItemStack) object).getType());
-                NBTItem nbtItemStack = new NBTItem(stack);
-                nbtItemStack.mergeCompound(new NBTContainer(value));
-                ((ItemStack) object).setItemMeta(nbtItemStack.getItem().getItemMeta());
-                return object;
-            case ITEM_TYPE:
-                ItemType itemType = ((ItemType) object);
-                ItemStack itemStack = new ItemStack(itemType.getMaterial());
-                NBTItem nbtItemType = new NBTItem(itemStack);
-                nbtItemType.mergeCompound(new NBTContainer(value));
-                itemType.setItemMeta(nbtItemType.getItem().getItemMeta());
-                return itemType;
-            case SLOT:
-                ItemStack slotItemStack = ((Slot) object).getItem();
-                if (slotItemStack != null) {
-                    ((Slot) object).setItem((ItemStack) setNBT(slotItemStack, value, ObjectType.ITEM_STACK));
-                }
-                return object;
-            case ENTITY:
-                return addNBT(object, value, ObjectType.ENTITY);
-            case BLOCK:
-                return addNBT(object, value, ObjectType.BLOCK);
-            default:
-                if (CONFIG.SETTINGS_DEBUG)
-                    throw new IllegalArgumentException("Unsupported ObjectType: " + type);
-        }
-        return null;
-    }
-
-    /**
-     * Get NBT from an object
-     *
-     * @param object Object to get NBT from
-     * @param type   Type of object
-     * @return NBT string of object
-     */
-    @Nullable
-    public String getNBT(@NotNull Object object, @NotNull ObjectType type) {
-        if (!type.isAssignableFrom(object, CONFIG.SETTINGS_DEBUG))
-            return null;
-        switch (type) {
-            case FILE:
-                File file = getFile(((String) object));
-                if (file == null) return null;
-                NBTFile fileNBT = null;
-                try {
-                    fileNBT = new NBTFile(file);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (fileNBT == null) return null;
-                return fileNBT.toString();
-            case ITEM_STACK:
-                ItemStack itemStack = (ItemStack) object;
-                if (itemStack.getType() == Material.AIR) return null;
-                NBTItem item = new NBTItem(itemStack);
-                return item.toString();
-            case ITEM_STACK_FULL:
-                return NBTItem.convertItemtoNBT((ItemStack) object).toString();
-            case ITEM_TYPE:
-                ItemStack itemTypeStack = ((ItemType) object).getItem().getRandom();
-                if (itemTypeStack == null) return null;
-                return getNBT(itemTypeStack, ObjectType.ITEM_STACK);
-            case ITEM_TYPE_FULL:
-                ItemStack itemTypeStackFull = ((ItemType) object).getItem().getRandom();
-                if (itemTypeStackFull == null) return null;
-                return getNBT(itemTypeStackFull, ObjectType.ITEM_STACK_FULL);
-            case SLOT:
-                ItemStack slotItemStack = ((Slot) object).getItem();
-                if (slotItemStack == null) return null;
-                return getNBT(slotItemStack, ObjectType.ITEM_STACK);
-            case SLOT_FULL:
-                ItemStack slotItemStackFull = ((Slot) object).getItem();
-                if (slotItemStackFull == null) return null;
-                return getNBT(slotItemStackFull, ObjectType.ITEM_STACK_FULL);
-            case ENTITY:
-                Entity entity = (Entity) object;
-                NBTEntity nbtEntity = new NBTEntity(entity);
-                return nbtEntity.toString();
-            case BLOCK:
-                NBTTileEntity tile = new NBTTileEntity(((Block) object).getState());
-                try {
-                    return tile.getCompound().toString();
-                } catch (NbtApiException ignore) {
-                    return null;
-                }
-            default:
-                if (CONFIG.SETTINGS_DEBUG)
-                    throw new IllegalArgumentException("Unsupported ObjectType: " + type);
-        }
-        return null;
-    }
-
-    /**
-     * Get an {@link ItemType} from an NBT string
-     *
-     * @param nbt Full NBT string
-     * @return New ItemType from NBT string
-     */
-    public ItemType getItemTypeFromNBT(String nbt) {
-        if (!validateNBT(nbt)) return null;
-        return new ItemType(getItemStackFromNBT(nbt));
-    }
-
-    /**
-     * Get an {@link ItemStack} from an NBT string
-     *
-     * @param nbt Full NBT string
-     * @return New ItemStack from NBT string
-     */
-    public ItemStack getItemStackFromNBT(String nbt) {
-        if (!validateNBT(nbt)) return null;
-        NBTContainer container = new NBTContainer(nbt);
-        return NBTItem.convertNBTtoItem(container);
+        ItemStack newItemStack = NBTItem.convertNBTtoItem(itemNBT);
+        return new ItemType(newItemStack);
     }
 
     /**
@@ -351,7 +145,7 @@ public class NBTApi {
      * @param nbt Full NBT Compound
      * @return New ItemType from NBT Compound
      */
-    public ItemType getItemTypeFromNBT(NBTCompound nbt) {
+    public static ItemType getItemTypeFromNBT(NBTCompound nbt) {
         return new ItemType(getItemStackFromNBT(nbt));
     }
 
@@ -361,8 +155,12 @@ public class NBTApi {
      * @param nbt Full NBT Compound
      * @return New ItemStack from NBT Compound
      */
-    public ItemStack getItemStackFromNBT(NBTCompound nbt) {
+    public static ItemStack getItemStackFromNBT(NBTCompound nbt) {
         return NBTItem.convertNBTtoItem(nbt);
+    }
+
+    public static String getItemStackNBT(ItemStack itemStack) {
+        return NBTItem.convertItemtoNBT(itemStack).toString();
     }
 
     /**
@@ -371,9 +169,13 @@ public class NBTApi {
      * @param tag         Tag to delete
      * @param nbtCompound Compound to remove tag from
      */
-    public void deleteTag(@NotNull String tag, @NotNull NBTCompound nbtCompound) {
+    public static void deleteTag(@NotNull String tag, @NotNull NBTCompound nbtCompound) {
         NBTCompound compound = nbtCompound;
         String key = tag;
+        if (tag.equalsIgnoreCase("custom") && nbtCompound instanceof NBTCustom nbtCustom) {
+            nbtCustom.deleteCustomNBT();
+            return;
+        }
         if (tag.contains(";")) {
             compound = getNestedCompound(tag, compound);
             key = getNestedTag(tag);
@@ -381,7 +183,8 @@ public class NBTApi {
         compound.removeKey(key);
     }
 
-    public void setTag(@NotNull String tag, @NotNull NBTCompound nbtCompound, @NotNull Object[] object, NBTCustomType type) {
+    @SuppressWarnings("RegExpRedundantEscape")
+    public static void setTag(@NotNull String tag, @NotNull NBTCompound nbtCompound, @NotNull Object[] object, NBTCustomType type) {
         NBTCompound compound = nbtCompound;
         String key = tag;
         if (tag.contains(";")) {
@@ -451,14 +254,12 @@ public class NBTApi {
                 }
                 break;
             case NBTTagString:
-                if (singleObject instanceof String) {
-                    String s = ((String) singleObject);
-                    compound.setString(key, s);
+                if (singleObject instanceof String string) {
+                    compound.setString(key, string);
                 }
                 break;
             case NBTTagCompound:
-                if (singleObject instanceof NBTCompound) {
-                    NBTCompound nbt = (NBTCompound) singleObject;
+                if (singleObject instanceof NBTCompound nbt) {
                     compound.removeKey(key);
                     try {
                         NBTCompound newCompound = compound.getOrCreateCompound(key);
@@ -533,7 +334,7 @@ public class NBTApi {
      * @param nbtCompound Compound to change
      * @param object      Value of tag to set to
      */
-    public void setTag(@NotNull String tag, @NotNull NBTCompound nbtCompound, @NotNull Object[] object) {
+    public static void setTag(@NotNull String tag, @NotNull NBTCompound nbtCompound, @NotNull Object[] object) {
         NBTCompound compound = nbtCompound;
         String key = tag;
         if (tag.contains(";")) {
@@ -650,7 +451,7 @@ public class NBTApi {
      * @param compound NBT to grab tag from
      * @return Object from the NBT string
      */
-    public Object getTag(String tag, NBTCompound compound) {
+    public static Object getTag(String tag, NBTCompound compound) {
         if (compound == null) return null;
         if (tag.contains(";")) {
             compound = getNestedCompound(tag, compound);
@@ -677,7 +478,7 @@ public class NBTApi {
      * @param type     Type of NBT tag
      * @return Object from the NBT string
      */
-    public Object getTag(String tag, NBTCompound compound, NBTCustomType type) {
+    public static Object getTag(String tag, NBTCompound compound, NBTCustomType type) {
         if (compound == null) return null;
         if (tag.contains(";")) {
             compound = getNestedCompound(tag, compound);
@@ -734,77 +535,37 @@ public class NBTApi {
             case NBTTagLongList:
                 return new ArrayList<>(compound.getLongList(tag));
             default:
-                if (CONFIG.SETTINGS_DEBUG)
-                    throw new IllegalArgumentException("Unknown tag type, please let the dev know -> type: " + type.toString());
+                if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG)
+                    throw new IllegalArgumentException("Unknown tag type, please let the dev know -> type: " + type);
         }
         return null;
     }
 
-    /**
-     * Type of object used for getting/setting/adding NBT
-     */
-    public enum ObjectType {
-        /**
-         * Represents an {@link ItemType} object
-         */
-        ITEM_TYPE(ItemType.class),
-        /**
-         * Represents an {@link ItemType} object
-         * <p>This is used when getting full NBT of an ItemType</p>
-         */
-        ITEM_TYPE_FULL(ItemType.class),
-        /**
-         * Represents an {@link ItemStack} object
-         */
-        ITEM_STACK(ItemStack.class),
-        /**
-         * Represents an {@link ItemStack} object
-         * <p>This is used when getting full NBT of an ItemStack</p>
-         */
-        ITEM_STACK_FULL(ItemStack.class),
-        /**
-         * Represents a {@link Slot} object
-         */
-        SLOT(Slot.class),
-        /**
-         * Represents a {@link Slot} object
-         * <p>This is used when getting full NBT of a Slot item</p>
-         */
-        SLOT_FULL(Slot.class),
-        /**
-         * Represents an {@link Entity} object
-         */
-        ENTITY(Entity.class),
-        /**
-         * Represents a {@link Block} object
-         */
-        BLOCK(Block.class),
-        /**
-         * Represents a {@link String} object (used for files)
-         */
-        FILE(String.class);
+    public static void addNBTToBlock(Block block, NBTCompound compound) {
+        if (block.getState() instanceof TileState tileState) {
+            NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity(tileState);
 
-        Class<?> cl;
-
-        ObjectType(Class<?> classType) {
-            this.cl = classType;
+            NBTCompound compoundCopy = new NBTContainer(compound.toString());
+            if (compoundCopy.hasKey("custom")) {
+                nbtBlock.getCustomNBT().mergeCompound(compoundCopy.getCompound("custom"));
+                compoundCopy.removeKey("custom");
+            }
+            nbtBlock.mergeCompound(compoundCopy);
+            block.getState().update(true, false);
+        } else if (SUPPORTS_BLOCK_NBT) {
+            NBTCustomBlock nbtCustomBlock = new NBTCustomBlock(block);
+            nbtCustomBlock.getData().mergeCompound(compound);
         }
+    }
 
-        /**
-         * Check if the object is assignable from the class type
-         *
-         * @param object Object to compare
-         * @return True if object matches the class type
-         */
-        @SuppressWarnings("BooleanMethodIsAlwaysInverted")
-        public boolean isAssignableFrom(Object object, boolean debug) {
-            if (cl.isAssignableFrom(object.getClass()))
-                return true;
-            if (debug)
-                throw new IllegalArgumentException("Object is not assignable from ObjectType:\n\tObject: " + object + " = " + object.getClass() +
-                        "\n\tObjectType: " + this + "\n\tAssignableFrom: " + cl);
-            return false;
+    public static void addNBTToEntity(Entity entity, NBTCompound compound) {
+        NBTCustomEntity nbtEntity = new NBTCustomEntity(entity);
+        NBTCompound compoundCopy = new NBTContainer(compound.toString());
+        if (compoundCopy.hasKey("custom")) {
+            nbtEntity.getCustomNBT().mergeCompound(compoundCopy.getCompound("custom"));
+            compoundCopy.removeKey("custom");
         }
+        nbtEntity.mergeCompound(compoundCopy);
     }
 
 }

@@ -12,13 +12,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
-import com.shanebeestudios.skbee.api.NBT.NBTCustom;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomTileEntity;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,19 +49,16 @@ import java.util.ArrayList;
 @Since("1.0.0")
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 
-    private static final NBTApi NBT_API;
-
     static {
         Skript.registerExpression(ExprTagOfNBT.class, Object.class, ExpressionType.COMBINED,
-                "tag %string% of %string/nbtcompound%",
-                "%string% tag of %string/nbtcompound%",
+                "tag %string% of %nbtcompound%",
+                "%string% tag of %nbtcompound%",
                 "%nbttype% %string% of %nbtcompound%",
                 "%string% %nbttype% of %nbtcompound%");
-        NBT_API = SkBee.getPlugin().getNbtApi();
     }
 
     private Expression<String> tag;
-    private Expression<Object> nbt;
+    private Expression<NBTCompound> nbt;
     @Nullable
     private Expression<NBTCustomType> nbtType;
 
@@ -72,30 +66,28 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parser) {
         this.tag = (Expression<String>) exprs[matchedPattern == 2 ? 1 : 0];
-        this.nbt = (Expression<Object>) exprs[matchedPattern < 2 ? 1 : 2];
+        this.nbt = (Expression<NBTCompound>) exprs[matchedPattern < 2 ? 1 : 2];
         this.nbtType = matchedPattern > 1 ? (Expression<NBTCustomType>) exprs[matchedPattern == 2 ? 0 : 1] : null;
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    @Nullable
-    protected Object[] get(@NotNull Event e) {
-        String t = tag.getSingle(e);
-        Object object = nbt.getSingle(e);
-        NBTCustomType type = this.nbtType != null ? this.nbtType.getSingle(e) : null;
-        if (object == null) {
-            return null;
+    protected Object[] get(@NotNull Event event) {
+        String tag = this.tag.getSingle(event);
+        NBTCompound nbt = this.nbt.getSingle(event);
+
+        NBTCustomType type = this.nbtType != null ? this.nbtType.getSingle(event) : null;
+        assert tag != null;
+
+        Object object = type != null ? NBTApi.getTag(tag, nbt, type) : NBTApi.getTag(tag, nbt);
+        if (object instanceof ArrayList arrayList) {
+            return arrayList.toArray();
         }
-        NBTCompound n = object instanceof NBTCompound ? ((NBTCompound) object) : new NBTContainer((String) object);
-        assert t != null;
-        Object nbt = type != null ? NBT_API.getTag(t, n, type) : NBT_API.getTag(t, n);
-        if (nbt instanceof ArrayList) {
-            return ((ArrayList<?>) nbt).toArray();
-        }
-        return new Object[]{nbt};
+        return new Object[]{object};
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET || mode == ChangeMode.DELETE) {
@@ -106,31 +98,24 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
 
     @Override
     public void change(@NotNull Event e, @Nullable Object[] delta, @NotNull ChangeMode mode) {
-        Object object = this.nbt.getSingle(e);
-        if (!(object instanceof NBTCompound)) return;
+        NBTCompound compound = this.nbt.getSingle(e);
         String tag = this.tag.getSingle(e);
-        NBTCompound compound = ((NBTCompound) object);
-        if (tag == null) return;
+        if (compound == null || tag == null) return;
 
         if (mode == ChangeMode.SET) {
             if (delta == null) return;
 
             if (this.nbtType != null) {
                 NBTCustomType type = this.nbtType.getSingle(e);
-                NBT_API.setTag(tag, compound, delta, type);
+                NBTApi.setTag(tag, compound, delta, type);
             } else {
-                NBT_API.setTag(tag, compound, delta);
+                NBTApi.setTag(tag, compound, delta);
             }
             if (compound instanceof NBTCustomTileEntity) {
                 ((NBTCustomTileEntity) compound).updateBlockstate();
             }
         } else if (mode == ChangeMode.DELETE) {
-            if (tag.equalsIgnoreCase("custom")) {
-                if (compound instanceof NBTCustom) {
-                    ((NBTCustom) compound).deleteCustomNBT();
-                }
-            }
-            NBT_API.deleteTag(tag, compound);
+            NBTApi.deleteTag(tag, compound);
         }
     }
 

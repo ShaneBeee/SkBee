@@ -12,9 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
-import com.shanebeestudios.skbee.api.NBT.NBTApi.ObjectType;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.ItemTag;
@@ -29,6 +27,7 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+@SuppressWarnings("deprecation") // Paper deprecations
 @Name("Text Component - Hover Event")
 @Description("Create a new hover event. Can show text or an item to a player. 'showing %itemtype%' requires Minecraft 1.16.2+")
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
@@ -36,8 +35,6 @@ import java.util.List;
         "send component {_t} to player"})
 @Since("1.5.0")
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
-
-    private static final NBTApi NBT_API = SkBee.getPlugin().getNbtApi();
 
     static {
         Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
@@ -51,7 +48,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
-        if (matchedPattern == 1 && !NBT_API.isEnabled()) {
+        if (matchedPattern == 1 && !NBTApi.isEnabled()) {
             Skript.error("NBTApi is currently unavailable, thus this expression with ItemType cannot be used right now.",
                     ErrorQuality.SEMANTIC_ERROR);
             return false;
@@ -61,28 +58,27 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
-    protected HoverEvent[] get(Event e) {
+    protected HoverEvent[] get(Event event) {
         if (object == null) return null;
 
         if (pattern == 0) {
-            String[] string = ((String[]) this.object.getArray(e));
+            String[] string = ((String[]) this.object.getArray(event));
             List<Content> texts = new ArrayList<>();
             for (int i = 0; i < string.length; i++) {
                 texts.add(new Text(string[i] + (i < (string.length - 1) ? System.lineSeparator() : "")));
             }
             return new HoverEvent[]{new HoverEvent(Action.SHOW_TEXT, texts)};
         } else if (pattern == 1) {
-            ItemType itemType = (ItemType) object.getSingle(e);
-            if (itemType == null) {
-                return null;
-            }
+            ItemType itemType = (ItemType) object.getSingle(event);
+            if (itemType == null) return null;
+
             ItemStack itemStack = itemType.getRandom();
-            if (itemStack == null) return null;
 
             String id = itemStack.getType().getKey().toString();
-            String nbt = NBT_API.getNBT(itemStack, ObjectType.ITEM_STACK);
+            String nbt = NBTApi.getItemStackNBT(itemStack);
             Item item = new Item(id, itemStack.getAmount(), ItemTag.ofNbt(nbt));
             return new HoverEvent[]{new HoverEvent(Action.SHOW_ITEM, item)};
         }

@@ -13,7 +13,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.reflection.McReflection;
 import com.shanebeestudios.skbee.api.util.TextUtils;
@@ -55,7 +54,6 @@ import java.util.Locale;
 @Since("1.5.0")
 public class ExprTextComponent extends SimpleExpression<BaseComponent> {
 
-    private static final NBTApi api = SkBee.getPlugin().getNbtApi();
     private static final boolean HAS_TRANSLATION = Skript.classExists("net.kyori.adventure.translation.Translatable");
 
     static {
@@ -138,9 +136,9 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
         ItemMeta meta = itemStack.getItemMeta();
         if (meta instanceof PotionMeta) {
             StringBuilder builder = new StringBuilder("item.minecraft.");
-            String nbt = api.getNBT(itemStack, NBTApi.ObjectType.ITEM_STACK);
+            String nbt = NBTApi.getItemStackNBT(itemStack);
             if (nbt != null) {
-                String pot = api.getTag("Potion", new NBTContainer(nbt)).toString();
+                String pot = NBTApi.getTag("Potion", new NBTContainer(nbt)).toString();
                 if (pot != null) {
                     if (material == Material.POTION) {
                         builder.append("potion");

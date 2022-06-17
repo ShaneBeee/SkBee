@@ -11,7 +11,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -23,26 +22,24 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 @Name("NBT - Spawn Entity with NBT")
-@Description("Spawn an entity at a location with NBT")
-@Examples({"spawn sheep at player with nbt \"{NoAI:1b}\"",
-        "spawn 1 of zombie at player with nbt \"{NoGravity:1b}\""})
+@Description("Spawn an entity at a location with NBT.")
+@Examples({"set {_n} to nbt compound from \"{NoAI:1b}\"",
+        "spawn sheep at player with nbt {_n}",
+        "spawn 1 of zombie at player with nbt nbt compound from \"{NoGravity:1b}\""})
 @Since("1.0.0")
 public class EffSpawnEntityNBT extends Effect {
 
-    private static final NBTApi NBT_API;
-
     static {
         Skript.registerEffect(EffSpawnEntityNBT.class,
-                "spawn %entitytypes% [%directions% %locations%] with nbt %string/nbtcompound%",
-                "spawn %number% of %entitytypes% [%directions% %locations%] with nbt %string/nbtcompound%");
-        NBT_API = SkBee.getPlugin().getNbtApi();
+                "spawn %entitytypes% [%directions% %locations%] with nbt %nbtcompound%",
+                "spawn %number% of %entitytypes% [%directions% %locations%] with nbt %nbtcompound%");
     }
 
     @SuppressWarnings("null")
     private Expression<Location> locations;
     @SuppressWarnings("null")
     private Expression<EntityType> types;
-    private Expression<Object> nbt;
+    private Expression<NBTCompound> nbt;
     @Nullable
     private Expression<Number> amount;
 
@@ -52,14 +49,15 @@ public class EffSpawnEntityNBT extends Effect {
         amount = matchedPattern == 0 ? null : (Expression<Number>) (exprs[0]);
         types = (Expression<EntityType>) exprs[matchedPattern];
         locations = Direction.combine((Expression<? extends Direction>) exprs[1 + matchedPattern], (Expression<? extends Location>) exprs[2 + matchedPattern]);
-        nbt = (Expression<Object>) exprs[3 + matchedPattern];
+        nbt = (Expression<NBTCompound>) exprs[3 + matchedPattern];
         return true;
     }
 
     @Override
     public void execute(final @NotNull Event event) {
-        Object nbtObject = this.nbt.getSingle(event);
-        String value = nbtObject instanceof NBTCompound ? nbtObject.toString() : (String) nbtObject;
+        NBTCompound compound = this.nbt.getSingle(event);
+        if (compound == null) return;
+
         final Number a = amount != null ? amount.getSingle(event) : 1;
         if (a == null)
             return;
@@ -68,7 +66,7 @@ public class EffSpawnEntityNBT extends Effect {
             assert loc != null : locations;
             for (final EntityType type : et) {
                 for (int i = 0; i < a.doubleValue() * type.getAmount(); i++) {
-                    spawn(loc, type.data.getType(), value);
+                    spawn(loc, type.data.getType(), compound);
                 }
             }
         }
@@ -80,8 +78,8 @@ public class EffSpawnEntityNBT extends Effect {
                 " " + locations.toString(e, debug) + " " + nbt.toString(e, debug);
     }
 
-    private <T extends Entity> void spawn(Location loc, Class<T> type, String nbt) {
-        Entity entity = loc.getWorld().spawn(loc, type, ent -> NBT_API.addNBT(ent, nbt, NBTApi.ObjectType.ENTITY));
+    private <T extends Entity> void spawn(Location loc, Class<T> type, NBTCompound nbt) {
+        Entity entity = loc.getWorld().spawn(loc, type, ent -> NBTApi.addNBTToEntity(ent, nbt));
         SkriptUtils.setLastSpawned(entity);
     }
 

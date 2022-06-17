@@ -11,11 +11,13 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("NBT - Tags")
 @Description("Get all tags of an NBT compound.")
-@Examples({"set {_t::*} to nbt tags of {_n}", "set {_t::*} to nbt tags of nbt compound of player"})
+@Examples({"set {_t::*} to nbt tags of {_n}",
+        "set {_t::*} to nbt tags of nbt compound of player"})
 @Since("1.14.2")
 public class ExprTagsOfNBT extends SimpleExpression<String> {
 
@@ -25,12 +27,14 @@ public class ExprTagsOfNBT extends SimpleExpression<String> {
 
     private Expression<NBTCompound> compound;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         compound = (Expression<NBTCompound>) exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     protected String[] get(Event event) {
@@ -47,12 +51,12 @@ public class ExprTagsOfNBT extends SimpleExpression<String> {
     }
 
     @Override
-    public Class<? extends String> getReturnType() {
+    public @NotNull Class<? extends String> getReturnType() {
         return String.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "nbt tags of nbt compound " + this.compound.toString(e, d);
     }
 
