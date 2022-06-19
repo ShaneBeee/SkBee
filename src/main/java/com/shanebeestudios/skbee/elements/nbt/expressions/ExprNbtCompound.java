@@ -16,9 +16,11 @@ import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomBlock;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomEntity;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomTileEntity;
+import com.shanebeestudios.skbee.api.NBT.NBTItemSlot;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
@@ -43,17 +45,17 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-                "nbt compound [(1¦copy)] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings%",
+                "nbt compound [(1¦copy|2¦item)] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings%",
                 "nbt compound [(1¦copy)] (of|from) file[s] %strings%");
     }
 
-    private boolean copy;
+    private int pattern;
     private boolean file;
 
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         setExpr(exprs[0]);
-        copy = parseResult.mark == 1;
+        pattern = parseResult.mark;
         file = matchedPattern == 1;
         return true;
     }
@@ -76,7 +78,12 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 return NBTItem.convertItemtoNBT(itemStack);
             } else if (object instanceof Slot slot) {
                 ItemStack stack = slot.getItem();
-                if (stack != null) {
+                if (stack == null) return null;
+
+                if (pattern == 2) {
+                    if (stack.getType() == Material.AIR) return null;
+                    compound = new NBTItemSlot(slot);
+                } else {
                     compound = NBTItem.convertItemtoNBT(stack);
                 }
             } else if (object instanceof String nbtString) {
@@ -87,7 +94,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 }
             }
             if (compound != null) {
-                if (copy) {
+                if (pattern == 1) {
                     return new NBTContainer(compound.toString());
                 } else {
                     return compound;
@@ -104,7 +111,8 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "nbt compound from " + getExpr().toString(e, d);
+        String extra = pattern == 1 ? "copy" : pattern == 2 ? "item" : "";
+        return "nbt compound " + extra + " from " + getExpr().toString(e, d);
     }
 
 }
