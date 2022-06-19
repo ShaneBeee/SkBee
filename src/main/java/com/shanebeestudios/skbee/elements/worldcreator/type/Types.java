@@ -1,17 +1,12 @@
 package com.shanebeestudios.skbee.elements.worldcreator.type;
 
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.classes.Parser;
-import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
 
 public class Types {
 
@@ -32,28 +27,7 @@ public class Types {
                     .usage(environments.getAllNames())
                     .examples("set environment of {_creator} to nether")
                     .since("1.8.0")
-                    .parser(new Parser<Environment>() {
-
-                        @Nullable
-                        @Override
-                        public Environment parse(@NotNull String string, @NotNull ParseContext context) {
-                            return environments.parse(string);
-                        }
-
-                        @Override
-                        public @NotNull String toString(Environment o, int flags) {
-                            return environments.toString(o, flags);
-                        }
-
-                        @Override
-                        public @NotNull String toVariableNameString(Environment o) {
-                            return o.name();
-                        }
-
-                        public @NotNull String getVariableNamePattern() {
-                            return "\\S+";
-                        }
-                    }));
+                    .parser(environments.getParser()));
         } else {
             Util.log("It looks like another addon registered 'environment' already.");
             Util.log("You may have to use their environment options in SkBee's 'world creator' system.");
@@ -68,28 +42,7 @@ public class Types {
                     .usage(worldTypes.getAllNames())
                     .examples("set world type of {_creator} to flat")
                     .since("1.8.0")
-                    .parser(new Parser<WorldType>() {
-
-                        @Nullable
-                        @Override
-                        public WorldType parse(@NotNull String string, @NotNull ParseContext context) {
-                            return worldTypes.parse(string);
-                        }
-
-                        @Override
-                        public @NotNull String toString(@NotNull WorldType o, int flags) {
-                            return worldTypes.toString(o, flags);
-                        }
-
-                        @Override
-                        public @NotNull String toVariableNameString(WorldType o) {
-                            return o.name();
-                        }
-
-                        public @NotNull String getVariableNamePattern() {
-                            return "\\S+";
-                        }
-                    }));
+                    .parser(worldTypes.getParser()));
         } else {
             Util.log("It looks like another addon registered 'world type' already. ");
             Util.log("You may have to use their world type options in SkBee's 'world creator' system.");

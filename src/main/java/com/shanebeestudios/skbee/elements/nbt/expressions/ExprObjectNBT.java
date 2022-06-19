@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.nbt.expressions;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -48,6 +49,7 @@ public class ExprObjectNBT extends SimplePropertyExpression<Object, Object> {
 
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
+        Skript.warning("SkBee expression 'nbt of %object%' will be removed in a future version. Please use NBT compounds instead.");
         full = parseResult.mark == 1;
         return super.init(exprs, matchedPattern, isDelayed, parseResult);
     }
