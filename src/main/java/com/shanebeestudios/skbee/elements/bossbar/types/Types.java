@@ -90,9 +90,8 @@ public class Types {
                             NamespacedKey key = keyedBossBar.getKey();
                             fields.putObject("namespace", key.getNamespace());
                             fields.putObject("key", key.getKey());
-                            return fields;
                         }
-                        return null;
+                        return fields;
                     }
 
                     @SuppressWarnings("NullableProblems")
