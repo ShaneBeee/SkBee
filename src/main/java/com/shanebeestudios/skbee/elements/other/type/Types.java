@@ -21,6 +21,8 @@ import org.bukkit.Vibration;
 import org.bukkit.Vibration.Destination.BlockDestination;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.entity.Villager.Type;
+import org.bukkit.event.entity.EntityPotionEffectEvent;
+import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,6 +40,19 @@ public class Types {
                     .usage(FISH_STATE_ENUM.getAllNames())
                     .since("1.15.2")
                     .parser(FISH_STATE_ENUM.getParser()));
+        }
+
+        // Only register if no other addons have registered this class
+        // EntityPotionEffectEvent.Cause
+        if (Classes.getExactClassInfo(Cause.class) == null) {
+            EnumUtils<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumUtils<>(Cause.class);
+            Classes.registerClass(new ClassInfo<>(Cause.class, "potioneffectcause")
+                    .user("potion ?effect ?causes?")
+                    .name("Potion Effect Cause")
+                    .description("Represents the different causes of an entity potion effect event.")
+                    .usage(POTION_EFFECT_EVENT_CAUSE.getAllNames())
+                    .since("INSERT VERSION")
+                    .parser(POTION_EFFECT_EVENT_CAUSE.getParser()));
         }
 
         // Only register if no other addons have registered this class
