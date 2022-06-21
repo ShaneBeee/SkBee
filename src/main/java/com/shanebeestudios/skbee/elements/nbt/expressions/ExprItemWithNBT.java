@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 @SuppressWarnings("NullableProblems")
 @Name("NBT - Item with NBT")
 @Description("Get an item with nbt.")
-@Examples({"give player diamond sword with nbt nbt compound from \"{Unbreakable:1}\"",
+@Examples({"give player diamond sword with nbt compound from \"{Unbreakable:1}\"",
         "set {_n} to nbt compound from \"{Points:10}\"",
         "set {_i} to netherite axe with nbt {_n}"})
 @Since("1.0.0")
@@ -28,7 +28,7 @@ public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
 
     static {
         Skript.registerExpression(ExprItemWithNBT.class, ItemType.class, ExpressionType.PROPERTY,
-                "%itemtype% with [item( |-)]nbt %nbtcompound%");
+                "%itemtype% with [[item( |-)]nbt] %nbtcompound%");
     }
 
     @SuppressWarnings("null")
