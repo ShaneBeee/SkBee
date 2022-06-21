@@ -75,6 +75,15 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     }
 
     @Override
+    public void mergeCompound(NBTCompound comp) {
+        super.mergeCompound(comp);
+        if (comp.hasKey("custom")) {
+            NBTCompound custom = comp.getCompound("custom");
+            getCustomNBT().mergeCompound(custom);
+        }
+    }
+
+    @Override
     public String toString() {
         try {
             return getCustomNBTCompound().toString();
