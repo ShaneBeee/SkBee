@@ -11,6 +11,7 @@ import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
+import com.shanebeestudios.skbee.api.util.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
@@ -121,6 +122,7 @@ public class SkBee extends JavaPlugin {
         }
 
         loadMetrics();
+        UpdateChecker.checkForUpdate(version);
         Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", version, (float) (System.currentTimeMillis() - start) / 1000);
 
         if (this.beeWorldConfig != null && this.config.AUTO_LOAD_WORLDS) {
