@@ -158,27 +158,10 @@ public class NBTApi {
     }
 
     /**
-     * Get an {@link ItemType} from an {@link NBTCompound}
-     *
-     * @param nbt Full NBT Compound
-     * @return New ItemType from NBT Compound
-     */
-    public static ItemType getItemTypeFromNBT(NBTCompound nbt) {
-        return new ItemType(getItemStackFromNBT(nbt));
-    }
-
-    /**
-     * Get an {@link ItemStack} from an {@link NBTCompound}
-     *
-     * @param nbt Full NBT Compound
-     * @return New ItemStack from NBT Compound
-     */
-    public static ItemStack getItemStackFromNBT(NBTCompound nbt) {
-        return NBTItem.convertNBTtoItem(nbt);
-    }
-
-    /**
      * Get an {@link NBTCompound} from an {@link ItemStack}
+     * <br>
+     * This is used in components, which need to make sure
+     * the NBT-API is available first
      *
      * @param itemStack ItemStack to grab NBT from
      * @return NBT compound from ItemStack

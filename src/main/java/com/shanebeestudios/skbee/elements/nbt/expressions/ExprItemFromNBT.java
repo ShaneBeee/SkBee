@@ -11,10 +11,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -44,7 +44,10 @@ public class ExprItemFromNBT extends PropertyExpression<NBTCompound, ItemType> {
 
     @Override
     protected ItemType @NotNull [] get(@NotNull Event e, NBTCompound @NotNull [] source) {
-        return get(source, NBTApi::getItemTypeFromNBT);
+        return get(source, nbtCompound -> {
+            ItemStack itemStack = NBTItem.convertNBTtoItem(nbtCompound);
+            return new ItemType(itemStack);
+        });
     }
 
     @Override
