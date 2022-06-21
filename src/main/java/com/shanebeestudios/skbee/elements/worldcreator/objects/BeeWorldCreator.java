@@ -1,15 +1,17 @@
 package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
+import com.shanebeestudios.skbee.SkBee;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
-import com.shanebeestudios.skbee.SkBee;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Objects;
 import java.util.Optional;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
@@ -35,7 +37,7 @@ public class BeeWorldCreator {
         this.keepSpawnLoaded = Optional.empty();
     }
 
-    public BeeWorldCreator(World world, String name, boolean clone) {
+    public BeeWorldCreator(@NotNull World world, String name, boolean clone) {
         this.worldName = name;
         //noinspection deprecation
         this.worldType = world.getWorldType();
@@ -188,14 +190,17 @@ public class BeeWorldCreator {
         File worldSaveLocation = Bukkit.getWorldContainer();
         File worldFile = this.world.getWorldFolder();
         File newWorldFile = new File(worldSaveLocation, this.worldName);
+        String newWorldFileName = newWorldFile.getName();
         if (worldFile.exists()) {
             try {
                 this.world.save();
-                FileUtils.copyDirectory(worldFile, newWorldFile);
-                File uuidFile = new File(newWorldFile, "uid.dat");
-                if (uuidFile.exists()) {
-                    //noinspection ResultOfMethodCallIgnored
-                    uuidFile.delete();
+                for (File file : Objects.requireNonNull(worldFile.listFiles())) {
+                    String fileName = file.getName();
+                    if (file.isDirectory()) {
+                        FileUtils.copyDirectory(file, new File(newWorldFileName, fileName));
+                    } else if (!fileName.contains("session") && !fileName.contains("uid.dat")) {
+                        FileUtils.copyFile(file, new File(newWorldFileName, fileName));
+                    }
                 }
                 return new WorldCreator(this.worldName);
             } catch (IOException e) {
@@ -205,6 +210,7 @@ public class BeeWorldCreator {
         return null;
     }
 
+    @SuppressWarnings("StringBufferReplaceableByString")
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("WorldCreator{");

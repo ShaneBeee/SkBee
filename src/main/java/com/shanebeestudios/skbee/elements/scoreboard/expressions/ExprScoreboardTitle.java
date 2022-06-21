@@ -70,7 +70,9 @@ public class ExprScoreboardTitle extends SimpleExpression<String> {
         String title = delta != null ? (String) delta[0] : null;
         for (Player player : this.player.getArray(event)) {
             Board board = BoardManager.getBoard(player);
-            board.setTitle(title);
+            if (board != null) {
+                board.setTitle(title);
+            }
         }
     }
 
