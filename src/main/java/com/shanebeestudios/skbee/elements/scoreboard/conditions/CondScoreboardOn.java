@@ -46,6 +46,7 @@ public class CondScoreboardOn extends Condition {
         Player player = this.player.getSingle(event);
         if (player != null) {
             Board board = BoardManager.getBoard(player);
+            if (board == null) return false;
             return board.isOn() ^ isNegated();
         }
 

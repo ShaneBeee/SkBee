@@ -45,10 +45,12 @@ public class EffScoreboardToggle extends Effect {
     protected void execute(Event event) {
         for (Player player : this.player.getArray(event)) {
             Board board = BoardManager.getBoard(player);
-            switch (pattern) {
-                case 0 -> board.toggle();
-                case 1 -> board.show();
-                case 2 -> board.hide();
+            if (board != null) {
+                switch (pattern) {
+                    case 0 -> board.toggle();
+                    case 1 -> board.show();
+                    case 2 -> board.hide();
+                }
             }
         }
     }

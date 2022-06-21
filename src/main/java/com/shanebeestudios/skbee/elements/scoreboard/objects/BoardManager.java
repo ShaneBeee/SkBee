@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -14,7 +15,9 @@ public class BoardManager implements Listener {
 
     private static final Map<UUID, Board> BOARDS = new HashMap<>();
 
+    @Nullable
     public static Board getBoard(Player player) {
+        if (!player.isOnline()) return null;
         UUID uuid = player.getUniqueId();
         if (BOARDS.containsKey(uuid)) {
             return BOARDS.get(uuid);
