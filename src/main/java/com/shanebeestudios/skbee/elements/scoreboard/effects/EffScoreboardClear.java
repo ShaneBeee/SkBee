@@ -42,7 +42,9 @@ public class EffScoreboardClear extends Effect {
     protected void execute(Event event) {
         for (Player player : this.player.getArray(event)) {
             Board board = BoardManager.getBoard(player);
-            board.clear();
+            if (board != null) {
+                board.clear();
+            }
         }
     }
 

@@ -60,7 +60,9 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
         List<String> lines = new ArrayList<>();
         for (Player player : this.player.getArray(event)) {
             Board board = BoardManager.getBoard(player);
-            lines.add(board.getLine(line));
+            if (board != null) {
+                lines.add(board.getLine(line));
+            }
         }
         return lines.toArray(new String[0]);
     }
@@ -86,10 +88,12 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
 
         for (Player player : this.player.getArray(event)) {
             Board board = BoardManager.getBoard(player);
-            if (mode == ChangeMode.SET) {
-                board.setLine(line, lineString);
-            } else if (mode == ChangeMode.DELETE) {
-                board.deleteLine(line);
+            if (board != null) {
+                if (mode == ChangeMode.SET) {
+                    board.setLine(line, lineString);
+                } else if (mode == ChangeMode.DELETE) {
+                    board.deleteLine(line);
+                }
             }
         }
     }
