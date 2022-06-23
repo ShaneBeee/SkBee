@@ -35,3 +35,6 @@ types:
 	profession: profession¦s
 	villagertype: villager type¦s
 	potioneffectcause: potion effect cause¦s
+	merchant: merchant¦s
+	merchantrecipe: merchant recipe¦s
+	merchantinventory: merchant inventor(y|ies)
