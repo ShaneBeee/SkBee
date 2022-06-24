@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.Version;
 import com.github.goingoffskript.skriptvariabledump.SkriptToYaml;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
@@ -43,6 +44,8 @@ public class SkBee extends JavaPlugin {
         ConfigurationSerialization.registerClass(Bound.class, "Bound");
     }
 
+    private static final int[] EARLIEST_VERSION = new int[]{1,17,1};
+
     private static SkBee instance;
     private Plugin skriptPlugin;
     private NBTApi nbtApi;
@@ -63,29 +66,7 @@ public class SkBee extends JavaPlugin {
         this.pm = Bukkit.getPluginManager();
         this.skriptPlugin = pm.getPlugin("Skript");
 
-        if (skriptPlugin == null) {
-            Util.log("&cDependency Skript was not found, plugin disabling.");
-            pm.disablePlugin(this);
-            return;
-        }
-        if (!skriptPlugin.isEnabled()) {
-            Util.log("&cDependency Skript is not enabled, plugin disabling.");
-            Util.log("&cThis could mean SkBee is being forced to load before Skript.");
-            pm.disablePlugin(this);
-            return;
-        }
-        if (!Skript.isAcceptRegistrations()) {
-            // SkBee should be loading right after Skript, during Skript's registration period
-            // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
-            // We need to find the route of this issue, so far the only plugin I know that does this is FAWE
-            Util.log("&cSkript is no longer accepting registrations.");
-            Util.log("&cNo clue how this could happen.");
-            Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
-            pm.disablePlugin(this);
-            return;
-        }
-        if (!Skript.isRunningMinecraft(1, 17, 1)) {
-            Util.log("&cYour server version &7'&b%s&7'&c is not supported, only MC 1.17.1+ is supported!", Skript.getMinecraftVersion());
+        if (!canLoadPlugin()) {
             pm.disablePlugin(this);
             return;
         }
@@ -94,7 +75,53 @@ public class SkBee extends JavaPlugin {
         addon.setLanguageFileDirectory("lang");
         this.nbtApi = new NBTApi();
 
-        // Load Skript elements
+        loadSkriptElements();
+        loadCommands();
+        loadMetrics();
+
+        // Beta check + notice
+        String version = getDescription().getVersion();
+        if (version.contains("-")) {
+            Util.log("&eThis is a BETA build, things may not work as expected, please report any bugs on GitHub");
+            Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
+        }
+
+        UpdateChecker.checkForUpdate(version);
+        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", version, (float) (System.currentTimeMillis() - start) / 1000);
+
+        if (this.beeWorldConfig != null && this.config.AUTO_LOAD_WORLDS) {
+            this.beeWorldConfig.loadCustomWorlds();
+        }
+    }
+
+    private boolean canLoadPlugin() {
+        if (skriptPlugin == null) {
+            Util.log("&cDependency Skript was not found, plugin disabling.");
+            return false;
+        }
+        if (!skriptPlugin.isEnabled()) {
+            Util.log("&cDependency Skript is not enabled, plugin disabling.");
+            Util.log("&cThis could mean SkBee is being forced to load before Skript.");
+            return false;
+        }
+        if (!Skript.isAcceptRegistrations()) {
+            // SkBee should be loading right after Skript, during Skript's registration period
+            // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
+            // We need to find the route of this issue, so far the only plugin I know that does this is FAWE
+            Util.log("&cSkript is no longer accepting registrations.");
+            Util.log("&cNo clue how this could happen.");
+            Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
+            return false;
+        }
+        Version version = new Version(EARLIEST_VERSION);
+        if (!Skript.isRunningMinecraft(version)) {
+            Util.log("&cYour server version &7'&bMC %s&7'&c is not supported, only &7'&bMC %s+&7'&c is supported!", Skript.getMinecraftVersion(), version);
+            return false;
+        }
+        return true;
+    }
+
+    private void loadSkriptElements() {
         loadNBTElements();
         loadRecipeElements();
         loadScoreboardElements();
@@ -111,24 +138,11 @@ public class SkBee extends JavaPlugin {
         loadStatisticElements();
         loadVillagerElements();
         loadAdvancementElements();
+    }
 
+    private void loadCommands() {
         //noinspection ConstantConditions
         getCommand("skbee").setExecutor(new SkBeeInfo(this));
-
-        // Beta check + notice
-        String version = getDescription().getVersion();
-        if (version.contains("-")) {
-            Util.log("&eThis is a BETA build, things may not work as expected, please report any bugs on GitHub");
-            Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
-        }
-
-        loadMetrics();
-        UpdateChecker.checkForUpdate(version);
-        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", version, (float) (System.currentTimeMillis() - start) / 1000);
-
-        if (this.beeWorldConfig != null && this.config.AUTO_LOAD_WORLDS) {
-            this.beeWorldConfig.loadCustomWorlds();
-        }
     }
 
     private void loadNBTElements() {
