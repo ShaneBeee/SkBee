@@ -27,7 +27,7 @@ import java.util.List;
         "You can also set/delete them or add to them. You can also get/set/delete a specific recipe."})
 @Examples({"add {_recipe} to merchant recipes of {_merchant}",
         "set merchant recipe 1 of {_merchant} to {_recipe}"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
 
     static {

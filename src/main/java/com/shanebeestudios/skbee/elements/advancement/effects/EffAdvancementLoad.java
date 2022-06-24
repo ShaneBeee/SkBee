@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
         "NOTE: Bukkit has marked this as 'Unsafe', so please use at your own risk.",
         "Watch console for errors when loading an advancement."})
 @Examples("¯\\_(ツ)_/¯")
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class EffAdvancementLoad extends Effect {
 
     static {

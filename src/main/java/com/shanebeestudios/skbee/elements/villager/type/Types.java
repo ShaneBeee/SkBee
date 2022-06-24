@@ -31,7 +31,7 @@ public class Types {
                     .description("Represent the types of professions for villagers.",
                             "Due to not parsing correctly, the professions are suffixed with 'profession'.")
                     .usage(VILLAGER_PROFESSION_ENUM.getAllNames())
-                    .since("INSERT VERSION")
+                    .since("1.17.0")
                     .parser(VILLAGER_PROFESSION_ENUM.getParser()));
         }
 
@@ -45,7 +45,7 @@ public class Types {
                     .description("Represents the types of villagers.",
                             "Due to possible overlaps with biomes, types are suffixed with 'villager'.")
                     .usage(VILLAGER_TYPE_ENUM.getAllNames())
-                    .since("INSERT VERSION")
+                    .since("1.17.0")
                     .parser(VILLAGER_TYPE_ENUM.getParser()));
         }
 
@@ -57,7 +57,7 @@ public class Types {
                     .name("Merchant")
                     .description("Represents a merchant.",
                             "A merchant is a special type of inventory which can facilitate custom trades between items.")
-                    .since("INSERT VERSION")
+                    .since("1.17.0")
                     .parser(new Parser<>() {
 
                         @SuppressWarnings("NullableProblems")
@@ -89,7 +89,7 @@ public class Types {
                     .name("Merchant Inventory")
                     .description("Represents a trading inventory between a player and a merchant.",
                             "The holder of this Inventory is the owning Villager, or null if the player is trading with a custom merchant.")
-                    .since("INSERT VERSION"));
+                    .since("1.17.0"));
         }
 
         // MERCHANT RECIPE
@@ -99,7 +99,7 @@ public class Types {
                     .user("merchant ?recipes?")
                     .name("Merchant Recipe")
                     .description("Represents a merchant's trade. Trades can take one or two ingredients, and provide one result.")
-                    .since("INSERT VERSION")
+                    .since("1.17.0")
                     .parser(new Parser<>() {
 
                         @Override

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("Open a merchant/villager to a player.")
 @Examples({"set {_m} to new merchant named \"Le Merchant\"",
         "open merchant {_m} to player"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class EffOpenMerchant extends Effect {
 
     static {

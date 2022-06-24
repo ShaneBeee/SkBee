@@ -25,7 +25,7 @@ import java.util.List;
 @Description("Get a list of all available advancements currently registered on the server.")
 @Examples({"set {_a::*} to all available advancements",
         "loop all available advancements:"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprAdvancementAll extends SimpleExpression<Advancement> {
 
     static {

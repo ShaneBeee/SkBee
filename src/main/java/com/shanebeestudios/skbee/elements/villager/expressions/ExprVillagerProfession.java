@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Villager - Profession")
 @Description("Represents the profession of a villager.")
 @Examples("set profession of target entity to nitwit profession")
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprVillagerProfession extends SimplePropertyExpression<LivingEntity, Profession> {
 
     static {

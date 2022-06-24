@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
         "By default it will drop one of their held item, or you can optionally drop the whole stack."})
 @Examples({"make player drop all of held item",
         "force all players to drop all of their held items"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class EffDropItem extends Effect {
 
     static {

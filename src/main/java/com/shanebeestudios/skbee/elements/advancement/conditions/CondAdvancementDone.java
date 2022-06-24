@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Advancement - Done")
 @Description("Check if the advancement progress is done.")
 @Examples("if advancement progress of {_advancement} of player is done:")
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class CondAdvancementDone extends Condition {
 
     static {

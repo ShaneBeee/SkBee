@@ -29,7 +29,7 @@ import org.jetbrains.annotations.NotNull;
         "load chunk chunk at location(1,1,1, world \"world\")",
         "load chunk at 150,150 in world \"world\"",
         "load chunk at 150,150 in world \"world\" with ticket"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class EffLoadChunk extends Effect {
 
     private static final SkBee PLUGIN = SkBee.getPlugin();

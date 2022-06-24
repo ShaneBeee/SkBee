@@ -31,7 +31,7 @@ import java.util.List;
 @Examples({"set item cooldown of player's tool for player to 1 second",
         "set item cooldown of nether star for all players to 2 seconds",
         "reset item cooldown of player's tool"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprItemCooldown extends SimpleExpression<Timespan> {
 
     static {

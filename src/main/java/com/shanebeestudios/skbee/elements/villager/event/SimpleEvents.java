@@ -21,7 +21,7 @@ public class SimpleEvents {
                         "`event-number` = Used to get the index of the trade the player clicked on.",
                         "`event-merchantrecipe` = The merchant recipe of the trade that the player clicked on.")
                 .examples("")
-                .since("INSERT VERSION");
+                .since("1.17.0");
 
         EventValues.registerEventValue(TradeSelectEvent.class, MerchantInventory.class, new Getter<>() {
             @Override

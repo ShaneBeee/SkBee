@@ -34,7 +34,7 @@ import java.util.List;
         "add 10 to mine block stat using diamond ore for player",
         "remove 10 from chest opened stat for player",
         "reset mob kills stat for player"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprPlayerStatistic extends SimpleExpression<Number> {
 
     static {

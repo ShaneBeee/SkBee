@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
         "and the player's currently active status effects (ex: hero of the village).",
         "The influence of the player's reputation on the special price is scaled by the recipe's price multiplier."})
 @Examples("set {_m} to merchant recipe with result diamond sword with max uses 10")
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprMerchantRecipe extends SimpleExpression<MerchantRecipe> {
 
     static {

@@ -17,7 +17,7 @@ public class SimpleEvents {
                         "[player] advancement done")
                 .description("Called when a player has completed all criteria in an advancement.")
                 .examples("")
-                .since("INSERT VERSION");
+                .since("1.17.0");
 
         EventValues.registerEventValue(PlayerAdvancementDoneEvent.class, String.class, new Getter<>() {
             @Override

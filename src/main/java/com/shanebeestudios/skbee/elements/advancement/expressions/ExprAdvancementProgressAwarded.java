@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Advancement - Progress Criteria")
 @Description("Get the awarded/remaining criteria of an advancement progress.")
 @Examples("set {_c::*} to awarded criteria of advancement progress of {_advancement} of player")
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprAdvancementProgressAwarded extends SimpleExpression<String> {
 
     static {

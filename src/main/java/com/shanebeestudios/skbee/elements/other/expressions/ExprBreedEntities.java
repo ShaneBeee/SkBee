@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("Get the entities involved in a breed event.")
 @Examples({"on entity breed:", "\nif breeding mother is a sheep:",
         "\n\nkill breeding player"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprBreedEntities extends SimpleExpression<Entity> {
 
     static {

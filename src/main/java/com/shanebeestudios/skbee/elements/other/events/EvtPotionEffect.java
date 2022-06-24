@@ -33,7 +33,7 @@ public class EvtPotionEffect extends SkriptEvent {
                         "past event-potioneffect = old effect.",
                         "event-potioneffecttype = type of potion effect.")
                 .examples("")
-                .since("INSERT VERSION");
+                .since("1.17.0");
 
         EventValues.registerEventValue(EntityPotionEffectEvent.class, PotionEffect.class, new Getter<>() {
             @Override

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Merchant - Create")
 @Description("Creates a new Merchant object with a title.")
 @Examples("set {_merch} to new merchant named \"Le-Merchant\"")
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprMerchant extends SimpleExpression<Merchant> {
 
     static {

@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
         "set villager experience of last spawned villager to 10",
         "if villager level of target entity > 2:",
         "if villager experience of target entity > 10:"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprVillagerLevel extends SimplePropertyExpression<LivingEntity, Number> {
 
     static {

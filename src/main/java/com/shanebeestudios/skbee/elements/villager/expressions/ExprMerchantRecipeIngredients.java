@@ -30,7 +30,7 @@ import java.util.List;
 @Examples({"set {_ing::*} to ingredients of merchant recipe {_recipe}",
         "set ingredients of merchant recipe {_recipe} to diamond and stone",
         "set {_result} to result item of merchant recipe {_recipe}"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprMerchantRecipeIngredients extends SimpleExpression<ItemType> {
 
     static {

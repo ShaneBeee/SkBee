@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("Represents the type of villager. Resetting will set a villager to a plains villager.")
 @Examples({"set {_t} to villager type of last spawned villager",
         "set villager type of target entity to desert villager"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprVillagerType extends SimplePropertyExpression<LivingEntity, Type> {
 
     static {

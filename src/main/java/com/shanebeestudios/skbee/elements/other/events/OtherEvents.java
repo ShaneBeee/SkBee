@@ -118,7 +118,7 @@ public class OtherEvents {
                 .description("Called when one Entity breeds with another Entity.")
                 .examples("on entity breed:", "\nif breeding mother is a sheep:",
                         "\n\nkill breeding player")
-                .since("INSERT VERSION");
+                .since("1.17.0");
 
         EventValues.registerEventValue(EntityBreedEvent.class, Player.class, new Getter<>() {
             @Override

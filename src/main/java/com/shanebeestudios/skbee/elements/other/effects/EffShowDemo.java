@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
         "Servers can modify the text on this screen using a resource pack."})
 @Examples({"show demo screen to all players",
         "show demo screen to player"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class EffShowDemo extends Effect {
 
     static {

@@ -21,7 +21,7 @@ import java.util.List;
 @Name("Advancement - Criteria")
 @Description("Get a list of the criteria for an advancement.")
 @Examples("set {_c::*} to criteria of {_advancement}")
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprAdvancementCriteria extends SimpleExpression<String> {
 
     static {

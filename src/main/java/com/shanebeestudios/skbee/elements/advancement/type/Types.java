@@ -26,7 +26,7 @@ public class Types {
                     .name("Advancement")
                     .description("Represents an advancement. These CAN be parsed, see examples.")
                     .examples("set {_a} to \"minecraft:nether/use_lodestone\" parsed as advancement")
-                    .since("INSERT VERSION")
+                    .since("1.17.0")
                     .parser(new Parser<>() {
 
                         @SuppressWarnings("NullableProblems")
@@ -94,7 +94,7 @@ public class Types {
                     .description("Represents the advancement progress of a player.",
                             "You will see `%advancementpro%` in the docs, this is due to a silly issue with Skript",
                             "where I couldn't use `progress` in expressions.")
-                    .since("INSERT VERSION"));
+                    .since("1.17.0"));
         }
     }
 

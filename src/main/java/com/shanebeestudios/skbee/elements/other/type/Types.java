@@ -51,7 +51,7 @@ public class Types {
                     .name("Potion Effect Cause")
                     .description("Represents the different causes of an entity potion effect event.")
                     .usage(POTION_EFFECT_EVENT_CAUSE.getAllNames())
-                    .since("INSERT VERSION")
+                    .since("1.17.0")
                     .parser(POTION_EFFECT_EVENT_CAUSE.getParser()));
         }
 

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Absorption Amount")
 @Description("Represents the absorption amount of an entity.")
 @Examples("set absorption amount of player to 5")
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class ExprAbsorptionAmount extends SimplePropertyExpression<Entity, Number> {
 
     static {

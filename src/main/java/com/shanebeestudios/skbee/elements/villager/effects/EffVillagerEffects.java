@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
         "wake up all villagers",
         "make target entity shake his head",
         "make target entity sleep at location(100, 64, 100, world \"world\")"})
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class EffVillagerEffects extends Effect {
 
     private static boolean CAN_ZOMBIFY = Skript.methodExists(Villager.class, "zombify");

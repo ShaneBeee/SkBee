@@ -23,7 +23,7 @@ public class Types {
                         "Underscores in stat names are not required, you can use spaces.",
                         "NOTE: 'play_one_minute' stat's name is misleading, it's actually amount of ticks played.")
                 .usage(getNames())
-                .since("INSERT VERSION")
+                .since("1.17.0")
                 .parser(STATISTICS_ENUM.getParser()));
     }
 

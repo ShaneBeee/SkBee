@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Advancement - Progress Criteria")
 @Description("Award or revoke criteria of an advancement progress.")
 @Examples("TODO") // TODO
-@Since("INSERT VERSION")
+@Since("1.17.0")
 public class EffAdvancementCriteriaAward extends Effect {
 
     static {

@@ -91,7 +91,7 @@ public class PaperEvents {
                     .examples("on player stop using item:",
                             "\tif event-item is a spyglass:",
                             "\t\tkill player")
-                    .since("INSERT VERSION");
+                    .since("1.17.0");
             EventValues.registerEventValue(PlayerStopUsingItemEvent.class, ItemType.class, new Getter<>() {
                 @Override
                 public ItemType get(PlayerStopUsingItemEvent event) {
