@@ -13,11 +13,13 @@ public class UpdateChecker {
 
     public static void checkForUpdate(String pluginVersion) {
         Util.log("Checking for update...");
+        if (pluginVersion.contains("-")) {
+            Util.logLoading("&eYou're running a beta version, no need to check for an update!");
+            return;
+        }
         getVersion(version -> {
             if (version.equalsIgnoreCase(pluginVersion)) {
                 Util.logLoading("&aPlugin is up to date!");
-            } else if (pluginVersion.contains("-")) {
-                Util.logLoading("&eYou're running a beta version, no need to check for an update!");
             } else {
                 Util.logLoading("&cPlugin is not up to date!");
                 Util.logLoading(" - Current version: &cv" + pluginVersion);
