@@ -1,20 +1,25 @@
 package com.shanebeestudios.skbee.elements.other.events;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("unused")
 public class OtherEvents {
 
     static {
@@ -106,6 +111,43 @@ public class OtherEvents {
                 .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")
                 .examples("on player shear entity:")
                 .since("1.8.0");
+
+        // Entity Breed Event
+        Skript.registerEvent("Entity Breed", SimpleEvent.class, EntityBreedEvent.class,
+                        "entity breed")
+                .description("Called when one Entity breeds with another Entity.")
+                .examples("on entity breed:", "\nif breeding mother is a sheep:",
+                        "\n\nkill breeding player")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(EntityBreedEvent.class, Player.class, new Getter<>() {
+            @Override
+            public @Nullable Player get(EntityBreedEvent breedEvent) {
+                LivingEntity breeder = breedEvent.getBreeder();
+                if (breeder instanceof Player player) {
+                    return player;
+                }
+                return null;
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EntityBreedEvent.class, Entity.class, new Getter<>() {
+            @Override
+            public @Nullable Entity get(EntityBreedEvent breedEvent) {
+                return breedEvent.getEntity();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(EntityBreedEvent.class, ItemType.class, new Getter<>() {
+            @Override
+            public @Nullable ItemType get(EntityBreedEvent breedEvent) {
+                ItemStack bredWith = breedEvent.getBredWith();
+                if (bredWith != null) {
+                    return new ItemType(bredWith);
+                }
+                return null;
+            }
+        }, 0);
     }
 
 }
