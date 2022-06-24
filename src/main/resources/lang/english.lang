@@ -38,3 +38,5 @@ types:
 	merchant: merchant¦s
 	merchantrecipe: merchant recipe¦s
 	merchantinventory: merchant inventor(y|ies)
+	advancement: advancement¦s
+	advancementpro: advancement progress¦es
