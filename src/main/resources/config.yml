@@ -57,6 +57,9 @@ elements:
   # Enable advancement elements
   advancement: true
 
+  # Enable world border elements
+  world-border: true
+
 recipe:
   # This is the namespace all recipes will be saved under
   # You can choose whatever you wish

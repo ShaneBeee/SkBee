@@ -138,6 +138,7 @@ public class SkBee extends JavaPlugin {
         loadStatisticElements();
         loadVillagerElements();
         loadAdvancementElements();
+        loadWorldBorderElements();
     }
 
     private void loadCommands() {
@@ -404,6 +405,20 @@ public class SkBee extends JavaPlugin {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.advancement");
             Util.logLoading("&5Advancement Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
+    }
+
+    private void loadWorldBorderElements() {
+        if (!this.config.ELEMENTS_WORLD_BORDER) {
+            Util.logLoading("&5World Border Elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.worldborder");
+            Util.logLoading("&5World Border Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
