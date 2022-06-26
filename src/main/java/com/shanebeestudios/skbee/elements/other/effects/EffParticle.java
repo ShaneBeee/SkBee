@@ -20,10 +20,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Particle Spawn")
-@Description({"Spawn a particle. This system is more inline with how Bukkit deals with particles, hence the amount of patterns.",
-        "DO NOT USE '(spawn|play)' part of syntax, they're horribly slow at parsing and will be removed in the future, use '(lerp|draw|make)' instead.",
+@Description({"Spawn a particle. This system is more inline with how Bukkit deals with particles, hence the choices in the pattern.",
         "Some particles may be affected differently by these values, so let's break them down:",
-        "\nfirst number = count, how many particles to spawn at once.",
+        "\nfirst number = count, how many particles to spawn at once. (use '0' if you notice the particle kinda flies away.)",
         "\nparticle = the particle to spawn.",
         "\nusing = the data used for this particle (some particles like 'block', 'item' and 'dust' require more data).",
         "\nlocation = where you are going to spawn the particle.",
@@ -32,20 +31,23 @@ import org.jetbrains.annotations.Nullable;
         "\nextra = the extra data for this particle, depends on the particle used (normally speed).",
         "\nforce = whether to send the particle to players within an extended range and encourage ",
         "their client to render it regardless of settings (this only works when not using `for player[s]`) (default = false)",
+        "\nfor %players% = will only send this particle to a player, not the whole server.",
         "\nRequires Minecraft 1.13+"})
 @Examples({"make 3 of item particle using diamond at location of player",
         "make 1 of block particle using dirt at location of target block",
         "make 10 of poof at player with offset vector(2, 2, 2) with extra 0.5",
         "draw 20 of dust using dustOption(blue, 10) at location above target block",
         "draw 1 of dust_color_transition using dustTransition(blue, green, 3) at location of player",
-        "draw 1 of vibration using vibration({loc1}, {loc2}, 1 second) at {loc1} with force"})
+        "draw 1 of vibration using vibration({loc1}, {loc2}, 1 second) at {loc1} with force",
+        "make 0 of shriek using 1 above target block of player",
+        "make 1 of sculk_charge using 0.1 at {_loc} with force"})
 @Since("1.9.0")
 public class EffParticle extends Effect {
 
     static {
         Skript.registerEffect(EffParticle.class,
                 "(lerp|draw|make) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption/dusttransition/vibration" +
-                        "%] %directions% %locations% [with offset %-vector%] [with extra %-number%] [(1¦with force)] [(for|to) %-players%]");
+                        "/number%] %directions% %locations% [with offset %-vector%] [with extra %-number%] [(1¦with force)] [(for|to) %-players%]");
     }
 
     private Expression<Number> count;
