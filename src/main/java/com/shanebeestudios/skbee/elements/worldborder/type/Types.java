@@ -45,8 +45,8 @@ public class Types {
                     .parser(new Parser<>() {
                         @SuppressWarnings("NullableProblems")
                         @Override
-                        public @Nullable WorldBorder parse(String s, ParseContext context) {
-                            return null;
+                        public boolean canParse(ParseContext context) {
+                            return false;
                         }
 
                         @SuppressWarnings("NullableProblems")
