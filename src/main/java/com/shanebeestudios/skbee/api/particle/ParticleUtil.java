@@ -55,7 +55,6 @@ public class ParticleUtil {
 
                 if (!PARTICLE.toString().contains("LEGACY")) {
                     PARTICLES.put(KEY, PARTICLE);
-                    Util.log("&7Particle: &b%s&7, Key: &a%s", PARTICLE, KEY);
                 }
             }
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
