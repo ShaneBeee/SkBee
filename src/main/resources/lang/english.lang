@@ -26,7 +26,7 @@ types:
 	attributeoperation: attribute operation¦s
 	attributepair: attribute pair¦s
 	attributemodifier: attribute modifier¦s
-	fishstate: fish state¦s
+	fishingstate: fish[ing] state¦s
 	bossbar: boss bars¦s
 	bossbarcolor: boss bar color¦s
 	bossbarstyle: boss bar style¦s

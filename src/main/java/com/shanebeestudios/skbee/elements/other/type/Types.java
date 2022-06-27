@@ -19,9 +19,6 @@ import org.bukkit.Particle.DustOptions;
 import org.bukkit.Particle.DustTransition;
 import org.bukkit.Vibration;
 import org.bukkit.Vibration.Destination.BlockDestination;
-import org.bukkit.entity.Villager.Profession;
-import org.bukkit.entity.Villager.Type;
-import org.bukkit.event.entity.EntityPotionEffectEvent;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.jetbrains.annotations.Nullable;
@@ -34,8 +31,8 @@ public class Types {
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(State.class) == null) {
             EnumUtils<State> FISH_STATE_ENUM = new EnumUtils<>(State.class);
-            Classes.registerClass(new ClassInfo<>(State.class, "fishstate")
-                    .user("fish ?states?")
+            Classes.registerClass(new ClassInfo<>(State.class, "fishingstate")
+                    .user("fish(ing)? ?states?")
                     .name("Fish Event State")
                     .usage(FISH_STATE_ENUM.getAllNames())
                     .since("1.15.2")
