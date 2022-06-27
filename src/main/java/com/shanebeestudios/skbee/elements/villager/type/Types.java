@@ -7,6 +7,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
@@ -33,6 +34,9 @@ public class Types {
                     .usage(VILLAGER_PROFESSION_ENUM.getAllNames())
                     .since("1.17.0")
                     .parser(VILLAGER_PROFESSION_ENUM.getParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'profession' already.");
+            Util.logLoading("You may have to use their profession in SkBee's 'Villager Profession' expression.");
         }
 
         // VILLAGER TYPE
@@ -47,6 +51,9 @@ public class Types {
                     .usage(VILLAGER_TYPE_ENUM.getAllNames())
                     .since("1.17.0")
                     .parser(VILLAGER_TYPE_ENUM.getParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'villagertype' already.");
+            Util.logLoading("You may have to use their villagertype in SkBee's 'Villager Type' expression.");
         }
 
         // MERCHANT

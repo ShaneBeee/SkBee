@@ -6,6 +6,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
 import org.eclipse.jdt.annotation.Nullable;
@@ -73,6 +74,9 @@ public class Types {
                         }
                     })
                     .changer(BORDER_CHANGER));
+        } else {
+            Util.logLoading("It looks like another addon registered 'worldborder' already.");
+            Util.logLoading("You may have to use their worldborder in SkBee's 'WorldBorder elements.");
         }
     }
 }

@@ -6,6 +6,7 @@ import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.yggdrasil.Fields;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.advancement.Advancement;
@@ -84,6 +85,9 @@ public class Types {
                             return false;
                         }
                     }));
+        } else {
+            Util.logLoading("It looks like another addon registered 'advancement' already.");
+            Util.logLoading("You may have to use their advancements in SkBee's 'advancement' elements.");
         }
 
         // Only register if no other addons have registered this class
@@ -95,6 +99,9 @@ public class Types {
                             "You will see `%advancementpro%` in the docs, this is due to a silly issue with Skript",
                             "where I couldn't use `progress` in expressions.")
                     .since("1.17.0"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'advancementpro' already.");
+            Util.logLoading("You may have to use their advancement progresses in SkBee's 'advancement' elements.");
         }
     }
 

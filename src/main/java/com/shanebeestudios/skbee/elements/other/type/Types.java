@@ -37,6 +37,9 @@ public class Types {
                     .usage(FISH_STATE_ENUM.getAllNames())
                     .since("1.15.2")
                     .parser(FISH_STATE_ENUM.getParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'fishingstate' already.");
+            Util.logLoading("You may have to use their fishing states in SkBee's 'Fish Event State' expression.");
         }
 
         // Only register if no other addons have registered this class
@@ -50,6 +53,9 @@ public class Types {
                     .usage(POTION_EFFECT_EVENT_CAUSE.getAllNames())
                     .since("1.17.0")
                     .parser(POTION_EFFECT_EVENT_CAUSE.getParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'potioneffectcause' already.");
+            Util.logLoading("You may have to use their potion effect causes in SkBee's 'Entity Potion Effect' event.");
         }
 
         // Only register if no other addons have registered this class
@@ -91,8 +97,8 @@ public class Types {
                         }
                     }));
         } else {
-            Util.log("It looks like another addon registered 'particle' already. ");
-            Util.log("You may have to use their particles in SkBee's 'particle spawn' effect.");
+            Util.logLoading("It looks like another addon registered 'particle' already.");
+            Util.logLoading("You may have to use their particles in SkBee's 'particle spawn' effect.");
         }
 
         Classes.registerClass(new ClassInfo<>(DustOptions.class, "dustoption")
