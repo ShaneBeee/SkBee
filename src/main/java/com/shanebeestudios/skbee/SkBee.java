@@ -59,6 +59,7 @@ public class SkBee extends JavaPlugin {
 
     @Override
     public void onEnable() {
+        // Let's get this party started...
         long start = System.currentTimeMillis();
         instance = this;
         this.config = new Config(this);
@@ -66,14 +67,11 @@ public class SkBee extends JavaPlugin {
         this.pm = Bukkit.getPluginManager();
         this.skriptPlugin = pm.getPlugin("Skript");
 
+        // Check if SkriptAddon can actually load
         if (!canLoadPlugin()) {
             pm.disablePlugin(this);
             return;
         }
-
-        addon = Skript.registerAddon(this);
-        addon.setLanguageFileDirectory("lang");
-        this.nbtApi = new NBTApi();
 
         loadSkriptElements();
         loadCommands();
@@ -89,9 +87,11 @@ public class SkBee extends JavaPlugin {
         UpdateChecker.checkForUpdate(version);
         Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", version, (float) (System.currentTimeMillis() - start) / 1000);
 
+        // Load custom worlds if enabled in config
         if (this.beeWorldConfig != null && this.config.AUTO_LOAD_WORLDS) {
             this.beeWorldConfig.loadCustomWorlds();
         }
+        // Looks like we made it after all
     }
 
     private boolean canLoadPlugin() {
@@ -122,6 +122,10 @@ public class SkBee extends JavaPlugin {
     }
 
     private void loadSkriptElements() {
+        addon = Skript.registerAddon(this);
+        addon.setLanguageFileDirectory("lang");
+        this.nbtApi = new NBTApi();
+
         loadNBTElements();
         loadRecipeElements();
         loadScoreboardElements();
