@@ -18,6 +18,7 @@ import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import org.jetbrains.annotations.NotNull;
 
 @Name("Bound - Create/Remove")
 @Description("Create/Remove a bound with id between 2 locations. " +
@@ -43,7 +44,7 @@ public class EffBoundCreate extends Effect {
     private boolean create;
     private boolean full;
 
-    @SuppressWarnings({"unchecked", "null"})
+    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
         this.id = (Expression<String>) exprs[0];
@@ -56,17 +57,18 @@ public class EffBoundCreate extends Effect {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        if (this.id.getSingle(event) == null) return;
         String id = this.id.getSingle(event);
-
-        if (SkBee.getPlugin().getBoundConfig().boundExists(id)) {
-            Util.skriptError("&cBound with id '%s' already exists, cannot overwrite!", id);
-            return;
-        }
+        if (id == null) return;
 
         if (create) {
+            if (boundConfig.boundExists(id)) {
+                Util.skriptError("&cBound with id '%s' already exists, cannot overwrite!", id);
+                return;
+            }
+
             Location lesser = this.loc1.getSingle(event);
             Location greater = this.loc2.getSingle(event);
             if (lesser == null || greater == null) return;
@@ -110,7 +112,7 @@ public class EffBoundCreate extends Effect {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String type = this.create ? "create" : "delete";
         String full = this.full ? " full " : " ";
         String create = this.create ? " between " + loc1.toString(e, d) + " and " + loc2.toString(e, d) : "";
