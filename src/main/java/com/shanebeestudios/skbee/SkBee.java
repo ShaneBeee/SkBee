@@ -148,6 +148,7 @@ public class SkBee extends JavaPlugin {
     private void loadCommands() {
         //noinspection ConstantConditions
         getCommand("skbee").setExecutor(new SkBeeInfo(this));
+        pm.registerEvents(new UpdateChecker(this), this);
     }
 
     private void loadNBTElements() {

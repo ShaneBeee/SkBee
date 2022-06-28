@@ -2,6 +2,12 @@ package com.shanebeestudios.skbee.api.util;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
+import com.shanebeestudios.skbee.SkBee;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -9,7 +15,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.function.Consumer;
 
-public class UpdateChecker {
+public class UpdateChecker implements Listener {
+
+    private static String UPDATE_VERSION;
 
     public static void checkForUpdate(String pluginVersion) {
         Util.log("Checking for update...");
@@ -24,6 +32,7 @@ public class UpdateChecker {
                 Util.logLoading("&cPlugin is not up to date!");
                 Util.logLoading(" - Current version: &cv" + pluginVersion);
                 Util.logLoading(" - Available update: &av" + version);
+                UPDATE_VERSION = version;
             }
         });
     }
@@ -39,4 +48,24 @@ public class UpdateChecker {
             throw new RuntimeException(e);
         }
     }
+
+    private final SkBee PLUGIN;
+
+    public UpdateChecker(SkBee plugin) {
+        this.PLUGIN = plugin;
+    }
+
+    @EventHandler
+    private void onJoin(PlayerJoinEvent event) {
+        if (UPDATE_VERSION == null) return;
+
+        Player player = event.getPlayer();
+        if (!player.hasPermission("skbee.update.check")) return;
+
+        Bukkit.getScheduler().runTaskLater(PLUGIN, bukkitTask -> {
+            Util.sendColMsg(player, "&7[&bSk&3Bee&7] update available: &a" + UPDATE_VERSION);
+            Util.sendColMsg(player, "&7[&bSk&3Bee&7] download at &bhttps://github.com/ShaneBeee/SkBee/releases");
+        }, 60);
+    }
+
 }
