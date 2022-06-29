@@ -66,7 +66,8 @@ public class EffSpawnEntityNBT extends Effect {
             assert loc != null : locations;
             for (final EntityType type : et) {
                 for (int i = 0; i < a.doubleValue() * type.getAmount(); i++) {
-                    spawn(loc, type.data.getType(), compound);
+                    Entity spawn = type.data.spawn(loc, entity -> NBTApi.addNBTToEntity(entity, compound));
+                    SkriptUtils.setLastSpawned(spawn);
                 }
             }
         }
@@ -76,11 +77,6 @@ public class EffSpawnEntityNBT extends Effect {
     public @NotNull String toString(Event e, boolean debug) {
         return "spawn " + (amount != null ? amount.toString(e, debug) + " " : "") + types.toString(e, debug) +
                 " " + locations.toString(e, debug) + " " + nbt.toString(e, debug);
-    }
-
-    private <T extends Entity> void spawn(Location loc, Class<T> type, NBTCompound nbt) {
-        Entity entity = loc.getWorld().spawn(loc, type, ent -> NBTApi.addNBTToEntity(ent, nbt));
-        SkriptUtils.setLastSpawned(entity);
     }
 
 }
