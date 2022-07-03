@@ -1,0 +1,105 @@
+package com.shanebeestudios.skbee.elements.villager.expressions;
+
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
+import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.MerchantRecipe;
+import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@SuppressWarnings("NullableProblems")
+@Name("Merchant Recipe - Ingredients")
+@Description({"Represents the ingredients/result of a merchant recipe.",
+        "Ingredients can be set, but the result can not be changed.",
+        "If you wish to change the result, you will have to create a new merchant recipe."})
+@Examples({"set {_ing::*} to ingredients of merchant recipe {_recipe}",
+        "set ingredients of merchant recipe {_recipe} to diamond and stone",
+        "set {_result} to result item of merchant recipe {_recipe}"})
+@Since("1.17.0")
+public class ExprMerchantRecipeIngredients extends SimpleExpression<ItemType> {
+
+    static {
+        Skript.registerExpression(ExprMerchantRecipeIngredients.class, ItemType.class, ExpressionType.SIMPLE,
+                "(ingredients|1¦result [item]) of merchant recipe %merchantrecipe%");
+    }
+
+    private int pattern;
+    private Expression<MerchantRecipe> recipe;
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
+        this.pattern = parseResult.mark;
+        this.recipe = (Expression<MerchantRecipe>) exprs[0];
+        return true;
+    }
+
+    @Override
+    protected @Nullable ItemType[] get(Event event) {
+        MerchantRecipe recipe = this.recipe.getSingle(event);
+        if (recipe == null) return null;
+
+        if (pattern == 0) {
+            List<ItemType> items = new ArrayList<>();
+            recipe.getIngredients().forEach(itemStack -> items.add(new ItemType(itemStack)));
+            return items.toArray(new ItemType[0]);
+        } else {
+            ItemStack result = recipe.getResult();
+            ItemType itemType = new ItemType(result);
+            return new ItemType[]{itemType};
+        }
+    }
+
+    @Override
+    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+        if (mode == ChangeMode.SET && pattern == 0) {
+            return CollectionUtils.array(ItemType[].class);
+        }
+        return null;
+    }
+
+    @Override
+    public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+        MerchantRecipe recipe = this.recipe.getSingle(event);
+        if (recipe == null || mode != ChangeMode.SET) return;
+
+        List<ItemStack> stacks = new ArrayList<>();
+        for (ItemType item : (ItemType[]) delta) {
+            if (stacks.size() <= 1) { // Recipe only accepts 2 ingredients
+                stacks.add(item.getRandom());
+            }
+        }
+        recipe.setIngredients(stacks);
+    }
+
+    @Override
+    public boolean isSingle() {
+        return false;
+    }
+
+    @Override
+    public @NotNull Class<? extends ItemType> getReturnType() {
+        return ItemType.class;
+    }
+
+    @Override
+    public @NotNull String toString(@Nullable Event e, boolean d) {
+        return "ingredients of merchant recipe " + this.recipe.toString(e, d);
+    }
+
+}

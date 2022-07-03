@@ -11,3 +11,7 @@ softdepend:
   - skript-variable-dump
 loadbefore:
   - SkQuery
+commands:
+  skbee:
+    description: Main SkBee command
+    permission: skbee.command

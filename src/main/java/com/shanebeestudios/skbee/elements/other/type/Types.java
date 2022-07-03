@@ -19,6 +19,8 @@ import org.bukkit.Particle.DustOptions;
 import org.bukkit.Particle.DustTransition;
 import org.bukkit.Vibration;
 import org.bukkit.Vibration.Destination.BlockDestination;
+import org.bukkit.entity.Spellcaster;
+import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,12 +32,46 @@ public class Types {
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(State.class) == null) {
             EnumUtils<State> FISH_STATE_ENUM = new EnumUtils<>(State.class);
-            Classes.registerClass(new ClassInfo<>(State.class, "fishstate")
-                    .user("fish ?states?")
+            Classes.registerClass(new ClassInfo<>(State.class, "fishingstate")
+                    .user("fish(ing)? ?states?")
                     .name("Fish Event State")
                     .usage(FISH_STATE_ENUM.getAllNames())
                     .since("1.15.2")
                     .parser(FISH_STATE_ENUM.getParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'fishingstate' already.");
+            Util.logLoading("You may have to use their fishing states in SkBee's 'Fish Event State' expression.");
+        }
+
+        // Only register if no other addons have registered this class
+        if (Classes.getExactClassInfo(Spellcaster.Spell.class) == null) {
+            EnumUtils<Spellcaster.Spell> SPELL_ENUM = new EnumUtils<>(Spellcaster.Spell.class);
+            Classes.registerClass(new ClassInfo<>(Spellcaster.Spell.class, "spell")
+                    .user("spells?")
+                    .name("Spellcaster Spell")
+                    .description("Represents the different spells of a spellcaster.")
+                    .usage(SPELL_ENUM.getAllNames())
+                    .since("1.17.0")
+                    .parser(SPELL_ENUM.getParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'spell' already.");
+            Util.logLoading("You may have to use their spells in SkBee's 'Spell-caster Spell' expression.");
+        }
+
+        // Only register if no other addons have registered this class
+        // EntityPotionEffectEvent.Cause
+        if (Classes.getExactClassInfo(Cause.class) == null) {
+            EnumUtils<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumUtils<>(Cause.class);
+            Classes.registerClass(new ClassInfo<>(Cause.class, "potioneffectcause")
+                    .user("potion ?effect ?causes?")
+                    .name("Potion Effect Cause")
+                    .description("Represents the different causes of an entity potion effect event.")
+                    .usage(POTION_EFFECT_EVENT_CAUSE.getAllNames())
+                    .since("1.17.0")
+                    .parser(POTION_EFFECT_EVENT_CAUSE.getParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'potioneffectcause' already.");
+            Util.logLoading("You may have to use their potion effect causes in SkBee's 'Entity Potion Effect' event.");
         }
 
         // Only register if no other addons have registered this class
@@ -77,8 +113,8 @@ public class Types {
                         }
                     }));
         } else {
-            Util.log("It looks like another addon registered 'particle' already. ");
-            Util.log("You may have to use their particles in SkBee's 'particle spawn' effect.");
+            Util.logLoading("It looks like another addon registered 'particle' already.");
+            Util.logLoading("You may have to use their particles in SkBee's 'particle spawn' effect.");
         }
 
         Classes.registerClass(new ClassInfo<>(DustOptions.class, "dustoption")

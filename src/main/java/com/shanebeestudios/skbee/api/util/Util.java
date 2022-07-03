@@ -5,7 +5,10 @@ import ch.njol.skript.log.ErrorQuality;
 import com.shanebeestudios.skbee.SkBee;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -33,6 +36,10 @@ public class Util {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
+    public static void sendColMsg(CommandSender receiver, String format, Object... objects) {
+        receiver.sendMessage(getColString(String.format(format, objects)));
+    }
+
     public static void log(String log) {
         Bukkit.getConsoleSender().sendMessage(getColString(PREFIX + log));
     }
@@ -57,6 +64,18 @@ public class Util {
 
     public static void debug(String format, Object... objects) {
         debug(String.format(format, objects));
+    }
+
+    private static final List<String> DEBUGS = new ArrayList<>();
+
+    public static void logLoading(String format, Object... objects) {
+        String form = String.format(format, objects);
+        DEBUGS.add(form);
+        log(form);
+    }
+
+    public static List<String> getDebugs() {
+        return DEBUGS;
     }
 
     /**
