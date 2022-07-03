@@ -16,6 +16,7 @@ public class Config {
 
     // Config stuff
     public boolean SETTINGS_DEBUG;
+    public boolean SETTINGS_UPDATE_CHECKER;
     public boolean ELEMENTS_NBT;
     public boolean ELEMENTS_BOARD;
     public boolean ELEMENTS_TEAM;
@@ -84,8 +85,13 @@ public class Config {
         return this.config.getBoolean("elements." + element);
     }
 
+    private boolean getSetting(String setting) {
+        return this.config.getBoolean("settings." + setting);
+    }
+
     private void loadConfigs() {
-        this.SETTINGS_DEBUG = this.config.getBoolean("settings.debug");
+        this.SETTINGS_DEBUG = getSetting("debug");
+        this.SETTINGS_UPDATE_CHECKER = getSetting("update-checker");
         this.ELEMENTS_NBT = getElement("nbt");
         this.ELEMENTS_BOARD = getElement("scoreboard");
         this.ELEMENTS_TEAM = getElement("team");
