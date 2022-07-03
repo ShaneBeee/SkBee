@@ -16,10 +16,10 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
+import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -78,6 +78,30 @@ public class PaperEvents {
                 @Override
                 public ItemType get(PlayerElytraBoostEvent e) {
                     return new ItemType(e.getItemStack());
+                }
+            }, 0);
+        }
+
+        // Player Stop Using Item Event
+        if (Skript.classExists("io.papermc.paper.event.player.PlayerStopUsingItemEvent")) {
+            Skript.registerEvent("Player Stop Using Item", SimpleEvent.class, PlayerStopUsingItemEvent.class, "[player] stop using item")
+                    .description("Called when the server detects a player stopping using an item.",
+                            "Examples of this are letting go of the interact button when holding a bow, an edible item, or a spyglass.",
+                            "event-number is the number of ticks the item was held for. Requires Paper (not sure which version).")
+                    .examples("on player stop using item:",
+                            "\tif event-item is a spyglass:",
+                            "\t\tkill player")
+                    .since("1.17.0");
+            EventValues.registerEventValue(PlayerStopUsingItemEvent.class, ItemType.class, new Getter<>() {
+                @Override
+                public ItemType get(PlayerStopUsingItemEvent event) {
+                    return new ItemType(event.getItem());
+                }
+            }, 0);
+            EventValues.registerEventValue(PlayerStopUsingItemEvent.class, Number.class, new Getter<>() {
+                @Override
+                public Number get(PlayerStopUsingItemEvent event) {
+                    return event.getTicksHeldFor();
                 }
             }, 0);
         }

@@ -4,6 +4,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.reflection.ReflectionConstants;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -121,14 +122,16 @@ public class ParticleUtil {
             return "dust-transition";
         } else if (dataType == Vibration.class) {
             return "vibration";
-
+        } else if (dataType == Integer.class) {
+            return "number(int)";
+        } else if (dataType == Float.class) {
+            return "number(float)";
         }
         // For future particle data additions that haven't been added here yet
         return "UNKNOWN";
     }
 
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data, Vector offset, double extra) {
-        if (offset == null) return;
+    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data, Vector offset, double extra, boolean force) {
         Object particleData = getData(particle, data);
         if (particle.getDataType() != Void.class && particleData == null) return;
 
@@ -138,7 +141,7 @@ public class ParticleUtil {
         if (players == null) {
             World world = location.getWorld();
             if (world == null) return;
-            world.spawnParticle(particle, location, count, x, y, z, extra, particleData);
+            world.spawnParticle(particle, location, count, x, y, z, extra, particleData, force);
         } else {
             for (Player player : players) {
                 assert player != null;
@@ -147,49 +150,16 @@ public class ParticleUtil {
         }
     }
 
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data, Vector offset) {
-        if (offset == null) return;
-        Object particleData = getData(particle, data);
-        if (particle.getDataType() != Void.class && particleData == null) return;
-
-        double x = offset.getX();
-        double y = offset.getY();
-        double z = offset.getZ();
-        if (players == null) {
-            World world = location.getWorld();
-            if (world == null) return;
-            world.spawnParticle(particle, location, count, x, y, z, particleData);
-        } else {
-            for (Player player : players) {
-                assert player != null;
-                player.spawnParticle(particle, location, count, x, y, z, particleData);
-            }
-        }
-    }
-
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data) {
-        Object particleData = getData(particle, data);
-        if (particle.getDataType() != Void.class && particleData == null) return;
-
-        if (players == null) {
-            World world = location.getWorld();
-            if (world == null) return;
-            world.spawnParticle(particle, location, count, particleData);
-        } else {
-            for (Player player : players) {
-                assert player != null;
-                player.spawnParticle(particle, location, count, particleData);
-            }
-        }
-    }
-
     private static Object getData(Particle particle, Object data) {
         Class<?> dataType = particle.getDataType();
         if (dataType == Void.class) {
             return null;
-        }
-        if (dataType == ItemStack.class && data instanceof ItemType) {
-            return ((ItemType) data).getRandom();
+        } else if (dataType == Float.class && data instanceof Number number) {
+            return number.floatValue();
+        } else if (dataType == Integer.class && data instanceof Number number) {
+            return number.intValue();
+        } else if (dataType == ItemStack.class && data instanceof ItemType itemType) {
+            return itemType.getRandom();
         } else if (dataType == Particle.DustOptions.class && data instanceof Particle.DustOptions) {
             return data;
         } else if (dataType == Particle.DustTransition.class && data instanceof Particle.DustTransition) {
@@ -199,8 +169,8 @@ public class ParticleUtil {
         } else if (dataType == BlockData.class) {
             if (data instanceof BlockData) {
                 return data;
-            } else if (data instanceof ItemType) {
-                Material material = ((ItemType) data).getMaterial();
+            } else if (data instanceof ItemType itemType) {
+                Material material = itemType.getMaterial();
                 if (material.isBlock()) {
                     return material.createBlockData();
                 }

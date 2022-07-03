@@ -7,6 +7,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import org.bukkit.GameEvent;
 import org.bukkit.NamespacedKey;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -27,11 +28,7 @@ public class Types {
                 .since("1.14.0")
                 .parser(new Parser<GameEvent>() {
 
-                    @Override
-                    public boolean canParse(ParseContext context) {
-                        return true;
-                    }
-
+                    @SuppressWarnings("NullableProblems")
                     @Nullable
                     @Override
                     public GameEvent parse(String string, ParseContext context) {
@@ -39,12 +36,12 @@ public class Types {
                     }
 
                     @Override
-                    public String toString(GameEvent gameEvent, int flags) {
+                    public @NotNull String toString(GameEvent gameEvent, int flags) {
                         return gameEvent.getKey().getKey();
                     }
 
                     @Override
-                    public String toVariableNameString(GameEvent gameEvent) {
+                    public @NotNull String toVariableNameString(GameEvent gameEvent) {
                         return "gameevent:" + gameEvent.getKey().getKey();
                     }
 
