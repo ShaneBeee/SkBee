@@ -36,7 +36,7 @@ public class EffEntityBlockStorage extends Effect {
     static {
         Skript.registerEffect(EffEntityBlockStorage.class,
                 "release [all] entities from [storage of] %blocks% [for %-timespan%] [into %-objects%]",
-                "add %entities% to [storage of] %block%");
+                "add %entities% to storage of %block%");
     }
 
     @SuppressWarnings("null")
@@ -80,14 +80,17 @@ public class EffEntityBlockStorage extends Effect {
             }
         } else {
             if (this.blocks == null || this.entities == null) return;
-            BlockState state = this.blocks.getSingle(event).getState();
+            Block block = this.blocks.getSingle(event);
+            if (block == null) return;
+            BlockState state = block.getState();
+            if (!(state instanceof Beehive beehive)) return;
 
             for (Entity entity : this.entities.getArray(event)) {
-                if (state instanceof Beehive && entity instanceof Bee) {
-                    ((Beehive) state).addEntity((Bee) entity);
-                    state.update();
+                if (entity instanceof Bee bee) {
+                    beehive.addEntity(bee);
                 }
             }
+            state.update();
         }
     }
 
