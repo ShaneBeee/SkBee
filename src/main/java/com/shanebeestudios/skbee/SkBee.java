@@ -84,7 +84,7 @@ public class SkBee extends JavaPlugin {
             Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
         }
 
-        UpdateChecker.checkForUpdate(version);
+        checkUpdate(version);
         Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", version, (float) (System.currentTimeMillis() - start) / 1000);
 
         // Load custom worlds if enabled in config
@@ -149,6 +149,14 @@ public class SkBee extends JavaPlugin {
         //noinspection ConstantConditions
         getCommand("skbee").setExecutor(new SkBeeInfo(this));
         pm.registerEvents(new UpdateChecker(this), this);
+    }
+
+    private void checkUpdate(String version) {
+        if (config.SETTINGS_UPDATE_CHECKER) {
+            UpdateChecker.checkForUpdate(version);
+        } else {
+            Util.log("Update checker disabled... will not check for update!");
+        }
     }
 
     private void loadNBTElements() {
