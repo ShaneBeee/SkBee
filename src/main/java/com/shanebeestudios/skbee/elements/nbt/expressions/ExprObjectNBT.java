@@ -36,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
         "add \"{RequiredPlayerRange:0s}\" to targeted block's nbt", "add \"{SpawnData:{id:\"\"minecraft:wither\"\"}}\" to nbt of clicked block",
         "set {_nbt} to file-nbt of \"world/playerdata/some-uuid-here.dat\""})
 @Since("1.0.0")
+@Deprecated // TODO remove in future version
 public class ExprObjectNBT extends SimplePropertyExpression<Object, Object> {
 
     static {
