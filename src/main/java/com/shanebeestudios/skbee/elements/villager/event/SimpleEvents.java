@@ -4,6 +4,9 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import io.papermc.paper.event.player.PlayerPurchaseEvent;
+import io.papermc.paper.event.player.PlayerTradeEvent;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.TradeSelectEvent;
@@ -61,5 +64,32 @@ public class SimpleEvents {
                 return null;
             }
         }, 0);
+
+        if (Skript.classExists("io.papermc.paper.event.player.PlayerPurchaseEvent")) {
+            Skript.registerEvent("Player Purchase", SimpleEvent.class, PlayerPurchaseEvent.class,
+                            "player (purchase|trade)")
+                    .description("Called when a player trades with a standalone merchant/villager GUI.")
+                    .examples("on player purchase:",
+                            "\tignite event-entity for 1 minute")
+                    .since("INSERT VERSION");
+
+            EventValues.registerEventValue(PlayerPurchaseEvent.class, MerchantRecipe.class, new Getter<>() {
+                @Override
+                public @Nullable MerchantRecipe get(PlayerPurchaseEvent event) {
+                    return event.getTrade();
+                }
+            }, 0);
+
+            EventValues.registerEventValue(PlayerPurchaseEvent.class, Entity.class, new Getter<>() {
+                @Override
+                public @Nullable Entity get(PlayerPurchaseEvent event) {
+                    if (event instanceof PlayerTradeEvent tradeEvent) {
+                        return tradeEvent.getVillager();
+                    }
+                    return null;
+                }
+            }, 0);
+        }
     }
+
 }
