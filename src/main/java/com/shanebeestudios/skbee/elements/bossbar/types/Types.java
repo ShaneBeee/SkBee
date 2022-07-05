@@ -132,7 +132,7 @@ public class Types {
         }
 
 
-        if (Classes.getExactClassInfo(BarColor.class) == null) {
+        if (Classes.getExactClassInfo(BarColor.class) == null && Classes.getClassInfoNoError("bossbarcolor") == null) {
             EnumUtils<BarColor> BAR_COLOR_ENUM = new EnumUtils<>(BarColor.class, "bar", "");
             Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
                     .user("boss ?bar ?colors?")
@@ -148,7 +148,7 @@ public class Types {
             Util.logLoading("&eYou may have to use their BossBar colors in SkBee's BossBar elements.");
         }
 
-        if (Classes.getExactClassInfo(BarStyle.class) == null) {
+        if (Classes.getExactClassInfo(BarStyle.class) == null && Classes.getClassInfoNoError("bossbarstyle") == null) {
             EnumUtils<BarStyle> BAR_STYLE_ENUM = new EnumUtils<>(BarStyle.class);
             Classes.registerClass(new ClassInfo<>(BarStyle.class, "bossbarstyle")
                     .user("boss ?bar ?styles?")
@@ -163,7 +163,7 @@ public class Types {
             Util.logLoading("&eYou may have to use their BossBar styles in SkBee's BossBar elements.");
         }
 
-        if (Classes.getExactClassInfo(BarFlag.class) == null) {
+        if (Classes.getExactClassInfo(BarFlag.class) == null && Classes.getClassInfoNoError("bossbarflag") == null) {
             EnumUtils<BarFlag> BAR_FLAG_ENUM = new EnumUtils<>(BarFlag.class);
             Classes.registerClass(new ClassInfo<>(BarFlag.class, "bossbarflag")
                     .user("boss ?bar ?flags?")
