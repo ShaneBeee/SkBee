@@ -22,7 +22,7 @@ public class NBTCustomBlock extends NBTBlock {
     @Override
     public NBTCompound getData() {
         NBTCompound data = super.getData();
-        if (!data.hasKey("custom")) {
+        if (!data.hasTag("custom")) {
             return setData(data);
         } else if (!data.getString("id").equals(block.getType().getKey().toString())) {
             return setData(data);

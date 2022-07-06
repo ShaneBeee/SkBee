@@ -143,8 +143,8 @@ public class NBTApi {
         NBTContainer itemNBT = NBTItem.convertItemtoNBT(itemType.getRandom());
 
         // Full NBT
-        if (nbtCompound.hasKey("tag")) {
-            if (nbtCompound.hasKey("id") && !itemNBT.getString("id").equalsIgnoreCase(nbtCompound.getString("id"))) {
+        if (nbtCompound.hasTag("tag")) {
+            if (nbtCompound.hasTag("id") && !itemNBT.getString("id").equalsIgnoreCase(nbtCompound.getString("id"))) {
                 // NBT compounds not the same item
                 return itemType;
             }
@@ -357,7 +357,7 @@ public class NBTApi {
             key = getNestedTag(key);
         }
 
-        boolean custom = !compound.hasKey(key);
+        boolean custom = !compound.hasTag(key);
         boolean isSingle = object.length == 1;
         NBTType type = compound.getType(key);
         Object singleObject = object[0];
@@ -569,7 +569,7 @@ public class NBTApi {
             NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity(tileState);
 
             NBTCompound compoundCopy = new NBTContainer(compound.toString());
-            if (compoundCopy.hasKey("custom")) {
+            if (compoundCopy.hasTag("custom")) {
                 nbtBlock.getCustomNBT().mergeCompound(compoundCopy.getCompound("custom"));
                 compoundCopy.removeKey("custom");
             }
@@ -592,7 +592,7 @@ public class NBTApi {
     public static void addNBTToEntity(Entity entity, NBTCompound compound) {
         NBTCustomEntity nbtEntity = new NBTCustomEntity(entity);
         NBTCompound compoundCopy = new NBTContainer(compound.toString());
-        if (compoundCopy.hasKey("custom")) {
+        if (compoundCopy.hasTag("custom")) {
             nbtEntity.getCustomNBT().mergeCompound(compoundCopy.getCompound("custom"));
             compoundCopy.removeKey("custom");
         }

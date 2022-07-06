@@ -36,10 +36,10 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
         String bukkit = "BukkitValues";
         NBTCompound compound = new NBTContainer(new NBTEntity(entity).toString());
         NBTCompound custom = null;
-        if (compound.hasKey(bukkit)) {
+        if (compound.hasTag(bukkit)) {
             NBTCompound persist = compound.getCompound(bukkit);
             persist.removeKey("__nbtapi"); // this is just a placeholder one, so we dont need it
-            if (persist.hasKey(KEY)) {
+            if (persist.hasTag(KEY)) {
                 custom = getPersistentDataContainer().getCompound(KEY);
                 persist.removeKey(KEY);
             }
@@ -67,17 +67,17 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     }
 
     @Override
-    public Boolean hasKey(String key) {
+    public boolean hasTag(String key) {
         if (key.equalsIgnoreCase("custom")) {
             return true;
         }
-        return super.hasKey(key);
+        return super.hasTag(key);
     }
 
     @Override
     public void mergeCompound(NBTCompound comp) {
         super.mergeCompound(comp);
-        if (comp.hasKey("custom")) {
+        if (comp.hasTag("custom")) {
             NBTCompound custom = comp.getCompound("custom");
             getCustomNBT().mergeCompound(custom);
         }
