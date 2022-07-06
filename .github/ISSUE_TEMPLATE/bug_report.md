@@ -20,9 +20,12 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots/errors to help explain your problem.
 
 **Version Info:**
- - **SkBee Version:** (ex: 1.0.0)
--  **Skript Version:** (ex: Skript 2.5-alpha3)
+ - Provide output of **/skbee info**   
+ **OR**
+ - **SkBee Version:** (ex: 1.16.1)
+ - **Skript Version:** (ex: Skript 2.6.1)
  - **Server Version/Platform** (ex: Spigot 1.15.2)
 
 **Additional context**
 Add any other context about the problem here.
+
