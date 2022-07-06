@@ -23,11 +23,6 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     }
 
     @Override
-    public NBTCompound getCustomNBT() {
-        return getPersistentDataContainer().getOrCreateCompound(KEY);
-    }
-
-    @Override
     public void deleteCustomNBT() {
         getPersistentDataContainer().removeKey(KEY);
     }
@@ -57,7 +52,7 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
         super.mergeCompound(comp);
         if (comp.hasTag("custom")) {
             NBTCompound custom = comp.getCompound("custom");
-            getCustomNBT().mergeCompound(custom);
+            getPersistentDataContainer().getOrCreateCompound(KEY).mergeCompound(custom);
         }
     }
 

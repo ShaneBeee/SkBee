@@ -15,6 +15,7 @@ import de.tr7zw.changeme.nbtapi.NbtApiException;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
@@ -565,16 +566,10 @@ public class NBTApi {
      * @param compound Compound to merge
      */
     public static void addNBTToBlock(Block block, NBTCompound compound) {
-        if (block.getState() instanceof TileState tileState) {
+        BlockState blockState = block.getState();
+        if (blockState instanceof TileState tileState) {
             NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity(tileState);
-
-            NBTCompound compoundCopy = new NBTContainer(compound.toString());
-            if (compoundCopy.hasTag("custom")) {
-                nbtBlock.getCustomNBT().mergeCompound(compoundCopy.getCompound("custom"));
-                compoundCopy.removeKey("custom");
-            }
-            nbtBlock.mergeCompound(compoundCopy);
-            block.getState().update(true, false);
+            nbtBlock.mergeCompound(compound);
         } else if (SUPPORTS_BLOCK_NBT) {
             NBTCustomBlock nbtCustomBlock = new NBTCustomBlock(block);
             nbtCustomBlock.getData().mergeCompound(compound);
@@ -591,12 +586,7 @@ public class NBTApi {
      */
     public static void addNBTToEntity(Entity entity, NBTCompound compound) {
         NBTCustomEntity nbtEntity = new NBTCustomEntity(entity);
-        NBTCompound compoundCopy = new NBTContainer(compound.toString());
-        if (compoundCopy.hasTag("custom")) {
-            nbtEntity.getCustomNBT().mergeCompound(compoundCopy.getCompound("custom"));
-            compoundCopy.removeKey("custom");
-        }
-        nbtEntity.mergeCompound(compoundCopy);
+        nbtEntity.mergeCompound(compound);
     }
 
 }

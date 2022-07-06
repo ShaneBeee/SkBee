@@ -28,11 +28,6 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     }
 
     @Override
-    public NBTCompound getCustomNBT() {
-        return getPersistentDataContainer().getOrCreateCompound(KEY);
-    }
-
-    @Override
     public void deleteCustomNBT() {
         getPersistentDataContainer().removeKey(KEY);
     }
@@ -62,7 +57,8 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
         super.mergeCompound(comp);
         if (comp.hasTag("custom")) {
             NBTCompound custom = comp.getCompound("custom");
-            getCustomNBT().mergeCompound(custom);
+            NBTCompound customNBT = getPersistentDataContainer().getOrCreateCompound(KEY);
+            customNBT.mergeCompound(custom);
         }
     }
 
