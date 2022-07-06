@@ -143,8 +143,8 @@ public class NBTApi {
         NBTContainer itemNBT = NBTItem.convertItemtoNBT(itemType.getRandom());
 
         // Full NBT
-        if (nbtCompound.hasKey("Count") && nbtCompound.hasKey("id")) {
-            if (!itemNBT.getString("id").equalsIgnoreCase(nbtCompound.getString("id"))) {
+        if (nbtCompound.hasKey("tag")) {
+            if (nbtCompound.hasKey("id") && !itemNBT.getString("id").equalsIgnoreCase(nbtCompound.getString("id"))) {
                 // NBT compounds not the same item
                 return itemType;
             }
