@@ -22,6 +22,7 @@ import org.jetbrains.annotations.NotNull;
         "\nmax uses = A trade has a maximum number of uses. A Villager may periodically replenish it's trades",
         "by resetting the uses of it's merchant recipes to 0, allowing them to be used again.",
         "\nexperience reward = A trade may or may not reward experience for being completed.",
+        "\nDemand & Special Price were added in MC 1.18.x:",
         "\ndemand = This value is periodically updated by the villager that owns this merchant recipe based on",
         "how often the recipe has been used since it has been last restocked in relation to its maximum uses.",
         "The amount by which the demand influences the amount of the first ingredient is scaled by the recipe's",
@@ -34,12 +35,17 @@ import org.jetbrains.annotations.NotNull;
 @Since("1.17.0")
 public class ExprMerchantRecipe extends SimpleExpression<MerchantRecipe> {
 
+    private static final boolean SUPPORTS_SPECIAL_PRICE = Skript.methodExists(MerchantRecipe.class, "getDemand");
     static {
-        Skript.registerExpression(ExprMerchantRecipe.class, MerchantRecipe.class, ExpressionType.SIMPLE,
-                "[new] merchant recipe with result %itemtype% with max uses %number% [with uses %-number%] " +
-                        "[(|1¦with experience reward)] " +
-                        "[with villager experience %-number%] [ with price multiplier %-number%] [ with demand %-number%] " +
-                        "[with special price %-number%]");
+        String pattern = "[new] merchant recipe with result %itemtype% with max uses %number% [with uses %-number%] " +
+                "[(|1¦with experience reward)] [with villager experience %-number%] [with price multiplier %-number%]";
+        if (SUPPORTS_SPECIAL_PRICE) {
+            Skript.registerExpression(ExprMerchantRecipe.class, MerchantRecipe.class, ExpressionType.SIMPLE,
+                    pattern + " [with demand %-number%] [with special price %-number%]");
+        } else {
+            Skript.registerExpression(ExprMerchantRecipe.class, MerchantRecipe.class, ExpressionType.SIMPLE,
+                    pattern);
+        }
     }
 
     private Expression<ItemType> result;
@@ -60,8 +66,10 @@ public class ExprMerchantRecipe extends SimpleExpression<MerchantRecipe> {
         this.reward = parseResult.mark == 1;
         this.villagerExp = (Expression<Number>) exprs[3];
         this.priceMulti = (Expression<Number>) exprs[4];
-        this.demand = (Expression<Number>) exprs[5];
-        this.specialPrice = (Expression<Number>) exprs[6];
+        if (SUPPORTS_SPECIAL_PRICE) {
+            this.demand = (Expression<Number>) exprs[5];
+            this.specialPrice = (Expression<Number>) exprs[6];
+        }
         return true;
     }
 
@@ -85,8 +93,12 @@ public class ExprMerchantRecipe extends SimpleExpression<MerchantRecipe> {
         int demandI = demand == null ? 0 : demand.intValue();
         int specialPriceI = specialPrice == null ? 0 : specialPrice.intValue();
 
-        MerchantRecipe merchantRecipe = new MerchantRecipe(random, usesI, maxUsesI, reward,
-                villXP, priceMultiF, demandI, specialPriceI);
+        MerchantRecipe merchantRecipe;
+        if (SUPPORTS_SPECIAL_PRICE) {
+            merchantRecipe = new MerchantRecipe(random, usesI, maxUsesI, reward, villXP, priceMultiF, demandI, specialPriceI);
+        } else {
+            merchantRecipe = new MerchantRecipe(random, usesI, maxUsesI, reward, villXP, priceMultiF);
+        }
         return new MerchantRecipe[]{merchantRecipe};
 
     }
