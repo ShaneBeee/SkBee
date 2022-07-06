@@ -17,9 +17,11 @@ import com.shanebeestudios.skbee.api.NBT.NBTCustomBlock;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomEntity;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomTileEntity;
 import com.shanebeestudios.skbee.api.NBT.NBTItemType;
+import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
@@ -31,26 +33,27 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 @Name("NBT - Compound of")
-@Description({"Get the nbt compound of a block/entity/item/file. Optionally you can return a copy of the compound. This way you can modify it without",
+@Description({"Get the nbt compound of a block/entity/item/file/chunk. Optionally you can return a copy of the compound. This way you can modify it without",
         "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to",
         "other entities.",
-        "'nbt compound' from an item will return a copy of the FULL nbt of an item (this includes id, count and 'tag' compound).",
+        "\n'nbt compound' from an item will return a copy of the FULL nbt of an item (this includes id, count and 'tag' compound).",
         "Modifying this will have no effect on the original item.",
-        "'nbt item compound' from an item will be the original. This will return the 'tag' portion of an items full NBT.",
+        "\n'nbt item compound' from an item will be the original. This will return the 'tag' portion of an items full NBT.",
         "Modifying this will modify the original item.",
-        "NBT from a file will need to be saved manually using",
+        "\nNBT from a file will need to be saved manually using",
         "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created."})
 @Examples({"set {_n} to nbt item compound of player's tool",
         "set {_nbt} to nbt compound of target entity",
         "set {_n} to nbt compound of \"{id:\"\"minecraft:diamond_sword\"\",tag:{Damage:0,Enchantments:[{id:\"\"minecraft:sharpness\"\",lvl:3s}]},Count:1b}\"",
-        "set {_nbt} to nbt compound of file \"world/playerdata/some-uuid.dat\""})
+        "set {_nbt} to nbt compound of file \"world/playerdata/some-uuid.dat\"",
+        "set {_n} to nbt compound of chunk at player"})
 @Since("1.6.0")
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
                 "nbt item compound [(1¦copy)] (of|from) %itemtypes/itemstacks/slots%",
-                "nbt compound [(1¦copy)] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings%",
+                "nbt compound [(1¦copy)] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings/chunks%",
                 "nbt compound [(1¦copy)] (of|from) file[s] %strings%");
     }
 
@@ -109,6 +112,8 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 } else {
                     compound = NBTApi.validateNBT(nbtString);
                 }
+            } else if (object instanceof Chunk chunk) {
+                compound = new NBTChunk(chunk).getPersistentDataContainer();
             }
             if (compound != null) {
                 if (isCopy) {
