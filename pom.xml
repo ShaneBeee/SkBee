@@ -175,6 +175,11 @@
                                 <exclude>META-INF/*.MF</exclude>
                                 <exclude>META-INF/*.DSA</exclude>
                                 <exclude>META-INF/*.RSA</exclude>
+                            </excludes>
+                        </filter>
+                        <filter>
+                            <artifact>com.github.ShaneBeeStudios:VirtualFurnace</artifact>
+                            <excludes>
                                 <exclude>plugin.yml</exclude>
                             </excludes>
                         </filter>
