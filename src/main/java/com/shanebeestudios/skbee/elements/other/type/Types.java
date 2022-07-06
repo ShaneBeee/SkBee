@@ -61,7 +61,7 @@ public class Types {
         // Only register if no other addons have registered this class
         // EntityPotionEffectEvent.Cause
         if (Classes.getExactClassInfo(Cause.class) == null) {
-            EnumUtils<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumUtils<>(Cause.class);
+            EnumUtils<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumUtils<>(Cause.class, "", "effect");
             Classes.registerClass(new ClassInfo<>(Cause.class, "potioneffectcause")
                     .user("potion ?effect ?causes?")
                     .name("Potion Effect Cause")

@@ -10,6 +10,7 @@ import com.shanebeestudios.skbee.api.command.SkBeeInfo;
 import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
+import com.shanebeestudios.skbee.api.listener.ScriptListener;
 import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.UpdateChecker;
@@ -147,6 +148,7 @@ public class SkBee extends JavaPlugin {
         //noinspection ConstantConditions
         getCommand("skbee").setExecutor(new SkBeeInfo(this));
         pm.registerEvents(new UpdateChecker(this), this);
+        pm.registerEvents(new ScriptListener(), this);
     }
 
     private void checkUpdate(String version) {

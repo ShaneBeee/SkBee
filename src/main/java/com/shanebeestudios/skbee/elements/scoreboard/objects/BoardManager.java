@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.scoreboard.objects;
 
+import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,6 +15,7 @@ import java.util.UUID;
 public class BoardManager implements Listener {
 
     private static final Map<UUID, Board> BOARDS = new HashMap<>();
+    private static final SkBee PLUGIN = SkBee.getPlugin();
 
     @Nullable
     public static Board getBoard(Player player) {
@@ -27,8 +29,7 @@ public class BoardManager implements Listener {
         return board;
     }
 
-    public static void removeBoard(Player player) {
-        UUID uuid = player.getUniqueId();
+    public static void removeBoard(UUID uuid) {
         if (BOARDS.containsKey(uuid)) {
             BOARDS.get(uuid).deleteFastboard();
             BOARDS.remove(uuid);
@@ -45,7 +46,8 @@ public class BoardManager implements Listener {
 
     @EventHandler
     private void onQuit(PlayerQuitEvent event) {
-        removeBoard(event.getPlayer());
+        UUID uuid = event.getPlayer().getUniqueId();
+        Bukkit.getScheduler().runTaskLater(PLUGIN, () -> removeBoard(uuid), 0);
     }
 
 }
