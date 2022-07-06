@@ -84,6 +84,10 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
             if (custom != null) {
                 customCompound.mergeCompound(custom);
             }
+            // For some reason block NBT doesn't show location in NBT-API (it does in vanilla MC)
+            compound.setInteger("x", blockState.getX());
+            compound.setInteger("y", blockState.getY());
+            compound.setInteger("z", blockState.getZ());
             return compound.toString();
         } catch (NbtApiException ignore) {
             return null;
