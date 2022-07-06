@@ -32,28 +32,6 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
         getPersistentDataContainer().removeKey(KEY);
     }
 
-    private NBTCompound getCustomNBTCompound() {
-        String bukkit = "BukkitValues";
-        NBTCompound compound = new NBTContainer(new NBTEntity(entity).toString());
-        NBTCompound custom = null;
-        if (compound.hasTag(bukkit)) {
-            NBTCompound persist = compound.getCompound(bukkit);
-            persist.removeKey("__nbtapi"); // this is just a placeholder one, so we dont need it
-            if (persist.hasTag(KEY)) {
-                custom = getPersistentDataContainer().getCompound(KEY);
-                persist.removeKey(KEY);
-            }
-            if (persist.getKeys().size() == 0) {
-                compound.removeKey(bukkit);
-            }
-        }
-        NBTCompound customCompound = compound.getOrCreateCompound("custom");
-        if (custom != null) {
-            customCompound.mergeCompound(custom);
-        }
-        return compound;
-    }
-
     @Override
     public NBTCompound getOrCreateCompound(String name) {
         if (name.equals("custom")) {
@@ -83,10 +61,29 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
         }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public String toString() {
         try {
-            return getCustomNBTCompound().toString();
+            String bukkit = "BukkitValues";
+            NBTCompound compound = new NBTContainer(new NBTEntity(entity).toString());
+            NBTCompound custom = null;
+            if (compound.hasTag(bukkit)) {
+                NBTCompound persist = compound.getCompound(bukkit);
+                persist.removeKey("__nbtapi"); // this is just a placeholder one, so we dont need it
+                if (persist.hasTag(KEY)) {
+                    custom = getPersistentDataContainer().getCompound(KEY);
+                    persist.removeKey(KEY);
+                }
+                if (persist.getKeys().size() == 0) {
+                    compound.removeKey(bukkit);
+                }
+            }
+            NBTCompound customCompound = compound.getOrCreateCompound("custom");
+            if (custom != null) {
+                customCompound.mergeCompound(custom);
+            }
+            return compound.toString();
         } catch (NbtApiException ignore) {
             return null;
         }
