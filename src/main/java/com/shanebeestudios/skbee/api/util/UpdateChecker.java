@@ -30,8 +30,9 @@ public class UpdateChecker implements Listener {
                 Util.logLoading("&aPlugin is up to date!");
             } else {
                 Util.logLoading("&cPlugin is not up to date!");
-                Util.logLoading(" - Current version: &cv" + pluginVersion);
-                Util.logLoading(" - Available update: &av" + version);
+                Util.logLoading(" - Current version: &cv%s", pluginVersion);
+                Util.logLoading(" - Available update: &av%s",version);
+                Util.logLoading(" - Download available at: https://github.com/ShaneBeee/SkBee/releases");
                 UPDATE_VERSION = version;
             }
         });
