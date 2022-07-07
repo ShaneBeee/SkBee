@@ -71,7 +71,7 @@ public class SimpleEvents {
                     .description("Called when a player trades with a standalone merchant/villager GUI.")
                     .examples("on player purchase:",
                             "\tignite event-entity for 1 minute")
-                    .since("INSERT VERSION");
+                    .since("1.17.1");
 
             EventValues.registerEventValue(PlayerPurchaseEvent.class, MerchantRecipe.class, new Getter<>() {
                 @Override
