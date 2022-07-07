@@ -17,9 +17,10 @@ public class Util {
 
     private static final String PREFIX = "&7[&bSk&3Bee&7] ";
     private static final String PREFIX_ERROR = "&7[&bSk&3Bee &cERROR&7] ";
-    private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f0-9]){6}>");
+    private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f\\d]){6}>");
     private static final boolean SKRIPT_IS_THERE = SkBee.getPlugin().getSkriptPlugin() != null;
 
+    @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
         Matcher matcher = HEX_PATTERN.matcher(string);
         if (SKRIPT_IS_THERE) {
@@ -40,30 +41,21 @@ public class Util {
         receiver.sendMessage(getColString(String.format(format, objects)));
     }
 
-    public static void log(String log) {
+    public static void log(String format, Object... objects) {
+        String log = String.format(format, objects);
         Bukkit.getConsoleSender().sendMessage(getColString(PREFIX + log));
     }
 
-    public static void log(String format, Object... objects) {
-        log(String.format(format, objects));
-    }
-
-    public static void skriptError(String error) {
+    public static void skriptError(String format, Object... objects) {
+        String error = String.format(format, objects);
         Skript.error(getColString(PREFIX_ERROR + error), ErrorQuality.SEMANTIC_ERROR);
     }
 
-    public static void skriptError(String format, Object... objects) {
-        skriptError(String.format(format, objects));
-    }
-
-    public static void debug(String debug) {
+    public static void debug(String format, Object... objects) {
         if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+            String debug = String.format(format, objects);
             Bukkit.getConsoleSender().sendMessage(getColString(PREFIX_ERROR + debug));
         }
-    }
-
-    public static void debug(String format, Object... objects) {
-        debug(String.format(format, objects));
     }
 
     private static final List<String> DEBUGS = new ArrayList<>();
