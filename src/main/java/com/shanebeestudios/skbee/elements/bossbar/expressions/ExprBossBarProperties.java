@@ -83,7 +83,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
             case BAR_TITLE:
                 return new String[]{bossBar.getTitle()};
             case BAR_PROGRESS:
-                return new Number[]{(int) (bossBar.getProgress() * 100)};
+                return new Number[]{(bossBar.getProgress() * 100)};
             case BAR_FLAG:
                 BarFlag barFlag = this.barFlag.getSingle(event);
                 if (barFlag == null) return null;
@@ -166,7 +166,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
             } else if (object instanceof Number number) {
                 double newProgress = 0;
                 double oldProgress = bossBar.getProgress();
-                float progress = (float) number.intValue() / 100;
+                float progress = number.floatValue() / 100;
                 if (mode == ChangeMode.SET) {
                     newProgress = progress;
                 } else if (mode == ChangeMode.ADD) {
