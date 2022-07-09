@@ -17,6 +17,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.Objects;
 
 @SuppressWarnings("deprecation")
 @Name("Text Component - Click Event")
@@ -69,7 +70,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
             case 3 -> action = Action.COPY_TO_CLIPBOARD;
             case 4 -> {
                 action = Action.CHANGE_PAGE;
-                value = "" + (((Number) object.getSingle(event)).intValue());
+                value = "" + (((Number) Objects.requireNonNull(object.getSingle(event))).intValue());
             }
             default -> action = Action.RUN_COMMAND;
         }

@@ -15,7 +15,7 @@ import org.bukkit.event.world.GenericGameEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("Convert2Diamond")
+@SuppressWarnings("unused")
 public class EvtGameEvents extends SkriptEvent {
 
     static {
@@ -40,7 +40,7 @@ public class EvtGameEvents extends SkriptEvent {
                         "\t\t\tdamage {_e} by 0.5")
                 .since("1.14.0");
 
-        EventValues.registerEventValue(GenericGameEvent.class, Entity.class, new Getter<Entity, GenericGameEvent>() {
+        EventValues.registerEventValue(GenericGameEvent.class, Entity.class, new Getter<>() {
             @Nullable
             @Override
             public Entity get(GenericGameEvent event) {
@@ -48,23 +48,21 @@ public class EvtGameEvents extends SkriptEvent {
             }
         }, 0);
 
-        EventValues.registerEventValue(GenericGameEvent.class, GameEvent.class, new Getter<GameEvent, GenericGameEvent>() {
-            @Nullable
+        EventValues.registerEventValue(GenericGameEvent.class, GameEvent.class, new Getter<>() {
             @Override
             public GameEvent get(GenericGameEvent event) {
                 return event.getEvent();
             }
         }, 0);
 
-        EventValues.registerEventValue(GenericGameEvent.class, Location.class, new Getter<Location, GenericGameEvent>() {
-            @Nullable
+        EventValues.registerEventValue(GenericGameEvent.class, Location.class, new Getter<>() {
             @Override
             public Location get(GenericGameEvent event) {
                 return event.getLocation();
             }
         }, 0);
 
-        EventValues.registerEventValue(BlockReceiveGameEvent.class, Entity.class, new Getter<Entity, BlockReceiveGameEvent>() {
+        EventValues.registerEventValue(BlockReceiveGameEvent.class, Entity.class, new Getter<>() {
             @Nullable
             @Override
             public Entity get(BlockReceiveGameEvent event) {
@@ -72,8 +70,7 @@ public class EvtGameEvents extends SkriptEvent {
             }
         }, 0);
 
-        EventValues.registerEventValue(BlockReceiveGameEvent.class, GameEvent.class, new Getter<GameEvent, BlockReceiveGameEvent>() {
-            @Nullable
+        EventValues.registerEventValue(BlockReceiveGameEvent.class, GameEvent.class, new Getter<>() {
             @Override
             public GameEvent get(BlockReceiveGameEvent event) {
                 return event.getEvent();
@@ -83,7 +80,7 @@ public class EvtGameEvents extends SkriptEvent {
 
     private Literal<GameEvent> gameEvents;
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
         if (args[0] != null) {

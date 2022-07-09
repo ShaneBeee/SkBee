@@ -9,10 +9,12 @@ import ch.njol.skript.util.Getter;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import com.shanebeestudios.skbee.api.event.EnterBoundEvent;
 import com.shanebeestudios.skbee.api.event.ExitBoundEvent;
 
+@SuppressWarnings("unused")
 public class BoundEvents extends SkriptEvent {
 
     static {
@@ -24,19 +26,19 @@ public class BoundEvents extends SkriptEvent {
                         "on enter bound with id \"spawn\":",
                         "\tcancel event")
                 .since("1.0.0, 1.12.2 (Bound IDs)");
-        EventValues.registerEventValue(EnterBoundEvent.class, Player.class, new Getter<Player, EnterBoundEvent>() {
+        EventValues.registerEventValue(EnterBoundEvent.class, Player.class, new Getter<>() {
             @Override
             public Player get(EnterBoundEvent event) {
                 return event.getPlayer();
             }
         }, 0);
-        EventValues.registerEventValue(EnterBoundEvent.class, Bound.class, new Getter<Bound, EnterBoundEvent>() {
+        EventValues.registerEventValue(EnterBoundEvent.class, Bound.class, new Getter<>() {
             @Override
             public Bound get(EnterBoundEvent event) {
                 return event.getBound();
             }
         }, 0);
-        EventValues.registerEventValue(EnterBoundEvent.class, String.class, new Getter<String, EnterBoundEvent>() {
+        EventValues.registerEventValue(EnterBoundEvent.class, String.class, new Getter<>() {
             @Nullable
             @Override
             public String get(EnterBoundEvent event) {
@@ -54,19 +56,19 @@ public class BoundEvents extends SkriptEvent {
                         "on exit bound with id \"spawn\":",
                         "\tcancel event")
                 .since("1.0.0, 1.12.2 (Bound IDs)");
-        EventValues.registerEventValue(ExitBoundEvent.class, Player.class, new Getter<Player, ExitBoundEvent>() {
+        EventValues.registerEventValue(ExitBoundEvent.class, Player.class, new Getter<>() {
             @Override
             public Player get(ExitBoundEvent event) {
                 return event.getPlayer();
             }
         }, 0);
-        EventValues.registerEventValue(ExitBoundEvent.class, Bound.class, new Getter<Bound, ExitBoundEvent>() {
+        EventValues.registerEventValue(ExitBoundEvent.class, Bound.class, new Getter<>() {
             @Override
             public Bound get(ExitBoundEvent event) {
                 return event.getBound();
             }
         }, 0);
-        EventValues.registerEventValue(ExitBoundEvent.class, String.class, new Getter<String, ExitBoundEvent>() {
+        EventValues.registerEventValue(ExitBoundEvent.class, String.class, new Getter<>() {
             @Nullable
             @Override
             public String get(ExitBoundEvent event) {
@@ -77,6 +79,7 @@ public class BoundEvents extends SkriptEvent {
 
     private Literal<String> boundID;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
         boundID = (Literal<String>) args[0];
@@ -89,11 +92,9 @@ public class BoundEvents extends SkriptEvent {
             return true;
         }
         return this.boundID.check(event, boundID -> {
-            if (event instanceof EnterBoundEvent) {
-                EnterBoundEvent enterBoundEvent = (EnterBoundEvent) event;
+            if (event instanceof EnterBoundEvent enterBoundEvent) {
                 return enterBoundEvent.getBound().getId().equals(boundID);
-            } else if (event instanceof ExitBoundEvent) {
-                ExitBoundEvent exitBoundEvent = (ExitBoundEvent) event;
+            } else if (event instanceof ExitBoundEvent exitBoundEvent) {
                 return exitBoundEvent.getBound().getId().equals(boundID);
             }
             return false;
@@ -101,7 +102,7 @@ public class BoundEvents extends SkriptEvent {
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "bound enter/exit" + (this.boundID != null ? " with id " + this.boundID.toString(e, d) : "");
     }
 

@@ -28,6 +28,7 @@ public class ExprChunkCoords extends PropertyExpression<Chunk, Number> {
 
     private int parseMark;
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         parseMark = parseResult.mark;
@@ -35,13 +36,14 @@ public class ExprChunkCoords extends PropertyExpression<Chunk, Number> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Number @NotNull [] get(Event event, Chunk[] source) {
         return get(source, chunk -> parseMark == 0 ? chunk.getX() : chunk.getZ());
     }
 
     @Override
-    public Class<? extends Number> getReturnType() {
+    public @NotNull Class<? extends Number> getReturnType() {
         return Number.class;
     }
 
