@@ -53,7 +53,7 @@ public class ScriptListener implements Listener {
             assert scriptFile != null;
             String content;
             try {
-                content = String.join("\n", Files.readLines(scriptFile, Charset.defaultCharset()));
+                content = String.join("\n", Files.readLines(scriptFile, Charset.defaultCharset())).toLowerCase(Locale.ROOT);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }

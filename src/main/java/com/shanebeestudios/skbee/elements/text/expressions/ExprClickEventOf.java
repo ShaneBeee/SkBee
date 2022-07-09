@@ -70,7 +70,7 @@ public class ExprClickEventOf extends PropertyExpression<BaseComponent, ClickEve
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "click event of " + getExpr().toString(e, d);
     }
 

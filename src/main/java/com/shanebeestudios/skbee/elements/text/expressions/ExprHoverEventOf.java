@@ -17,6 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
+@SuppressWarnings("deprecation")
 @Name("Text Component - Hover Event Of")
 @Description("Set the hover event of a text component.")
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
@@ -29,6 +30,7 @@ public class ExprHoverEventOf extends PropertyExpression<BaseComponent, HoverEve
         register(ExprHoverEventOf.class, HoverEvent.class, "hover event", "basecomponents");
     }
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setExpr((Expression<BaseComponent>) exprs[0]);
@@ -48,6 +50,7 @@ public class ExprHoverEventOf extends PropertyExpression<BaseComponent, HoverEve
         return null;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
         HoverEvent hoverEvent = delta != null ? ((HoverEvent) delta[0]) : null;
@@ -65,7 +68,7 @@ public class ExprHoverEventOf extends PropertyExpression<BaseComponent, HoverEve
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "hover event of " + getExpr().toString(e, d);
     }
 
