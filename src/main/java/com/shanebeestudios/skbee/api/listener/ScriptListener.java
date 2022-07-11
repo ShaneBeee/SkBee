@@ -47,7 +47,6 @@ public class ScriptListener implements Listener {
     private static final List<String> CHECK_STRINGS = new ArrayList<>();
 
     static {
-
     }
 
     @SuppressWarnings("UnstableApiUsage")
@@ -64,7 +63,7 @@ public class ScriptListener implements Listener {
                 throw new RuntimeException(e);
             }
             CHECK_STRINGS.forEach(string -> {
-                if (content.contains(StringEscapeUtils.unescapeJava(string))) {
+                if (content.contains(StringEscapeUtils.unescapeJava(string).toLowerCase(Locale.ROOT))) {
                     scriptsToRemove.add(script);
                     String scriptName = scriptFile.getName().replace(".sk", "");
                     DISABLED_SCRIPTS.add(scriptName);
