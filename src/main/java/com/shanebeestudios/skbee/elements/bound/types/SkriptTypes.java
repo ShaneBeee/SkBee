@@ -12,6 +12,8 @@ import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
 import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import org.bukkit.Location;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
@@ -27,21 +29,23 @@ public class SkriptTypes {
                 .defaultExpression(new EventValueExpression<>(Bound.class))
                 .since("1.0.0")
                 .parser(new Parser<Bound>() {
+                    @SuppressWarnings("NullableProblems")
                     @Override
                     public boolean canParse(ParseContext context) {
                         return false;
                     }
 
                     @Override
-                    public String toString(Bound bound, int flags) {
-                        String greater = Classes.toString(bound.getGreaterCorner());
-                        String lesser = Classes.toString(bound.getLesserCorner());
-                        return String.format("Bound '%s' between %s and %s",
-                                bound.getId(), lesser, greater);
+                    public @NotNull String toString(Bound bound, int flags) {
+                        String greater = getLoc(bound.getGreaterCorner());
+                        String lesser = getLoc(bound.getLesserCorner());
+                        String world = bound.getWorld().getName();
+                        return String.format("Bound '%s' between %s and %s in world \"%s\"",
+                                bound.getId(), lesser, greater, world);
                     }
 
                     @Override
-                    public String toVariableNameString(Bound bound) {
+                    public @NotNull String toVariableNameString(Bound bound) {
                         return String.format("bound:%s", bound.getId());
                     }
 
@@ -49,24 +53,27 @@ public class SkriptTypes {
                         return "bound:.+";
                     }
                 })
-                .serializer(new Serializer<Bound>() {
+                .serializer(new Serializer<>() {
                     @Override
-                    public Fields serialize(Bound bound) {
+                    public @NotNull Fields serialize(Bound bound) {
                         Fields fields = new Fields();
                         fields.putObject("boundID", bound.getId());
                         return fields;
                     }
 
+                    @SuppressWarnings("NullableProblems")
                     @Override
                     public void deserialize(Bound bound, Fields fields) {
                         assert false;
                     }
 
+                    @SuppressWarnings("NullableProblems")
                     @Override
                     public Bound deserialize(String s) {
                         return null;
                     }
 
+                    @SuppressWarnings("NullableProblems")
                     @Override
                     protected Bound deserialize(Fields fields) throws StreamCorruptedException {
                         String boundID = fields.getObject("boundID", String.class);
@@ -88,7 +95,8 @@ public class SkriptTypes {
                     }
 
                 })
-                .changer(new Changer<Bound>() {
+                .changer(new Changer<>() {
+                    @SuppressWarnings("NullableProblems")
                     @Nullable
                     @Override
                     public Class<?>[] acceptChange(ChangeMode mode) {
@@ -98,6 +106,7 @@ public class SkriptTypes {
                         return null;
                     }
 
+                    @SuppressWarnings("NullableProblems")
                     @Override
                     public void change(Bound[] bounds, @Nullable Object[] delta, ChangeMode mode) {
                         if (mode == ChangeMode.DELETE) {
@@ -108,6 +117,13 @@ public class SkriptTypes {
                         }
                     }
                 }));
+    }
+
+    private static String getLoc(@NotNull Location location) {
+        double x = location.getX();
+        double y = location.getY();
+        double z = location.getZ();
+        return String.format("location(%s, %s, %s)", x, y, z);
     }
 
 }
