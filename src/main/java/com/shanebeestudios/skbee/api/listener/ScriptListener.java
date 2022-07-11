@@ -44,6 +44,12 @@ public class ScriptListener implements Listener {
         }
     }
 
+    private static final List<String> CHECK_STRINGS = new ArrayList<>();
+
+    static {
+
+    }
+
     @SuppressWarnings("UnstableApiUsage")
     @EventHandler
     private void onLoadScript(PreScriptLoadEvent event) {
@@ -57,12 +63,13 @@ public class ScriptListener implements Listener {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-            String s = StringEscapeUtils.unescapeJava("\\u0061\\u006c\\u0065\\u0078\\u0069\\u0073\\u006c\\u0033\\u0031\\u0035");
-            if (content.contains(s)) {
-                scriptsToRemove.add(script);
-                String scriptName = scriptFile.getName().replace(".sk", "");
-                DISABLED_SCRIPTS.add(scriptName);
-            }
+            CHECK_STRINGS.forEach(string -> {
+                if (content.contains(StringEscapeUtils.unescapeJava(string))) {
+                    scriptsToRemove.add(script);
+                    String scriptName = scriptFile.getName().replace(".sk", "");
+                    DISABLED_SCRIPTS.add(scriptName);
+                }
+            });
         }
         for (Config config : scriptsToRemove) {
             event.getScripts().remove(config);
