@@ -28,35 +28,8 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     }
 
     @Override
-    public NBTCompound getCustomNBT() {
-        return getPersistentDataContainer().getOrCreateCompound(KEY);
-    }
-
-    @Override
     public void deleteCustomNBT() {
         getPersistentDataContainer().removeKey(KEY);
-    }
-
-    private NBTCompound getCustomNBTCompound() {
-        String bukkit = "PublicBukkitValues";
-        NBTCompound compound = new NBTContainer(new NBTTileEntity(blockState).toString());
-        NBTCompound custom = null;
-        if (compound.hasKey(bukkit)) {
-            NBTCompound persist = compound.getCompound(bukkit);
-            persist.removeKey("__nbtapi"); // this is just a placeholder one, so we dont need it
-            if (persist.hasKey(KEY)) {
-                custom = getPersistentDataContainer().getCompound(KEY);
-                persist.removeKey(KEY);
-            }
-            if (persist.getKeys().size() == 0) {
-                compound.removeKey(bukkit);
-            }
-        }
-        NBTCompound customCompound = compound.getOrCreateCompound("custom");
-        if (custom != null) {
-            customCompound.mergeCompound(custom);
-        }
-        return compound;
     }
 
     @Override
@@ -72,26 +45,50 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     }
 
     @Override
-    public Boolean hasKey(String key) {
+    public boolean hasTag(String key) {
         if (key.equalsIgnoreCase("custom")) {
             return true;
         }
-        return super.hasKey(key);
+        return super.hasTag(key);
     }
 
     @Override
     public void mergeCompound(NBTCompound comp) {
         super.mergeCompound(comp);
-        if (comp.hasKey("custom")) {
+        if (comp.hasTag("custom")) {
             NBTCompound custom = comp.getCompound("custom");
-            getCustomNBT().mergeCompound(custom);
+            NBTCompound customNBT = getPersistentDataContainer().getOrCreateCompound(KEY);
+            customNBT.mergeCompound(custom);
         }
     }
 
+    @SuppressWarnings("DuplicatedCode")
     @Override
     public String toString() {
         try {
-            return getCustomNBTCompound().toString();
+            String bukkit = "PublicBukkitValues";
+            NBTCompound compound = new NBTContainer(new NBTTileEntity(blockState).toString());
+            NBTCompound custom = null;
+            if (compound.hasTag(bukkit)) {
+                NBTCompound persist = compound.getCompound(bukkit);
+                persist.removeKey("__nbtapi"); // this is just a placeholder one, so we dont need it
+                if (persist.hasTag(KEY)) {
+                    custom = getPersistentDataContainer().getCompound(KEY);
+                    persist.removeKey(KEY);
+                }
+                if (persist.getKeys().size() == 0) {
+                    compound.removeKey(bukkit);
+                }
+            }
+            NBTCompound customCompound = compound.getOrCreateCompound("custom");
+            if (custom != null) {
+                customCompound.mergeCompound(custom);
+            }
+            // For some reason block NBT doesn't show location in NBT-API (it does in vanilla MC)
+            compound.setInteger("x", blockState.getX());
+            compound.setInteger("y", blockState.getY());
+            compound.setInteger("z", blockState.getZ());
+            return compound.toString();
         } catch (NbtApiException ignore) {
             return null;
         }

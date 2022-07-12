@@ -39,6 +39,7 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     protected NBTCustomType[] get(Event e) {

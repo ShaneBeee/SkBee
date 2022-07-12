@@ -49,7 +49,6 @@ public class SkBee extends JavaPlugin {
 
     private static SkBee instance;
     private Plugin skriptPlugin;
-    private NBTApi nbtApi;
     private PluginManager pm;
     private Config config;
     private BoundConfig boundConfig = null;
@@ -125,7 +124,6 @@ public class SkBee extends JavaPlugin {
     private void loadSkriptElements() {
         addon = Skript.registerAddon(this);
         addon.setLanguageFileDirectory("lang");
-        this.nbtApi = new NBTApi();
 
         loadNBTElements();
         loadRecipeElements();
@@ -162,11 +160,12 @@ public class SkBee extends JavaPlugin {
     }
 
     private void loadNBTElements() {
+        NBTApi.initializeAPI();
         if (!this.config.ELEMENTS_NBT) {
             Util.logLoading("&5NBT Elements &cdisabled via config");
             return;
         }
-        if (!this.nbtApi.isEnabled()) {
+        if (!NBTApi.isEnabled()) {
             String ver = Skript.getMinecraftVersion().toString();
             Util.logLoading("&5NBT Elements &cDISABLED!");
             Util.logLoading(" - Your server version [&b" + ver + "&7] is not currently supported by the NBT-API");
@@ -181,7 +180,7 @@ public class SkBee extends JavaPlugin {
             if (plugin != null && Skript.classExists("com.github.goingoffskript.skriptvariabledump.SkriptToYaml")) {
                 SkriptToYaml.adapts(NBTContainer.class, (compound, map) -> map.put("nbt-compound", compound.toString()));
             }
-            if (NBTApi.SUPPORTS_BLOCK_NBT) {
+            if (NBTApi.supportsBlockNBT()) {
                 pm.registerEvents(new NBTListener(), this);
             }
             Util.logLoading("&5NBT Elements &asuccessfully loaded");
@@ -500,15 +499,6 @@ public class SkBee extends JavaPlugin {
      */
     public BeeWorldConfig getBeeWorldConfig() {
         return beeWorldConfig;
-    }
-
-    /**
-     * Get an instance of the {@link NBTApi}
-     *
-     * @return Instance of the NBT API
-     */
-    public NBTApi getNbtApi() {
-        return nbtApi;
     }
 
     /**

@@ -12,7 +12,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.reflection.ChatReflection;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,12 +24,12 @@ import javax.annotation.Nullable;
         "send pretty nbt from {_nbt} to player",
         "send pretty nbt from {_nbt} with split \" \" to console"})
 @Since("1.6.0")
-public class ExprPrettyNBT extends PropertyExpression<Object, String> {
+public class ExprPrettyNBT extends PropertyExpression<NBTCompound, String> {
 
     static {
         Skript.registerExpression(ExprPrettyNBT.class, String.class, ExpressionType.PROPERTY,
-                "pretty nbt (of|from) %nbtcompounds/strings% [(with|using) split %-string%]",
-                "%nbtcompounds/strings%'[s] pretty nbt [(with|using) split %-string%]");
+                "pretty nbt (of|from) %nbtcompounds% [(with|using) split %-string%]",
+                "%nbtcompounds%'[s] pretty nbt [(with|using) split %-string%]");
     }
 
     private Expression<String> split;
@@ -38,25 +37,15 @@ public class ExprPrettyNBT extends PropertyExpression<Object, String> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
-        setExpr(exprs[0]);
+        setExpr((Expression<? extends NBTCompound>) exprs[0]);
         split = (Expression<String>) exprs[1];
         return true;
     }
 
     @Override
-    protected String @NotNull [] get(@NotNull Event e, Object @NotNull [] source) {
-        return get(source, n -> {
-            String split = this.split != null ? this.split.getSingle(e) : null;
-            NBTCompound compound;
-            if (n instanceof NBTCompound) {
-                compound = (NBTCompound) n;
-            } else if (n instanceof String) {
-                compound = new NBTContainer((String) n);
-            } else {
-                return null;
-            }
-            return ChatReflection.getPrettyNBT(compound, split);
-        });
+    protected String @NotNull [] get(@NotNull Event e, NBTCompound @NotNull [] source) {
+        String split = this.split != null ? this.split.getSingle(e) : null;
+        return get(source, nbt -> ChatReflection.getPrettyNBT(nbt, split));
     }
 
     @Override

@@ -9,9 +9,12 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTFile;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -25,33 +28,41 @@ import java.io.IOException;
 @Since("1.14.0")
 public class EffSaveNBTFile extends Effect {
 
+    public static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
+
     static {
         Skript.registerEffect(EffSaveNBTFile.class, "save nbt file[s] (for|of) %nbtcompounds%");
     }
 
     private Expression<NBTCompound> nbtCompound;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.nbtCompound = (Expression<NBTCompound>) exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected void execute(Event e) {
-        for (NBTCompound compound : nbtCompound.getArray(e)) {
-            if (compound instanceof NBTFile) {
+    protected void execute(Event event) {
+        for (NBTCompound compound : nbtCompound.getArray(event)) {
+            if (compound instanceof NBTFile nbtFile) {
                 try {
-                    ((NBTFile) compound).save();
-                } catch (IOException ignore) {
+                    nbtFile.save();
+                } catch (IOException ex) {
+                    if (DEBUG) {
+                        ex.printStackTrace();
+                    } else {
+                        Util.skriptError("Could not save file: '" + nbtFile.getName() + "'. Enable debug in SkBee config for more info");
+                    }
                 }
             }
         }
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return "save nbt file for " + this.nbtCompound.toString(e, d);
     }
 

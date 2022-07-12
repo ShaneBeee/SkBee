@@ -27,7 +27,8 @@ import org.jetbrains.annotations.NotNull;
         "Supports get, set, add and reset. Reset will only properly work on an item, not entities or blocks. ",
         "Set should not be used on entities or blocks, it's best to use add. Using set can quite often screw up the entity/block's location. ",
         "The optional 'full' part (added in 1.4.10) will only work on items/slots. When using this, it will return the full NBT of said item, ",
-        "including the item amount as well as the item type."})
+        "including the item amount as well as the item type.",
+        "\nREMOVED IN '1.18.0'"})
 @Examples({"set {_nbt} to nbt of player's tool", "set {_f} to full nbt of player's tool",
         "add \"{Enchantments:[{id:\"\"sharpness\"\",lvl:5}]}\" to nbt of player's tool",
         "reset nbt of player's tool", "set {_nbt} to nbt of target entity", "set {_nbt} to event-entity",
@@ -35,94 +36,25 @@ import org.jetbrains.annotations.NotNull;
         "add \"{RequiredPlayerRange:0s}\" to targeted block's nbt", "add \"{SpawnData:{id:\"\"minecraft:wither\"\"}}\" to nbt of clicked block",
         "set {_nbt} to file-nbt of \"world/playerdata/some-uuid-here.dat\""})
 @Since("1.0.0")
+@Deprecated // TODO remove in future version
 public class ExprObjectNBT extends SimplePropertyExpression<Object, Object> {
-
-    private static final NBTApi NBT_API;
 
     static {
         register(ExprObjectNBT.class, Object.class, "[(1¦full )][(entity|item|slot|block|tile[(-| )]entity|file)(-| )]nbt",
                 "block/entity/itemstack/itemtype/slot/string");
-        NBT_API = SkBee.getPlugin().getNbtApi();
     }
 
     private boolean full;
 
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
-        Skript.warning("SkBee expression 'nbt of %object%' will be removed in a future version. Please use NBT compounds instead.");
-        full = parseResult.mark == 1;
-        return super.init(exprs, matchedPattern, isDelayed, parseResult);
+        Skript.error("SkBee expression 'nbt of %object%' has been removed. Please use NBT compounds instead.");
+        return false;
     }
 
     @Override
     public String convert(@NotNull Object object) {
-        NBTApi.ObjectType objectType = null;
-        if (object instanceof Slot) {
-            objectType = full ? NBTApi.ObjectType.SLOT_FULL : NBTApi.ObjectType.SLOT;
-        } else if (object instanceof ItemStack) {
-            objectType = full ? NBTApi.ObjectType.ITEM_STACK_FULL : NBTApi.ObjectType.ITEM_STACK;
-        } else if (object instanceof ItemType) {
-            objectType = full ? NBTApi.ObjectType.ITEM_TYPE_FULL : NBTApi.ObjectType.ITEM_TYPE;
-        } else if (object instanceof Entity) {
-            objectType = NBTApi.ObjectType.ENTITY;
-        } else if (object instanceof Block) {
-            objectType = NBTApi.ObjectType.BLOCK;
-        } else if (object instanceof String) {
-            objectType = NBTApi.ObjectType.FILE;
-        }
-        if (objectType != null)
-            return NBT_API.getNBT(object, objectType);
         return null;
-    }
-
-    @Override
-    public Class<?>[] acceptChange(final @NotNull ChangeMode mode) {
-        if (mode == ChangeMode.ADD || mode == ChangeMode.SET || mode == ChangeMode.RESET)
-            return CollectionUtils.array(Object.class);
-        return null;
-    }
-
-    @Override
-    public void change(@NotNull Event event, Object[] delta, @NotNull ChangeMode mode) {
-        Object object = getExpr().getSingle(event);
-        if (object == null) return;
-
-        Object nbtObject = delta != null ? delta[0] : null;
-
-        String value = "{}";
-        if (nbtObject != null) {
-            value = nbtObject instanceof NBTCompound ? nbtObject.toString() : nbtObject instanceof String ? (String) nbtObject : "{}";
-        }
-        if (!NBTApi.validateNBT(value)) {
-            return;
-        }
-        NBTApi.ObjectType objectType = null;
-        if (object instanceof Slot) {
-            objectType = NBTApi.ObjectType.SLOT;
-        } else if (object instanceof ItemStack) {
-            objectType = NBTApi.ObjectType.ITEM_STACK;
-        } else if (object instanceof ItemType) {
-            objectType = NBTApi.ObjectType.ITEM_TYPE;
-        } else if (object instanceof Entity) {
-            objectType = NBTApi.ObjectType.ENTITY;
-        } else if (object instanceof Block) {
-            objectType = NBTApi.ObjectType.BLOCK;
-        } else if (object instanceof String) {
-            objectType = NBTApi.ObjectType.FILE;
-        }
-        switch (mode) {
-            case ADD:
-                if (objectType != null)
-                    NBT_API.addNBT(object, value, objectType);
-                break;
-            case SET:
-            case RESET:
-                if (objectType != null)
-                    NBT_API.setNBT(object, value, objectType);
-                break;
-            default:
-                assert false;
-        }
     }
 
     @Override
