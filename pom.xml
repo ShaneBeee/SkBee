@@ -6,7 +6,7 @@
 
     <groupId>com.shanebeestudios</groupId>
     <artifactId>SkBee</artifactId>
-    <version>1.17.1</version>
+    <version>1.18.0-Beta1</version>
 
     <properties>
         <maven.compiler.source>16</maven.compiler.source>
