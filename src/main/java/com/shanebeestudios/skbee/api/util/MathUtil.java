@@ -57,4 +57,8 @@ public class MathUtil {
         return x >= xLow && x <= xHigh && y >= yLow && y <= yHigh && z >= zLow && z <= zHigh;
     }
 
+    public static float clamp(float num, float min, float max) {
+        return Math.min(max, Math.max(num, min));
+    }
+
 }
