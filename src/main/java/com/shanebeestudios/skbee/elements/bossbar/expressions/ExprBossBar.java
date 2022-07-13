@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
@@ -23,15 +24,19 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Name("BossBar")
-@Description({"Get a BossBar from an entity (such as a wither) or create your own custom BossBar.",
+@Description({"Get a BossBar from an entity (such as a wither), create your own custom BossBar, or get a list of all custom BossBars.",
         "Progress is a number between 0-100",
         "NOTE: BossBars from entities cannot be saved in global variables, as the entity may not be loaded on the",
         "server when that variable is trying to load. Custom BossBars can be saved in variables."})
 @Examples({"set {_bar} to boss bar named \"le-bar\"",
         "set {_bar} to boss bar named \"le-bar\" with title \"Le Title\" with color bar blue with progress 50",
         "delete boss bar named \"le-bar\"",
-        "set {_bar} to boss bar of target entity"})
+        "set {_bar} to boss bar of target entity",
+        "set {_bars::*} to all bossbars"})
 @Since("1.16.0")
 public class ExprBossBar extends SimpleExpression<BossBar> {
 
@@ -40,7 +45,8 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
         Skript.registerExpression(ExprBossBar.class, BossBar.class, ExpressionType.COMBINED,
                 "boss[ ]bar of %entity%",
                 "[new] boss[ ]bar named %string% [with title %-string%] [with color %-bossbarcolor%] " +
-                        "[with style %-bossbarstyle%] [with progress %-number%]");
+                        "[with style %-bossbarstyle%] [with progress %-number%]",
+                "all boss[ ]bars");
     }
 
     private int pattern;
@@ -67,12 +73,12 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable BossBar[] get(Event event) {
-        if (this.entity != null) {
+        if (pattern == 0 && this.entity != null) {
             Entity entity = this.entity.getSingle(event);
             if (entity instanceof Boss boss) {
                 return new BossBar[]{boss.getBossBar()};
             }
-        } else if (this.key != null) {
+        } else if (pattern == 1 && this.key != null) {
             String name = this.key.getSingle(event);
             NamespacedKey key = getKey(name);
             if (key != null) {
@@ -103,9 +109,7 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
                     if (this.progress != null) {
                         Number proNumber = this.progress.getSingle(event);
                         if (proNumber != null) {
-                            progress = (float) (proNumber.intValue() / 100);
-                            if (progress > 1) progress = 1;
-                            if (progress < 0) progress = 0;
+                            progress = MathUtil.clamp(proNumber.floatValue() / 100, 0, 1);
                         }
                     }
 
@@ -115,13 +119,17 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
                 return new BossBar[]{bossBar};
             }
 
+        } else if (pattern == 2) {
+            List<BossBar> bars = new ArrayList<>();
+            Bukkit.getBossBars().forEachRemaining(bars::add);
+            return bars.toArray(new BossBar[0]);
         }
         return null;
     }
 
     @Override
     public boolean isSingle() {
-        return true;
+        return pattern != 2;
     }
 
     @Override
@@ -133,13 +141,15 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         if (pattern == 0) {
             return "boss bar of entity " + this.entity.toString(e, d);
-        } else {
+        } else if (pattern == 1) {
             String name = "boss bar named " + this.key.toString(e, d);
             String title = this.title != null ? " named " + this.title.toString(e, d) : "";
             String color = this.barColor != null ? " with color " + this.barColor.toString(e, d) : "";
             String style = this.barStyle != null ? " with style " + this.barStyle.toString(e, d) : "";
             String progress = this.progress != null ? " with progress " + this.progress.toString(e, d) : "";
             return name + title + color + style + progress;
+        } else {
+            return "all boss bars";
         }
     }
 
