@@ -152,7 +152,7 @@ public class NBTApi {
             itemNBT.mergeCompound(nbtCompound);
         } else {
             // Tag portion of NBT
-            itemNBT.getCompound("tag").mergeCompound(nbtCompound);
+            itemNBT.getOrCreateCompound("tag").mergeCompound(nbtCompound);
         }
         ItemStack newItemStack = NBTItem.convertNBTtoItem(itemNBT);
         return new ItemType(newItemStack);
