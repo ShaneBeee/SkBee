@@ -13,6 +13,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.ItemTag;
@@ -78,7 +79,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             ItemStack itemStack = itemType.getRandom();
 
             String id = itemStack.getType().getKey().toString();
-            String nbt = NBTApi.getItemStackNBT(itemStack).toString();
+            String nbt = new NBTItem(itemStack).toString();
             Item item = new Item(id, itemStack.getAmount(), ItemTag.ofNbt(nbt));
             return new HoverEvent[]{new HoverEvent(Action.SHOW_ITEM, item)};
         }
