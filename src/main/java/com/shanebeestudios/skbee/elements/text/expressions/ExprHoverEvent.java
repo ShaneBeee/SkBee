@@ -22,6 +22,7 @@ import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -37,6 +38,8 @@ import java.util.List;
 @Since("1.5.0")
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
+    private static final boolean HAS_ITEM_META_NBT = Skript.methodExists(ItemMeta.class, "getAsString");
+
     static {
         Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
                 "[a] [new] hover event showing %strings%",
@@ -49,7 +52,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
-        if (matchedPattern == 1 && !NBTApi.isEnabled()) {
+        if (matchedPattern == 1 && !HAS_ITEM_META_NBT && !NBTApi.isEnabled()) {
             Skript.error("NBTApi is currently unavailable, thus this expression with ItemType cannot be used right now.",
                     ErrorQuality.SEMANTIC_ERROR);
             return false;
@@ -79,7 +82,12 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             ItemStack itemStack = itemType.getRandom();
 
             String id = itemStack.getType().getKey().toString();
-            String nbt = new NBTItem(itemStack).toString();
+            String nbt;
+            if (HAS_ITEM_META_NBT) {
+                nbt = itemStack.getItemMeta().getAsString();
+            } else {
+                nbt = new NBTItem(itemStack).toString();
+            }
             Item item = new Item(id, itemStack.getAmount(), ItemTag.ofNbt(nbt));
             return new HoverEvent[]{new HoverEvent(Action.SHOW_ITEM, item)};
         }
