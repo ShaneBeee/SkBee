@@ -49,9 +49,10 @@ public class NBTApi {
         if (version == MinecraftVersion.UNKNOWN) {
             Util.log("&cFailed to load NBTApi!");
             ENABLED = false;
+        } else {
+            Util.log("&aSuccessfully loaded NBTApi!");
+            ENABLED = true;
         }
-        Util.log("&aSuccessfully loaded NBTApi!");
-        ENABLED = true;
         DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     }
 
