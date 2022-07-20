@@ -66,6 +66,7 @@ public enum NBTCustomType {
 
     @Nullable
     public static NBTCustomType getByTag(NBTCompound compound, String key) {
+        if (compound == null) return null;
         NBTType nbtType = compound.getType(key);
         if (BY_TYPE.containsKey(nbtType)) {
             if (nbtType == NBTType.NBTTagList) {
