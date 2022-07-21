@@ -21,6 +21,9 @@ public class LoggerBee extends Logger {
     @Override
     public void info(String msg) {
         String prefix = msg.replace("[NBTAPI]", "&7[&bNBT&3API&7]");
+        if (msg.contains("google.gson") || msg.contains("bStats")) {
+            return;
+        }
         Util.logLoading(prefix);
     }
 
