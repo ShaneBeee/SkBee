@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
@@ -71,9 +72,12 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         pattern = matchedPattern;
-        translation = (Expression<Object>) exprs[0];
-        objects = pattern == 2 ? (Expression<Object>) exprs[1] : null;
-        return true;
+        translation = LiteralUtils.defendExpression(exprs[0]);
+        objects = pattern == 2 ? LiteralUtils.defendExpression(exprs[1]) : null;
+        if (objects != null) {
+            return LiteralUtils.canInitSafely(translation, objects);
+        }
+        return LiteralUtils.canInitSafely(translation);
     }
 
     @SuppressWarnings("NullableProblems")

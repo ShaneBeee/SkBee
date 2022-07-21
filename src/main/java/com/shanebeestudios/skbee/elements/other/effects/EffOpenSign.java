@@ -12,6 +12,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -27,7 +28,8 @@ import javax.annotation.Nullable;
 public class EffOpenSign extends Effect {
 
     static {
-        if (Skript.methodExists(Player.class, "openSign", Sign.class)) {
+        if (Skript.methodExists(HumanEntity.class, "openSign", Sign.class) ||
+                Skript.methodExists(Player.class, "openSign", Sign.class)) {
             Skript.registerEffect(EffOpenSign.class,
                     "open sign [gui] [(for|of)] [%direction%] %location% to %players%",
                     "open [%direction%] %location%'[s] sign [gui] to %players%");
