@@ -3,11 +3,11 @@ package com.shanebeestudios.skbee.elements.other.type;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.function.FunctionEvent;
 import ch.njol.skript.lang.function.Functions;
-import ch.njol.skript.lang.function.JavaFunction;
 import ch.njol.skript.lang.function.Parameter;
+import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Timespan;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
@@ -22,6 +22,7 @@ import org.bukkit.Vibration.Destination.BlockDestination;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.player.PlayerFishEvent.State;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Types {
@@ -90,8 +91,9 @@ public class Types {
                             "play 1 of dust_color_transition using dustTransition(blue, green, 3) at location of player",
                             "play 1 of vibration using vibration({loc1}, {loc2}, 1 second) at {loc1}")
                     .since("1.9.0")
-                    .parser(new Parser<Particle>() {
+                    .parser(new Parser<>() {
 
+                        @SuppressWarnings("NullableProblems")
                         @Nullable
                         @Override
                         public Particle parse(String s, ParseContext context) {
@@ -99,17 +101,13 @@ public class Types {
                         }
 
                         @Override
-                        public String toString(Particle particle, int flags) {
-                            return ParticleUtil.getName(particle);
+                        public @NotNull String toString(Particle particle, int flags) {
+                            return "" + ParticleUtil.getName(particle);
                         }
 
                         @Override
-                        public String toVariableNameString(Particle particle) {
+                        public @NotNull String toVariableNameString(Particle particle) {
                             return "particle:" + toString(particle, 0);
-                        }
-
-                        public String getVariableNamePattern() {
-                            return "particle://s";
                         }
                     }));
         } else {
@@ -128,13 +126,14 @@ public class Types {
         // == FUNCTIONS ==
 
         // Function to create DustOptions
-        Functions.registerFunction(new JavaFunction<DustOptions>("dustOption", new Parameter[]{
-                new Parameter<>("color", Classes.getExactClassInfo(Color.class), true, null),
-                new Parameter<>("size", Classes.getExactClassInfo(Number.class), true, null)
+        //noinspection ConstantConditions
+        Functions.registerFunction(new SimpleJavaFunction<>("dustOption", new Parameter[]{
+                new Parameter<>("color", DefaultClasses.COLOR, true, null),
+                new Parameter<>("size", DefaultClasses.NUMBER, true, null)
         }, Classes.getExactClassInfo(DustOptions.class), true) {
-            @Nullable
+            @SuppressWarnings("NullableProblems")
             @Override
-            public DustOptions[] execute(FunctionEvent e, Object[][] params) {
+            public DustOptions[] executeSimple(Object[][] params) {
                 org.bukkit.Color color = ((Color) params[0][0]).asBukkitColor();
                 float size = ((Number) params[1][0]).floatValue();
                 return new DustOptions[]{new DustOptions(color, size)};
@@ -146,14 +145,15 @@ public class Types {
 
 
         // Function to create DustTransition
-        Functions.registerFunction(new JavaFunction<DustTransition>("dustTransition", new Parameter[]{
-                new Parameter<>("fromColor", Classes.getExactClassInfo(Color.class), true, null),
-                new Parameter<>("toColor", Classes.getExactClassInfo(Color.class), true, null),
-                new Parameter<>("size", Classes.getExactClassInfo(Number.class), true, null)
+        //noinspection ConstantConditions
+        Functions.registerFunction(new SimpleJavaFunction<>("dustTransition", new Parameter[]{
+                new Parameter<>("fromColor", DefaultClasses.COLOR, true, null),
+                new Parameter<>("toColor", DefaultClasses.COLOR, true, null),
+                new Parameter<>("size", DefaultClasses.NUMBER, true, null)
         }, Classes.getExactClassInfo(DustTransition.class), true) {
-            @Nullable
+            @SuppressWarnings("NullableProblems")
             @Override
-            public DustTransition[] execute(FunctionEvent e, Object[][] params) {
+            public DustTransition[] executeSimple(Object[][] params) {
                 org.bukkit.Color fromColor = ((Color) params[0][0]).asBukkitColor();
                 org.bukkit.Color toColor = ((Color) params[1][0]).asBukkitColor();
                 float size = ((Number) params[2][0]).floatValue();
@@ -168,14 +168,15 @@ public class Types {
                 .since("1.11.1"));
 
         // Function to create Vibration
-        Functions.registerFunction(new JavaFunction<Vibration>("vibration", new Parameter[]{
-                new Parameter<>("from", Classes.getExactClassInfo(Location.class), true, null),
-                new Parameter<>("to", Classes.getExactClassInfo(Location.class), true, null),
-                new Parameter<>("arrivalTime", Classes.getExactClassInfo(Timespan.class), true, null)
+        //noinspection ConstantConditions
+        Functions.registerFunction(new SimpleJavaFunction<>("vibration", new Parameter[]{
+                new Parameter<>("from", DefaultClasses.LOCATION, true, null),
+                new Parameter<>("to", DefaultClasses.LOCATION, true, null),
+                new Parameter<>("arrivalTime", DefaultClasses.TIMESPAN, true, null)
         }, Classes.getExactClassInfo(Vibration.class), true) {
-            @Nullable
+            @SuppressWarnings("NullableProblems")
             @Override
-            public Vibration[] execute(FunctionEvent e, Object[][] params) {
+            public Vibration[] executeSimple(Object[][] params) {
                 if (params[0].length == 0 || params[1].length == 0) {
                     return null;
                 }
