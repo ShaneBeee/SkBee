@@ -13,6 +13,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
+import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
@@ -62,7 +63,10 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
             if (recipe instanceof Keyed keyed && keyed.getKey().toString().equalsIgnoreCase(this.recipe.getSingle(e))) {
                 if (recipe instanceof ShapedRecipe shapedRecipe) {
                     for (ItemStack ingredient : shapedRecipe.getIngredientMap().values()) {
-                        if (ingredient == null) continue;
+                        if (ingredient == null) {
+                            items.add(new ItemType(new ItemStack(Material.AIR)));
+                            continue;
+                        }
                         items.add(new ItemType(ingredient));
                     }
                 } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
