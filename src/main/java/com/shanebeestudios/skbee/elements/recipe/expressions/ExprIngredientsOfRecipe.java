@@ -11,7 +11,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -71,7 +70,6 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
                         for (int x = 0; x < shape[i].length(); x++) {
                             ItemStack ingredient = shapedRecipe.getIngredientMap().get(shape[i].toCharArray()[x]);
                             if (ingredient != null) items.set(i * shape.length + x, new ItemType(ingredient));
-
                         }
                     }
                 } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
