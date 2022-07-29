@@ -51,6 +51,10 @@ public class NBTApi {
             ENABLED = false;
         } else {
             Util.log("&aSuccessfully loaded NBTApi!");
+            // Failsafe to make sure API is properly loaded each time
+            // This is to prevent an error when unloading/saving vars
+            // noinspection ResultOfMethodCallIgnored
+            new NBTContainer("{a:1}").toString();
             ENABLED = true;
         }
         DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;

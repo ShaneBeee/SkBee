@@ -116,10 +116,12 @@ public class SkriptTypes {
                     @Override
                     protected NBTCompound deserialize(@NotNull Fields fields) throws StreamCorruptedException {
                         String nbt = fields.getObject("nbt", String.class);
-                        assert nbt != null;
+                        if (nbt == null) {
+                            throw new StreamCorruptedException("NBT string is null");
+                        }
                         try {
                             return new NBTContainer(nbt);
-                        } catch (IllegalArgumentException ex) {
+                        } catch (Exception ex) {
                             throw new StreamCorruptedException("Invalid nbt data: " + nbt);
                         }
                     }
