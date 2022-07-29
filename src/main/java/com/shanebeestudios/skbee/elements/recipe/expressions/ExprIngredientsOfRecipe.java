@@ -11,6 +11,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -62,12 +63,23 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
         Bukkit.recipeIterator().forEachRemaining(recipe -> {
             if (recipe instanceof Keyed keyed && keyed.getKey().toString().equalsIgnoreCase(this.recipe.getSingle(e))) {
                 if (recipe instanceof ShapedRecipe shapedRecipe) {
-                    for (ItemStack ingredient : shapedRecipe.getIngredientMap().values()) {
-                        if (ingredient == null) {
-                            items.add(new ItemType(new ItemStack(Material.AIR)));
-                            continue;
+                    String[] shape = shapedRecipe.getShape();
+
+                    for (int i = 0; i < 9; i++) {
+                        items.add(new ItemType(Material.AIR));
+                    }
+
+                    for (int i = 0; i < shape.length; i++) {
+
+                        for (int x = 0; x < shape[i].length(); x++) {
+
+
+                            ItemStack ingredient = shapedRecipe.getIngredientMap().get(shape[i].toCharArray()[x]);
+                            SkBee.getPlugin().getLogger().info(ingredient.toString());
+                            items.set(i * 3 + x + 1, new ItemType(ingredient));
+
                         }
-                        items.add(new ItemType(ingredient));
+
                     }
                 } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
                     for (ItemStack ingredient : shapelessRecipe.getIngredientList()) {
