@@ -75,7 +75,6 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
 
 
                             ItemStack ingredient = shapedRecipe.getIngredientMap().get(shape[i].toCharArray()[x]);
-                            SkBee.getPlugin().getLogger().info(ingredient.toString());
                             items.set(i * 3 + x + 1, new ItemType(ingredient));
 
                         }
