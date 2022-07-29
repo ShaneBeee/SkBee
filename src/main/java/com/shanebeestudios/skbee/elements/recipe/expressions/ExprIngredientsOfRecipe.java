@@ -65,38 +65,20 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
                 if (recipe instanceof ShapedRecipe shapedRecipe) {
                     String[] shape = shapedRecipe.getShape();
 
-                    if (shape.length == 3) {
-                        for (int i = 0; i < 9; i++) {
-                            items.add(new ItemType(Material.AIR));
-                        }
-                        for (int i = 0; i < shape.length; i++) {
+                    for (int i = 0; i < Math.pow(shape.length, 2); i++) {
+                        items.add(new ItemType(Material.AIR));
+                    }
 
-                            for (int x = 0; x < shape[i].length(); x++) {
+                    for (int i = 0; i < shape.length; i++) {
+
+                        for (int x = 0; x < shape[i].length(); x++) {
 
 
-                                ItemStack ingredient = shapedRecipe.getIngredientMap().get(shape[i].toCharArray()[x]);
-                                if (ingredient != null) items.set(i * 3 + x, new ItemType(ingredient));
-
-                            }
+                            ItemStack ingredient = shapedRecipe.getIngredientMap().get(shape[i].toCharArray()[x]);
+                            if (ingredient != null) items.set(i * shape.length + x, new ItemType(ingredient));
 
                         }
 
-                    } else if (shape.length == 2) {
-                        for (int i = 0; i < 4; i++) {
-                            items.add(new ItemType(Material.AIR));
-                        }
-
-                        for (int i = 0; i < shape.length; i++) {
-
-                            for (int x = 0; x < shape[i].length(); x++) {
-
-
-                                ItemStack ingredient = shapedRecipe.getIngredientMap().get(shape[i].toCharArray()[x]);
-                                if (ingredient != null) items.set(i * 2 + x, new ItemType(ingredient));
-
-                            }
-
-                        }
                     }
 
 
