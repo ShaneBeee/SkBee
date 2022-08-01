@@ -89,12 +89,12 @@ public class NBTApi {
         try {
             compound = new NBTContainer(nbtString);
         } catch (Exception ex) {
-            Util.skriptError("&cInvalid NBT: &7'&b" + nbtString + "&7'&c");
+            Util.skriptError("&cInvalid NBT: &7'&b%s&7'&c", nbtString);
 
             if (DEBUG) {
                 ex.printStackTrace();
             } else {
-                Util.skriptError("&cCause: &e" + ex.getMessage());
+                Util.skriptError("&cCause: &e%s", ex.getMessage());
             }
             return null;
         }
