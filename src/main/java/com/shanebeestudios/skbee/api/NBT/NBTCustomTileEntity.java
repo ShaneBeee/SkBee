@@ -56,7 +56,7 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     public void mergeCompound(NBTCompound comp) {
         super.mergeCompound(comp);
         if (comp.hasTag("custom")) {
-            NBTCompound custom = comp.getCompound("custom");
+            NBTCompound custom = comp.getOrCreateCompound("custom");
             NBTCompound customNBT = getPersistentDataContainer().getOrCreateCompound(KEY);
             customNBT.mergeCompound(custom);
         }
