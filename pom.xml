@@ -77,8 +77,8 @@
             <version>1.0.0-Beta12</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.realityforge.org.jetbrains.annotations</groupId>
-                    <artifactId>org.jetbrains.annotations</artifactId>
+                    <groupId>org.jetbrains</groupId>
+                    <artifactId>annotations</artifactId>
                 </exclusion>
             </exclusions>
         </dependency>
@@ -86,6 +86,7 @@
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.11.0</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.goingoffskript</groupId>

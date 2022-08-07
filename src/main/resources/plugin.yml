@@ -11,6 +11,8 @@ softdepend:
   - skript-variable-dump
 loadbefore:
   - SkQuery
+libraries:
+  - commons-io:commons-io:2.11.0
 commands:
   skbee:
     description: Main SkBee command
