@@ -21,10 +21,11 @@ import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 import com.shanebeestudios.skbee.elements.scoreboard.objects.BoardManager;
 import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
-import com.shanebeestudios.skbee.metrics.Metrics;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import org.bstats.bukkit.Metrics;
+import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
 import org.bukkit.boss.BossBar;
@@ -45,7 +46,7 @@ public class SkBee extends JavaPlugin {
         ConfigurationSerialization.registerClass(Bound.class, "Bound");
     }
 
-    private static final int[] EARLIEST_VERSION = new int[]{1,17,1};
+    private static final int[] EARLIEST_VERSION = new int[]{1, 17, 1};
 
     private static SkBee instance;
     private Plugin skriptPlugin;
@@ -448,7 +449,7 @@ public class SkBee extends JavaPlugin {
 
     private void loadMetrics() { //6719
         Metrics metrics = new Metrics(this, 6719);
-        metrics.addCustomChart(new Metrics.SimplePie("skript_version", () -> Skript.getVersion().toString()));
+        metrics.addCustomChart(new SimplePie("skript_version", () -> Skript.getVersion().toString()));
     }
 
     @Override

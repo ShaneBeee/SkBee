@@ -100,6 +100,12 @@
             <version>2.2.600</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.bstats</groupId>
+            <artifactId>bstats-bukkit</artifactId>
+            <version>3.0.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
@@ -177,12 +183,21 @@
                             <shadedPattern>com.shanebeestudios.skbee.api.NBT</shadedPattern>
                         </relocation>
                         <relocation>
+                            <pattern>de.tr7zw.annotations</pattern>
+                            <shadedPattern>com.shanebeestudios.skbee.api.NBT.annotations</shadedPattern>
+                        </relocation>
+                        <relocation>
                             <pattern>com.shanebeestudios.vf</pattern>
                             <shadedPattern>com.shanebeestudios.skbee.api.virtualfurnace</shadedPattern>
                         </relocation>
                         <relocation>
                             <pattern>fr.mrmicky.fastboard</pattern>
                             <shadedPattern>com.shanebeestudios.skbee.api.fastboard</shadedPattern>
+                        </relocation>
+                        <relocation>
+                            <pattern>org.bstats</pattern>
+                            <!-- Replace this with your package! -->
+                            <shadedPattern>com.shanebeestudios.skbee.metrics</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>
