@@ -28,11 +28,11 @@ import org.bukkit.inventory.ShapelessRecipe;
 @Name("Recipe - Shaped/Shapeless")
 @Description({"Register a new shaped/shapeless recipe for a specific item using custom ingredients.",
         "Recipes support items and material choices for ingredients. Material choices allow you to use Minecraft tags or lists of items.",
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores.",
-        "IDs are used for recipe discovery/unlocking recipes for players.",
+        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores,",
+        "NOT SPACES!!! IDs are used for recipe discovery/unlocking recipes for players.",
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
         "<b>NOTE:</b> Recipes with 4 or less ingredients will be craftable in the player's crafting grid.",
-        "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the SkBee config to whatever you want.",
+        "By default recipes will start with the namespace \"skbee:\", this can be changed in the SkBee config to whatever you want.",
         "Requires MC 1.13+"})
 @Examples({"on load:",
         "\tregister new shaped recipe for elytra using air, iron chestplate, air, air, iron chestplate and air with id \"elytra\"",
@@ -40,7 +40,7 @@ import org.bukkit.inventory.ShapelessRecipe;
         "\tregister new shaped recipe for {_s} using emerald, emerald, air, emerald, emerald and air with id \"strong_emerald\"",
         "\tregister new shaped recipe for diamond chestplate named \"&3Strong Emerald Chestplate\" using {_s}, air, {_s}, " +
                 "{_s}, {_s}, {_s}, {_s}, {_s} and {_s} with id \"strong_emerald_chestplate\"", "",
-        "\tset {_m} to material choice of every plank",
+        "\tset {_a} to material choice of every plank",
         "\tregister new shaped recipe for jigsaw block using {_a}, {_a}, {_a}, {_a}, {_a}, {_a}, {_a}, {_a} and {_a} with id \"jigsaw\""})
 @RequiredPlugins("1.13+")
 @Since("1.0.0")
