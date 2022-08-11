@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
         "Set should not be used on entities or blocks, it's best to use add. Using set can quite often screw up the entity/block's location. ",
         "The optional 'full' part (added in 1.4.10) will only work on items/slots. When using this, it will return the full NBT of said item, ",
         "including the item amount as well as the item type.",
-        "\nREMOVED IN '1.18.0'"})
+        "\nREMOVED IN 'SkBee 2.0.0'"})
 @Examples({"set {_nbt} to nbt of player's tool", "set {_f} to full nbt of player's tool",
         "add \"{Enchantments:[{id:\"\"sharpness\"\",lvl:5}]}\" to nbt of player's tool",
         "reset nbt of player's tool", "set {_nbt} to nbt of target entity", "set {_nbt} to event-entity",
