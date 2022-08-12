@@ -31,8 +31,8 @@ public class EffSpawnEntityNBT extends Effect {
 
     static {
         Skript.registerEffect(EffSpawnEntityNBT.class,
-                "spawn %entitytypes% [%directions% %locations%] with nbt %nbtcompound%",
-                "spawn %number% of %entitytypes% [%directions% %locations%] with nbt %nbtcompound%");
+                "spawn %entitytypes% [%directions% %locations%] with [nbt] %nbtcompound%",
+                "spawn %number% of %entitytypes% [%directions% %locations%] with [nbt] %nbtcompound%");
     }
 
     @SuppressWarnings("null")

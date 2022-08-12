@@ -33,7 +33,7 @@ public class EffSetBlockNBT extends Effect {
 
     static {
         Skript.registerEffect(EffSetBlockNBT.class,
-                "set (nbt[(-| )]block|tile[(-| )]entity) %directions% %locations% to %itemtype/blockdata% with nbt %nbtcompound%");
+                "set (nbt[(-| )]block|tile[(-| )]entity) %directions% %locations% to %itemtype/blockdata% with [nbt] %nbtcompound%");
     }
 
     @SuppressWarnings("null")
