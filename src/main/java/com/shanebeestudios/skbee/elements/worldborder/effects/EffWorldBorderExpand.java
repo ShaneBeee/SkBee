@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
         "\nTO = sets to the specified size.",
         "\ntimespan = how long it will take the border to get to the new size."})
 @Examples({"expand world border of player by 100 in 5 seconds",
-        "shrink world border of world border of world \"world\" to 100 in 10 seconds"})
+        "shrink world border of world \"world\" to 100 in 10 seconds"})
 @Since("1.17.0")
 public class EffWorldBorderExpand extends Effect {
 
