@@ -14,9 +14,11 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import net.md_5.bungee.api.chat.BaseComponent;
 import net.md_5.bungee.api.chat.HoverEvent;
 import net.md_5.bungee.api.chat.HoverEvent.Action;
 import net.md_5.bungee.api.chat.ItemTag;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.md_5.bungee.api.chat.hover.content.Content;
 import net.md_5.bungee.api.chat.hover.content.Item;
 import net.md_5.bungee.api.chat.hover.content.Text;
@@ -72,7 +74,8 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             String[] string = ((String[]) this.object.getArray(event));
             List<Content> texts = new ArrayList<>();
             for (int i = 0; i < string.length; i++) {
-                texts.add(new Text(string[i] + (i < (string.length - 1) ? System.lineSeparator() : "")));
+                BaseComponent[] baseComponents = TextComponent.fromLegacyText(string[i] + (i < (string.length - 1) ? System.lineSeparator() : ""));
+                texts.add(new Text(baseComponents));
             }
             return new HoverEvent[]{new HoverEvent(Action.SHOW_TEXT, texts)};
         } else if (pattern == 1) {
