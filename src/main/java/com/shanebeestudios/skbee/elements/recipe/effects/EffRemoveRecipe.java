@@ -9,12 +9,14 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
+import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
+import org.bukkit.event.Event;
 
-@SuppressWarnings({"NullableProblems", "ConstantConditions"})
+@SuppressWarnings({"NullableProblems"})
 @Name("Recipe - Remove")
 @Description({"Remove a recipe from your server. Recipes can be removed at any time ",
         "but it is best to do so during a server load event. If a recipe is removed whilst a player is online ",
@@ -25,9 +27,10 @@ import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
         "remove minecraft recipe \"cooked_chicken_from_campfire_cooking\"",
         "remove recipe \"minecraft:diamond_sword\"",
         "remove all minecraft recipes",
+        "remove all recipes",
         "remove custom recipe \"my_recipe\"",
         "remove recipe \"another_recipe\"",
-        "remove recipe \"someplugin:some_recipe\""})
+        "remove recipe \"some_plugin:some_recipe\""})
 @Since("1.0.0")
 public class EffRemoveRecipe extends Effect {
 
@@ -35,20 +38,20 @@ public class EffRemoveRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffRemoveRecipe.class,
-                "remove [(0¦custom|1¦(mc|minecraft))] recipe[s] %strings%",
-                "remove all (mc|minecraft) recipe[s]");
+                "remove [(custom|1¦(mc|minecraft))] recipe[s] %strings%",
+                "remove all [(1¦(mc|minecraft))] recipe[s]");
     }
 
     @SuppressWarnings("null")
     private Expression<String> recipes;
     private boolean all;
-    private boolean MC;
+    private boolean minecraft;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int pattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         all = pattern == 1;
-        MC = all || parseResult.mark == 1;
+        minecraft = parseResult.mark == 1;
         recipes = pattern == 0 ? (Expression<String>) exprs[0] : null;
         return true;
     }
@@ -56,27 +59,33 @@ public class EffRemoveRecipe extends Effect {
     @Override
     protected void execute(Event event) {
         if (all) {
-            RecipeUtil.removeAllMCRecipes();
-            if (config.SETTINGS_DEBUG) {
-                RecipeUtil.log("&aRemoving all Minecraft recipes.");
+            if (minecraft) {
+                RecipeUtil.removeAllMCRecipes();
+                if (config.SETTINGS_DEBUG) {
+                    RecipeUtil.log("&aRemoving all Minecraft recipes.");
+                }
+            } else {
+                Bukkit.clearRecipes();
+                if (config.SETTINGS_DEBUG) {
+                    RecipeUtil.log("&aRemoving all recipes.");
+                }
             }
             return;
         }
-        String[] recipes = this.recipes.getAll(event);
-        if (recipes == null) return;
 
-        for (String recipe : recipes) {
-            if (MC || recipe.startsWith("minecraft:")) {
+        for (String recipe : this.recipes.getAll(event)) {
+            NamespacedKey key;
+            if (minecraft) {
                 recipe = recipe.replace("minecraft:", "");
-                if (config.SETTINGS_DEBUG) {
-                    RecipeUtil.log("&aRemoving recipe: minecraft:" + recipe);
-                }
-                RecipeUtil.removeMCRecipe(recipe);
+                key = NamespacedKey.minecraft(recipe);
             } else {
+                key = RecipeUtil.getKey(recipe);
+            }
+            if (key != null) {
+                Bukkit.removeRecipe(key);
                 if (config.SETTINGS_DEBUG) {
                     RecipeUtil.log("&aRemoving recipe: " + recipe);
                 }
-                RecipeUtil.removeRecipeByKey(recipe);
             }
         }
     }
@@ -85,7 +94,7 @@ public class EffRemoveRecipe extends Effect {
     public String toString(Event e, boolean d) {
         if (all) {
             return "remove all minecraft recipes";
-        } else if (MC) {
+        } else if (minecraft) {
             return "remove minecraft recipes " + recipes.toString(e, d);
         } else {
             return "remove custom recipes " + recipes.toString(e, d);

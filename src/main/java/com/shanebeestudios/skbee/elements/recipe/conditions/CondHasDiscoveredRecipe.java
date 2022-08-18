@@ -7,13 +7,14 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
@@ -42,23 +43,26 @@ public class CondHasDiscoveredRecipe extends Condition {
     @SuppressWarnings("null")
     private Expression<String> recipes;
 
-    @SuppressWarnings({"unchecked", "null"})
+    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         players = (Expression<Player>) exprs[0];
         recipes = (Expression<String>) exprs[1];
         setNegated(matchedPattern == 1);
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public boolean check(Event e) {
-        return players.check(e, player -> recipes.check(e,
-                recipe -> player.hasDiscoveredRecipe(RecipeUtil.getKeyFromString(recipe))), isNegated());
+    public boolean check(Event event) {
+        return players.check(event, player -> recipes.check(event, recipeString -> {
+            NamespacedKey key = RecipeUtil.getKey(recipeString);
+            return key != null && player.hasDiscoveredRecipe(key);
+        }), isNegated());
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         return players.toString(e, d) + (players.isSingle() ? " has" : " have") + (isNegated() ? " not" : "") +
                 " discovered recipe(s) " + recipes.toString(e, d);
     }

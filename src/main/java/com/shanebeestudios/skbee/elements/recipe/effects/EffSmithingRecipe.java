@@ -29,8 +29,9 @@ import javax.annotation.Nullable;
 
 @Name("Recipe - Smithing")
 @Description({"Register a new smithing recipe.",
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores.",
-        "Used for recipe discovery/unlocking recipes for players.",
+        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
+        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
+        "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
         "Note: While 'custom' items will work in these recipes, it appears the smithing table will not recognize them. Requires MC 1.16+"})
 @Examples({"on load:",
         "\tregister new smithing recipe for diamond chestplate using an iron chestplate and a diamond with id \"smith_diamond_chestplate\""})
@@ -90,7 +91,7 @@ public class EffSmithingRecipe extends Effect {
         }
 
         //Remove duplicates on script reload
-        RecipeUtil.removeRecipeByKey(key);
+        Bukkit.removeRecipe(key);
 
         ItemStack resultStack = result.getRandom();
         RecipeChoice choiceBase = getChoice(base);

@@ -26,11 +26,11 @@ import org.bukkit.inventory.StonecuttingRecipe;
 
 @SuppressWarnings({"ConstantConditions", "NullableProblems"})
 @Name("Recipe - StoneCutting")
-@Description({"Register a new stone cutting recipe. " +
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores.",
-        "Used for recipe discovery/unlocking recipes for players. ",
+@Description({"Register a new stone cutting recipe.",
+        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
+        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
+        "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
-        "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the config to whatever you want.",
         "Requires MC 1.13+"})
 @Examples({"on skript load:", "\tregister new stone cutting recipe for diamond using diamond ore with id \"cutting_diamond\""})
 @RequiredPlugins("1.14+")
@@ -103,7 +103,7 @@ public class EffStonecuttingRecipe extends Effect {
         recipe.setGroup(group);
 
         // Remove duplicates on script reload
-        RecipeUtil.removeRecipeByKey(key);
+        Bukkit.removeRecipe(key);
 
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {

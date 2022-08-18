@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.recipe.util;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.util.Timespan;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -15,104 +14,36 @@ import org.bukkit.inventory.ShapelessRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 public class RecipeUtil {
 
     private static final String NAMESPACE = SkBee.getPlugin().getPluginConfig().RECIPE_NAMESPACE;
-    private static final boolean BUKKIT_REMOVE = Skript.methodExists(Bukkit.class, "removeRecipe", NamespacedKey.class);
 
     /**
-     * Get a NamespacedKey from string using this plugin as the namespace
+     * Get a NamespacedKey from string
+     * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
      *
-     * @param key Key for new NamespacedKey, ex: "thisplugin:key"
+     * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
      */
     public static NamespacedKey getKey(String key) {
         try {
-            return new NamespacedKey(NAMESPACE, key.toLowerCase());
+            NamespacedKey namespacedKey;
+            if (key.contains(":")) {
+                namespacedKey = NamespacedKey.fromString(key.toLowerCase(Locale.ROOT));
+            } else {
+                namespacedKey = new NamespacedKey(NAMESPACE, key.toLowerCase());
+            }
+            if (namespacedKey == null) {
+                error("Invalid namespaced key. Must be [a-z0-9/._-:]: " + key);
+                return null;
+            }
+            return namespacedKey;
         } catch (IllegalArgumentException ex) {
             error(ex.getMessage());
             return null;
-        }
-    }
-
-    private static NamespacedKey getKeyByPlugin(String key) {
-        if (key.contains(":")) {
-            String[] split = key.split(":");
-            return new NamespacedKey(split[0], split[1]);
-        }
-        return null;
-    }
-
-    /**
-     * Get a NamespacedKey from a string
-     *
-     * @param key Key to get NamespacedKey for
-     * @return NamespacedKey from string
-     */
-    public static NamespacedKey getKeyFromString(String key) {
-        if (key.contains(":")) {
-            String[] split = key.toLowerCase().split(":");
-            if (split[0].equalsIgnoreCase("minecraft"))
-                return NamespacedKey.minecraft(split[1]);
-            return getKeyByPlugin(key);
-        }
-        return getKey(key);
-    }
-
-    /**
-     * Remove a recipe that is currently registered to the server
-     *
-     * @param recipe Recipe to remove
-     */
-    public static void removeRecipeByKey(String recipe) {
-        recipe = recipe.toLowerCase();
-        if (recipe.contains("minecraft:")) {
-            removeMCRecipe(recipe);
-        } else if (recipe.contains(NAMESPACE + ":")) {
-            recipe = recipe.split(":")[1];
-            removeRecipeByKey(getKey(recipe));
-        } else if (recipe.contains(":")) {
-            NamespacedKey key = getKeyByPlugin(recipe);
-            if (key != null) {
-                removeRecipeByKey(key);
-            }
-        } else {
-            removeRecipeByKey(getKey(recipe));
-        }
-    }
-
-    /**
-     * Remove a Minecraft recipe that is currently registered to the server
-     *
-     * @param recipe Key of recipe to remove
-     */
-    public static void removeMCRecipe(String recipe) {
-        recipe = recipe.replace("minecraft:", "");
-        removeRecipeByKey(NamespacedKey.minecraft(recipe));
-    }
-
-    /**
-     * Remove a recipe from the server based on a NamespacedKey
-     *
-     * @param recipeKey NamespacedKey of recipe to remove
-     */
-    public static void removeRecipeByKey(NamespacedKey recipeKey) {
-        if (BUKKIT_REMOVE) {
-            Bukkit.removeRecipe(recipeKey);
-        } else {
-            try {
-                List<Recipe> recipes = new ArrayList<>();
-                Bukkit.recipeIterator().forEachRemaining(recipe -> {
-                    if (recipe instanceof Keyed && !((Keyed) recipe).getKey().equals(recipeKey)) {
-                        recipes.add(recipe);
-                    }
-                });
-                Bukkit.clearRecipes();
-                recipes.forEach(Bukkit::addRecipe);
-            } catch (NoSuchElementException ignore) {
-            }
         }
     }
 
@@ -226,7 +157,7 @@ public class RecipeUtil {
     }
 
     /**
-     * Send an warning to console prefixed with [Recipe]
+     * Send a warning to console prefixed with [Recipe]
      *
      * @param warning Warning to log
      */

@@ -10,13 +10,13 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.elements.recipe.util.RecipeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.KnowledgeBookMeta;
 import org.bukkit.plugin.Plugin;
-import com.shanebeestudios.skbee.SkBee;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,7 +25,11 @@ import java.util.List;
 @Description({"Add/Remove custom or minecraft recipes to/from a knowledge book item.",
         "Optional string for plugin name, to add recipes from other plugins. Requires MC 1.13+"})
 @Examples({"add custom recipe \"my_recipe\" to player's tool",
-        "add minecraft recipe \"cooked_cod_from_campfire_cooking\" to {_book}"})
+        "add recipe \"my_recipes:fancy_recipe\" to player's tool",
+        "add minecraft recipe \"cooked_cod_from_campfire_cooking\" to {_book}",
+        "add recipe \"minecraft:cooked_cod_from_campfire_cooking\" to {_book}",
+        "add recipe \"some_recipe\" from plugin \"SomePlugin\" to player's tool",
+        "add recipe \"someplugin:some_recipe\" to player's tool"})
 @Since("1.0.0")
 public class EffKnowledgeBook extends Effect {
 
@@ -65,9 +69,6 @@ public class EffKnowledgeBook extends Effect {
             assert pl != null;
             plugin = Bukkit.getPluginManager().getPlugin(pl);
         }
-        if (plugin == null) {
-            plugin = SkBee.getPlugin();
-        }
 
         String[] recipes = this.recipes.getAll(event);
         KnowledgeBookMeta meta = ((KnowledgeBookMeta) book.getItemMeta());
@@ -77,8 +78,10 @@ public class EffKnowledgeBook extends Effect {
             NamespacedKey key;
             if (minecraft)
                 key = NamespacedKey.minecraft(recipe);
-            else
+            else if (plugin != null)
                 key = new NamespacedKey(plugin, recipe);
+            else
+                key = RecipeUtil.getKey(recipe);
 
             if (add)
                 allRecipes.add(key);

@@ -28,14 +28,14 @@ import org.bukkit.inventory.ShapelessRecipe;
 @Name("Recipe - Shaped/Shapeless")
 @Description({"Register a new shaped/shapeless recipe for a specific item using custom ingredients.",
         "Recipes support items and material choices for ingredients. Material choices allow you to use Minecraft tags or lists of items.",
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores,",
-        "NOT SPACES!!! IDs are used for recipe discovery/unlocking recipes for players.",
+        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
+        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
+        "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
         "<b>NOTE:</b> Recipes with 4 or less ingredients will be craftable in the player's crafting grid.",
-        "By default recipes will start with the namespace \"skbee:\", this can be changed in the SkBee config to whatever you want.",
         "Requires MC 1.13+"})
 @Examples({"on load:",
-        "\tregister new shaped recipe for elytra using air, iron chestplate, air, air, iron chestplate and air with id \"elytra\"",
+        "\tregister new shaped recipe for elytra using air, iron chestplate, air, air, iron chestplate and air with id \"my_recipes:elytra\"",
         "\tset {_s} to emerald named \"&3Strong Emerald\"",
         "\tregister new shaped recipe for {_s} using emerald, emerald, air, emerald, emerald and air with id \"strong_emerald\"",
         "\tregister new shaped recipe for diamond chestplate named \"&3Strong Emerald Chestplate\" using {_s}, air, {_s}, " +
@@ -50,14 +50,14 @@ public class EffCraftingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffCraftingRecipe.class,
-                "register [new] (0¦shaped|1¦shapeless) recipe for %itemtype% (using|with ingredients) " +
+                "register [new] (shaped|1¦shapeless) recipe for %itemtype% (using|with ingredients) " +
                         "%itemtypes/materialchoices% with id %string% [in group %-string%]");
     }
 
     @SuppressWarnings("null")
     private Expression<ItemType> item;
     private Expression<Object> ingredients;
-    private Expression<String> key;
+    private Expression<String> id;
     private Expression<String> group;
     private boolean shaped;
 
@@ -66,7 +66,7 @@ public class EffCraftingRecipe extends Effect {
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         item = (Expression<ItemType>) exprs[0];
         ingredients = (Expression<Object>) exprs[1];
-        key = (Expression<String>) exprs[2];
+        id = (Expression<String>) exprs[2];
         group = (Expression<String>) exprs[3];
         shaped = parseResult.mark == 0;
         return true;
@@ -89,14 +89,15 @@ public class EffCraftingRecipe extends Effect {
         }
 
         String group = this.group != null ? this.group.getSingle(event) : null;
-        NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
+        String id = this.id.getSingle(event);
+        NamespacedKey key = RecipeUtil.getKey(id);
         if (key == null) {
             RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
             return;
         }
 
         // Remove duplicates on script reload
-        RecipeUtil.removeRecipeByKey(key);
+        Bukkit.removeRecipe(key);
 
         if (shaped)
             registerShaped(item, ingredients, key, group);
@@ -116,7 +117,7 @@ public class EffCraftingRecipe extends Effect {
             Object object = ingredients.length > i ? ingredients[i] : null;
             if (ingredients.length - 1 < i) {
                 keyChar[i] = ' ';
-            } else if (object instanceof ItemType && ((ItemType) object).getMaterial() == Material.AIR) {
+            } else if (object instanceof ItemType itemType && itemType.getMaterial() == Material.AIR) {
                 keyChar[i] = ' ';
             } else {
                 keyChar[i] = oldChar[i];
@@ -200,7 +201,7 @@ public class EffCraftingRecipe extends Effect {
                 shaped ? "shaped" : "shapeless",
                 item.toString(e, d),
                 ingredients.toString(e, d),
-                key.toString(e, d),
+                id.toString(e, d),
                 this.group != null ? "in group " + this.group.toString(e, d) : "");
     }
 

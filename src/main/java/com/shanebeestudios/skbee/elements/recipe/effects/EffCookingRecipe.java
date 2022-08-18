@@ -31,15 +31,15 @@ import org.bukkit.inventory.SmokingRecipe;
 
 @SuppressWarnings({"NullableProblems", "ConstantConditions"})
 @Name("Recipe - Cooking")
-@Description({"Register new cooking recipes. On 1.13+ you can register recipes for furnaces. ",
-        "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires. ",
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens and underscores. " +
-                "Used for recipe discovery/unlocking recipes for players. " +
-                "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
-        "By default recipes will start with the namespace \"skrecipe:\", this can be changed in the config to whatever you want."})
+@Description({"Register new cooking recipes. On 1.13+ you can register recipes for furnaces.",
+        "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires.",
+        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
+        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
+        "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
+        "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",})
 @Examples({"on skript load:",
         "\tregister new furnace recipe for diamond using dirt with id \"furnace_diamond\"",
-        "\tregister new blasting recipe for emerald using dirt with id \"blasting_emerald\"",
+        "\tregister new blasting recipe for emerald using dirt with id \"my_recipes:blasting_emerald\"",
         "\tregister new smoking recipe for cooked cod named \"Hot Cod\" using puffer fish with id \"smoking_cod\""})
 @RequiredPlugins("1.13+ for furnaces. 1.14+ for smokers, blast furnaces and campfires.")
 @Since("1.0.0")
@@ -119,7 +119,7 @@ public class EffCookingRecipe extends Effect {
         int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : getDefaultCookTime(recipeType);
 
         // Remove duplicates on script reload
-        RecipeUtil.removeRecipeByKey(key);
+        Bukkit.removeRecipe(key);
 
         cookingRecipe(result, ingredient, group, key, xp, cookTime);
     }
