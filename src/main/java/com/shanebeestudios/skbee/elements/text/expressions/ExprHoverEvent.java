@@ -33,7 +33,8 @@ import java.util.List;
 
 @SuppressWarnings("deprecation") // Paper deprecations
 @Name("Text Component - Hover Event")
-@Description("Create a new hover event. Can show text or an item to a player. 'showing %itemtype%' requires Minecraft 1.16.2+")
+@Description({"Create a new hover event. Can show text or an item to a player. 'showing %itemtype%' requires Minecraft 1.16.2+",
+        "When showing an ItemType from a variable, use `...showing item {var}`, this is just a weird quirk of this."})
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
         "set hover event of {_t} to a new hover event showing player's tool",
         "send component {_t} to player"})
