@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -10,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.registrations.Classes;
@@ -50,7 +50,7 @@ public class ExprTabCompletion extends SimpleExpression<String> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
-        if (!ScriptLoader.isCurrentEvent(TabCompleteEvent.class)) {
+        if (!ParserInstance.get().isCurrentEvent(TabCompleteEvent.class)) {
             Skript.error("Tab completions are only usable in a tab complete event.", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
@@ -83,7 +83,7 @@ public class ExprTabCompletion extends SimpleExpression<String> {
         }
 
         switch (mode) {
-            case SET -> {
+            case SET, ADD -> {
                 String buff = event.getBuffer();
                 String[] buffers = buff.split(" ");
                 String last = buff.substring(buff.length() - 1);
@@ -96,9 +96,11 @@ public class ExprTabCompletion extends SimpleExpression<String> {
                         arg = buffers[position];
                     }
 
-                    List<String> completions = new ArrayList<>();
+                    List<String> completions = mode == ChangeMode.SET ? new ArrayList<>() : new ArrayList<>(event.getCompletions());
                     if (objects == null) {
-                        event.setCompletions(Collections.singletonList(""));
+                        if (mode == ChangeMode.SET) {
+                            event.setCompletions(Collections.singletonList(""));
+                        }
                         return;
                     }
                     for (Object o : objects) {
@@ -118,15 +120,6 @@ public class ExprTabCompletion extends SimpleExpression<String> {
                     } catch (Exception ignore) {
                     } // Had a little issue when removing from a blank list
                 }
-            }
-            case ADD -> {
-                assert objects != null;
-                List<String> completions = new ArrayList<>();
-                for (Object object : objects) {
-                    completions.add(Classes.toString(object));
-                }
-                completions.addAll(event.getCompletions());
-                event.setCompletions(completions);
             }
             case DELETE -> event.setCompletions(Collections.singletonList(""));
         }
