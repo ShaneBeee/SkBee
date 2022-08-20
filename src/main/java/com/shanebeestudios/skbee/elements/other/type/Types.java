@@ -10,6 +10,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Timespan;
+import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -22,10 +23,27 @@ import org.bukkit.Vibration.Destination.BlockDestination;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.player.PlayerFishEvent.State;
+import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Locale;
+
 public class Types {
+
+    private static String getItemFlagNames() {
+        List<String> flags = new ArrayList<>();
+        for (ItemFlag flag : ItemFlag.values()) {
+            String hide = flag.name().replace("HIDE_", "").toLowerCase(Locale.ROOT);
+            hide += "_flag";
+            flags.add(hide);
+        }
+        Collections.sort(flags);
+        return StringUtils.join(flags, ",");
+    }
 
     static {
         // == TYPES ==
@@ -42,6 +60,48 @@ public class Types {
         } else {
             Util.logLoading("It looks like another addon registered 'fishingstate' already.");
             Util.logLoading("You may have to use their fishing states in SkBee's 'Fish Event State' expression.");
+        }
+
+        if (Classes.getExactClassInfo(ItemFlag.class) == null) {
+            Classes.registerClass(new ClassInfo<>(ItemFlag.class, "itemflag")
+                    .user("item ?flags?")
+                    .name("Item Flag")
+                    .description("Represents the different Item Flags that can be applied to an item.")
+                    .user(getItemFlagNames())
+                    .since("INSERT VERSION")
+                    .parser(new Parser<>() {
+
+                        @Override
+                        public boolean canParse(@NotNull ParseContext context) {
+                            return true;
+                        }
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public @Nullable ItemFlag parse(String string, ParseContext context) {
+                            String flag = string.replace(" ", "_").toUpperCase(Locale.ROOT);
+                            flag = "HIDE_" + flag.replace("_FLAG", "");
+                            try {
+                                return ItemFlag.valueOf(flag);
+                            } catch (IllegalArgumentException ignore) {
+                                return null;
+                            }
+                        }
+
+                        @Override
+                        public @NotNull String toString(ItemFlag itemFlag, int flags) {
+                            String flag = itemFlag.name().replace("HIDE_", "") + "_FLAG";
+                            return flag.toLowerCase(Locale.ROOT);
+                        }
+
+                        @Override
+                        public @NotNull String toVariableNameString(ItemFlag itemFlag) {
+                            return toString(itemFlag, 0);
+                        }
+                    }));
+        } else {
+            Util.logLoading("It looks like another addon registered 'itemflag' already.");
+            Util.logLoading("You may have to use their Item Flags in SkBee's 'Hidden Item Flags' expression.");
         }
 
         // Only register if no other addons have registered this class
