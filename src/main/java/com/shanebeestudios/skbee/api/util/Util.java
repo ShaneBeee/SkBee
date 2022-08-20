@@ -11,6 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.UUID;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -73,6 +74,10 @@ public class Util {
     }
 
     public static NamespacedKey getNamespacedKey(@NotNull String key) {
+        if (key.contains(" ")) {
+            key = key.replace(" ", "_");
+        }
+        key = key.toLowerCase(Locale.ROOT);
         if (key.contains(":")) {
             NamespacedKey namespacedKey = NamespacedKey.fromString(key);
             if (namespacedKey == null) {
