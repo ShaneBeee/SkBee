@@ -5,7 +5,9 @@ import ch.njol.skript.log.ErrorQuality;
 import com.shanebeestudios.skbee.SkBee;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -68,6 +70,24 @@ public class Util {
 
     public static List<String> getDebugs() {
         return DEBUGS;
+    }
+
+    public static NamespacedKey getNamespacedKey(@NotNull String key) {
+        if (key.contains(":")) {
+            NamespacedKey namespacedKey = NamespacedKey.fromString(key);
+            if (namespacedKey == null) {
+                skriptError("Invalid key. Must be [a-z0-9/._-:]: %s", key);
+                return null;
+            }
+            return namespacedKey;
+        } else {
+            try {
+                return new NamespacedKey(SkBee.getPlugin(), key);
+            } catch (IllegalArgumentException ex) {
+                skriptError(ex.getMessage());
+                return null;
+            }
+        }
     }
 
     /**
