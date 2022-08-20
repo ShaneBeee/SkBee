@@ -10,8 +10,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.MathUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
@@ -80,42 +80,46 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
             }
         } else if (pattern == 1 && this.key != null) {
             String name = this.key.getSingle(event);
-            NamespacedKey key = getKey(name);
+            if (name == null) return null;
+            NamespacedKey key = Util.getNamespacedKey(name);
             if (key != null) {
+                String title = null;
+                if (this.title != null && this.title.getSingle(event) != null) {
+                    title = this.title.getSingle(event);
+                }
+
+                BarColor barColor = null;
+                if (this.barColor != null) {
+                    barColor = this.barColor.getSingle(event);
+                }
+                if (barColor == null) {
+                    barColor = BarColor.PURPLE;
+                }
+
+                BarStyle barStyle = null;
+                if (this.barStyle != null) {
+                    barStyle = this.barStyle.getSingle(event);
+                }
+                if (barStyle == null) {
+                    barStyle = BarStyle.SEGMENTED_20;
+                }
+
+                float progress = 1;
+                if (this.progress != null) {
+                    Number proNumber = this.progress.getSingle(event);
+                    if (proNumber != null) {
+                        progress = MathUtil.clamp(proNumber.floatValue() / 100, 0, 1);
+                    }
+                }
                 KeyedBossBar bossBar = Bukkit.getBossBar(key);
                 if (bossBar == null) {
-                    String title = null;
-                    if (this.title != null && this.title.getSingle(event) != null) {
-                        title = this.title.getSingle(event);
-                    }
-
-                    BarColor barColor = null;
-                    if (this.barColor != null) {
-                        barColor = this.barColor.getSingle(event);
-                    }
-                    if (barColor == null) {
-                        barColor = BarColor.PURPLE;
-                    }
-
-                    BarStyle barStyle = null;
-                    if (this.barStyle != null) {
-                        barStyle = this.barStyle.getSingle(event);
-                    }
-                    if (barStyle == null) {
-                        barStyle = BarStyle.SEGMENTED_20;
-                    }
-
-                    float progress = 1;
-                    if (this.progress != null) {
-                        Number proNumber = this.progress.getSingle(event);
-                        if (proNumber != null) {
-                            progress = MathUtil.clamp(proNumber.floatValue() / 100, 0, 1);
-                        }
-                    }
-
                     bossBar = Bukkit.createBossBar(key, title, barColor, barStyle);
-                    bossBar.setProgress(progress);
+                } else {
+                    bossBar.setTitle(title);
+                    bossBar.setColor(barColor);
+                    bossBar.setStyle(barStyle);
                 }
+                bossBar.setProgress(progress);
                 return new BossBar[]{bossBar};
             }
 
@@ -151,25 +155,6 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
         } else {
             return "all boss bars";
         }
-    }
-
-    private NamespacedKey getKey(@Nullable String key) {
-        if (key == null) return null;
-
-        String[] keys = key.split(":");
-        if (keys.length == 2) {
-            try {
-                return new NamespacedKey(keys[0], keys[1]);
-            } catch (IllegalArgumentException ignore) {
-            }
-
-        } else {
-            try {
-                return new NamespacedKey(SkBee.getPlugin(), keys[0]);
-            } catch (IllegalArgumentException ignore) {
-            }
-        }
-        return null;
     }
 
 }
