@@ -11,11 +11,13 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -70,16 +72,9 @@ public class ExprMinecraftTag extends SimpleExpression<Object> {
             Bukkit.getTags(TAG_TYPE[tagPattern], Material.class).forEach(tags::add);
         } else {
             for (String s : strings.getArray(event)) {
-                NamespacedKey key;
-                s = s.toLowerCase(Locale.ROOT);
-                if (s.contains(":")) {
-                    if (s.split(":").length > 2) {
-                        continue;
-                    }
-                    key = NamespacedKey.fromString(s);
-                } else {
-                    key = NamespacedKey.minecraft(s);
-                }
+                NamespacedKey key = Util.getNamespacedKey(s.toLowerCase(Locale.ROOT));
+                if (key == null) continue;
+
                 Tag<Material> tag = Bukkit.getTag(TAG_TYPE[tagPattern], key, Material.class);
                 if (tag != null) {
                     tags.add(tag);
@@ -107,7 +102,7 @@ public class ExprMinecraftTag extends SimpleExpression<Object> {
     }
 
     @Override
-    public Class<? extends Object> getReturnType() {
+    public @NotNull Class<? extends Object> getReturnType() {
         return pattern == 2 ? ItemType.class : Tag.class;
     }
 
@@ -117,7 +112,8 @@ public class ExprMinecraftTag extends SimpleExpression<Object> {
         return switch (pattern) {
             case 0 -> String.format("minecraft %s tag[s] %s", TAG_TYPE[tagPattern], strings.toString(e, d));
             case 1 -> String.format("all minecraft %s tag[s]", TAG_TYPE[tagPattern]);
-            case 2 -> String.format("all itemtypes of minecraft %s tag[s] %s", TAG_TYPE[tagPattern], strings.toString(e, d));
+            case 2 ->
+                    String.format("all itemtypes of minecraft %s tag[s] %s", TAG_TYPE[tagPattern], strings.toString(e, d));
             default -> null;
         };
     }

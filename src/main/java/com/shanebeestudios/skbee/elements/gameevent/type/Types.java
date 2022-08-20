@@ -5,6 +5,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.GameEvent;
 import org.bukkit.NamespacedKey;
 import org.jetbrains.annotations.NotNull;
@@ -13,7 +14,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 
 public class Types {
 
@@ -32,7 +32,13 @@ public class Types {
                     @Nullable
                     @Override
                     public GameEvent parse(String string, ParseContext context) {
-                        return Types.parse(string);
+                        try {
+                            NamespacedKey namespacedKey = Util.getNamespacedKey(string);
+                            if (namespacedKey == null) return null;
+                            return GameEvent.getByKey(namespacedKey);
+                        } catch (IllegalArgumentException ignore) {
+                            return null;
+                        }
                     }
 
                     @Override
@@ -58,16 +64,6 @@ public class Types {
         }
         Collections.sort(names);
         return StringUtils.join(names, ", ");
-    }
-
-    private static GameEvent parse(String string) {
-        try {
-            string = string.replace(" ", "_").toLowerCase(Locale.ROOT);
-            NamespacedKey minecraft = NamespacedKey.minecraft(string);
-            return GameEvent.getByKey(minecraft);
-        } catch (IllegalArgumentException ignore) {
-            return null;
-        }
     }
 
 }

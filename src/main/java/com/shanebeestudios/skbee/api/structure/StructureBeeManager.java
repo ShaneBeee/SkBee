@@ -19,19 +19,7 @@ public class StructureBeeManager {
         if (STRUCTURE_MAP.containsKey(name)) {
             return STRUCTURE_MAP.get(name);
         } else {
-            name = name.toLowerCase(Locale.ROOT);
-            NamespacedKey namespacedKey;
-            try {
-                if (name.contains(":")) {
-                    namespacedKey = NamespacedKey.fromString(name);
-                } else {
-                    namespacedKey = NamespacedKey.minecraft(name);
-                }
-            } catch (IllegalArgumentException ex) {
-                Util.skriptError(ex.getMessage());
-                return null;
-            }
-
+            NamespacedKey namespacedKey = Util.getNamespacedKey(name);
             if (namespacedKey == null) {
                 return null;
             }
