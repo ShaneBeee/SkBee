@@ -81,7 +81,7 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
         } else if (pattern == 1 && this.key != null) {
             String name = this.key.getSingle(event);
             if (name == null) return null;
-            NamespacedKey key = Util.getNamespacedKey(name);
+            NamespacedKey key = Util.getNamespacedKey(name, true);
             if (key != null) {
                 String title = null;
                 if (this.title != null && this.title.getSingle(event) != null) {

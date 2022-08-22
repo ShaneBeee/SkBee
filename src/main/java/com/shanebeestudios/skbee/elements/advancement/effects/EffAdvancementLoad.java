@@ -51,7 +51,7 @@ public class EffAdvancementLoad extends Effect {
         String advancement = this.advancement.getSingle(event);
         if (key == null || advancement == null) return;
 
-        NamespacedKey namespacedKey = Util.getNamespacedKey(key);
+        NamespacedKey namespacedKey = Util.getNamespacedKey(key, true);
         if (namespacedKey != null) {
             try {
                 Bukkit.getUnsafe().loadAdvancement(namespacedKey, advancement);

@@ -33,7 +33,7 @@ public class Types {
                         @SuppressWarnings("NullableProblems")
                         @Override
                         public @Nullable Advancement parse(String string, ParseContext context) {
-                            NamespacedKey namespacedKey = Util.getNamespacedKey(string);
+                            NamespacedKey namespacedKey = Util.getNamespacedKey(string, false);
                             if (namespacedKey != null) {
                                 return Bukkit.getAdvancement(namespacedKey);
                             }

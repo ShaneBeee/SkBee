@@ -19,7 +19,7 @@ public class StructureBeeManager {
         if (STRUCTURE_MAP.containsKey(name)) {
             return STRUCTURE_MAP.get(name);
         } else {
-            NamespacedKey namespacedKey = Util.getNamespacedKey(name);
+            NamespacedKey namespacedKey = Util.getNamespacedKey(name, true);
             if (namespacedKey == null) {
                 return null;
             }

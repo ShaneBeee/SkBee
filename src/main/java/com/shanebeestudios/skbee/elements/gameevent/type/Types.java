@@ -33,7 +33,7 @@ public class Types {
                     @Override
                     public GameEvent parse(String string, ParseContext context) {
                         try {
-                            NamespacedKey namespacedKey = Util.getNamespacedKey(string);
+                            NamespacedKey namespacedKey = Util.getNamespacedKey(string, false);
                             if (namespacedKey == null) return null;
                             return GameEvent.getByKey(namespacedKey);
                         } catch (IllegalArgumentException ignore) {

@@ -73,7 +73,7 @@ public class Util {
         return DEBUGS;
     }
 
-    public static NamespacedKey getNamespacedKey(@NotNull String key) {
+    public static NamespacedKey getNamespacedKey(@NotNull String key, boolean error) {
         if (key.contains(" ")) {
             key = key.replace(" ", "_");
         }
@@ -81,7 +81,9 @@ public class Util {
         if (key.contains(":")) {
             NamespacedKey namespacedKey = NamespacedKey.fromString(key);
             if (namespacedKey == null) {
-                skriptError("Invalid key. Must be [a-z0-9/._-:]: %s", key);
+                if (error) {
+                    skriptError("Invalid key. Must be [a-z0-9/._-:]: %s", key);
+                }
                 return null;
             }
             return namespacedKey;
@@ -89,7 +91,9 @@ public class Util {
             try {
                 return new NamespacedKey(SkBee.getPlugin(), key);
             } catch (IllegalArgumentException ex) {
-                skriptError(ex.getMessage());
+                if (error) {
+                    skriptError(ex.getMessage());
+                }
                 return null;
             }
         }
