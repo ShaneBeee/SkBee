@@ -68,7 +68,7 @@ public class Types {
                     .name("Item Flag")
                     .description("Represents the different Item Flags that can be applied to an item.")
                     .user(getItemFlagNames())
-                    .since("INSERT VERSION")
+                    .since("2.1.0")
                     .parser(new Parser<>() {
 
                         @Override
