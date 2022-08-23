@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
         "give player potion of harming with hidden potion effects flag",
         "set {_b} to leather boots with dye flag hidden",
         "set {_i} to diamond sword of unbreaking 3 with all flags hidden",
-        "set {_i} to unbreakable netherite pickaxe with hidden flags",
+        "set {_i} to unbreakable netherite pickaxe with hidden unbreakable flag",
         "set {_i} to unbreakable diamond sword of sharpness 3 with unbreakable flag and enchants flag hidden"})
 @Since("1.0.0")
 public class ExprHiddenFlags extends SimpleExpression<ItemType> {

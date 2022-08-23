@@ -42,7 +42,7 @@ public class Types {
             flags.add(hide);
         }
         Collections.sort(flags);
-        return StringUtils.join(flags, ",");
+        return StringUtils.join(flags, ", ");
     }
 
     static {
@@ -66,7 +66,8 @@ public class Types {
             Classes.registerClass(new ClassInfo<>(ItemFlag.class, "itemflag")
                     .user("item ?flags?")
                     .name("Item Flag")
-                    .description("Represents the different Item Flags that can be applied to an item.")
+                    .description("Represents the different Item Flags that can be applied to an item.",
+                            "NOTE: Underscores aren't required, you CAN use spaces.")
                     .user(getItemFlagNames())
                     .since("2.1.0")
                     .parser(new Parser<>() {
