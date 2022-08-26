@@ -83,43 +83,39 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
             if (name == null) return null;
             NamespacedKey key = Util.getNamespacedKey(name, true);
             if (key != null) {
-                String title = null;
-                if (this.title != null && this.title.getSingle(event) != null) {
-                    title = this.title.getSingle(event);
-                }
-
-                BarColor barColor = null;
-                if (this.barColor != null) {
-                    barColor = this.barColor.getSingle(event);
-                }
-                if (barColor == null) {
-                    barColor = BarColor.PURPLE;
-                }
-
-                BarStyle barStyle = null;
-                if (this.barStyle != null) {
-                    barStyle = this.barStyle.getSingle(event);
-                }
-                if (barStyle == null) {
-                    barStyle = BarStyle.SEGMENTED_20;
-                }
-
-                float progress = 1;
-                if (this.progress != null) {
-                    Number proNumber = this.progress.getSingle(event);
-                    if (proNumber != null) {
-                        progress = MathUtil.clamp(proNumber.floatValue() / 100, 0, 1);
-                    }
-                }
                 KeyedBossBar bossBar = Bukkit.getBossBar(key);
                 if (bossBar == null) {
+                    String title = null;
+                    if (this.title != null && this.title.getSingle(event) != null) {
+                        title = this.title.getSingle(event);
+                    }
+
+                    BarColor barColor = null;
+                    if (this.barColor != null) {
+                        barColor = this.barColor.getSingle(event);
+                    }
+                    if (barColor == null) {
+                        barColor = BarColor.PURPLE;
+                    }
+
+                    BarStyle barStyle = null;
+                    if (this.barStyle != null) {
+                        barStyle = this.barStyle.getSingle(event);
+                    }
+                    if (barStyle == null) {
+                        barStyle = BarStyle.SEGMENTED_20;
+                    }
+
+                    float progress = 1;
+                    if (this.progress != null) {
+                        Number proNumber = this.progress.getSingle(event);
+                        if (proNumber != null) {
+                            progress = MathUtil.clamp(proNumber.floatValue() / 100, 0, 1);
+                        }
+                    }
                     bossBar = Bukkit.createBossBar(key, title, barColor, barStyle);
-                } else {
-                    bossBar.setTitle(title);
-                    bossBar.setColor(barColor);
-                    bossBar.setStyle(barStyle);
+                    bossBar.setProgress(progress);
                 }
-                bossBar.setProgress(progress);
                 return new BossBar[]{bossBar};
             }
 
