@@ -47,7 +47,7 @@ public class BoardManager implements Listener {
     @EventHandler
     private void onQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        Bukkit.getScheduler().runTaskLater(PLUGIN, () -> removeBoard(uuid), 0);
+        Bukkit.getScheduler().runTaskLater(PLUGIN, () -> removeBoard(uuid), 1);
     }
 
 }
