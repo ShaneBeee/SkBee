@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerTeleportEvent;
 
 public class BoundBorderListener implements Listener {
 
@@ -25,6 +26,18 @@ public class BoundBorderListener implements Listener {
         Player player = event.getPlayer();
         Location from = event.getFrom();
         Location to = event.getTo();
+        boundMove(player, from, to);
+    }
+
+    @EventHandler
+    private void onPlayerTeleport(PlayerTeleportEvent event) {
+        Player player = event.getPlayer();
+        Location from = event.getFrom();
+        Location to = event.getTo();
+        boundMove(player, from, to);
+    }
+
+    private void boundMove(Player player, Location from, Location to) {
         if (to == null || to.equals(from)) {
             return;
         }
