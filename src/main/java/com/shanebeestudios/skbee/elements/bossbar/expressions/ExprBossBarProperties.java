@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
@@ -175,8 +176,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
                     newProgress = oldProgress - progress;
                 }
 
-                if (newProgress < 0) newProgress = 0;
-                if (newProgress > 1) newProgress = 1;
+                newProgress = MathUtil.clamp((float) newProgress, 0, 1);
                 bossBar.setProgress(newProgress);
             }
         } else if (pattern == BAR_FLAG) {
