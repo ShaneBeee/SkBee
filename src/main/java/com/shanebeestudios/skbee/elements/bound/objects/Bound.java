@@ -11,6 +11,7 @@ import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class Bound implements ConfigurationSerializable {
     private String id;
     private List<UUID> owners = new ArrayList<>();
     private List<UUID> members = new ArrayList<>();
+    private Map<String, Object> values = new HashMap<>();
     private BoundingBox boundingBox;
 
     /**
@@ -290,6 +292,26 @@ public class Bound implements ConfigurationSerializable {
         this.members.remove(member);
     }
 
+    public void setValue(String key, Object value) {
+        this.values.put(key, value);
+    }
+
+    public void deleteValue(String key) {
+        this.values.remove(key);
+    }
+
+    public void clearValues() {
+        this.values = new HashMap<>();
+    }
+
+    public Object getValue(String key) {
+        return this.values.get(key);
+    }
+
+    public Map<String, Object> getValues() {
+        return values;
+    }
+
     /**
      * Get the instance of the Bukkit {@link BoundingBox}
      *
@@ -328,6 +350,7 @@ public class Bound implements ConfigurationSerializable {
         this.members.forEach(uuid -> members.add(uuid.toString()));
         result.put("owners", owners);
         result.put("members", members);
+        result.put("values", values);
 
         return result;
     }
@@ -369,6 +392,10 @@ public class Bound implements ConfigurationSerializable {
                 memberUUIDs.add(uuid);
             });
             bound.setMembers(memberUUIDs);
+        }
+
+        if (args.containsKey("values")) {
+            bound.values = (Map<String, Object>) args.get("values");
         }
 
         return bound;
