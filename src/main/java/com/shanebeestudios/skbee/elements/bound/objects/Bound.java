@@ -1,10 +1,12 @@
 package com.shanebeestudios.skbee.elements.bound.objects;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
@@ -19,6 +21,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
+@SerializableAs("Bound")
 public class Bound implements ConfigurationSerializable {
 
     private final String world;
@@ -29,29 +32,27 @@ public class Bound implements ConfigurationSerializable {
     private BoundingBox boundingBox;
 
     /**
-     * Create a new bounding box between 2 sets of coordinates
+     * Create a new bound in a {@link World} with ID using a {@link BoundingBox}
      *
-     * @param world World this bound is in
-     * @param x     x coord of 1st corner of bound
-     * @param y     y coord of 1st corner of bound
-     * @param z     z coord of 1st corner of bound
-     * @param x2    x coord of 2nd corner of bound
-     * @param y2    y coord of 2nd corner of bound
-     * @param z2    z coord of 2nd corner of bound
+     * @param world       World this bound is in
+     * @param id          ID of this bound
+     * @param boundingBox BoundingBox of this bound
      */
-    public Bound(String world, int x, int y, int z, int x2, int y2, int z2, String id) {
+    public Bound(String world, String id, BoundingBox boundingBox) {
         this.world = world;
         this.id = id;
-        this.boundingBox = new BoundingBox(x, y, z, x2, y2, z2);
+        this.boundingBox = boundingBox;
     }
 
     /**
-     * Create a new bounding box between 2 locations (must be in same world)
+     * Create a new bound between 2 locations (must be in same world)
      *
      * @param location  Location 1
      * @param location2 Location 2
+     * @param id        ID of this bound
      */
     public Bound(Location location, Location location2, String id) {
+        Preconditions.checkArgument(location.getWorld() == location2.getWorld(), "Worlds have to match");
         this.world = location.getWorld().getName();
         this.id = id;
         this.boundingBox = BoundingBox.of(location, location2);
@@ -335,14 +336,9 @@ public class Bound implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<>();
 
-        result.put("world", world);
-        result.put("x1", (int) this.boundingBox.getMinX());
-        result.put("y1", (int) this.boundingBox.getMinY());
-        result.put("z1", (int) this.boundingBox.getMinZ());
-        result.put("x2", (int) this.boundingBox.getMaxX());
-        result.put("y2", (int) this.boundingBox.getMaxY());
-        result.put("z2", (int) this.boundingBox.getMaxZ());
         result.put("id", id);
+        result.put("world", world);
+        result.put("boundingbox", boundingBox);
 
         List<String> owners = new ArrayList<>();
         this.owners.forEach(uuid -> owners.add(uuid.toString()));
@@ -364,15 +360,21 @@ public class Bound implements ConfigurationSerializable {
     @SuppressWarnings("unchecked")
     public static Bound deserialize(Map<String, Object> args) {
         String world = ((String) args.get("world"));
-        int x = ((Number) args.get("x1")).intValue();
-        int y = ((Number) args.get("y1")).intValue();
-        int z = ((Number) args.get("z1")).intValue();
-        int x2 = ((Number) args.get("x2")).intValue();
-        int y2 = ((Number) args.get("y2")).intValue();
-        int z2 = ((Number) args.get("z2")).intValue();
         String id = String.valueOf(args.get("id"));
-
-        Bound bound = new Bound(world, x, y, z, x2, y2, z2, id);
+        Bound bound;
+        if (args.containsKey("boundingbox")) {
+            BoundingBox box = ((BoundingBox) args.get("boundingbox"));
+            bound = new Bound(world, id, box);
+        } else {
+            int x = ((Number) args.get("x1")).intValue();
+            int y = ((Number) args.get("y1")).intValue();
+            int z = ((Number) args.get("z1")).intValue();
+            int x2 = ((Number) args.get("x2")).intValue();
+            int y2 = ((Number) args.get("y2")).intValue();
+            int z2 = ((Number) args.get("z2")).intValue();
+            BoundingBox box = new BoundingBox(x, y, z, x2, y2, z2);
+            bound = new Bound(world, id, box);
+        }
 
         if (args.containsKey("owners")) {
             List<String> owners = (List<String>) args.get("owners");
