@@ -158,7 +158,7 @@ public class Bound implements ConfigurationSerializable {
     public void setLesserX(int x) {
         Vector min = this.boundingBox.getMin();
         min.setX(x);
-        this.boundingBox = BoundingBox.of(min, this.boundingBox.getMax());
+        this.boundingBox = this.boundingBox.union(min);
     }
 
     public int getLesserY() {
@@ -168,7 +168,7 @@ public class Bound implements ConfigurationSerializable {
     public void setLesserY(int y) {
         Vector min = this.boundingBox.getMin();
         min.setY(y);
-        this.boundingBox = BoundingBox.of(min, this.boundingBox.getMax());
+        this.boundingBox = this.boundingBox.union(min);
     }
 
     public int getLesserZ() {
@@ -178,7 +178,7 @@ public class Bound implements ConfigurationSerializable {
     public void setLesserZ(int z) {
         Vector min = this.boundingBox.getMin();
         min.setZ(z);
-        this.boundingBox = BoundingBox.of(min, this.boundingBox.getMax());
+        this.boundingBox = this.boundingBox.union(min);
     }
 
     public int getGreaterX() {
@@ -188,7 +188,7 @@ public class Bound implements ConfigurationSerializable {
     public void setGreaterX(int x2) {
         Vector max = this.boundingBox.getMax();
         max.setX(x2);
-        this.boundingBox = BoundingBox.of(this.boundingBox.getMin(), max);
+        this.boundingBox = this.boundingBox.union(max);
     }
 
     public int getGreaterY() {
@@ -198,7 +198,7 @@ public class Bound implements ConfigurationSerializable {
     public void setGreaterY(int y2) {
         Vector max = this.boundingBox.getMax();
         max.setY(y2);
-        this.boundingBox = BoundingBox.of(this.boundingBox.getMin(), max);
+        this.boundingBox = this.boundingBox.union(max);
     }
 
     public int getGreaterZ() {
@@ -208,7 +208,7 @@ public class Bound implements ConfigurationSerializable {
     public void setGreaterZ(int z2) {
         Vector max = this.boundingBox.getMax();
         max.setZ(z2);
-        this.boundingBox = BoundingBox.of(this.boundingBox.getMin(), max);
+        this.boundingBox = this.boundingBox.union(max);
     }
 
     public void change(Axis axis, Corner corner, int amount) {
