@@ -82,7 +82,9 @@ public class EffParticle extends Effect {
         if (this.count == null || this.particle == null || this.location == null) return;
 
         boolean hasExtra = this.extra != null;
-        int count = this.count.getSingle(e).intValue();
+        Number countSingle = this.count.getSingle(e);
+        int count = countSingle != null ? countSingle.intValue() : 0;
+
         Particle particle = this.particle.getSingle(e);
         Location[] locations = this.location.getArray(e);
         Vector offset = this.offset != null ? this.offset.getSingle(e) : new Vector(0, 0, 0);
