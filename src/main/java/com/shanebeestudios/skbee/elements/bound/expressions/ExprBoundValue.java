@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
         "set {_values::*} to all bound values of bound with id \"ma_bound\"",
         "set {_keys::*} to all bound keys of bound with id \"look_mah_imma_bound\"",
         "delete all bound values from bound with id \"now_im_a_sad_valueless_bound\""})
-@Since("INSERT VERSION")
+@Since("2.2.0")
 public class ExprBoundValue extends SimpleExpression<Object> {
 
     static {
