@@ -70,6 +70,33 @@ public class Bound implements ConfigurationSerializable {
     }
 
     /**
+     * Check if this bound overlaps another bound
+     *
+     * @param bound Bound to check for overlapping
+     * @return True if bound overlaps
+     */
+    public boolean overlaps(Bound bound) {
+        if (bound.world.equals(world)) {
+            return boundingBox.overlaps(bound.boundingBox);
+        }
+        return false;
+    }
+
+    /**
+     * Check if this bound overlaps another potential bound within 2 locations
+     *
+     * @param l1 Location 1 of potential bound
+     * @param l2 Location 2 of potential bound
+     * @return
+     */
+    public boolean overlaps(Location l1, Location l2) {
+        if (l1.getWorld() != null && l1.getWorld() == l2.getWorld()) {
+            return boundingBox.overlaps(l1.toVector(), l2.toVector());
+        }
+        return false;
+    }
+
+    /**
      * Get the entities within this Bound
      * <p>Note: If the chunk is unloaded, the entities will also be unloaded</p>
      *
