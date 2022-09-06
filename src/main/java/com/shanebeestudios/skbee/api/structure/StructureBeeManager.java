@@ -35,4 +35,12 @@ public class StructureBeeManager {
         }
     }
 
+    public boolean structureExists(String name) {
+        NamespacedKey namespacedKey = Util.getNamespacedKey(name, true);
+        if (namespacedKey == null) {
+            return false;
+        }
+        return STRUCTURE_MANAGER.loadStructure(namespacedKey, false) != null;
+    }
+
 }
