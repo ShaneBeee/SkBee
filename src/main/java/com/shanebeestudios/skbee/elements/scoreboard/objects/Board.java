@@ -1,18 +1,12 @@
 package com.shanebeestudios.skbee.elements.scoreboard.objects;
 
-import com.shanebeestudios.skbee.SkBee;
 import fr.mrmicky.fastboard.FastBoard;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitScheduler;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class Board {
-
-    private static final BukkitScheduler SCHEDULER = Bukkit.getScheduler();
-    private static final SkBee PLUGIN = SkBee.getPlugin();
 
     private final FastBoard fastBoard;
     private String title = "";
@@ -99,7 +93,7 @@ public class Board {
                 lines.add(line);
             }
         }
-        SCHEDULER.runTaskAsynchronously(PLUGIN, () -> fastBoard.updateLines(lines));
+        fastBoard.updateLines(lines);
     }
 
 }
