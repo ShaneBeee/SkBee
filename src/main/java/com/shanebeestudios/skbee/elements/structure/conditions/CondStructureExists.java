@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("Check if a structure exists. This can be helpful to prevent overriding structures.")
 @Examples({"if structure \"my_structures:house\" exists:",
         "if structure \"my_structures:town_hall\" doesn't exist:"})
-@Since("INSERT VERSION")
+@Since("2.3.0")
 public class CondStructureExists extends Condition {
 
     private static final StructureBeeManager STRUCTURE_BEE_MANAGER;

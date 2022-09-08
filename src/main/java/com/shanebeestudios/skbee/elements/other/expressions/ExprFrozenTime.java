@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
         "remove 10 ticks from frozen time of player",
         "reset frozen time of all entities",
         "set {_ticks} to frozen time of player"})
-@Since("INSERT VERSION")
+@Since("2.3.0")
 public class ExprFrozenTime extends SimplePropertyExpression<Entity, Timespan> {
 
     static {

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
         "remove 10 ticks from fire time of player",
         "reset fire time of all entities",
         "set {_ticks} to fire time of player"})
-@Since("INSERT VERSION")
+@Since("2.3.0")
 public class ExprFireTime extends SimplePropertyExpression<Entity, Timespan> {
 
     static {

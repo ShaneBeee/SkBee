@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
         "if {_bound} intersects with {_bound2}:",
         "if {_bound} doesn't intersect with {_loc1} and {_loc2}:",
         "if {_bound} doesn't intersect with {_bound2}:"})
-@Since("INSERT VERSION")
+@Since("2.3.0")
 public class CondBoundIntersects extends Condition {
 
     static {
