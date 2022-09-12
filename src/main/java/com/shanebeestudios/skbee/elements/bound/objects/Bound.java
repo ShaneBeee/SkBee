@@ -55,7 +55,24 @@ public class Bound implements ConfigurationSerializable {
         Preconditions.checkArgument(location.getWorld() == location2.getWorld(), "Worlds have to match");
         this.world = location.getWorld().getName();
         this.id = id;
-        this.boundingBox = BoundingBox.of(location, location2);
+
+        Location loc1 = location.getBlock().getLocation();
+        int blockX = loc1.getBlockX();
+        int blockY = loc1.getBlockY();
+        int blockZ = loc1.getBlockZ();
+
+        Location loc2 = location2.getBlock().getLocation();
+        int blockX1 = loc2.getBlockX();
+        int blockY1 = loc2.getBlockY();
+        int blockZ1 = loc2.getBlockZ();
+
+        int minX = Math.min(blockX, blockX1);
+        int minY = Math.min(blockY, blockY1);
+        int minZ = Math.min(blockZ, blockZ1);
+        int maxX = Math.max(blockX, blockX1) + 1;
+        int maxY = Math.max(blockY, blockY1) + 1;
+        int maxZ = Math.max(blockZ, blockZ1) + 1;
+        this.boundingBox = new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     /**
@@ -87,7 +104,7 @@ public class Bound implements ConfigurationSerializable {
      *
      * @param l1 Location 1 of potential bound
      * @param l2 Location 2 of potential bound
-     * @return
+     * @return True if bound overlaps
      */
     public boolean overlaps(Location l1, Location l2) {
         if (l1.getWorld() != null && l1.getWorld() == l2.getWorld()) {
@@ -119,16 +136,16 @@ public class Bound implements ConfigurationSerializable {
         World w = getWorld();
         if (w == null) return null;
         List<Block> array = new ArrayList<>();
-        int x = (int) boundingBox.getMinX();
-        int y = (int) boundingBox.getMinY();
-        int z = (int) boundingBox.getMinZ();
-        int x2 = (int) boundingBox.getMaxX();
-        int y2 = (int) boundingBox.getMaxY();
-        int z2 = (int) boundingBox.getMaxZ();
-        for (int x3 = x; x3 <= x2; x3++) {
-            for (int y3 = y; y3 <= y2; y3++) {
-                for (int z3 = z; z3 <= z2; z3++) {
-                    Block b = w.getBlockAt(x3, y3, z3);
+        int minX = (int) boundingBox.getMinX();
+        int minY = (int) boundingBox.getMinY();
+        int minZ = (int) boundingBox.getMinZ();
+        int maxX = (int) boundingBox.getMaxX();
+        int maxY = (int) boundingBox.getMaxY();
+        int maxZ = (int) boundingBox.getMaxZ();
+        for (int x = minX; x < maxX; x++) {
+            for (int y = minY; y < maxY; y++) {
+                for (int z = minZ; z < maxZ; z++) {
+                    Block b = w.getBlockAt(x, y, z);
                     array.add(b);
                 }
             }
