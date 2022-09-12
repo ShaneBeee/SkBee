@@ -203,7 +203,7 @@ public class Bound implements ConfigurationSerializable {
     public void setLesserX(int x) {
         Vector min = this.boundingBox.getMin();
         min.setX(x);
-        this.boundingBox = this.boundingBox.union(min);
+        resize(min, this.boundingBox.getMax());
     }
 
     public int getLesserY() {
@@ -213,7 +213,7 @@ public class Bound implements ConfigurationSerializable {
     public void setLesserY(int y) {
         Vector min = this.boundingBox.getMin();
         min.setY(y);
-        this.boundingBox = this.boundingBox.union(min);
+        resize(min, this.boundingBox.getMax());
     }
 
     public int getLesserZ() {
@@ -223,7 +223,7 @@ public class Bound implements ConfigurationSerializable {
     public void setLesserZ(int z) {
         Vector min = this.boundingBox.getMin();
         min.setZ(z);
-        this.boundingBox = this.boundingBox.union(min);
+        resize(min, this.boundingBox.getMax());
     }
 
     public int getGreaterX() {
@@ -233,7 +233,7 @@ public class Bound implements ConfigurationSerializable {
     public void setGreaterX(int x2) {
         Vector max = this.boundingBox.getMax();
         max.setX(x2);
-        this.boundingBox = this.boundingBox.union(max);
+        resize(this.boundingBox.getMin(), max);
     }
 
     public int getGreaterY() {
@@ -243,7 +243,7 @@ public class Bound implements ConfigurationSerializable {
     public void setGreaterY(int y2) {
         Vector max = this.boundingBox.getMax();
         max.setY(y2);
-        this.boundingBox = this.boundingBox.union(max);
+        resize(this.boundingBox.getMin(), max);
     }
 
     public int getGreaterZ() {
@@ -253,7 +253,11 @@ public class Bound implements ConfigurationSerializable {
     public void setGreaterZ(int z2) {
         Vector max = this.boundingBox.getMax();
         max.setZ(z2);
-        this.boundingBox = this.boundingBox.union(max);
+        resize(this.boundingBox.getMin(), max);
+    }
+
+    public void resize(Vector v1, Vector v2) {
+        this.boundingBox = this.boundingBox.resize(v1.getX(), v1.getY(), v1.getZ(), v2.getX(), v2.getY(), v2.getZ());
     }
 
     public void change(Axis axis, Corner corner, int amount) {
