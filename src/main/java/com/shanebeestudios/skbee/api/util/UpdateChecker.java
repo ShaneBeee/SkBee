@@ -9,6 +9,8 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
 
+import java.net.UnknownHostException;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -51,6 +53,8 @@ public class UpdateChecker implements Listener {
             } else {
                 Util.logLoading("&cChecking for update failed!");
             }
+        } catch (UnknownHostException e){
+            Util.logLoading("&cChecking for update failed!");
         }
     }
 
