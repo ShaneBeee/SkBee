@@ -40,6 +40,14 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     }
 
     @Override
+    public NBTCompound getCompound(String name) {
+        if (name.equals("custom")) {
+            return getPersistentDataContainer().getOrCreateCompound(KEY);
+        }
+        return super.getCompound(name);
+    }
+
+    @Override
     public boolean hasTag(String key) {
         if (key.equalsIgnoreCase("custom")) {
             return true;
