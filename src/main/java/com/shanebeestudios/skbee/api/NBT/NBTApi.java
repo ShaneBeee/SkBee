@@ -123,6 +123,24 @@ public class NBTApi {
         return tag;
     }
 
+    @SuppressWarnings("RegExpRedundantEscape")
+    public static boolean hasTag(NBTCompound compound, String tag) {
+        if (compound == null) return false;
+        if (tag == null) return false;
+        if (tag.contains(";")) {
+            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
+            for (int i = 0; i < splits.length - 1; i++) {
+                String split = splits[i];
+                if (compound.hasTag(split) && compound.getCompound(split) != null) {
+                    compound = compound.getCompound(split);
+                } else {
+                    return false;
+                }
+            }
+        }
+        return compound.hasTag(getNestedTag(tag));
+    }
+
     /**
      * Get an {@link NBTFile}
      *
