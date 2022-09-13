@@ -47,7 +47,7 @@ public class UpdateChecker implements Listener {
             consumer.accept(tag_name);
         } catch (IOException e) {
             if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
-                throw new RuntimeException(e);
+                e.printStackTrace();
             } else {
                 Util.logLoading("&cChecking for update failed!");
             }
