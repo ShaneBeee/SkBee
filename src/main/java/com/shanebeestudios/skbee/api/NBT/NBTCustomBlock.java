@@ -37,7 +37,9 @@ public class NBTCustomBlock extends NBTBlock {
     }
 
     private NBTCompound setData(NBTCompound data) {
-        data.clearNBT();
+        if (data.hasTag("custom")) {
+            data.removeKey("custom");
+        }
         data.setString("id", block.getType().getKey().toString());
         data.setInteger("x", block.getX());
         data.setInteger("y", block.getY());
