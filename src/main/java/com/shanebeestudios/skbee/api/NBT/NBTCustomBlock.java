@@ -24,6 +24,10 @@ public class NBTCustomBlock extends NBTBlock {
         if (!data.hasTag("custom")) {
             return setData(data);
         } else if (!data.getString("id").equals(block.getType().getKey().toString())) {
+            // If Block's type has changed, reset custom data
+            if (data.hasTag("custom")) {
+                data.removeKey("custom");
+            }
             return setData(data);
         } else if (data.getInteger("x") != block.getX()) {
             return setData(data);
@@ -36,9 +40,6 @@ public class NBTCustomBlock extends NBTBlock {
     }
 
     private NBTCompound setData(NBTCompound data) {
-        if (data.hasTag("custom")) {
-            data.removeKey("custom");
-        }
         data.setString("id", block.getType().getKey().toString());
         data.setInteger("x", block.getX());
         data.setInteger("y", block.getY());
