@@ -9,22 +9,13 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import net.md_5.bungee.api.ChatMessageType;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-import org.bukkit.Bukkit;
-import org.bukkit.Server;
+import com.shanebeestudios.skbee.api.text.BeeComponent;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-
-@SuppressWarnings("deprecation") // Paper uses their own API
 @Name("TextComponent - Send")
 @Description({"Send text components to players/console. You can also broadcast components as well.",
         "The optional sender (supported in Minecraft 1.16.4+) allows you to send components from a specific player.",
@@ -70,41 +61,26 @@ public class EffSendComponent extends Effect {
 
         Player sender = this.sender != null ? this.sender.getSingle(e) : null;
 
-        List<BaseComponent> components = new ArrayList<>();
+        BeeComponent component = BeeComponent.empty();
         for (Object comp : this.components.getArray(e)) {
-            if (comp instanceof BaseComponent) {
-                components.add(((BaseComponent) comp));
-            } else if (comp instanceof String) {
-                components.add(new TextComponent(TextComponent.fromLegacyText((String) comp)));
+            if (comp instanceof BeeComponent beeComponent) {
+                component.append(beeComponent);
+            } else if (comp instanceof String string) {
+                component.append(BeeComponent.fromText(string));
             }
         }
-
-        BaseComponent[] baseComponents = components.toArray(new BaseComponent[0]);
 
         if (broadcast) {
-            broadcast(sender, baseComponents);
+            component.broadcast(sender);
         } else {
-            for (CommandSender player : this.receivers.getArray(e)) {
-                sendMessage(player, sender, baseComponents);
+            for (CommandSender receiver : this.receivers.getArray(e)) {
+                if (action) {
+                    component.sendActionBar(receiver);
+                } else {
+                    component.sendMessage(sender, receiver);
+                }
             }
         }
-    }
-
-    private void sendMessage(CommandSender receiver, Player sender, BaseComponent... components) {
-        if (action && receiver instanceof Player player) {
-            player.spigot().sendMessage(ChatMessageType.ACTION_BAR, components);
-        } else if (sender != null) {
-            receiver.spigot().sendMessage(sender.getUniqueId(), components);
-        } else {
-            receiver.spigot().sendMessage(components);
-        }
-    }
-
-    private void broadcast(@Nullable Player sender, BaseComponent... components) {
-        Server server = Bukkit.getServer();
-        ConsoleCommandSender consoleSender = server.getConsoleSender();
-        server.getOnlinePlayers().forEach(player -> sendMessage(player, sender, components));
-        sendMessage(consoleSender, sender, components);
     }
 
     @Override

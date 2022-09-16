@@ -14,7 +14,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import net.md_5.bungee.api.chat.BaseComponent;
+import com.shanebeestudios.skbee.api.text.BeeComponent;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.BookMeta;
@@ -22,7 +22,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-@SuppressWarnings("deprecation")
 @Name("Book Pages")
 @Description("Allows you to set pages in a book to text components. You can also retrieve the pages. " +
         "Based on testing, a book's author/title needs to be set AFTER setting the pages, why? I have no idea!")
@@ -35,10 +34,10 @@ import javax.annotation.Nullable;
         "set book title of {_i} to \"MyBook\"",
         "give player 1 of {_i}"})
 @Since("1.8.0")
-public class ExprBookPages extends SimpleExpression<BaseComponent> {
+public class ExprBookPages extends SimpleExpression<BeeComponent> {
 
     static {
-        Skript.registerExpression(ExprBookPages.class, BaseComponent.class, ExpressionType.PROPERTY,
+        Skript.registerExpression(ExprBookPages.class, BeeComponent.class, ExpressionType.PROPERTY,
                 "page %number% of [book] %itemtype%");
     }
 
@@ -55,9 +54,9 @@ public class ExprBookPages extends SimpleExpression<BaseComponent> {
         return true;
     }
 
-    @Nullable
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected BaseComponent[] get(@NotNull Event e) {
+    protected BeeComponent[] get(@NotNull Event e) {
         ItemType item = this.item.getSingle(e);
         if (item == null) return null;
         Material material = item.getMaterial();
@@ -66,8 +65,8 @@ public class ExprBookPages extends SimpleExpression<BaseComponent> {
             Number num = this.page.getSingle(e);
             int page = num == null ? 0 : num.intValue();
 
-            if (bookMeta.getPages().size() >= page) {
-                return bookMeta.spigot().getPage(page);
+            if (bookMeta.getPageCount() >= page) {
+                return new BeeComponent[]{BeeComponent.fromComponent(bookMeta.page(page))};
             }
         }
         return null;
@@ -77,29 +76,36 @@ public class ExprBookPages extends SimpleExpression<BaseComponent> {
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(BaseComponent[].class);
+            return CollectionUtils.array(BeeComponent[].class);
         } else {
             return null;
         }
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void change(@NotNull Event e, @Nullable Object[] delta, @NotNull ChangeMode mode) {
-        BaseComponent[] baseComponents = delta == null ? null : (BaseComponent[]) delta;
+        BeeComponent[] baseComponents = delta == null ? null : (BeeComponent[]) delta;
         ItemType book = this.item.getSingle(e);
         if (book == null) return;
 
         Material bookMaterial = book.getMaterial();
+
+        BeeComponent comp = BeeComponent.fromComponents(baseComponents);
+
         if (BOOK.isOfType(bookMaterial)) {
             BookMeta bookMeta = ((BookMeta) book.getItemMeta());
 
-            Number page = this.page.getSingle(e);
-            int p = page != null ? page.intValue() : 0;
-            if (bookMeta.spigot().getPages().size() < p) {
-                bookMeta.spigot().addPage(baseComponents);
-            } else {
-                bookMeta.spigot().setPage(p, baseComponents);
+            Number pageNumber = this.page.getSingle(e);
+            int page = pageNumber != null ? pageNumber.intValue() : 0;
+            int pageCount = bookMeta.getPageCount();
+            if (pageCount < page) {
+                // If no pages exist for this page, we create some
+                for (int i = 0; i < page - pageCount; i++) {
+                    bookMeta.addPage(" ");
+                }
             }
+            bookMeta.page(page, comp.getComponent());
             book.setItemMeta(bookMeta);
         }
     }
@@ -110,8 +116,8 @@ public class ExprBookPages extends SimpleExpression<BaseComponent> {
     }
 
     @Override
-    public @NotNull Class<? extends BaseComponent> getReturnType() {
-        return BaseComponent.class;
+    public @NotNull Class<? extends BeeComponent> getReturnType() {
+        return BeeComponent.class;
     }
 
     @Override

@@ -14,28 +14,17 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.NBT.NBTApi;
-import com.shanebeestudios.skbee.api.reflection.McReflection;
-import com.shanebeestudios.skbee.api.util.TextUtils;
+import com.shanebeestudios.skbee.api.text.BeeComponent;
 import com.shanebeestudios.skbee.api.util.Util;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.KeybindComponent;
-import net.md_5.bungee.api.chat.TextComponent;
-import net.md_5.bungee.api.chat.TranslatableComponent;
-import org.bukkit.Material;
+import net.kyori.adventure.translation.Translatable;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
-@SuppressWarnings("deprecation")
 @Name("Text Component - New Text Component")
 @Description({"Create a new text component. Can have hover and click events added to it. You can also create a translate component, ",
         "this will send to the client, and the client will translate based on their language. You can use either an item type or a ",
@@ -53,12 +42,9 @@ import java.util.Locale;
         "set {_assist} to translate component \"death.fell.assist\" using victim's name and attacker's name",
         "set {_key} to keybind component \"key.jump\""})
 @Since("1.5.0")
-public class ExprTextComponent extends SimpleExpression<BaseComponent> {
-
-    private static final boolean HAS_TRANSLATION = Skript.classExists("net.kyori.adventure.translation.Translatable");
-
+public class ExprTextComponent extends SimpleExpression<BeeComponent> {
     static {
-        Skript.registerExpression(ExprTextComponent.class, BaseComponent.class, ExpressionType.COMBINED,
+        Skript.registerExpression(ExprTextComponent.class, BeeComponent.class, ExpressionType.COMBINED,
                 "[a] [new] text component[s] (from|of) %strings%",
                 "[a] [new] key[ ]bind component[s] (from|of) %strings%",
                 "[a] [new] translate component[s] (from|of) %objects% [(with|using) %-objects%]");
@@ -68,7 +54,6 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
     private Expression<Object> translation;
     private Expression<Object> objects;
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         pattern = matchedPattern;
@@ -82,40 +67,35 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected BaseComponent[] get(@NotNull Event e) {
-        List<BaseComponent> components = new ArrayList<>();
+    protected BeeComponent[] get(@NotNull Event e) {
+        List<BeeComponent> components = new ArrayList<>();
 
         for (Object object : this.translation.getArray(e)) {
             if (pattern == 0) {
-                BaseComponent[] baseComponents = TextComponent.fromLegacyText(Util.getColString((String) object));
-                components.add(new TextComponent(baseComponents));
+                components.add(BeeComponent.fromText(Util.getColString(((String) object))));
             } else if (pattern == 1) {
-                components.add(new KeybindComponent((String) object));
+                components.add(BeeComponent.fromKeybind((String) object));
             } else if (pattern == 2) {
                 String translate = getTranslation(object, e);
                 if (translate != null) {
                     if (this.objects != null) {
-                        components.add(new TranslatableComponent(translate, this.objects.getArray(e)));
+                        components.add(BeeComponent.fromTranslate(translate, this.objects.getArray(e)));
                     } else {
-                        components.add(new TranslatableComponent(translate));
+                        components.add(BeeComponent.fromTranslate(translate));
                     }
 
                 }
             }
         }
-        return components.toArray(new BaseComponent[0]);
+        return components.toArray(new BeeComponent[0]);
     }
 
     public static String getTranslation(Object object, Event event) {
         if (object instanceof ItemStack itemStack) {
-            if (HAS_TRANSLATION) {
-                return TextUtils.getTranslationKey(itemStack);
-            } else {
-                return translateItemStack(itemStack);
-            }
+            return itemStack.translationKey();
         } else if (object instanceof ItemType itemType) {
             ItemStack itemStack = itemType.getRandom();
-            return getTranslation(itemStack, event);
+            return itemStack.translationKey();
         } else if (object instanceof Slot slot) {
             ItemStack itemStack = slot.getItem();
             return getTranslation(itemStack, event);
@@ -123,33 +103,10 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
             return getTranslation(tool.getSingle(event), event);
         } else if (object instanceof String string) {
             return string;
-        } else if (HAS_TRANSLATION) {
-            return TextUtils.getTranslationKey(object);
+        } else if (object instanceof Translatable translatable) {
+            return translatable.translationKey();
         }
         return null;
-    }
-
-    public static String translateItemStack(ItemStack itemStack) {
-        String trans = McReflection.getTranslateKey(itemStack);
-        if (trans != null) {
-            return trans;
-        }
-        Material material = itemStack.getType();
-        String type = material.isBlock() ? "block" : "item";
-        String raw = material.name().toLowerCase(Locale.ROOT);
-        ItemMeta meta = itemStack.getItemMeta();
-        if (meta instanceof PotionMeta) {
-            StringBuilder builder = new StringBuilder("item.minecraft.");
-            NBTCompound nbt = NBTApi.getItemStackNBT(itemStack);
-            String pot = NBTApi.getTag("tag;Potion", nbt).toString();
-            if (pot != null) {
-                builder.append(material.toString().toLowerCase(Locale.ROOT));
-                builder.append(".effect.");
-                builder.append(pot.replace("minecraft:", ""));
-                return builder.toString();
-            }
-        }
-        return type + ".minecraft." + raw;
     }
 
     @Override
@@ -158,8 +115,8 @@ public class ExprTextComponent extends SimpleExpression<BaseComponent> {
     }
 
     @Override
-    public @NotNull Class<? extends BaseComponent> getReturnType() {
-        return BaseComponent.class;
+    public @NotNull Class<? extends BeeComponent> getReturnType() {
+        return BeeComponent.class;
     }
 
     @Override

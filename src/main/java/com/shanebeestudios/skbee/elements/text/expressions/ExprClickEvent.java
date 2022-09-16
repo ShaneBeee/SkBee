@@ -11,15 +11,14 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.ClickEvent.Action;
+import net.kyori.adventure.text.event.ClickEvent;
+import net.kyori.adventure.text.event.ClickEvent.Action;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.Objects;
 
-@SuppressWarnings("deprecation")
 @Name("Text Component - Click Event")
 @Description("Create a new click event. Supports run command, suggest command, open link and copy to clipboard.")
 @Examples({"set {_t} to text component from \"Check out my cool website\"",
@@ -32,7 +31,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
     private static final boolean SUPPORTS_CLIPBOARD;
 
     static {
-        SUPPORTS_CLIPBOARD = Skript.fieldExists(ClickEvent.Action.class, "COPY_TO_CLIPBOARD");
+        SUPPORTS_CLIPBOARD = Skript.fieldExists(Action.class, "COPY_TO_CLIPBOARD");
         Skript.registerExpression(ExprClickEvent.class, ClickEvent.class, ExpressionType.COMBINED,
                 "[a] [new] click event to run command %string%",
                 "[a] [new] click event to suggest command %string%",
@@ -74,7 +73,10 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
             }
             default -> action = Action.RUN_COMMAND;
         }
-        return new ClickEvent[]{new ClickEvent(action, (String) value)};
+        if (value == null) {
+            return null;
+        }
+        return new ClickEvent[]{ClickEvent.clickEvent(action, ((String) value))};
     }
 
     @Override

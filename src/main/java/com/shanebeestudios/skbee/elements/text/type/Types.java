@@ -4,27 +4,26 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import net.md_5.bungee.api.chat.BaseComponent;
+import com.shanebeestudios.skbee.api.text.BeeComponent;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 public class Types {
 
     static {
-        Classes.registerClass(new ClassInfo<>(BaseComponent.class, "basecomponent")
+        Classes.registerClass(new ClassInfo<>(BeeComponent.class, "basecomponent")
                 .user("base ?components?")
                 .name("Text Component - Base Component")
                 .description("Text components used for hover/click events. Due to the complexity of these, ",
-                        "they can NOT be long term stored in variables.")
+                        "they can NOT be long term stored in variables. \n\bRequires a PaperMC server.")
                 .examples("set {_t} to text component from \"CLICK FOR OUR DISCORD\"",
                         "set hover event of {_t} to a new hover event showing \"Clicky Clicky!\"",
                         "set click event of {_t} to a new click event to open url \"https://OurDiscord.com\"",
                         "send component {_t} to player")
                 .since("1.5.0")
-                .parser(new Parser<BaseComponent>() {
+                .parser(new Parser<>() {
                     @Override
-                    public @NotNull String toString(@NotNull BaseComponent o, int flags) {
-                        return o.toLegacyText();
+                    public @NotNull String toString(@NotNull BeeComponent o, int flags) {
+                        return o.toString();
                     }
 
                     @Override
@@ -33,12 +32,8 @@ public class Types {
                     }
 
                     @Override
-                    public @NotNull String toVariableNameString(@NotNull BaseComponent o) {
-                        return o.toLegacyText();
-                    }
-
-                    public @NotNull String getVariableNamePattern() {
-                        return "";
+                    public @NotNull String toVariableNameString(@NotNull BeeComponent o) {
+                        return o.toString();
                     }
                 }));
     }
