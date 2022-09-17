@@ -13,12 +13,17 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.title.Title;
+import net.kyori.adventure.title.Title.Times;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.time.Duration;
 
 @SuppressWarnings("PatternValidation")
 public class BeeComponent {
@@ -201,6 +206,35 @@ public class BeeComponent {
             return BeeComponent.fromComponent(sign.line(line));
         }
         return null;
+    }
+
+    public static void sendTitle(Player[] players, @NotNull Object title, @Nullable Object subtitle, long stay, long fadeIn, long fadeOut) {
+        Component titleComponent;
+        Component subtitleComponent;
+        if (title instanceof BeeComponent beeComponent) {
+            titleComponent = beeComponent.getComponent();
+        } else if (title instanceof String string) {
+            titleComponent = Component.text(string);
+        } else {
+            titleComponent = Component.text("");
+        }
+
+        if (subtitle instanceof BeeComponent beeComponent) {
+            subtitleComponent = beeComponent.getComponent();
+        } else if (subtitle instanceof String string) {
+            subtitleComponent = Component.text(string);
+        } else {
+            subtitleComponent = Component.text("");
+        }
+
+        Times times = Times.times(Duration.ofMillis(fadeIn * 50), Duration.ofMillis(stay * 50),
+                Duration.ofMillis(fadeOut * 50));
+
+        Title titleTitle = Title.title(titleComponent, subtitleComponent, times);
+
+        for (Player player : players) {
+            player.showTitle(titleTitle);
+        }
     }
 
     public String toString() {
