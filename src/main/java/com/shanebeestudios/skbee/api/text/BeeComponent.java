@@ -15,7 +15,6 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -190,11 +189,18 @@ public class BeeComponent {
     }
 
     public void setBlockLine(Block block, int line) {
-        BlockState blockState = block.getState();
-        if (blockState instanceof Sign sign) {
+        if (block.getState() instanceof Sign sign) {
             sign.line(line, this.component);
-            blockState.update(true);
+            sign.update();
         }
+    }
+
+    @Nullable
+    public static BeeComponent getSignLine(Block block, int line) {
+        if (block.getState() instanceof Sign sign) {
+            return BeeComponent.fromComponent(sign.line(line));
+        }
+        return null;
     }
 
     public String toString() {
