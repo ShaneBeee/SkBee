@@ -22,7 +22,7 @@ import java.util.List;
 @Name("Structure - Object")
 @Description({"Create a new, empty structure or load a structure from file. ",
         "If the file you have specified is not available, it will be created upon saving.",
-        "Structures without a namespace (ex: \"tree\") will load from/save to \"(main world folder)/generated/minecraft/structures/\".",
+        "Structures without a namespace (ex: \"tree\") will load from/save to \"(main world folder)/generated/skbee/structures/\".",
         "Structures with a namespace (ex:\"myname:house\") will load from/save to \"(main world folder)/generated/myname/structures/\".",
         "To create folders, simply add a slash in your name, ex: \"buildings/house\".",
         "Requires MC 1.17.1+"})
