@@ -83,8 +83,10 @@ public class ExprComponentFormat extends PropertyExpression<BeeComponent, Object
 
         switch (pattern) {
             case COLOR:
-                for (BeeComponent component : getExpr().getArray(e)) {
-                    component.setColor((Color) object);
+                if (object instanceof Color color) {
+                    for (BeeComponent component : getExpr().getArray(e)) {
+                        component.setColor(color);
+                    }
                 }
                 break;
             case BOLD:
