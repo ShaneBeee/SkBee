@@ -19,6 +19,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -206,6 +207,13 @@ public class BeeComponent {
             return BeeComponent.fromComponent(sign.line(line));
         }
         return null;
+    }
+
+    public void setEntityName(Entity entity, boolean alwaysOn) {
+        entity.customName(this.component);
+        if (alwaysOn) {
+            entity.setCustomNameVisible(true);
+        }
     }
 
     public static void sendTitle(Player[] players, @NotNull Object title, @Nullable Object subtitle, long stay, long fadeIn, long fadeOut) {
