@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.text;
 
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.SkriptColor;
@@ -21,6 +22,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -214,6 +216,12 @@ public class BeeComponent {
         if (alwaysOn) {
             entity.setCustomNameVisible(true);
         }
+    }
+
+    public void setItemName(ItemType itemType) {
+        ItemMeta itemMeta = itemType.getItemMeta();
+        itemMeta.displayName(this.component);
+        itemType.setItemMeta(itemMeta);
     }
 
     public static void sendTitle(Player[] players, @NotNull Object title, @Nullable Object subtitle, long stay, long fadeIn, long fadeOut) {
