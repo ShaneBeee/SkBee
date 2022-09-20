@@ -27,6 +27,7 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -245,6 +246,14 @@ public class BeeComponent {
         }
         copy.setContents(inventory.getContents());
         viewers.forEach(viewer -> viewer.openInventory(copy));
+    }
+
+    public void setTeamPrefix(Team team) {
+        team.prefix(getComponent());
+    }
+
+    public void setTeamSuffix(Team team) {
+        team.suffix(getComponent());
     }
 
     public static void sendTitle(Player[] players, @NotNull Object title, @Nullable Object subtitle, long stay, long fadeIn, long fadeOut) {
