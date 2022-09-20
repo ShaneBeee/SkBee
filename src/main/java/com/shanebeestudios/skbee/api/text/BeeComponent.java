@@ -21,12 +21,18 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.inventory.InventoryType;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("PatternValidation")
 public class BeeComponent {
@@ -222,6 +228,23 @@ public class BeeComponent {
         ItemMeta itemMeta = itemType.getItemMeta();
         itemMeta.displayName(this.component);
         itemType.setItemMeta(itemMeta);
+    }
+
+    public void setInventoryName(Inventory inventory) {
+        if (inventory.getViewers().isEmpty()) return;
+
+        List<HumanEntity> viewers = new ArrayList<>(inventory.getViewers());
+
+        InventoryHolder holder = inventory.getHolder();
+        InventoryType type = inventory.getType();
+        Inventory copy;
+        if (type == InventoryType.CHEST) {
+            copy = Bukkit.createInventory(holder, inventory.getSize(), this.component);
+        } else {
+            copy = Bukkit.createInventory(holder, type, this.component);
+        }
+        copy.setContents(inventory.getContents());
+        viewers.forEach(viewer -> viewer.openInventory(copy));
     }
 
     public static void sendTitle(Player[] players, @NotNull Object title, @Nullable Object subtitle, long stay, long fadeIn, long fadeOut) {
