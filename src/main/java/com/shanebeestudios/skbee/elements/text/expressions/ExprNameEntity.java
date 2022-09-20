@@ -22,10 +22,10 @@ import org.jetbrains.annotations.NotNull;
         "\nDISPLAY NAME = the name will always show."})
 @Examples("set component entity name of target entity to translate component from \"entity.minecraft.llama\"")
 @Since("INSERT VERSION")
-public class ExprEntityName extends SimplePropertyExpression<Entity, BeeComponent> {
+public class ExprNameEntity extends SimplePropertyExpression<Entity, BeeComponent> {
 
     static {
-        register(ExprEntityName.class, BeeComponent.class,
+        register(ExprNameEntity.class, BeeComponent.class,
                 "component entity (name|1¦display name)", "entities");
     }
 
