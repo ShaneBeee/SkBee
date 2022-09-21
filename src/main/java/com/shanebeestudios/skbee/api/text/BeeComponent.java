@@ -10,12 +10,14 @@ import com.shanebeestudios.skbee.api.util.ChatUtil;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
 import net.kyori.adventure.translation.Translatable;
@@ -52,7 +54,17 @@ public class BeeComponent {
     }
 
     public static BeeComponent fromMiniMessage(String text) {
-        return new BeeComponent(MiniMessage.miniMessage().deserialize(text));
+        String string = text;
+        // MiniMessage doesn't like these
+        if (text.contains("&")) {
+            TextComponent deserialize = LegacyComponentSerializer.legacyAmpersand().deserialize(string);
+            string = PlainTextComponentSerializer.plainText().serialize(deserialize);
+        }
+        if (text.contains("§")) {
+            TextComponent deserialize = LegacyComponentSerializer.legacySection().deserialize(string);
+            string = PlainTextComponentSerializer.plainText().serialize(deserialize);
+        }
+        return new BeeComponent(MiniMessage.miniMessage().deserialize(string));
     }
 
     public static BeeComponent fromKeybind(String keybind) {
