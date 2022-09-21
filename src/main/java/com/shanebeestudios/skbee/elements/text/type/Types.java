@@ -4,12 +4,16 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.Converters;
 import com.shanebeestudios.skbee.api.text.BeeComponent;
 import org.jetbrains.annotations.NotNull;
 
 public class Types {
 
     static {
+        // Allow components to be used anywhere a string can
+        Converters.registerConverter(BeeComponent.class, String.class, BeeComponent::toString);
+
         Classes.registerClass(new ClassInfo<>(BeeComponent.class, "basecomponent")
                 .user("base ?components?")
                 .name("Text Component - Base Component")
