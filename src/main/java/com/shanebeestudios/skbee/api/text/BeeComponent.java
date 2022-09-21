@@ -1,9 +1,11 @@
 package com.shanebeestudios.skbee.api.text;
 
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.SkriptColor;
+import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.util.ChatUtil;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.key.Key;
@@ -16,6 +18,7 @@ import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
+import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Bukkit;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -26,6 +29,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
@@ -60,8 +64,42 @@ public class BeeComponent {
     }
 
     public static BeeComponent fromTranslate(String translate, Object... objects) {
-        // TODO figure out objects
-        return new BeeComponent(Component.translatable(translate));
+        List<Component> comps = new ArrayList<>();
+        for (Object object : objects) {
+            if (object instanceof String string) {
+                comps.add(Component.text(string));
+            } else if (object instanceof Entity entity) {
+                comps.add(entity.name());
+            } else if (object instanceof ItemType || object instanceof ItemStack || object instanceof Slot) {
+                comps.add(getItem(object));
+            } else if (object instanceof Translatable translatable) {
+                comps.add(Component.translatable(translatable));
+            } else {
+                String objectString = Classes.toString(object);
+                comps.add(Component.text(objectString));
+            }
+        }
+        return new BeeComponent(Component.translatable(translate, comps));
+    }
+
+    private static Component getItem(Object object) {
+        ItemStack itemStack = null;
+        if (object instanceof ItemStack is) {
+            itemStack = is;
+        } else if (object instanceof ItemType itemType) {
+            itemStack = itemType.getRandom();
+        } else if (object instanceof Slot slot) {
+            itemStack = slot.getItem();
+        }
+        if (itemStack == null) {
+            return null;
+        }
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        if (itemMeta.hasDisplayName()) {
+            return itemMeta.displayName();
+        } else {
+            return Component.translatable(itemStack);
+        }
     }
 
     public static BeeComponent fromComponent(Component component) {
