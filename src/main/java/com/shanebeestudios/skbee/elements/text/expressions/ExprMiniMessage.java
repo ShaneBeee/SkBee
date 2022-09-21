@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.text.BeeComponent;
@@ -41,6 +42,9 @@ public class ExprMiniMessage extends SimpleExpression<BeeComponent> {
     @Override
     protected @Nullable BeeComponent[] get(Event event) {
         String string = this.string.getSingle(event);
+        if (this.string instanceof VariableString variableString) {
+            string = variableString.toUnformattedString(event);
+        }
         if (string == null) return null;
         return new BeeComponent[]{BeeComponent.fromMiniMessage(string)};
     }
