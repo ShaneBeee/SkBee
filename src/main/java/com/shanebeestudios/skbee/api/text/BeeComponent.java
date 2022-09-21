@@ -286,7 +286,7 @@ public class BeeComponent {
     }
 
     public String toString() {
-        return LegacyComponentSerializer.builder().build().serialize(this.component);
+        return LegacyComponentSerializer.legacySection().serialize(this.component);
     }
 
 }
