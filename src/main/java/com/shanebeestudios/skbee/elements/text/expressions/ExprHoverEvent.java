@@ -12,7 +12,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
@@ -25,7 +24,7 @@ import javax.annotation.Nullable;
 
 @SuppressWarnings("rawtypes")
 @Name("Text Component - Hover Event")
-@Description({"Create a new hover event. Can show text or an item to a player. 'showing %itemtype%' requires Minecraft 1.16.2+",
+@Description({"Create a new hover event. Can show text or an item to a player. 'showing %itemtype%' requires Minecraft 1.18.2+",
         "When showing an ItemType from a variable, use `...showing item {var}`, this is just a weird quirk of this."})
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
         "set hover event of {_t} to a new hover event showing player's tool",
@@ -47,8 +46,8 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
-        if (matchedPattern == 1 && !HAS_ITEM_META_NBT && !NBTApi.isEnabled()) {
-            Skript.error("NBTApi is currently unavailable, thus this expression with ItemType cannot be used right now.",
+        if (matchedPattern == 1 && !HAS_ITEM_META_NBT) {
+            Skript.error("'showing itemtype' requires MC 1.18.2+",
                     ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
@@ -57,7 +56,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "PatternValidation"})
+    @SuppressWarnings({"NullableProblems"})
     @Nullable
     @Override
     protected HoverEvent[] get(Event event) {
