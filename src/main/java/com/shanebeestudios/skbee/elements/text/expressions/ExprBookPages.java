@@ -85,13 +85,13 @@ public class ExprBookPages extends SimpleExpression<BeeComponent> {
     @SuppressWarnings("deprecation")
     @Override
     public void change(@NotNull Event e, @Nullable Object[] delta, @NotNull ChangeMode mode) {
-        BeeComponent[] baseComponents = delta == null ? null : (BeeComponent[]) delta;
+        BeeComponent[] beeComponents = delta == null ? null : (BeeComponent[]) delta;
         ItemType book = this.item.getSingle(e);
         if (book == null) return;
 
         Material bookMaterial = book.getMaterial();
 
-        BeeComponent comp = BeeComponent.fromComponents(baseComponents);
+        BeeComponent comp = BeeComponent.fromComponents(beeComponents);
 
         if (BOOK.isOfType(bookMaterial)) {
             BookMeta bookMeta = ((BookMeta) book.getItemMeta());

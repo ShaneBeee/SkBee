@@ -26,7 +26,7 @@ public class EffSendComponentTitle extends Effect {
 
     static {
         Skript.registerEffect(EffSendComponentTitle.class,
-                "send title [component] %basecomponent/string% [with subtitle [component] %-basecomponent/string%] [to %players%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]");
+                "send title [component] %textcomponent/string% [with subtitle [component] %-textcomponent/string%] [to %players%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]");
     }
 
     private Expression<Object> title, subtitle;

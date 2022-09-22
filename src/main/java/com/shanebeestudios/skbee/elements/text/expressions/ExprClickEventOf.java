@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprClickEventOf extends PropertyExpression<BeeComponent, ClickEvent> {
 
     static {
-        register(ExprClickEventOf.class, ClickEvent.class, "click event", "basecomponents");
+        register(ExprClickEventOf.class, ClickEvent.class, "click event", "textcomponents");
     }
 
     @SuppressWarnings({"NullableProblems", "unchecked"})

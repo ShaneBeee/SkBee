@@ -29,8 +29,8 @@ public class ExprChestInventory extends SimpleExpression<Inventory> {
 
     static {
         Skript.registerExpression(ExprChestInventory.class, Inventory.class, ExpressionType.COMBINED,
-                "[a [new]] chest inventory with component name %basecomponent% [with %-number% row[s]]",
-                "[a [new]] chest inventory with %number% row[s] with component name %basecomponent%");
+                "[a [new]] chest inventory with component name %textcomponent% [with %-number% row[s]]",
+                "[a [new]] chest inventory with %number% row[s] with component name %textcomponent%");
     }
 
     private Expression<Number> rows;

@@ -27,7 +27,7 @@ import javax.annotation.Nullable;
 public class ExprHoverEventOf extends PropertyExpression<BeeComponent, HoverEvent> {
 
     static {
-        register(ExprHoverEventOf.class, HoverEvent.class, "hover event", "basecomponents");
+        register(ExprHoverEventOf.class, HoverEvent.class, "hover event", "textcomponents");
     }
 
     @SuppressWarnings({"NullableProblems", "unchecked"})

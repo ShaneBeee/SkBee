@@ -36,11 +36,11 @@ public class ExprComponentFormat extends PropertyExpression<BeeComponent, Object
         if (Skript.methodExists(BeeComponent.class, "setInsertion", String.class)) {
             register(ExprComponentFormat.class, Object.class,
                     "(color|1¦bold|2¦italic|3¦(obfuscate[d]|magic)|4¦strikethrough|5¦underline[d]|6¦font|7¦insert[ion]) format",
-                    "basecomponents");
+                    "textcomponents");
         } else {
             register(ExprComponentFormat.class, Object.class,
                     "(color|1¦bold|2¦italic|3¦(obfuscate[d]|magic)|4¦strikethrough|5¦underline[d]|6¦font) format",
-                    "basecomponents");
+                    "textcomponents");
         }
     }
 
@@ -121,8 +121,8 @@ public class ExprComponentFormat extends PropertyExpression<BeeComponent, Object
                 break;
             case FONT:
                 String font = object instanceof String ? ((String) object) : object.toString();
-                for (BeeComponent baseComponent : getExpr().getArray(e)) {
-                    baseComponent.setFont(font);
+                for (BeeComponent beeComponent : getExpr().getArray(e)) {
+                    beeComponent.setFont(font);
                 }
             case INSERT:
                 String insert = object instanceof String ? ((String) object) : object.toString();

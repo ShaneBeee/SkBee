@@ -14,9 +14,9 @@ public class Types {
         // Allow components to be used anywhere a string can
         Converters.registerConverter(BeeComponent.class, String.class, BeeComponent::toString);
 
-        Classes.registerClass(new ClassInfo<>(BeeComponent.class, "basecomponent")
-                .user("base ?components?")
-                .name("Text Component - Base Component")
+        Classes.registerClass(new ClassInfo<>(BeeComponent.class, "textcomponent")
+                .user("text ?components?")
+                .name("Text Component - Text Component")
                 .description("Text components used for hover/click events. Due to the complexity of these, ",
                         "they can NOT be long term stored in variables. \n\bRequires a PaperMC server.")
                 .examples("set {_t} to text component from \"CLICK FOR OUR DISCORD\"",

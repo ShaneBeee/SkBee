@@ -23,7 +23,7 @@ public class ExprMergeComponents extends SimpleExpression<BeeComponent> {
 
     static {
         Skript.registerExpression(ExprMergeComponents.class, BeeComponent.class, ExpressionType.SIMPLE,
-                "merge components %basecomponents%");
+                "merge components %textcomponents%");
     }
 
     private Expression<BeeComponent> components;
