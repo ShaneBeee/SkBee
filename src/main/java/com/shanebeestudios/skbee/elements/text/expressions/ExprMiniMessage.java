@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Text Component - MiniMessage")
 @Description({"Get a mini message from a string.",
         "These messages are still components, which you can still apply hover/click events to.",
-        "For more info check out the mini message page <link>https://docs.adventure.kyori.net/minimessage/index.html</link>"})
+        "For more info check out the mini message page <link>https://docs.adventure.kyori.net/minimessage/format.html</link>"})
 @Examples("set {_m} to mini message from \"<rainbow>this is a rainbow message\"")
 @Since("INSERT VERSION")
 public class ExprMiniMessage extends SimpleExpression<BeeComponent> {
