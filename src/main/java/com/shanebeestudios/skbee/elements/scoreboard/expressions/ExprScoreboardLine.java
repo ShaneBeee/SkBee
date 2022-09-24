@@ -35,7 +35,7 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
     static {
         Skript.registerExpression(ExprScoreboardLine.class, String.class, ExpressionType.COMBINED,
                 "line %number% of %players%'[s] [score]board[s]",
-                "line %number% of [score]board[s] of %player%");
+                "line %number% of [score]board[s] of %players%");
     }
 
     private Expression<Number> line;
