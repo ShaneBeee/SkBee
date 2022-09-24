@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.text.BeeComponent;
 import org.bukkit.command.CommandSender;
@@ -46,12 +47,12 @@ public class EffSendComponent extends Effect {
     @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        components = (Expression<Object>) exprs[0];
+        components = LiteralUtils.defendExpression(exprs[0]);
         receivers = matchedPattern == 0 ? (Expression<CommandSender>) exprs[1] : null;
         sender = (Expression<Player>) exprs[matchedPattern == 0 ? 2 : 1];
         action = matchedPattern == 0 && parseResult.mark == 1;
         broadcast = matchedPattern == 1;
-        return true;
+        return LiteralUtils.canInitSafely(components);
     }
 
     @SuppressWarnings("NullableProblems")
