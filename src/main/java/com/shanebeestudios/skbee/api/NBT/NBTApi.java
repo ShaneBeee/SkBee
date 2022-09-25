@@ -21,6 +21,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,12 +103,14 @@ public class NBTApi {
     }
 
     @SuppressWarnings("RegExpRedundantEscape")
+    @Nullable
     public static NBTCompound getNestedCompound(String tag, NBTCompound compound) {
         if (compound == null) return null;
         if (tag.contains(";")) {
             String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
             for (int i = 0; i < splits.length - 1; i++) {
                 String split = splits[i];
+                if (compound == null) return null;
                 compound = compound.getOrCreateCompound(split);
             }
         }
@@ -211,7 +214,9 @@ public class NBTApi {
             compound = getNestedCompound(tag, compound);
             key = getNestedTag(tag);
         }
-        compound.removeKey(key);
+        if (compound != null) {
+            compound.removeKey(key);
+        }
     }
 
     /**
@@ -380,6 +385,7 @@ public class NBTApi {
             compound = getNestedCompound(key, compound);
             key = getNestedTag(key);
         }
+        if (compound == null) return;
 
         boolean custom = !compound.hasTag(key);
         boolean isSingle = object.length == 1;
@@ -523,17 +529,20 @@ public class NBTApi {
             compound = getNestedCompound(tag, compound);
             tag = getNestedTag(tag);
         }
+        if (compound == null) return null;
 
         switch (type) {
-            case NBTTagString:
+            case NBTTagString -> {
                 return compound.getString(tag);
-            case NBTTagByteArray:
+            }
+            case NBTTagByteArray -> {
                 List<Byte> byteArray = new ArrayList<>();
                 for (byte i : compound.getByteArray(tag)) {
                     byteArray.add(i);
                 }
                 return byteArray;
-            case NBTTagIntArray:
+            }
+            case NBTTagIntArray -> {
                 if (compound.getIntArray(tag).length == 4) {
                     UUID uuid = compound.getUUID(tag);
                     if (uuid != null) {
@@ -545,37 +554,53 @@ public class NBTApi {
                     intArray.add(i);
                 }
                 return intArray;
-            case NBTTagByte:
+            }
+            case NBTTagByte -> {
                 return compound.getByte(tag);
-            case NBTTagShort:
+            }
+            case NBTTagShort -> {
                 return compound.getShort(tag);
-            case NBTTagInt:
+            }
+            case NBTTagInt -> {
                 return compound.getInteger(tag);
-            case NBTTagLong:
+            }
+            case NBTTagLong -> {
                 return compound.getLong(tag);
-            case NBTTagFloat:
+            }
+            case NBTTagFloat -> {
                 return compound.getFloat(tag);
-            case NBTTagDouble:
+            }
+            case NBTTagDouble -> {
                 return compound.getDouble(tag);
-            case NBTTagEnd:
+            }
+            case NBTTagEnd -> {
                 return null;
-            case NBTTagCompound:
+            }
+            case NBTTagCompound -> {
                 return compound.getOrCreateCompound(tag);
-            case NBTTagCompoundList:
+            }
+            case NBTTagCompoundList -> {
                 return new ArrayList<>(compound.getCompoundList(tag));
-            case NBTTagStringList:
+            }
+            case NBTTagStringList -> {
                 return new ArrayList<>(compound.getStringList(tag));
-            case NBTTagDoubleList:
+            }
+            case NBTTagDoubleList -> {
                 return new ArrayList<>(compound.getDoubleList(tag));
-            case NBTTagFloatList:
+            }
+            case NBTTagFloatList -> {
                 return new ArrayList<>(compound.getFloatList(tag));
-            case NBTTagIntList:
+            }
+            case NBTTagIntList -> {
                 return new ArrayList<>(compound.getIntegerList(tag));
-            case NBTTagLongList:
+            }
+            case NBTTagLongList -> {
                 return new ArrayList<>(compound.getLongList(tag));
-            default:
+            }
+            default -> {
                 if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG)
                     throw new IllegalArgumentException("Unknown tag type, please let the dev know -> type: " + type);
+            }
         }
         return null;
     }
