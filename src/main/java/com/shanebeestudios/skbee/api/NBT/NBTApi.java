@@ -21,6 +21,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -102,12 +103,14 @@ public class NBTApi {
     }
 
     @SuppressWarnings("RegExpRedundantEscape")
+    @Nullable
     public static NBTCompound getNestedCompound(String tag, NBTCompound compound) {
         if (compound == null) return null;
         if (tag.contains(";")) {
             String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
             for (int i = 0; i < splits.length - 1; i++) {
                 String split = splits[i];
+                if (compound == null) return null;
                 compound = compound.getOrCreateCompound(split);
             }
         }
@@ -211,7 +214,9 @@ public class NBTApi {
             compound = getNestedCompound(tag, compound);
             key = getNestedTag(tag);
         }
-        compound.removeKey(key);
+        if (compound != null) {
+            compound.removeKey(key);
+        }
     }
 
     /**
@@ -380,6 +385,7 @@ public class NBTApi {
             compound = getNestedCompound(key, compound);
             key = getNestedTag(key);
         }
+        if (compound == null) return;
 
         boolean custom = !compound.hasTag(key);
         boolean isSingle = object.length == 1;
@@ -523,6 +529,7 @@ public class NBTApi {
             compound = getNestedCompound(tag, compound);
             tag = getNestedTag(tag);
         }
+        if (compound == null) return null;
 
         switch (type) {
             case NBTTagString:
