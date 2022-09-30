@@ -8,7 +8,9 @@ import org.bukkit.Location;
 public class MathUtil {
 
     public static boolean isByte(Object object) {
-        if (object instanceof Long || object instanceof Integer) {
+        if (object instanceof Byte) {
+            return true;
+        } else if (object instanceof Long || object instanceof Integer) {
             long l = ((Number) object).longValue();
             return l <= Byte.MAX_VALUE && l >= Byte.MIN_VALUE;
         }
@@ -16,7 +18,9 @@ public class MathUtil {
     }
 
     public static boolean isShort(Object object) {
-        if (object instanceof Long || object instanceof Integer) {
+        if (object instanceof Short) {
+            return true;
+        } else if (object instanceof Long || object instanceof Integer) {
             long l = ((Number) object).longValue();
             return l <= Short.MAX_VALUE && l >= Short.MIN_VALUE;
         }
