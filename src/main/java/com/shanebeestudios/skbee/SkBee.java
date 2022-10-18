@@ -261,6 +261,11 @@ public class SkBee extends JavaPlugin {
             Util.logLoading("&5Text Component Elements &cdisabled via config");
             return;
         }
+        if (!Skript.classExists("net.kyori.adventure.text.Component")) {
+            Util.logLoading("&5Text Component Elements &cdisabled");
+            Util.logLoading("&7- Text components require a PaperMC server.");
+            return;
+        }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.text");
             Util.logLoading("&5Text Component Elements &asuccessfully loaded");

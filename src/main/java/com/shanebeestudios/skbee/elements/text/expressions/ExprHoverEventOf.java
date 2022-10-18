@@ -10,8 +10,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.HoverEvent;
+import com.shanebeestudios.skbee.api.text.BeeComponent;
+import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,22 +24,22 @@ import javax.annotation.Nullable;
         "set hover event of {_t} to a new hover event showing player's tool",
         "send component {_t} to player"})
 @Since("1.5.0")
-public class ExprHoverEventOf extends PropertyExpression<BaseComponent, HoverEvent> {
+public class ExprHoverEventOf extends PropertyExpression<BeeComponent, HoverEvent> {
 
     static {
-        register(ExprHoverEventOf.class, HoverEvent.class, "hover event", "basecomponents");
+        register(ExprHoverEventOf.class, HoverEvent.class, "hover event", "textcomponents");
     }
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        setExpr((Expression<BaseComponent>) exprs[0]);
+        setExpr((Expression<BeeComponent>) exprs[0]);
         return true;
     }
 
     @Override
-    protected HoverEvent @NotNull [] get(Event e, BaseComponent[] source) {
-        return get(source, BaseComponent::getHoverEvent);
+    protected HoverEvent<?> @NotNull [] get(Event e, BeeComponent[] source) {
+        return get(source, BeeComponent::getHoverEvent);
     }
 
     @Nullable
@@ -57,7 +57,7 @@ public class ExprHoverEventOf extends PropertyExpression<BaseComponent, HoverEve
 
         if (hoverEvent == null) return;
 
-        for (BaseComponent component : getExpr().getArray(e)) {
+        for (BeeComponent component : getExpr().getArray(e)) {
             component.setHoverEvent(hoverEvent);
         }
     }

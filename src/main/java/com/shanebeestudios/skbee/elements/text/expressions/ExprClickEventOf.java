@@ -10,14 +10,12 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import net.md_5.bungee.api.chat.BaseComponent;
-import net.md_5.bungee.api.chat.ClickEvent;
+import com.shanebeestudios.skbee.api.text.BeeComponent;
+import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-
-@SuppressWarnings("deprecation")
 @Name("Text Component - Click Event Of")
 @Description("Set the click event of a text component.")
 @Examples({"set {_t} to text component from \"Check out this cool thing at SPAWN!\"",
@@ -25,23 +23,23 @@ import javax.annotation.Nullable;
         "set click event of {_t} to a new click event to run command \"/spawn\"",
         "send component {_t} to player"})
 @Since("1.5.0")
-public class ExprClickEventOf extends PropertyExpression<BaseComponent, ClickEvent> {
+public class ExprClickEventOf extends PropertyExpression<BeeComponent, ClickEvent> {
 
     static {
-        register(ExprClickEventOf.class, ClickEvent.class, "click event", "basecomponents");
+        register(ExprClickEventOf.class, ClickEvent.class, "click event", "textcomponents");
     }
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        setExpr((Expression<BaseComponent>) exprs[0]);
+        setExpr((Expression<BeeComponent>) exprs[0]);
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected ClickEvent @NotNull [] get(Event e, BaseComponent[] source) {
-        return get(source, BaseComponent::getClickEvent);
+    protected ClickEvent @NotNull [] get(Event e, BeeComponent[] source) {
+        return get(source, BeeComponent::getClickEvent);
     }
 
     @SuppressWarnings("NullableProblems")
@@ -52,14 +50,14 @@ public class ExprClickEventOf extends PropertyExpression<BaseComponent, ClickEve
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
     @Override
     public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
         ClickEvent clickEvent = delta != null ? ((ClickEvent) delta[0]) : null;
 
         if (clickEvent == null) return;
 
-        for (BaseComponent component : getExpr().getArray(e)) {
+        for (BeeComponent component : getExpr().getArray(e)) {
             component.setClickEvent(clickEvent);
         }
     }

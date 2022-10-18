@@ -1,9 +1,10 @@
 package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.util.Color;
-import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.SkriptColor;
+import net.kyori.adventure.text.format.TextColor;
 import net.md_5.bungee.api.ChatColor;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
 public enum ChatUtil {
@@ -41,19 +42,16 @@ public enum ChatUtil {
         }
         return null;
     }
-    
-    public static ChatColor getBungeeFromSkriptColor(SkriptColor color) {
-        return color.asChatColor().asBungee();
-    }
-    
-    public static ChatColor getBungeeFromColor(Color color) {
-        java.awt.Color javaColor = new java.awt.Color(color.asBukkitColor().asRGB());
-        return ChatColor.of(javaColor);
+
+    public static TextColor getTextColorFromColor(Color color) {
+        return TextColor.color(color.asBukkitColor().asRGB());
     }
 
-    public static ColorRGB getColorRGBFromBungee(ChatColor chatColor) {
-        java.awt.Color jC = chatColor.getColor();
-        return new ColorRGB(jC.getRed(), jC.getGreen(), jC.getBlue());
+    @SuppressWarnings("ConstantConditions")
+    @Nullable
+    public static SkriptColor getSkriptColorFromTextColor(TextColor textColor) {
+        int intValue = textColor.value();
+        return SkriptColor.fromBukkitColor(org.bukkit.Color.fromRGB(intValue));
     }
 
 }
