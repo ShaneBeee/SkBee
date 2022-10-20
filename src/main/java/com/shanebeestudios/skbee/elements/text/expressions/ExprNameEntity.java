@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
         "\nNAME = the name will only show when crosshair is on entity.",
         "\nDISPLAY NAME = the name will always show."})
 @Examples("set component entity name of target entity to translate component from \"entity.minecraft.llama\"")
-@Since("INSERT VERSION")
+@Since("2.4.0")
 public class ExprNameEntity extends SimplePropertyExpression<Entity, BeeComponent> {
 
     static {

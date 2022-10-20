@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
         "set {_i} to chest inventory with component name {_t} with 2 rows",
         "set slot 1 of {_i} to diamond sword",
         "open {_i} to player"})
-@Since("INSERT VERSION")
+@Since("2.4.0")
 public class ExprChestInventory extends SimpleExpression<Inventory> {
 
     static {

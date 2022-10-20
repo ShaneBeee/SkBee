@@ -28,7 +28,7 @@ import java.util.List;
 @Name("Text Component - Item Lore")
 @Description("Get/set the lore of an item using text components.")
 @Examples("set component lore of player's tool to mini message from \"<rainbow>OOO RAINBOW LORE\"")
-@Since("INSERT VERSION")
+@Since("2.4.0")
 public class ExprLore extends SimpleExpression<BeeComponent> {
 
     static {

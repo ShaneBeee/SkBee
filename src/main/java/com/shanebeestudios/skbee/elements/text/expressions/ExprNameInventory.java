@@ -21,7 +21,7 @@ import java.util.List;
 @Description({"Get/set the name of an inventory using components.",
         "NOTE: This will only rename OPEN inventories, not inventories saved in variables."})
 @Examples("set component inventory title of player's current inventory to {_t}")
-@Since("INSERT VERSION")
+@Since("2.4.0")
 public class ExprNameInventory extends SimplePropertyExpression<Inventory, BeeComponent> {
 
     static {

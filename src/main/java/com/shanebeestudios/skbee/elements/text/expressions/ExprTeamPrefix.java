@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Text Component - Team Prefix/Suffix")
 @Description("Get/set prefix/suffix of teams using components.")
 @Examples("set component team prefix of team of player to mini message from \"<color:grey>[<color:aqua>OWNER<color:grey>] \"")
-@Since("INSERT VERSION")
+@Since("2.4.0")
 public class ExprTeamPrefix extends SimplePropertyExpression<Team, BeeComponent> {
 
     static {

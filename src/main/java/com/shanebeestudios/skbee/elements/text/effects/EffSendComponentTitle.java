@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
         "If you are using variables and the title won't send, make sure to add `component`."})
 @Examples({"send title mini message from \"<rainbow>OOO RAINBOW TITLE\"",
         "send title component {_comp} for 10 seconds with fadein 5 ticks and fadeout 10 ticks"})
-@Since("INSERT VERSION")
+@Since("2.4.0")
 public class EffSendComponentTitle extends Effect {
 
     static {

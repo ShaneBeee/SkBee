@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"set sign line 1 of target block to mini message from \"<rainbow>LINE ONE\"",
         "set sign line 2 of target block to translate component from \"item.minecraft.diamond_sword\"",
         "set {_line1} to sign line 1 of target block"})
-@Since("INSERT VERSION")
+@Since("2.4.0")
 public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
 
     static {

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
         "These messages are still components, which you can still apply hover/click events to.",
         "For more info check out the mini message page <link>https://docs.adventure.kyori.net/minimessage/format.html</link>"})
 @Examples("set {_m} to mini message from \"<rainbow>this is a rainbow message\"")
-@Since("INSERT VERSION")
+@Since("2.4.0")
 public class ExprMiniMessage extends SimpleExpression<BeeComponent> {
 
     static {
