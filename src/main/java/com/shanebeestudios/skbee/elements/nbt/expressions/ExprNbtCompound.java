@@ -32,17 +32,17 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-@Name("NBT - Compound of")
-@Description({"Get the nbt compound of a block/entity/item/file/chunk. Optionally you can return a copy of the compound. This way you can modify it without",
+@Name("NBT - Compound Of")
+@Description({"Get the NBT compound of a block/entity/item/file/chunk. Optionally you can return a copy of the compound. This way you can modify it without",
         "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to",
         "other entities.",
-        "\n'nbt compound' from an item will return a copy of the FULL nbt of an item (this includes id, count and 'tag' compound).",
-        "Modifying this will have no effect on the original item.",
-        "\n'nbt item compound' from an item will be the original. This will return the 'tag' portion of an items full NBT.",
-        "Modifying this will modify the original item.",
+        "\n'full nbt compound' from an item will return a copy of the FULL NBT of an item (this includes id, count and 'tag' compound).",
+        "Modifying this will have no effect on the original item. This is useful for serializing items.",
+        "\n'nbt [item] compound' from an item will be the original. This will return the 'tag' portion of an items full NBT.",
+        "Modifying this will modify the original item. The '[item]' portion is deprecated and will be removed in a future version.",
         "\nNBT from a file will need to be saved manually using",
         "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created."})
-@Examples({"set {_n} to nbt item compound of player's tool",
+@Examples({"set {_n} to nbt compound of player's tool",
         "set {_nbt} to nbt compound of target entity",
         "set {_n} to nbt compound of \"{id:\"\"minecraft:diamond_sword\"\",tag:{Damage:0,Enchantments:[{id:\"\"minecraft:sharpness\"\",lvl:3s}]},Count:1b}\"",
         "set {_nbt} to nbt compound of file \"world/playerdata/some-uuid.dat\"",
@@ -51,22 +51,25 @@ import javax.annotation.Nullable;
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
+        // Will remove '[item]' in the future (oct 24/2022)
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-                "nbt item compound [(1¦copy)] (of|from) %itemtypes/itemstacks/slots%",
-                "nbt compound [(1¦copy)] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings/chunks%",
-                "nbt compound [(1¦copy)] (of|from) file[s] %strings%");
+                "[:full] nbt [:item] [compound] [:copy] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings/chunks%",
+                "nbt [compound] [:copy] (of|from) file[s] %strings%");
     }
 
-    private boolean isItem;
+    private boolean isFullItem;
     private boolean isCopy;
     private boolean isFile;
 
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         setExpr(exprs[0]);
-        isItem = matchedPattern == 0;
-        isCopy = parseResult.mark == 1;
+        isFullItem = parseResult.hasTag("full");
+        isCopy = parseResult.hasTag("copy");
         isFile = matchedPattern == 2;
+        if (parseResult.hasTag("item")) {
+            Skript.warning("'nbt item compound' has been deprecated ... please just use 'nbt compound'");
+        }
         return true;
     }
 
@@ -83,28 +86,28 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             } else if (object instanceof Entity entity) {
                 compound = new NBTCustomEntity(entity);
             } else if (object instanceof ItemType itemType) {
-                if (isItem) {
+                if (isFullItem) {
+                    compound = NBTItem.convertItemtoNBT(itemType.getRandom());
+                } else {
                     if (itemType.getMaterial() == Material.AIR) return null;
                     compound = new NBTItemType(itemType);
-                } else {
-                    compound = NBTItem.convertItemtoNBT(itemType.getRandom());
                 }
             } else if (object instanceof ItemStack itemStack) {
-                if (isItem) {
+                if (isFullItem) {
+                    return NBTItem.convertItemtoNBT(itemStack);
+                } else {
                     if (itemStack.getType() == Material.AIR) return null;
                     compound = new NBTItem(itemStack, true);
-                } else {
-                    return NBTItem.convertItemtoNBT(itemStack);
                 }
             } else if (object instanceof Slot slot) {
                 ItemStack stack = slot.getItem();
                 if (stack == null) return null;
 
-                if (isItem) {
+                if (isFullItem) {
+                    compound = NBTItem.convertItemtoNBT(stack);
+                } else {
                     if (stack.getType() == Material.AIR) return null;
                     compound = new NBTItem(stack, true);
-                } else {
-                    compound = NBTItem.convertItemtoNBT(stack);
                 }
             } else if (object instanceof String nbtString) {
                 if (isFile) {
@@ -133,9 +136,9 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String item = this.isItem ? "item" : "";
-        String copy = this.isCopy ? "copy" : "";
-        return "nbt " + item + " compound " + copy + " from " + getExpr().toString(e, d);
+        String full = this.isFullItem ? "full " : "";
+        String copy = this.isCopy ? "copy " : "";
+        return full + "nbt compound " + copy + "from " + getExpr().toString(e, d);
     }
 
 }
