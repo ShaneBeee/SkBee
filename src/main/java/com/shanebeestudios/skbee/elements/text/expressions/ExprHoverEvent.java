@@ -66,7 +66,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             String[] string = ((String[]) this.object.getArray(event));
             Component texts = Component.empty();
             for (int i = 0; i < string.length; i++) {
-                Component component = Component.text(string[i] + (i < (string.length - 1) ? System.lineSeparator() : ""));
+                Component component = Component.text(string[i] + (i < (string.length - 1) ? "\n" : ""));
                 texts = texts.append(component);
             }
             return new HoverEvent[]{HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT, texts)};
