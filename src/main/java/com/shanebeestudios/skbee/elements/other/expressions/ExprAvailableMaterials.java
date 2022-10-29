@@ -12,6 +12,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
@@ -60,10 +61,15 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         entityTypes = entityTypes.stream().sorted(Comparator.comparing(Enum::toString)).collect(Collectors.toList());
         for (EntityType entityType : entityTypes) {
             Class<? extends Entity> entityClass = entityType.getEntityClass();
-            if (entityClass != null) {
-                EntityData<?> entityData = EntityData.fromClass(entityClass);
-                ENTITY_DATAS.add(entityData);
+            if (entityClass == null) {
+                continue;
             }
+            EntityData<?> entityData = EntityData.fromClass(entityClass);
+            if (entityData.getType() == Entity.class) {
+                Util.debug("Skript is missing EntityType: %s", entityType.getKey());
+                continue;
+            }
+            ENTITY_DATAS.add(entityData);
         }
         Skript.registerExpression(ExprAvailableMaterials.class, Object.class, ExpressionType.SIMPLE,
                 "[all] available materials",
