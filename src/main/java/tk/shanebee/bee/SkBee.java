@@ -2,10 +2,8 @@ package tk.shanebee.bee;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import com.github.shynixn.structureblocklib.bukkit.service.ProxyServiceImpl;
-import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
+import ch.njol.skript.util.Version;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
-import io.papermc.lib.PaperLib;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.Plugin;
@@ -23,7 +21,6 @@ import tk.shanebee.bee.elements.board.listener.PlayerBoardListener;
 import tk.shanebee.bee.elements.board.objects.Board;
 import tk.shanebee.bee.elements.bound.config.BoundConfig;
 import tk.shanebee.bee.elements.bound.objects.Bound;
-import tk.shanebee.bee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import tk.shanebee.bee.elements.worldcreator.objects.BeeWorldConfig;
 import tk.shanebee.bee.metrics.Metrics;
 
@@ -44,7 +41,6 @@ public class SkBee extends JavaPlugin {
     private Config config;
     private BoundConfig boundConfig = null;
     private SkriptAddon addon;
-    private VirtualFurnaceAPI virtualFurnaceAPI;
     private BeeWorldConfig beeWorldConfig;
 
     @Override
@@ -59,19 +55,26 @@ public class SkBee extends JavaPlugin {
 
         final Plugin SKRIPT = pm.getPlugin("Skript");
         if (SKRIPT != null && SKRIPT.isEnabled() && Skript.isAcceptRegistrations()) {
+            if (Skript.getVersion().isSmallerThan(new Version(2, 6, 2))) {
+                Util.log("Skript 2.6.2+ is required for this version of SkBee");
+                pm.disablePlugin(this);
+                return;
+            }
+            if (Skript.isRunningMinecraft(1, 13)) {
+                Util.log("This version of SkBee is meant for legacy server versions.");
+                Util.log("Use an updated version of SkBee for MC 1.13+");
+                pm.disablePlugin(this);
+                return;
+            }
             addon = Skript.registerAddon(this);
             addon.setLanguageFileDirectory("lang");
 
             // Load Skript elements
             loadNBTElements();
-            loadRecipeElements();
             loadBoardElements();
             loadBoundElements();
             loadTextElements();
-            loadPathElements();
-            loadStructureElements();
             loadOtherElements();
-            loadVirtualFurnaceElements();
             loadWorldCreatorElements();
 
             // Beta check + notice
@@ -79,16 +82,13 @@ public class SkBee extends JavaPlugin {
                 Util.log("&eThis is a BETA build, things may not work as expected, please report any bugs on GitHub");
                 Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
             }
-
-            // Paper Message
-            PaperLib.suggestPaper(this);
         } else {
             Util.log("&cDependency Skript was not found, plugin disabling");
             pm.disablePlugin(this);
             return;
         }
         loadMetrics();
-        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", desc.getVersion(), (float)(System.currentTimeMillis() - start) / 1000);
+        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", desc.getVersion(), (float) (System.currentTimeMillis() - start) / 1000);
 
         if (this.beeWorldConfig != null && this.config.AUTO_LOAD_WORLDS) {
             this.beeWorldConfig.loadCustomWorlds();
@@ -119,25 +119,6 @@ public class SkBee extends JavaPlugin {
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
-        }
-    }
-
-    private void loadRecipeElements() {
-        if (Skript.isRunningMinecraft(1, 13)) {
-            if (!this.config.ELEMENTS_RECIPE) {
-                Util.log("&5Recipe Elements &cdisabled via config");
-                return;
-            }
-            try {
-                addon.loadClasses("tk.shanebee.bee.elements.recipe");
-                Util.log("&5Recipe Elements &asuccessfully loaded");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        } else {
-            Util.log("&5Recipe Elements &cdisabled");
-            Util.log("&7 - Recipe elements are only available on 1.13+");
         }
     }
 
@@ -193,76 +174,6 @@ public class SkBee extends JavaPlugin {
         }
     }
 
-    private void loadPathElements() {
-        if (Skript.classExists("com.destroystokyo.paper.entity.Pathfinder")) {
-            if (!this.config.ELEMENTS_PATHFINDING) {
-                Util.log("&5Pathfinding Elements &cdisabled via config");
-                return;
-            }
-            try {
-
-                addon.loadClasses("tk.shanebee.bee.elements.path");
-                Util.log("&5Pathfinding Elements &asuccessfully loaded");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        } else {
-            Util.log("&5Pathfinding &cdisabled");
-            Util.log("&7 - Pathfinding elements are only available on Paper 1.13+");
-        }
-    }
-
-    private void loadStructureElements() {
-        if (Skript.isRunningMinecraft(1, 9, 4)) {
-            if (!this.config.ELEMENTS_STRUCTURE) {
-                Util.log("&5Structure Elements &cdisabled via config");
-                return;
-            }
-            // Disable if StructureBlockLib is not currently updated for this server version
-            ProxyServiceImpl impl = new ProxyServiceImpl(this);
-            if (impl.getServerVersion() == null) {
-                String ver = Skript.getMinecraftVersion().toString();
-                Util.log("&5Structure Elements &cDISABLED!");
-                Util.log(" - Your server version [&b" + ver + "&7] is not currently supported by the StructureBlock API");
-                Util.log(" - This is not a bug!");
-                Util.log(" - Structure elements will resume once the API is updated to work with [&b" + ver + "&7]");
-                return;
-            }
-            try {
-                addon.loadClasses("tk.shanebee.bee.elements.structure");
-                Util.log("&5Structure Elements &asuccessfully loaded");
-            } catch (IOException ex) {
-                ex.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        } else {
-            Util.log("&5Structure Elements &cdisabled");
-            Util.log("&7 - Structure elements are only available on 1.9.4+");
-        }
-    }
-
-    private void loadVirtualFurnaceElements() {
-        if (Skript.classExists("org.bukkit.persistence.PersistentDataContainer")) {
-            if (!this.config.ELEMENTS_VIRTUAL_FURNACE) {
-                Util.log("&5Virtual Furnace Elements &cdisabled via config");
-                return;
-            }
-            try {
-                this.virtualFurnaceAPI = new VirtualFurnaceAPI(this, true);
-                pm.registerEvents(new VirtualFurnaceListener(), this);
-                addon.loadClasses("tk.shanebee.bee.elements.virtualfurnace");
-                Util.log("&5Virtual Furnace Elements &asuccessfully loaded");
-            } catch (IOException e) {
-                e.printStackTrace();
-                pm.disablePlugin(this);
-            }
-        } else {
-            Util.log("&5Virtual Furnace Elements &cdisabled");
-            Util.log("&7 - Virtual Furnace elements are only available on 1.13+");
-        }
-    }
-
     private void loadOtherElements() {
         try {
             pm.registerEvents(new EntityListener(), this);
@@ -296,10 +207,6 @@ public class SkBee extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        if (this.virtualFurnaceAPI != null) {
-            this.virtualFurnaceAPI.disableAPI();
-        }
-
         Board.clearBoards();
     }
 
@@ -343,15 +250,5 @@ public class SkBee extends JavaPlugin {
     public NBTApi getNbtApi() {
         return nbtApi;
     }
-
-    /**
-     * Get an instance of the {@link VirtualFurnaceAPI}
-     *
-     * @return Instance of the Virtual Furnace API
-     */
-    public VirtualFurnaceAPI getVirtualFurnaceAPI() {
-        return virtualFurnaceAPI;
-    }
-
 
 }
