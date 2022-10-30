@@ -25,6 +25,7 @@ import tk.shanebee.bee.SkBee;
 import tk.shanebee.bee.api.NBT.NBTCustomBlock;
 import tk.shanebee.bee.api.NBT.NBTCustomEntity;
 import tk.shanebee.bee.api.NBT.NBTCustomTileEntity;
+import tk.shanebee.bee.api.NBT.NBTItemType;
 import tk.shanebee.bee.api.NBTApi;
 
 import javax.annotation.Nullable;
@@ -42,21 +43,24 @@ import javax.annotation.Nullable;
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     private final static NBTApi NBT_API;
+
     static {
         NBT_API = SkBee.getPlugin().getNbtApi();
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-                "nbt compound [(1¦copy)] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings%",
+                "[:full] nbt compound [:copy] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings%",
                 "nbt compound (of|from) file[s] %strings%");
     }
 
     private boolean copy;
     private boolean file;
+    private boolean isFullItem;
 
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         setExpr(exprs[0]);
-        copy = parseResult.mark == 1;
+        copy = parseResult.hasTag("copy");
         file = matchedPattern == 1;
+        isFullItem = parseResult.hasTag("full");
         return true;
     }
 
@@ -76,16 +80,20 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             } else if (object instanceof Entity) {
                 compound = new NBTCustomEntity(((Entity) object));
             } else if (object instanceof ItemType) {
-                ItemStack stack = ((ItemType) object).getRandom();
-                if (stack != null) {
-                    compound = NBTItem.convertItemtoNBT(stack);
+                if (!isFullItem) {
+                    compound = new NBTItemType(((ItemType) object));
+                } else {
+                    ItemStack stack = ((ItemType) object).getRandom();
+                    if (stack != null) {
+                        compound = getFromItem(stack);
+                    }
                 }
             } else if (object instanceof ItemStack) {
-                return NBTItem.convertItemtoNBT(((ItemStack) object));
+                compound = getFromItem((ItemStack) object);
             } else if (object instanceof Slot) {
                 ItemStack stack = ((Slot) object).getItem();
                 if (stack != null) {
-                    compound = NBTItem.convertItemtoNBT(stack);
+                    compound = getFromItem(stack);
                 }
             } else if (object instanceof String) {
                 if (file) {
@@ -108,6 +116,13 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             }
             return null;
         });
+    }
+
+    private NBTCompound getFromItem(ItemStack itemStack) {
+        if (isFullItem) {
+            return NBTItem.convertItemtoNBT(itemStack);
+        }
+        return new NBTItem(itemStack, true);
     }
 
     @Override
