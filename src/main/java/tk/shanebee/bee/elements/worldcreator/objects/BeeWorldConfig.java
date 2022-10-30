@@ -40,9 +40,9 @@ public class BeeWorldConfig {
     }
 
     public void loadCustomWorlds() {
-        Util.log("Loading custom worlds...");
         ConfigurationSection section = worldConfig.getConfigurationSection("worlds");
         if (section != null) {
+            Util.log("Loading custom worlds...");
             for (String key : section.getKeys(false)) {
                 BeeWorldCreator beeWorldCreator = loadWorld(key);
                 if (beeWorldCreator != null) {
@@ -51,7 +51,9 @@ public class BeeWorldConfig {
             }
         }
         int size = WORLDS.size();
-        Util.log("&aSuccessfully loaded &b%s &acustom world%s", size, size > 1 ? "s" : "");
+        if (size > 0) {
+            Util.log("&aSuccessfully loaded &b%s &acustom world%s", size, size > 1 ? "s" : "");
+        }
     }
 
     public BeeWorldCreator loadWorld(String name) {
