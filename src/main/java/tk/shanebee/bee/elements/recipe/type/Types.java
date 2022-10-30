@@ -44,11 +44,6 @@ public class Types {
                         public String toVariableNameString(RecipeChoice.MaterialChoice matChoice) {
                             return "materialchoice:" + toString(matChoice, 0);
                         }
-
-                        @Override
-                        public String getVariableNamePattern() {
-                            return "materialchoice://s";
-                        }
                     }));
 
             Classes.registerClass(new ClassInfo<>(Tag.class, "minecrafttag")
@@ -78,11 +73,6 @@ public class Types {
                         @Override
                         public String toVariableNameString(Tag tag) {
                             return "minecrafttag:" + toString(tag, 0);
-                        }
-
-                        @Override
-                        public String getVariableNamePattern() {
-                            return "minecrafttag://s";
                         }
                     }));
         }

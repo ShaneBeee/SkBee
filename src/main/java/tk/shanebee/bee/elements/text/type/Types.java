@@ -35,11 +35,6 @@ public class Types {
                     public @NotNull String toVariableNameString(@NotNull BaseComponent o) {
                         return o.toLegacyText();
                     }
-
-                    @Override
-                    public @NotNull String getVariableNamePattern() {
-                        return "";
-                    }
                 }));
     }
 

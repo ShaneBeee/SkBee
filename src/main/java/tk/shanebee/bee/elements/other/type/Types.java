@@ -61,11 +61,6 @@ public class Types {
                             public String toVariableNameString(Particle particle) {
                                 return "particle:" + toString(particle, 0);
                             }
-
-                            @Override
-                            public String getVariableNamePattern() {
-                                return "particle://s";
-                            }
                         }));
             } else {
                 Util.log("It looks like another addon registered 'particle' already. ");

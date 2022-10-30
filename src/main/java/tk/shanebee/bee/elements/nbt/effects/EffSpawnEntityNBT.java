@@ -5,11 +5,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.effects.EffSpawn;
 import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.sections.EffSecSpawn;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -74,7 +74,7 @@ public class EffSpawnEntityNBT extends Effect {
             assert loc != null : locations;
             for (final EntityType type : et) {
                 for (int i = 0; i < a.doubleValue() * type.getAmount(); i++) {
-                    EffSpawn.lastSpawned = spawn(loc, type.data.getType(), value);
+                    EffSecSpawn.lastSpawned = spawn(loc, type.data.getType(), value);
                 }
             }
         }

@@ -43,11 +43,6 @@ public class SkriptTypes {
                     public String toVariableNameString(NBTCustomType nbtCustomType) {
                         return toString(nbtCustomType, 0);
                     }
-
-                    @Override
-                    public String getVariableNamePattern() {
-                        return "\\S";
-                    }
                 }));
         Classes.registerClass(new ClassInfo<>(NBTCompound.class, "nbtcompound")
                 .user("nbt ?compound")
@@ -71,11 +66,6 @@ public class SkriptTypes {
                     @Override
                     public String toVariableNameString(@NotNull NBTCompound nbt) {
                         return "nbt:" + nbt.toString();
-                    }
-
-                    @Override
-                    public String getVariableNamePattern() {
-                        return "nbt:.+";
                     }
                 })
                 .serializer(new Serializer<NBTCompound>() {

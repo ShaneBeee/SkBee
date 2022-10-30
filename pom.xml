@@ -28,10 +28,6 @@
             <id>jitpack.io</id>
             <url>https://jitpack.io</url>
         </repository>
-        <repository>
-            <id>shanebeestudios-repo</id>
-            <url>https://shanebeestudios.com/maven/</url>
-        </repository>
     </repositories>
 
     <dependencies>
@@ -50,7 +46,7 @@
         <dependency>
             <groupId>com.github.SkriptLang</groupId>
             <artifactId>Skript</artifactId>
-            <version>2.5-alpha2</version>
+            <version>2.6.1</version>
             <scope>provided</scope>
             <exclusions>
                 <exclusion>
@@ -102,12 +98,18 @@
         <dependency>
             <groupId>com.shanebeestudios</groupId>
             <artifactId>VirtualFurnace</artifactId>
-            <version>1.0.0-Beta11</version>
+            <version>1.0.0-Beta12</version>
         </dependency>
         <dependency>
             <groupId>commons-io</groupId>
             <artifactId>commons-io</artifactId>
             <version>2.5</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>org.eclipse.jdt.annotation</artifactId>
+            <version>2.2.600</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

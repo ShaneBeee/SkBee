@@ -48,11 +48,6 @@ public class Types {
                     public @NotNull String toVariableNameString(Environment o) {
                         return o.name();
                     }
-
-                    @Override
-                    public @NotNull String getVariableNamePattern() {
-                        return "\\S+";
-                    }
                 }));
 
         EnumUtils<WorldType> worldTypes = new EnumUtils<>(WorldType.class, "world types");
@@ -79,11 +74,6 @@ public class Types {
                     @Override
                     public @NotNull String toVariableNameString(WorldType o) {
                         return o.name();
-                    }
-
-                    @Override
-                    public @NotNull String getVariableNamePattern() {
-                        return "\\S+";
                     }
                 }));
     }
