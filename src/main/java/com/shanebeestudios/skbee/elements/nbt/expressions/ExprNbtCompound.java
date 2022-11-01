@@ -66,7 +66,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
         setExpr(exprs[0]);
         isFullItem = parseResult.hasTag("full");
         isCopy = parseResult.hasTag("copy");
-        isFile = matchedPattern == 2;
+        isFile = matchedPattern == 1;
         if (parseResult.hasTag("item")) {
             Skript.warning("'nbt item compound' has been deprecated ... please just use 'nbt compound'");
         }
