@@ -162,7 +162,9 @@ public class OtherEvents {
                         "\nevent-inventory = Inventory that initiated the transfer.",
                         "\npast event-inventory = Inventory that the ItemStack is being taken from.",
                         "\nfuture event-inventory = Inventory that the ItemStack is being put into.")
-                .examples("")
+                .examples("on inventory move item:",
+                        "\tif type of past event-inventory = hopper inventory:",
+                        "\t\tcancel event")
                 .since("INSERT VERSION");
 
         EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
