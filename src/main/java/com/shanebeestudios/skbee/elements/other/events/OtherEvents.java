@@ -13,10 +13,12 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityBreedEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
@@ -146,6 +148,48 @@ public class OtherEvents {
                     return new ItemType(bredWith);
                 }
                 return null;
+            }
+        }, 0);
+
+        // Inventory Move Item Event
+        Skript.registerEvent("Inventory Move Item", SimpleEvent.class, InventoryMoveItemEvent.class,
+                        "inventory move item")
+                .description("Called when some entity or block (e.g. hopper) tries to move items directly from one inventory to another.",
+                        "\nWhen this event is called, the initiator may already have removed the item from the source inventory and is ready to move it into the destination inventory.",
+                        "\nIf this event is cancelled, the items will be returned to the source inventory, if needed.",
+                        "\nIf this event is not cancelled, the initiator will try to put the ItemStack into the destination inventory.",
+                        "If this is not possible and the ItemStack has not been modified, the source inventory slot will be restored to its former state. Otherwise any additional items will be discarded.",
+                        "\nevent-inventory = Inventory that initiated the transfer.",
+                        "\npast event-inventory = Inventory that the ItemStack is being taken from.",
+                        "\nfuture event-inventory = Inventory that the ItemStack is being put into.")
+                .examples("")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
+            @Override
+            public @NotNull Inventory get(InventoryMoveItemEvent event) {
+                return event.getInitiator();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
+            @Override
+            public @NotNull Inventory get(InventoryMoveItemEvent event) {
+                return event.getSource();
+            }
+        }, -1);
+
+        EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
+            @Override
+            public @NotNull Inventory get(InventoryMoveItemEvent event) {
+                return event.getDestination();
+            }
+        }, 1);
+
+        EventValues.registerEventValue(InventoryMoveItemEvent.class, ItemStack.class, new Getter<>() {
+            @Override
+            public @NotNull ItemStack get(InventoryMoveItemEvent event) {
+                return event.getItem();
             }
         }, 0);
     }
