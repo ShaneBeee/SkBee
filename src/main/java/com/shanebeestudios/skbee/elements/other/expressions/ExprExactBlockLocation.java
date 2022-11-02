@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"set {_loc} to exact location of event-block",
         "set {_loc} to exact location of target block",
         "if y coord of exact location of event-block = 5:"})
-@Since("INSERT VERSION")
+@Since("2.5.1")
 public class ExprExactBlockLocation extends SimplePropertyExpression<Block, Location> {
 
     static {
