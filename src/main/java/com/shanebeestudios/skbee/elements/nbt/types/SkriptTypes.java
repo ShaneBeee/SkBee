@@ -11,6 +11,7 @@ import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
+import de.tr7zw.changeme.nbtapi.NBTFile;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +24,7 @@ public class SkriptTypes {
         @Nullable
         @Override
         public Class<?>[] acceptChange(ChangeMode mode) {
-            if (mode == ChangeMode.ADD) {
+            if (mode == ChangeMode.ADD || mode == ChangeMode.DELETE) {
                 return CollectionUtils.array(NBTCompound.class);
             }
             return null;
@@ -35,6 +36,12 @@ public class SkriptTypes {
                 if (mode == ChangeMode.ADD) {
                     for (NBTCompound nbtCompound : what) {
                         nbtCompound.mergeCompound(changer);
+                    }
+                } else if (mode == ChangeMode.DELETE) {
+                    for (NBTCompound nbtCompound : what) {
+                        if (nbtCompound instanceof NBTFile nbtFile) {
+                            nbtFile.getFile().delete();
+                        }
                     }
                 }
             }
