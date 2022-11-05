@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 public class ExprTotalXP extends PropertyExpression<Player, Integer> {
 
     static {
-        register(ExprTotalXP.class, Integer.class, "total (xp|experience) [points]", "players");
+        register(ExprTotalXP.class, Integer.class, "[total] (xp|experience) [points]", "players");
     }
 
     @SuppressWarnings({"unchecked", "null", "NullableProblems"})
