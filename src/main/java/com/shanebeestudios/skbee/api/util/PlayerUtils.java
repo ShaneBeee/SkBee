@@ -30,7 +30,9 @@ public class PlayerUtils {
     public static void setTotalXP(Player player, int level) {
         player.setLevel(0);
         player.setExp(0);
-        player.giveExp(level);
+        if (level > 0) {
+            player.giveExp(level);
+        }
     }
 
 }
