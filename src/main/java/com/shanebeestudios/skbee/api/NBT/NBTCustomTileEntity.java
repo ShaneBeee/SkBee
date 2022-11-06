@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
+import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
@@ -68,6 +69,14 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
             NBTCompound customNBT = getPersistentDataContainer().getOrCreateCompound(KEY);
             customNBT.mergeCompound(custom);
         }
+    }
+
+    @Override
+    public NBTType getType(String name) {
+        if (name.equalsIgnoreCase("custom")) {
+            return NBTType.NBTTagCompound;
+        }
+        return super.getType(name);
     }
 
     @SuppressWarnings("DuplicatedCode")

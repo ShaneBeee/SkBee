@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
+import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.entity.Entity;
 import org.bukkit.persistence.PersistentDataContainer;
@@ -62,6 +63,14 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
             NBTCompound custom = comp.getCompound("custom");
             getPersistentDataContainer().getOrCreateCompound(KEY).mergeCompound(custom);
         }
+    }
+
+    @Override
+    public NBTType getType(String name) {
+        if (name.equalsIgnoreCase("custom")) {
+            return NBTType.NBTTagCompound;
+        }
+        return super.getType(name);
     }
 
     @SuppressWarnings("DuplicatedCode")
