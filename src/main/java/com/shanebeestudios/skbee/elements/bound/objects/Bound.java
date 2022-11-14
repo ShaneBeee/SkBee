@@ -124,7 +124,7 @@ public class Bound implements ConfigurationSerializable {
         World world = getWorld();
         if (world == null) return null;
         Collection<Entity> nearbyEntities = world.getNearbyEntities(this.boundingBox, entity ->
-                type.isAssignableFrom(entity.getClass()) && isInRegion(entity.getLocation()));
+                type.isAssignableFrom(entity.getClass()));
         return new ArrayList<>(nearbyEntities);
     }
 
