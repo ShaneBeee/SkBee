@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @Description({"Check if a chunk contains a specific block data.",
         "This can be useful to check before looping blocks in a chunk."})
 @Examples("if chunk at player contains block data sand[]:")
-@Since("INSERT VERSION")
+@Since("2.5.2")
 public class CondChunkContainsBlockData extends Condition {
 
     static {

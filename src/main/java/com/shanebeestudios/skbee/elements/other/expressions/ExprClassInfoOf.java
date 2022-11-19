@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Description({"Returns the Skript type (also known as 'ClassInfo') of an object.",
         "Useful for debugging. Will return as a string."})
 @Examples("set {_info} to class info of player's tool")
-@Since("INSERT VERSION")
+@Since("2.5.2")
 public class ExprClassInfoOf extends SimplePropertyExpression<Object, String> {
 
     static {

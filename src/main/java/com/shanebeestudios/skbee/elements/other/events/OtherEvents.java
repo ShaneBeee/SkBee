@@ -165,7 +165,7 @@ public class OtherEvents {
                 .examples("on inventory move item:",
                         "\tif type of past event-inventory = hopper inventory:",
                         "\t\tcancel event")
-                .since("INSERT VERSION");
+                .since("2.5.2");
 
         EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
             @Override
