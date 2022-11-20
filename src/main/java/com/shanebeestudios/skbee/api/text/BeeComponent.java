@@ -50,7 +50,15 @@ public class BeeComponent {
     }
 
     public static BeeComponent fromText(String text) {
-        return new BeeComponent(Component.text(text));
+        Component component;
+        if (text.contains("§")) {
+            component = LegacyComponentSerializer.legacySection().deserialize(text);
+        } else if (text.contains("&")) {
+            component = LegacyComponentSerializer.legacyAmpersand().deserialize(text);
+        } else {
+            component = Component.text(text);
+        }
+        return new BeeComponent(component);
     }
 
     public static BeeComponent fromMiniMessage(String text) {
