@@ -73,6 +73,13 @@ public class Util {
         return DEBUGS;
     }
 
+    public static NamespacedKey getMCNamespacedKey(@NotNull String key, boolean error) {
+        String string = key;
+        if (!string.contains(":")) {
+            string = "minecraft:" + string;
+        }
+        return getNamespacedKey(string, error);
+    }
     public static NamespacedKey getNamespacedKey(@NotNull String key, boolean error) {
         if (key.contains(" ")) {
             key = key.replace(" ", "_");
