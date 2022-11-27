@@ -145,12 +145,6 @@ public class Types {
                             "Some particles require extra data, these are distinguished by their data type within the square brackets.",
                             "DustOption, DustTransition and Vibration each have their own functions to build the appropriate data for these particles.")
                     .usage(ParticleUtil.getNamesAsString())
-                    .examples("play 1 of soul at location of player",
-                            "play 10 of dust using dustOption(green, 10) at location of player",
-                            "play 3 of item using player's tool at location of player",
-                            "play 1 of block using dirt at location of player",
-                            "play 1 of dust_color_transition using dustTransition(blue, green, 3) at location of player",
-                            "play 1 of vibration using vibration({loc1}, {loc2}, 1 second) at {loc1}")
                     .since("1.9.0")
                     .parser(new Parser<>() {
 
