@@ -4,13 +4,16 @@ import ch.njol.skript.Skript;
 
 public class ReflectionConstants {
 
+    // net.minecraft.resources.ResourceLocation -> of()
     public static String MINECRAFT_KEY_GET_KEY_METHOD = get("getKey", "a", "a");
+    // net.minecraft.nbt.TagVisitor -> visitString
     public static String TAG_VISITOR_VISIT_METHOD = get("a", "a", "a");
+    // net.minecraft.world.entity.Entity -> noPhysics
     public static String ENTITY_NO_CLIP_FIELD = get("P", "Q", "Q");
+    // net.minecraft.world.scores.PlayerTeam -> setPlayerPrefix
     public static String NMS_SCOREBOARD_TEAM_SET_PREFIX_METHOD = get("setPrefix", "b", "b");
+    // net.minecraft.world.scores.PlayerTeam -> setPlayerSuffix
     public static String NMS_SCOREBOARD_TEAM_SET_SUFFIX_METHOD = get("setSuffix", "c", "c");
-    public static String NMS_ITEMSTACK_GET_HOVER_NAME_METHOD = get("getName", "v", "v");
-    public static String NMS_CHAT_MESSAGE_GET_KEY_METHOD = get("getKey", "i", "i");
 
     private static String get(String v117, String v118, String v119) {
         if (Skript.isRunningMinecraft(1, 19)) {
