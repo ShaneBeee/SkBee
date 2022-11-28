@@ -22,6 +22,7 @@ import org.bukkit.Vibration;
 import org.bukkit.Vibration.Destination.BlockDestination;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
+import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
@@ -134,6 +135,17 @@ public class Types {
         } else {
             Util.logLoading("It looks like another addon registered 'potioneffectcause' already.");
             Util.logLoading("You may have to use their potion effect causes in SkBee's 'Entity Potion Effect' event.");
+        }
+
+        if (Classes.getExactClassInfo(TransformReason.class) == null) {
+            EnumUtils<TransformReason> TRANSOFORM_REASON = new EnumUtils<>(TransformReason.class);
+            Classes.registerClass(new ClassInfo<>(TransformReason.class, "transformreason")
+                    .user("transform ?reasons?")
+                    .name("Transform Reason")
+                    .description("Represents the different reasons for transforming in the entity transform event.")
+                    .usage(TRANSOFORM_REASON.getAllNames())
+                    .since("INSERT VERSION")
+                    .parser(TRANSOFORM_REASON.getParser()));
         }
 
         // Only register if no other addons have registered this class

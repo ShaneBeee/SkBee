@@ -13,6 +13,8 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityBreedEvent;
+import org.bukkit.event.entity.EntityTransformEvent;
+import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
@@ -192,6 +194,36 @@ public class OtherEvents {
             @Override
             public @NotNull ItemStack get(InventoryMoveItemEvent event) {
                 return event.getItem();
+            }
+        }, 0);
+
+        // Entity Transform Event
+        Skript.registerEvent("Entity Transform", SimpleEvent.class, EntityTransformEvent.class,
+                "entity transform")
+                .description("Called when an entity is about to be replaced by another entity.",
+                        "Examples include a villager struck by lightning turning into a witch,",
+                        "zombie drowning and becoming a drowned,",
+                        "slime splitting into other slimes.",
+                        "\nevent-entity = entity that is going to transform",
+                        "\nfuture event-entity = entity after transformation (only returns one entity)",
+                        "\nevent-transformreason = reason for the transformation",
+                        "\ntransformed entit(y|ies) = entity or entities after transformation (can be multiple entities)")
+                .examples("on entity transform:",
+                        "\tif event-entity is a villager:",
+                        "\t\tcancel event")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(EntityTransformEvent.class, Entity.class, new Getter<>() {
+            @Override
+            public Entity get(EntityTransformEvent event) {
+                return event.getTransformedEntity();
+            }
+        }, 1);
+
+        EventValues.registerEventValue(EntityTransformEvent.class, TransformReason.class, new Getter<>() {
+            @Override
+            public TransformReason get(EntityTransformEvent event) {
+                return event.getTransformReason();
             }
         }, 0);
     }
