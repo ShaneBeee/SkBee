@@ -8,11 +8,13 @@ import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityBreedEvent;
+import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
@@ -224,6 +226,27 @@ public class OtherEvents {
             @Override
             public TransformReason get(EntityTransformEvent event) {
                 return event.getTransformReason();
+            }
+        }, 0);
+
+        // Entity Change Block Event
+        Skript.registerEvent("Entity Change Block", SimpleEvent.class, EntityChangeBlockEvent.class,
+                "entity change block")
+                .description("Called when any Entity changes a block and a more specific event is not available.",
+                        "Skript does partially have this event, but this version of it opens up ALL possibilities with this event.",
+                        "\nevent-entity = the entity which changed the block",
+                        "\nevent-block = the block that changed",
+                        "\nevent-blockdata = the blockdata the block has changed into")
+                .examples("on entity change block:",
+                        "\tif event-entity is a villager:",
+                        "\t\tif event-block is a composter:",
+                        "\t\t\theal event-entity")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(EntityChangeBlockEvent.class, BlockData.class, new Getter<>() {
+            @Override
+            public @NotNull BlockData get(EntityChangeBlockEvent event) {
+                return event.getBlockData();
             }
         }, 0);
     }
