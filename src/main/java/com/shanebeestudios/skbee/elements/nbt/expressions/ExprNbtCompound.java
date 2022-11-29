@@ -17,7 +17,7 @@ import com.shanebeestudios.skbee.api.NBT.NBTCustomBlock;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomEntity;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomSlot;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomTileEntity;
-import com.shanebeestudios.skbee.api.NBT.NBTItemType;
+import com.shanebeestudios.skbee.api.NBT.NBTCustomItemType;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -91,7 +91,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                     compound = NBTItem.convertItemtoNBT(itemType.getRandom());
                 } else {
                     if (itemType.getMaterial() == Material.AIR) return null;
-                    compound = new NBTItemType(itemType);
+                    compound = new NBTCustomItemType(itemType);
                 }
             } else if (object instanceof ItemStack itemStack) {
                 if (isFullItem) {
