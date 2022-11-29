@@ -15,6 +15,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomBlock;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomEntity;
+import com.shanebeestudios.skbee.api.NBT.NBTCustomSlot;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomTileEntity;
 import com.shanebeestudios.skbee.api.NBT.NBTItemType;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
@@ -107,7 +108,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                     compound = NBTItem.convertItemtoNBT(stack);
                 } else {
                     if (stack.getType() == Material.AIR) return null;
-                    compound = new NBTItem(stack, true);
+                    compound = new NBTCustomSlot(slot);
                 }
             } else if (object instanceof String nbtString) {
                 if (isFile) {
