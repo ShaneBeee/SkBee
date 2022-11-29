@@ -21,7 +21,8 @@ public class TabEvent extends SkriptEvent {
         Skript.registerEvent("Tab Complete", TabEvent.class, TabCompleteEvent.class,
                         "[skbee] tab complete [(of|for) %strings%]")
                 .description("Called when a player attempts to tab complete the arguments of a command. ",
-                        "event-string = the command.")
+                        "\nNOTE: Tab complete event is only called for the ARGUMENTS of a command, NOT the command itself.",
+                        "\nevent-string = the command.")
                 .examples("on tab complete of \"/mycommand\":",
                         "\tset tab completions for position 1 to \"one\", \"two\" and \"three\"",
                         "\tset tab completions for position 2 to 1, 2 and 3",
