@@ -102,7 +102,8 @@ public class ExprNBTUuid extends SimpleExpression<Object> {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String[] pat = new String[]{"int array", "int array as strings", "most bits", "least bit"};
-        return "uuid " + pat[pattern] + " from " + entity.toString(e, d);
+        String ent = this.entity != null ? " from " + this.entity.toString(e, d) : "";
+        return "uuid " + pat[pattern] + ent;
     }
 
 }
