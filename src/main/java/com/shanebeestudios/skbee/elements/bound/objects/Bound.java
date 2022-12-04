@@ -55,24 +55,9 @@ public class Bound implements ConfigurationSerializable {
         Preconditions.checkArgument(location.getWorld() == location2.getWorld(), "Worlds have to match");
         this.world = location.getWorld().getName();
         this.id = id;
-
-        Location loc1 = location.getBlock().getLocation();
-        int blockX = loc1.getBlockX();
-        int blockY = loc1.getBlockY();
-        int blockZ = loc1.getBlockZ();
-
-        Location loc2 = location2.getBlock().getLocation();
-        int blockX1 = loc2.getBlockX();
-        int blockY1 = loc2.getBlockY();
-        int blockZ1 = loc2.getBlockZ();
-
-        int minX = Math.min(blockX, blockX1);
-        int minY = Math.min(blockY, blockY1);
-        int minZ = Math.min(blockZ, blockZ1);
-        int maxX = Math.max(blockX, blockX1) + 1;
-        int maxY = Math.max(blockY, blockY1) + 1;
-        int maxZ = Math.max(blockZ, blockZ1) + 1;
-        this.boundingBox = new BoundingBox(minX, minY, minZ, maxX, maxY, maxZ);
+        Block block1 = location.getBlock();
+        Block block2 = location2.getBlock();
+        this.boundingBox = BoundingBox.of(block1, block2);
     }
 
     /**
