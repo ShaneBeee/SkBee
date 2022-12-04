@@ -93,6 +93,15 @@ public class ParticleUtil {
     }
 
     /**
+     * Get a list of all available particles
+     *
+     * @return List of all available particles
+     */
+    public static List<Particle> getAvailableParticles() {
+        return new ArrayList<>(PARTICLES.values());
+    }
+
+    /**
      * Parse a particle by its Minecraft name
      *
      * @param key Minecraft name of particle
