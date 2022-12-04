@@ -4,7 +4,6 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.reflection.ReflectionConstants;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
-import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -31,6 +30,7 @@ public class ParticleUtil {
     }
 
     private static final Map<String, Particle> PARTICLES = new HashMap<>();
+    private static final Map<Particle, String> PARTICLE_NAMES = new HashMap<>();
 
     // Load and map Minecraft particle names
     // Bukkit does not have any API for getting the Minecraft names of particles (how stupid)
@@ -55,6 +55,7 @@ public class ParticleUtil {
 
                 if (!PARTICLE.toString().contains("LEGACY")) {
                     PARTICLES.put(KEY, PARTICLE);
+                    PARTICLE_NAMES.put(PARTICLE, KEY);
                 }
             }
         } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
@@ -88,12 +89,7 @@ public class ParticleUtil {
      * @return Minecraft name of particle
      */
     public static String getName(Particle particle) {
-        for (String key : PARTICLES.keySet()) {
-            if (PARTICLES.get(key) == particle) {
-                return key;
-            }
-        }
-        return null;
+        return PARTICLE_NAMES.get(particle);
     }
 
     /**
