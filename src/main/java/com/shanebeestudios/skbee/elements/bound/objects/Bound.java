@@ -245,6 +245,14 @@ public class Bound implements ConfigurationSerializable {
         this.boundingBox = this.boundingBox.resize(v1.getX(), v1.getY(), v1.getZ(), v2.getX(), v2.getY(), v2.getZ());
     }
 
+    public void resize(Location loc1, Location loc2) {
+        Preconditions.checkArgument(loc1.getWorld() == loc2.getWorld(), "Worlds have to match");
+        Preconditions.checkArgument(loc1.getWorld().getName().equalsIgnoreCase(this.world), "World cannot be changed!");
+        Block block1 = loc1.getBlock();
+        Block block2 = loc2.getBlock();
+        this.boundingBox = BoundingBox.of(block1, block2);
+    }
+
     public void change(Axis axis, Corner corner, int amount) {
         if (axis == Axis.X) {
             if (corner == Corner.GREATER) {
