@@ -144,7 +144,7 @@ public class Types {
                     .name("Transform Reason")
                     .description("Represents the different reasons for transforming in the entity transform event.")
                     .usage(TRANSOFORM_REASON.getAllNames())
-                    .since("INSERT VERSION")
+                    .since("2.5.3")
                     .parser(TRANSOFORM_REASON.getParser()));
         }
 

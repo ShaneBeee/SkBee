@@ -214,7 +214,7 @@ public class OtherEvents {
                 .examples("on entity transform:",
                         "\tif event-entity is a villager:",
                         "\t\tcancel event")
-                .since("INSERT VERSION");
+                .since("2.5.3");
 
         EventValues.registerEventValue(EntityTransformEvent.class, Entity.class, new Getter<>() {
             @Override
@@ -242,7 +242,7 @@ public class OtherEvents {
                         "\tif event-entity is a villager:",
                         "\t\tif event-block is a composter:",
                         "\t\t\theal event-entity")
-                .since("INSERT VERSION");
+                .since("2.5.3");
 
         EventValues.registerEventValue(EntityChangeBlockEvent.class, BlockData.class, new Getter<>() {
             @Override
@@ -260,7 +260,7 @@ public class OtherEvents {
                         "then the command should be assigned a permission which is not granted to the player.")
                 .examples("on player command send:",
                         "\tremove \"ver\" and \"version\" from player command map")
-                .since("INSERT VERSION");
+                .since("2.5.3");
     }
 
 }

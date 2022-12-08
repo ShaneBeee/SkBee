@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @Description({"Resize a current bound. Full will stretch it to the lowest/highest points of the world.",
         "\nNOTE: World of a bound cannot be changed."})
 @Examples("resize bound with id \"test\" between {_l1} and {_l1}")
-@Since("INSERT VERSION")
+@Since("2.5.3")
 public class EffBoundResize extends Effect {
 
     static {

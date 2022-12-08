@@ -39,7 +39,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         "\tset owner of event-bound to player",
         "create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
         "create a full bound with id \"spawn\" between {loc} and location of player"})
-@Since("INSERT VERSION")
+@Since("2.5.3")
 public class EffSecBoundCreate extends EffectSection {
 
     public static class BoundCreateEvent extends Event {

@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("Attempts to update the command map sent to players.")
 @Examples({"on load:",
         "\tupdate command map"})
-@Since("INSERT VERSION")
+@Since("2.5.3")
 public class EffUpdateCommandMap extends Effect {
 
     static {

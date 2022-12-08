@@ -33,7 +33,7 @@ import java.util.List;
         "\tloop command map:",
         "\t\tif loop-value contains \":\":",
         "\t\t\tremove loop-value from command map"})
-@Since("INSERT VERSION")
+@Since("2.5.3")
 public class ExprPlayerCommandMap extends SimpleExpression<String> {
 
     static {

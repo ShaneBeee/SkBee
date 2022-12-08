@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
         "\tif event-entity is a villager:",
         "\t\tif transformed entity is a witch:",
         "\t\t\tspawn a turtle at event-location"})
-@Since("INSERT VERSION")
+@Since("2.5.3")
 public class ExprTransformedEntities extends SimpleExpression<Entity> {
 
     static {
