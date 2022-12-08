@@ -87,7 +87,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         ENCHANTMENTS.addAll(enchantments);
 
         List<PotionEffectType> potionEffectTypes = Arrays.asList(PotionEffectType.values());
-        potionEffectTypes = potionEffectTypes.stream().sorted(Comparator.comparing(potion -> potion.getKey().getKey())).collect(Collectors.toList());
+        potionEffectTypes = potionEffectTypes.stream().sorted(Comparator.comparing(PotionEffectType::getName)).collect(Collectors.toList());
         POTION_EFFECT_TYPES.addAll(potionEffectTypes);
 
         List<Biome> biomes = Arrays.asList(Biome.values());
