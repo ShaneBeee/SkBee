@@ -22,6 +22,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Minecart;
 import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
@@ -78,6 +79,19 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
             EntityData<?> entityData = EntityData.fromClass(entityClass);
             if (entityData.getType() == Entity.class) {
                 Util.debug("Skript is missing EntityType: %s", entityType.getKey());
+                continue;
+            }
+            // Silly minecart issues with Skript
+            if (Minecart.class.isAssignableFrom(entityClass)) {
+                ENTITY_DATAS.add(entityData);
+                continue;
+            }
+            // Prevent doubling up of entity types
+            if (ENTITY_DATAS.contains(entityData)) {
+                EntityData<?> superType = entityData.getSuperType();
+                if (!ENTITY_DATAS.contains(superType)) {
+                    ENTITY_DATAS.add(superType);
+                }
                 continue;
             }
             ENTITY_DATAS.add(entityData);
