@@ -18,12 +18,12 @@ import java.io.File;
 
 @Name("World Exists")
 @Description("Check if a world exists in your world directory.")
-@Examples("if world \"my-world\" exists:")
+@Examples("if world file \"my-world\" exists:")
 @Since("1.8.0")
 public class CondWorldExists extends Condition {
 
     static {
-        Skript.registerCondition(CondWorldExists.class, "world %string% (0¦exists|1¦(does not|doesn't) exist)");
+        Skript.registerCondition(CondWorldExists.class, "world file %string% (0¦exists|1¦(does not|doesn't) exist)");
     }
 
     private Expression<String> world;
@@ -38,15 +38,21 @@ public class CondWorldExists extends Condition {
 
     @Override
     public boolean check(@NotNull Event e) {
-        return world.check(e, w -> {
-            File file = new File(Bukkit.getWorldContainer(), w);
-            return file.exists() && file.isDirectory();
-        }, isNegated());
+        return world.check(e, this::isAWorld, isNegated());
+    }
+
+    private boolean isAWorld(String worldName) {
+        File worldFile = new File(Bukkit.getWorldContainer(), worldName);
+        if (worldFile.exists() && worldFile.isDirectory()) {
+            File levelDat = new File(worldFile, "level.dat");
+            return levelDat.exists();
+        }
+        return false;
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return String.format("%s%s", this.world.toString(e, d), isNegated() ? " does not exist" : " exists");
+        return String.format("world file %s %s", this.world.toString(e, d), isNegated() ? "does not exist" : "exists");
     }
 
 }
