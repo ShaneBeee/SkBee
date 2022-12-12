@@ -25,7 +25,7 @@ public class ExprLoadedChunks extends SimpleExpression<Chunk> {
 
     static {
         Skript.registerExpression(ExprLoadedChunks.class, Chunk.class, ExpressionType.COMBINED,
-                "[(all [[of] the]|the)] loaded chunks of %world%");
+                "[(all [[of] the]|the)] loaded chunks (of|in) %world%");
     }
 
     private Expression<World> world;
