@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.bossbar.types;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
@@ -132,20 +133,49 @@ public class Types {
         }
 
 
+        // TODO (dec 11/2022)
+        // Remove in future
         if (Classes.getExactClassInfo(BarColor.class) == null && Classes.getClassInfoNoError("bossbarcolor") == null) {
             EnumUtils<BarColor> BAR_COLOR_ENUM = new EnumUtils<>(BarColor.class, "bar", "");
             Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
                     .user("boss ?bar ?colors?")
                     .name("BossBar Color")
                     .description("Represents the color options of a BossBar. ",
-                            "Colors are prefixed with \"bar\" (such as `bar blue`) to differentiate from Skript colors")
+                            "Colors are prefixed with \"bar\" (such as `bar blue`) to differentiate from Skript colors.",
+                            "\nDEPRECATED: Will be removed in the future")
                     .usage(BAR_COLOR_ENUM.getAllNames())
                     .examples("set bar color of {_bar} to bar blue")
                     .since("1.16.0")
-                    .parser(BAR_COLOR_ENUM.getParser()));
-        } else {
-            Util.logLoading("&eIt looks like another addon registered 'boss bar color' already.");
-            Util.logLoading("&eYou may have to use their BossBar colors in SkBee's BossBar elements.");
+                    .parser(new Parser<>() {
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public boolean canParse(ParseContext context) {
+                            return true;
+                        }
+
+                        final EnumUtils<BarColor> BAR_COLOR_ENUM = new EnumUtils<>(BarColor.class);
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public @Nullable BarColor parse(String string, ParseContext context) {
+                            string = string.replace("bar ", "");
+                            Skript.warning("Please use SkriptColors instead of BarColors, BarColors will be removed in the future.");
+                            return BAR_COLOR_ENUM.parse(string);
+                        }
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public String toString(BarColor o, int flags) {
+                            return BAR_COLOR_ENUM.toString(o, flags);
+                        }
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public String toVariableNameString(BarColor o) {
+                            return BAR_COLOR_ENUM.toString(o, 0);
+                        }
+                    }));
         }
 
         if (Classes.getExactClassInfo(BarStyle.class) == null && Classes.getClassInfoNoError("bossbarstyle") == null) {

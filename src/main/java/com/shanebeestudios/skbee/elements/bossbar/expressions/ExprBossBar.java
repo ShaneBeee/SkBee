@@ -9,7 +9,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.BossBarUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
@@ -35,7 +37,7 @@ import java.util.List;
         "NOTE: BossBars from entities cannot be saved in global variables, as the entity may not be loaded on the",
         "server when that variable is trying to load. Custom BossBars and BossBars from players can be saved in variables."})
 @Examples({"set {_bar} to boss bar named \"le-bar\"",
-        "set {_bar} to boss bar named \"le-bar\" with title \"Le Title\" with color bar blue with progress 50",
+        "set {_bar} to boss bar named \"le-bar\" with title \"Le Title\" with color pink with progress 50",
         "delete boss bar named \"le-bar\"",
         "set {_bar} to boss bar of target entity",
         "set {_bars::*} to boss bars of player",
@@ -43,12 +45,13 @@ import java.util.List;
 @Since("1.16.0")
 public class ExprBossBar extends SimpleExpression<BossBar> {
 
-
     static {
         Skript.registerExpression(ExprBossBar.class, BossBar.class, ExpressionType.COMBINED,
                 "boss[ ]bar of %entity%",
                 "boss[ ]bars of %players%",
-                "[new] boss[ ]bar named %string% [with title %-string%] [with color %-bossbarcolor%] " +
+                "[new] boss[ ]bar named %string% [with title %-string%] [with color %-color%] " +
+                        "[with style %-bossbarstyle%] [with progress %-number%]",
+                "[new] boss[ ]bar named %string% [with title %-string%] with color %-bossbarcolor% " +
                         "[with style %-bossbarstyle%] [with progress %-number%]",
                 "all boss[ ]bars");
     }
@@ -59,6 +62,7 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
     private Expression<String> key;
     private Expression<String> title;
     private Expression<BarColor> barColor;
+    private Expression<SkriptColor> skriptColor;
     private Expression<BarStyle> barStyle;
     private Expression<Number> progress;
 
@@ -66,13 +70,15 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         pattern = matchedPattern;
+        boolean newBar = pattern == 2 || pattern == 3;
         this.entity = pattern == 0 ? (Expression<Entity>) exprs[0] : null;
         this.players = pattern == 1 ? (Expression<Player>) exprs[0] : null;
-        this.key = pattern == 2 ? (Expression<String>) exprs[0] : null;
-        this.title = pattern == 2 ? (Expression<String>) exprs[1] : null;
-        this.barColor = pattern == 2 ? (Expression<BarColor>) exprs[2] : null;
-        this.barStyle = pattern == 2 ? (Expression<BarStyle>) exprs[3] : null;
-        this.progress = pattern == 2 ? (Expression<Number>) exprs[4] : null;
+        this.key = newBar ? (Expression<String>) exprs[0] : null;
+        this.title = newBar ? (Expression<String>) exprs[1] : null;
+        this.barColor = pattern == 3 ? (Expression<BarColor>) exprs[2] : null;
+        this.skriptColor = pattern == 2 ? (Expression<SkriptColor>) exprs[2] : null;
+        this.barStyle = newBar ? (Expression<BarStyle>) exprs[3] : null;
+        this.progress = newBar ? (Expression<Number>) exprs[4] : null;
         return true;
     }
 
@@ -95,7 +101,7 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
                 }
             });
             return bars.toArray(new BossBar[0]);
-        } else if (pattern == 2 && this.key != null) {
+        } else if ((pattern == 2 || pattern == 3) && this.key != null) {
             String name = this.key.getSingle(event);
             if (name == null) return null;
             NamespacedKey key = Util.getNamespacedKey(name, true);
@@ -110,6 +116,11 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
                     BarColor barColor = null;
                     if (this.barColor != null) {
                         barColor = this.barColor.getSingle(event);
+                    } else if (this.skriptColor != null) {
+                        SkriptColor skriptColor = this.skriptColor.getSingle(event);
+                        if (skriptColor != null) {
+                            barColor = BossBarUtils.getBossBarColor(skriptColor);
+                        }
                     }
                     if (barColor == null) {
                         barColor = BarColor.PURPLE;
@@ -136,7 +147,7 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
                 return new BossBar[]{bossBar};
             }
 
-        } else if (pattern == 3) {
+        } else if (pattern == 4) {
             List<BossBar> bars = new ArrayList<>();
             Bukkit.getBossBars().forEachRemaining(bars::add);
             return bars.toArray(new BossBar[0]);
@@ -146,7 +157,7 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
 
     @Override
     public boolean isSingle() {
-        return pattern == 0 || pattern == 2;
+        return pattern == 0 || pattern == 2 || pattern == 3;
     }
 
     @Override
@@ -160,10 +171,15 @@ public class ExprBossBar extends SimpleExpression<BossBar> {
             return "boss bar of entity " + this.entity.toString(e, d);
         } else if (pattern == 1) {
             return "boss bar of players " + this.players.toString(e, d);
-        }else if (pattern == 2) {
+        } else if (pattern == 2 || pattern == 3) {
             String name = "boss bar named " + this.key.toString(e, d);
             String title = this.title != null ? " named " + this.title.toString(e, d) : "";
-            String color = this.barColor != null ? " with color " + this.barColor.toString(e, d) : "";
+            String color = "";
+            if (this.barColor != null) {
+                color = " with color " + this.barColor.toString(e, d);
+            } else if (this.skriptColor != null) {
+                color = " with color " + this.skriptColor.toString(e, d);
+            }
             String style = this.barStyle != null ? " with style " + this.barStyle.toString(e, d) : "";
             String progress = this.progress != null ? " with progress " + this.progress.toString(e, d) : "";
             return name + title + color + style + progress;

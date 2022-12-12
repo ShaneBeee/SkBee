@@ -10,8 +10,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.Color;
+import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.BossBarUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
@@ -25,11 +28,10 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("NullableProblems")
 @Name("BossBar - Properties")
 @Description({"Represents the properties of a BossBar that can be changed.",
-        "Progress of a bar is a number from 0-100.",
-        "BossBar colors are not the same as Skript colors, see docs for BossBar color options."})
+        "Progress of a bar is a number from 0-100."})
 @Examples({"add all players to bar players of {_bar}",
         "remove player from bar players of {_bar}",
-        "set bar color of {_bar} to bar blue",
+        "set bar color of {_bar} to blue",
         "set bar style of {_bar} to segmented 20",
         "set bar title of {_bar} to \"Le-Title\"",
         "reset bar title of {_bar}",
@@ -78,7 +80,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
             case PLAYERS:
                 return bossBar.getPlayers().toArray(new Player[0]);
             case BAR_COLOR:
-                return new BarColor[]{bossBar.getColor()};
+                return new SkriptColor[]{BossBarUtils.getSkriptColor(bossBar.getColor())};
             case BAR_STYLE:
                 return new BarStyle[]{bossBar.getStyle()};
             case BAR_TITLE:
@@ -103,7 +105,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
                 return CollectionUtils.array(Player[].class);
             }
         } else if (pattern == BAR_COLOR && mode == ChangeMode.SET) {
-            return CollectionUtils.array(BarColor.class);
+            return CollectionUtils.array(Color.class,BarColor.class);
         } else if (pattern == BAR_STYLE && mode == ChangeMode.SET) {
             return CollectionUtils.array(BarStyle.class);
         } else if (pattern == BAR_TITLE && (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.DELETE)) {
@@ -148,7 +150,10 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
 
             }
         } else if (pattern == BAR_COLOR && mode == ChangeMode.SET) {
-            if (object instanceof BarColor barColor) {
+            if (object instanceof SkriptColor skriptColor) {
+                BarColor bossBarColor = BossBarUtils.getBossBarColor(skriptColor);
+                bossBar.setColor(bossBarColor);
+            } else if (object instanceof BarColor barColor) {
                 bossBar.setColor(barColor);
             }
         } else if (pattern == BAR_STYLE && mode == ChangeMode.SET) {
@@ -206,7 +211,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
     public @NotNull Class<?> getReturnType() {
         return switch (pattern) {
             case PLAYERS -> Player.class;
-            case BAR_COLOR -> BarColor.class;
+            case BAR_COLOR -> SkriptColor.class;
             case BAR_STYLE -> BarStyle.class;
             case BAR_TITLE -> String.class;
             case BAR_PROGRESS -> Number.class;
