@@ -20,7 +20,7 @@ import javax.annotation.Nullable;
 @Name("NBT - Pretty NBT String")
 @Description({"Get a 'pretty' NBT string. This is colored the same as when using the vanilla Minecraft '/data' command. ",
         "Splitting it will output kind of like a JSON output. Requires 1.13.2+"})
-@Examples({"set {_p} to pretty nbt from nbt compound of player's tool",
+@Examples({"set {_nbt} to pretty nbt from nbt compound of player's tool",
         "send pretty nbt from {_nbt} to player",
         "send pretty nbt from {_nbt} with split \" \" to console"})
 @Since("1.6.0")
