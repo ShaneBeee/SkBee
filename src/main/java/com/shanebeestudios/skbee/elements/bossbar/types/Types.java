@@ -154,8 +154,6 @@ public class Types {
                             return true;
                         }
 
-                        final EnumUtils<BarColor> BAR_COLOR_ENUM = new EnumUtils<>(BarColor.class);
-
                         @SuppressWarnings("NullableProblems")
                         @Override
                         public @Nullable BarColor parse(String string, ParseContext context) {
