@@ -8,6 +8,7 @@ import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
+import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.StringUtils;
@@ -24,6 +25,7 @@ import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.player.PlayerFishEvent.State;
+import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -146,6 +148,17 @@ public class Types {
                     .usage(TRANSOFORM_REASON.getAllNames())
                     .since("2.5.3")
                     .parser(TRANSOFORM_REASON.getParser()));
+        }
+
+        if (Classes.getExactClassInfo(QuitReason.class) == null) {
+            EnumUtils<QuitReason> QUIT_REASON = new EnumUtils<>(QuitReason.class);
+            Classes.registerClass(new ClassInfo<>(QuitReason.class, "quitreason")
+                    .user("quit ?reasons?")
+                    .name("Quit Reason")
+                    .description("Represents the different reasons for calling the player quit event.")
+                    .usage(QUIT_REASON.getAllNames())
+                    .since("INSERT VERSION")
+                    .parser(QUIT_REASON.getParser()));
         }
 
         // Only register if no other addons have registered this class

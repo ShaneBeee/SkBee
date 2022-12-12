@@ -20,6 +20,8 @@ import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -202,7 +204,7 @@ public class OtherEvents {
 
         // Entity Transform Event
         Skript.registerEvent("Entity Transform", SimpleEvent.class, EntityTransformEvent.class,
-                "entity transform")
+                        "entity transform")
                 .description("Called when an entity is about to be replaced by another entity.",
                         "Examples include a villager struck by lightning turning into a witch,",
                         "zombie drowning and becoming a drowned,",
@@ -232,7 +234,7 @@ public class OtherEvents {
 
         // Entity Change Block Event
         Skript.registerEvent("Entity Change Block", SimpleEvent.class, EntityChangeBlockEvent.class,
-                "entity change block")
+                        "entity change block")
                 .description("Called when any Entity changes a block and a more specific event is not available.",
                         "Skript does partially have this event, but this version of it opens up ALL possibilities with this event.",
                         "\nevent-entity = the entity which changed the block",
@@ -253,7 +255,7 @@ public class OtherEvents {
 
         // Player Command Send Event
         Skript.registerEvent("Player Command Send", SimpleEvent.class, PlayerCommandSendEvent.class,
-                "player command send")
+                        "player command send")
                 .description("This event is called when the list of available server commands is sent to the player.",
                         "Commands may be removed from display using this event, but implementations are not required to securely",
                         "remove all traces of the command. If secure removal of commands is required,",
@@ -261,6 +263,14 @@ public class OtherEvents {
                 .examples("on player command send:",
                         "\tremove \"ver\" and \"version\" from player command map")
                 .since("2.5.3");
+
+        // Player Quit Event
+        EventValues.registerEventValue(PlayerQuitEvent.class, QuitReason.class, new Getter<>() {
+            @Override
+            public @NotNull QuitReason get(PlayerQuitEvent event) {
+                return event.getReason();
+            }
+        }, 0);
     }
 
 }

@@ -44,3 +44,4 @@ types:
 	spell: spell¦s
 	itemflag: item flag¦s
 	transformreason: transform reason¦s
+	quitreason: quit reason¦s
