@@ -45,3 +45,4 @@ types:
 	itemflag: item flag¦s
 	transformreason: transform reason¦s
 	quitreason: quit reason¦s
+	recipetype: recipe type¦s

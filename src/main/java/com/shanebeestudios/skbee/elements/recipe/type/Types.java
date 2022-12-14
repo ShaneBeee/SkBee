@@ -6,6 +6,8 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
+import com.shanebeestudios.skbee.api.recipe.RecipeType;
+import com.shanebeestudios.skbee.api.util.EnumUtils;
 import org.bukkit.Tag;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
@@ -81,6 +83,15 @@ public class Types {
                         return "minecrafttag://s";
                     }
                 }));
+
+        EnumUtils<RecipeType> RECIPE_TYPE_ENUM = new EnumUtils<>(RecipeType.class);
+        Classes.registerClass(new ClassInfo<>(RecipeType.class, "recipetype")
+                .user("recipe ?types?")
+                .name("Recipe Type")
+                .description("Represents the types of recipes.")
+                .usage(RECIPE_TYPE_ENUM.getAllNames())
+                .since("INSERT VERSION")
+                .parser(RECIPE_TYPE_ENUM.getParser()));
     }
 
     private static String matChoiceToString(RecipeChoice.MaterialChoice materialChoice) {
