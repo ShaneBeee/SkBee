@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.recipe.util;
+package com.shanebeestudios.skbee.api.recipe;
 
 import ch.njol.skript.util.Timespan;
 import com.shanebeestudios.skbee.SkBee;
