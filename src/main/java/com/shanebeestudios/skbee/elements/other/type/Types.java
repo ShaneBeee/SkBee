@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.other.type;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
@@ -25,6 +26,7 @@ import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.player.PlayerFishEvent.State;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
@@ -150,15 +152,17 @@ public class Types {
                     .parser(TRANSOFORM_REASON.getParser()));
         }
 
-        if (Classes.getExactClassInfo(QuitReason.class) == null) {
-            EnumUtils<QuitReason> QUIT_REASON = new EnumUtils<>(QuitReason.class);
-            Classes.registerClass(new ClassInfo<>(QuitReason.class, "quitreason")
-                    .user("quit ?reasons?")
-                    .name("Quit Reason")
-                    .description("Represents the different reasons for calling the player quit event.")
-                    .usage(QUIT_REASON.getAllNames())
-                    .since("INSERT VERSION")
-                    .parser(QUIT_REASON.getParser()));
+        if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
+            if (Classes.getExactClassInfo(QuitReason.class) == null) {
+                EnumUtils<QuitReason> QUIT_REASON = new EnumUtils<>(QuitReason.class);
+                Classes.registerClass(new ClassInfo<>(QuitReason.class, "quitreason")
+                        .user("quit ?reasons?")
+                        .name("Quit Reason")
+                        .description("Represents the different reasons for calling the player quit event (Requires Paper).")
+                        .usage(QUIT_REASON.getAllNames())
+                        .since("INSERT VERSION")
+                        .parser(QUIT_REASON.getParser()));
+            }
         }
 
         // Only register if no other addons have registered this class

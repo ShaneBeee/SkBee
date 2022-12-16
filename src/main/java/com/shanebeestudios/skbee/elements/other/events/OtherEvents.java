@@ -20,8 +20,6 @@ import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -263,14 +261,6 @@ public class OtherEvents {
                 .examples("on player command send:",
                         "\tremove \"ver\" and \"version\" from player command map")
                 .since("2.5.3");
-
-        // Player Quit Event
-        EventValues.registerEventValue(PlayerQuitEvent.class, QuitReason.class, new Getter<>() {
-            @Override
-            public @NotNull QuitReason get(PlayerQuitEvent event) {
-                return event.getReason();
-            }
-        }, 0);
     }
 
 }

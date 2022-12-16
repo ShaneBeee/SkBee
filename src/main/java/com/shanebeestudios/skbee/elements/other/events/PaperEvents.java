@@ -20,6 +20,7 @@ import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -229,6 +230,16 @@ public class PaperEvents {
                 @Override
                 public @NotNull PotionEffect get(BeaconEffectEvent e) {
                     return e.getEffect();
+                }
+            }, 0);
+        }
+
+        // Player Quit Event
+        if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
+            EventValues.registerEventValue(PlayerQuitEvent.class, PlayerQuitEvent.QuitReason.class, new Getter<>() {
+                @Override
+                public @NotNull PlayerQuitEvent.QuitReason get(PlayerQuitEvent event) {
+                    return event.getReason();
                 }
             }, 0);
         }
