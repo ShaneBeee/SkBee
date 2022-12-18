@@ -19,6 +19,7 @@ public class Config {
     public boolean SETTINGS_UPDATE_CHECKER;
     public boolean ELEMENTS_NBT;
     public boolean ELEMENTS_BOARD;
+    public boolean ELEMENTS_OBJECTIVE;
     public boolean ELEMENTS_TEAM;
     public boolean ELEMENTS_RECIPE;
     public boolean ELEMENTS_BOUND;
@@ -94,6 +95,7 @@ public class Config {
         this.SETTINGS_UPDATE_CHECKER = getSetting("update-checker");
         this.ELEMENTS_NBT = getElement("nbt");
         this.ELEMENTS_BOARD = getElement("scoreboard");
+        this.ELEMENTS_OBJECTIVE = getElement("scoreboard-objective");
         this.ELEMENTS_TEAM = getElement("team");
         this.ELEMENTS_RECIPE = getElement("recipe");
         this.ELEMENTS_BOUND = getElement("bound");

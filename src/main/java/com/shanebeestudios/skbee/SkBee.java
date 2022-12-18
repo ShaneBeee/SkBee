@@ -129,6 +129,7 @@ public class SkBee extends JavaPlugin {
         loadNBTElements();
         loadRecipeElements();
         loadScoreboardElements();
+        loadObjectiveElements();
         loadTeamElements();
         loadBoundElements();
         loadTextElements();
@@ -214,6 +215,20 @@ public class SkBee extends JavaPlugin {
             addon.loadClasses("com.shanebeestudios.skbee.elements.scoreboard");
             pm.registerEvents(new BoardManager(), this);
             Util.logLoading("&5Scoreboard Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
+    }
+
+    private void loadObjectiveElements() {
+        if (!this.config.ELEMENTS_OBJECTIVE) {
+            Util.logLoading("&5Scoreboard Objective Elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.objective");
+            Util.logLoading("&5Scoreboard Objective Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);

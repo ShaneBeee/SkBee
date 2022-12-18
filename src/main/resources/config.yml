@@ -16,6 +16,9 @@ elements:
   # Enable Scoreboard elements
   scoreboard: true
 
+  # Enable Scoreboard Objective elements
+  scoreboard-objective: true
+
   # Enable Team elements
   team: true
 
