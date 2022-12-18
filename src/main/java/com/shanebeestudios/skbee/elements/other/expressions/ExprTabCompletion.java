@@ -14,10 +14,10 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.server.TabCompleteEvent;
-import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -105,7 +105,12 @@ public class ExprTabCompletion extends SimpleExpression<String> {
                     }
                     for (Object o : objects) {
                         String object = Classes.toString(o);
-                        if (StringUtil.startsWithIgnoreCase(object, arg)) {
+                        // old way which sorted based on STARTS WITH
+                        // We shall keep this here in case someone complains one day
+                        //if (StringUtil.startsWithIgnoreCase(object, arg)) {
+                        //  completions.add(object);
+                        //}
+                        if (StringUtils.contains(object, arg, false)) {
                             completions.add(object);
                         }
                     }
