@@ -4,24 +4,11 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.function.Functions;
-import ch.njol.skript.lang.function.Parameter;
-import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.DefaultClasses;
-import ch.njol.skript.util.Color;
-import ch.njol.skript.util.SkriptColor;
-import ch.njol.skript.util.Timespan;
 import ch.njol.util.StringUtils;
-import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import org.bukkit.Location;
-import org.bukkit.Particle;
-import org.bukkit.Particle.DustOptions;
-import org.bukkit.Particle.DustTransition;
-import org.bukkit.Vibration;
-import org.bukkit.Vibration.Destination.BlockDestination;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
@@ -163,6 +150,16 @@ public class Types {
                         .since("INSERT VERSION")
                         .parser(QUIT_REASON.getParser()));
             }
+        }
+
+        if (Classes.getExactClassInfo(NamespacedKey.class) == null) {
+            Classes.registerClass(new ClassInfo<>(NamespacedKey.class, "namespacedkey")
+                    .user("namespacedkeys?")
+                    .name("NamespacedKey")
+                    .description("NamespacedKeys are a way to declare and specify game objects in Minecraft,",
+                            "which can identify built-in and user-defined objects without potential ambiguity or conflicts.",
+                            "For more information see Resource Location on McWiki <link>https://minecraft.fandom.com/wiki/Resource_location</link>")
+                    .since("INSERT VERSION"));
         }
     }
 
