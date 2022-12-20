@@ -19,7 +19,9 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Name("Minecraft Tag - All")
 @Description("Represents all Minecraft Tags registered to the server.")
@@ -55,6 +57,7 @@ public class ExprTagAll extends SimpleExpression<Tag> {
         } else {
             Bukkit.getTags(Tag.REGISTRY_ITEMS, Material.class).forEach(tags::add);
         }
+        tags = tags.stream().sorted(Comparator.comparing(tag -> tag.getKey().toString())).collect(Collectors.toList());
         return tags.toArray(new Tag[0]);
     }
 
