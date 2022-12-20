@@ -145,6 +145,7 @@ public class SkBee extends JavaPlugin {
         loadAdvancementElements();
         loadWorldBorderElements();
         loadParticleElements();
+        loadTagElements();
     }
 
     private void loadCommands() {
@@ -482,6 +483,20 @@ public class SkBee extends JavaPlugin {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.particle");
             Util.logLoading("&5Particle Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pm.disablePlugin(this);
+        }
+    }
+
+    private void loadTagElements() {
+        if (!this.config.ELEMENTS_MINECRAFT_TAG) {
+            Util.logLoading("&5Minecraft Tag elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.tag");
+            Util.logLoading("&5Minecraft Tag elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pm.disablePlugin(this);
