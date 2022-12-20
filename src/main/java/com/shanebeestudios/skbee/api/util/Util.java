@@ -21,7 +21,7 @@ public class Util {
     private static final String PREFIX = "&7[&bSk&3Bee&7] ";
     private static final String PREFIX_ERROR = "&7[&bSk&3Bee &cERROR&7] ";
     private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f\\d]){6}>");
-    private static final boolean SKRIPT_IS_THERE = SkBee.getPlugin().getSkriptPlugin() != null;
+    private static final boolean SKRIPT_IS_THERE = Bukkit.getPluginManager().getPlugin("Skript") != null;
 
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
