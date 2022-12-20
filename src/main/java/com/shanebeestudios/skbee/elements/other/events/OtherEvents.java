@@ -13,6 +13,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
@@ -261,6 +262,20 @@ public class OtherEvents {
                 .examples("on player command send:",
                         "\tremove \"ver\" and \"version\" from player command map")
                 .since("2.5.3");
+
+        // Block Drop Item Event
+        Skript.registerEvent("Block Drop Item", SimpleEvent.class, BlockDropItemEvent.class,
+                "block drop item")
+                .description("This event is called if a block broken by a player drops an item. ")
+                .examples("")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(BlockDropItemEvent.class, Player.class, new Getter<>() {
+            @Override
+            public Player get(BlockDropItemEvent event) {
+                return event.getPlayer();
+            }
+        }, 0);
     }
 
 }
