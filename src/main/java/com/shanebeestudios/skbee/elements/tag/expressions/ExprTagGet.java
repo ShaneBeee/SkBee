@@ -1,7 +1,10 @@
 package com.shanebeestudios.skbee.elements.tag.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -18,9 +21,14 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @Name("Minecraft Tag - Get")
+@Description("Get a vanilla Minecraft Tag. This will include custom tags from data packs that are registered to the server.")
+@Examples({"set {_key} to namespaced key from \"minecraft:arrows\"",
+        "set {_tag} to minecraft item tag from {_key}"})
+@Since("INSERT VERSION")
 @SuppressWarnings("rawtypes")
 public class ExprTagGet extends SimpleExpression<Tag> {
 
@@ -41,7 +49,7 @@ public class ExprTagGet extends SimpleExpression<Tag> {
         this.pattern = matchedPattern;
         this.parse = parseResult.mark;
         if (matchedPattern == 1) {
-            Skript.warning("string use will be removed in the future, please use Namespaced Keys instead.");
+            //Skript.warning("string use will be removed in the future, please use Namespaced Keys instead.");
             this.strings = (Expression<String>) exprs[0];
         } else {
             this.keys = (Expression<NamespacedKey>) exprs[0];
@@ -58,6 +66,8 @@ public class ExprTagGet extends SimpleExpression<Tag> {
             for (String string : this.strings.getArray(event)) {
                 keys.add(Util.getMCNamespacedKey(string, true));
             }
+        } else {
+            keys.addAll(Arrays.asList(this.keys.getArray(event)));
         }
         for (NamespacedKey namespacedKey : keys) {
             Class tagType = parse == 2 ? EntityType.class : Material.class;
@@ -88,7 +98,7 @@ public class ExprTagGet extends SimpleExpression<Tag> {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String type = parse == 1 ? "block" : parse == 2 ? "entity type" : "item";
-        String key = pattern == 1 ? this.strings.toString(e, d) : this.keys.toString(e,d);
+        String key = pattern == 1 ? this.strings.toString(e, d) : this.keys.toString(e, d);
         return "minecraft " + type + " tag[s] from " + key;
     }
 

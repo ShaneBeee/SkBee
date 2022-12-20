@@ -5,6 +5,7 @@ import ch.njol.skript.conditions.base.PropertyCondition;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -23,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Minecraft Tag - Is Tagged")
 @Description("Check if an item/block/entity is tagged with a Minecraft Tag.")
 @Examples("if player's tool is tagged as {_mcTag}:")
+@Since("INSERT VERSION")
 @SuppressWarnings("rawtypes")
 public class CondIsMinecraftTagged extends Condition {
 
