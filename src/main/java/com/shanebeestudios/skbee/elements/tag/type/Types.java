@@ -1,8 +1,11 @@
 package com.shanebeestudios.skbee.elements.tag.type;
 
 import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.Parser;
+import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import org.bukkit.Tag;
+import org.jetbrains.annotations.NotNull;
 
 public class Types {
 
@@ -12,7 +15,25 @@ public class Types {
                     .user("minecraft ?tags?")
                     .name("Minecraft Tag")
                     .description("Represents a Minecraft Tag.")
-                    .since("INSERT VERSION"));
+                    .since("INSERT VERSION")
+                    .parser(new Parser<>() {
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public boolean canParse(ParseContext context) {
+                            return false;
+                        }
+
+                        @Override
+                        public @NotNull String toString(Tag tag, int flags) {
+                            return tag.getKey().toString();
+                        }
+
+                        @Override
+                        public @NotNull String toVariableNameString(Tag tag) {
+                            return toString(tag, 0);
+                        }
+                    }));
         }
     }
 
