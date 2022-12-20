@@ -34,6 +34,7 @@ public class Config {
     public boolean ELEMENTS_VILLAGER;
     public boolean ELEMENTS_ADVANCEMENT;
     public boolean ELEMENTS_WORLD_BORDER;
+    public boolean ELEMENTS_PARTICLE;
     public boolean AUTO_LOAD_WORLDS;
     public String RECIPE_NAMESPACE;
 
@@ -110,6 +111,7 @@ public class Config {
         this.ELEMENTS_VILLAGER = getElement("villager");
         this.ELEMENTS_ADVANCEMENT = getElement("advancement");
         this.ELEMENTS_WORLD_BORDER = getElement("world-border");
+        this.ELEMENTS_PARTICLE = getElement("particle");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
         String namespace = this.config.getString("recipe.namespace");
         if (namespace == null) {

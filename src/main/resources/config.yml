@@ -67,6 +67,9 @@ elements:
   # Enable world border elements
   world-border: true
 
+  # Enable particle elements
+  particle: true
+
 recipe:
   # This is the namespace all recipes will be saved under
   # You can choose whatever you wish
