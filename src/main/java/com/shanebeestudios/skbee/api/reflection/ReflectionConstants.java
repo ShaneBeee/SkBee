@@ -4,8 +4,6 @@ import ch.njol.skript.Skript;
 
 public class ReflectionConstants {
 
-    // net.minecraft.resources.ResourceLocation -> of()
-    public static String MINECRAFT_KEY_GET_KEY_METHOD = get("getKey", "a", "a");
     // net.minecraft.nbt.TagVisitor -> visitString
     public static String TAG_VISITOR_VISIT_METHOD = get("a", "a", "a");
     // net.minecraft.world.entity.Entity -> noPhysics

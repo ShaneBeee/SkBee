@@ -2,11 +2,12 @@ package com.shanebeestudios.skbee.api.particle;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
-import com.shanebeestudios.skbee.api.reflection.ReflectionConstants;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Particle.DustOptions;
+import org.bukkit.Particle.DustTransition;
 import org.bukkit.Vibration;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -16,8 +17,6 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -37,28 +36,23 @@ public class ParticleUtil {
     // This method fetches them from the server and maps them with the Bukkit particle enums
     static {
         Class<?> cbParticle = ReflectionUtils.getOBCClass("CraftParticle");
-        Class<?> mcKey = ReflectionUtils.getNMSClass("MinecraftKey", "net.minecraft.resources");
         try {
             assert cbParticle != null;
-            Field mc = cbParticle.getDeclaredField("minecraftKey");
-            mc.setAccessible(true);
-            Field pc = cbParticle.getDeclaredField("bukkit");
-            pc.setAccessible(true);
-
-            assert mcKey != null;
-            Method getKey = mcKey.getMethod(ReflectionConstants.MINECRAFT_KEY_GET_KEY_METHOD);
-            getKey.setAccessible(true);
+            Field bukkitParticleField = cbParticle.getDeclaredField("bukkit");
+            bukkitParticleField.setAccessible(true);
+            Field mcKeyField = cbParticle.getDeclaredField("minecraftKey");
+            mcKeyField.setAccessible(true);
 
             for (Object enumConstant : cbParticle.getEnumConstants()) {
-                String KEY = getKey.invoke(mc.get(enumConstant)).toString();
-                Particle PARTICLE = ((Particle) pc.get(enumConstant));
+                String mcKey = mcKeyField.get(enumConstant).toString().replace("minecraft:", "");
+                Particle bukkitParticle = (Particle) bukkitParticleField.get(enumConstant);
 
-                if (!PARTICLE.toString().contains("LEGACY")) {
-                    PARTICLES.put(KEY, PARTICLE);
-                    PARTICLE_NAMES.put(PARTICLE, KEY);
+                if (!bukkitParticle.toString().contains("LEGACY")) {
+                    PARTICLES.put(mcKey, bukkitParticle);
+                    PARTICLE_NAMES.put(bukkitParticle, mcKey);
                 }
             }
-        } catch (NoSuchFieldException | IllegalAccessException | NoSuchMethodException | InvocationTargetException e) {
+        } catch (NoSuchFieldException | IllegalAccessException e) {
             e.printStackTrace();
         }
     }
@@ -119,11 +113,11 @@ public class ParticleUtil {
         Class<?> dataType = particle.getDataType();
         if (dataType == ItemStack.class) {
             return "itemtype";
-        } else if (dataType == Particle.DustOptions.class) {
+        } else if (dataType == DustOptions.class) {
             return "dust-option";
         } else if (dataType == BlockData.class) {
             return "blockdata/itemtype";
-        } else if (dataType == Particle.DustTransition.class) {
+        } else if (dataType == DustTransition.class) {
             return "dust-transition";
         } else if (dataType == Vibration.class) {
             return "vibration";
@@ -165,9 +159,9 @@ public class ParticleUtil {
             return number.intValue();
         } else if (dataType == ItemStack.class && data instanceof ItemType itemType) {
             return itemType.getRandom();
-        } else if (dataType == Particle.DustOptions.class && data instanceof Particle.DustOptions) {
+        } else if (dataType == DustOptions.class && data instanceof DustOptions) {
             return data;
-        } else if (dataType == Particle.DustTransition.class && data instanceof Particle.DustTransition) {
+        } else if (dataType == DustTransition.class && data instanceof DustTransition) {
             return data;
         } else if (dataType == Vibration.class && data instanceof Vibration) {
             return data;
