@@ -221,9 +221,6 @@
                     <excludePackageNames>com.shanebeestudios.skbee.elements.*;com.shanebeestudios.skbee.config;com.shanebeestudios.skbee.metrics;com.shanebeestudios.skbee.api.listener</excludePackageNames>
                     <links>
                         <link>https://hub.spigotmc.org/javadocs/spigot/</link>
-                        <link>https://shanebeestudios.com/docs/skript/JavaDocs/</link>
-                        <link>https://shanebeestudios.com/docs/plugins/NBT-API/</link>
-                        <link>https://shanebeestudios.com/docs/plugins/VirtualFurnace/</link>
                         <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
                     </links>
                 </configuration>
