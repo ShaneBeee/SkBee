@@ -2,6 +2,9 @@ package com.shanebeestudios.skbee.api.util;
 
 import org.bukkit.entity.Player;
 
+/**
+ * Utility class for {@link Player Players}
+ */
 public class PlayerUtils {
 
     public static int getXPAtLevel(int level) {

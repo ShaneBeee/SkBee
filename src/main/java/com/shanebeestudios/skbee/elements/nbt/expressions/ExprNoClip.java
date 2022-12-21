@@ -13,7 +13,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.reflection.McReflection;
+import com.shanebeestudios.skbee.api.util.EntityUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 
@@ -55,7 +55,7 @@ public class ExprNoClip extends SimpleExpression<Boolean> {
         for (Entity ent : ents) {
             if (ent == null)
                 continue;
-            noClipStates[i] = !McReflection.getClip(ent);
+            noClipStates[i] = !EntityUtils.getClip(ent);
             i++;
         }
         return noClipStates;
@@ -79,7 +79,7 @@ public class ExprNoClip extends SimpleExpression<Boolean> {
             for (Entity ent : ents) {
                 if (ent == null)
                     continue;
-                McReflection.setClip(ent, !newValue);
+                EntityUtils.setClip(ent, !newValue);
             }
         }
     }
