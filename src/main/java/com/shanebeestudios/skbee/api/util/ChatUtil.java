@@ -6,6 +6,9 @@ import net.kyori.adventure.text.format.TextColor;
 import net.md_5.bungee.api.ChatColor;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * Utility class for handing colors
+ */
 @SuppressWarnings("deprecation")
 public enum ChatUtil {
 

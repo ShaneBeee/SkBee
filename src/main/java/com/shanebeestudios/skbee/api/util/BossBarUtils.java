@@ -4,7 +4,7 @@ import ch.njol.skript.util.SkriptColor;
 import org.bukkit.boss.BarColor;
 
 /**
- * Util class for translating BarColor <-> Skript Color
+ * Util class for translating BarColor to/from Skript Color
  */
 public class BossBarUtils {
 

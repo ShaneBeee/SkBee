@@ -12,9 +12,11 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * @author Peter Güttinger
+ * Utility class for managing enums.
+ * <br>
  * This class is copied from Skript, and modified to allow for not using language nodes
- * https://github.com/SkriptDev/Skript/blob/master/src/main/java/ch/njol/skript/util/EnumUtils.java
+ * <a href="https://github.com/SkriptDev/Skript/blob/master/src/main/java/ch/njol/skript/util/EnumUtils.java">EnumUtils</a>
+ * @author Peter Güttinger
  */
 public final class EnumUtils<E extends Enum<E>> {
 
