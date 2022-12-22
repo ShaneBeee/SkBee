@@ -11,6 +11,7 @@ import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
@@ -76,6 +77,7 @@ public class AddonLoader {
         this.addon = Skript.registerAddon(this.plugin);
         this.addon.setLanguageFileDirectory("lang");
 
+        int[] elementCountBefore = SkriptUtils.getElementCount();
         loadNBTElements();
         loadRecipeElements();
         loadScoreboardElements();
@@ -96,6 +98,18 @@ public class AddonLoader {
         loadWorldBorderElements();
         loadParticleElements();
         loadTagElements();
+
+        int[] elementCountAfter = SkriptUtils.getElementCount();
+        int[] finish = new int[elementCountBefore.length];
+        for (int i = 0; i < elementCountBefore.length; i++) {
+            finish[i] = elementCountAfter[i] - elementCountBefore[i];
+        }
+        String[] elementNames = new String[]{"event", "effect", "expression", "condition", "section"};
+
+        Util.log("Loaded elements:");
+        for (int i = 0; i < finish.length; i++) {
+            Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
+        }
     }
 
     private void loadNBTElements() {

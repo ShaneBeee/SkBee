@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import org.bukkit.entity.Entity;
 
 import java.lang.reflect.Field;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Utility class to handle Skript things
@@ -39,5 +40,27 @@ public class SkriptUtils {
             }
         }
     }
+
+    /**
+     * Get counts of loaded Skript elements
+     * <br>
+     * In order events, effects, expressions, conditions, sections
+     *
+     * @return Counts of loaded Skript elements
+     */
+    public static int[] getElementCount() {
+        int[] i = new int[5];
+
+        i[0] = Skript.getEvents().size();
+        i[1] = Skript.getEffects().size();
+        AtomicInteger exprs = new AtomicInteger();
+        Skript.getExpressions().forEachRemaining(e -> exprs.getAndIncrement());
+        i[2] = exprs.get();
+        i[3] = Skript.getConditions().size();
+        i[4] = Skript.getSections().size();
+
+        return i;
+    }
+
 }
 
