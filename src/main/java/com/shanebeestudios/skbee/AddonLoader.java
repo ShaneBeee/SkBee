@@ -98,6 +98,7 @@ public class AddonLoader {
         loadWorldBorderElements();
         loadParticleElements();
         loadTagElements();
+        loadRayTraceElements();
 
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
@@ -446,6 +447,20 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.tag");
             Util.logLoading("&5Minecraft Tag elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadRayTraceElements() {
+        if (!this.config.ELEMENTS_RAYTRACE) {
+            Util.logLoading("&5RayTrace elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.raytrace");
+            Util.logLoading("&5RayTrace elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);

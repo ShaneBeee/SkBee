@@ -36,6 +36,7 @@ public class Config {
     public boolean ELEMENTS_WORLD_BORDER;
     public boolean ELEMENTS_PARTICLE;
     public boolean ELEMENTS_MINECRAFT_TAG;
+    public boolean ELEMENTS_RAYTRACE;
     public boolean AUTO_LOAD_WORLDS;
     public String RECIPE_NAMESPACE;
 
@@ -114,6 +115,7 @@ public class Config {
         this.ELEMENTS_WORLD_BORDER = getElement("world-border");
         this.ELEMENTS_PARTICLE = getElement("particle");
         this.ELEMENTS_MINECRAFT_TAG = getElement("minecraft-tag");
+        this.ELEMENTS_RAYTRACE = getElement("raytrace");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
         String namespace = this.config.getString("recipe.namespace");
         if (namespace == null) {

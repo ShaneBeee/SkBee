@@ -73,6 +73,9 @@ elements:
   # Enable MinecraftTag Elements
   minecraft-tag: true
 
+  # Enable RayTrace elements
+  raytrace: true
+
 recipe:
   # This is the namespace all recipes will be saved under
   # You can choose whatever you wish
