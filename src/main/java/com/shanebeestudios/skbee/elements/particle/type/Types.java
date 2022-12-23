@@ -141,7 +141,6 @@ public class Types {
         // Function to create Vibration
         //noinspection ConstantConditions
         Functions.registerFunction(new SimpleJavaFunction<>("vibration", new Parameter[]{
-                new Parameter<>("from", DefaultClasses.LOCATION, true, null),
                 new Parameter<>("to", DefaultClasses.LOCATION, true, null),
                 new Parameter<>("arrivalTime", DefaultClasses.TIMESPAN, true, null)
         }, Classes.getExactClassInfo(Vibration.class), true) {
@@ -151,16 +150,18 @@ public class Types {
                 if (params[0].length == 0 || params[1].length == 0) {
                     return null;
                 }
-                Location origin = (Location) params[0][0];
-                Location destination = (Location) params[1][0];
-                int arrivalTime = (int) ((Timespan) params[2][0]).getTicks_i();
+                // Apparently original location makes no difference
+                Location origin = new Location(null, 0, 0, 0);
+                Location destination = (Location) params[0][0];
+                int arrivalTime = (int) ((Timespan) params[1][0]).getTicks_i();
+                //noinspection removal
                 Vibration vibration = new Vibration(origin, new Vibration.Destination.BlockDestination(destination), arrivalTime);
                 return new Vibration[]{vibration};
             }
         }.description("Creates a new vibration to be used with 'vibration' particle.",
-                        "FROM = the origin location the particle will start at.",
                         "TO = the destination location the particle will travel to.",
-                        "ARRIVAL TIME = the time it will take to arrive at the destination location. Requires MC 1.17+")
+                        "ARRIVAL TIME = the time it will take to arrive at the destination location.",
+                        "Requires MC 1.17+")
                 .examples("set {_v} to vibration({loc1}, {loc2}, 10 seconds)")
                 .since("1.11.1"));
     }
