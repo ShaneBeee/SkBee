@@ -21,6 +21,8 @@ import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.command.CommandSender;
@@ -344,6 +346,22 @@ public class BeeComponent {
 
         for (Player player : players) {
             player.showTitle(titleTitle);
+        }
+    }
+
+    public static void sendSignChange(Player player, Location location, BeeComponent[] beeComponents, @Nullable DyeColor color, boolean isGlowing) {
+        List<Component> components = new ArrayList<>();
+        for (int i = 0; i < 4; i++) {
+            if (beeComponents.length > i) {
+                components.add(beeComponents[i].component);
+            } else {
+                components.add(Component.text(""));
+            }
+        }
+        if (color == null) {
+            player.sendSignChange(location, components, isGlowing);
+        } else {
+            player.sendSignChange(location, components, color, isGlowing);
         }
     }
 
