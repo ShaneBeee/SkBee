@@ -4,11 +4,13 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
@@ -160,6 +162,18 @@ public class Types {
                             "which can identify built-in and user-defined objects without potential ambiguity or conflicts.",
                             "For more information see Resource Location on McWiki <link>https://minecraft.fandom.com/wiki/Resource_location</link>")
                     .since("INSERT VERSION"));
+        }
+
+        if (Classes.getExactClassInfo(BlockFace.class) == null) {
+            EnumUtils<BlockFace> BLOCK_FACE_ENUM = new EnumUtils<>(BlockFace.class);
+            Classes.registerClass(new ClassInfo<>(BlockFace.class, "blockface")
+                    .user("blockfaces?")
+                    .name("BlockFace")
+                    .description("Represents the face of a block.")
+                    .usage(BLOCK_FACE_ENUM.getAllNames())
+                    .since("INSERT VERSION")
+                    .parser(BLOCK_FACE_ENUM.getParser())
+                    .defaultExpression(new SimpleLiteral<>(BlockFace.NORTH, true)));
         }
     }
 
