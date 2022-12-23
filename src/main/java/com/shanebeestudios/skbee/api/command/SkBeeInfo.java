@@ -30,7 +30,6 @@ public class SkBeeInfo implements TabExecutor {
         if (args.length > 0 && args[0].equalsIgnoreCase("info")) {
             sendColMsg(sender, "&7--- [&bSkBee Loading Info&7] ---");
             Util.getDebugs().forEach(debug -> sendColMsg(sender, "- &7" + debug));
-            sendColMsg(sender, " ");
             sendColMsg(sender, "&7--- [&bServer Info&7] ---");
             sendColMsg(sender, "&7Server Version: &b" + Bukkit.getVersion());
             sendColMsg(sender, "&7Skript Version: &b" + Skript.getVersion());
