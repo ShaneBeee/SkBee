@@ -16,6 +16,8 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
+import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
+import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -28,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
+@SuppressWarnings("unused")
 public class PaperEvents {
 
     static {
@@ -240,6 +243,47 @@ public class PaperEvents {
                 @Override
                 public @NotNull PlayerQuitEvent.QuitReason get(PlayerQuitEvent event) {
                     return event.getReason();
+                }
+            }, 0);
+        }
+
+        // PlayerChunkLoadEvent
+        if (Skript.classExists("io.papermc.paper.event.packet.PlayerChunkLoadEvent")) {
+            Skript.registerEvent("Player Chunk Load", SimpleEvent.class, PlayerChunkLoadEvent.class,
+                            "player chunk (send|load)")
+                    .description("Is called when a Player receives a Chunk.",
+                            "Can for example be used for spawning a fake entity when the player receives a chunk. ",
+                            "Should only be used for packet/clientside related stuff. Not intended for modifying server side state.",
+                            "\nRequires a PaperMC server.")
+                    .examples("on player chunk send:",
+                            "\tloop all blocks in event-chunk:",
+                            "\t\tif loop-block is diamond ore:",
+                            "\t\t\tmake player see loop-block as stone")
+                    .since("INSERT VERSION");
+
+            EventValues.registerEventValue(PlayerChunkLoadEvent.class, Player.class, new Getter<>() {
+                @Override
+                public @Nullable Player get(PlayerChunkLoadEvent event) {
+                    return event.getPlayer();
+                }
+            }, 0);
+        }
+
+        // PlayerChunkUnloadEvent
+        if (Skript.classExists("io.papermc.paper.event.packet.PlayerChunkUnloadEvent")) {
+            Skript.registerEvent("Player Chunk Unload", SimpleEvent.class, PlayerChunkUnloadEvent.class,
+                            "player chunk unload")
+                    .description("Is called when a Player receives a chunk unload packet.",
+                            "Should only be used for packet/clientside related stuff. Not intended for modifying server side.",
+                            "\nRequires a PaperMC server.")
+                    .examples("on player chunk unload:",
+                            "\tsend \"looks like you lost your chunk cowboy!\" to player")
+                    .since("INSERT VERSION");
+
+            EventValues.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, new Getter<>() {
+                @Override
+                public @Nullable Player get(PlayerChunkUnloadEvent event) {
+                    return event.getPlayer();
                 }
             }, 0);
         }
