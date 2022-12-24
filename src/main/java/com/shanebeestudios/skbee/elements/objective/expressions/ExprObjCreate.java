@@ -36,8 +36,9 @@ public class ExprObjCreate extends SimpleExpression<Objective> {
     private static final boolean HAS_CRITERIA_CLASS = Skript.classExists("org.bukkit.scoreboard.Criteria");
 
     static {
+        String pattern = HAS_CRITERIA_CLASS ? "criteria/string" : "string";
         Skript.registerExpression(ExprObjCreate.class, Objective.class, ExpressionType.COMBINED,
-                "objective with id %string% with [criteria] %criteria/string% named " +
+                "objective with id %string% with [criteria] %" + pattern + "% named " +
                         "%string% [with render[ ]type %-rendertype%] [(with|in) [display[ ]slot] %-displayslot%]");
     }
 

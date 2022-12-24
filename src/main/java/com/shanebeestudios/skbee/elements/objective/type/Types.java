@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.objective.type;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
@@ -61,29 +62,31 @@ public class Types {
                     }
                 }));
 
-        Classes.registerClass(new ClassInfo<>(Criteria.class, "criteria")
-                .user("criterias?")
-                .name("Scoreboard - Criteria")
-                .description("Represents a criteria for a scoreboard objective.",
-                        "More info: <link>https://minecraft.fandom.com/wiki/Scoreboard#Criteria</link>")
-                .since("2.6.0")
-                .parser(new Parser<>() {
+        if (Skript.classExists("org.bukkit.scoreboard.Criteria")) {
+            Classes.registerClass(new ClassInfo<>(Criteria.class, "criteria")
+                    .user("criterias?")
+                    .name("Scoreboard - Criteria")
+                    .description("Represents a criteria for a scoreboard objective.",
+                            "More info: <link>https://minecraft.fandom.com/wiki/Scoreboard#Criteria</link>")
+                    .since("2.6.0")
+                    .parser(new Parser<>() {
 
-                    @Override
-                    public boolean canParse(@NotNull ParseContext context) {
-                        return false;
-                    }
+                        @Override
+                        public boolean canParse(@NotNull ParseContext context) {
+                            return false;
+                        }
 
-                    @Override
-                    public @NotNull String toString(Criteria o, int flags) {
-                        return "criteria " + o.getName();
-                    }
+                        @Override
+                        public @NotNull String toString(Criteria o, int flags) {
+                            return "criteria " + o.getName();
+                        }
 
-                    @Override
-                    public @NotNull String toVariableNameString(Criteria o) {
-                        return "criteria{name=" + o.getName() + "}";
-                    }
-                }));
+                        @Override
+                        public @NotNull String toVariableNameString(Criteria o) {
+                            return "criteria{name=" + o.getName() + "}";
+                        }
+                    }));
+        }
 
         EnumUtils<RenderType> RENDER_ENUM = new EnumUtils<>(RenderType.class);
         Classes.registerClass(new ClassInfo<>(RenderType.class, "rendertype")
