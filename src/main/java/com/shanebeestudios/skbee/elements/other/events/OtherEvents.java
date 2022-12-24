@@ -15,6 +15,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
@@ -293,6 +294,15 @@ public class OtherEvents {
             @Override
             public @Nullable BlockFace get(ProjectileHitEvent event) {
                 return event.getHitBlockFace();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(BlockPlaceEvent.class, BlockFace.class, new Getter<>() {
+            @Override
+            public @Nullable BlockFace get(BlockPlaceEvent event) {
+                Block placed = event.getBlockPlaced();
+                Block against = event.getBlockAgainst();
+                return against.getFace(placed);
             }
         }, 0);
 
