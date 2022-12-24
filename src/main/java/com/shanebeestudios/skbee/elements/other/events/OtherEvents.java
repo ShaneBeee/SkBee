@@ -8,6 +8,7 @@ import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -18,9 +19,11 @@ import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
@@ -276,6 +279,23 @@ public class OtherEvents {
                 return event.getPlayer();
             }
         }, 0);
+
+        // Click Events
+        EventValues.registerEventValue(PlayerInteractEvent.class, BlockFace.class, new Getter<>() {
+            @Override
+            public @Nullable BlockFace get(PlayerInteractEvent event) {
+                return event.getBlockFace();
+            }
+        }, 0);
+
+        // Projectile Hit Event
+        EventValues.registerEventValue(ProjectileHitEvent.class, BlockFace.class, new Getter<>() {
+            @Override
+            public @Nullable BlockFace get(ProjectileHitEvent event) {
+                return event.getHitBlockFace();
+            }
+        }, 0);
+
     }
 
 }
