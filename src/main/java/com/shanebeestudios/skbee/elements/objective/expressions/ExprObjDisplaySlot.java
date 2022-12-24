@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Scoreboard - Objective DisplaySlot")
 @Description("Get/Set the display slot of an objective.")
 @Examples("set display slot of {_objective} to player_list")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprObjDisplaySlot extends SimpleExpression<DisplaySlot> {
 
     static {

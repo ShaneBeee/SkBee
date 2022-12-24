@@ -30,7 +30,7 @@ import java.util.Objects;
         "\nRENDER TYPE = how this objective will render, hearts or integer.",
         "\nDISPLAY SLOT = where this objective will render."})
 @Examples("set {_obj} to objective with id \"le-health\" with criteria {_c} named \"&bLe &cHealth\" with render type hearts in display slot player_list")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprObjCreate extends SimpleExpression<Objective> {
 
     private static final boolean HAS_CRITERIA_CLASS = Skript.classExists("org.bukkit.scoreboard.Criteria");

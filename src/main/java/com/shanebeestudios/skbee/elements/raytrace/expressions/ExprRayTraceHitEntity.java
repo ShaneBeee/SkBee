@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("RayTrace - Hit Entity")
 @Description("Gets the hit entity resulting from a RayTrace.")
 @Examples("set {_hit} to raytrace hit entity of {_ray}")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprRayTraceHitEntity extends SimplePropertyExpression<RayTraceResult, Entity> {
 
     static {

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Scoreboard - Objective Name")
 @Description("Get/Set the display name of an objective.")
 @Examples("set display name of objective {_objective} to \"le-objective\"")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprObjName extends SimpleExpression<String> {
 
     static {

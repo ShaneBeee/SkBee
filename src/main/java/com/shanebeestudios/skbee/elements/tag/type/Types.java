@@ -15,7 +15,7 @@ public class Types {
                     .user("minecraft ?tags?")
                     .name("Minecraft Tag")
                     .description("Represents a Minecraft Tag.")
-                    .since("INSERT VERSION")
+                    .since("2.6.0")
                     .parser(new Parser<>() {
 
                         @SuppressWarnings("NullableProblems")

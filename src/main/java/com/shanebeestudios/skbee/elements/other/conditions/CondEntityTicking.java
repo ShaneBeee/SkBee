@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Entity - Is Ticking")
 @Description("Check if an entity is currently ticking. If they're in a chunk that is not ticking, this will be false.")
 @Examples("loop all entities where [input is ticking]:")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class CondEntityTicking extends PropertyCondition<Entity> {
 
     private static final boolean TICKING_METHOD_EXISTS = Skript.methodExists(Entity.class, "isTicking");

@@ -27,7 +27,7 @@ import java.util.List;
 @Description("Get the values of a Minecraft Tag.")
 @Examples({"loop tag values of {_tag}:",
         "set {_values::*} to tag values of {_mctag}"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprTagValues extends SimpleExpression<Object> {
 
     static {

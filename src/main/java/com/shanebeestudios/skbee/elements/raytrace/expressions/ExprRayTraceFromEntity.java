@@ -31,7 +31,7 @@ import java.util.List;
         "by this value before doing collision checks (default = 0.0)."})
 @Examples({"set {_ray} to ray trace from player with max distance 25",
         "set {_rays::*} to raytrace from all players with ray size 0.1"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
 
     static {

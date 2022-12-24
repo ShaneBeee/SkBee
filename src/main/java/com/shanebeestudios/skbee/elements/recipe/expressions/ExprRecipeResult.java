@@ -29,7 +29,7 @@ import java.util.List;
 @Examples({"set {_result} to result of recipe \"minecraft:oak_door\"",
         "set {_result} to result of recipe \"skbee:some_recipe\"",
         "set {_result} to result of recipe \"my_recipes:some_custom_recipe\""})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprRecipeResult extends SimpleExpression<ItemType> {
 
     static {

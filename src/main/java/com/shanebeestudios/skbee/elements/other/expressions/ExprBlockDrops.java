@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("Represents the dropped items in a block drop item event.")
 @Examples({"on block drop item:",
         "\tteleport block dropped items to player"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprBlockDrops extends SimpleExpression<Item> {
 
     static {

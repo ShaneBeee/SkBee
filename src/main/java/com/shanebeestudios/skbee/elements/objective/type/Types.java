@@ -22,7 +22,7 @@ public class Types {
                 .name("Scoreboard - Objective")
                 .description("Represents an objective in a scoreboard.",
                         "When deleting, the objective will be unregistered.")
-                .since("INSERT VERSION")
+                .since("2.6.0")
                 .parser(new Parser<>() {
 
                     @Override
@@ -66,7 +66,7 @@ public class Types {
                 .name("Scoreboard - Criteria")
                 .description("Represents a criteria for a scoreboard objective.",
                         "More info: <link>https://minecraft.fandom.com/wiki/Scoreboard#Criteria</link>")
-                .since("INSERT VERSION")
+                .since("2.6.0")
                 .parser(new Parser<>() {
 
                     @Override
@@ -91,7 +91,7 @@ public class Types {
                 .name("Scoreboard - Objective Render Type")
                 .description("Controls the way in which an Objective is rendered client side.")
                         .usage(RENDER_ENUM.getAllNames())
-                .since("INSERT VERSION")
+                .since("2.6.0")
                 .parser(RENDER_ENUM.getParser()));
 
         EnumUtils<DisplaySlot> DISPLAY_ENUM = new EnumUtils<>(DisplaySlot.class);
@@ -100,7 +100,7 @@ public class Types {
                 .name("Scoreboard - Objective Display Slot")
                 .description("Locations for displaying objectives to the player")
                 .usage(DISPLAY_ENUM.getAllNames())
-                .since("INSERT VERSION")
+                .since("2.6.0")
                 .parser(DISPLAY_ENUM.getParser()));
     }
 

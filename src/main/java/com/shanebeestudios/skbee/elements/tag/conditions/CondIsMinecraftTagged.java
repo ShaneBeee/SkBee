@@ -24,7 +24,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Minecraft Tag - Is Tagged")
 @Description("Check if an item/block/entity is tagged with a Minecraft Tag.")
 @Examples("if player's tool is tagged as {_mcTag}:")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 @SuppressWarnings("rawtypes")
 public class CondIsMinecraftTagged extends Condition {
 

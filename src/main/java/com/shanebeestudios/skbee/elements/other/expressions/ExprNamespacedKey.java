@@ -31,7 +31,7 @@ import java.util.List;
 @Examples({"set {_n} to namespaced key from \"minecraft:log\"",
         "set {_custom} to namespaced key from \"my_server:custom_log\"",
         "set {_n} to namespaced key from \"le_test\""})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprNamespacedKey extends SimpleExpression<NamespacedKey> {
 
     static {

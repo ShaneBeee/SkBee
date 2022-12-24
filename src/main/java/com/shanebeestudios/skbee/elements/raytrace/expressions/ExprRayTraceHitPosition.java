@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("RayTrace - Hit Position")
 @Description("Get the hit position resulting from a RayTrace (returns a vector).")
 @Examples("set {_vec} to hit position of {_ray}")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprRayTraceHitPosition extends SimplePropertyExpression<RayTraceResult, Vector> {
 
     static {

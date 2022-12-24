@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Scoreboard - Objective Get")
 @Description("Get an already registered objective.")
 @Examples("set {_obj} to objective with id \"le-objective\"")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprObjGet extends SimpleExpression<Objective> {
 
     static {

@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"set {_m::1} to mini message from \"<rainbow>OOOOOOOO\"",
         "set {_m::2} to text component from \"Le-Text\"",
         "make player see sign lines of target block as {_m::*} with color blue"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class EffSendSignChange extends Effect {
 
     static {

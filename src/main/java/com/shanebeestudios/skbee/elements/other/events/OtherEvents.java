@@ -268,7 +268,7 @@ public class OtherEvents {
                 "block drop item")
                 .description("This event is called if a block broken by a player drops an item. ")
                 .examples("")
-                .since("INSERT VERSION");
+                .since("2.6.0");
 
         EventValues.registerEventValue(BlockDropItemEvent.class, Player.class, new Getter<>() {
             @Override

@@ -27,7 +27,7 @@ import java.util.List;
 @Description({"Set the BlockData of a block without updates (will prevent physics updates of neighbouring blocks)."})
 @Examples({"set blockdata of target block without updates to oak_fence[]",
         "set blockdata of target block without updates to campfire[lit=false]"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprBlockDataUpdates extends SimpleExpression<BlockData> {
 
     static {

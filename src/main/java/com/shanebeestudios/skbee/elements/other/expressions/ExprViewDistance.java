@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set view distance of all players to 2",
         "add 1 to view distance of world \"world\"",
         "set {_sim} to view distance of world of player"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprViewDistance extends SimplePropertyExpression<Object, Number> {
 
     static {

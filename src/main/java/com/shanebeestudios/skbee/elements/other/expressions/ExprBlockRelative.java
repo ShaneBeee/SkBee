@@ -23,7 +23,7 @@ import java.util.List;
 @Description("Get a block relative to another block using a BlockFace.")
 @Examples({"set {_rel} to block relative to target block using {_blockFace}",
         "set block relative to target block using north to stone"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprBlockRelative extends SimpleExpression<Block> {
 
     static {

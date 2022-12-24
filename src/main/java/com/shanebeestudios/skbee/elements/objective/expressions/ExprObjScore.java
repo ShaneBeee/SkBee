@@ -25,7 +25,7 @@ import java.util.List;
 @Name("Scoreboard - Objective Score")
 @Description("Get/Set the score of an entity for an objective.")
 @Examples("set score of player for {_objective} to 10")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprObjScore extends SimpleExpression<Number> {
 
     static {

@@ -28,7 +28,7 @@ import java.util.List;
 @Description("Get a vanilla Minecraft Tag. This will include custom tags from data packs that are registered to the server.")
 @Examples({"set {_key} to namespaced key from \"minecraft:arrows\"",
         "set {_tag} to minecraft item tag from {_key}"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 @SuppressWarnings("rawtypes")
 public class ExprTagGet extends SimpleExpression<Tag> {
 

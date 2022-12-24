@@ -149,7 +149,7 @@ public class Types {
                         .name("Quit Reason")
                         .description("Represents the different reasons for calling the player quit event (Requires Paper).")
                         .usage(QUIT_REASON.getAllNames())
-                        .since("INSERT VERSION")
+                        .since("2.6.0")
                         .parser(QUIT_REASON.getParser()));
             }
         }
@@ -161,7 +161,7 @@ public class Types {
                     .description("NamespacedKeys are a way to declare and specify game objects in Minecraft,",
                             "which can identify built-in and user-defined objects without potential ambiguity or conflicts.",
                             "For more information see Resource Location on McWiki <link>https://minecraft.fandom.com/wiki/Resource_location</link>")
-                    .since("INSERT VERSION"));
+                    .since("2.6.0"));
         }
 
         if (Classes.getExactClassInfo(BlockFace.class) == null) {
@@ -171,7 +171,7 @@ public class Types {
                     .name("BlockFace")
                     .description("Represents the face of a block.")
                     .usage(BLOCK_FACE_ENUM.getAllNames())
-                    .since("INSERT VERSION")
+                    .since("2.6.0")
                     .parser(BLOCK_FACE_ENUM.getParser())
                     .defaultExpression(new SimpleLiteral<>(BlockFace.NORTH, true)));
         }

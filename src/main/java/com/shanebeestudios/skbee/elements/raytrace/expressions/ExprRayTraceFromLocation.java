@@ -30,7 +30,7 @@ import java.util.List;
         "\nRaySize = entity bounding boxes will be uniformly expanded (or shrunk)",
         "by this value before doing collision checks (default = 0.0)."})
 @Examples("set {_ray} to ray trace from location of target block along vector(0.25,0.3,0) with max distance 50")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {
 
     static {

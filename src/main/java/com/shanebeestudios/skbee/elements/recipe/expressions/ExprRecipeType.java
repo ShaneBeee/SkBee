@@ -28,7 +28,7 @@ import java.util.List;
         "set {_type} to recipe type of recipe \"skbee:some_recipe\"",
         "set {_type} to recipe type of recipe with id \"my_recipes:some_custom_recipe\"",
         "if recipe type of recipe with id \"my_recipes:some_custom_recipe\" = shaped recipe:"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprRecipeType extends SimpleExpression<RecipeType> {
 
     static {

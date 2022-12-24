@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set simulation distance of all players to 2",
         "add 1 to simulation distance of world \"world\"",
         "set {_sim} to simulation distance of world of player"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprSimulationDistance extends SimplePropertyExpression<Object, Number> {
 
     static {

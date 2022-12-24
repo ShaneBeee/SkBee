@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("RayTrace - Hit Location")
 @Description("Get the hit location resulting from a RayTrace.")
 @Examples("set {_hit} to hit location of {_ray}")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprRayTraceHitLocation extends SimplePropertyExpression<RayTraceResult, Location> {
 
     static {

@@ -26,7 +26,7 @@ import java.util.List;
 @Description("Create your own custom tag with items of your choosing. Requires a PaperMC server.")
 @Examples({"set {_key} to namespaced key from \"custom:diamond_items\"",
         "set {_tag} to custom minecraft tag with id {_id} to include (all items where [\"%input%\" contains \"diamond\"])"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 @SuppressWarnings("rawtypes")
 public class ExprTagCustom extends SimpleExpression<Tag> {
 

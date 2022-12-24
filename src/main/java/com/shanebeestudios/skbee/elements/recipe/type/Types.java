@@ -56,7 +56,7 @@ public class Types {
                 .name("Recipe Type")
                 .description("Represents the types of recipes.")
                 .usage(RECIPE_TYPE_ENUM.getAllNames())
-                .since("INSERT VERSION")
+                .since("2.6.0")
                 .parser(RECIPE_TYPE_ENUM.getParser()));
     }
 

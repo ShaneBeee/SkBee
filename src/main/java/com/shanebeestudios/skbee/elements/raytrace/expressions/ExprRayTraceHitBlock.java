@@ -13,7 +13,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("RayTrace - Hit Block")
 @Description("Gets the hit block resulting from a RayTrace.")
 @Examples("set {_hit} to ray trace hit block of {_ray}")
-@Since("INSERT VERSION")
+@Since("2.6.0")
 public class ExprRayTraceHitBlock extends SimplePropertyExpression<RayTraceResult, Block> {
 
     static {

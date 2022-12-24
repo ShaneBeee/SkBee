@@ -28,7 +28,7 @@ import java.util.stream.Collectors;
 @Examples({"send all minecraft tags",
         "loop all minecraft block tags:",
         "set {_tags::*} to all minecraft item tags"})
-@Since("INSERT VERSION")
+@Since("2.6.0")
 @SuppressWarnings("rawtypes")
 public class ExprTagAll extends SimpleExpression<Tag> {
 
