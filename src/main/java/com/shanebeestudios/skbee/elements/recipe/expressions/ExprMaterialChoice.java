@@ -11,6 +11,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.event.Event;
@@ -27,14 +28,17 @@ import java.util.List;
         "Do note that material choices do not accept custom items (ie: items with names, lore, enchants, etc). Requires Minecraft 1.13+"})
 @Examples({"set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
         "set {_a} to material choice of every sword",
-        "set {_a} to material choice of minecraft tag \"doors\""})
+        "set {_m} to minecraft tag \"minecraft:planks\"",
+        "set {_a} to material choice of tag {_m}"})
 @Since("1.10.0")
 public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
 
     static {
+        String[] patterns = SkBee.getPlugin().getPluginConfig().ELEMENTS_MINECRAFT_TAG ?
+                new String[]{"material choice of %itemtypes%", "material choice of [minecraft] tag %minecrafttag%"} :
+                new String[]{"material choice of %itemtypes%"};
         Skript.registerExpression(ExprMaterialChoice.class, MaterialChoice.class, ExpressionType.COMBINED,
-                "material choice of %itemtypes%",
-                "material choice of %minecrafttag%");
+                patterns);
     }
 
     private int pattern;
@@ -67,7 +71,9 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
                     }
                 });
             }
-            return new MaterialChoice[]{new MaterialChoice(materials)};
+            if (materials.size() > 0) {
+                return new MaterialChoice[]{new MaterialChoice(materials)};
+            }
         } else if (pattern == 1) {
             Tag<Material> tag = tags.getSingle(event);
             if (tag != null) {
@@ -92,7 +98,7 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
     @Override
     public String toString(@Nullable Event e, boolean d) {
         return String.format("material choice of %s",
-                pattern == 0 ? itemTypes.toString(e, d) : tags.toString(e, d));
+                pattern == 0 ? itemTypes.toString(e, d) : "tag " + tags.toString(e, d));
     }
 
 }
