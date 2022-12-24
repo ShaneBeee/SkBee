@@ -46,3 +46,10 @@ types:
 	transformreason: transform reason¦s
 	quitreason: quit reason¦s
 	recipetype: recipe type¦s
+	objective: objective¦s
+	criteria: criteria¦s
+	rendertype: render type¦s
+	displayslot: display slot¦s
+	namespacedkey: namespacedkey¦s
+	blockface: blockface¦s
+	raytraceresult: raytraceresult¦s

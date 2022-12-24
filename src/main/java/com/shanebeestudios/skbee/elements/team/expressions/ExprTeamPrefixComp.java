@@ -23,10 +23,10 @@ import org.jetbrains.annotations.NotNull;
         "set team suffix of {_team} to \"[GOLD]\"",
         "set {_pre} to team prefix of {_team}"})
 @Since("1.16.0")
-public class ExprTeamPrefix extends SimplePropertyExpression<Team, String> {
+public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, String> {
 
     static {
-        register(ExprTeamPrefix.class, String.class,
+        register(ExprTeamPrefixComp.class, String.class,
                 "team (0¦prefix|1¦suffix)", "team");
     }
 

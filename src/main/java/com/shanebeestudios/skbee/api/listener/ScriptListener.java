@@ -4,7 +4,7 @@ import ch.njol.skript.config.Config;
 import ch.njol.skript.events.bukkit.PreScriptLoadEvent;
 import com.google.common.io.Files;
 import com.shanebeestudios.skbee.api.util.Util;
-import org.apache.commons.lang.StringEscapeUtils;
+import org.apache.commons.text.StringEscapeUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.EventHandler;

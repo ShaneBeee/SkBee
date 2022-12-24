@@ -50,40 +50,6 @@ public class Types {
                     }
                 }));
 
-        Classes.registerClass(new ClassInfo<>(Tag.class, "minecrafttag")
-                .name("Minecraft Tag")
-                .user("(minecraft )?tags?")
-                .description("Represents a tag provided by Minecraft. Requires Minecraft 1.13+")
-                .usage("see Minecraft tag expression")
-                .examples("set {_i} to minecraft tag \"doors\"",
-                        "set {_tag} to minecraft tag \"trapdoors\"",
-                        "set {_tags::*} to minecraft tags \"wall_signs\" and \"wooden_doors\"",
-                        "set {_tag} to \"minecraft:climbable\"", "",
-                        "loop minecraft tags:",
-                        "\tsend \"-%loop-value%\" to console")
-                .since("1.10.0")
-                .parser(new Parser<Tag>() {
-
-                    @Override
-                    public boolean canParse(ParseContext context) {
-                        return false;
-                    }
-
-                    @Override
-                    public String toString(Tag tag, int flags) {
-                        return tag.getKey().toString();
-                    }
-
-                    @Override
-                    public String toVariableNameString(Tag tag) {
-                        return "minecrafttag:" + toString(tag, 0);
-                    }
-
-                    public String getVariableNamePattern() {
-                        return "minecrafttag://s";
-                    }
-                }));
-
         EnumUtils<RecipeType> RECIPE_TYPE_ENUM = new EnumUtils<>(RecipeType.class);
         Classes.registerClass(new ClassInfo<>(RecipeType.class, "recipetype")
                 .user("recipe ?types?")

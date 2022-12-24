@@ -65,4 +65,8 @@ public class MathUtil {
         return Math.min(max, Math.max(num, min));
     }
 
+    public static int clamp(int num, int min, int max) {
+        return Math.min(max, Math.max(num, min));
+    }
+
 }

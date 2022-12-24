@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -44,7 +43,7 @@ public class ReflectionUtils {
         }
     }
 
-    public static Object getNMSHandle(Entity entity) {
+    public static Object getNMSEntity(Entity entity) {
         try {
             Method getHandle = entity.getClass().getMethod("getHandle");
             return getHandle.invoke(entity);
@@ -91,18 +90,6 @@ public class ReflectionUtils {
                 ex.printStackTrace();
             }
         }
-    }
-
-    public static Object getConnection(Player player)
-            throws SecurityException, NoSuchMethodException, NoSuchFieldException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        Field conField = getHandle(player).getClass().getField("playerConnection");
-        return conField.get(getHandle(player));
-    }
-
-    public static Object getHandle(Player player)
-            throws SecurityException, NoSuchMethodException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        Method getHandle = player.getClass().getMethod("getHandle");
-        return getHandle.invoke(player);
     }
 
     /**

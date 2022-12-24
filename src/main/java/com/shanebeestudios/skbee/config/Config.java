@@ -19,6 +19,7 @@ public class Config {
     public boolean SETTINGS_UPDATE_CHECKER;
     public boolean ELEMENTS_NBT;
     public boolean ELEMENTS_BOARD;
+    public boolean ELEMENTS_OBJECTIVE;
     public boolean ELEMENTS_TEAM;
     public boolean ELEMENTS_RECIPE;
     public boolean ELEMENTS_BOUND;
@@ -33,6 +34,9 @@ public class Config {
     public boolean ELEMENTS_VILLAGER;
     public boolean ELEMENTS_ADVANCEMENT;
     public boolean ELEMENTS_WORLD_BORDER;
+    public boolean ELEMENTS_PARTICLE;
+    public boolean ELEMENTS_MINECRAFT_TAG;
+    public boolean ELEMENTS_RAYTRACE;
     public boolean AUTO_LOAD_WORLDS;
     public String RECIPE_NAMESPACE;
 
@@ -94,6 +98,7 @@ public class Config {
         this.SETTINGS_UPDATE_CHECKER = getSetting("update-checker");
         this.ELEMENTS_NBT = getElement("nbt");
         this.ELEMENTS_BOARD = getElement("scoreboard");
+        this.ELEMENTS_OBJECTIVE = getElement("scoreboard-objective");
         this.ELEMENTS_TEAM = getElement("team");
         this.ELEMENTS_RECIPE = getElement("recipe");
         this.ELEMENTS_BOUND = getElement("bound");
@@ -108,6 +113,9 @@ public class Config {
         this.ELEMENTS_VILLAGER = getElement("villager");
         this.ELEMENTS_ADVANCEMENT = getElement("advancement");
         this.ELEMENTS_WORLD_BORDER = getElement("world-border");
+        this.ELEMENTS_PARTICLE = getElement("particle");
+        this.ELEMENTS_MINECRAFT_TAG = getElement("minecraft-tag");
+        this.ELEMENTS_RAYTRACE = getElement("raytrace");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
         String namespace = this.config.getString("recipe.namespace");
         if (namespace == null) {

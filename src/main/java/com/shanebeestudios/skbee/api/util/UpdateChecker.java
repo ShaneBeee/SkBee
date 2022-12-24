@@ -15,6 +15,9 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.function.Consumer;
 
+/**
+ * Utility class to check for plugin updates
+ */
 public class UpdateChecker implements Listener {
 
     private static String UPDATE_VERSION;

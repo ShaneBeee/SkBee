@@ -16,6 +16,9 @@ elements:
   # Enable Scoreboard elements
   scoreboard: true
 
+  # Enable Scoreboard Objective elements
+  scoreboard-objective: true
+
   # Enable Team elements
   team: true
 
@@ -63,6 +66,15 @@ elements:
 
   # Enable world border elements
   world-border: true
+
+  # Enable particle elements
+  particle: true
+
+  # Enable MinecraftTag Elements
+  minecraft-tag: true
+
+  # Enable RayTrace elements
+  raytrace: true
 
 recipe:
   # This is the namespace all recipes will be saved under
