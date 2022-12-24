@@ -259,7 +259,7 @@ public class PaperEvents {
                             "\tloop all blocks in event-chunk:",
                             "\t\tif loop-block is diamond ore:",
                             "\t\t\tmake player see loop-block as stone")
-                    .since("INSERT VERSION");
+                    .since("2.6.1");
 
             EventValues.registerEventValue(PlayerChunkLoadEvent.class, Player.class, new Getter<>() {
                 @Override
@@ -278,7 +278,7 @@ public class PaperEvents {
                             "\nRequires a PaperMC server.")
                     .examples("on player chunk unload:",
                             "\tsend \"looks like you lost your chunk cowboy!\" to player")
-                    .since("INSERT VERSION");
+                    .since("2.6.1");
 
             EventValues.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, new Getter<>() {
                 @Override
