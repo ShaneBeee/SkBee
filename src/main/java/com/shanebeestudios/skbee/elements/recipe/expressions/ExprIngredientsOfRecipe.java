@@ -63,13 +63,14 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
             if (recipe instanceof Keyed keyed && keyed.getKey().toString().equalsIgnoreCase(this.recipe.getSingle(e))) {
                 if (recipe instanceof ShapedRecipe shapedRecipe) {
                     String[] shape = shapedRecipe.getShape();
-                    for (int i = 0; i < Math.pow(shape.length, 2); i++) {
+                    int length = Math.max(shape.length, shape[0].length());
+                    for (int i = 0; i < Math.pow(length, 2); i++) {
                         items.add(new ItemType(Material.AIR));
                     }
                     for (int i = 0; i < shape.length; i++) {
                         for (int x = 0; x < shape[i].length(); x++) {
                             ItemStack ingredient = shapedRecipe.getIngredientMap().get(shape[i].toCharArray()[x]);
-                            if (ingredient != null) items.set(i * shape.length + x, new ItemType(ingredient));
+                            if (ingredient != null) items.set(i * length + x, new ItemType(ingredient));
                         }
                     }
                 } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
