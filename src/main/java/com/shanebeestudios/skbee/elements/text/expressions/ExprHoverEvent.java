@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.text.BeeComponent;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.Component;
@@ -66,7 +67,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             String[] string = ((String[]) this.object.getArray(event));
             Component texts = Component.empty();
             for (int i = 0; i < string.length; i++) {
-                Component component = Component.text(string[i] + (i < (string.length - 1) ? "\n" : ""));
+                Component component = BeeComponent.fromText(string[i] + (i < (string.length - 1) ? "\n" : "")).getComponent();
                 texts = texts.append(component);
             }
             return new HoverEvent[]{HoverEvent.hoverEvent(HoverEvent.Action.SHOW_TEXT, texts)};
