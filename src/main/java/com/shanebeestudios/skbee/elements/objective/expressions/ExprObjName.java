@@ -19,13 +19,13 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("Scoreboard - Objective Name")
 @Description("Get/Set the display name of an objective.")
-@Examples("set display name of objective {_objective} to \"le-objective\"")
+@Examples("set objective display name of {_objective} to \"le-objective\"")
 @Since("2.6.0")
 public class ExprObjName extends SimpleExpression<String> {
 
     static {
         Skript.registerExpression(ExprObjName.class, String.class, ExpressionType.COMBINED,
-                "[display[ ]]name of [objective] %objective%");
+                "objective [display[ ]]name of %objective%");
     }
 
     private Expression<Objective> objective;
@@ -73,7 +73,7 @@ public class ExprObjName extends SimpleExpression<String> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "display name of objective " + this.objective.toString(e, d);
+        return "objective display name of " + this.objective.toString(e, d);
     }
 
 }
