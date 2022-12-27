@@ -162,7 +162,7 @@ public class Types {
                         "TO = the destination location the particle will travel to.",
                         "ARRIVAL TIME = the time it will take to arrive at the destination location.",
                         "Requires MC 1.17+")
-                .examples("set {_v} to vibration({loc1}, {loc2}, 10 seconds)")
+                .examples("set {_v} to vibration({loc}, 10 seconds)")
                 .since("1.11.1"));
     }
 
