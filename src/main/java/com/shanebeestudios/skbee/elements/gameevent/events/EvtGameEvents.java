@@ -9,6 +9,7 @@ import ch.njol.skript.util.Getter;
 import org.bukkit.GameEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockReceiveGameEvent;
 import org.bukkit.event.world.GenericGameEvent;
@@ -62,6 +63,14 @@ public class EvtGameEvents extends SkriptEvent {
             }
         }, 0);
 
+        EventValues.registerEventValue(GenericGameEvent.class, Player.class, new Getter<>() {
+            @Override
+            public @Nullable Player get(GenericGameEvent event) {
+                if (event.getEntity() instanceof Player player) return player;
+                return null;
+            }
+        }, 0);
+
         EventValues.registerEventValue(BlockReceiveGameEvent.class, Entity.class, new Getter<>() {
             @Nullable
             @Override
@@ -74,6 +83,14 @@ public class EvtGameEvents extends SkriptEvent {
             @Override
             public GameEvent get(BlockReceiveGameEvent event) {
                 return event.getEvent();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(BlockReceiveGameEvent.class, Player.class, new Getter<>() {
+            @Override
+            public @Nullable Player get(BlockReceiveGameEvent event) {
+                if (event.getEntity() instanceof Player player) return player;
+                return null;
             }
         }, 0);
     }
