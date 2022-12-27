@@ -26,6 +26,7 @@ import org.bukkit.Statistic;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 
 import java.io.IOException;
@@ -176,6 +177,12 @@ public class AddonLoader {
     private void loadObjectiveElements() {
         if (!this.config.ELEMENTS_OBJECTIVE) {
             Util.logLoading("&5Scoreboard Objective Elements &cdisabled via config");
+            return;
+        }
+        if (Classes.getClassInfoNoError("objective") != null || Classes.getExactClassInfo(Objective.class) != null) {
+            Util.logLoading("&5Scoreboard Objective Elements &cdisabled");
+            Util.logLoading("&7It appears another Skript addon may have registered Scoreboard Objective syntax.");
+            Util.logLoading("&7To use SkBee Scoreboard Objectives, please remove the addon which has registered Scoreboard Objective already.");
             return;
         }
         try {
