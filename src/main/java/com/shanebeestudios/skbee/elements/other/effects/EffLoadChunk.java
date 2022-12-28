@@ -25,10 +25,10 @@ import org.jetbrains.annotations.NotNull;
         "NOTE: If no ticket is added, and the chunk has no players to keep it active, it will immediately unload.",
         "NOTE: When adding a ticket, a bunch of chunks will load in a radius around said chunk."})
 @Examples({"load chunk at 1,1 in world \"world\"",
-        "unload chunk at 1,1 in world \"world\"",
         "load chunk chunk at location(1,1,1, world \"world\")",
         "load chunk at 150,150 in world \"world\"",
-        "load chunk at 150,150 in world \"world\" with ticket"})
+        "load chunk at 150,150 in world \"world\" with ticket",
+        "unload chunk at 1,1 in world \"world\""})
 @Since("1.17.0")
 public class EffLoadChunk extends Effect {
 
@@ -36,10 +36,8 @@ public class EffLoadChunk extends Effect {
 
     static {
         Skript.registerEffect(EffLoadChunk.class,
-                "(load|1¦unload) chunk at %number%,[ ]%number% (in|of) [world] %world%",
-                "(load|1¦unload) chunk %chunk%",
-                "load chunk at %number%,[ ]%number% (in|of) [world] %world% with ticket",
-                "load chunk %chunk% with ticket");
+                "(load|:unload) chunk at %number%,[ ]%number% (in|of) [world] %world% [ticket:with ticket]",
+                "(load|:unload) %chunks% [ticket:with ticket]");
     }
 
     private int pattern;
@@ -48,22 +46,22 @@ public class EffLoadChunk extends Effect {
     private Expression<Number> one;
     private Expression<Number> two;
     private Expression<World> world;
-    private Expression<Chunk> chunk;
+    private Expression<Chunk> chunks;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
-        this.pattern = i;
-        this.unload = parseResult.mark == 1;
-        this.ticket = i > 1;
+    public boolean init(Expression<?>[] exprs, int pattern, Kleenean kleenean, ParseResult parseResult) {
+        this.pattern = pattern;
+        this.unload = parseResult.hasTag("unload");
+        this.ticket = parseResult.hasTag("ticket");
 
-        if (i == 0 || i == 2) {
-            this.chunk = null;
+        if (pattern == 0) {
+            this.chunks = null;
             this.one = (Expression<Number>) exprs[0];
             this.two = (Expression<Number>) exprs[1];
             this.world = (Expression<World>) exprs[2];
         } else {
-            this.chunk = (Expression<Chunk>) exprs[0];
+            this.chunks = (Expression<Chunk>) exprs[0];
             this.one = null;
             this.two = null;
             this.world = null;
@@ -74,8 +72,7 @@ public class EffLoadChunk extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        //Chunk chunk = null;
-        if (pattern == 0 || pattern == 2) {
+        if (pattern == 0) {
             int one = 0;
             int two = 0;
             World world = Bukkit.getWorlds().get(0);
@@ -103,9 +100,7 @@ public class EffLoadChunk extends Effect {
                 }
             }
         } else {
-            if (this.chunk != null) {
-                Chunk chunk = this.chunk.getSingle(event);
-                if (chunk == null) return;
+            for (Chunk chunk : this.chunks.getArray(event)) {
                 if (unload) {
                     chunk.removePluginChunkTicket(PLUGIN);
                     chunk.unload();
@@ -123,7 +118,7 @@ public class EffLoadChunk extends Effect {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String load = this.unload ? "unload" : "load";
         String chunk = (pattern == 0 || pattern == 2) ? "at " + this.one.toString(e, d) + "," +
-                this.two.toString(e,d) : this.chunk.toString(e,d);
+                this.two.toString(e, d) : this.chunks.toString(e, d);
         String ticket = this.ticket ? " with ticket" : "";
         return String.format("%s chunk %s %s",
                 load, chunk, ticket);
