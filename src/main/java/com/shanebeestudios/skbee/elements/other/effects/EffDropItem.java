@@ -23,7 +23,8 @@ import org.jetbrains.annotations.NotNull;
 public class EffDropItem extends Effect {
 
     static {
-        Skript.registerEffect(EffDropItem.class, "(make|force) %players% [to] drop (|1¦all of) [their] held item[s]");
+        Skript.registerEffect(EffDropItem.class,
+                "(make|force) %players% [to] drop [all:all of] [their] held item[s]");
     }
 
     private Expression<Player> players;
@@ -33,7 +34,7 @@ public class EffDropItem extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.players = (Expression<Player>) exprs[0];
-        this.all = parseResult.mark == 1;
+        this.all = parseResult.hasTag("all");
         return true;
     }
 
