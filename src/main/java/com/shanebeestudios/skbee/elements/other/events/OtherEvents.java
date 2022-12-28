@@ -37,7 +37,8 @@ public class OtherEvents {
     static {
         Skript.registerEvent("Block Physical Interact Event", SimpleEvent.class, EntityBlockInteractEvent.class,
                         "block (interact|trample)")
-                .description("Called when an entity physically interacts with a block, for example, trampling.")
+                .description("Called when an entity physically interacts with a block, for example,",
+                        " entities trampling farmland and villagers opening doors.")
                 .examples("on block interact:",
                         "\tif event-entity is a villager:",
                         "\t\tcancel event")
