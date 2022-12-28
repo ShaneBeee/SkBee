@@ -105,11 +105,6 @@ public class ExprTabCompletion extends SimpleExpression<String> {
                     }
                     for (Object o : objects) {
                         String object = Classes.toString(o);
-                        // old way which sorted based on STARTS WITH
-                        // We shall keep this here in case someone complains one day
-                        //if (StringUtil.startsWithIgnoreCase(object, arg)) {
-                        //  completions.add(object);
-                        //}
                         if (StringUtils.contains(object, arg, false)) {
                             completions.add(object);
                         }

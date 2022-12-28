@@ -29,8 +29,8 @@ public class ExprAnvilRenameText extends SimplePropertyExpression<Inventory, Str
     @Nullable
     @Override
     public String convert(Inventory inv) {
-        if (inv instanceof AnvilInventory) {
-            return ((AnvilInventory) inv).getRenameText();
+        if (inv instanceof AnvilInventory anvilInventory) {
+            return anvilInventory.getRenameText();
         }
         return null;
     }

@@ -49,14 +49,14 @@ public class EffOpenSign extends Effect {
     }
 
     @Override
-    protected void execute(@NotNull Event e) {
-        Location location = locations.getSingle(e);
+    protected void execute(@NotNull Event event) {
+        Location location = locations.getSingle(event);
         if (location == null) return;
 
         BlockState block = location.getBlock().getState();
-        if (block instanceof Sign) {
-            for (Player player : players.getArray(e)) {
-                player.openSign(((Sign) block));
+        if (block instanceof Sign sign) {
+            for (Player player : players.getArray(event)) {
+                player.openSign(sign);
             }
         }
     }

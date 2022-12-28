@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.gameevent.expressions;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
@@ -10,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
@@ -35,7 +35,7 @@ public class ExprGameEventRadius extends SimpleExpression<Number> {
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (!ScriptLoader.isCurrentEvent(GenericGameEvent.class)) {
+        if (!ParserInstance.get().isCurrentEvent(GenericGameEvent.class)) {
             Skript.error("The expression 'game event radius' can only be used in a generic game event", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
@@ -62,7 +62,7 @@ public class ExprGameEventRadius extends SimpleExpression<Number> {
         };
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (event instanceof GenericGameEvent gameEvent && delta != null) {

@@ -36,15 +36,16 @@ import org.jetbrains.annotations.Nullable;
 public class ExprAnvilRepairCost extends SimplePropertyExpression<Inventory, Number> {
 
     static {
-        register(ExprAnvilRepairCost.class, Number.class, "[anvil] (0¦repair cost|1¦max[imum] repair cost)", "inventories");
+        register(ExprAnvilRepairCost.class, Number.class,
+                "[anvil] [max:max[imum]] repair cost", "inventories");
     }
 
-    private int pattern;
+    private boolean max;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
-        this.pattern = parseResult.mark;
+        this.max = parseResult.hasTag("max");
         setExpr((Expression<? extends Inventory>) exprs[0]);
         return true;
     }
@@ -52,12 +53,13 @@ public class ExprAnvilRepairCost extends SimplePropertyExpression<Inventory, Num
     @Nullable
     @Override
     public Number convert(Inventory inv) {
-        if (!(inv instanceof AnvilInventory)) return null;
-        return pattern == 0 ? ((AnvilInventory) inv).getRepairCost() : ((AnvilInventory) inv).getMaximumRepairCost();
+        if (!(inv instanceof AnvilInventory anvilInventory)) return null;
+        return max ? anvilInventory.getMaximumRepairCost() : anvilInventory.getRepairCost();
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public Class<?> @NotNull [] acceptChange(@NotNull ChangeMode mode) {
+    public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         return switch (mode) {
             case SET, ADD, REMOVE -> CollectionUtils.array(Number.class);
             default -> null;
@@ -71,21 +73,19 @@ public class ExprAnvilRepairCost extends SimplePropertyExpression<Inventory, Num
 
         int cost = number.intValue();
         Inventory inv = getExpr().getSingle(e);
-        if (!(inv instanceof AnvilInventory)) return;
+        if (!(inv instanceof AnvilInventory anvilInv)) return;
 
-        AnvilInventory anvilInv = (AnvilInventory) inv;
-
-        if (pattern == 0) {
-            switch (mode) {
-                case SET -> anvilInv.setRepairCost(cost);
-                case ADD -> anvilInv.setRepairCost(anvilInv.getRepairCost() + cost);
-                case REMOVE -> anvilInv.setRepairCost(Math.max(anvilInv.getRepairCost() - cost, 0));
-            }
-        } else {
+        if (max) {
             switch (mode) {
                 case SET -> anvilInv.setMaximumRepairCost(cost);
                 case ADD -> anvilInv.setMaximumRepairCost(anvilInv.getMaximumRepairCost() + cost);
                 case REMOVE -> anvilInv.setMaximumRepairCost(Math.max(anvilInv.getMaximumRepairCost() - cost, 0));
+            }
+        } else {
+            switch (mode) {
+                case SET -> anvilInv.setRepairCost(cost);
+                case ADD -> anvilInv.setRepairCost(anvilInv.getRepairCost() + cost);
+                case REMOVE -> anvilInv.setRepairCost(Math.max(anvilInv.getRepairCost() - cost, 0));
             }
         }
     }
@@ -97,7 +97,7 @@ public class ExprAnvilRepairCost extends SimplePropertyExpression<Inventory, Num
 
     @Override
     protected @NotNull String getPropertyName() {
-        String cost = pattern == 0 ? "repair cost" : "max repair cost";
+        String cost = max ? "max repair cost" : "repair cost";
         return String.format("anvil inventory %s", cost);
     }
 

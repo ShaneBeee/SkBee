@@ -23,15 +23,15 @@ public class ExprChunkCoords extends PropertyExpression<Chunk, Number> {
 
     static {
         Skript.registerExpression(ExprChunkCoords.class, Number.class, ExpressionType.PROPERTY,
-                "chunk (x|1¦z) of %chunk%");
+                "chunk (:x|z) of %chunk%");
     }
 
-    private int parseMark;
+    private boolean x;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        parseMark = parseResult.mark;
+        this.x = parseResult.hasTag("x");
         setExpr((Expression<? extends Chunk>) exprs[0]);
         return true;
     }
@@ -39,7 +39,7 @@ public class ExprChunkCoords extends PropertyExpression<Chunk, Number> {
     @SuppressWarnings("NullableProblems")
     @Override
     protected Number @NotNull [] get(Event event, Chunk[] source) {
-        return get(source, chunk -> parseMark == 0 ? chunk.getX() : chunk.getZ());
+        return get(source, chunk -> this.x ? chunk.getX() : chunk.getZ());
     }
 
     @Override
@@ -49,7 +49,8 @@ public class ExprChunkCoords extends PropertyExpression<Chunk, Number> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "chunk X/Z coord of " + getExpr().toString(e, d);
+        String x = this.x ? "x" : "z";
+        return "chunk " + x + " coord of " + getExpr().toString(e, d);
     }
 
 }

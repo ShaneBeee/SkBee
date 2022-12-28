@@ -50,10 +50,6 @@ public class Types {
                     public @NotNull String toVariableNameString(GameEvent gameEvent) {
                         return "gameevent:" + gameEvent.getKey().getKey();
                     }
-
-                    public String getVariableNamePattern() {
-                        return "gameevent://s";
-                    }
                 }));
     }
 

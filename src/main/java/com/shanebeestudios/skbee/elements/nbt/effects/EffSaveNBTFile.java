@@ -31,7 +31,7 @@ public class EffSaveNBTFile extends Effect {
     public static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
-        Skript.registerEffect(EffSaveNBTFile.class, "save nbt file[s] (for|of) %nbtcompounds%");
+        Skript.registerEffect(EffSaveNBTFile.class, "save nbt file[s] (from|for|of) %nbtcompounds%");
     }
 
     private Expression<NBTCompound> nbtCompound;

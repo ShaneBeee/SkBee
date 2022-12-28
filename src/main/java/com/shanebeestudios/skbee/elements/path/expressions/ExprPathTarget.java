@@ -24,14 +24,16 @@ import javax.annotation.Nullable;
 @Name("Pathfinding - Path Target")
 @Description({"Set the path of an entity to target a specific location, with an optional speed",
         "Get the location of the paths end. Delete will stop the entity from pathfinding. Requires Paper 1.13+"})
-@Examples({"set path target of event-entity to player", "set path target with speed 1.5 to location of above player",
+@Examples({"set path target of event-entity to player",
+        "set path target with speed 1.5 of last spawned entity to location above player",
         "set path targets of all entities to location of player",
         "delete path target of event-entity"})
 @Since("1.5.0")
 public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Location> {
 
     static {
-        register(ExprPathTarget.class, Location.class, "[final] path target[s] [with speed %-number%]", "livingentities");
+        register(ExprPathTarget.class, Location.class,
+                "[final] path target[s] [with speed %-number%]", "livingentities");
     }
 
     @Nullable
