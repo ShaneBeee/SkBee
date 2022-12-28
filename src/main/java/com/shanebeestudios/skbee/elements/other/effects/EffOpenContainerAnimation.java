@@ -10,7 +10,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Lidded;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +25,8 @@ import org.jetbrains.annotations.Nullable;
 public class EffOpenContainerAnimation extends Effect {
 
     static {
-        Skript.registerEffect(EffOpenContainerAnimation.class, "play (0¦open|1¦close) animation on %blocks%");
+        Skript.registerEffect(EffOpenContainerAnimation.class,
+                "play (:open|close) animation on %blocks%");
     }
 
     private boolean open;
@@ -35,20 +35,20 @@ public class EffOpenContainerAnimation extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
-        this.open = parseResult.mark == 0;
+        this.open = parseResult.hasTag("open");
         this.blocks = (Expression<Block>) exprs[0];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected void execute(Event e) {
-        for (Block block : this.blocks.getArray(e)) {
-            BlockState blockState = block.getState();
-            if (blockState instanceof Lidded) {
+    protected void execute(Event event) {
+        for (Block block : this.blocks.getArray(event)) {
+            if (block.getState() instanceof Lidded lidded) {
                 if (open) {
-                    ((Lidded) blockState).open();
+                    lidded.open();
                 } else {
-                    ((Lidded) blockState).close();
+                    lidded.close();
                 }
             }
         }
