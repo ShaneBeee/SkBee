@@ -128,7 +128,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
 
     @Override
     public boolean isSingle() {
-        return parse != 1;
+        return parse == 1 && this.blocks.isSingle();
     }
 
     @Override
