@@ -67,7 +67,7 @@ public class SkBee extends JavaPlugin {
         Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", version, (float) (System.currentTimeMillis() - start) / 1000);
 
         // Load custom worlds if enabled in config
-        if (this.beeWorldConfig != null && this.config.AUTO_LOAD_WORLDS) {
+        if (this.beeWorldConfig != null) {
             this.beeWorldConfig.loadCustomWorlds();
         }
         // Looks like we made it after all

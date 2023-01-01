@@ -22,11 +22,13 @@ public class BeeWorldConfig {
     private final SkBee plugin;
     private FileConfiguration worldConfig;
     private File worldConfigFile;
+    private boolean autoLoadWorlds;
 
     private final Map<String, BeeWorldCreator> WORLDS = new HashMap<>();
 
     public BeeWorldConfig(SkBee plugin) {
         this.plugin = plugin;
+        this.autoLoadWorlds = plugin.getPluginConfig().AUTO_LOAD_WORLDS;
         loadConfig();
     }
 
@@ -48,14 +50,15 @@ public class BeeWorldConfig {
                 return;
             }
             Util.log("&6Loading custom worlds...");
+            int loadedWorlds = 0;
             for (String key : keys) {
                 BeeWorldCreator beeWorldCreator = loadWorld(key);
                 if (beeWorldCreator != null) {
                     WORLDS.put(key, beeWorldCreator);
+                    if (beeWorldCreator.isLoaded) loadedWorlds++;
                 }
             }
-            int size = WORLDS.size();
-            Util.log("&aSuccessfully loaded &b%s &acustom world%s", size, size > 1 ? "s" : "");
+            Util.log("&aSuccessfully loaded &b%s &acustom world%s", loadedWorlds, loadedWorlds == 1 ? "" : "s");
         }
     }
 
@@ -98,7 +101,19 @@ public class BeeWorldConfig {
             worldCreator.setKeepSpawnLoaded(worldConfig.getBoolean(path + "keep-spawn-loaded"));
         }
 
+        if (worldConfig.isSet(path + "load-on-start")) {
+            boolean loadOnStart = worldConfig.getBoolean(path + "load-on-start");
+            worldCreator.setLoadOnStart(loadOnStart);
+
+            // return but don't load the world
+            if (!loadOnStart) return worldCreator;
+        } else if (!autoLoadWorlds) {
+            // return but don't load the world
+            return worldCreator;
+        }
+
         if (worldCreator.loadWorld() != null) {
+            worldCreator.isLoaded = true;
             return worldCreator;
         }
         return null;
@@ -122,6 +137,7 @@ public class BeeWorldConfig {
         worldCreator.genStructures.ifPresent(aBoolean -> worldConfig.set(path + "structures", aBoolean));
         worldCreator.hardcore.ifPresent(aBoolean -> worldConfig.set(path + "hardcore", aBoolean));
         worldCreator.keepSpawnLoaded.ifPresent(aBoolean -> worldConfig.set(path + "keep-spawn-loaded", aBoolean));
+        worldCreator.loadOnStart.ifPresent(aBoolean -> worldConfig.set(path + "load-on-start", aBoolean));
 
         save();
     }

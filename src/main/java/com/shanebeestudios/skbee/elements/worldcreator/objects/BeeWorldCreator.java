@@ -25,6 +25,8 @@ public class BeeWorldCreator {
     Optional<Boolean> genStructures;
     Optional<Boolean> hardcore;
     Optional<Boolean> keepSpawnLoaded;
+    Optional<Boolean> loadOnStart = Optional.empty();
+    boolean isLoaded;
     long seed = -1;
 
     private World world;
@@ -116,6 +118,14 @@ public class BeeWorldCreator {
 
     public void setKeepSpawnLoaded(boolean loaded) {
         this.keepSpawnLoaded = Optional.of(loaded);
+    }
+
+    public boolean isLoadOnStart() {
+        return loadOnStart.orElse(true);
+    }
+
+    public void setLoadOnStart(boolean loadOnStart) {
+        this.loadOnStart = Optional.of(loadOnStart);
     }
 
     public World loadWorld() {

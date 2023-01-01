@@ -19,11 +19,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 @Name("World Creator Options")
-@Description("Set different options for world creators. See SkBee wiki for more details.")
+@Description({"Set different options for world creators. See SkBee wiki for more details.",
+        "\nNOTE: 'load on start' will bypass 'auto-load-custom-worlds' in SkBee config."})
 @Examples({"set {_w} to a new world creator named \"my-world\"",
         "set environment of {_w} to nether",
         "set world type of {_w} to flat",
         "set should generate structures of {_w} to true",
+        "set load on start of {_w} to false",
         "load world from creator {_w}"})
 @Since("1.8.0")
 public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCreator, Object> {
@@ -31,7 +33,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
     static {
         register(ExprWorldCreatorOption.class, Object.class,
                 "(0¦environment|1¦world type|2¦world seed|3¦gen[erator] settings|4¦generator" +
-                        "|5¦should gen[erate] structures|6¦[is] hardcore|7¦keep spawn loaded)",
+                        "|5¦should gen[erate] structures|6¦[is] hardcore|7¦keep spawn loaded|8¦load on start)",
                 "worldcreator");
     }
 
@@ -56,6 +58,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
             case 5 -> creator.isGenStructures();
             case 6 -> creator.isHardcore();
             case 7 -> creator.isKeepSpawnLoaded();
+            case 8 -> creator.isLoadOnStart();
             default -> creator.getEnvironment();
         };
     }
@@ -68,7 +71,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
                 case 1 -> CollectionUtils.array(WorldType.class);
                 case 2 -> CollectionUtils.array(Number.class);
                 case 3, 4 -> CollectionUtils.array(String.class);
-                case 5, 6, 7 -> CollectionUtils.array(Boolean.class);
+                case 5, 6, 7, 8 -> CollectionUtils.array(Boolean.class);
                 default -> CollectionUtils.array(Environment.class);
             };
         }
@@ -117,6 +120,10 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
                     creator.setKeepSpawnLoaded((Boolean) object);
                 }
                 break;
+            case 8:
+                if (object instanceof Boolean loadOnStart) {
+                    creator.setLoadOnStart(loadOnStart);
+                }
             default:
                 if (object instanceof Environment) {
                     creator.setEnvironment((Environment) object);
@@ -145,6 +152,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
             case 5 -> "should generate structures";
             case 6 -> "hardcore";
             case 7 -> "keep spawn loaded";
+            case 8 -> "load on start";
             default -> "environment";
         };
     }
