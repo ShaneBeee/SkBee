@@ -39,7 +39,7 @@ public class EffSendBlockDamage extends Effect {
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (!Skript.methodExists(Player.class, "sendBlockDamage", Location.class, Float.class)) {
+        if (!Skript.methodExists(Player.class, "sendBlockDamage", Location.class, float.class)) {
             Skript.error("This effect requires a PaperMC server.");
             return false;
         }
