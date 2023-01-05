@@ -157,7 +157,6 @@ public class Types {
                         @SuppressWarnings("NullableProblems")
                         @Override
                         public @Nullable BarColor parse(String string, ParseContext context) {
-                            string = string.replace("bar ", "");
                             Skript.warning("Please use SkriptColors instead of BarColors, BarColors will be removed in the future.");
                             return BAR_COLOR_ENUM.parse(string);
                         }
