@@ -55,9 +55,21 @@ public class Bound implements ConfigurationSerializable {
         Preconditions.checkArgument(location.getWorld() == location2.getWorld(), "Worlds have to match");
         this.world = location.getWorld().getName();
         this.id = id;
-        Block block1 = location.getBlock();
-        Block block2 = location2.getBlock();
-        this.boundingBox = BoundingBox.of(block1, block2);
+        this.boundingBox = BoundingBox.of(location, location2);
+    }
+
+    /**
+     * Create a new bound between 2 blocks (must be in same world)
+     *
+     * @param block  Block 1
+     * @param block2 Block 2
+     * @param id     ID of this bound
+     */
+    public Bound(Block block, Block block2, String id) {
+        Preconditions.checkArgument(block.getWorld() == block2.getWorld(), "Worlds have to match");
+        this.world = block.getWorld().getName();
+        this.id = id;
+        this.boundingBox = BoundingBox.of(block, block2);
     }
 
     /**

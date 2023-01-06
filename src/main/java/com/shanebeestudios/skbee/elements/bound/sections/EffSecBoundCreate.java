@@ -17,12 +17,13 @@ import ch.njol.skript.util.Getter;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.WorldUtils;
-import com.shanebeestudios.skbee.api.bound.BoundConfig;
-import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.eclipse.jdt.annotation.Nullable;
@@ -33,15 +34,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Name("Bound - Create")
 @Description({"Create a bound within 2 locations. This can be used as an effect and as a section.",
-        "Optional value \"full\" is a bound from min to max height of world."})
+        "\tNote: optional `[full]` will create a bound from min to max height of world.",
+        "\nNOTE: optional `[blocks]` will force the bound to wrap around the block at the greater corner.",
+        "If not using this, the bound will be created at the exact location you input and may exclude blocks."})
 @Examples({"create bound with id \"le-test\" between {_1} and {_2}:",
         "\tset bound value \"le-value\" of event-bound to 52",
         "\tset owner of event-bound to player",
-        "create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
+        "create a new bound with id \"%uuid of player%.home\" within blocks at {loc1} and {loc2}",
+        "create a new bound with id \"%uuid of player%.home\" within blocks {block1} and {block2}",
         "create a full bound with id \"spawn\" between {loc} and location of player"})
 @Since("2.5.3")
 public class EffSecBoundCreate extends EffectSection {
 
+    // Bound event for event-bound in section
     public static class BoundCreateEvent extends Event {
 
         private final Bound bound;
@@ -67,7 +72,8 @@ public class EffSecBoundCreate extends EffectSection {
     static {
         boundConfig = SkBee.getPlugin().getBoundConfig();
         Skript.registerSection(EffSecBoundCreate.class,
-                "create [a] [new] [:full] bound with id %string% (within|between) %location% and %location%");
+                "create [a] [new] [:full] bound with id %string% (within|between) " +
+                        "[:blocks[ at]] %block/location% and %block/location%");
 
         EventValues.registerEventValue(BoundCreateEvent.class, Bound.class, new Getter<>() {
             @Override
@@ -78,20 +84,21 @@ public class EffSecBoundCreate extends EffectSection {
     }
 
     private Expression<String> boundID;
-    private Expression<Location> loc1, loc2;
+    private Expression<Object> loc1, loc2;
     private boolean isFull;
     private Trigger trigger;
+    private boolean blocks;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
         this.boundID = (Expression<String>) exprs[0];
-        this.loc1 = (Expression<Location>) exprs[1];
-        this.loc2 = (Expression<Location>) exprs[2];
+        this.loc1 = (Expression<Object>) exprs[1];
+        this.loc2 = (Expression<Object>) exprs[2];
         this.isFull = parseResult.hasTag("full");
+        this.blocks = parseResult.hasTag("blocks");
         if (sectionNode != null) {
             AtomicBoolean delayed = new AtomicBoolean(false);
-            //Runnable afterLoading = () -> delayed.set(!getParser().getHasDelayBefore().isFalse()); // Skript was using this, maybe in the future?!?!
             trigger = loadCode(sectionNode, "bound create", BoundCreateEvent.class);
             if (delayed.get()) {
                 Skript.error("Delays can't be within a Create Bound section.");
@@ -115,8 +122,23 @@ public class EffSecBoundCreate extends EffectSection {
             return super.walk(event, false);
         }
 
-        Location lesser = this.loc1.getSingle(event);
-        Location greater = this.loc2.getSingle(event);
+        Object loc1 = this.loc1.getSingle(event);
+        Object loc2 = this.loc2.getSingle(event);
+        if (loc1 == null || loc2 == null) return super.walk(event, false);
+
+        Location lesser = null;
+        Location greater = null;
+        if (loc1 instanceof Location loc) {
+            lesser = loc;
+        } else if (loc1 instanceof Block block) {
+            lesser = block.getLocation();
+        }
+        if (loc2 instanceof Location loc) {
+            greater = loc;
+        } else if (loc2 instanceof Block block) {
+            greater = block.getLocation();
+        }
+
         if (lesser == null || greater == null) return super.walk(event, false);
 
         // both locations need to be in the same world
@@ -136,13 +158,18 @@ public class EffSecBoundCreate extends EffectSection {
             // clone to prevent changing original location variables
             lesser = lesser.clone();
             greater = greater.clone();
-            int max = worldG.getMaxHeight() - 1;
+            int max = WorldUtils.getMaxHeight(worldG);
             int min = WorldUtils.getMinHeight(worldG);
 
             lesser.setY(min);
             greater.setY(max);
         }
-        Bound bound = new Bound(lesser, greater, id);
+        Bound bound;
+        if (this.blocks) {
+            bound = new Bound(lesser.getBlock(), greater.getBlock(), id);
+        } else {
+            bound = new Bound(lesser, greater, id);
+        }
         if (bound.getGreaterY() - bound.getLesserY() < 1 ||
                 bound.getGreaterX() - bound.getLesserX() < 1 ||
                 bound.getGreaterZ() - bound.getLesserZ() < 1) {
@@ -164,7 +191,8 @@ public class EffSecBoundCreate extends EffectSection {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String full = this.isFull ? " full " : " ";
-        String create = " between " + loc1.toString(e, d) + " and " + loc2.toString(e, d);
+        String blocks = this.blocks ? " blocks " : "";
+        String create = " within " + blocks + this.loc1.toString(e, d) + " and " + this.loc2.toString(e, d);
         return "create" + full + "bound with id " + this.boundID.toString(e, d) + create;
     }
 
