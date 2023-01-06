@@ -14,12 +14,12 @@ import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import org.bukkit.World;
 import org.bukkit.event.Event;
-import com.shanebeestudios.skbee.elements.bound.objects.Bound;
-import com.shanebeestudios.skbee.elements.bound.objects.Bound.Axis;
-import com.shanebeestudios.skbee.elements.bound.objects.Bound.Corner;
+import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.bound.Bound.Axis;
+import com.shanebeestudios.skbee.api.bound.Bound.Corner;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Bound - Coords")

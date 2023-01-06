@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.bound.objects;
+package com.shanebeestudios.skbee.api.bound;
 
 import com.google.common.base.Preconditions;
 import org.bukkit.Bukkit;
