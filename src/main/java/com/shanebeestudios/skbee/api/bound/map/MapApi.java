@@ -3,7 +3,7 @@ package com.shanebeestudios.skbee.api.bound.map;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.Color;
 
-public interface Map {
+public interface MapApi {
 
     void addMarker(Bound bound);
 

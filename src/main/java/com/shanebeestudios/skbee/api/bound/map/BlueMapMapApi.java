@@ -16,9 +16,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
-class BlueMapMap implements Map {
+class BlueMapMapApi implements MapApi {
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private static Optional<BlueMapAPI> BLUE_API = BlueMapAPI.getInstance();
@@ -33,7 +34,7 @@ class BlueMapMap implements Map {
 
     List<Bound> delayedBounds = new ArrayList<>();
 
-    BlueMapMap() {
+    BlueMapMapApi() {
         // If a bound loads before BlueMap, we will delay the markers
         BlueMapAPI.onEnable(api -> {
             for (Bound delayedBound : delayedBounds) {
@@ -112,7 +113,7 @@ class BlueMapMap implements Map {
         return (ExtrudeMarker) marker;
     }
 
-    private final java.util.Map<String, MarkerSet> markerSets = new HashMap<>();
+    private final Map<String, MarkerSet> markerSets = new HashMap<>();
 
     private MarkerSet getMarkerSet(@NotNull World world) {
         String worldName = world.getName();

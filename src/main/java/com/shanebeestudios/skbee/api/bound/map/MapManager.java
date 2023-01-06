@@ -11,11 +11,11 @@ import org.jetbrains.annotations.Nullable;
 public class MapManager {
 
     @Nullable
-    private static final Map MAP_API;
+    private static final MapApi MAP_API;
 
     static {
         if (Bukkit.getPluginManager().getPlugin("BlueMap") != null) {
-            MAP_API = new BlueMapMap();
+            MAP_API = new BlueMapMapApi();
         } else {
             MAP_API = null;
         }
