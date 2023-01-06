@@ -14,6 +14,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
@@ -134,6 +135,7 @@ public class ExprBoundValue extends SimpleExpression<Object> {
                 bound.clearValues();
             }
         }
+        SkBee.getPlugin().getBoundConfig().saveBound(bound);
     }
 
     @Override
