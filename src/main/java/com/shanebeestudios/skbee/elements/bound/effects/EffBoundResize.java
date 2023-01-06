@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.WorldUtils;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.Location;
@@ -64,6 +65,7 @@ public class EffBoundResize extends Effect {
             loc2.setY(max);
         }
         bound.resize(loc1, loc2);
+        SkBee.getPlugin().getBoundConfig().saveBound(bound);
     }
 
     @Override
