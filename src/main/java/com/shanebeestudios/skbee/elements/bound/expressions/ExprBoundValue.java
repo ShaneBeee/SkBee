@@ -12,12 +12,12 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
-import org.bukkit.Location;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Bound - Values")
 @Description({"Get/set/delete custom values for bounds.",
         "Some objects will be serialized as their type, others will serialize as just a string.",
-        "Numbers/Locations/Booleans/(Offline)Players/Items will be serialized as their type.",
+        "Numbers/Booleans/Locations/[Offline]Players/ItemStacks will be serialized as their type.",
         "Entities will be serialized as a string version of their UUID.",
         "All other objects will be serialized as a string.",
         "All bound values will return a list of the values, all bound keys will return a list of keys for these values.",
@@ -110,13 +110,14 @@ public class ExprBoundValue extends SimpleExpression<Object> {
 
             Object object = delta[0];
             Object changed;
-            if (object instanceof ItemStack || object instanceof Boolean || object instanceof Number ||
-                    object instanceof String || object instanceof Location) {
+            if (object instanceof Boolean || object instanceof Number || object instanceof String) {
                 changed = object;
+            } else if (object instanceof ConfigurationSerializable serializable) {
+                changed = serializable;
             } else if (object instanceof ItemType itemType) {
                 changed = itemType.getRandom();
-            } else if (object instanceof OfflinePlayer offlinePlayer) {
-                changed = offlinePlayer;
+            } else if (object instanceof Slot slot) {
+                changed = slot.getItem();
             } else if (object instanceof Entity entity) {
                 changed = entity.getUniqueId().toString();
             } else if (object != null) {
