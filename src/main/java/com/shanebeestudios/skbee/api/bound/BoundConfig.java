@@ -4,14 +4,17 @@ import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.WorldUtils;
-import com.shanebeestudios.skbee.api.bound.Bound;
+import org.bukkit.Color;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -38,6 +41,8 @@ public class BoundConfig {
             plugin.saveResource("bounds.yml", false);
         }
         boundConfig = YamlConfiguration.loadConfiguration(boundFile);
+        matchConfig();
+        loadConfig();
         loadBounds();
 
         // Update heights for 1.18 worlds
@@ -46,13 +51,56 @@ public class BoundConfig {
         }
     }
 
+    // Used to update config
+    @SuppressWarnings("ConstantConditions")
+    private void matchConfig() {
+        try {
+            boolean hasUpdated = false;
+            InputStream stream = plugin.getResource(boundFile.getName());
+            assert stream != null;
+            InputStreamReader is = new InputStreamReader(stream);
+            YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(is);
+            for (String key : defConfig.getConfigurationSection("").getKeys(true)) {
+                if (!boundConfig.contains(key)) {
+                    boundConfig.set(key, defConfig.get(key));
+                    hasUpdated = true;
+                }
+            }
+            if (hasUpdated)
+                boundConfig.save(boundFile);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    public static String MARKER_SET_LABEL;
+    public static String MARKER_LABEL;
+    @NotNull
+    public static Color MARKER_FILL_COLOR = Color.fromRGB(200, 0, 0);
+    @NotNull
+    public static Color MARKER_LINE_COLOR = Color.fromRGB(255, 0, 0);
+
+    private void loadConfig() {
+        MARKER_SET_LABEL = boundConfig.getString("map.marker-set-label");
+        MARKER_LABEL = boundConfig.getString("map.marker-label");
+        String fillColorString = boundConfig.getString("map.marker-fill-color");
+        if (fillColorString != null) {
+            MARKER_FILL_COLOR = BoundUtils.deserializeColor(fillColorString);
+        }
+        String lineColorString = boundConfig.getString("map.marker-line-color");
+        if (lineColorString != null) {
+            MARKER_LINE_COLOR = BoundUtils.deserializeColor(lineColorString);
+        }
+    }
+
     private void loadBounds() {
         ConfigurationSection section = boundConfig.getConfigurationSection("bounds");
         if (section == null) return;
         for (String key : section.getKeys(true)) {
-            Object bound = section.get(key);
-            if (bound instanceof Bound) {
-                boundsMap.put(key, ((Bound) bound));
+            Object boundObject = section.get(key);
+            if (boundObject instanceof Bound bound) {
+                bound.updateMarker();
+                boundsMap.put(key, bound);
             }
         }
     }
@@ -84,6 +132,7 @@ public class BoundConfig {
     }
 
     public void removeBound(Bound bound) {
+        bound.removeMarker();
         boundsMap.remove(bound.getId());
         boundConfig.set("bounds." + bound.getId(), null);
         saveConfig();

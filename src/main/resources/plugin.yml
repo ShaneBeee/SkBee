@@ -9,6 +9,7 @@ softdepend:
   - Skript
   - FastAsyncWorldEdit
   - skript-variable-dump
+  - BlueMap
 loadbefore:
   - SkQuery
 libraries:

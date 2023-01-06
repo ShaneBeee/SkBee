@@ -1,7 +1,9 @@
 package com.shanebeestudios.skbee.api.bound;
 
 import com.google.common.base.Preconditions;
+import com.shanebeestudios.skbee.api.bound.map.MapManager;
 import org.bukkit.Bukkit;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -10,6 +12,8 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -30,6 +34,10 @@ public class Bound implements ConfigurationSerializable {
     private List<UUID> members = new ArrayList<>();
     private Map<String, Object> values = new HashMap<>();
     private BoundingBox boundingBox;
+
+    // MAP
+    private String label;
+    private Color lineColor,fillColor;
 
     /**
      * Create a new bound in a {@link World} with ID using a {@link BoundingBox}
@@ -56,6 +64,7 @@ public class Bound implements ConfigurationSerializable {
         this.world = location.getWorld().getName();
         this.id = id;
         this.boundingBox = BoundingBox.of(location, location2);
+        updateMarker();
     }
 
     /**
@@ -70,6 +79,15 @@ public class Bound implements ConfigurationSerializable {
         this.world = block.getWorld().getName();
         this.id = id;
         this.boundingBox = BoundingBox.of(block, block2);
+        updateMarker();
+    }
+
+    public void updateMarker() {
+        MapManager.addMarker(this);
+    }
+
+    public void removeMarker() {
+        MapManager.removeMarker(this);
     }
 
     /**
@@ -301,6 +319,46 @@ public class Bound implements ConfigurationSerializable {
 
     public void setId(String id) {
         this.id = id;
+        updateMarker();
+    }
+
+    // MAP STUFF
+    public String getLabel() {
+        if (this.label == null) {
+            return BoundConfig.MARKER_LABEL.replaceAll("<bound>", this.id);
+        }
+        return this.label;
+    }
+
+    public void setLabel(String label) {
+        this.label = label;
+        MapManager.setLabel(this, label);
+    }
+
+    @NotNull
+    public Color getLineColor() {
+        if (this.lineColor == null) {
+            return BoundConfig.MARKER_LINE_COLOR;
+        }
+        return lineColor;
+    }
+
+    public void setLineColor(Color lineColor) {
+        this.lineColor = lineColor;
+        MapManager.setMarkerLineColor(this, lineColor);
+    }
+
+    @NotNull
+    public Color getFillColor() {
+        if (this.fillColor ==  null) {
+            return BoundConfig.MARKER_FILL_COLOR;
+        }
+        return fillColor;
+    }
+
+    public void setFillColor(Color fillColor) {
+        this.fillColor = fillColor;
+        MapManager.setMarkerFillColor(this, fillColor);
     }
 
     public List<UUID> getOwners() {
@@ -402,6 +460,17 @@ public class Bound implements ConfigurationSerializable {
         result.put("members", members);
         result.put("values", values);
 
+        // MAP STUFF
+        if (this.label != null) {
+            result.put("map-label", this.label);
+        }
+        if (this.fillColor != null) {
+            result.put("map-fill-color", BoundUtils.serializeColor(this.fillColor));
+        }
+        if (this.lineColor != null) {
+            result.put("map-line-color", BoundUtils.serializeColor(this.lineColor));
+        }
+
         return result;
     }
 
@@ -452,6 +521,17 @@ public class Bound implements ConfigurationSerializable {
 
         if (args.containsKey("values")) {
             bound.values = (Map<String, Object>) args.get("values");
+        }
+
+        // MAP STUFF
+        if (args.containsKey("map-label")) {
+            bound.label = (String) args.get("map-label");
+        }
+        if (args.containsKey("map-line-color")) {
+            bound.lineColor = BoundUtils.deserializeColor((String)args.get("map-line-color"));
+        }
+        if (args.containsKey("map-fill-color")) {
+            bound.fillColor = BoundUtils.deserializeColor((String)args.get("map-fill-color"));
         }
 
         return bound;

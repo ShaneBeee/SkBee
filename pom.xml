@@ -117,6 +117,12 @@
             <version>3.0.0</version>
             <scope>compile</scope>
         </dependency>
+        <dependency>
+            <groupId>com.github.BlueMap-Minecraft</groupId>
+            <artifactId>BlueMapAPI</artifactId>
+            <version>v2.4.0</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <profiles>
