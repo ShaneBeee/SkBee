@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.bound.map;
 
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.Bukkit;
 import org.bukkit.Color;
@@ -11,13 +12,13 @@ import org.jetbrains.annotations.Nullable;
 public class MapManager {
 
     @Nullable
-    private static final MapApi MAP_API;
+    private static MapApi MAP_API = null;
 
     static {
-        if (Bukkit.getPluginManager().getPlugin("BlueMap") != null) {
-            MAP_API = new BlueMapMapApi();
-        } else {
-            MAP_API = null;
+        if (SkBee.getPlugin().getPluginConfig().ELEMENTS_BOUND_MARKERS) {
+            if (Bukkit.getPluginManager().getPlugin("BlueMap") != null) {
+                MAP_API = new BlueMapMapApi();
+            }
         }
     }
 

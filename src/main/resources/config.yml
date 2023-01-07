@@ -29,6 +29,9 @@ elements:
   # Bounds are like custom world guard regions
   bound: true
 
+  # Enable bound map markers
+  bound-map-markers: true
+
   # Enable structure elements
   structure: true
 

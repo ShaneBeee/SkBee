@@ -23,6 +23,7 @@ public class Config {
     public boolean ELEMENTS_TEAM;
     public boolean ELEMENTS_RECIPE;
     public boolean ELEMENTS_BOUND;
+    public boolean ELEMENTS_BOUND_MARKERS;
     public boolean ELEMENTS_STRUCTURE;
     public boolean ELEMENTS_VIRTUAL_FURNACE;
     public boolean ELEMENTS_TEXT_COMPONENT;
@@ -102,6 +103,7 @@ public class Config {
         this.ELEMENTS_TEAM = getElement("team");
         this.ELEMENTS_RECIPE = getElement("recipe");
         this.ELEMENTS_BOUND = getElement("bound");
+        this.ELEMENTS_BOUND_MARKERS = getElement("bound-map-markers");
         this.ELEMENTS_STRUCTURE = getElement("structure");
         this.ELEMENTS_VIRTUAL_FURNACE = getElement("virtual-furnace");
         this.ELEMENTS_TEXT_COMPONENT = getElement("text-component");
