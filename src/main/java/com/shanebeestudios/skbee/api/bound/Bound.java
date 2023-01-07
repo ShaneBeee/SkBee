@@ -37,6 +37,7 @@ public class Bound implements ConfigurationSerializable {
     // MAP
     private String label;
     private Color lineColor, fillColor;
+    private boolean hidden;
 
     /**
      * Create a new bound in a {@link World} with ID using a {@link BoundingBox}
@@ -360,6 +361,19 @@ public class Bound implements ConfigurationSerializable {
         MapManager.setMarkerFillColor(this, fillColor);
     }
 
+    public boolean isMarkerHidden() {
+        return hidden;
+    }
+
+    public void setMarkerHidden(boolean hidden) {
+        if (this.hidden && !hidden) {
+            MapManager.addMarker(this);
+        } else if (!this.hidden && hidden) {
+            MapManager.removeMarker(this);
+        }
+        this.hidden = hidden;
+    }
+
     public List<UUID> getOwners() {
         return owners;
     }
@@ -470,6 +484,7 @@ public class Bound implements ConfigurationSerializable {
         if (this.lineColor != null) {
             map.put("marker-line-color", BoundUtils.serializeColor(this.lineColor));
         }
+        map.put("marker-hidden", this.hidden);
         result.put("map", map);
 
         return result;
@@ -535,6 +550,9 @@ public class Bound implements ConfigurationSerializable {
             }
             if (map.containsKey("marker-fill-color")) {
                 bound.fillColor = BoundUtils.deserializeColor((String) map.get("marker-fill-color"));
+            }
+            if (map.containsKey("marker-hidden")) {
+                bound.hidden = (boolean) map.get("marker-hidden");
             }
         }
 

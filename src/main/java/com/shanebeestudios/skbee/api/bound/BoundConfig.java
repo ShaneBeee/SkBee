@@ -99,7 +99,9 @@ public class BoundConfig {
         for (String key : section.getKeys(true)) {
             Object boundObject = section.get(key);
             if (boundObject instanceof Bound bound) {
-                bound.updateMarker();
+                if (!bound.isMarkerHidden()) {
+                    bound.updateMarker();
+                }
                 boundsMap.put(key, bound);
             }
         }
