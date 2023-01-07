@@ -17,10 +17,10 @@ import org.jetbrains.annotations.Nullable;
         "If not set, will pull from the default value in the bound config."})
 @Examples("set map marker label of bound with id \"test-bound\" to \"LeTestBound\"")
 @Since("INSERT VERSION")
-public class ExprBoundLabel extends SimplePropertyExpression<Bound, String> {
+public class ExprBoundMapLabel extends SimplePropertyExpression<Bound, String> {
 
     static {
-        register(ExprBoundLabel.class, String.class, "map marker label", "bounds");
+        register(ExprBoundMapLabel.class, String.class, "map marker label", "bounds");
     }
 
     @Override
