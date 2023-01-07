@@ -13,7 +13,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -37,7 +36,7 @@ public class Bound implements ConfigurationSerializable {
 
     // MAP
     private String label;
-    private Color lineColor,fillColor;
+    private Color lineColor, fillColor;
 
     /**
      * Create a new bound in a {@link World} with ID using a {@link BoundingBox}
@@ -350,7 +349,7 @@ public class Bound implements ConfigurationSerializable {
 
     @NotNull
     public Color getFillColor() {
-        if (this.fillColor ==  null) {
+        if (this.fillColor == null) {
             return BoundConfig.MARKER_FILL_COLOR;
         }
         return fillColor;
@@ -461,15 +460,17 @@ public class Bound implements ConfigurationSerializable {
         result.put("values", values);
 
         // MAP STUFF
+        Map<String, Object> map = new HashMap<>();
         if (this.label != null) {
-            result.put("map-label", this.label);
+            map.put("marker-label", this.label);
         }
         if (this.fillColor != null) {
-            result.put("map-fill-color", BoundUtils.serializeColor(this.fillColor));
+            map.put("marker-fill-color", BoundUtils.serializeColor(this.fillColor));
         }
         if (this.lineColor != null) {
-            result.put("map-line-color", BoundUtils.serializeColor(this.lineColor));
+            map.put("marker-line-color", BoundUtils.serializeColor(this.lineColor));
         }
+        result.put("map", map);
 
         return result;
     }
@@ -524,14 +525,17 @@ public class Bound implements ConfigurationSerializable {
         }
 
         // MAP STUFF
-        if (args.containsKey("map-label")) {
-            bound.label = (String) args.get("map-label");
-        }
-        if (args.containsKey("map-line-color")) {
-            bound.lineColor = BoundUtils.deserializeColor((String)args.get("map-line-color"));
-        }
-        if (args.containsKey("map-fill-color")) {
-            bound.fillColor = BoundUtils.deserializeColor((String)args.get("map-fill-color"));
+        if (args.containsKey("map")) {
+            Map<String, Object> map = (Map<String, Object>) args.get("map");
+            if (map.containsKey("marker-label")) {
+                bound.label = (String) map.get("marker-label");
+            }
+            if (map.containsKey("marker-line-color")) {
+                bound.lineColor = BoundUtils.deserializeColor((String) map.get("marker-line-color"));
+            }
+            if (map.containsKey("marker-fill-color")) {
+                bound.fillColor = BoundUtils.deserializeColor((String) map.get("marker-fill-color"));
+            }
         }
 
         return bound;
