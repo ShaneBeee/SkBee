@@ -14,15 +14,15 @@ map:
 
   # The name that will appear on the map for each bound
   # <bound> = ID of the bound
-  marker-label: "Bound: <bound>"
+  marker-label: 'Bound: <bound>'
 
   # The color that fills the marker on the map
   # Represents an RGB color
-  marker-fill-color: "200:0:0"
+  marker-fill-color: '200:0:0'
 
   # The color that outlines the marker on the map
   # Represents an RGB color
-  marker-line-color: "255:0:0"
+  marker-line-color: '255:0:0'
 
 
 # A list of all bounds
