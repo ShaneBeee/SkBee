@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"make last spawned entity look at player",
         "make player look at {loc}",
         "make all players look at {loc}"})
-@Since("INSERT VERSION")
+@Since("2.7.1")
 public class EffLookAt extends Effect {
 
     private static final boolean HAS_METHOD = Skript.methodExists(Mob.class, "lookAt", Location.class);
