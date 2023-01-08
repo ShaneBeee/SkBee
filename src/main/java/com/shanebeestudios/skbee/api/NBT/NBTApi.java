@@ -11,7 +11,6 @@ import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import de.tr7zw.changeme.nbtapi.NBTType;
-import de.tr7zw.changeme.nbtapi.NbtApiException;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -305,13 +304,10 @@ public class NBTApi {
             case NBTTagCompound:
                 if (singleObject instanceof NBTCompound nbt) {
                     compound.removeKey(key);
-                    try {
-                        NBTCompound newCompound = compound.getOrCreateCompound(key);
-                        if (newCompound != null) {
-                            newCompound.mergeCompound(nbt);
-                        }
-                    } catch (NbtApiException ignore) {
-                    }
+                    NBTContainer emptyContainer = new NBTContainer("{}");
+                    NBTCompound keyCompound = emptyContainer.getOrCreateCompound(key);
+                    keyCompound.mergeCompound(nbt);
+                    compound.mergeCompound(emptyContainer);
                 }
             case NBTTagIntList:
                 if (singleObject instanceof Number) {
@@ -417,19 +413,11 @@ public class NBTApi {
             compound.setDouble(key, ((Number) singleObject).doubleValue());
 
         } else if ((type == NBTType.NBTTagCompound || (custom && isSingle)) && singleObject instanceof NBTCompound) {
-            NBTCompound comp;
-            if (custom) {
-                comp = compound.getOrCreateCompound(key);
-            } else {
-                comp = compound.getCompound(key);
-                for (String compKey : comp.getKeys()) {
-                    comp.removeKey(compKey);
-                }
-            }
-            if (comp != null) {
-                comp.mergeCompound(((NBTCompound) singleObject));
-            }
-
+            compound.removeKey(key);
+            NBTContainer emptyContainer = new NBTContainer("{}");
+            NBTCompound keyCompound = emptyContainer.getOrCreateCompound(key);
+            keyCompound.mergeCompound((NBTCompound) singleObject);
+            compound.mergeCompound(emptyContainer);
         } else if (type == NBTType.NBTTagList || (custom && !isSingle && !(object instanceof Integer[]) && !(object instanceof Byte[]))) {
             if (MathUtil.isInt(singleObject)) {
                 NBTList<Integer> list = compound.getIntegerList(key);

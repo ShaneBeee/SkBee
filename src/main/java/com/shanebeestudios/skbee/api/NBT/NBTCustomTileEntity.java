@@ -24,10 +24,6 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
         convert();
     }
 
-    public void updateBlockstate() {
-        blockState.getBlock().getState().update();
-    }
-
     @Override
     public void deleteCustomNBT() {
         getPersistentDataContainer().removeKey(KEY);
@@ -124,4 +120,9 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
         }
     }
 
+    @Override
+    protected void saveCompound() {
+        super.saveCompound();
+        blockState.getBlock().getState().update();
+    }
 }

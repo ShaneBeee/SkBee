@@ -13,7 +13,6 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.NBT.NBTApi;
-import com.shanebeestudios.skbee.api.NBT.NBTCustomTileEntity;
 import com.shanebeestudios.skbee.api.NBT.NBTCustomType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
@@ -104,9 +103,6 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
                 NBTApi.setTag(tag, compound, delta, type);
             } else {
                 NBTApi.setTag(tag, compound, delta);
-            }
-            if (compound instanceof NBTCustomTileEntity) {
-                ((NBTCustomTileEntity) compound).updateBlockstate();
             }
         } else if (mode == ChangeMode.DELETE) {
             NBTApi.deleteTag(tag, compound);
