@@ -31,11 +31,6 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 
     @Override
     public NBTCompound getOrCreateCompound(String name) {
-        return getCompound(name);
-    }
-
-    @Override
-    public NBTCompound getCompound(String name) {
         if (name.equals("custom")) {
             return getPersistentDataContainer().getOrCreateCompound(KEY);
         }
@@ -44,6 +39,14 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
         } catch (NbtApiException ignore) {
             return null;
         }
+    }
+
+    @Override
+    public NBTCompound getCompound(String name) {
+        if (name.equals("custom")) {
+            return getPersistentDataContainer().getOrCreateCompound(KEY);
+        }
+        return super.getCompound(name);
     }
 
     @Override
