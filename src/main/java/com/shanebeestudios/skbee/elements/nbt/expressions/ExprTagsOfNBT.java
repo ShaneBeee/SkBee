@@ -14,6 +14,9 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Comparator;
+import java.util.Locale;
+
 @Name("NBT - Tags")
 @Description("Get all tags of an NBT compound.")
 @Examples({"set {_t::*} to nbt tags of {_n}",
@@ -40,7 +43,8 @@ public class ExprTagsOfNBT extends SimpleExpression<String> {
     protected String[] get(Event event) {
         NBTCompound compound = this.compound.getSingle(event);
         if (compound != null) {
-            return compound.getKeys().toArray(new String[0]);
+            return compound.getKeys().stream().sorted(Comparator.comparing(
+                    key -> key.toLowerCase(Locale.ROOT))).toArray(String[]::new);
         }
         return null;
     }
