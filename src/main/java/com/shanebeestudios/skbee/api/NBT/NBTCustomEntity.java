@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.NBT;
 
+import com.shanebeestudios.skbee.SkBee;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
@@ -30,6 +31,11 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 
     @Override
     public NBTCompound getOrCreateCompound(String name) {
+        return getCompound(name);
+    }
+
+    @Override
+    public NBTCompound getCompound(String name) {
         if (name.equals("custom")) {
             return getPersistentDataContainer().getOrCreateCompound(KEY);
         }
@@ -38,14 +44,6 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
         } catch (NbtApiException ignore) {
             return null;
         }
-    }
-
-    @Override
-    public NBTCompound getCompound(String name) {
-        if (name.equals("custom")) {
-            return getPersistentDataContainer().getOrCreateCompound(KEY);
-        }
-        return super.getCompound(name);
     }
 
     @Override
@@ -78,11 +76,11 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     public String toString() {
         try {
             String bukkit = "BukkitValues";
-            NBTCompound compound = new NBTContainer(new NBTEntity(entity).toString());
+            NBTCompound compound = new NBTContainer(super.toString());
             NBTCompound custom = null;
             if (compound.hasTag(bukkit)) {
                 NBTCompound persist = compound.getCompound(bukkit);
-                persist.removeKey("__nbtapi"); // this is just a placeholder one, so we dont need it
+                persist.removeKey("__nbtapi"); // this is just a placeholder one, so we don't need it
                 if (persist.hasTag(KEY)) {
                     custom = getPersistentDataContainer().getCompound(KEY);
                     persist.removeKey(KEY);
@@ -96,7 +94,10 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
                 customCompound.mergeCompound(custom);
             }
             return compound.toString();
-        } catch (NbtApiException ignore) {
+        } catch (NbtApiException ex) {
+            if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+                ex.printStackTrace();
+            }
             return null;
         }
     }
