@@ -72,7 +72,7 @@ public class ExprTabCompletionArgs extends SimpleExpression<String> {
 
     @Override
     public boolean isSingle() {
-        return true;
+        return this.pattern == 1;
     }
 
     @Override
