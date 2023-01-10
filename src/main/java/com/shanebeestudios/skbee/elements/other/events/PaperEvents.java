@@ -7,8 +7,10 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
 import com.destroystokyo.paper.event.block.BeaconEffectEvent;
+import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
+import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
@@ -173,6 +175,27 @@ public class PaperEvents {
                     .examples("on xp merge:",
                             "\tcancel event")
                     .since("1.8.0");
+        }
+
+        // Entity Add To World Event
+        if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityAddToWorldEvent")) {
+            Skript.registerEvent("Entity Add to World", SimpleEvent.class, EntityAddToWorldEvent.class,
+                    "entity add[ed] to world")
+                    .description("Fired any time an entity is being added to the world for any reason.",
+                            "Not to be confused with entity spawn event. This will fire anytime a chunk is reloaded too. Requires a PaperMC server.")
+                    .examples("on entity added to world:",
+                            "\tdelete event-entity")
+                    .since("INSERT VERSION");
+        }
+
+        // Entity Removed from World Event
+        if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent")) {
+            Skript.registerEvent("Entity Remove from World", SimpleEvent.class, EntityRemoveFromWorldEvent.class,
+                    "entity remove[d] from world")
+                    .description("Fired any time an entity is being removed from a world for any reason. Requires a PaperMC server.")
+                    .examples("on entity removed from world:",
+                            "\tbroadcast \"a lonely %event-entity% left the world.\"")
+                    .since("INSERT VERSION");
         }
 
         // == BLOCK EVENTS == //
