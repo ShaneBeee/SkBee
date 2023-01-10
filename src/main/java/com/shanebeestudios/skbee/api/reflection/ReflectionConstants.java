@@ -4,7 +4,7 @@ import ch.njol.skript.Skript;
 
 public class ReflectionConstants {
 
-    // net.minecraft.nbt.TagVisitor -> visitString
+    // net.minecraft.nbt.TextComponentTagVisitor -> visit(Tag)
     public static String TAG_VISITOR_VISIT_METHOD = get("a", "a", "a");
     // net.minecraft.world.entity.Entity -> noPhysics
     public static String ENTITY_NO_PHYSICS_FIELD = get("P", "Q", "Q");
