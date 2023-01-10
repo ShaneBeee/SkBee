@@ -17,6 +17,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.Particle;
+import org.bukkit.Sound;
 import org.bukkit.block.Biome;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
@@ -36,7 +37,7 @@ import java.util.stream.Collectors;
 @Name("Available Objects")
 @Description({"Get a list of all available materials (will return as an itemtype, but it's a mix of blocks and items),",
         "itemtypes, block types (will return as an item type, but only materials which can be placed as a block), block datas,",
-        "entity types, enchantments, potion effect types, biomes, game rules and particles (SkBee particles)."})
+        "entity types, enchantments, potion effect types, biomes, game rules, particles (SkBee particles) and sounds (as strings)."})
 @Examples({"give player random element of all available itemtypes",
         "set {_blocks::*} to all available blocktypes",
         "set target block to random element of all available blockdatas"})
@@ -54,6 +55,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
     private static final List<Biome> BIOMES = new ArrayList<>();
     private static final List<GameRule<?>> GAME_RULES = new ArrayList<>();
     private static final List<Particle> PARTICLES = new ArrayList<>();
+    private static final List<String> SOUNDS = new ArrayList<>();
 
     static {
         List<Material> materials = Arrays.asList(Material.values());
@@ -116,6 +118,10 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         particles = particles.stream().sorted(Comparator.comparing(ParticleUtil::getName)).collect(Collectors.toList());
         PARTICLES.addAll(particles);
 
+        List<Sound> sounds = Arrays.asList(Sound.values());
+        sounds = sounds.stream().sorted(Comparator.comparing(sound -> sound.getKey().getKey())).collect(Collectors.toList());
+        sounds.forEach(sound -> SOUNDS.add(sound.getKey().getKey()));
+
         Skript.registerExpression(ExprAvailableMaterials.class, Object.class, ExpressionType.SIMPLE,
                 "[all] available materials",
                 "[all] available item[ ]types",
@@ -126,7 +132,8 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
                 "[all] available potion effect types",
                 "[all] available biomes",
                 "[all] available game[ ]rules",
-                "[all] available particles");
+                "[all] available particles",
+                "[all] available sounds");
     }
 
     private int pattern;
@@ -149,6 +156,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
             case 7 -> BIOMES.toArray(new Biome[0]);
             case 8 -> GAME_RULES.toArray(new GameRule[0]);
             case 9 -> PARTICLES.toArray(new Particle[0]);
+            case 10 -> SOUNDS.toArray(new String[0]);
             default -> MATERIALS.toArray(new ItemType[0]);
         };
     }
@@ -168,6 +176,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
             case 7 -> Biome.class;
             case 8 -> GameRule.class;
             case 9 -> Particle.class;
+            case 10 -> String.class;
             default -> ItemType.class;
         };
     }
@@ -184,6 +193,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
             case 7 -> "biomes";
             case 8 -> "game rules";
             case 9 -> "particles";
+            case 10 -> "sounds";
             default -> "materials";
         };
         return "all available " + type;
