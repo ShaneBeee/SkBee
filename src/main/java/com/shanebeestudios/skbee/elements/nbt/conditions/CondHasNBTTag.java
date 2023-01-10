@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.NBT.NBTApi;
+import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;

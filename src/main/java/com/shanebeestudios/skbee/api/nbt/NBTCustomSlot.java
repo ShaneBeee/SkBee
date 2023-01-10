@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.NBT;
+package com.shanebeestudios.skbee.api.nbt;
 
 import ch.njol.skript.util.slot.Slot;
 import de.tr7zw.changeme.nbtapi.NBTItem;

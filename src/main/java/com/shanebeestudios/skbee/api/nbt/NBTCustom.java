@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.NBT;
+package com.shanebeestudios.skbee.api.nbt;
 
 import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.NamespacedKey;

@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.NBT;
+package com.shanebeestudios.skbee.api.nbt;
 
 import ch.njol.util.StringUtils;
 import de.tr7zw.changeme.nbtapi.NBTCompound;

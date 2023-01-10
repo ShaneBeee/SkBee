@@ -5,7 +5,7 @@ import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Version;
 import com.github.goingoffskript.skriptvariabledump.SkriptToYaml;
-import com.shanebeestudios.skbee.api.NBT.NBTApi;
+import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;

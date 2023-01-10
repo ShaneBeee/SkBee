@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.api.listener;
 
-import com.shanebeestudios.skbee.api.NBT.NBTApi;
+import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.block.Block;

@@ -1,26 +1,26 @@
-package com.shanebeestudios.skbee.api.NBT;
+package com.shanebeestudios.skbee.api.nbt;
 
-import com.shanebeestudios.skbee.SkBee;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NBTEntity;
+import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
-import org.bukkit.entity.Entity;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.TileState;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
-public class NBTCustomEntity extends NBTEntity implements NBTCustom {
+public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
 
-    private final Entity entity;
+    private final BlockState blockState;
     private final String KEY = "skbee-custom";
 
     /**
-     * @param entity Any valid Bukkit Entity
+     * @param tile BlockState from any TileEntity
      */
-    public NBTCustomEntity(Entity entity) {
-        super(entity);
-        this.entity = entity;
+    public NBTCustomTileEntity(BlockState tile) {
+        super(tile);
+        this.blockState = tile;
         convert();
     }
 
@@ -61,8 +61,9 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     public void mergeCompound(NBTCompound comp) {
         super.mergeCompound(comp);
         if (comp.hasTag("custom")) {
-            NBTCompound custom = comp.getCompound("custom");
-            getPersistentDataContainer().getOrCreateCompound(KEY).mergeCompound(custom);
+            NBTCompound custom = comp.getOrCreateCompound("custom");
+            NBTCompound customNBT = getPersistentDataContainer().getOrCreateCompound(KEY);
+            customNBT.mergeCompound(custom);
         }
     }
 
@@ -78,12 +79,12 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     @Override
     public String toString() {
         try {
-            String bukkit = "BukkitValues";
-            NBTCompound compound = new NBTContainer(super.toString());
+            String bukkit = "PublicBukkitValues";
+            NBTCompound compound = new NBTContainer(new NBTTileEntity(blockState).toString());
             NBTCompound custom = null;
             if (compound.hasTag(bukkit)) {
                 NBTCompound persist = compound.getCompound(bukkit);
-                persist.removeKey("__nbtapi"); // this is just a placeholder one, so we don't need it
+                persist.removeKey("__nbtapi"); // this is just a placeholder one, so we dont need it
                 if (persist.hasTag(KEY)) {
                     custom = getPersistentDataContainer().getCompound(KEY);
                     persist.removeKey(KEY);
@@ -96,25 +97,32 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
             if (custom != null) {
                 customCompound.mergeCompound(custom);
             }
+            // For some reason block NBT doesn't show location in NBT-API (it does in vanilla MC)
+            compound.setInteger("x", blockState.getX());
+            compound.setInteger("y", blockState.getY());
+            compound.setInteger("z", blockState.getZ());
             return compound.toString();
-        } catch (NbtApiException ex) {
-            if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
-                ex.printStackTrace();
-            }
+        } catch (NbtApiException ignore) {
             return null;
         }
     }
 
     private void convert() {
-        PersistentDataContainer container = entity.getPersistentDataContainer();
+        PersistentDataContainer container = ((TileState) blockState).getPersistentDataContainer();
         if (container.has(OLD_KEY, PersistentDataType.STRING)) {
             String data = container.get(OLD_KEY, PersistentDataType.STRING);
-            NBTCompound custom = getOrCreateCompound("custom");
+            container.remove(OLD_KEY);
             if (data != null) {
+                blockState.update();
+                NBTCompound custom = getOrCreateCompound("custom");
                 custom.mergeCompound(new NBTContainer(data));
             }
-            container.remove(OLD_KEY);
         }
     }
 
+    @Override
+    protected void saveCompound() {
+        super.saveCompound();
+        blockState.getBlock().getState().update();
+    }
 }
