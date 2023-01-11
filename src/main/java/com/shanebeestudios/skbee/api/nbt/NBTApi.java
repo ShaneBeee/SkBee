@@ -291,6 +291,31 @@ public class NBTApi {
                     compound.setIntArray(key, ia);
                 }
                 break;
+            case NBTTagUUID:
+                UUID uuid = null;
+                int[] ints = new int[0];
+                if (singleObject instanceof String string) {
+                    try {
+                        uuid = UUID.fromString(string);
+                    } catch (IllegalArgumentException ignore) {
+                    }
+                } else if (singleObject instanceof UUID u) {
+                    uuid = u;
+                } else if (singleObject instanceof Entity entity) {
+                    uuid = entity.getUniqueId();
+                } else if (singleObject instanceof Number) {
+                    ints = new int[object.length];
+                    for (int i = 0; i < object.length; i++) {
+                        ints[i] = ((Number) object[i]).intValue();
+                    }
+                }
+                if (uuid != null) {
+                    ints = Util.uuidToIntArray(uuid);
+                }
+                if (ints.length > 0) {
+                    compound.setIntArray(key, ints);
+                }
+                break;
             case NBTTagString:
                 if (singleObject instanceof String string) {
                     compound.setString(key, string);
@@ -527,17 +552,19 @@ public class NBTApi {
                 return byteArray;
             }
             case NBTTagIntArray -> {
-                if (compound.getIntArray(tag).length == 4) {
-                    UUID uuid = compound.getUUID(tag);
-                    if (uuid != null) {
-                        return uuid;
-                    }
-                }
                 List<Integer> intArray = new ArrayList<>();
                 for (int i : compound.getIntArray(tag)) {
                     intArray.add(i);
                 }
                 return intArray;
+            }
+            case NBTTagUUID -> {
+                if (compound.getIntArray(tag).length == 4) {
+                    UUID uuid = compound.getUUID(tag);
+                    if (uuid != null) {
+                        return uuid.toString();
+                    }
+                }
             }
             case NBTTagByte -> {
                 return compound.getByte(tag);

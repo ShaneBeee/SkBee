@@ -23,6 +23,7 @@ public enum NBTCustomType {
     NBTTagDouble("double", NBTType.NBTTagDouble),
     NBTTagByteArray("byte array", NBTType.NBTTagByteArray),
     NBTTagIntArray("int array", NBTType.NBTTagIntArray),
+    NBTTagUUID("uuid", NBTType.NBTTagIntArray),
     NBTTagString("string", NBTType.NBTTagString),
     NBTTagCompound("compound", NBTType.NBTTagCompound),
     NBTTagDoubleList("double list", NBTType.NBTTagList),
@@ -32,8 +33,8 @@ public enum NBTCustomType {
     NBTTagCompoundList("compound list", NBTType.NBTTagList),
     NBTTagStringList("string list", NBTType.NBTTagList);
 
-    String name;
-    NBTType nbtType;
+    final String name;
+    final NBTType nbtType;
 
     NBTCustomType(String name, NBTType nbtType) {
         this.name = name + " tag";

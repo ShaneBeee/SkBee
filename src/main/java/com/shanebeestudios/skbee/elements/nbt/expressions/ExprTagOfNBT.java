@@ -24,7 +24,8 @@ import java.util.ArrayList;
 @Name("NBT - Tag")
 @Description({"Get/set/delete the value of the specified tag of an NBT compound. Also supports getting nested tags using a semi colon as a delimiter.",
         "If the return value is a list, you can use it as a list, as it will automatically split it for ya.",
-        "Note: Entities/blocks can not natively hold custom NBT tags. SkBee allows you to put custom nbt",
+        "\nNOTE: `uuid tag` will set an int array tag (This is how MC stores uuids). On return it'll convert back to a uuid.",
+        "\nNOTE: Entities/blocks can not natively hold custom NBT tags. SkBee allows you to put custom nbt",
         "data in the \"custom\" tag of a block/entity's NBT compound. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen.",
         "That said, this system is a tad convoluted, see the SkBee WIKI for more details."})
 @Examples({"set {_tag} to tag \"Invulnerable\" of nbt compound of target entity",
