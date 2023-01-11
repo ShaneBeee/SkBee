@@ -42,10 +42,11 @@ public class ExprTabCompletion extends SimpleExpression<String> {
 
     static {
         Skript.registerExpression(ExprTabCompletion.class, String.class, ExpressionType.SIMPLE,
-                "[skbee] tab completions [(of|for) position %number%]");
+                "[skbee] tab completion[s] [(of|for) (last:last position|position %number%)]");
     }
 
     private Expression<Number> position;
+    private boolean last;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -54,7 +55,8 @@ public class ExprTabCompletion extends SimpleExpression<String> {
             Skript.error("Tab completions are only usable in a tab complete event.", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
-        position = (Expression<Number>) exprs[0];
+        this.position = (Expression<Number>) exprs[0];
+        this.last = parseResult.hasTag("last");
         return true;
     }
 
@@ -86,6 +88,7 @@ public class ExprTabCompletion extends SimpleExpression<String> {
             case SET, ADD -> {
                 String buff = event.getBuffer();
                 String[] buffers = buff.split(" ");
+                if (this.last) position = buffers.length;
                 String last = buff.substring(buff.length() - 1);
                 if ((position == buffers.length && last.equalsIgnoreCase(" ")) ||
                         (position + 1 == buffers.length && !last.equalsIgnoreCase(" "))) {
@@ -137,7 +140,7 @@ public class ExprTabCompletion extends SimpleExpression<String> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String pos = this.position != null ? " for position " + this.position.toString(e, d) : "";
+        String pos = this.last ? " for last position" : this.position != null ? " for position " + this.position.toString(e, d) : "";
         return "tab completions" + pos;
     }
 
