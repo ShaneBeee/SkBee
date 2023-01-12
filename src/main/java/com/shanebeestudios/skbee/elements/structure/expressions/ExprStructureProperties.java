@@ -27,12 +27,15 @@ import org.jetbrains.annotations.Nullable;
         "With 0 removing all blocks and 1 spawning the structure in pristine condition.",
         "Include entities determines if saved entities should be spawned into the structure (true by default).",
         "Size returns a vector offset from the starting point of the structure. This cannot be changed.",
+        "\nNOTE: `reset` will reset the value back to default. (added in v-INSERT VERSION)",
         "Requires MC 1.17.1+"})
 @Examples({"set rotation of {_s} to clockwise 90",
         "set {_r} to rotation of {_s}",
         "set {_v} to size of {_s}",
         "set include entities of structure {_s} to false",
-        "set integrity of structure {_s} to 0.75"})
+        "set integrity of structure {_s} to 0.75",
+        "reset rotation of {_s}",
+        "reset integrity of {_s}"})
 @Since("1.12.0")
 public class ExprStructureProperties extends PropertyExpression<StructureBee, Object> {
 
@@ -74,7 +77,7 @@ public class ExprStructureProperties extends PropertyExpression<StructureBee, Ob
     @Nullable
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) {
+        if (mode == ChangeMode.SET || mode == ChangeMode.RESET) {
             return switch (pattern) {
                 case 0 -> new Class[]{Mirror.class};
                 case 1 -> new Class[]{StructureRotation.class};
@@ -86,17 +89,17 @@ public class ExprStructureProperties extends PropertyExpression<StructureBee, Ob
         return super.acceptChange(mode);
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (mode == ChangeMode.SET) {
-            Object object = delta[0];
+        boolean reset = mode == ChangeMode.RESET;
+        if (mode == ChangeMode.SET || reset) {
             for (StructureBee structure : getExpr().getArray(event)) {
                 switch (pattern) {
-                    case 0 -> structure.setMirror(((Mirror) object));
-                    case 1 -> structure.setRotation(((StructureRotation) object));
+                    case 0 -> structure.setMirror(reset ? Mirror.NONE : (Mirror) delta[0]);
+                    case 1 -> structure.setRotation(reset ? StructureRotation.NONE : (StructureRotation) delta[0]);
                     case 2 -> {
-                        Number num = (Number) object;
+                        Number num = reset ? 1 : (Number) delta[0];
                         float integrity = 1f;
                         if (num != null) {
                             float v = num.floatValue();
@@ -106,7 +109,7 @@ public class ExprStructureProperties extends PropertyExpression<StructureBee, Ob
                         }
                         structure.setIntegrity(integrity);
                     }
-                    case 3 -> structure.setIncludeEntities(((Boolean) object));
+                    case 3 -> structure.setIncludeEntities(reset || (Boolean) delta[0]);
                 }
             }
         }
