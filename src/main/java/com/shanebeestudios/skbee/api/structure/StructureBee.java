@@ -35,7 +35,6 @@ public class StructureBee {
     public StructureBee(Structure structure, NamespacedKey key) {
         this.key = key;
         this.structure = structure;
-
     }
 
     public void fill(Location location, BlockVector blockVector) {
@@ -130,6 +129,17 @@ public class StructureBee {
 
     public BlockVector getSize() {
         return this.structure.getSize();
+    }
+
+    /**
+     * Reset variables in this structure
+     * (including mirror, rotation, integrity and inclusion of entities)
+     */
+    public void reset() {
+        this.mirror = Mirror.NONE;
+        this.rotation = StructureRotation.NONE;
+        this.integrity = 1.0f;
+        this.includeEntities = true;
     }
 
     @Override

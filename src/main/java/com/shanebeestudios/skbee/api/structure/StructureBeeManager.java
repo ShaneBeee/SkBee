@@ -7,7 +7,6 @@ import org.bukkit.structure.Structure;
 import org.bukkit.structure.StructureManager;
 
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 
 public class StructureBeeManager {
@@ -17,7 +16,10 @@ public class StructureBeeManager {
 
     public StructureBee getStructure(String name) {
         if (STRUCTURE_MAP.containsKey(name)) {
-            return STRUCTURE_MAP.get(name);
+            StructureBee structureBee = STRUCTURE_MAP.get(name);
+            // if attempting to load again, reset rotation/mirror
+            structureBee.reset();
+            return structureBee;
         } else {
             NamespacedKey namespacedKey = Util.getNamespacedKey(name, true);
             if (namespacedKey == null) {
