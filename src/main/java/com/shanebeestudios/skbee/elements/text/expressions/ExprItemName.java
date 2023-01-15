@@ -17,10 +17,10 @@ import org.jetbrains.annotations.NotNull;
 @Description("Get/set the component name of an ItemType.")
 @Examples("set component item name of player's tool to translate component of \"item.minecraft.diamond_sword\"")
 @Since("2.4.0")
-public class ExprNameItem extends SimplePropertyExpression<ItemType, BeeComponent> {
+public class ExprItemName extends SimplePropertyExpression<ItemType, BeeComponent> {
 
     static {
-        register(ExprNameItem.class, BeeComponent.class,
+        register(ExprItemName.class, BeeComponent.class,
                 "component item[[ ]type] name", "itemtypes");
     }
 

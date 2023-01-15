@@ -29,10 +29,10 @@ import java.util.List;
 @Description("Get/set the lore of an item using text components.")
 @Examples("set component lore of player's tool to mini message from \"<rainbow>OOO RAINBOW LORE\"")
 @Since("2.4.0")
-public class ExprLore extends SimpleExpression<BeeComponent> {
+public class ExprItemLore extends SimpleExpression<BeeComponent> {
 
     static {
-        Skript.registerExpression(ExprLore.class, BeeComponent.class, ExpressionType.PROPERTY,
+        Skript.registerExpression(ExprItemLore.class, BeeComponent.class, ExpressionType.PROPERTY,
                 "[the] component [item] lore of %itemstack/itemtype/slot%",
                 "%itemstack/itemtype/slot%'[s] component [item] lore");
     }
