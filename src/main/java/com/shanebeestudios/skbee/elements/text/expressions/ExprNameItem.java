@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("Text Component - ItemType Name")
 @Description("Get/set the component name of an ItemType.")
-@Examples("set component name of player's tool to translate component of \"item.minecraft.diamond_sword\"")
+@Examples("set component item name of player's tool to translate component of \"item.minecraft.diamond_sword\"")
 @Since("2.4.0")
 public class ExprNameItem extends SimplePropertyExpression<ItemType, BeeComponent> {
 
