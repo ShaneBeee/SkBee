@@ -22,14 +22,14 @@ import org.jetbrains.annotations.NotNull;
 @Description("Represents the caught entity or hook in a fish event.")
 @Examples({"on fish:",
         "\tif fish state = caught fish:",
-        "\t\tset item of caught entity to diamond"})
+        "\t\tset item of fishing caught entity to diamond"})
 @Since("1.15.2")
 public class ExprFishEventEntity extends SimpleExpression<Entity> {
 
     static {
         Skript.registerExpression(ExprFishEventEntity.class, Entity.class, ExpressionType.SIMPLE,
-                "[fish event] caught entity",
-                "fish [event] hook");
+                "fish[ing] [event] caught entity",
+                "fish[ing] [event] hook");
     }
 
     private int pattern;
