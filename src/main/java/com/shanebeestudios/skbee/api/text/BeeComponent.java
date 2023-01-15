@@ -7,6 +7,8 @@ import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.util.ChatUtil;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -244,12 +246,9 @@ public class BeeComponent {
         return this.component.insertion();
     }
 
-    public void sendMessage(@Nullable Player sender, CommandSender receiver) {
-        if (sender != null) {
-            receiver.sendMessage(sender.identity(), this.component);
-        } else {
-            receiver.sendMessage(this.component);
-        }
+    public void sendMessage(@Nullable Player sender, Audience receiver) {
+        Identity identity = sender != null ? sender.identity() : Identity.nil();
+        receiver.sendMessage(identity, this.component);
     }
 
     public void sendActionBar(CommandSender receiver) {
@@ -257,14 +256,7 @@ public class BeeComponent {
     }
 
     public void broadcast(@Nullable Player sender) {
-        Bukkit.getConsoleSender().sendMessage(this.component);
-        Bukkit.getOnlinePlayers().forEach(player -> {
-            if (sender != null) {
-                player.sendMessage(sender.identity(), this.component);
-            } else {
-                player.sendMessage(this.component);
-            }
-        });
+        sendMessage(sender, Bukkit.getServer());
     }
 
     public void setBlockLine(Block block, int line) {
