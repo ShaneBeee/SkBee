@@ -22,8 +22,8 @@ public enum NBTCustomType {
     NBTTagFloat("float", NBTType.NBTTagFloat),
     NBTTagDouble("double", NBTType.NBTTagDouble),
     NBTTagByteArray("byte array", NBTType.NBTTagByteArray),
-    NBTTagIntArray("int array", NBTType.NBTTagIntArray),
     NBTTagUUID("uuid", NBTType.NBTTagIntArray),
+    NBTTagIntArray("int array", NBTType.NBTTagIntArray),
     NBTTagString("string", NBTType.NBTTagString),
     NBTTagCompound("compound", NBTType.NBTTagCompound),
     NBTTagDoubleList("double list", NBTType.NBTTagList),
@@ -45,8 +45,8 @@ public enum NBTCustomType {
         return name;
     }
 
-    private static final Map<String,NBTCustomType> BY_NAME = new HashMap<>();
-    private static final Map<NBTType,NBTCustomType> BY_TYPE = new HashMap<>();
+    private static final Map<String, NBTCustomType> BY_NAME = new HashMap<>();
+    private static final Map<NBTType, NBTCustomType> BY_TYPE = new HashMap<>();
 
     static {
         for (NBTCustomType type : NBTCustomType.values()) {
