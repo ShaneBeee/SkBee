@@ -11,6 +11,7 @@ import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import de.tr7zw.changeme.nbtapi.NBTType;
+import de.tr7zw.changeme.nbtapi.NbtApiException;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Chunk;
 import org.bukkit.block.Block;
@@ -185,19 +186,6 @@ public class NBTApi {
     }
 
     /**
-     * Get an {@link NBTCompound} from an {@link ItemStack}
-     * <br>
-     * This is used in components, which need to make sure
-     * the NBT-API is available first
-     *
-     * @param itemStack ItemStack to grab NBT from
-     * @return NBT compound from ItemStack
-     */
-    public static NBTCompound getItemStackNBT(ItemStack itemStack) {
-        return NBTItem.convertItemtoNBT(itemStack);
-    }
-
-    /**
      * Delete a tag from an {@link NBTCompound}
      *
      * @param tag         Tag to delete
@@ -310,7 +298,9 @@ public class NBTApi {
                     }
                 }
                 if (uuid != null) {
-                    ints = Util.uuidToIntArray(uuid);
+                    //ints = Util.uuidToIntArray(uuid);
+                    compound.setUUID(key, uuid);
+                    break;
                 }
                 if (ints.length > 0) {
                     compound.setIntArray(key, ints);
@@ -559,11 +549,12 @@ public class NBTApi {
                 return intArray;
             }
             case NBTTagUUID -> {
-                if (compound.getIntArray(tag).length == 4) {
+                try {
                     UUID uuid = compound.getUUID(tag);
                     if (uuid != null) {
                         return uuid.toString();
                     }
+                } catch (NbtApiException ignore) {
                 }
             }
             case NBTTagByte -> {
