@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
         "set {_near} to nearest entity in radius 100 around location(100,100,100,world \"world\")",
         "teleport player to nearest player in radius 10 around player",
         "damage 10 nearest entity in radius 10 around player by 2"})
-@Since("INSERT VERSION")
+@Since("2.7.2")
 @SuppressWarnings("NullableProblems")
 public class ExprNearestEntity extends SimpleExpression<Entity> {
 

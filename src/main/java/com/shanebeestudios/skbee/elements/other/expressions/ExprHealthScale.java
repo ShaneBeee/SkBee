@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
         "add 10 to health scale of player",
         "reset health scale of player",
         "set health scale of (\"BrettPlaysMC\" parsed as offline player) to 0.01"})
-@Since("INSERT VERSION")
+@Since("2.7.2")
 public class ExprHealthScale extends SimplePropertyExpression<Player, Number> {
 
     static {

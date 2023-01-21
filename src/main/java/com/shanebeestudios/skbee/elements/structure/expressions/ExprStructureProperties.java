@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
         "With 0 removing all blocks and 1 spawning the structure in pristine condition.",
         "Include entities determines if saved entities should be spawned into the structure (true by default).",
         "Size returns a vector offset from the starting point of the structure. This cannot be changed.",
-        "\nNOTE: `reset` will reset the value back to default. (added in v-INSERT VERSION)",
+        "\nNOTE: `reset` will reset the value back to default. (added in v-2.7.2)",
         "Requires MC 1.17.1+"})
 @Examples({"set rotation of {_s} to clockwise 90",
         "set {_r} to rotation of {_s}",

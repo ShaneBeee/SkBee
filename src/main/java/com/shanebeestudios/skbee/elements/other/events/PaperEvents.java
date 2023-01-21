@@ -185,7 +185,7 @@ public class PaperEvents {
                             "Not to be confused with entity spawn event. This will fire anytime a chunk is reloaded too. Requires a PaperMC server.")
                     .examples("on entity added to world:",
                             "\tdelete event-entity")
-                    .since("INSERT VERSION");
+                    .since("2.7.2");
         }
 
         // Entity Removed from World Event
@@ -195,7 +195,7 @@ public class PaperEvents {
                     .description("Fired any time an entity is being removed from a world for any reason. Requires a PaperMC server.")
                     .examples("on entity removed from world:",
                             "\tbroadcast \"a lonely %event-entity% left the world.\"")
-                    .since("INSERT VERSION");
+                    .since("2.7.2");
         }
 
         // == BLOCK EVENTS == //
