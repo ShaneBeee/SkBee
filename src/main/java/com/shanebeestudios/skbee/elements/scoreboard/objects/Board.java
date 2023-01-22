@@ -8,12 +8,14 @@ import java.util.List;
 
 public class Board {
 
-    private final FastBoard fastBoard;
+    private final Player player;
+    private FastBoard fastBoard;
     private String title = "";
     private String[] lines;
     private boolean visible = true;
 
     public Board(Player player) {
+        this.player = player;
         this.fastBoard = new FastBoard(player);
         this.lines = new String[15];
     }
@@ -23,6 +25,7 @@ public class Board {
         if (this.title.equals(title)) return;
         this.title = title;
         if (!visible) return;
+        if (this.fastBoard == null) return;
         this.fastBoard.updateTitle(title);
     }
 
@@ -59,12 +62,13 @@ public class Board {
     }
 
     public void hide() {
-        this.fastBoard.updateTitle("");
-        this.fastBoard.updateLines();
         this.visible = false;
+        this.fastBoard.delete();
+        this.fastBoard = null;
     }
 
     public void show() {
+        this.fastBoard = new FastBoard(this.player);
         this.fastBoard.updateTitle(this.title);
         this.visible = true;
         updateLines();
@@ -93,6 +97,7 @@ public class Board {
                 lines.add(line);
             }
         }
+        if (this.fastBoard == null) return;
         fastBoard.updateLines(lines);
     }
 
