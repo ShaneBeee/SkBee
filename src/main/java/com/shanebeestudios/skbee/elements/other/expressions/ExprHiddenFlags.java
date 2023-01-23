@@ -60,6 +60,7 @@ public class ExprHiddenFlags extends SimpleExpression<ItemType> {
         ItemType item = this.itemType.getSingle(event);
         if (item == null) return null;
 
+        item = item.clone();
         ItemMeta meta = item.getItemMeta();
         if (flagType) {
             for (ItemFlag flag : this.itemFlag.getArray(event)) {
