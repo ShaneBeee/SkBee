@@ -21,13 +21,13 @@ See the [**Wiki**](https://github.com/ShaneBeee/SkBee/wiki) for more detailed in
 ## Docs
 [![SkriptHubViewTheDocs](http://skripthub.net/static/addon/ViewTheDocsButton.png)](http://skripthub.net/docs/?addon=SkBee)
 
-## Outdated
-Are you running an outdated version of Minecraft and looking for an outdated build of SkBee that will work on your outdated server? Well look no further, here is a list of outdated builds of SkBee for your outdated server.    
-Keep in mind, these outdated builds are not supported and you will not get support/bug fixes, because they're outdated.
+## <u>Outdated</u>
+Are you running an <u>**outdated**</u> version of Minecraft and looking for an <u>**outdated**</u> build of SkBee that will work on your <u>**outdated**</u> server? Well look no further, here is a list of <u>**outdated**</u> builds of SkBee for your <u>**outdated**</u> server.    
+Keep in mind, these <u>**outdated**</u> builds for <u>**outdated**</u> servers are not supported and you will not get support/bug fixes, because they're <u>**outdated**</u>!
 
-### 1.16.5
+### <u>1.16.5</U>
 [**SkBee 1.15.3**](https://github.com/ShaneBeee/SkBee/releases/tag/1.15.3)
-### 1.15.2
+### <u>1.15.2</U>
 [**SkBee 1.12.4**](https://github.com/ShaneBeee/SkBee/releases/tag/1.12.4)
-### 1.12.2 (and below)
+### <u>1.12.2 (and below)</u>
 [**SkBee 1.10.3**](https://github.com/ShaneBeee/SkBee/releases/tag/1.10.3)
