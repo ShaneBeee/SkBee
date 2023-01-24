@@ -62,7 +62,7 @@ public class Types {
                     .name("Item Flag")
                     .description("Represents the different Item Flags that can be applied to an item.",
                             "NOTE: Underscores aren't required, you CAN use spaces.")
-                    .user(getItemFlagNames())
+                    .usage(getItemFlagNames())
                     .since("2.1.0")
                     .parser(new Parser<>() {
 
