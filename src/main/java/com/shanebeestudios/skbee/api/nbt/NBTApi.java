@@ -579,7 +579,13 @@ public class NBTApi {
                 return null;
             }
             case NBTTagCompound -> {
-                return compound.getOrCreateCompound(tag);
+                if (compound.hasTag(tag)) {
+                    if (compound.getType(tag) == NBTType.NBTTagCompound) {
+                        return compound.getCompound(tag);
+                    }
+                } else {
+                    return compound.getOrCreateCompound(tag);
+                }
             }
             case NBTTagCompoundList -> {
                 return new ArrayList<>(compound.getCompoundList(tag));
