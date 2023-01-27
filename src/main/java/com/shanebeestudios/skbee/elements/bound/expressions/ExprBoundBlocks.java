@@ -28,7 +28,7 @@ public class ExprBoundBlocks extends SimpleExpression<Block> {
 
     static {
         Skript.registerExpression(ExprBoundBlocks.class, Block.class, ExpressionType.SIMPLE,
-                "[(all [[of] the]|the)] blocks within [bound] %bound%");
+                "[(all [[of] the]|the)] blocks within bound %bound%");
     }
 
     private Expression<Bound> bound;
