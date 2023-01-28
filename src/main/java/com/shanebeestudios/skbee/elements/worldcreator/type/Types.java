@@ -12,7 +12,7 @@ public class Types {
 
     static {
         Classes.registerClass(new ClassInfo<>(BeeWorldCreator.class, "worldcreator")
-                .usage("world creator")
+                .user("world ?creators?")
                 .name("World Creator")
                 .description("Used to create new worlds.")
                 .examples("set {_creator} to new world creator named \"my-world\"")
