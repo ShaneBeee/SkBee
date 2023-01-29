@@ -13,6 +13,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 /**
@@ -57,23 +58,42 @@ public class UpdateChecker implements Listener {
         }
     }
 
-    private final SkBee PLUGIN;
+    private final SkBee plugin;
 
     public UpdateChecker(SkBee plugin) {
-        this.PLUGIN = plugin;
+        this.plugin = plugin;
     }
 
     @EventHandler
     private void onJoin(PlayerJoinEvent event) {
-        if (UPDATE_VERSION == null) return;
-
         Player player = event.getPlayer();
         if (!player.hasPermission("skbee.update.check")) return;
 
-        Bukkit.getScheduler().runTaskLater(PLUGIN, bukkitTask -> {
-            Util.sendColMsg(player, "&7[&bSk&3Bee&7] update available: &a" + UPDATE_VERSION);
+        String currentVersion = this.plugin.getDescription().getVersion();
+        CompletableFuture<String> updateVersion = getUpdateVersion(currentVersion);
+
+        Bukkit.getScheduler().runTaskLater(this.plugin, () -> updateVersion.thenApply(version -> {
+            Util.sendColMsg(player, "&7[&bSk&3Bee&7] update available: &a" + version);
             Util.sendColMsg(player, "&7[&bSk&3Bee&7] download at &bhttps://github.com/ShaneBeee/SkBee/releases");
-        }, 60);
+            return true;
+        }), 30);
+    }
+
+    private CompletableFuture<String> getUpdateVersion(String currentVersion) {
+        CompletableFuture<String> future = new CompletableFuture<>();
+        if (UPDATE_VERSION != null) {
+            future.complete(UPDATE_VERSION);
+        } else {
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> getVersion(version -> {
+                if (!version.equalsIgnoreCase(currentVersion)) {
+                    UPDATE_VERSION = currentVersion;
+                    future.complete(version);
+                } else {
+                    future.cancel(true);
+                }
+            }));
+        }
+        return future;
     }
 
 }
