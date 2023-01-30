@@ -22,10 +22,10 @@ import javax.annotation.Nullable;
 @Description({"Set different options for world creators. See SkBee wiki for more details.",
         "\nNOTE: 'load on start' will bypass 'auto-load-custom-worlds' in SkBee config."})
 @Examples({"set {_w} to a new world creator named \"my-world\"",
-        "set environment of {_w} to nether",
-        "set world type of {_w} to flat",
-        "set should generate structures of {_w} to true",
-        "set load on start of {_w} to false",
+        "set environment option of {_w} to nether",
+        "set world type option of {_w} to flat",
+        "set should generate structures option of {_w} to true",
+        "set load on start option of {_w} to false",
         "load world from creator {_w}"})
 @Since("1.8.0")
 public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCreator, Object> {
@@ -33,7 +33,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
     static {
         register(ExprWorldCreatorOption.class, Object.class,
                 "(0¦environment|1¦world type|2¦world seed|3¦gen[erator] settings|4¦generator" +
-                        "|5¦should gen[erate] structures|6¦[is] hardcore|7¦keep spawn loaded|8¦load on start)",
+                        "|5¦should gen[erate] structures|6¦[is] hardcore|7¦keep spawn loaded|8¦load on start) [option]",
                 "worldcreator");
     }
 
@@ -144,7 +144,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
 
     @Override
     protected @NotNull String getPropertyName() {
-        return switch (pattern) {
+        String option = switch (pattern) {
             case 1 -> "world type";
             case 2 -> "seed";
             case 3 -> "generator settings";
@@ -155,6 +155,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
             case 8 -> "load on start";
             default -> "environment";
         };
+        return option + " option";
     }
 
 }
