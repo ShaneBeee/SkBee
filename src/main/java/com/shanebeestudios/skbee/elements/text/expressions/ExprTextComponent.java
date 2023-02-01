@@ -39,8 +39,8 @@ import java.util.List;
         "set {_t} to translate component from player's tool",
         "set {_t} to translate component from \"item.minecraft.milk_bucket\"",
         "set {_death} to translate component from \"death.fell.accident.ladder\" using player's name",
-        "set {_assist} to translate component \"death.fell.assist\" using victim's name and attacker's name",
-        "set {_key} to keybind component \"key.jump\""})
+        "set {_assist} to translate component from \"death.fell.assist\" using victim's name and attacker's name",
+        "set {_key} to keybind component of \"key.jump\""})
 @Since("1.5.0")
 public class ExprTextComponent extends SimpleExpression<BeeComponent> {
     static {
