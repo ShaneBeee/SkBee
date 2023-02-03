@@ -4,8 +4,10 @@ import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
+import org.bukkit.block.data.Bisected;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -22,9 +24,6 @@ public class NBTListener implements Listener {
     // called in Skript is handled before we touch it
     // This way a user can retrieve the nbt before it's deleted
 
-    public NBTListener() {
-    }
-
     // If a player breaks a block with NBT, remove the NBT
     @EventHandler(priority = EventPriority.MONITOR)
     private void onBlockBreak(BlockBreakEvent event) {
@@ -37,13 +36,13 @@ public class NBTListener implements Listener {
     private void onEntityBreakBlock(EntityChangeBlockEvent event) {
         if (event.isCancelled()) return;
         switch (event.getEntity().getType()) {
-            case ENDERMAN: // pickup blocks
-            case ZOMBIE: // break doors
-            case SILVERFISH: // changes block when entering
-            case RABBIT: // breaks carrots
-            case RAVAGER: // tramples blocks
-            case WITHER: // I dunno what they do
-                breakBlock(event.getBlock());
+            // enderman = pickup blocks
+            // zombie = break doors
+            // silverfish = changes block when entering
+            // rabbit = breaks carrots
+            // ravager = tramples blocks
+            // wither = I dunno what they do
+            case ENDERMAN, ZOMBIE, SILVERFISH, RABBIT, RAVAGER, WITHER -> breakBlock(event.getBlock());
         }
     }
 
@@ -75,17 +74,27 @@ public class NBTListener implements Listener {
     }
 
     private void breakBlock(Block block) {
-        BlockState blockState = block.getState();
-        if (blockState instanceof TileState) return;
+        if (block.getState() instanceof TileState) return;
         if (!NBTApi.supportsBlockNBT()) return;
+
         NBTCompound chunkContainer = new NBTChunk(block.getChunk()).getPersistentDataContainer();
 
-        if (chunkContainer.hasKey("blocks")) {
+        if (chunkContainer.hasTag("blocks")) {
             NBTCompound blocksContainer = chunkContainer.getCompound("blocks");
-            String blockKey = String.format("%s_%s_%s", block.getX(), block.getY(), block.getZ());
-            if (blocksContainer.hasKey(blockKey)) {
-                blocksContainer.removeKey(blockKey);
+            removeNBT(blocksContainer, block);
+
+            // Process joined blocks (ie: doors)
+            if (block.getBlockData() instanceof Bisected bisected) {
+                BlockFace face = bisected.getHalf() == Bisected.Half.BOTTOM ? BlockFace.UP : BlockFace.DOWN;
+                removeNBT(blocksContainer, block.getRelative(face));
             }
+        }
+    }
+
+    private void removeNBT(NBTCompound blocksContainer, Block block) {
+        String blockKey = String.format("%s_%s_%s", block.getX(), block.getY(), block.getZ());
+        if (blocksContainer.hasTag(blockKey)) {
+            blocksContainer.removeKey(blockKey);
         }
     }
 
