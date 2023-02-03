@@ -51,23 +51,25 @@ public class Board {
 
     public void deleteLine(int line) {
         setLine(line, null);
-        updateLines();
     }
 
     public void clear() {
         this.title = "";
         this.lines = new String[15];
+        if (this.fastBoard == null) return;
         this.fastBoard.updateTitle("");
         this.fastBoard.updateLines();
     }
 
     public void hide() {
         this.visible = false;
+        if (this.fastBoard == null) return;
         this.fastBoard.delete();
         this.fastBoard = null;
     }
 
     public void show() {
+        if (this.visible) return;
         this.fastBoard = new FastBoard(this.player);
         this.fastBoard.updateTitle(this.title);
         this.visible = true;
