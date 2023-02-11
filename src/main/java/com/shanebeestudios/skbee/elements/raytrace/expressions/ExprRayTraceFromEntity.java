@@ -36,7 +36,7 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
 
     static {
         Skript.registerExpression(ExprRayTraceFromEntity.class, RayTraceResult.class, ExpressionType.COMBINED,
-                "ray[ ]trace from %entities% [with max distance %-number%] [with ray size %-number%]");
+                "ray[ ]trace from %livingentities% [with max distance %-number%] [with ray size %-number%]");
     }
 
     private Expression<LivingEntity> entities;
