@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.util.Experience;
 import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
 import com.destroystokyo.paper.event.block.BeaconEffectEvent;
@@ -23,6 +24,7 @@ import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.Inventory;
@@ -66,11 +68,28 @@ public class PaperEvents {
 
         // Player Pickup XP Event
         if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent")) {
-            Skript.registerEvent("Player Pickup Experience Orb", SimpleEvent.class, PlayerPickupExperienceEvent.class, "player pickup (experience|xp) [orb]")
-                    .description("Fired when a player is attempting to pick up an experience orb. Requires Paper 1.12.2+")
+            Skript.registerEvent("Player Pickup Experience Orb", SimpleEvent.class, PlayerPickupExperienceEvent.class,
+                            "player pickup (experience|xp) [orb]")
+                    .description("Fired when a player is attempting to pick up an experience orb. Requires Paper 1.12.2+",
+                            "\n`event-experience` represents the experience picked up (This is Skript's version of XP).",
+                            "\n`event-entity` represents the experience orb entity.")
                     .examples("on player pickup xp:",
                             "\tadd 10 to level of player")
                     .since("1.8.0");
+
+            EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Experience.class, new Getter<>() {
+                @Override
+                public Experience get(PlayerPickupExperienceEvent event) {
+                    return new Experience(event.getExperienceOrb().getExperience());
+                }
+            }, 0);
+
+            EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Entity.class, new Getter<>() {
+                @Override
+                public Entity get(PlayerPickupExperienceEvent event) {
+                    return event.getExperienceOrb();
+                }
+            }, 0);
         }
 
         // Player Elytra Boost Event
