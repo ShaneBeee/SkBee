@@ -14,7 +14,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
-import org.bukkit.event.player.PlayerFishEvent.State;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
 import org.bukkit.inventory.ItemFlag;
@@ -40,22 +39,6 @@ public class Types {
     }
 
     static {
-        // == TYPES ==
-
-        // Only register if no other addons have registered this class
-        if (Classes.getExactClassInfo(State.class) == null) {
-            EnumUtils<State> FISH_STATE_ENUM = new EnumUtils<>(State.class);
-            Classes.registerClass(new ClassInfo<>(State.class, "fishingstate")
-                    .user("fish(ing)? ?states?")
-                    .name("Fish Event State")
-                    .usage(FISH_STATE_ENUM.getAllNames())
-                    .since("1.15.2")
-                    .parser(FISH_STATE_ENUM.getParser()));
-        } else {
-            Util.logLoading("It looks like another addon registered 'fishingstate' already.");
-            Util.logLoading("You may have to use their fishing states in SkBee's 'Fish Event State' expression.");
-        }
-
         if (Classes.getExactClassInfo(ItemFlag.class) == null) {
             Classes.registerClass(new ClassInfo<>(ItemFlag.class, "itemflag")
                     .user("item ?flags?")

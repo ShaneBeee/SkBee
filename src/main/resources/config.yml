@@ -76,6 +76,9 @@ elements:
   # Enable RayTrace elements
   raytrace: true
 
+  # Enable fishing elements
+  fishing: true
+
 recipe:
   # This is the namespace all recipes will be saved under
   # You can choose whatever you wish
