@@ -21,13 +21,14 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.StonecuttingRecipe;
 import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"NullableProblems"})
+@SuppressWarnings({"NullableProblems", "deprecation"})
 @Name("Recipe - Ingredients of Recipe")
 @Description("Get the ingredients from a recipe. Requires 1.13+")
 @Examples({"set {_ing::*} to ingredients of recipe \"minecraft:diamond_sword\"",
@@ -78,7 +79,7 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
                         if (ingredient == null) continue;
                         items.add(new ItemType(ingredient));
                     }
-                } else if (HAS_COOKING && recipe instanceof CookingRecipe cookingRecipe) {
+                } else if (HAS_COOKING && recipe instanceof CookingRecipe<?> cookingRecipe) {
                     items.add(new ItemType(cookingRecipe.getInput()));
                 } else if (recipe instanceof FurnaceRecipe furnaceRecipe) {
                     items.add(new ItemType(furnaceRecipe.getInput()));
@@ -89,6 +90,9 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
                     }
                 } else if (HAS_STONECUTTING && recipe instanceof StonecuttingRecipe stonecuttingRecipe) {
                     items.add(new ItemType(stonecuttingRecipe.getInput()));
+                } else if (recipe instanceof SmithingRecipe smithingRecipe) {
+                    items.add(new ItemType(smithingRecipe.getBase().getItemStack()));
+                    items.add(new ItemType(smithingRecipe.getAddition().getItemStack()));
                 }
             }
         });
