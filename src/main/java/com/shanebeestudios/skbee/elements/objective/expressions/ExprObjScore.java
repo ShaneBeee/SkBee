@@ -16,30 +16,33 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Objective;
-import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Name("Scoreboard - Objective Score")
-@Description("Get/Set the score of an entity for an objective.")
-@Examples("set score of player for {_objective} to 10")
+@Description("Get/Set the score of an entity/string for an objective.")
+@Examples({"set score of player for {_objective} to 10",
+        "set score of \"le_test\" for {_objective} to 25",
+        "set {_score} to score of target entity for {_objective}",
+        "set {_score} to score of \"le_test\" for {_objective}"})
 @Since("2.6.0")
 public class ExprObjScore extends SimpleExpression<Number> {
 
     static {
         Skript.registerExpression(ExprObjScore.class, Number.class, ExpressionType.COMBINED,
-                "score of %entities% for %objective%");
+                "score of %entities/strings% for %objective%");
     }
 
     private Expression<Objective> objective;
-    private Expression<Entity> entities;
+    private Expression<?> entries;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.entities = (Expression<Entity>) exprs[0];
+        this.entries = exprs[0];
         this.objective = (Expression<Objective>) exprs[1];
         return true;
     }
@@ -50,8 +53,8 @@ public class ExprObjScore extends SimpleExpression<Number> {
         List<Number> scores = new ArrayList<>();
         Objective objective = this.objective.getSingle(event);
         if (objective != null) {
-            for (Entity entity : this.entities.getArray(event)) {
-                scores.add(getScore(objective, entity));
+            for (Object entry : this.entries.getArray(event)) {
+                scores.add(getScore(objective, entry));
             }
         }
         return scores.toArray(new Number[0]);
@@ -74,40 +77,49 @@ public class ExprObjScore extends SimpleExpression<Number> {
 
         if (delta[0] instanceof Number number) {
             int changeValue = number.intValue();
-            for (Entity entity : this.entities.getArray(event)) {
-                int oldScore = getScore(objective, entity);
+            for (Object entry : this.entries.getArray(event)) {
+                int oldScore = getScore(objective, entry);
                 switch (mode) {
-                    case SET -> setScore(objective, entity, changeValue);
-                    case ADD -> setScore(objective, entity, oldScore + changeValue);
-                    case REMOVE -> setScore(objective, entity, oldScore - changeValue);
+                    case SET -> setScore(objective, entry, changeValue);
+                    case ADD -> setScore(objective, entry, oldScore + changeValue);
+                    case REMOVE -> setScore(objective, entry, oldScore - changeValue);
                 }
             }
         }
     }
 
-    private int getScore(Objective objective, Entity entity) {
-        String entry;
-        if (entity instanceof Player player) {
-            entry = player.getName();
-        } else {
-            entry = entity.getUniqueId().toString();
+    private int getScore(Objective objective, Object entry) {
+        String stringEntiry = null;
+        if (entry instanceof Player player) {
+            stringEntiry = player.getName();
+        } else if (entry instanceof Entity entity) {
+            stringEntiry = entity.getUniqueId().toString();
+        } else if (entry instanceof String string) {
+            stringEntiry = string;
         }
-        return objective.getScore(entry).getScore();
+        if (stringEntiry != null) {
+            return objective.getScore(stringEntiry).getScore();
+        }
+        return 0;
     }
 
-    private void setScore(Objective objective, Entity entity, int score) {
-        String entry;
-        if (entity instanceof Player player) {
-            entry = player.getName();
-        } else {
-            entry = entity.getUniqueId().toString();
+    private void setScore(Objective objective, Object entry, int score) {
+        String stringEntiry = null;
+        if (entry instanceof Player player) {
+            stringEntiry = player.getName();
+        } else if (entry instanceof Entity entity) {
+            stringEntiry = entity.getUniqueId().toString();
+        } else if (entry instanceof String string) {
+            stringEntiry = string;
         }
-        objective.getScore(entry).setScore(score);
+        if (stringEntiry != null) {
+            objective.getScore(stringEntiry).setScore(score);
+        }
     }
 
     @Override
     public boolean isSingle() {
-        return false;
+        return this.entries.isSingle();
     }
 
     @Override
@@ -117,8 +129,8 @@ public class ExprObjScore extends SimpleExpression<Number> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "score of entities " + this.entities.toString(e,d) +
-                " for objective " + this.objective.toString(e,d);
+        return "score of entities/strings " + this.entries.toString(e, d) +
+                " for objective " + this.objective.toString(e, d);
     }
 
 }
