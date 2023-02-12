@@ -72,6 +72,7 @@ public class PaperEvents {
                             "player pickup (experience|xp) [orb]")
                     .description("Fired when a player is attempting to pick up an experience orb. Requires Paper 1.12.2+",
                             "\n`event-experience` represents the experience picked up (This is Skript's version of XP).",
+                            "\n`event-number` represents the experience picked up as a number.",
                             "\n`event-entity` represents the experience orb entity.")
                     .examples("on player pickup xp:",
                             "\tadd 10 to level of player")
@@ -81,6 +82,13 @@ public class PaperEvents {
                 @Override
                 public Experience get(PlayerPickupExperienceEvent event) {
                     return new Experience(event.getExperienceOrb().getExperience());
+                }
+            }, 0);
+
+            EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Number.class, new Getter<>() {
+                @Override
+                public Number get(PlayerPickupExperienceEvent event) {
+                    return event.getExperienceOrb().getExperience();
                 }
             }, 0);
 
