@@ -89,6 +89,7 @@ public class Board {
     }
 
     public void deleteFastboard() {
+        if (this.fastBoard == null) return;
         this.fastBoard.delete();
     }
 
