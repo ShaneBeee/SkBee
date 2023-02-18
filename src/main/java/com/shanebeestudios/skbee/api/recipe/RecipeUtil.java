@@ -127,7 +127,8 @@ public class RecipeUtil {
         }
 
         String[] shape = recipe.getShape();
-        String grid = " - &7Shape: &r[&d%s&r]&7, &r[&d%s&r]";
+        String grid = " - &7Shape: &r[&d%s&r]&7";
+        if (shape.length > 1) grid += "&7, &r[&d%s&r]";
         if (shape.length > 2) grid += "&7, &r[&d%s&r]";
         log(grid, shape);
         log(" - &7Ingredients:");
