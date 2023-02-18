@@ -24,6 +24,9 @@ import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @SuppressWarnings({"NullableProblems", "ConstantConditions"})
 @Name("Recipe - Shaped/Shapeless")
 @Description({"Register a new shaped/shapeless recipe for a specific item using custom ingredients.",
@@ -128,11 +131,22 @@ public class EffCraftingRecipe extends Effect {
             String one = "" + keyChar[0] + keyChar[1] + keyChar[2];
             String two = "" + keyChar[3] + keyChar[4] + keyChar[5];
             String thr = "" + keyChar[6] + keyChar[7] + keyChar[8];
-            recipe.shape(one, two, thr);
+
+            // Only register a row if it has a key in it
+            List<String> shape = new ArrayList<>();
+            if (!one.equalsIgnoreCase("   ")) shape.add(one);
+            if (!two.equalsIgnoreCase("   ")) shape.add(two);
+            if (!thr.equalsIgnoreCase("   ")) shape.add(thr);
+            recipe.shape(shape.toArray(new String[0]));
         } else {
             String one = "" + keyChar[0] + keyChar[1];
             String two = "" + keyChar[2] + keyChar[3];
-            recipe.shape(one, two);
+
+            // Only register a row if it has a key in it
+            List<String> shape = new ArrayList<>();
+            if (!one.equalsIgnoreCase("  ")) shape.add(one);
+            if (!two.equalsIgnoreCase("  ")) shape.add(two);
+            recipe.shape(shape.toArray(new String[0]));
         }
 
         for (int i = 0; i < ingredients.length; i++) {
