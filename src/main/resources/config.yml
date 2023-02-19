@@ -13,6 +13,20 @@ elements:
   # Enable NBT elements
   nbt: true
 
+  # Enable different event listeners for NBT
+  nbt-events:
+    # Whether breaking a block should remove NBT
+    block-break: true
+    # Whether pistons pushing blocks should remove NBT
+    piston-extend: true
+    # Whether an entity changing a block should remove NBT
+    # Examples would be rabbit breaking carrots or enderman picking up blocks
+    entity-change-block: true
+    # Whether a block exploding should remove NBT
+    block-explode: true
+    # Whether an entity exploding should remove NBT from broken blocks
+    entity-explode: true
+
   # Enable Scoreboard elements
   scoreboard: true
 

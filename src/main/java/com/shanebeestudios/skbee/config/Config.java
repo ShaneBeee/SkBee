@@ -18,6 +18,11 @@ public class Config {
     public boolean SETTINGS_DEBUG;
     public boolean SETTINGS_UPDATE_CHECKER;
     public boolean ELEMENTS_NBT;
+    public boolean ELEMENTS_NBT_EVENTS_BREAK_BLOCK;
+    public boolean ELEMENTS_NBT_EVENTS_PISTON_EXTEND;
+    public boolean ELEMENTS_NBT_EVENTS_ENTITY_CHANGE_BLOCK;
+    public boolean ELEMENTS_NBT_EVENTS_ENTITY_EXPLODE;
+    public boolean ELEMENTS_NBT_EVENTS_BLOCK_EXPLODE;
     public boolean ELEMENTS_BOARD;
     public boolean ELEMENTS_OBJECTIVE;
     public boolean ELEMENTS_TEAM;
@@ -94,10 +99,19 @@ public class Config {
         return this.config.getBoolean("settings." + setting);
     }
 
+    private boolean getNBTEvent(String nbtEvent) {
+        return this.config.getBoolean("elements.nbt-events." + nbtEvent);
+    }
+
     private void loadConfigs() {
         this.SETTINGS_DEBUG = getSetting("debug");
         this.SETTINGS_UPDATE_CHECKER = getSetting("update-checker");
         this.ELEMENTS_NBT = getElement("nbt");
+        this.ELEMENTS_NBT_EVENTS_BREAK_BLOCK = getNBTEvent("block-break");
+        this.ELEMENTS_NBT_EVENTS_PISTON_EXTEND = getNBTEvent("piston-extend");
+        this.ELEMENTS_NBT_EVENTS_ENTITY_CHANGE_BLOCK = getNBTEvent("entity-change-block");
+        this.ELEMENTS_NBT_EVENTS_ENTITY_EXPLODE = getNBTEvent("entity-explode");
+        this.ELEMENTS_NBT_EVENTS_BLOCK_EXPLODE = getNBTEvent("block-explode");
         this.ELEMENTS_BOARD = getElement("scoreboard");
         this.ELEMENTS_OBJECTIVE = getElement("scoreboard-objective");
         this.ELEMENTS_TEAM = getElement("team");

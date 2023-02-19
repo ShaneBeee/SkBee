@@ -137,7 +137,7 @@ public class AddonLoader {
                 SkriptToYaml.adapts(NBTContainer.class, (compound, map) -> map.put("nbt-compound", compound.toString()));
             }
             if (NBTApi.supportsBlockNBT()) {
-                pluginManager.registerEvents(new NBTListener(), this.plugin);
+                pluginManager.registerEvents(new NBTListener(this.plugin.getPluginConfig()), this.plugin);
             }
             Util.logLoading("&5NBT Elements &asuccessfully loaded");
         } catch (IOException ex) {

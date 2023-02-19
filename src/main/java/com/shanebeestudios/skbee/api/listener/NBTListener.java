@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.listener;
 
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.config.Config;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.block.Block;
@@ -19,6 +20,20 @@ import org.bukkit.event.entity.EntityExplodeEvent;
 
 public class NBTListener implements Listener {
 
+    private final boolean BREAK_BLOCK;
+    private final boolean PISTON_EXTEND;
+    private final boolean ENTITY_CHANGE;
+    private final boolean ENTITY_EXPLODE;
+    private final boolean BLOCK_EXPLODE;
+
+    public NBTListener(Config config) {
+        this.BREAK_BLOCK = config.ELEMENTS_NBT_EVENTS_BREAK_BLOCK;
+        this.PISTON_EXTEND = config.ELEMENTS_NBT_EVENTS_PISTON_EXTEND;
+        this.ENTITY_CHANGE = config.ELEMENTS_NBT_EVENTS_ENTITY_CHANGE_BLOCK;
+        this.ENTITY_EXPLODE = config.ELEMENTS_NBT_EVENTS_ENTITY_EXPLODE;
+        this.BLOCK_EXPLODE = config.ELEMENTS_NBT_EVENTS_BLOCK_EXPLODE;
+    }
+
     // Note regarding event priority:
     // We use EventPriority.MONITOR, to make sure any event
     // called in Skript is handled before we touch it
@@ -27,6 +42,7 @@ public class NBTListener implements Listener {
     // If a player breaks a block with NBT, remove the NBT
     @EventHandler(priority = EventPriority.MONITOR)
     private void onBlockBreak(BlockBreakEvent event) {
+        if (!this.BREAK_BLOCK) return;
         if (event.isCancelled()) return;
         breakBlock(event.getBlock());
     }
@@ -34,6 +50,7 @@ public class NBTListener implements Listener {
     // If an entity breaks a block with NBT, remove the NBT
     @EventHandler(priority = EventPriority.MONITOR)
     private void onEntityBreakBlock(EntityChangeBlockEvent event) {
+        if (!this.ENTITY_CHANGE) return;
         if (event.isCancelled()) return;
         switch (event.getEntity().getType()) {
             // enderman = pickup blocks
@@ -49,6 +66,7 @@ public class NBTListener implements Listener {
     // If a block explodes, remove NBT from the exploded blocks
     @EventHandler(priority = EventPriority.MONITOR)
     private void onExplode(BlockExplodeEvent event) {
+        if (!this.BLOCK_EXPLODE) return;
         if (event.isCancelled()) return;
         event.blockList().forEach(this::breakBlock);
     }
@@ -56,6 +74,7 @@ public class NBTListener implements Listener {
     // If an entity explodes, remove NBT from the exploded blocks
     @EventHandler(priority = EventPriority.MONITOR)
     private void onEntityExplode(EntityExplodeEvent event) {
+        if (!this.ENTITY_EXPLODE) return;
         if (event.isCancelled()) return;
         event.blockList().forEach(this::breakBlock);
     }
@@ -63,6 +82,7 @@ public class NBTListener implements Listener {
     // If a piston moves a block with NBT, we remove the NBT
     @EventHandler(priority = EventPriority.MONITOR)
     private void onPistonPush(BlockPistonExtendEvent event) {
+        if (!this.PISTON_EXTEND) return;
         if (event.isCancelled()) return;
         Block piston = event.getBlock();
         BlockState blockState = piston.getState();
