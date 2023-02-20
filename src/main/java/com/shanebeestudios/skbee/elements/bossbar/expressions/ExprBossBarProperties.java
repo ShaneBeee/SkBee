@@ -43,7 +43,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
     static {
         Skript.registerExpression(ExprBossBarProperties.class, Object.class, ExpressionType.COMBINED,
                 "[boss[ ]]bar players of %bossbar%",
-                "[boss[ ]]bar color of %bossbar%",
+                "[boss[ ]]bar (color|colour) of %bossbar%",
                 "[boss[ ]]bar style of %bossbar%",
                 "[boss[ ]]bar title of %bossbar%",
                 "[boss[ ]]bar progress of %bossbar%",
