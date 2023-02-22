@@ -19,6 +19,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("Merchant Recipe - Create")
 @Description({"Create a merchant recipe.",
+        "\nNOTE: You will need to use the merchant recipe ingredients expression to add ingredients.",
         "\nmax uses = A trade has a maximum number of uses. A Villager may periodically replenish it's trades",
         "by resetting the uses of it's merchant recipes to 0, allowing them to be used again.",
         "\nexperience reward = A trade may or may not reward experience for being completed.",

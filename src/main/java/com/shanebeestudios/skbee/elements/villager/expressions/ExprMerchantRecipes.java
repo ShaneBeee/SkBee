@@ -19,7 +19,6 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 @Name("Merchant - Recipes")
@@ -49,7 +48,7 @@ public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "PatternVariableHidesField"})
     @Override
     protected @Nullable MerchantRecipe[] get(Event event) {
         if (this.merchant.getSingle(event) instanceof Merchant merchant) {
@@ -83,23 +82,27 @@ public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
+    @SuppressWarnings({"NullableProblems", "ConstantConditions", "PatternVariableHidesField"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (this.merchant.getSingle(event) instanceof Merchant merchant) {
             if (all) {
                 MerchantRecipe[] recipes = delta != null ? ((MerchantRecipe[]) delta) : null;
+                List<MerchantRecipe> newRecipes = new ArrayList<>();
+                for (MerchantRecipe recipe : recipes) {
+                    if (recipe.getIngredients().size() > 0) newRecipes.add(recipe);
+                }
                 if (mode == ChangeMode.SET) {
-                    List<MerchantRecipe> recipesList = new ArrayList<>(Arrays.asList(recipes));
-                    merchant.setRecipes(recipesList);
+                    merchant.setRecipes(newRecipes);
                 } else if (mode == ChangeMode.DELETE) {
                     merchant.setRecipes(new ArrayList<>());
                 } else if (mode == ChangeMode.ADD) {
                     List<MerchantRecipe> merchantRecipes = new ArrayList<>(merchant.getRecipes());
-                    merchantRecipes.addAll(Arrays.asList(recipes));
+                    merchantRecipes.addAll(newRecipes);
                     merchant.setRecipes(merchantRecipes);
                 }
             } else if (delta[0] instanceof MerchantRecipe merchantRecipe) {
+                if (merchantRecipe.getIngredients().size() == 0) return;
                 int recipe = this.recipe.getSingle(event).intValue() - 1;
                 if (recipe < 0) recipe = 0;
                 if (recipe >= merchant.getRecipeCount()) {
