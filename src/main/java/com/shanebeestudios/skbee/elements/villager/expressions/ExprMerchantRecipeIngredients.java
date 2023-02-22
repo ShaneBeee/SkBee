@@ -79,9 +79,11 @@ public class ExprMerchantRecipeIngredients extends SimpleExpression<ItemType> {
         if (recipe == null || mode != ChangeMode.SET) return;
 
         List<ItemStack> stacks = new ArrayList<>();
-        for (ItemType item : (ItemType[]) delta) {
-            if (stacks.size() <= 1) { // Recipe only accepts 2 ingredients
-                stacks.add(item.getRandom());
+        for (Object object : delta) {
+            if (object instanceof ItemType itemType) {
+                if (stacks.size() <= 1) { // Recipe only accepts 2 ingredients
+                    stacks.add(itemType.getRandom());
+                }
             }
         }
         recipe.setIngredients(stacks);
@@ -89,7 +91,7 @@ public class ExprMerchantRecipeIngredients extends SimpleExpression<ItemType> {
 
     @Override
     public boolean isSingle() {
-        return false;
+        return this.pattern == 1;
     }
 
     @Override
