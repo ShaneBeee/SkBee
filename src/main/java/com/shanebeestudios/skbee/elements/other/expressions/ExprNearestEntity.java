@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -25,7 +26,8 @@ import java.util.stream.Collectors;
 
 @Name("Nearest Entity")
 @Description({"Returns the nearest entity around a location/entity.",
-        "\nNOTE: When using `around entity`, this will exclude that entity in the search."})
+        "\nNOTE: When using `around entity`, this will exclude that entity in the search.",
+        "\nNOTE: When radius is excluded, the distance will default to Skript's `maximum target block distance`."})
 @Examples({"kill nearest player in radius 10 around player",
         "damage nearest mob in radius 5 around player",
         "set {_near} to nearest entity in radius 50 around {_loc}",
@@ -36,9 +38,11 @@ import java.util.stream.Collectors;
 @SuppressWarnings("NullableProblems")
 public class ExprNearestEntity extends SimpleExpression<Entity> {
 
+    private static final int MAX_TARGET_BLOCK_DISTANCE = SkriptConfig.maxTargetBlockDistance.value();
+
     static {
         Skript.registerExpression(ExprNearestEntity.class, Entity.class, ExpressionType.COMBINED,
-                "[num:%number%] nearest %entitydata% in radius %number% (of|around) %location/entity%");
+                "[num:%number%] nearest %entitydata% [in radius %-number%] (at|of|around) %location/entity%");
     }
 
     private Expression<Number> number;
@@ -62,7 +66,7 @@ public class ExprNearestEntity extends SimpleExpression<Entity> {
     protected @Nullable Entity[] get(Event event) {
         Number number = this.number.getSingle(event);
         EntityData<?> entityData = this.entityData.getSingle(event);
-        Number radius = this.radius.getSingle(event);
+        Number radius = this.radius != null ? this.radius.getSingle(event) : MAX_TARGET_BLOCK_DISTANCE;
         Object object = this.location.getSingle(event);
         if (number == null || entityData == null || radius == null || object == null) return null;
         double rad = radius.doubleValue();
