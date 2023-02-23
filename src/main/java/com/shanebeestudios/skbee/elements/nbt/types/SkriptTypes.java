@@ -30,18 +30,17 @@ public class SkriptTypes {
             return null;
         }
 
+        @SuppressWarnings("ResultOfMethodCallIgnored")
         @Override
         public void change(NBTCompound[] what, @Nullable Object[] delta, ChangeMode mode) {
-            if (delta[0] instanceof NBTCompound changer) {
-                if (mode == ChangeMode.ADD) {
-                    for (NBTCompound nbtCompound : what) {
-                        nbtCompound.mergeCompound(changer);
-                    }
-                } else if (mode == ChangeMode.DELETE) {
-                    for (NBTCompound nbtCompound : what) {
-                        if (nbtCompound instanceof NBTFile nbtFile) {
-                            nbtFile.getFile().delete();
-                        }
+            if (mode == ChangeMode.ADD && delta[0] instanceof NBTCompound changer) {
+                for (NBTCompound nbtCompound : what) {
+                    nbtCompound.mergeCompound(changer);
+                }
+            } else if (mode == ChangeMode.DELETE) {
+                for (NBTCompound nbtCompound : what) {
+                    if (nbtCompound instanceof NBTFile nbtFile) {
+                        nbtFile.getFile().delete();
                     }
                 }
             }
