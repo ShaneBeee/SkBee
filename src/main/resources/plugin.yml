@@ -5,10 +5,8 @@ description: "A simple Skript addon to help customize your server to the fullest
 api-version: '1.13'
 author: ShaneBee
 website: https://github.com/ShaneBeee/SkBee
-softdepend:
+depend:
   - Skript
-  - FastAsyncWorldEdit
-  - skript-variable-dump
 loadbefore:
   - SkQuery
 libraries:

@@ -4,11 +4,10 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Version;
-import com.github.goingoffskript.skriptvariabledump.SkriptToYaml;
-import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
+import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
@@ -19,7 +18,6 @@ import com.shanebeestudios.skbee.elements.scoreboard.objects.BoardManager;
 import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
@@ -131,11 +129,6 @@ public class AddonLoader {
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.nbt");
-            // Allow for serializing NBT compounds via 'skript-variable-dump'
-            Plugin plugin = Bukkit.getPluginManager().getPlugin("skript-variable-dump");
-            if (plugin != null && Skript.classExists("com.github.goingoffskript.skriptvariabledump.SkriptToYaml")) {
-                SkriptToYaml.adapts(NBTContainer.class, (compound, map) -> map.put("nbt-compound", compound.toString()));
-            }
             if (NBTApi.supportsBlockNBT()) {
                 pluginManager.registerEvents(new NBTListener(this.plugin.getPluginConfig()), this.plugin);
             }
