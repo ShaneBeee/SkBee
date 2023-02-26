@@ -24,10 +24,10 @@ public class SkriptTypes {
         @Nullable
         @Override
         public Class<?>[] acceptChange(ChangeMode mode) {
-            if (mode == ChangeMode.ADD || mode == ChangeMode.DELETE) {
-                return CollectionUtils.array(NBTCompound.class);
-            }
-            return null;
+            return switch (mode) {
+                case ADD,DELETE -> CollectionUtils.array(NBTCompound.class);
+                default -> null;
+            };
         }
 
         @SuppressWarnings("ResultOfMethodCallIgnored")
