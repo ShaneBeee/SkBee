@@ -120,7 +120,7 @@ public class PaperEvents {
             Skript.registerEvent("Player Stop Using Item", SimpleEvent.class, PlayerStopUsingItemEvent.class, "[player] stop using item")
                     .description("Called when the server detects a player stopping using an item.",
                             "Examples of this are letting go of the interact button when holding a bow, an edible item, or a spyglass.",
-                            "event-number is the number of ticks the item was held for. Requires Paper (not sure which version).")
+                            "event-number is the number of ticks the item was held for. Requires Paper 1.18+.")
                     .examples("on player stop using item:",
                             "\tif event-item is a spyglass:",
                             "\t\tkill player")
