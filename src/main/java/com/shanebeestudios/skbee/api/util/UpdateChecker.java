@@ -86,7 +86,7 @@ public class UpdateChecker implements Listener {
         } else {
             Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> getVersion(version -> {
                 if (!version.equalsIgnoreCase(currentVersion)) {
-                    UPDATE_VERSION = currentVersion;
+                    UPDATE_VERSION = version;
                     future.complete(version);
                 } else {
                     future.cancel(true);
