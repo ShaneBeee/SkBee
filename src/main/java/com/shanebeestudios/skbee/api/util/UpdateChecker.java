@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.util;
 
+import ch.njol.skript.util.Version;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.shanebeestudios.skbee.SkBee;
@@ -21,28 +22,26 @@ import java.util.function.Consumer;
  */
 public class UpdateChecker implements Listener {
 
-    private static String UPDATE_VERSION;
+    private static Version UPDATE_VERSION;
 
     public static void checkForUpdate(String pluginVersion) {
         Util.log("Checking for update...");
-        if (pluginVersion.contains("-")) {
-            Util.logLoading("&eYou're running a beta version, no need to check for an update!");
-            return;
-        }
-        getVersion(version -> {
-            if (version.equalsIgnoreCase(pluginVersion)) {
+        getLatestReleaseVersion(version -> {
+            Version plugVer = new Version(pluginVersion);
+            Version curVer = new Version(version);
+            if (curVer.compareTo(plugVer) <= 0) {
                 Util.logLoading("&aPlugin is up to date!");
             } else {
                 Util.logLoading("&cPlugin is not up to date!");
                 Util.logLoading(" - Current version: &cv%s", pluginVersion);
                 Util.logLoading(" - Available update: &av%s",version);
                 Util.logLoading(" - Download available at: https://github.com/ShaneBeee/SkBee/releases");
-                UPDATE_VERSION = version;
+                UPDATE_VERSION = curVer;
             }
         });
     }
 
-    private static void getVersion(final Consumer<String> consumer) {
+    private static void getLatestReleaseVersion(final Consumer<String> consumer) {
         try {
             URL url = new URL("https://api.github.com/repos/ShaneBeee/SkBee/releases/latest");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -70,7 +69,7 @@ public class UpdateChecker implements Listener {
         if (!player.hasPermission("skbee.update.check")) return;
 
         String currentVersion = this.plugin.getDescription().getVersion();
-        CompletableFuture<String> updateVersion = getUpdateVersion(currentVersion);
+        CompletableFuture<Version> updateVersion = getUpdateVersion(currentVersion);
 
         Bukkit.getScheduler().runTaskLater(this.plugin, () -> updateVersion.thenApply(version -> {
             Util.sendColMsg(player, "&7[&bSk&3Bee&7] update available: &a" + version);
@@ -79,17 +78,19 @@ public class UpdateChecker implements Listener {
         }), 30);
     }
 
-    private CompletableFuture<String> getUpdateVersion(String currentVersion) {
-        CompletableFuture<String> future = new CompletableFuture<>();
+    private CompletableFuture<Version> getUpdateVersion(String currentVersion) {
+        CompletableFuture<Version> future = new CompletableFuture<>();
         if (UPDATE_VERSION != null) {
             future.complete(UPDATE_VERSION);
         } else {
-            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> getVersion(version -> {
-                if (!version.equalsIgnoreCase(currentVersion)) {
-                    UPDATE_VERSION = version;
-                    future.complete(version);
-                } else {
+            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> getLatestReleaseVersion(version -> {
+                Version plugVer = new Version(currentVersion);
+                Version curVer = new Version(version);
+                if (curVer.compareTo(plugVer) <= 0) {
                     future.cancel(true);
+                } else {
+                    UPDATE_VERSION = curVer;
+                    future.complete(UPDATE_VERSION);
                 }
             }));
         }
