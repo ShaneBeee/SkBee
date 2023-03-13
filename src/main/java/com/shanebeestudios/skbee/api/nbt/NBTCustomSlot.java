@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.api.nbt;
 
 import ch.njol.skript.util.slot.Slot;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import org.bukkit.inventory.ItemStack;
 
 import java.util.Objects;
 
@@ -20,7 +21,9 @@ public class NBTCustomSlot extends NBTItem {
     @Override
     protected void saveCompound() {
         super.saveCompound();
-        this.slot.setItem(getItem());
+        ItemStack item = this.slot.getItem();
+        if (item == null) return;
+        item.setItemMeta(getItem().getItemMeta());
     }
 
 }
