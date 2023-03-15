@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("NBT - Has Tag")
 @Description("Check if an NBT Compound contains a tag.")
 @Examples({"if nbt compound of player has tag \"custom;points\":",
-        "if nbt item compound of player's tool doesn't have nbt tag \"health;score\":"})
+        "if nbt compound of player's tool doesn't have nbt tag \"health;score\":"})
 @Since("2.3.2")
 public class CondHasNBTTag extends Condition {
 
