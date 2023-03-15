@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
-import com.shanebeestudios.skbee.api.listener.ScriptListener;
 import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
 import com.shanebeestudios.skbee.api.util.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -78,7 +77,7 @@ public class SkBee extends JavaPlugin {
         //noinspection ConstantConditions
         getCommand("skbee").setExecutor(new SkBeeInfo(this));
         pm.registerEvents(new UpdateChecker(this), this);
-        pm.registerEvents(new ScriptListener(), this);
+        //pm.registerEvents(new ScriptListener(), this); // Temp removed
     }
 
     private void checkUpdate(String version) {
