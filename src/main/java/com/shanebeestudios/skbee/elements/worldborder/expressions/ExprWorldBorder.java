@@ -31,7 +31,8 @@ import java.util.List;
         "Resetting border of player will set back to the world border of the world the player is in.",
         "If you would like to reset default values of a border, you will have to do it in a var (see examples).",
         "Multiple players can share a virtual world border.",
-        "NOTE: Virtual world borders do not seem to be persistent (ie: restarts, quitting, death, world change)."})
+        "NOTE: Virtual world borders do not seem to be persistent (ie: restarts, quitting, death, world change).",
+        "NOTE: Virtual world borders were added in MC 1.18.x+"})
 @Examples({"set world border of player to virtual world border",
         "set center of world border of player to location of player",
         "set size of world border of player to 100",
