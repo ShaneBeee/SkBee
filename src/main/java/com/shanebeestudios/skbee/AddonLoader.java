@@ -101,6 +101,7 @@ public class AddonLoader {
         loadTagElements();
         loadRayTraceElements();
         loadFishingElements();
+        loadDisplayEntityElements();
 
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
@@ -483,6 +484,24 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.fishing");
             Util.logLoading("&5Fishing elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadDisplayEntityElements() {
+        if (!this.config.ELEMENTS_DISPLAY) {
+            Util.logLoading("&5Display Entity elements &cdisabled via config");
+            return;
+        }
+        if (!Skript.isRunningMinecraft(1,19,4)) {
+            Util.log("&eDisplay Entities are only available on Minecraft 1.19.4+");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.display");
+            Util.logLoading("&5Display Entity elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);

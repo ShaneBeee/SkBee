@@ -79,6 +79,10 @@ elements:
   # Enable fishing elements
   fishing: true
 
+  # Enable display entity elements
+  # This is specifically for Minecraft 1.19.4+
+  display-entity: true
+
 recipe:
   # This is the namespace all recipes will be saved under
   # You can choose whatever you wish

@@ -54,3 +54,7 @@ types:
 	namespacedkey: namespacedkey¦s
 	blockface: blockface¦s
 	raytraceresult: raytraceresult¦s
+	displayentity: display entit(y|ies)
+	displaybrightness: display brightness¦es
+	displaybillboard: display billboard¦s
+	bukkitcolor: bukkit col(or|our)¦s
