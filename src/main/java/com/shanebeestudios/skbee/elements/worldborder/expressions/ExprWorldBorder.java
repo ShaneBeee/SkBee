@@ -57,7 +57,7 @@ public class ExprWorldBorder extends SimpleExpression<WorldBorder> {
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         if (i == 1 && !SUPPORTS_VIRTUAL_BORDER) {
-            Skript.error("Virtual world borders are not supported on your version.", ErrorQuality.SEMANTIC_ERROR);
+            Skript.error("Virtual world borders are not supported on your server version.", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
         this.pattern = i;
@@ -87,7 +87,7 @@ public class ExprWorldBorder extends SimpleExpression<WorldBorder> {
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (pattern == 0 && !SUPPORTS_VIRTUAL_BORDER) {
-            Skript.error("Virtual world borders are not supported on your version therefor a border cannot be changed", ErrorQuality.SEMANTIC_ERROR);
+            Skript.error("Virtual world borders are not supported on your server version therefor a border cannot be changed", ErrorQuality.SEMANTIC_ERROR);
             return null;
         }
         if (pattern == 0 && (mode == ChangeMode.SET || mode == ChangeMode.RESET)) {
