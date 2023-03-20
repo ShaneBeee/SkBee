@@ -77,7 +77,9 @@ public class SkBee extends JavaPlugin {
     private void loadCommands() {
         //noinspection ConstantConditions
         getCommand("skbee").setExecutor(new SkBeeInfo(this));
-        pm.registerEvents(new UpdateChecker(this), this);
+        if (config.SETTINGS_UPDATE_CHECKER) {
+            pm.registerEvents(new UpdateChecker(this), this);
+        }
         //pm.registerEvents(new ScriptListener(), this); // Temp removed
     }
 
