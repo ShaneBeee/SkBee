@@ -10,6 +10,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,16 +19,17 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the glow color override of a Display Entity.", Types.McWIKI})
 @Examples("set glow color override of {_display} to bukkitColor(255,1,1,100)")
 @Since("INSERT VERSION")
-public class ExprDisplayGlowColor extends SimplePropertyExpression<Display, Color> {
+public class ExprDisplayGlowColor extends SimplePropertyExpression<Entity, Color> {
 
     static {
-        register(ExprDisplayGlowColor.class, Color.class, "glow color override", "displayentities");
+        register(ExprDisplayGlowColor.class, Color.class, "glow color override", "entities");
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public @Nullable Color convert(Display display) {
-        return display.getGlowColorOverride();
+    public @Nullable Color convert(Entity entity) {
+        if (entity instanceof Display display) return display.getGlowColorOverride();
+        return null;
     }
 
     @SuppressWarnings("NullableProblems")
@@ -41,8 +43,8 @@ public class ExprDisplayGlowColor extends SimplePropertyExpression<Display, Colo
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Color color) {
-            for (Display display : getExpr().getArray(event)) {
-                display.setGlowColorOverride(color);
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof Display display) display.setGlowColorOverride(color);
             }
         }
     }

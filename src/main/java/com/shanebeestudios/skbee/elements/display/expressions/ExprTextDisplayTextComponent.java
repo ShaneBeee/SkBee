@@ -11,7 +11,7 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.text.BeeComponent;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import net.kyori.adventure.text.Component;
-import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -21,17 +21,17 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the text component of a Text Display Entity.", Types.McWIKI})
 @Examples("set display component of {_display} to mini message from \"<rainbow>OOO A RAINBOW\"")
 @Since("INSERT VERSION")
-public class ExprTextDisplayTextComponent extends SimplePropertyExpression<Display, BeeComponent> {
+public class ExprTextDisplayTextComponent extends SimplePropertyExpression<Entity, BeeComponent> {
 
     static {
         if (SkBee.getPlugin().getAddonLoader().isTextComponentEnabled()) {
-            register(ExprTextDisplayTextComponent.class, BeeComponent.class, "display [text] component", "displayentities");
+            register(ExprTextDisplayTextComponent.class, BeeComponent.class, "display [text] component", "entities");
         }
     }
 
     @Override
-    public @Nullable BeeComponent convert(Display display) {
-        if (display instanceof TextDisplay textDisplay) {
+    public @Nullable BeeComponent convert(Entity entity) {
+        if (entity instanceof TextDisplay textDisplay) {
             Component text = textDisplay.text();
             return BeeComponent.fromComponent(text);
         }
@@ -50,8 +50,8 @@ public class ExprTextDisplayTextComponent extends SimplePropertyExpression<Displ
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof BeeComponent beeComponent) {
             Component component = beeComponent.getComponent();
-            for (Display display : getExpr().getArray(event)) {
-                if (display instanceof TextDisplay textDisplay) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof TextDisplay textDisplay) {
                     textDisplay.text(component);
                 }
             }

@@ -12,6 +12,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.NotNull;
@@ -24,11 +25,11 @@ import org.joml.Vector3f;
 @Examples({"set display left rotation of {_display} to vector4(0,1,1,0)",
         "set display right rotation of {_display} to vector4(1,0,0,5)"})
 @Since("INSERT VERSION")
-public class ExprDisplayRotation extends SimplePropertyExpression<Display, Quaternionf> {
+public class ExprDisplayRotation extends SimplePropertyExpression<Entity, Quaternionf> {
 
     static {
         register(ExprDisplayRotation.class, Quaternionf.class,
-                "display (left|r:right) rotation", "displayentities");
+                "display (left|r:right) rotation", "entities");
     }
 
     private boolean right;
@@ -41,7 +42,8 @@ public class ExprDisplayRotation extends SimplePropertyExpression<Display, Quate
     }
 
     @Override
-    public @Nullable Quaternionf convert(Display display) {
+    public @Nullable Quaternionf convert(Entity entity) {
+        if (!(entity instanceof Display display)) return null;
         Transformation transformation = display.getTransformation();
         return this.right ? transformation.getRightRotation() : transformation.getLeftRotation();
     }
@@ -57,7 +59,9 @@ public class ExprDisplayRotation extends SimplePropertyExpression<Display, Quate
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Quaternionf vec4f) {
-            for (Display display : getExpr().getArray(event)) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (!(entity instanceof Display display)) continue;
+
                 Transformation oldTransform = display.getTransformation();
                 Vector3f translation = oldTransform.getTranslation();
                 Vector3f scale = oldTransform.getScale();

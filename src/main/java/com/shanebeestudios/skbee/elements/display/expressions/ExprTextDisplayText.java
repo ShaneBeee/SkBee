@@ -9,7 +9,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
-import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -20,16 +20,16 @@ import org.jetbrains.annotations.Nullable;
         "NOTE: Supports multiple lines.", Types.McWIKI})
 @Examples("set display text of {_display} to \"Line 1\", \"Line 2\" and \"Line 3\"")
 @Since("INSERT VERSION")
-public class ExprTextDisplayText extends SimplePropertyExpression<Display, String> {
+public class ExprTextDisplayText extends SimplePropertyExpression<Entity, String> {
 
     static {
-        register(ExprTextDisplayText.class, String.class, "display text", "displayentities");
+        register(ExprTextDisplayText.class, String.class, "display text", "entities");
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public @Nullable String convert(Display display) {
-        if (display instanceof TextDisplay textDisplay) return textDisplay.getText();
+    public @Nullable String convert(Entity entity) {
+        if (entity instanceof TextDisplay textDisplay) return textDisplay.getText();
         return null;
     }
 
@@ -50,8 +50,8 @@ public class ExprTextDisplayText extends SimplePropertyExpression<Display, Strin
         } else {
             text = StringUtils.join(delta, System.lineSeparator());
         }
-        for (Display display : getExpr().getArray(event)) {
-            if (display instanceof TextDisplay textDisplay) {
+        for (Entity entity : getExpr().getArray(event)) {
+            if (entity instanceof TextDisplay textDisplay) {
                 textDisplay.setText(text);
             }
         }

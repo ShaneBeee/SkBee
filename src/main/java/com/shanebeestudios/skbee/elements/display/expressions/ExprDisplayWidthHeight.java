@@ -12,6 +12,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,11 +21,11 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the width/height of a display entity.", Types.McWIKI})
 @Examples("set display width of {_display} to 3")
 @Since("INSERT VERSION")
-public class ExprDisplayWidthHeight extends SimplePropertyExpression<Display, Float> {
+public class ExprDisplayWidthHeight extends SimplePropertyExpression<Entity, Float> {
 
     static {
         register(ExprDisplayWidthHeight.class, Float.class,
-                "display (width|height:height)", "displayentities");
+                "display (width|height:height)", "entities");
     }
 
     private boolean height;
@@ -37,7 +38,8 @@ public class ExprDisplayWidthHeight extends SimplePropertyExpression<Display, Fl
     }
 
     @Override
-    public @Nullable Float convert(Display display) {
+    public @Nullable Float convert(Entity entity) {
+        if (!(entity instanceof Display display)) return null;
         return this.height ? display.getDisplayHeight() : display.getDisplayWidth();
     }
 
@@ -48,11 +50,12 @@ public class ExprDisplayWidthHeight extends SimplePropertyExpression<Display, Fl
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Float changeValue) {
-            for (Display display : getExpr().getArray(event)) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (!(entity instanceof Display display)) continue;
                 if (this.height) {
                     display.setDisplayHeight(changeValue);
                 } else {

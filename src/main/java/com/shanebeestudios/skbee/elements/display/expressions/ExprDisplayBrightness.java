@@ -10,6 +10,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Display.Brightness;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,16 +20,17 @@ import org.jetbrains.annotations.Nullable;
         "NOTE: If this is not set in the first place, it will return nothing!", Types.McWIKI})
 @Examples("set display brightness of {_display} to displayBrightness(10,10)")
 @Since("INSERT VERSION")
-public class ExprDisplayBrightness extends SimplePropertyExpression<Display, Brightness> {
+public class ExprDisplayBrightness extends SimplePropertyExpression<Entity, Brightness> {
 
     static {
         register(ExprDisplayBrightness.class, Brightness.class,
-                "display brightness", "displayentities");
+                "display brightness", "entities");
     }
 
     @Override
-    public @Nullable Brightness convert(Display display) {
-        return display.getBrightness();
+    public @Nullable Brightness convert(Entity entity) {
+        if (entity instanceof Display display) return display.getBrightness();
+        return null;
     }
 
     @SuppressWarnings("NullableProblems")
@@ -38,12 +40,12 @@ public class ExprDisplayBrightness extends SimplePropertyExpression<Display, Bri
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Brightness brightness) {
-            for (Display display : getExpr().getArray(event)) {
-                display.setBrightness(brightness);
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof Display display) display.setBrightness(brightness);
             }
         }
     }

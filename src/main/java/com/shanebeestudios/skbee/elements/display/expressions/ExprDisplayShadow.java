@@ -12,6 +12,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -21,10 +22,10 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set shadow strength of {_display} to 3",
         "set shadow radius of {_display} to 10"})
 @Since("INSERT VERSION")
-public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> {
+public class ExprDisplayShadow extends SimplePropertyExpression<Entity, Float> {
 
     static {
-        register(ExprDisplayShadow.class, Float.class, "shadow (radius|s:strength)", "displayentities");
+        register(ExprDisplayShadow.class, Float.class, "shadow (radius|s:strength)", "entities");
     }
 
     private boolean strength;
@@ -37,7 +38,8 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> 
     }
 
     @Override
-    public @Nullable Float convert(Display display) {
+    public @Nullable Float convert(Entity entity) {
+        if (!(entity instanceof Display display)) return null;
         return this.strength ? display.getShadowStrength() : display.getShadowRadius();
     }
 
@@ -52,7 +54,8 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Display, Float> 
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Float changeValue) {
-            for (Display display : getExpr().getArray(event)) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (!(entity instanceof Display display)) continue;
                 if (this.strength) {
                     display.setShadowStrength(changeValue);
                 } else {

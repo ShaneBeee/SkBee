@@ -8,7 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
-import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -18,15 +18,15 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the shadowed state of a Text Display Entity.", Types.McWIKI})
 @Examples("set text shadowed of {_display} to true")
 @Since("INSERT VERSION")
-public class ExprTextDisplayShadowed extends SimplePropertyExpression<Display,Boolean> {
+public class ExprTextDisplayShadowed extends SimplePropertyExpression<Entity, Boolean> {
 
     static {
-        register(ExprTextDisplayShadowed.class, Boolean.class, "text shadowed", "displayentities");
+        register(ExprTextDisplayShadowed.class, Boolean.class, "text shadowed", "entities");
     }
 
     @Override
-    public @Nullable Boolean convert(Display display) {
-        if (display instanceof TextDisplay textDisplay) return textDisplay.isShadowed();
+    public @Nullable Boolean convert(Entity entity) {
+        if (entity instanceof TextDisplay textDisplay) return textDisplay.isShadowed();
         return null;
     }
 
@@ -41,8 +41,8 @@ public class ExprTextDisplayShadowed extends SimplePropertyExpression<Display,Bo
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Boolean shadowed) {
-            for (Display display : getExpr().getArray(event)) {
-                if (display instanceof TextDisplay textDisplay) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof TextDisplay textDisplay) {
                     textDisplay.setShadowed(shadowed);
                 }
             }

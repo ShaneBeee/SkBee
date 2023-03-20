@@ -31,13 +31,6 @@ public class Types {
 
     // TYPES
     static {
-        Classes.registerClass(new ClassInfo<>(Display.class, "displayentity")
-                .user("display ?entit(y|ies)")
-                .name("DisplayEntity - Display Entity")
-                .description("Represents a Minecraft Display Entity.",
-                        "See <link>https://minecraft.fandom.com/wiki/Display</link> for more details.")
-                .since("INSERT VERSION"));
-
         Classes.registerClass(new ClassInfo<>(Display.Brightness.class, "displaybrightness")
                 .user("display ?brightness(es)?")
                 .name("DisplayEntity - Display Brightness")

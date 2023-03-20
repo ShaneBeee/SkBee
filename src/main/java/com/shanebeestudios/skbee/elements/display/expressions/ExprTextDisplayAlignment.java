@@ -8,7 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
-import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.entity.TextDisplay.TextAligment;
 import org.bukkit.event.Event;
@@ -19,15 +19,15 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the text alignment of a Text Display Entity.", Types.McWIKI})
 @Examples("set text alignment of {_display} to left aligned")
 @Since("INSERT VERSION")
-public class ExprTextDisplayAlignment extends SimplePropertyExpression<Display, TextAligment> {
+public class ExprTextDisplayAlignment extends SimplePropertyExpression<Entity, TextAligment> {
 
     static {
-        register(ExprTextDisplayAlignment.class, TextAligment.class, "text alignment", "displayentities");
+        register(ExprTextDisplayAlignment.class, TextAligment.class, "text alignment", "entities");
     }
 
     @Override
-    public @Nullable TextAligment convert(Display display) {
-        if (display instanceof TextDisplay textDisplay) return textDisplay.getAlignment();
+    public @Nullable TextAligment convert(Entity entity) {
+        if (entity instanceof TextDisplay textDisplay) return textDisplay.getAlignment();
         return null;
     }
 
@@ -42,8 +42,8 @@ public class ExprTextDisplayAlignment extends SimplePropertyExpression<Display, 
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof TextAligment textAligment) {
-            for (Display display : getExpr().getArray(event)) {
-                if (display instanceof TextDisplay textDisplay) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof TextDisplay textDisplay) {
                     textDisplay.setAlignment(textAligment);
                 }
             }

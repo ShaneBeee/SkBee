@@ -9,7 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
-import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -22,15 +22,15 @@ import org.jetbrains.annotations.Nullable;
         "set display item of {_display} to air",
         "delete display item of {_display}"})
 @Since("INSERT VERSION")
-public class ExprItemDisplayItem extends SimplePropertyExpression<Display, ItemType> {
+public class ExprItemDisplayItem extends SimplePropertyExpression<Entity, ItemType> {
 
     static {
-        register(ExprItemDisplayItem.class, ItemType.class, "display item", "displayentities");
+        register(ExprItemDisplayItem.class, ItemType.class, "display item", "entities");
     }
 
     @Override
-    public @Nullable ItemType convert(Display display) {
-        if (display instanceof ItemDisplay itemDisplay) {
+    public @Nullable ItemType convert(Entity entity) {
+        if (entity instanceof ItemDisplay itemDisplay) {
             ItemStack itemStack = itemDisplay.getItemStack();
             if (itemStack != null) return new ItemType(itemStack);
         }
@@ -49,8 +49,8 @@ public class ExprItemDisplayItem extends SimplePropertyExpression<Display, ItemT
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         ItemType itemType = (delta != null && delta[0] instanceof ItemType it) ? it : null;
         ItemStack itemStack = itemType != null ? itemType.getRandom() : null;
-        for (Display display : getExpr().getArray(event)) {
-            if (display instanceof ItemDisplay itemDisplay) {
+        for (Entity entity : getExpr().getArray(event)) {
+            if (entity instanceof ItemDisplay itemDisplay) {
                 itemDisplay.setItemStack(itemStack);
             }
         }

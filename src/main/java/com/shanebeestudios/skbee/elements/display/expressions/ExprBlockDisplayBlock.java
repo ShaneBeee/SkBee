@@ -10,7 +10,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.BlockDisplay;
-import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -19,15 +19,15 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the block data of a Block Display Entity.", Types.McWIKI})
 @Examples("set display block data of {_display} to oak_stairs[facing=south]")
 @Since("INSERT VERSION")
-public class ExprBlockDisplayBlock extends SimplePropertyExpression<Display, BlockData> {
+public class ExprBlockDisplayBlock extends SimplePropertyExpression<Entity, BlockData> {
 
     static {
-        register(ExprBlockDisplayBlock.class, BlockData.class, "display block data", "displayentities");
+        register(ExprBlockDisplayBlock.class, BlockData.class, "display block data", "entities");
     }
 
     @Override
-    public @Nullable BlockData convert(Display display) {
-        if (display instanceof BlockDisplay blockDisplay) return blockDisplay.getBlock();
+    public @Nullable BlockData convert(Entity entity) {
+        if (entity instanceof BlockDisplay blockDisplay) return blockDisplay.getBlock();
         return null;
     }
 
@@ -42,8 +42,8 @@ public class ExprBlockDisplayBlock extends SimplePropertyExpression<Display, Blo
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof BlockData blockData) {
-            for (Display display : getExpr().getArray(event)) {
-                if (display instanceof BlockDisplay blockDisplay) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof BlockDisplay blockDisplay) {
                     blockDisplay.setBlock(blockData);
                 }
             }

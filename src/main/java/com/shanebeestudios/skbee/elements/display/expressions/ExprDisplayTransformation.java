@@ -9,6 +9,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.util.Transformation;
 import org.jetbrains.annotations.NotNull;
@@ -18,16 +19,17 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the transformation of a Display Entity.", Types.McWIKI})
 @Examples("set display transformation of {_display} to {_transformation}")
 @Since("INSERT VERSION")
-public class ExprDisplayTransformation extends SimplePropertyExpression<Display, Transformation> {
+public class ExprDisplayTransformation extends SimplePropertyExpression<Entity, Transformation> {
 
     static {
         register(ExprDisplayTransformation.class, Transformation.class,
-                "display transformation", "displayentities");
+                "display transformation", "entities");
     }
 
     @Override
-    public @Nullable Transformation convert(Display display) {
-        return display.getTransformation();
+    public @Nullable Transformation convert(Entity entity) {
+        if (entity instanceof Display display) return display.getTransformation();
+        return null;
     }
 
     @SuppressWarnings("NullableProblems")
@@ -41,8 +43,8 @@ public class ExprDisplayTransformation extends SimplePropertyExpression<Display,
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Transformation transformation) {
-            for (Display display : getExpr().getArray(event)) {
-                display.setTransformation(transformation);
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof Display display) display.setTransformation(transformation);
             }
         }
     }

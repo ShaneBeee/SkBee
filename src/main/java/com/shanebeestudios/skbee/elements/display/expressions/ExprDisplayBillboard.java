@@ -10,6 +10,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Display.Billboard;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,15 +19,16 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the billboard of a Display Entity.", Types.McWIKI})
 @Examples("set display billboard of {_display} to horizontal")
 @Since("INSERT VERSION")
-public class ExprDisplayBillboard extends SimplePropertyExpression<Display, Billboard> {
+public class ExprDisplayBillboard extends SimplePropertyExpression<Entity, Billboard> {
 
     static {
-        register(ExprDisplayBillboard.class, Billboard.class, "display billboard", "displayentities");
+        register(ExprDisplayBillboard.class, Billboard.class, "display billboard", "entities");
     }
 
     @Override
-    public @Nullable Billboard convert(Display display) {
-        return display.getBillboard();
+    public @Nullable Billboard convert(Entity entity) {
+        if (entity instanceof Display display) return display.getBillboard();
+        return null;
     }
 
     @SuppressWarnings("NullableProblems")
@@ -40,8 +42,8 @@ public class ExprDisplayBillboard extends SimplePropertyExpression<Display, Bill
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Billboard billboard) {
-            for (Display display : getExpr().getArray(event)) {
-                display.setBillboard(billboard);
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof Display display) display.setBillboard(billboard);
             }
         }
     }

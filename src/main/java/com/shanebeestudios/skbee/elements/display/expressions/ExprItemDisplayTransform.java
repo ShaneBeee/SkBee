@@ -8,7 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
-import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemDisplay;
 import org.bukkit.entity.ItemDisplay.ItemDisplayTransform;
 import org.bukkit.event.Event;
@@ -20,16 +20,16 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set item display transform of {_display} to ground transform",
         "set item display transform of {_display} to fixed transform"})
 @Since("INSERT VERSION")
-public class ExprItemDisplayTransform extends SimplePropertyExpression<Display, ItemDisplayTransform> {
+public class ExprItemDisplayTransform extends SimplePropertyExpression<Entity, ItemDisplayTransform> {
 
     static {
         register(ExprItemDisplayTransform.class, ItemDisplayTransform.class,
-                "item display transform", "displayentities");
+                "item display transform", "entities");
     }
 
     @Override
-    public @Nullable ItemDisplayTransform convert(Display display) {
-        if (display instanceof ItemDisplay itemDisplay) return itemDisplay.getItemDisplayTransform();
+    public @Nullable ItemDisplayTransform convert(Entity entity) {
+        if (entity instanceof ItemDisplay itemDisplay) return itemDisplay.getItemDisplayTransform();
         return null;
     }
 
@@ -44,8 +44,8 @@ public class ExprItemDisplayTransform extends SimplePropertyExpression<Display, 
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof ItemDisplayTransform transform) {
-            for (Display display : getExpr().getArray(event)) {
-                if (display instanceof ItemDisplay itemDisplay) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof ItemDisplay itemDisplay) {
                     itemDisplay.setItemDisplayTransform(transform);
                 }
             }

@@ -12,7 +12,7 @@ import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.BlockDisplay;
-import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,18 +22,18 @@ import org.jetbrains.annotations.Nullable;
         "I HIGHLY recommend not using this, use the block data method instead.", Types.McWIKI})
 @Examples("set display block item type of {_omgPleaseStopUsingItemTypesForThisPleaseUseBlockDataInstead} to diamond ore")
 @Since("INSERT VERSION")
-public class ExprBlockDisplayItemType extends SimplePropertyExpression<Display, ItemType> {
+public class ExprBlockDisplayItemType extends SimplePropertyExpression<Entity, ItemType> {
 
     private static final BlockData STONE = Material.STONE.createBlockData();
 
     static {
         register(ExprBlockDisplayItemType.class, ItemType.class,
-                "display block item[ ]type", "displayentities");
+                "display block item[ ]type", "entities");
     }
 
     @Override
-    public @Nullable ItemType convert(Display display) {
-        if (display instanceof BlockDisplay blockDisplay) {
+    public @Nullable ItemType convert(Entity entity) {
+        if (entity instanceof BlockDisplay blockDisplay) {
             return new ItemType(blockDisplay.getBlock().getMaterial());
         }
         return null;
@@ -52,8 +52,8 @@ public class ExprBlockDisplayItemType extends SimplePropertyExpression<Display, 
         if (delta != null && delta[0] instanceof ItemType itemType) {
             Material material = itemType.getMaterial();
             BlockData blockData = material.isBlock() ? material.createBlockData() : STONE;
-            for (Display display : getExpr().getArray(event)) {
-                if (display instanceof BlockDisplay blockDisplay) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof BlockDisplay blockDisplay) {
                     blockDisplay.setBlock(blockData);
                 }
             }

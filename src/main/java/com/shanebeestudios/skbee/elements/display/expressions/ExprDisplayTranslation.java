@@ -9,6 +9,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
@@ -21,14 +22,15 @@ import org.joml.Vector3f;
 @Description({"Represents the transformation translation of a Display Entity.", Types.McWIKI})
 @Examples("set display translation of {_display} to vector(0,2,0)")
 @Since("INSERT VERSION")
-public class ExprDisplayTranslation extends SimplePropertyExpression<Display, Vector> {
+public class ExprDisplayTranslation extends SimplePropertyExpression<Entity, Vector> {
 
     static {
-        register(ExprDisplayTranslation.class, Vector.class, "display translation", "displayentities");
+        register(ExprDisplayTranslation.class, Vector.class, "display translation", "entities");
     }
 
     @Override
-    public @Nullable Vector convert(Display display) {
+    public @Nullable Vector convert(Entity entity) {
+        if (!(entity instanceof Display display)) return null;
         return Types.converToVector(display.getTransformation().getTranslation());
     }
 
@@ -44,7 +46,9 @@ public class ExprDisplayTranslation extends SimplePropertyExpression<Display, Ve
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Vector vector) {
             Vector3f translation = Types.converToVector3f(vector);
-            for (Display display : getExpr().getArray(event)) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (!(entity instanceof Display display)) continue;
+
                 Transformation oldTransform = display.getTransformation();
                 Vector3f scale = oldTransform.getScale();
                 Quaternionf leftRotation = oldTransform.getLeftRotation();

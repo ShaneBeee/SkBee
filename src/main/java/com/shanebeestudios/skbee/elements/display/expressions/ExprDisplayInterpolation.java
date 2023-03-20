@@ -12,6 +12,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,11 +23,11 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set interpolation start of {_display} to -1",
         "set interpolation delay of {_display} to 200"})
 @Since("INSERT VERSION")
-public class ExprDisplayInterpolation extends SimplePropertyExpression<Display, Integer> {
+public class ExprDisplayInterpolation extends SimplePropertyExpression<Entity, Integer> {
 
     static {
         register(ExprDisplayInterpolation.class, Integer.class,
-                "interpolation ((start|delay)|d:duration)", "displayentities");
+                "interpolation ((start|delay)|d:duration)", "entities");
     }
 
     private boolean duration;
@@ -39,7 +40,8 @@ public class ExprDisplayInterpolation extends SimplePropertyExpression<Display, 
     }
 
     @Override
-    public @Nullable Integer convert(Display display) {
+    public @Nullable Integer convert(Entity entity) {
+        if (!(entity instanceof Display display)) return null;
         return this.duration ? display.getInterpolationDuration() : display.getInterpolationDelay();
     }
 
@@ -54,11 +56,13 @@ public class ExprDisplayInterpolation extends SimplePropertyExpression<Display, 
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Integer changeValue) {
-            for (Display display : getExpr().getArray(event)) {
-                if (this.duration) {
-                    display.setInterpolationDuration(changeValue);
-                } else {
-                    display.setInterpolationDelay(changeValue);
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof Display display) {
+                    if (this.duration) {
+                        display.setInterpolationDuration(changeValue);
+                    } else {
+                        display.setInterpolationDelay(changeValue);
+                    }
                 }
             }
         }

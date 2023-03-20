@@ -8,7 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.display.types.Types;
-import org.bukkit.entity.Display;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.TextDisplay;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -18,16 +18,16 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents if a Text Display Entity should use a default background.", Types.McWIKI})
 @Examples("set default text background of {_display} to true")
 @Since("INSERT VERSION")
-public class ExprTextDisplayDefaultBackground extends SimplePropertyExpression<Display, Boolean> {
+public class ExprTextDisplayDefaultBackground extends SimplePropertyExpression<Entity, Boolean> {
 
     static {
         register(ExprTextDisplayDefaultBackground.class, Boolean.class,
-                "default [text] background", "displayentities");
+                "default [text] background", "entities");
     }
 
     @Override
-    public @Nullable Boolean convert(Display display) {
-        if (display instanceof TextDisplay textDisplay) return textDisplay.isDefaultBackground();
+    public @Nullable Boolean convert(Entity entity) {
+        if (entity instanceof TextDisplay textDisplay) return textDisplay.isDefaultBackground();
         return null;
     }
 
@@ -42,8 +42,8 @@ public class ExprTextDisplayDefaultBackground extends SimplePropertyExpression<D
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Boolean isDefaultBackground) {
-            for (Display display : getExpr().getArray(event)) {
-                if (display instanceof TextDisplay textDisplay) {
+            for (Entity entity : getExpr().getArray(event)) {
+                if (entity instanceof TextDisplay textDisplay) {
                     textDisplay.setDefaultBackground(isDefaultBackground);
                 }
             }
