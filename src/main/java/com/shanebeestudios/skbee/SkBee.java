@@ -37,6 +37,7 @@ public class SkBee extends JavaPlugin {
     VirtualFurnaceAPI virtualFurnaceAPI;
     BeeWorldConfig beeWorldConfig;
     StructureBeeManager structureBeeManager = null;
+    AddonLoader addonLoader = null;
 
     @Override
     public void onEnable() {
@@ -46,7 +47,7 @@ public class SkBee extends JavaPlugin {
         this.config = new Config(this);
         this.pm = Bukkit.getPluginManager();
 
-        AddonLoader addonLoader = new AddonLoader(this);
+        this.addonLoader = new AddonLoader(this);
         // Check if SkriptAddon can actually load
         if (!addonLoader.canLoadPlugin()) {
             pm.disablePlugin(this);
@@ -157,6 +158,10 @@ public class SkBee extends JavaPlugin {
      */
     public StructureBeeManager getStructureBeeManager() {
         return structureBeeManager;
+    }
+
+    public AddonLoader getAddonLoader() {
+        return addonLoader;
     }
 
 }

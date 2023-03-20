@@ -38,6 +38,7 @@ public class AddonLoader {
     private final Config config;
     private final Plugin skriptPlugin;
     private SkriptAddon addon;
+    private boolean textComponentEnabled;
 
     public AddonLoader(SkBee plugin) {
         this.plugin = plugin;
@@ -251,6 +252,7 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.text");
             Util.logLoading("&5Text Component Elements &asuccessfully loaded");
+            this.textComponentEnabled = true;
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);
@@ -506,6 +508,10 @@ public class AddonLoader {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);
         }
+    }
+
+    public boolean isTextComponentEnabled() {
+        return textComponentEnabled;
     }
 
 }
