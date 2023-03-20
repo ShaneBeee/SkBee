@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("DisplayEntity - Spawn")
-@Description({"An effect to spawn display entities.",
+@Description({"An effect to spawn display/interaction entities.",
         "NOTE: This is a TEMPORARY solution until Skript adds these entities."})
 @Examples({"le spawn item display entity at player",
         "set item display of last spawned entity to diamond"})
@@ -29,7 +29,7 @@ public class EffTempSpawn extends Effect {
 
     static {
         Skript.registerEffect(EffTempSpawn.class,
-                "(skbee|le) spawn (text|1:item|2:block) display [%directions% %locations%]");
+                "(skbee|le) spawn ((text|1:item|2:block) display|3:interaction) [%directions% %locations%]");
     }
 
     private int pattern;
@@ -46,7 +46,12 @@ public class EffTempSpawn extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        EntityType entityType = pattern == 0 ? EntityType.TEXT_DISPLAY : pattern == 1 ? EntityType.ITEM_DISPLAY : EntityType.BLOCK_DISPLAY;
+        EntityType entityType = switch (pattern) {
+            case 1 -> EntityType.ITEM_DISPLAY;
+            case 2 -> EntityType.BLOCK_DISPLAY;
+            case 3 -> EntityType.INTERACTION;
+            default -> EntityType.TEXT_DISPLAY;
+        };
         for (Location location : this.locations.getArray(event)) {
             World world = location.getWorld();
             Entity entity = world.spawnEntity(location, entityType);
@@ -56,7 +61,13 @@ public class EffTempSpawn extends Effect {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "skbee spawn (text|item|block) display " + this.locations.toString(e, d);
+        String entityType = switch (pattern) {
+            case 1 -> "item display";
+            case 2 -> "block display";
+            case 3 -> "interaction";
+            default -> "text display";
+        };
+        return "skbee spawn " + entityType + " display " + this.locations.toString(e, d);
     }
 
 }
