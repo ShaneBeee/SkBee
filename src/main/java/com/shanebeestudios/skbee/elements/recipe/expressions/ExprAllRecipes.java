@@ -1,14 +1,13 @@
 package com.shanebeestudios.skbee.elements.recipe.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.Bukkit;
@@ -28,63 +27,45 @@ import java.util.List;
         "Due to some items having more than 1 recipe this may return multiple recipes. Requires 1.13+"})
 @Examples("set {_recipes::*} to all recipes of iron ingot")
 @Since("1.4.0")
-public class ExprAllRecipes extends SimpleExpression<String> {
+public class ExprAllRecipes extends SimpleExpression {
 
     static {
-        if (Skript.classExists("org.bukkit.Keyed")) {
-            Skript.registerExpression(ExprAllRecipes.class, String.class, ExpressionType.COMBINED,
-                    "[(all [[of] the]|the)] [(1¦(mc|minecraft)|2¦custom)] recipe[s] [(for|of) %-itemtypes%]");
-        }
+        Skript.registerExpression(ExprAllRecipes.class, Recipe.class, ExpressionType.COMBINED,
+                "[(all [[of] the]|the)] [(1:(mc|minecraft)|2:custom)] recipe[s] [(for|of) %-itemstack%]");
     }
 
     private int pattern;
-    private Expression<ItemType> items;
+    @Nullable
+    private Expression<ItemStack> items;
 
-    @SuppressWarnings({"unchecked", "null"})
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         pattern = parseResult.mark;
-        items = (Expression<ItemType>) exprs[0];
+        items = (Expression<ItemStack>) exprs[0];
         return true;
     }
 
-    @Nullable
     @Override
-    protected String[] get(Event e) {
+    protected Object[] get(Event event) {
+        List<Recipe> recipes = new ArrayList<>();
         if (this.items != null) {
-            return getRecipesForItems(this.items.getAll(e));
-        }
-        return getAllRecipes();
-    }
-
-    private String[] getAllRecipes() {
-        List<String> recipes = new ArrayList<>();
-        Bukkit.recipeIterator().forEachRemaining(recipe -> {
-            if (recipe instanceof Keyed) {
-                NamespacedKey key = ((Keyed) recipe).getKey();
-                if (pattern == 0 || isMinecraft(key) || isCustom(key)) {
-                    recipes.add(key.toString());
-                }
-            }
-        });
-        return recipes.toArray(new String[0]);
-    }
-
-    private String[] getRecipesForItems(ItemType[] itemTypes) {
-        List<String> recipes = new ArrayList<>();
-        for (ItemType itemType : itemTypes) {
-            ItemStack itemStack = itemType.getRandom();
-            assert itemStack != null;
-            for (Recipe recipe : Bukkit.getRecipesFor(itemStack)) {
-                if (recipe instanceof Keyed keyed) {
-                    NamespacedKey key = keyed.getKey();
-                    if (pattern == 0 || isMinecraft(key) || isCustom(key)) {
-                        recipes.add(key.toString());
+            for(ItemStack item : items.getArray(event)) {
+                for (Recipe recipe : Bukkit.getRecipesFor(item)) {
+                    NamespacedKey namespacedKey = ((Keyed) recipe).getKey();
+                    if(pattern == 0 || isMinecraft(namespacedKey) || isCustom(namespacedKey)) {
+                        recipes.add(recipe);
                     }
                 }
             }
+        } else {
+            Bukkit.recipeIterator().forEachRemaining(recipe -> {
+                NamespacedKey namespacedKey = ((Keyed) recipe).getKey();
+                if(pattern == 0 || isMinecraft(namespacedKey) || isCustom(namespacedKey)) {
+                    recipes.add(recipe);
+                }
+            });
         }
-        return recipes.toArray(new String[0]);
+        return recipes.toArray(new Recipe[0]);
     }
 
     private boolean isMinecraft(NamespacedKey key) {
@@ -101,13 +82,15 @@ public class ExprAllRecipes extends SimpleExpression<String> {
     }
 
     @Override
-    public Class<? extends String> getReturnType() {
-        return String.class;
+    public Class getReturnType() {
+        return Recipe.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
-        return "recipes of " + items.toString(e, d);
+    public String toString(@Nullable Event event, boolean debug) {
+        if (items != null) {
+            return "all recipes for " + items.toString(event, debug);
+        }
+        return "all recipes";
     }
-
 }

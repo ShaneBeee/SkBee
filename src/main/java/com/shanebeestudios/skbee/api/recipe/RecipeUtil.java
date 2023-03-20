@@ -5,14 +5,20 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.CookingRecipe;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.RecipeChoice.ExactChoice;
+import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -63,6 +69,54 @@ public class RecipeUtil {
         } catch (NoSuchElementException ignore) {
         }
     }
+
+    /**
+     * Gets the ItemStack used for a RecipeChoice
+     *
+     * @param recipeChoice RecipeChoice to get ItemStack from
+     * @return Itemstack from given RecipeChoice
+     */
+    public static ItemStack getItemStack(RecipeChoice recipeChoice) {
+        if(recipeChoice instanceof ExactChoice exactChoice) return exactChoice.getItemStack().clone();
+        else if (recipeChoice instanceof MaterialChoice materialChoice) return materialChoice.getItemStack().clone();
+        return new ItemStack(Material.AIR);
+    }
+
+    /**
+     *
+     * @param itemStack ItemStack to convert to a RecipeChoice
+     * @return ExactChoice or MaterialChoice depending on ItemStack
+     */
+    public static RecipeChoice getRecipeChoice(ItemStack itemStack) {
+        if(itemStack == null)
+            return null;
+        Material material = itemStack.getType();
+        boolean isAir = material.isAir();
+        boolean isSimilar = itemStack.isSimilar(new ItemStack(material));
+        if(isAir) {
+            return null;
+        }
+        else if (isSimilar) {
+            return  new MaterialChoice(material);
+        }
+        return new ExactChoice(itemStack);
+    }
+
+    /**
+     *
+     * @param itemStacks ItemStacks to convert to a RecipeChoice
+     * @return ExactChoice or MatrerialChoice depending on ItemStack
+     */
+    public static RecipeChoice[] getRecipeChoices(ItemStack ...itemStacks) {
+        List<RecipeChoice> recipeChoices = new ArrayList<>();
+        for(ItemStack itemStack : itemStacks) {
+            recipeChoices.add(getRecipeChoice(itemStack));
+        }
+        return recipeChoices.toArray(new RecipeChoice[0]);
+    }
+
+
+
 
     /**
      * Log a recipe to console
