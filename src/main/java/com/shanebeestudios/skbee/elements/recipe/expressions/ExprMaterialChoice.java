@@ -19,7 +19,6 @@ import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
 @Name("Material Choice")
@@ -32,8 +31,7 @@ import java.util.List;
 @Examples({
         "set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
         "set {_a} to material choice of every sword",
-        "set {_m} to minecraft tag \"minecraft:planks\"",
-        "set {_a} to material choice of {_m}"
+        "set {_a} to material choice of minecraft tag \"minecraft:planks\""
 })
 @Since("1.10.0")
 public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {

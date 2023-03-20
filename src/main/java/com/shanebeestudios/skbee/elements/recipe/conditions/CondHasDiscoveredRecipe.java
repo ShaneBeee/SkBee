@@ -9,62 +9,55 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
-import org.bukkit.NamespacedKey;
-import org.bukkit.entity.HumanEntity;
+import org.bukkit.Keyed;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.bukkit.inventory.Recipe;
+import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Recipe - Has Discovered")
 @Description("Check if a player has discovered a recipe. Can check recipes you created, another plugin has created, or vanilla Minecraft recipes." +
         "When checking recipes that are not your own, make sure to include the namespace, ex \"minecraft:diamond_sword\", \"someplugin:some_recipe\". " +
         "This condition is only available on 1.16+")
-@Examples({"player has discovered recipe \"minecraft:furnace\"",
-        "if player has discovered recipe \"my_custom_sword\":",
-        "if player has discovered recipe \"someplugin:fancy_shovel\":",
-        "if all players have not discovered recipe \"minecraft:golden_shovel\":",
-        "if player has not discovered recipe \"my_fancy_hoe\":"})
+@Examples({"player has discovered recipe from id \"minecraft:furnace\"",
+        "if player has discovered recipe from id \"my_custom_sword\":",
+        "if player has discovered recipe from id \"someplugin:fancy_shovel\":",
+        "if all players have not discovered recipe from id \"minecraft:golden_shovel\":",
+        "if player has not discovered recipe from id \"my_fancy_hoe\":"})
 @Since("1.4.9")
 public class CondHasDiscoveredRecipe extends Condition {
 
     static {
-        if (Skript.methodExists(HumanEntity.class, "hasDiscoveredRecipe", NamespacedKey.class)) {
-            Skript.registerCondition(CondHasDiscoveredRecipe.class,
-                    "%players% (has|have) discovered recipe[s] %strings%",
-                    "%players% (has|have) not discovered recipe[s] %strings%");
-        }
+        Skript.registerCondition(CondHasDiscoveredRecipe.class,
+                "%players% (has|have) discovered %recipes%",
+                "%players% (doesn't|does not|do not|don't) have discovered %recipes%");
     }
 
-    @SuppressWarnings("null")
     private Expression<Player> players;
-    @SuppressWarnings("null")
-    private Expression<String> recipes;
+    private Expression<Recipe> recipes;
 
-    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        players = (Expression<Player>) exprs[0];
-        recipes = (Expression<String>) exprs[1];
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
         setNegated(matchedPattern == 1);
+        players = (Expression<Player>) exprs[0];
+        recipes = (Expression<Recipe>) exprs[1];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
-        return players.check(event, player -> recipes.check(event, recipeString -> {
-            NamespacedKey key = RecipeUtil.getKey(recipeString);
-            return key != null && player.hasDiscoveredRecipe(key);
-        }), isNegated());
+        return players.check(event, player -> recipes.check(event, recipe -> {
+            if(recipe instanceof Keyed keyed)
+                return player.hasDiscoveredRecipe(keyed.getKey());
+            return false;
+        }));
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
-        return players.toString(e, d) + (players.isSingle() ? " has" : " have") + (isNegated() ? " not" : "") +
-                " discovered recipe(s) " + recipes.toString(e, d);
+    public String toString(@Nullable Event event, boolean debug) {
+        return String.format("%s %s discovered recipes %s",
+                players.toString(event, debug),
+                isNegated() ? "has not" : "has",
+                recipes.toString(event,debug));
     }
-
 }
