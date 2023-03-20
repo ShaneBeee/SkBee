@@ -60,3 +60,5 @@ types:
 	textalignment: text alignment¦s
 	itemdisplaytransform: item display transform¦s
 	bukkitcolor: bukkit col(or|our)¦s
+	vector4: vector4¦s
+	transformation: transformation¦s
