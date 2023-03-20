@@ -39,7 +39,7 @@
         <dependency>
             <groupId>io.papermc.paper</groupId>
             <artifactId>paper-api</artifactId>
-            <version>1.19.2-R0.1-SNAPSHOT</version>
+            <version>1.19.4-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -124,7 +124,7 @@
                         <version>3.2.0</version>
                         <configuration>
                             <!-- Put here wherever you would like the plugin to build -->
-                            <outputDirectory>/Users/ShaneBee/Desktop/Server/Skript/1-19/plugins</outputDirectory>
+                            <outputDirectory>/Users/ShaneBee/Desktop/Server/Skript/1-19-4/plugins</outputDirectory>
                         </configuration>
                     </plugin>
                 </plugins>

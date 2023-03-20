@@ -27,6 +27,7 @@ types:
 	attributepair: attribute pair¦s
 	attributemodifier: attribute modifier¦s
 	fishingstate: fish[ing] state¦s
+	fishhookstate: fish hook state¦s
 	bossbar: boss bars¦s
 	bossbarcolor: boss bar color¦s
 	bossbarstyle: boss bar style¦s
@@ -53,3 +54,10 @@ types:
 	namespacedkey: namespacedkey¦s
 	blockface: blockface¦s
 	raytraceresult: raytraceresult¦s
+	displaybrightness: display brightness¦es
+	displaybillboard: display billboard¦s
+	textalignment: text alignment¦s
+	itemdisplaytransform: item display transform¦s
+	bukkitcolor: bukkit col(or|our)¦s
+	vector4: vector4¦s
+	transformation: transformation¦s
