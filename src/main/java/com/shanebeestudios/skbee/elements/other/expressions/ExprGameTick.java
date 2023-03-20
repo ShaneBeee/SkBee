@@ -22,7 +22,7 @@ public class ExprGameTick extends SimplePropertyExpression<World, Long> {
 
     @Override
     public @Nullable Long convert(World world) {
-        return world.getFullTime();
+        return world.getGameTime();
     }
 
     @Override
