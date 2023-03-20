@@ -56,12 +56,15 @@ public class EffLookAt extends Effect {
     protected void execute(Event event) {
         Location location = this.lookAt.getSingle(event);
         if (location == null) return;
+        double x = location.x();
+        double y = location.y();
+        double z = location.z();
 
         for (Entity entity : this.entities.getArray(event)) {
             if (entity instanceof Mob mob) {
-                mob.lookAt(location);
+                mob.lookAt(x, y, z);
             } else if (entity instanceof Player player) {
-                player.lookAt(location, LookAnchor.EYES);
+                player.lookAt(x, y, z, LookAnchor.EYES);
             }
         }
     }
