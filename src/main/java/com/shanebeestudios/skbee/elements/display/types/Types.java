@@ -28,7 +28,7 @@ public class Types {
     public static final String McWIKI = "See <link>https://minecraft.fandom.com/wiki/Display#Entity_data</link> for more details.";
     public static final String McWiki_INTERACTION = "See <link>https://minecraft.fandom.com/wiki/Interaction#Entity_data</link> for more details.";
     public static ClassInfo<Transformation> TRANSFORMATION;
-    public static ClassInfo<Quaternionf> VECTOR4;
+    public static ClassInfo<Quaternionf> QUATERNION;
 
 
     // TYPES
@@ -82,7 +82,7 @@ public class Types {
                         "as it adds an alpha channel.")
                 .since("2.8.0"));
 
-        VECTOR4 = new ClassInfo<>(Quaternionf.class, "quaternion")
+        QUATERNION = new ClassInfo<>(Quaternionf.class, "quaternion")
                 .user("quaternions?")
                 .name("Quaternion")
                 .description("Represents a Quaternion (like a vector but with 4 values).")
@@ -109,7 +109,7 @@ public class Types {
                         return toString(vec4f, 0);
                     }
                 });
-        Classes.registerClass(VECTOR4);
+        Classes.registerClass(QUATERNION);
     }
 
     // FUNCTIONS
@@ -169,7 +169,7 @@ public class Types {
                 new Parameter<>("y", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("z", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("w", DefaultClasses.NUMBER, true, null)
-        }, VECTOR4, true) {
+        }, QUATERNION, true) {
             @SuppressWarnings("NullableProblems")
             @Override
             public @Nullable Quaternionf[] executeSimple(Object[][] params) {
@@ -190,7 +190,7 @@ public class Types {
                 new Parameter<>("y", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("z", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("w", DefaultClasses.NUMBER, true, null)
-        }, VECTOR4, true) {
+        }, QUATERNION, true) {
             @SuppressWarnings("NullableProblems")
             @Override
             public @Nullable Quaternionf[] executeSimple(Object[][] params) {
@@ -210,7 +210,7 @@ public class Types {
                 new Parameter<>("x", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("z", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("z", DefaultClasses.NUMBER, true, null)
-        }, VECTOR4, true) {
+        }, QUATERNION, true) {
             @SuppressWarnings("NullableProblems")
             @Override
             public @Nullable Quaternionf[] executeSimple(Object[][] params) {
@@ -230,8 +230,8 @@ public class Types {
         Functions.registerFunction(new SimpleJavaFunction<>("transformation", new Parameter[]{
                 new Parameter<>("translation", DefaultClasses.VECTOR, true, null),
                 new Parameter<>("scale", DefaultClasses.VECTOR, true, null),
-                new Parameter<>("leftRotation", VECTOR4, true, null),
-                new Parameter<>("rightRotation", VECTOR4, true, null)
+                new Parameter<>("leftRotation", QUATERNION, true, null),
+                new Parameter<>("rightRotation", QUATERNION, true, null)
         }, TRANSFORMATION, true) {
             @SuppressWarnings("NullableProblems")
             @Override
@@ -247,8 +247,8 @@ public class Types {
                 .examples("on load:",
                         "\tset {_trans} to vector(0,1,0)",
                         "\tset {_scale} to vector(1,1,1)",
-                        "\tset {_lr} to vector4(1,1,1,1)",
-                        "\tset {_rr} to vector4(2,2,2,2)",
+                        "\tset {_lr} to quaternion(1,1,1,1)",
+                        "\tset {_rr} to axisAngle(2,2,2,2)",
                         "\tset {_transform} to transformation({_trans}, {_scale}, {_lr}, {_rr})")
                 .since("2.8.0"));
     }
