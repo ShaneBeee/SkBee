@@ -58,4 +58,5 @@ types:
 	displaybrightness: display brightness¦es
 	displaybillboard: display billboard¦s
 	textalignment: text alignment¦s
+	itemdisplaytransform: item display transform¦s
 	bukkitcolor: bukkit col(or|our)¦s

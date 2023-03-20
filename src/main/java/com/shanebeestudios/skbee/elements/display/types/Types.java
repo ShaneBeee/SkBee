@@ -11,6 +11,7 @@ import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Display.Billboard;
+import org.bukkit.entity.ItemDisplay.ItemDisplayTransform;
 import org.bukkit.entity.TextDisplay.TextAligment;
 import org.jetbrains.annotations.Nullable;
 
@@ -52,6 +53,15 @@ public class Types {
                 .usage(TEXT_ALIGNMENT_ENUM.getAllNames())
                 .since("INSERT VERSION")
                 .parser(TEXT_ALIGNMENT_ENUM.getParser()));
+
+        EnumUtils<ItemDisplayTransform> TRANSFORM_ENUM = new EnumUtils<>(ItemDisplayTransform.class, "", "transform");
+        Classes.registerClass(new ClassInfo<>(ItemDisplayTransform.class, "itemdisplaytransform")
+                .user("item ?display ?transforms?")
+                .name("DisplayEntity - Item Display Transform")
+                .description("Represents the item display transform of an Item Display Entity.", McWIKI)
+                .usage(TRANSFORM_ENUM.getAllNames())
+                .since("INSERT VERSION")
+                .parser(TRANSFORM_ENUM.getParser()));
 
         Classes.registerClass(new ClassInfo<>(Color.class, "bukkitcolor")
                 .user("bukkit ?colors?")
