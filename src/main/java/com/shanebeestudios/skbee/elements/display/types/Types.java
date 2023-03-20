@@ -43,13 +43,13 @@ public class Types {
                 .since("INSERT VERSION")
                 .parser(BILLBOARD_ENUM.getParser()));
 
-        EnumUtils<TextAligment> TEXT_ALIGNMENT_ENUM = new EnumUtils<>(TextAligment.class, "aligned", "");
+        EnumUtils<TextAligment> TEXT_ALIGNMENT_ENUM = new EnumUtils<>(TextAligment.class, "", "aligned");
         Classes.registerClass(new ClassInfo<>(TextAligment.class, "textalignment")
                 .user("text ?alignments?")
                 .name("DisplayEntity - Text Alignment")
                 .description("Represents the text alignment of a Text Display Entity.",
                         "NOTE: While I understand these names do not directly align with Minecraft,",
-                        "I had to prefix them to deal with conflict issues.", McWIKI)
+                        "I had to suffix them to deal with conflict issues.", McWIKI)
                 .usage(TEXT_ALIGNMENT_ENUM.getAllNames())
                 .since("INSERT VERSION")
                 .parser(TEXT_ALIGNMENT_ENUM.getParser()));
