@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the block type of a Block Display Entity.",
         "I HIGHLY recommend not using this, use the block data method instead.", Types.McWIKI})
 @Examples("set display block item type of {_omgPleaseStopUsingItemTypesForThisPleaseUseBlockDataInstead} to diamond ore")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprBlockDisplayItemType extends SimplePropertyExpression<Entity, ItemType> {
 
     private static final BlockData STONE = Material.STONE.createBlockData();

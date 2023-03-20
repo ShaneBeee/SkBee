@@ -30,7 +30,7 @@ public class Types {
                     .user("fish ?hook ?states?")
                     .name("Fish Hook State")
                     .usage(FISH_HOOK_STATE_ENUM.getAllNames())
-                    .since("INSERT VERSION")
+                    .since("2.8.0")
                     .parser(FISH_HOOK_STATE_ENUM.getParser()));
         } else {
             Util.logLoading("It looks like another addon registered 'fishhookstate' already.");

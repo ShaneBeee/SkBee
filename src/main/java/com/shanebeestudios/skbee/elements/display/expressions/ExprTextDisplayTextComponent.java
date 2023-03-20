@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Text Component")
 @Description({"Represents the text component of a Text Display Entity.", Types.McWIKI})
 @Examples("set display component of {_display} to mini message from \"<rainbow>OOO A RAINBOW\"")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprTextDisplayTextComponent extends SimplePropertyExpression<Entity, BeeComponent> {
 
     static {

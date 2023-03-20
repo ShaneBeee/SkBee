@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Transformation")
 @Description({"Represents the transformation of a Display Entity.", Types.McWIKI})
 @Examples("set display transformation of {_display} to {_transformation}")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprDisplayTransformation extends SimplePropertyExpression<Entity, Transformation> {
 
     static {

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set puff state of target entity to 1",
         "add 1 to puff state of target entity",
         "reset puff state of target entity"})
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprPufferFishState extends SimplePropertyExpression<Entity,Integer> {
 
     static {

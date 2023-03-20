@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Returns an empty/new NBT compound.")
 @Examples({"set {_n} to blank nbt compound",
         "set tag \"points\" of {_n} to 10"})
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprBlankNBTCompound extends SimpleExpression<NBTCompound> {
 
     static {

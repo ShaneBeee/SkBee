@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Fish Hook - Pull In")
 @Description("Pulls in the entity hooked to this fish hook.")
 @Examples("pull in hooked entity of {_fishHook}")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class EffFishHookPullIn extends Effect {
 
     static {

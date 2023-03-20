@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Entity Damage Entity")
 @Description("Make an entity damage another entity by a given amount.")
 @Examples("make last spawned entity damage player by 10")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class EffEntityDamageEntity extends Effect {
 
     static {

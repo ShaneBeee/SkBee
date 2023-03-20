@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the text background color of a Text Display Entity.",
         "NOTE: Due to Skript Color missing the alpha channel, you must use Bukkit Colors here.", Types.McWIKI})
 @Examples("set text background color of {_display} to bukkitColor(55,100,0,150)")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprTextDisplayBackgroundColor extends SimplePropertyExpression<Entity, Color> {
 
     static {

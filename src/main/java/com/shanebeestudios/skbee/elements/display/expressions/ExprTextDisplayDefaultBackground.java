@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Text Default Background")
 @Description({"Represents if a Text Display Entity should use a default background.", Types.McWIKI})
 @Examples("set default text background of {_display} to true")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprTextDisplayDefaultBackground extends SimplePropertyExpression<Entity, Boolean> {
 
     static {

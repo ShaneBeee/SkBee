@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Text Alignment")
 @Description({"Represents the text alignment of a Text Display Entity.", Types.McWIKI})
 @Examples("set text alignment of {_display} to left aligned")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprTextDisplayAlignment extends SimplePropertyExpression<Entity, TextAligment> {
 
     static {

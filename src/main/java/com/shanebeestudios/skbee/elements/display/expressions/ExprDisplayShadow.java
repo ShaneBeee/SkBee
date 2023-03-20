@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the shadow radius/strength of a Display Entity.", Types.McWIKI})
 @Examples({"set shadow strength of {_display} to 3",
         "set shadow radius of {_display} to 10"})
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprDisplayShadow extends SimplePropertyExpression<Entity, Float> {
 
     static {

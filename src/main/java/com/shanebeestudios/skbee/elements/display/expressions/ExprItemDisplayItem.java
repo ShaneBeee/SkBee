@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set display item of {_display} to diamond sword",
         "set display item of {_display} to air",
         "delete display item of {_display}"})
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprItemDisplayItem extends SimplePropertyExpression<Entity, ItemType> {
 
     static {

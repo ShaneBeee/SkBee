@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Text Opacity")
 @Description({"Represents the text opacity of a Text Display Entity.", Types.McWIKI})
 @Examples("set text opacity of {_display} to 50")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprTextDisplayOpacity extends SimplePropertyExpression<Entity, Integer> {
 
     static {

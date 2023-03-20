@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
         "\tif fish state = fishing:",
         "\t\tset min wait time of fish hook to 1 second",
         "\t\tset max wait time of fish hook to 2 seconds"})
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprFishHookWaitTime extends SimplePropertyExpression<Entity, Timespan> {
 
     static {

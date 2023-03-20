@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
         "NOTE: Due to how these work, you will need to use integers as ticks instead of time spans.", Types.McWIKI})
 @Examples({"set interpolation start of {_display} to -1",
         "set interpolation delay of {_display} to 200"})
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprDisplayInterpolation extends SimplePropertyExpression<Entity, Integer> {
 
     static {

@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
         "NOTE: This is a TEMPORARY solution until Skript adds these entities."})
 @Examples({"le spawn item display entity at player",
         "set item display of last spawned entity to diamond"})
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class EffTempSpawn extends Effect {
 
     static {

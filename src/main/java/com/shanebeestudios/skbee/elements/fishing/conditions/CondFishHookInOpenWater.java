@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
         "Open water is defined by a 5x4x5 area of water, air and lily pads.",
         "If in open water, treasure items may be caught."})
 @Examples("if fish hook is in open water:")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class CondFishHookInOpenWater extends PropertyCondition<Entity> {
 
     static {

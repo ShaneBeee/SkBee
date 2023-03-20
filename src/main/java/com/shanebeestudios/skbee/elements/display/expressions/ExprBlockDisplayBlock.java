@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Block Display Blockdata")
 @Description({"Represents the block data of a Block Display Entity.", Types.McWIKI})
 @Examples("set display block data of {_display} to oak_stairs[facing=south]")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprBlockDisplayBlock extends SimplePropertyExpression<Entity, BlockData> {
 
     static {

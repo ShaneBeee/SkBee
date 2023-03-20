@@ -21,7 +21,7 @@ import org.joml.Vector3f;
 @Name("DisplayEntity - Scale")
 @Description({"Represents the transformation scale of a Display Entity.", Types.McWIKI})
 @Examples("set display scale of {_display} to vector(5,5,5)")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprDisplayScale extends SimplePropertyExpression<Entity, Vector> {
 
     static {

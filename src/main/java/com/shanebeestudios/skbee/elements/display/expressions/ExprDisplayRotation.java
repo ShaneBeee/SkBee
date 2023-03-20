@@ -24,7 +24,7 @@ import org.joml.Vector3f;
 @Description({"Represents the transformation left/right rotation of a Display Entity.", Types.McWIKI})
 @Examples({"set display left rotation of {_display} to vector4(0,1,1,0)",
         "set display right rotation of {_display} to vector4(1,0,0,5)"})
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprDisplayRotation extends SimplePropertyExpression<Entity, Quaternionf> {
 
     static {

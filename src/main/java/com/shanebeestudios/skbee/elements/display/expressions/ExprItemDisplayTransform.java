@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the item display transform of an Item Display Entity.", Types.McWIKI})
 @Examples({"set item display transform of {_display} to ground transform",
         "set item display transform of {_display} to fixed transform"})
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprItemDisplayTransform extends SimplePropertyExpression<Entity, ItemDisplayTransform> {
 
     static {

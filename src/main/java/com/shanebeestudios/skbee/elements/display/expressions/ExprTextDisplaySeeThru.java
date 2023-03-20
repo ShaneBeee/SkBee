@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - See Through")
 @Description({"Represents the see through state of a Text Display Entity.", Types.McWIKI})
 @Examples("set see thru state of {_display} to true")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprTextDisplaySeeThru extends SimplePropertyExpression<Entity, Boolean> {
 
     static {

@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Fish Hook - Hooked State")
 @Description("Represents the hooked state of a fish hook.")
 @Examples("if hook state of fish hook = bobbing:")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprFishHookState extends SimplePropertyExpression<Entity, HookState> {
 
     static {

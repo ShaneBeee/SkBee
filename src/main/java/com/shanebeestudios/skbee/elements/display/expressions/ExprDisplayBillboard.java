@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Billboard")
 @Description({"Represents the billboard of a Display Entity.", Types.McWIKI})
 @Examples("set display billboard of {_display} to horizontal")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprDisplayBillboard extends SimplePropertyExpression<Entity, Billboard> {
 
     static {

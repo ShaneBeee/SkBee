@@ -21,7 +21,7 @@ import org.joml.Vector3f;
 @Name("DisplayEntity - Translation")
 @Description({"Represents the transformation translation of a Display Entity.", Types.McWIKI})
 @Examples("set display translation of {_display} to vector(0,2,0)")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprDisplayTranslation extends SimplePropertyExpression<Entity, Vector> {
 
     static {

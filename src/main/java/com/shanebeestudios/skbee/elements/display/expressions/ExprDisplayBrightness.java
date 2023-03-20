@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the brightness attributes of a Display Entity.",
         "NOTE: If this is not set in the first place, it will return nothing!", Types.McWIKI})
 @Examples("set display brightness of {_display} to displayBrightness(10,10)")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprDisplayBrightness extends SimplePropertyExpression<Entity, Brightness> {
 
     static {

@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on fish:",
         "\tif fish state = caught entity:",
         "\t\tdelete hooked entity of fish event hook"})
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprFishHookHookedEntity extends SimplePropertyExpression<FishHook, Entity> {
 
     static {

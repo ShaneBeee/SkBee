@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the display text of a Text Display Entity.",
         "NOTE: Supports multiple lines.", Types.McWIKI})
 @Examples("set display text of {_display} to \"Line 1\", \"Line 2\" and \"Line 3\"")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprTextDisplayText extends SimplePropertyExpression<Entity, String> {
 
     static {

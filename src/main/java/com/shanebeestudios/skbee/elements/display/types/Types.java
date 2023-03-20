@@ -35,7 +35,7 @@ public class Types {
                 .user("display ?brightness(es)?")
                 .name("DisplayEntity - Display Brightness")
                 .description("Represents the brightness attributes of a Display Entity.", McWIKI)
-                .since("INSERT VERSION"));
+                .since("2.8.0"));
 
         EnumUtils<Billboard> BILLBOARD_ENUM = new EnumUtils<>(Billboard.class);
         Classes.registerClass(new ClassInfo<>(Billboard.class, "displaybillboard")
@@ -43,7 +43,7 @@ public class Types {
                 .name("DisplayEntity - Billboard")
                 .description("Represents the Billboard of a Display Entity.", McWIKI)
                 .usage(BILLBOARD_ENUM.getAllNames())
-                .since("INSERT VERSION")
+                .since("2.8.0")
                 .parser(BILLBOARD_ENUM.getParser()));
 
         EnumUtils<TextAligment> TEXT_ALIGNMENT_ENUM = new EnumUtils<>(TextAligment.class, "", "aligned");
@@ -54,7 +54,7 @@ public class Types {
                         "NOTE: While I understand these names do not directly align with Minecraft,",
                         "I had to suffix them to deal with conflict issues.", McWIKI)
                 .usage(TEXT_ALIGNMENT_ENUM.getAllNames())
-                .since("INSERT VERSION")
+                .since("2.8.0")
                 .parser(TEXT_ALIGNMENT_ENUM.getParser()));
 
         EnumUtils<ItemDisplayTransform> TRANSFORM_ENUM = new EnumUtils<>(ItemDisplayTransform.class, "", "transform");
@@ -63,14 +63,14 @@ public class Types {
                 .name("DisplayEntity - Item Display Transform")
                 .description("Represents the item display transform of an Item Display Entity.", McWIKI)
                 .usage(TRANSFORM_ENUM.getAllNames())
-                .since("INSERT VERSION")
+                .since("2.8.0")
                 .parser(TRANSFORM_ENUM.getParser()));
 
         TRANSFORMATION = new ClassInfo<>(Transformation.class, "transformation")
                 .user("transformations?")
                 .name("DisplayEntity - Transformation")
                 .description("Represents a transformation of a Display Entity.", McWIKI)
-                .since("INSERT VERSION");
+                .since("2.8.0");
         Classes.registerClass(TRANSFORMATION);
 
         Classes.registerClass(new ClassInfo<>(Color.class, "bukkitcolor")
@@ -78,13 +78,13 @@ public class Types {
                 .name("Bukkit Color")
                 .description("Represents a Bukkit color. This is different than a Skript color",
                         "as it adds an alpha channel.")
-                .since("INSERT VERSION"));
+                .since("2.8.0"));
 
         VECTOR4 = new ClassInfo<>(Quaternionf.class, "vector4")
                 .user("vector4s?")
                 .name("Vector4")
                 .description("Represents a Quaternion (like a vector but with 4 values).")
-                .since("INSERT VERSION")
+                .since("2.8.0")
                 .parser(new Parser<>() {
 
                     @SuppressWarnings("NullableProblems")
@@ -134,7 +134,7 @@ public class Types {
                 .description("Creates a new display brightness object for use on a Display Entity.",
                         "Number values must be between 0 and 15.", McWIKI)
                 .examples("set {_db} to displayBrightness(10,10)")
-                .since("INSERT VERSION"));
+                .since("2.8.0"));
 
         //noinspection DataFlowIssue
         Functions.registerFunction(new SimpleJavaFunction<>("bukkitColor", new Parameter[]{
@@ -160,7 +160,7 @@ public class Types {
                 .description("Creates a new Bukkit Color using alpha, red, green and blue channels.",
                         "Number values must be between 0 and 255.")
                 .examples("set {_color} to bukkitColor(50,155,100,10)")
-                .since("INSERT VERSION"));
+                .since("2.8.0"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("vector4", new Parameter[]{
                 new Parameter<>("x", DefaultClasses.NUMBER, true, null),
@@ -180,7 +180,7 @@ public class Types {
         }
                 .description("Creates a new Vector4(Quaternion).")
                 .examples("set {_v} to vector4(1,0,0,0)")
-                .since("INSERT VERSION"));
+                .since("2.8.0"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("transformation", new Parameter[]{
                 new Parameter<>("translation", DefaultClasses.VECTOR, true, null),
@@ -205,7 +205,7 @@ public class Types {
                         "\tset {_lr} to vector4(1,1,1,1)",
                         "\tset {_rr} to vector4(2,2,2,2)",
                         "\tset {_transform} to transformation({_trans}, {_scale}, {_lr}, {_rr})")
-                .since("INSERT VERSION"));
+                .since("2.8.0"));
     }
 
     public static Vector3f converToVector3f(Vector vector) {

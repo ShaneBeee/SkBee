@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Display Width/Height")
 @Description({"Represents the width/height of a display entity.", Types.McWIKI})
 @Examples("set display width of {_display} to 3")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprDisplayWidthHeight extends SimplePropertyExpression<Entity, Float> {
 
     static {

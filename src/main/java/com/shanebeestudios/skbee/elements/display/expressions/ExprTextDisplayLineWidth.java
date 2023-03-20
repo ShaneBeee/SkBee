@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Text Line Width")
 @Description({"Represents the line width of a Text Display Entity.", Types.McWIKI})
 @Examples("set line width of {_display} to 100")
-@Since("INSERT VERSION")
+@Since("2.8.0")
 public class ExprTextDisplayLineWidth extends SimplePropertyExpression<Entity, Integer> {
 
     static {
