@@ -1,6 +1,8 @@
 package com.shanebeestudios.skbee.elements.display.types;
 
 import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.Parser;
+import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.lang.function.SimpleJavaFunction;
@@ -15,6 +17,7 @@ import org.bukkit.entity.ItemDisplay.ItemDisplayTransform;
 import org.bukkit.entity.TextDisplay.TextAligment;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -88,7 +91,29 @@ public class Types {
                 .user("vector4s?")
                 .name("Vector4")
                 .description("Represents a Quaternion (like a vector but with 4 values).")
-                .since("INSERT VERSION");
+                .since("INSERT VERSION")
+                .parser(new Parser<>() {
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public @NotNull String toString(Quaternionf vec4f, int flags) {
+                        float x = vec4f.x;
+                        float y = vec4f.y;
+                        float z = vec4f.z;
+                        float w = vec4f.w;
+                        return String.format("Vector4f(x=%s, y=%s, z=%s, w=%s)", x,y,z,w);
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(Quaternionf vec4f) {
+                        return toString(vec4f, 0);
+                    }
+                });
         Classes.registerClass(VECTOR4);
     }
 
@@ -173,8 +198,8 @@ public class Types {
             @SuppressWarnings("NullableProblems")
             @Override
             public Transformation[] executeSimple(Object[][] params) {
-                Vector3f translation = convert((Vector) params[0][0]);
-                Vector3f scale = convert((Vector) params[1][0]);
+                Vector3f translation = converToVector3f((Vector) params[0][0]);
+                Vector3f scale = converToVector3f((Vector) params[1][0]);
                 Quaternionf leftRotation = (Quaternionf) params[2][0];
                 Quaternionf rightRotation = (Quaternionf) params[3][0];
                 return new Transformation[]{new Transformation(translation, leftRotation, scale, rightRotation)};
@@ -190,11 +215,18 @@ public class Types {
                 .since("INSERT VERSION"));
     }
 
-    private static Vector3f convert(Vector vector) {
+    public static Vector3f converToVector3f(Vector vector) {
         double x = vector.getX();
         double y = vector.getY();
         double z = vector.getZ();
         return new Vector3f((float) x, (float) y, (float) z);
+    }
+
+    public static Vector converToVector(Vector3f vector3f) {
+        float x = vector3f.x;
+        float y = vector3f.y;
+        float z = vector3f.z;
+        return new Vector(x, y, z);
     }
 
 }
