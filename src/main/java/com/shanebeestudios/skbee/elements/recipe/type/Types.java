@@ -8,7 +8,10 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
+import org.bukkit.Keyed;
 import org.bukkit.Tag;
+import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
 
@@ -47,6 +50,35 @@ public class Types {
 
                     public String getVariableNamePattern() {
                         return "materialchoice://s";
+                    }
+                }));
+
+        Classes.registerClass(new ClassInfo<>(Recipe.class, "recipe")
+                .name("Recipes - Recipe")
+                .user("recipes?")
+                .description("Represents a minecraft recipe which is used to collect information",
+                        "Requires Minecraft 1.13+")
+                .examples("set {_recipe} to recipe with id \"minecraft:oak_door\"", "set {_recipes::*} to recipes from id \"someplugin:custom_recipe\", \"myrecipe\"")
+                .usage("See recipe from id expression")
+                .since("INSERT VERSION")
+                .parser(new Parser<Recipe>() {
+
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public String toString(Recipe recipe, int flags) {
+                        if(recipe instanceof Keyed recipeKey) {
+                            return recipeKey.getKey().toString();
+                        }
+                        return recipe.toString();
+                    }
+
+                    @Override
+                    public String toVariableNameString(Recipe recipe) {
+                        return "recipe:" + toString(recipe, 0);
                     }
                 }));
 
