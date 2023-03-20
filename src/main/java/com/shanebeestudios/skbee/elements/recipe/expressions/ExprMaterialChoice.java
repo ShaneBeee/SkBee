@@ -39,11 +39,11 @@ import java.util.List;
 public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
 
     static {
-        String[] patterns = SkBee.getPlugin().getPluginConfig().ELEMENTS_MINECRAFT_TAG ?
-                new String[]{"material choice of %itemtypes/minecrafttags%"} :
-                new String[]{"material choice of %itemtypes%"};
+        String pattern = SkBee.getPlugin().getPluginConfig().ELEMENTS_MINECRAFT_TAG ?
+                "material choice of %itemtypes/minecrafttags%" :
+                "material choice of %itemtypes%";
         Skript.registerExpression(ExprMaterialChoice.class, MaterialChoice.class, ExpressionType.COMBINED,
-                patterns);
+                pattern);
     }
 
     private Expression<Object> materials;
@@ -61,11 +61,12 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
         for (Object object : this.materials.getArray(event)) {
             if (object instanceof ItemType itemType) {
                 itemType.getAll().forEach(itemStack -> {
-                    if(!materials.contains(itemStack.getType()))
-                        materials.add(itemStack.getType());
+                    Material material = itemStack.getType();
+                    if(!materials.contains(material))
+                        materials.add(material);
                 });
-                itemType.getAll().forEach(itemStack -> materials.add(itemStack.getType()));
-            } else if (object instanceof Tag<?> tag) {
+            }
+            else if (object instanceof Tag<?> tag) {
                 Tag<Material> materialTag = (Tag<Material>) tag;
                 materialTag.getValues().forEach(material -> {
                     if(!materials.contains(material))

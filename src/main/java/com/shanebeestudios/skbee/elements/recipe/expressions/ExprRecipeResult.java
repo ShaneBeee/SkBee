@@ -10,11 +10,15 @@ import org.bukkit.inventory.Recipe;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Recipe - Result")
-@Description({"Get the result item of a recipe.",
-        "\nID = Minecraft or custom NamespacedKey, see examples."})
-@Examples({"set {_result} to result of recipe \"minecraft:oak_door\"",
-        "set {_result} to result of recipe \"skbee:some_recipe\"",
-        "set {_result} to result of recipe \"my_recipes:some_custom_recipe\""})
+@Description({
+        "Get the result item of a recipe.",
+        "\nID = Minecraft or custom NamespacedKey, see examples."
+})
+@Examples({
+        "set {_result} to recipe result of recipe with id \"minecraft:oak_door\"",
+        "set {_result} to recipe result of recipe with id \"skbee:some_recipe\"",
+        "set {_result} to recipe result of recipe with id \"my_recipes:some_custom_recipe\""
+})
 @Since("2.6.0")
 public class ExprRecipeResult extends SimplePropertyExpression<Recipe, ItemStack> {
 

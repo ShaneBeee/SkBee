@@ -12,7 +12,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Name("Recipe - Recipe Type")
 @Description({"Get the type of a recipe.", "\nID = Minecraft or custom NamespacedKey, see examples."})
 @Examples({"set {_type} to recipe type of recipe with id \"minecraft:oak_door\"",
-        "set {_type} to recipe type of recipe \"skbee:some_recipe\"",
+        "set {_type} to recipe type of recipe with id \"skbee:some_recipe\"",
         "set {_type} to recipe type of recipe with id \"my_recipes:some_custom_recipe\"",
         "if recipe type of recipe with id \"my_recipes:some_custom_recipe\" = shaped recipe:"})
 @Since("2.6.0")

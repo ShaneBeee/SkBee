@@ -28,7 +28,7 @@ import java.util.List;
 @Examples({
 		"set {_recipe} to recipe from id \"minecraft:oak_door\"",
 		"set {_recipe} to recipe with id \"skbee:my_recipe\"",
-		"set {_recipes::*} to recipes from ids \"someplug:recipe_name\", \"my_recipe\"",
+		"set {_recipes::*} to recipe with ids \"someplug:recipe_name\", \"my_recipe\"",
 		"set {_result} to recipe result of {_recipe}"
 })
 @Since("INSERT VERSION")
