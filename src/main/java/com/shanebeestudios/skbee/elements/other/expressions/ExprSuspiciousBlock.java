@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @Description({"Represents the item hiding in a Suspicious Block.",
         "As of Minecraft 1.19.4 the only block is Suspicious Sand."})
 @Examples("set suspicious item of target block to a diamond")
-@Since("INSERT VERSION")
+@Since("2.8.1")
 public class ExprSuspiciousBlock extends SimplePropertyExpression<Block, ItemType> {
 
     static {

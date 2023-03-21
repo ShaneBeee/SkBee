@@ -203,7 +203,7 @@ public class Types {
         }
                 .description("Creates a new Quaternion.")
                 .examples("set {_v} to quaternion(1,0,0,0)")
-                .since("INSERT VERSION"));
+                .since("2.8.1"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("axisAngle", new Parameter[]{
                 new Parameter<>("angle", DefaultClasses.NUMBER, true, null),
@@ -225,7 +225,7 @@ public class Types {
                 .description("Creates a new AxisAngle4f (Will be converted and returned as a Quaternion).",
                         "I have no clue what this is, ask ThatOneWizard!")
                 .examples("set {_v} to axisAngle(0.25,0,0,1)")
-                .since("INSERT VERSION"));
+                .since("2.8.1"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("transformation", new Parameter[]{
                 new Parameter<>("translation", DefaultClasses.VECTOR, true, null),

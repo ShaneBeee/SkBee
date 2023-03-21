@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
         "As per Minecraft \"The timestamp of the game tick when the event happened\".",
         "Appears to be how many ticks since the world was created.", Types.McWiki_INTERACTION})
 @Examples("set {_time} to last attack timestamp of target entity")
-@Since("INSERT VERSION")
+@Since("2.8.1")
 public class ExprInteractionTime extends SimplePropertyExpression<Entity, Long> {
 
     static {

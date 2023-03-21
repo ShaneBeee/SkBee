@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the game ticks of a world,",
         "essentially how many ticks this world has ticked from since creation."})
 @Examples("set {_gt} to game ticks of world of player")
-@Since("INSERT VERSION")
+@Since("2.8.1")
 public class ExprGameTick extends SimplePropertyExpression<World, Long> {
 
     static {
