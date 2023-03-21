@@ -48,7 +48,7 @@ public class ExprAllRecipes extends SimpleExpression<Recipe> {
     }
 
     @Override
-    protected Object[] get(Event event) {
+    protected Recipe[] get(Event event) {
         List<Recipe> recipes = new ArrayList<>();
         if (this.items != null) {
             for(ItemStack item : items.getArray(event)) {
