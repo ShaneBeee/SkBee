@@ -29,7 +29,7 @@ import java.util.List;
 })
 @Examples("set {_recipes::*} to all recipes of iron ingot")
 @Since("1.4.0")
-public class ExprAllRecipes extends SimpleExpression {
+public class ExprAllRecipes extends SimpleExpression<Recipe> {
 
     static {
         Skript.registerExpression(ExprAllRecipes.class, Recipe.class, ExpressionType.COMBINED,
