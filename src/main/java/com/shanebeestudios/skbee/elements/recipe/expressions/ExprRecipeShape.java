@@ -28,7 +28,7 @@ public class ExprRecipeShape extends SimplePropertyExpression<Recipe, String> {
 
 	@Override
 	public @Nullable String convert(Recipe recipe) {
-		if(recipe instanceof ShapedRecipe shapedRecipe)
+		if (recipe instanceof ShapedRecipe shapedRecipe)
 			return String.format("%s{shape=[%s]}", shapedRecipe.getKey(), StringUtils.join(shapedRecipe.getShape(), "], ["));
 		return null;
 	}

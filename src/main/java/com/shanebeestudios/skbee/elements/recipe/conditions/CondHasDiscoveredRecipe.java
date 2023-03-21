@@ -47,7 +47,7 @@ public class CondHasDiscoveredRecipe extends Condition {
     @Override
     public boolean check(Event event) {
         return players.check(event, player -> recipes.check(event, recipe -> {
-            if(recipe instanceof Keyed keyed)
+            if (recipe instanceof Keyed keyed)
                 return player.hasDiscoveredRecipe(keyed.getKey());
             return false;
         }));

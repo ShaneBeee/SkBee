@@ -33,16 +33,16 @@ public class ExprRecipeGroup extends SimplePropertyExpression<Recipe, String> {
 	@Override
 	@Nullable
 	public String convert(Recipe recipe) {
-		if(recipe instanceof ShapedRecipe shapedRecipe) {
+		if (recipe instanceof ShapedRecipe shapedRecipe) {
 			return shapedRecipe.getGroup();
 		}
-		else if(recipe instanceof ShapelessRecipe shapelessRecipe) {
+		else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
 			return shapelessRecipe.getGroup();
 		}
-		else if(recipe instanceof StonecuttingRecipe stonecuttingRecipe) {
+		else if (recipe instanceof StonecuttingRecipe stonecuttingRecipe) {
 			return stonecuttingRecipe.getGroup();
 		}
-		else if(recipe instanceof CookingRecipe<?> cookingRecipe) {
+		else if (recipe instanceof CookingRecipe<?> cookingRecipe) {
 			return cookingRecipe.getGroup();
 		}
 		return null;

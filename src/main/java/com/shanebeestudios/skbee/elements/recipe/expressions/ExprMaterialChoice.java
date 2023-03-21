@@ -60,14 +60,14 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
             if (object instanceof ItemType itemType) {
                 itemType.getAll().forEach(itemStack -> {
                     Material material = itemStack.getType();
-                    if(!materials.contains(material))
+                    if (!materials.contains(material))
                         materials.add(material);
                 });
             }
             else if (object instanceof Tag<?> tag) {
                 Tag<Material> materialTag = (Tag<Material>) tag;
                 materialTag.getValues().forEach(material -> {
-                    if(!materials.contains(material))
+                    if (!materials.contains(material))
                         materials.add(material);
                 });
             }

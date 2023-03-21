@@ -70,7 +70,7 @@ public class Types {
 
                     @Override
                     public String toString(Recipe recipe, int flags) {
-                        if(recipe instanceof Keyed recipeKey) {
+                        if (recipe instanceof Keyed recipeKey) {
                             return recipeKey.getKey().toString();
                         }
                         return recipe.toString();

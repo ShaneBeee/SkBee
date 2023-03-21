@@ -38,6 +38,8 @@ public class EffRemoveRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffRemoveRecipe.class,
+                "(remove|unregister) [1:(mc|minecraft)|2:custom] %recipe%",
+                "(remove|unregister) all [1:(mc|minecraft)|2:custom] recipe[s]",
                 "remove [(custom|1¦(mc|minecraft))] recipe[s] %strings%",
                 "remove all [(1¦(mc|minecraft))] recipe[s]");
     }

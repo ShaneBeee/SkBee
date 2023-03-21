@@ -15,10 +15,8 @@ import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
-import org.eclipse.jdt.annotation.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -77,8 +75,12 @@ public class RecipeUtil {
      * @return Itemstack from given RecipeChoice
      */
     public static ItemStack getItemStack(RecipeChoice recipeChoice) {
-        if(recipeChoice instanceof ExactChoice exactChoice) return exactChoice.getItemStack().clone();
-        else if (recipeChoice instanceof MaterialChoice materialChoice) return materialChoice.getItemStack().clone();
+        if (recipeChoice instanceof ExactChoice exactChoice) {
+            return exactChoice.getItemStack().clone();
+        }
+        else if (recipeChoice instanceof MaterialChoice materialChoice) {
+            return materialChoice.getItemStack().clone();
+        }
         return new ItemStack(Material.AIR);
     }
 
@@ -93,7 +95,7 @@ public class RecipeUtil {
         Material material = itemStack.getType();
         boolean isAir = material.isAir();
         boolean isSimilar = itemStack.isSimilar(new ItemStack(material));
-        if(isAir) {
+        if (isAir) {
             return null;
         }
         else if (isSimilar) {
@@ -109,7 +111,7 @@ public class RecipeUtil {
      */
     public static RecipeChoice[] getRecipeChoices(ItemStack ...itemStacks) {
         List<RecipeChoice> recipeChoices = new ArrayList<>();
-        for(ItemStack itemStack : itemStacks) {
+        for (ItemStack itemStack : itemStacks) {
             recipeChoices.add(getRecipeChoice(itemStack));
         }
         return recipeChoices.toArray(new RecipeChoice[0]);

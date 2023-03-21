@@ -51,10 +51,10 @@ public class ExprAllRecipes extends SimpleExpression<Recipe> {
     protected Recipe[] get(Event event) {
         List<Recipe> recipes = new ArrayList<>();
         if (this.items != null) {
-            for(ItemStack item : items.getArray(event)) {
+            for (ItemStack item : items.getArray(event)) {
                 for (Recipe recipe : Bukkit.getRecipesFor(item)) {
                     NamespacedKey namespacedKey = ((Keyed) recipe).getKey();
-                    if(pattern == 0 || isMinecraft(namespacedKey) || isCustom(namespacedKey)) {
+                    if (pattern == 0 || isMinecraft(namespacedKey) || isCustom(namespacedKey)) {
                         recipes.add(recipe);
                     }
                 }
@@ -62,7 +62,7 @@ public class ExprAllRecipes extends SimpleExpression<Recipe> {
         } else {
             Bukkit.recipeIterator().forEachRemaining(recipe -> {
                 NamespacedKey namespacedKey = ((Keyed) recipe).getKey();
-                if(pattern == 0 || isMinecraft(namespacedKey) || isCustom(namespacedKey)) {
+                if (pattern == 0 || isMinecraft(namespacedKey) || isCustom(namespacedKey)) {
                     recipes.add(recipe);
                 }
             });

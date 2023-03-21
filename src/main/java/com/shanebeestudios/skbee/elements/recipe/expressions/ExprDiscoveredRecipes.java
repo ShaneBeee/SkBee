@@ -49,7 +49,7 @@ public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
 		for (Player player : players) {
 			for (NamespacedKey namespacedKey : player.getDiscoveredRecipes()) {
 				Recipe recipe = Bukkit.getRecipe(namespacedKey);
-				if(!recipes.contains(recipe))
+				if (!recipes.contains(recipe))
 					recipes.add(recipe);
 			}
 		}
@@ -78,7 +78,7 @@ public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
 				for (Player player : getExpr().getArray(event)) {
 					player.undiscoverRecipes(player.getDiscoveredRecipes());
 					for (Object object : delta) {
-						if(object instanceof Recipe recipe && recipe instanceof Keyed keyed)
+						if (object instanceof Recipe recipe && recipe instanceof Keyed keyed)
 							player.discoverRecipe(keyed.getKey());
 					}
 				}
@@ -86,8 +86,8 @@ public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
 			case ADD:
 				for (Player player : getExpr().getArray(event)) {
 					for (Object object : delta) {
-						if(object instanceof Recipe recipe && recipe instanceof Keyed keyed)
-							if(!player.hasDiscoveredRecipe(keyed.getKey()))
+						if (object instanceof Recipe recipe && recipe instanceof Keyed keyed)
+							if (!player.hasDiscoveredRecipe(keyed.getKey()))
 								player.discoverRecipe(keyed.getKey());
 					}
 				}
@@ -95,8 +95,8 @@ public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
 			case REMOVE:
 				for (Player player : getExpr().getArray(event)) {
 					for (Object object : delta) {
-						if(object instanceof Recipe recipe && recipe instanceof Keyed keyed)
-							if(player.hasDiscoveredRecipe(keyed.getKey()))
+						if (object instanceof Recipe recipe && recipe instanceof Keyed keyed)
+							if (player.hasDiscoveredRecipe(keyed.getKey()))
 								player.undiscoverRecipe(keyed.getKey());
 					}
 				}

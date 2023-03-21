@@ -10,7 +10,7 @@ public class ExprRecipeId extends SimplePropertyExpression<Recipe,String> {
 
 	@Override
 	public @Nullable String convert(Recipe recipe) {
-		if(recipe instanceof Keyed keyed)
+		if (recipe instanceof Keyed keyed)
 			return keyed.getKey().toString();
 		return null;
 	}
