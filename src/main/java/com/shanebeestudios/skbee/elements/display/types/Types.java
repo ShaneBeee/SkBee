@@ -208,7 +208,7 @@ public class Types {
         Functions.registerFunction(new SimpleJavaFunction<>("axisAngle", new Parameter[]{
                 new Parameter<>("angle", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("x", DefaultClasses.NUMBER, true, null),
-                new Parameter<>("z", DefaultClasses.NUMBER, true, null),
+                new Parameter<>("y", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("z", DefaultClasses.NUMBER, true, null)
         }, QUATERNION, true) {
             @SuppressWarnings("NullableProblems")
