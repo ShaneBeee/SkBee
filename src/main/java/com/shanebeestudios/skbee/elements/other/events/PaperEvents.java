@@ -18,7 +18,6 @@ import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
-import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
@@ -47,23 +46,6 @@ public class PaperEvents {
                     .examples("on player change armor:",
                             "\tset helmet of player to pumpkin")
                     .since("1.3.1");
-        }
-
-        // Player Recipe Book Click Event
-        if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent")) {
-            Skript.registerEvent("Recipe Book Click Event", SimpleEvent.class, PlayerRecipeBookClickEvent.class, "[player] recipe book click")
-                    .description("Called when the player clicks on a recipe in their recipe book. Requires Paper 1.15+")
-                    .examples("on recipe book click:",
-                            "\tif event-string = \"minecraft:diamond_sword\":",
-                            "\t\tcancel event")
-                    .since("1.5.0");
-
-            EventValues.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, new Getter<>() {
-                @Override
-                public @NotNull String get(@NotNull PlayerRecipeBookClickEvent event) {
-                    return event.getRecipe().toString();
-                }
-            }, 0);
         }
 
         // Player Pickup XP Event
