@@ -24,7 +24,8 @@ import org.jetbrains.annotations.Nullable;
 public class EffStructureFill extends Effect {
 
     static {
-        Skript.registerEffect(EffStructureFill.class, "fill [structure] %structure% between %location% and %location%");
+        Skript.registerEffect(EffStructureFill.class,
+                "fill [structure] %structure% (between|within) %location% and %location%");
     }
 
     private Expression<StructureBee> structure;
