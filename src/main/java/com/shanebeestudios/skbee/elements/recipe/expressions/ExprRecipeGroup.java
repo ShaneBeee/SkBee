@@ -10,19 +10,15 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.StonecuttingRecipe;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Group of Recipe")
-@Description({
-		"Get the group of a recipe, not all recipes support groups.",
-		"Requires Minecraft 1.13+"
-})
-@Examples({
-		"set {_recipes::*} to recipes where [recipe group of input is \"custom\"]",
+@Description({"Get the group of a recipe, not all recipes support groups.",
+		"Requires Minecraft 1.13+"})
+@Examples({"set {_recipes::*} to recipes where [recipe group of input is \"custom\"]",
 		"set {_recipe} to recipe with id \"someplugin:your_recipe\"",
 		"set recipe group of {_recipe} to \"some_cool_group\"",
-		"send {_recipe}'s recipe group"
-})
+		"send {_recipe}'s recipe group"})
 @Since("INSERT VERSION")
 public class ExprRecipeGroup extends SimplePropertyExpression<Recipe, String> {
 

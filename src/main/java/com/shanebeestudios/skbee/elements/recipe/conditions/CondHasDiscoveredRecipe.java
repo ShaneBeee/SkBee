@@ -13,7 +13,7 @@ import org.bukkit.Keyed;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Recipe;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Has Discovered")
 @Description("Check if a player has discovered a recipe. Can check recipes you created, another plugin has created, or vanilla Minecraft recipes." +
@@ -60,4 +60,5 @@ public class CondHasDiscoveredRecipe extends Condition {
                 isNegated() ? "has not" : "has",
                 recipes.toString(event,debug));
     }
+
 }

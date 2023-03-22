@@ -16,17 +16,15 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings({"NullableProblems"})
 @Name("Recipe - All Recipes")
-@Description({
-        "Get a list of all recipes. May be from a specific item, may be just Minecraft recipes or custom recipes.",
-        "Due to some items having more than 1 recipe this may return multiple recipes. Requires 1.13+"
-})
+@Description({"Get a list of all recipes. May be from a specific item, may be just Minecraft recipes or custom recipes.",
+        "Due to some items having more than 1 recipe this may return multiple recipes. Requires 1.13+"})
 @Examples("set {_recipes::*} to all recipes of iron ingot")
 @Since("1.4.0")
 public class ExprAllRecipes extends SimpleExpression<Recipe> {
@@ -95,4 +93,5 @@ public class ExprAllRecipes extends SimpleExpression<Recipe> {
         }
         return "all recipes";
     }
+
 }

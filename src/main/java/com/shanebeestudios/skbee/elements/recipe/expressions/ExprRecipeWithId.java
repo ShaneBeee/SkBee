@@ -15,22 +15,18 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Recipe;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Name("Recipe - Recipe with Id")
-@Description({
-		"Gets a minecraft recipe based off a given recipe id. Requires Minecraft 1.13+",
-		"If no recipe key value is given (i.e. 'skbee' within 'skbee:my_recipe') we default to config recipe key"
-})
-@Examples({
-		"set {_recipe} to recipe from id \"minecraft:oak_door\"",
+@Description({"Gets a minecraft recipe based off a given recipe id. Requires Minecraft 1.13+",
+		"If no recipe key value is given (i.e. 'skbee' within 'skbee:my_recipe') we default to config recipe key"})
+@Examples({"set {_recipe} to recipe from id \"minecraft:oak_door\"",
 		"set {_recipe} to recipe with id \"skbee:my_recipe\"",
 		"set {_recipes::*} to recipe with ids \"someplug:recipe_name\", \"my_recipe\"",
-		"set {_result} to recipe result of {_recipe}"
-})
+		"set {_result} to recipe result of {_recipe}"})
 @Since("INSERT VERSION")
 public class ExprRecipeWithId extends SimpleExpression<Recipe> {
 

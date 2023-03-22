@@ -22,17 +22,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Material Choice")
-@Description({
-        "A material choice is a list of items or a minecraft tag, that can be used as an option in some recipes.",
+@Description({"A material choice is a list of items or a minecraft tag, that can be used as an option in some recipes.",
         "When using the 'every' item type, this will grab all relatable items in a list, ie: 'every sword'.",
         "This allows you to have one specific slot of a recipe to accept multiple items, without having to create multiple recipes.",
-        "Do note that material choices do not accept custom items (ie: items with names, lore, enchants, etc). Requires Minecraft 1.13+"
-})
-@Examples({
-        "set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
+        "Do note that material choices do not accept custom items (ie: items with names, lore, enchants, etc). Requires Minecraft 1.13+"})
+@Examples({"set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
         "set {_a} to material choice of every sword",
-        "set {_a} to material choice of minecraft tag \"minecraft:planks\""
-})
+        "set {_a} to material choice of minecraft tag \"minecraft:planks\""})
 @Since("1.10.0")
 public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
 

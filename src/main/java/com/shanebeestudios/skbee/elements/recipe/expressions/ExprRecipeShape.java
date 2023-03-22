@@ -9,15 +9,13 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.StringUtils;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 
 @NoDoc // Marked as NoDoc until advanced recipes are created, this is currently just a debug syntax
 @Name("Recipes - Recipe Shape")
-@Description({
-		"Gets the registered shape of a Shaped Recipe",
-		"Requires Minecraft 1.13+"
-})
+@Description({"Gets the registered shape of a Shaped Recipe",
+		"Requires Minecraft 1.13+"})
 @Examples("send recipe shape of recipe with id \"minecraft:oak_door\"")
 @Since("INSERT VERSION")
 public class ExprRecipeShape extends SimplePropertyExpression<Recipe, String> {

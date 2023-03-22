@@ -7,18 +7,14 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Result")
-@Description({
-        "Get the result item of a recipe.",
-        "\nID = Minecraft or custom NamespacedKey, see examples."
-})
-@Examples({
-        "set {_result} to recipe result of recipe with id \"minecraft:oak_door\"",
+@Description({"Get the result item of a recipe.",
+        "\nID = Minecraft or custom NamespacedKey, see examples."})
+@Examples({"set {_result} to recipe result of recipe with id \"minecraft:oak_door\"",
         "set {_result} to recipe result of recipe with id \"skbee:some_recipe\"",
-        "set {_result} to recipe result of recipe with id \"my_recipes:some_custom_recipe\""
-})
+        "set {_result} to recipe result of recipe with id \"my_recipes:some_custom_recipe\""})
 @Since("2.6.0")
 public class ExprRecipeResult extends SimplePropertyExpression<Recipe, ItemStack> {
 

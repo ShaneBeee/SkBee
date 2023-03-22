@@ -19,17 +19,15 @@ import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.StonecuttingRecipe;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({"NullableProblems", "deprecation"})
 @Name("Recipe - Ingredients of Recipe")
 @Description("Get the ingredients from a recipe. Requires 1.13+")
-@Examples({
-        "set {_ing::*} to ingredients of recipe with id \"minecraft:diamond_sword\"",
+@Examples({"set {_ing::*} to ingredients of recipe with id \"minecraft:diamond_sword\"",
         "loop recipes for iron ingot:",
         "\tset {_ing::*} to ingredients of loop-value"})
 @Since("1.4.0")

@@ -7,7 +7,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
 import org.bukkit.inventory.Recipe;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Recipe Type")
 @Description({"Get the type of a recipe.", "\nID = Minecraft or custom NamespacedKey, see examples."})

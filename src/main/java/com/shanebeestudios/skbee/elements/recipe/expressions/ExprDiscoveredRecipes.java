@@ -16,20 +16,16 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Recipe;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Name("Recipes - Discovered")
-@Description({
-		"Get and modify the discovered recipes of a player",
-		"Requires minecraft 1.13+"
-})
-@Examples({
-		"clear discovered recipes of player",
-		"add recipe with id \"someplugin:your_recipe\" to discovered recipes of player"
-})
+@Description({"Get and modify the discovered recipes of a player",
+		"Requires minecraft 1.13+"})
+@Examples({"clear discovered recipes of player",
+		"add recipe with id \"someplugin:your_recipe\" to discovered recipes of player"})
 @Since("INSERT VERSION")
 public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
 
@@ -114,4 +110,5 @@ public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
 	public String toString(@Nullable Event event, boolean debug) {
 		return "discovered recipes of " + getExpr().toString(event, debug);
 	}
+
 }
