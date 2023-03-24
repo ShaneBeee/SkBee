@@ -22,8 +22,8 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Spawn")
 @Description({"An effect to spawn display/interaction entities.",
         "NOTE: This is a TEMPORARY solution until Skript adds these entities."})
-@Examples({"le spawn item display entity at player",
-        "set item display of last spawned entity to diamond"})
+@Examples({"le spawn item display at player",
+        "set display item of last spawned entity to diamond"})
 @Since("2.8.0")
 public class EffTempSpawn extends Effect {
 
