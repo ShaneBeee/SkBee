@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Interaction - Is Responsive")
 @Description({"Represents the state of being responsive of an Interaction Entity.", Types.McWiki_INTERACTION})
 @Examples("set is responsive of {_int} to true")
-@Since("INSERT VERSION")
+@Since("2.8.1")
 public class ExprInteractionResponsive extends SimplePropertyExpression<Entity, Boolean> {
 
     static {

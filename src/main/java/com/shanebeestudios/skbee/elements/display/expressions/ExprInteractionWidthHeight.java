@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
         "add 5 to interaction width of {_int}",
         "remove 2.5 from interaction width of {_int}",
         "reset interaction height of {_int}"})
-@Since("INSERT VERSION")
+@Since("2.8.1")
 public class ExprInteractionWidthHeight extends SimplePropertyExpression<Entity, Float> {
 
     static {

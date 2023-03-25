@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Interaction - Last Attack/Interaction Player")
 @Description({"Represents the last player to attack/interact with an Interaction Entity.", Types.McWiki_INTERACTION})
 @Examples("set {_player} to last attack player of {_int}")
-@Since("INSERT VERSION")
+@Since("2.8.1")
 public class ExprInteractionPlayer extends SimplePropertyExpression<Entity, OfflinePlayer> {
 
     static {

@@ -17,6 +17,10 @@ public class TeamManager {
     private static final boolean ENTITY_TEAM = Skript.methodExists(Scoreboard.class, "getEntityTeam", Entity.class);
 
     public static Team getTeam(String name) {
+        // Team names in 1.17.x only support 16 chars
+        if (!Skript.isRunningMinecraft(1,18) && name.length() > 16) {
+            name = name.substring(0,16);
+        }
         Team team = SCOREBOARD.getTeam(name);
         if (team == null) {
             team = SCOREBOARD.registerNewTeam(name);
@@ -35,6 +39,10 @@ public class TeamManager {
     }
 
     public static void unregisterTeam(String name) {
+        // Team names in 1.17.x only support 16 chars
+        if (!Skript.isRunningMinecraft(1,18) && name.length() > 16) {
+            name = name.substring(0,16);
+        }
         Team team = SCOREBOARD.getTeam(name);
         if (team != null) {
             team.unregister();
