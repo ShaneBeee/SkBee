@@ -48,7 +48,7 @@ public class ExprTextDisplayText extends SimplePropertyExpression<Entity, String
         if (delta.length == 1) {
             text = ((String) delta[0]);
         } else {
-            text = StringUtils.join(delta, System.lineSeparator());
+            text = StringUtils.join(delta, "\n");
         }
         for (Entity entity : getExpr().getArray(event)) {
             if (entity instanceof TextDisplay textDisplay) {
