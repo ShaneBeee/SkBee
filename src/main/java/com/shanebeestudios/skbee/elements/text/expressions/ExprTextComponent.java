@@ -34,7 +34,7 @@ import java.util.List;
         "Some components have extra objects, you can use strings or other text components here."})
 @Examples({"set {_comp::1} to text component from \"hi player \"",
         "set {_comp::2} to text component of \"hover over me for a special message!\"",
-        "set hover event of {_comp::2} to hover event to show \"OoO look ma I'm hovering!\"",
+        "set hover event of {_comp::2} to hover event showing \"OoO look ma I'm hovering!\"",
         "send component {_comp::*} to player", "",
         "set {_t} to translate component from player's tool",
         "set {_t} to translate component from \"item.minecraft.milk_bucket\"",
