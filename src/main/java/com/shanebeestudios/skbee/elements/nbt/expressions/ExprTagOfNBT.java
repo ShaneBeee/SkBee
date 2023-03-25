@@ -29,7 +29,7 @@ import java.util.ArrayList;
         "data in the \"custom\" tag of a block/entity's NBT compound. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen.",
         "That said, this system is a tad convoluted, see the SkBee WIKI for more details."})
 @Examples({"set {_tag} to tag \"Invulnerable\" of nbt compound of target entity",
-        "send \"Tag: %tag \"\"CustomName\"\" of nbt compound of target entity%\" to player",
+        "send \"Tag: %tag \"CustomName\" of nbt compound of target entity%\" to player",
         "set {_tag::*} to compound list tag \"Enchantments\" of nbt item compound of player's tool",
         "delete tag \"CustomTag\" of {_nbt}",
         "set {_tag} to \"BlockEntityTag;Items\" tag of nbt compound of target block", "",
