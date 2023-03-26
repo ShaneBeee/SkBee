@@ -16,12 +16,12 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("DisplayEntity - Text Shadowed")
 @Description({"Represents the shadowed state of a Text Display Entity.", Types.McWIKI})
-@Examples("set text shadowed of {_display} to true")
+@Examples("set display text shadowed of {_display} to true")
 @Since("2.8.0")
 public class ExprTextDisplayShadowed extends SimplePropertyExpression<Entity, Boolean> {
 
     static {
-        register(ExprTextDisplayShadowed.class, Boolean.class, "text shadowed", "entities");
+        register(ExprTextDisplayShadowed.class, Boolean.class, "[display] text shadowed", "entities");
     }
 
     @Override

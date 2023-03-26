@@ -24,7 +24,7 @@ public class ExprItemDisplayTransform extends SimplePropertyExpression<Entity, I
 
     static {
         register(ExprItemDisplayTransform.class, ItemDisplayTransform.class,
-                "item display transform", "entities");
+                "[display] item display transform", "entities");
     }
 
     @Override

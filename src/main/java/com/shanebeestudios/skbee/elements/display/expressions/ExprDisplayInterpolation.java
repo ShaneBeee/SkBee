@@ -20,14 +20,14 @@ import org.jetbrains.annotations.Nullable;
 @Name("DisplayEntity - Interpolation Start/Duration")
 @Description({"Represents the interpolation start and duration times for a Display Entity.",
         "NOTE: Due to how these work, you will need to use integers as ticks instead of time spans.", Types.McWIKI})
-@Examples({"set interpolation start of {_display} to -1",
-        "set interpolation delay of {_display} to 200"})
+@Examples({"set display interpolation start of {_display} to -1",
+        "set display interpolation delay of {_display} to 200"})
 @Since("2.8.0")
 public class ExprDisplayInterpolation extends SimplePropertyExpression<Entity, Number> {
 
     static {
         register(ExprDisplayInterpolation.class, Number.class,
-                "interpolation ((start|delay)|d:duration)", "entities");
+                "[display] interpolation ((start|delay)|d:duration)", "entities");
     }
 
     private boolean duration;

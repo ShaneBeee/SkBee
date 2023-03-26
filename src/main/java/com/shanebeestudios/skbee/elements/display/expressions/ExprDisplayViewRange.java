@@ -16,12 +16,12 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("DisplayEntity - View Range")
 @Description({"Represents the view range of a Display Entity.", Types.McWIKI})
-@Examples("set view range of {_display} to 500")
+@Examples("set display view range of {_display} to 500")
 @Since("2.8.0")
 public class ExprDisplayViewRange extends SimplePropertyExpression<Entity, Number> {
 
     static {
-        register(ExprDisplayViewRange.class, Number.class, "view range", "entities");
+        register(ExprDisplayViewRange.class, Number.class, "display view range", "entities");
     }
 
     @Override

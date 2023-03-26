@@ -19,13 +19,14 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("DisplayEntity - Shadow Radius/Strength")
 @Description({"Represents the shadow radius/strength of a Display Entity.", Types.McWIKI})
-@Examples({"set shadow strength of {_display} to 3",
-        "set shadow radius of {_display} to 10"})
+@Examples({"set display shadow strength of {_display} to 3",
+        "set display shadow radius of {_display} to 10"})
 @Since("2.8.0")
 public class ExprDisplayShadow extends SimplePropertyExpression<Entity, Number> {
 
     static {
-        register(ExprDisplayShadow.class, Number.class, "shadow (radius|s:strength)", "entities");
+        register(ExprDisplayShadow.class, Number.class,
+                "[display] shadow (radius|s:strength)", "entities");
     }
 
     private boolean strength;

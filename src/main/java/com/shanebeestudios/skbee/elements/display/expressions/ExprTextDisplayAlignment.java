@@ -17,12 +17,13 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("DisplayEntity - Text Alignment")
 @Description({"Represents the text alignment of a Text Display Entity.", Types.McWIKI})
-@Examples("set text alignment of {_display} to left aligned")
+@Examples("set display text alignment of {_display} to left aligned")
 @Since("2.8.0")
 public class ExprTextDisplayAlignment extends SimplePropertyExpression<Entity, TextAligment> {
 
     static {
-        register(ExprTextDisplayAlignment.class, TextAligment.class, "text alignment", "entities");
+        register(ExprTextDisplayAlignment.class, TextAligment.class,
+                "[display] text alignment", "entities");
     }
 
     @Override
