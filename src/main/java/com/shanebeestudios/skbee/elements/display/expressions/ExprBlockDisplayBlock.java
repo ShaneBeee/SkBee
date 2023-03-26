@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprBlockDisplayBlock extends SimplePropertyExpression<Entity, BlockData> {
 
     static {
-        register(ExprBlockDisplayBlock.class, BlockData.class, "display block data", "entities");
+        register(ExprBlockDisplayBlock.class, BlockData.class, "display block[ ]data", "entities");
     }
 
     @Override
