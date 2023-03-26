@@ -18,14 +18,14 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the line width of a Text Display Entity.", Types.McWIKI})
 @Examples("set line width of {_display} to 100")
 @Since("2.8.0")
-public class ExprTextDisplayLineWidth extends SimplePropertyExpression<Entity, Integer> {
+public class ExprTextDisplayLineWidth extends SimplePropertyExpression<Entity, Number> {
 
     static {
-        register(ExprTextDisplayLineWidth.class, Integer.class, "line width", "entities");
+        register(ExprTextDisplayLineWidth.class, Number.class, "line width", "entities");
     }
 
     @Override
-    public @Nullable Integer convert(Entity entity) {
+    public @Nullable Number convert(Entity entity) {
         if (entity instanceof TextDisplay textDisplay) return textDisplay.getLineWidth();
         return null;
     }
@@ -33,14 +33,15 @@ public class ExprTextDisplayLineWidth extends SimplePropertyExpression<Entity, I
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(Integer.class);
+        if (mode == ChangeMode.SET) return CollectionUtils.array(Number.class);
         return null;
     }
 
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (delta != null && delta[0] instanceof Integer width) {
+        if (delta != null && delta[0] instanceof Number num) {
+            int width = num.intValue();
             for (Entity entity : getExpr().getArray(event)) {
                 if (entity instanceof TextDisplay textDisplay) {
                     textDisplay.setLineWidth(width);
@@ -50,8 +51,8 @@ public class ExprTextDisplayLineWidth extends SimplePropertyExpression<Entity, I
     }
 
     @Override
-    public @NotNull Class<? extends Integer> getReturnType() {
-        return Integer.class;
+    public @NotNull Class<? extends Number> getReturnType() {
+        return Number.class;
     }
 
     @Override

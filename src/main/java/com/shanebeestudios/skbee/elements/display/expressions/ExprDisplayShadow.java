@@ -22,10 +22,10 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set shadow strength of {_display} to 3",
         "set shadow radius of {_display} to 10"})
 @Since("2.8.0")
-public class ExprDisplayShadow extends SimplePropertyExpression<Entity, Float> {
+public class ExprDisplayShadow extends SimplePropertyExpression<Entity, Number> {
 
     static {
-        register(ExprDisplayShadow.class, Float.class, "shadow (radius|s:strength)", "entities");
+        register(ExprDisplayShadow.class, Number.class, "shadow (radius|s:strength)", "entities");
     }
 
     private boolean strength;
@@ -38,7 +38,7 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Entity, Float> {
     }
 
     @Override
-    public @Nullable Float convert(Entity entity) {
+    public @Nullable Number convert(Entity entity) {
         if (!(entity instanceof Display display)) return null;
         return this.strength ? display.getShadowStrength() : display.getShadowRadius();
     }
@@ -46,14 +46,15 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Entity, Float> {
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(Float.class);
+        if (mode == ChangeMode.SET) return CollectionUtils.array(Number.class);
         return null;
     }
 
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (delta != null && delta[0] instanceof Float changeValue) {
+        if (delta != null && delta[0] instanceof Number n) {
+            float changeValue = n.floatValue();
             for (Entity entity : getExpr().getArray(event)) {
                 if (!(entity instanceof Display display)) continue;
                 if (this.strength) {
@@ -66,8 +67,8 @@ public class ExprDisplayShadow extends SimplePropertyExpression<Entity, Float> {
     }
 
     @Override
-    public @NotNull Class<? extends Float> getReturnType() {
-        return Float.class;
+    public @NotNull Class<? extends Number> getReturnType() {
+        return Number.class;
     }
 
     @Override

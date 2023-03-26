@@ -18,14 +18,14 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the view range of a Display Entity.", Types.McWIKI})
 @Examples("set view range of {_display} to 500")
 @Since("2.8.0")
-public class ExprDisplayViewRange extends SimplePropertyExpression<Entity, Float> {
+public class ExprDisplayViewRange extends SimplePropertyExpression<Entity, Number> {
 
     static {
-        register(ExprDisplayViewRange.class, Float.class, "view range", "entities");
+        register(ExprDisplayViewRange.class, Number.class, "view range", "entities");
     }
 
     @Override
-    public @Nullable Float convert(Entity entity) {
+    public @Nullable Number convert(Entity entity) {
         if (entity instanceof Display display) return display.getViewRange();
         return null;
     }
@@ -33,14 +33,15 @@ public class ExprDisplayViewRange extends SimplePropertyExpression<Entity, Float
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(Float.class);
+        if (mode == ChangeMode.SET) return CollectionUtils.array(Number.class);
         return null;
     }
 
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (delta != null && delta[0] instanceof Float changeValue) {
+        if (delta != null && delta[0] instanceof Number num) {
+            float changeValue = num.intValue();
             for (Entity entity : getExpr().getArray(event)) {
                 if (entity instanceof Display display) display.setViewRange(changeValue);
             }
@@ -48,8 +49,8 @@ public class ExprDisplayViewRange extends SimplePropertyExpression<Entity, Float
     }
 
     @Override
-    public @NotNull Class<? extends Float> getReturnType() {
-        return Float.class;
+    public @NotNull Class<? extends Number> getReturnType() {
+        return Number.class;
     }
 
     @Override

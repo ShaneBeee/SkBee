@@ -22,10 +22,10 @@ import org.joml.Quaternionf;
         "reset quat-x of {_q}",
         "set {_x} to quat-x of display right rotation of {_display}"})
 @Since("INSERT VERSION")
-public class ExprQuaternionElements extends SimplePropertyExpression<Quaternionf, Float> {
+public class ExprQuaternionElements extends SimplePropertyExpression<Quaternionf, Number> {
 
     static {
-        register(ExprQuaternionElements.class, Float.class,
+        register(ExprQuaternionElements.class, Number.class,
                 "quat[ernion]-(x|1:y|2:z|3:w)", "quaternions");
     }
 
@@ -39,7 +39,7 @@ public class ExprQuaternionElements extends SimplePropertyExpression<Quaternionf
     }
 
     @Override
-    public @Nullable Float convert(Quaternionf quaternionf) {
+    public @Nullable Number convert(Quaternionf quaternionf) {
         return switch (this.pattern) {
             case 1 -> quaternionf.y;
             case 2 -> quaternionf.z;
@@ -53,7 +53,7 @@ public class ExprQuaternionElements extends SimplePropertyExpression<Quaternionf
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         switch (mode) {
             case SET, ADD, REMOVE, RESET -> {
-                return CollectionUtils.array(Float.class);
+                return CollectionUtils.array(Number.class);
             }
         }
         return null;
@@ -62,7 +62,7 @@ public class ExprQuaternionElements extends SimplePropertyExpression<Quaternionf
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        float changeValue = delta != null && delta[0] instanceof Float ? (float) delta[0] : this.pattern == 3 ? 1.0f : 0.0f;
+        float changeValue = delta != null && delta[0] instanceof Number num ? num.floatValue() : this.pattern == 3 ? 1.0f : 0.0f;
 
         for (Quaternionf quaternionf : getExpr().getArray(event)) {
             float oldValue = switch (this.pattern) {
@@ -85,8 +85,8 @@ public class ExprQuaternionElements extends SimplePropertyExpression<Quaternionf
     }
 
     @Override
-    public @NotNull Class<? extends Float> getReturnType() {
-        return Float.class;
+    public @NotNull Class<? extends Number> getReturnType() {
+        return Number.class;
     }
 
     @Override

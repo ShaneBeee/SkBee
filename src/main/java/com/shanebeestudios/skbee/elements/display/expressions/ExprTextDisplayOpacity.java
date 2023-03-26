@@ -18,14 +18,14 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the text opacity of a Text Display Entity.", Types.McWIKI})
 @Examples("set text opacity of {_display} to 50")
 @Since("2.8.0")
-public class ExprTextDisplayOpacity extends SimplePropertyExpression<Entity, Integer> {
+public class ExprTextDisplayOpacity extends SimplePropertyExpression<Entity, Number> {
 
     static {
-        register(ExprTextDisplayOpacity.class, Integer.class, "text opacity", "entities");
+        register(ExprTextDisplayOpacity.class, Number.class, "text opacity", "entities");
     }
 
     @Override
-    public @Nullable Integer convert(Entity entity) {
+    public @Nullable Number convert(Entity entity) {
         if (entity instanceof TextDisplay textDisplay) return (int) textDisplay.getTextOpacity();
         return null;
     }
@@ -33,15 +33,15 @@ public class ExprTextDisplayOpacity extends SimplePropertyExpression<Entity, Int
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(Integer.class);
+        if (mode == ChangeMode.SET) return CollectionUtils.array(Number.class);
         return null;
     }
 
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (delta != null && delta[0] instanceof Integer integer) {
-            byte opacity = ((Number) integer).byteValue();
+        if (delta != null && delta[0] instanceof Number num) {
+            byte opacity = num.byteValue();
             for (Entity entity : getExpr().getArray(event)) {
                 if (entity instanceof TextDisplay textDisplay) {
                     textDisplay.setTextOpacity(opacity);
@@ -51,8 +51,8 @@ public class ExprTextDisplayOpacity extends SimplePropertyExpression<Entity, Int
     }
 
     @Override
-    public @NotNull Class<? extends Integer> getReturnType() {
-        return Integer.class;
+    public @NotNull Class<? extends Number> getReturnType() {
+        return Number.class;
     }
 
     @Override

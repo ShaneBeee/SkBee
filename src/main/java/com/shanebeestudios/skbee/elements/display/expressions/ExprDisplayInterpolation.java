@@ -23,10 +23,10 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set interpolation start of {_display} to -1",
         "set interpolation delay of {_display} to 200"})
 @Since("2.8.0")
-public class ExprDisplayInterpolation extends SimplePropertyExpression<Entity, Integer> {
+public class ExprDisplayInterpolation extends SimplePropertyExpression<Entity, Number> {
 
     static {
-        register(ExprDisplayInterpolation.class, Integer.class,
+        register(ExprDisplayInterpolation.class, Number.class,
                 "interpolation ((start|delay)|d:duration)", "entities");
     }
 
@@ -40,22 +40,23 @@ public class ExprDisplayInterpolation extends SimplePropertyExpression<Entity, I
     }
 
     @Override
-    public @Nullable Integer convert(Entity entity) {
+    public @Nullable Number convert(Entity entity) {
         if (!(entity instanceof Display display)) return null;
-        return this.duration ? display.getInterpolationDuration() : display.getInterpolationDelay();
+        return (long) (this.duration ? display.getInterpolationDuration() : display.getInterpolationDelay());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(Integer.class);
+        if (mode == ChangeMode.SET) return CollectionUtils.array(Number.class);
         return null;
     }
 
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (delta != null && delta[0] instanceof Integer changeValue) {
+        if (delta != null && delta[0] instanceof Number num) {
+            int changeValue = num.intValue();
             for (Entity entity : getExpr().getArray(event)) {
                 if (entity instanceof Display display) {
                     if (this.duration) {
@@ -69,8 +70,8 @@ public class ExprDisplayInterpolation extends SimplePropertyExpression<Entity, I
     }
 
     @Override
-    public @NotNull Class<? extends Integer> getReturnType() {
-        return Integer.class;
+    public @NotNull Class<? extends Number> getReturnType() {
+        return Number.class;
     }
 
     @Override

@@ -20,10 +20,10 @@ import org.jetbrains.annotations.Nullable;
         "Appears to be how many ticks since the world was created.", Types.McWiki_INTERACTION})
 @Examples("set {_time} to last attack timestamp of target entity")
 @Since("2.8.1")
-public class ExprInteractionTime extends SimplePropertyExpression<Entity, Long> {
+public class ExprInteractionTime extends SimplePropertyExpression<Entity, Number> {
 
     static {
-        register(ExprInteractionTime.class, Long.class,
+        register(ExprInteractionTime.class, Number.class,
                 "last (attack|i:interaction) timestamp[s]", "entities");
     }
 
@@ -37,7 +37,7 @@ public class ExprInteractionTime extends SimplePropertyExpression<Entity, Long> 
     }
 
     @Override
-    public @Nullable Long convert(Entity entity) {
+    public @Nullable Number convert(Entity entity) {
         if (entity instanceof Interaction interaction) {
             if (this.interact) {
                 Interaction.PreviousInteraction lastInteraction = interaction.getLastInteraction();
@@ -51,8 +51,8 @@ public class ExprInteractionTime extends SimplePropertyExpression<Entity, Long> 
     }
 
     @Override
-    public @NotNull Class<? extends Long> getReturnType() {
-        return Long.class;
+    public @NotNull Class<? extends Number> getReturnType() {
+        return Number.class;
     }
 
     @Override
