@@ -17,6 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("DisplayEntity - Display Brightness")
 @Description({"Represents the brightness attributes of a Display Entity.",
+        "NOTE: Delete/reset will reset the Display Entity's brightness to match it's surroundings.",
         "NOTE: If this is not set in the first place, it will return nothing!", Types.McWIKI})
 @Examples("set display brightness of {_display} to displayBrightness(10,10)")
 @Since("2.8.0")
@@ -36,17 +37,18 @@ public class ExprDisplayBrightness extends SimplePropertyExpression<Entity, Brig
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(Brightness.class);
+        if (mode == ChangeMode.SET || mode == ChangeMode.DELETE || mode == ChangeMode.RESET) {
+            return CollectionUtils.array(Brightness.class);
+        }
         return null;
     }
 
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (delta != null && delta[0] instanceof Brightness brightness) {
-            for (Entity entity : getExpr().getArray(event)) {
-                if (entity instanceof Display display) display.setBrightness(brightness);
-            }
+        Brightness brightness = (delta != null && delta[0] instanceof Brightness b) ? b : null;
+        for (Entity entity : getExpr().getArray(event)) {
+            if (entity instanceof Display display) display.setBrightness(brightness);
         }
     }
 
