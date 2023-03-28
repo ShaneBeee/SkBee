@@ -29,7 +29,7 @@ public class EffTempSpawn extends Effect {
 
     static {
         Skript.registerEffect(EffTempSpawn.class,
-                "(skbee|le) spawn ((text|1:item|2:block) display|3:interaction) [%directions% %locations%]");
+                "(skbee|le) spawn ((text|1:item|2:block) display|3:interaction) [entity] [%directions% %locations%]");
     }
 
     private int pattern;

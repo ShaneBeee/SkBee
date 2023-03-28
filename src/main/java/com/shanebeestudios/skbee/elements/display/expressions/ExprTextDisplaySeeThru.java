@@ -16,13 +16,13 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("DisplayEntity - See Through")
 @Description({"Represents the see through state of a Text Display Entity.", Types.McWIKI})
-@Examples("set see thru state of {_display} to true")
+@Examples("set display see thru state of {_display} to true")
 @Since("2.8.0")
 public class ExprTextDisplaySeeThru extends SimplePropertyExpression<Entity, Boolean> {
 
     static {
         register(ExprTextDisplaySeeThru.class, Boolean.class,
-                "see (thru|through) state", "entities");
+                "[display] see (thru|through) state", "entities");
     }
 
     @Override

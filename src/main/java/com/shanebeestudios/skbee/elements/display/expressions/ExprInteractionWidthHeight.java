@@ -24,10 +24,10 @@ import org.jetbrains.annotations.Nullable;
         "remove 2.5 from interaction width of {_int}",
         "reset interaction height of {_int}"})
 @Since("2.8.1")
-public class ExprInteractionWidthHeight extends SimplePropertyExpression<Entity, Float> {
+public class ExprInteractionWidthHeight extends SimplePropertyExpression<Entity, Number> {
 
     static {
-        register(ExprInteractionWidthHeight.class, Float.class,
+        register(ExprInteractionWidthHeight.class, Number.class,
                 "interaction (width|h:height)", "entities");
     }
 
@@ -41,9 +41,9 @@ public class ExprInteractionWidthHeight extends SimplePropertyExpression<Entity,
     }
 
     @Override
-    public @Nullable Float convert(Entity entity) {
+    public @Nullable Number convert(Entity entity) {
         if (entity instanceof Interaction interaction) {
-            return this.height ? interaction.getInteractionHeight() : interaction.getInteractionWidth();
+            return this.height ? (double) interaction.getInteractionHeight() : interaction.getInteractionWidth();
         }
         return null;
     }
@@ -52,7 +52,7 @@ public class ExprInteractionWidthHeight extends SimplePropertyExpression<Entity,
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         return switch (mode) {
-            case ADD, SET, RESET, REMOVE -> CollectionUtils.array(Float.class);
+            case ADD, SET, RESET, REMOVE -> CollectionUtils.array(Number.class);
             default -> null;
         };
     }
@@ -61,8 +61,8 @@ public class ExprInteractionWidthHeight extends SimplePropertyExpression<Entity,
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         float changeValue = 1.0f;
-        if (delta != null && delta[0] instanceof Float f) {
-            changeValue = f;
+        if (delta != null && delta[0] instanceof Number num) {
+            changeValue = num.floatValue();
         }
         for (Entity entity : getExpr().getArray(event)) {
             if (entity instanceof Interaction interaction) {
@@ -81,8 +81,8 @@ public class ExprInteractionWidthHeight extends SimplePropertyExpression<Entity,
     }
 
     @Override
-    public @NotNull Class<? extends Float> getReturnType() {
-        return Float.class;
+    public @NotNull Class<? extends Number> getReturnType() {
+        return Number.class;
     }
 
     @Override

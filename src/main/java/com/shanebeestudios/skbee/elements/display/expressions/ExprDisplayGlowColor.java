@@ -17,12 +17,12 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("DisplayEntity - Glow Color Override")
 @Description({"Represents the glow color override of a Display Entity.", Types.McWIKI})
-@Examples("set glow color override of {_display} to bukkitColor(255,1,1,100)")
+@Examples("set display glow color override of {_display} to bukkitColor(255,1,1,100)")
 @Since("2.8.0")
 public class ExprDisplayGlowColor extends SimplePropertyExpression<Entity, Color> {
 
     static {
-        register(ExprDisplayGlowColor.class, Color.class, "glow color override", "entities");
+        register(ExprDisplayGlowColor.class, Color.class, "[display] glow color override", "entities");
     }
 
     @SuppressWarnings("deprecation")
