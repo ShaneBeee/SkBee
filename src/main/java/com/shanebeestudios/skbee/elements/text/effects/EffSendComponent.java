@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.text.BeeComponent;
@@ -20,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Text Component - Send")
 @Description({"Send text components to players/console. You can also broadcast components as well.",
         "The optional sender (supported in Minecraft 1.16.4+) allows you to send components from a specific player.",
-        "This is useful to make sure players can block messages using 1.16.4's new player chat ignore system.",
+        "This is useful to make sure players can block messages using MC 1.16.4's new player chat ignore system.",
         "As of 1.16.0 you can also send action bar components to players and you can also send normal strings."})
 @Examples({"set {_comp::1} to text component of \"hi player \"",
         "set {_comp::2} to text component of \"hover over me for a special message!\"",
@@ -57,28 +58,30 @@ public class EffSendComponent extends Effect {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected void execute(Event e) {
+    protected void execute(Event event) {
         if (components == null) return;
 
-        Player sender = this.sender != null ? this.sender.getSingle(e) : null;
-
-        BeeComponent component = BeeComponent.empty();
-        for (Object comp : this.components.getArray(e)) {
-            if (comp instanceof BeeComponent beeComponent) {
-                component.append(beeComponent);
-            } else if (comp instanceof String string) {
+        Player sender = this.sender != null ? this.sender.getSingle(event) : null;
+        for (Object object : this.components.getArray(event)) {
+            BeeComponent component = BeeComponent.empty();
+            if (object instanceof BeeComponent beeComponent) {
+                component = beeComponent;
+            } else if (object instanceof String string) {
+                component.append(BeeComponent.fromText(string));
+            } else {
+                String string = Classes.toString(object);
                 component.append(BeeComponent.fromText(string));
             }
-        }
 
-        if (broadcast) {
-            component.broadcast(sender);
-        } else {
-            for (CommandSender receiver : this.receivers.getArray(e)) {
-                if (action) {
-                    component.sendActionBar(receiver);
-                } else {
-                    component.sendMessage(sender, receiver);
+            if (this.broadcast) {
+                component.broadcast(sender);
+            } else {
+                for (CommandSender receiver : this.receivers.getArray(event)) {
+                    if (this.action) {
+                        component.sendActionBar(receiver);
+                    } else {
+                        component.sendMessage(sender, receiver);
+                    }
                 }
             }
         }
