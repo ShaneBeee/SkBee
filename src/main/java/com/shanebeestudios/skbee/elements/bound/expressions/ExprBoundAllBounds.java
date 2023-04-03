@@ -31,7 +31,8 @@ public class ExprBoundAllBounds extends SimpleExpression<Object> {
 
     static {
         Skript.registerExpression(ExprBoundAllBounds.class, Object.class, ExpressionType.SIMPLE,
-                "[(all [[of] the]|the)] bound[s] [(in|of) %-worlds%]", "[(all [[of] the]|the)] bound id[s] [(in|of) %-worlds%]");
+                "[(all [[of] the]|the)] bounds [(in|of) %-worlds%]",
+                "[(all [[of] the]|the)] bound ids [(in|of) %-worlds%]");
     }
 
     private boolean ID;
