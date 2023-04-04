@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
@@ -282,6 +283,24 @@ public class OtherEvents {
             }
         }, 0);
 
+        // Block Damage Abort Event
+        if (Skript.classExists("org.bukkit.event.block.BlockDamageAbortEvent")) {
+            Skript.registerEvent("Block Damage Abort", SimpleEvent.class, BlockDamageAbortEvent.class,
+                    "block damage abort")
+                    .description("Called when a player stops damaging a Block. Requires MC 1.18.x+")
+                    .examples("on block damage abort:",
+                            "\tsend \"get back to work\"")
+                    .since("INSERT VERSION");
+
+            EventValues.registerEventValue(BlockDamageAbortEvent.class, Player.class, new Getter<>() {
+                @Override
+                public Player get(BlockDamageAbortEvent event) {
+                    return event.getPlayer();
+                }
+            }, EventValues.TIME_NOW);
+        }
+
+        // OTHER EVENT VALUES
         // Click Events
         EventValues.registerEventValue(PlayerInteractEvent.class, BlockFace.class, new Getter<>() {
             @Override
