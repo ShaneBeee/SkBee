@@ -167,6 +167,7 @@ public class OtherEvents {
         Skript.registerEvent("Inventory Move Item", SimpleEvent.class, InventoryMoveItemEvent.class,
                         "inventory move item")
                 .description("Called when some entity or block (e.g. hopper) tries to move items directly from one inventory to another.",
+                        "\nNOTE: This has nothing to do with a player's inventory!!!",
                         "\nWhen this event is called, the initiator may already have removed the item from the source inventory and is ready to move it into the destination inventory.",
                         "\nIf this event is cancelled, the items will be returned to the source inventory, if needed.",
                         "\nIf this event is not cancelled, the initiator will try to put the ItemStack into the destination inventory.",
