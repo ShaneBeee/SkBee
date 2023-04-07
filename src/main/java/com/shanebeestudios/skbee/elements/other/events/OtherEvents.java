@@ -291,7 +291,7 @@ public class OtherEvents {
                     .description("Called when a player stops damaging a Block. Requires MC 1.18.x+")
                     .examples("on block damage abort:",
                             "\tsend \"get back to work\"")
-                    .since("INSERT VERSION");
+                    .since("2.8.3");
 
             EventValues.registerEventValue(BlockDamageAbortEvent.class, Player.class, new Getter<>() {
                 @Override

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
         "\tif attacker is a player:",
         "\t\tif hit is critical:",
         "\t\t\tcancel event"})
-@Since("INSERT VERSION")
+@Since("2.8.3")
 public class CondCriticalHit extends Condition {
 
     static {

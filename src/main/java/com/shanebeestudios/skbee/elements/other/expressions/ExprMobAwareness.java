@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
         "Unaware mobs may also have other unspecified behaviours disabled, such as drowning."})
 @Examples({"if mob awareness of target entity = true:",
         "set mob awareness of target entity to false"})
-@Since("INSERT VERSION")
+@Since("2.8.3")
 public class ExprMobAwareness extends SimplePropertyExpression<Entity, Boolean> {
 
     static {
