@@ -30,7 +30,7 @@ import java.util.ArrayList;
         "That said, this system is a tad convoluted, see the SkBee WIKI for more details."})
 @Examples({"set {_tag} to tag \"Invulnerable\" of nbt compound of target entity",
         "send \"Tag: %tag \"CustomName\" of nbt compound of target entity%\" to player",
-        "set {_tag::*} to compound list tag \"Enchantments\" of nbt item compound of player's tool",
+        "set {_tag::*} to compound list tag \"Enchantments\" of nbt compound of player's tool",
         "delete tag \"CustomTag\" of {_nbt}",
         "set {_tag} to \"BlockEntityTag;Items\" tag of nbt compound of target block", "",
         "set {_n} to nbt compound of player's tool",
