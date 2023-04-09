@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.elements.team.type;
 
 import ch.njol.skript.Skript;
 import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -65,9 +64,9 @@ public class TeamManager {
                     entities.add(ent);
                 }
             } else {
-                OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(entry);
-                if (offlinePlayer.isOnline()) {
-                    entities.add(offlinePlayer.getPlayer());
+                Player player = Bukkit.getPlayer(entry);
+                if (player != null) {
+                    entities.add(player);
                 }
             }
         });
