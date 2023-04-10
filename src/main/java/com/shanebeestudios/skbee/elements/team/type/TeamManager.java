@@ -10,16 +10,18 @@ import org.bukkit.scoreboard.Team;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class TeamManager {
 
     private static final Scoreboard SCOREBOARD = Bukkit.getScoreboardManager().getMainScoreboard();
     private static final boolean ENTITY_TEAM = Skript.methodExists(Scoreboard.class, "getEntityTeam", Entity.class);
+    private static final Pattern UUID_PATTERN = Pattern.compile("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}");
 
     public static Team getTeam(String name) {
         // Team names in 1.17.x only support 16 chars
-        if (!Skript.isRunningMinecraft(1,18) && name.length() > 16) {
-            name = name.substring(0,16);
+        if (!Skript.isRunningMinecraft(1, 18) && name.length() > 16) {
+            name = name.substring(0, 16);
         }
         Team team = SCOREBOARD.getTeam(name);
         if (team == null) {
@@ -40,8 +42,8 @@ public class TeamManager {
 
     public static void unregisterTeam(String name) {
         // Team names in 1.17.x only support 16 chars
-        if (!Skript.isRunningMinecraft(1,18) && name.length() > 16) {
-            name = name.substring(0,16);
+        if (!Skript.isRunningMinecraft(1, 18) && name.length() > 16) {
+            name = name.substring(0, 16);
         }
         Team team = SCOREBOARD.getTeam(name);
         if (team != null) {
@@ -56,13 +58,15 @@ public class TeamManager {
     public static List<Entity> getEntries(Team team) {
         List<Entity> entities = new ArrayList<>();
         team.getEntries().forEach(entry -> {
-            Player player = Bukkit.getPlayer(entry);
-            if (player != null) {
-                entities.add(player);
-            } else {
+            if (UUID_PATTERN.matcher(entry).matches()) {
                 Entity ent = Bukkit.getServer().getEntity(UUID.fromString(entry));
                 if (ent != null) {
                     entities.add(ent);
+                }
+            } else {
+                Player player = Bukkit.getPlayer(entry);
+                if (player != null) {
+                    entities.add(player);
                 }
             }
         });

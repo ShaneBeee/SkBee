@@ -21,8 +21,11 @@ import java.util.List;
 @Name("Bound - Blocks")
 @Description("All the blocks within a bound")
 @Examples({"set {_blocks::*} to all blocks within bound {bound}",
-        "set all blocks within {bound} to stone",
-        "loop all blocks within bound {bound}:", "\tif loop-block is stone:", "\t\tset loop-block to grass"})
+        "set {_blocks::*} to all blocks within bound bound with id \"le-bound\"",
+        "set all blocks within bound {bound} to stone",
+        "loop all blocks within bound {bound}:",
+        "\tif loop-block is stone:",
+        "\t\tset loop-block to grass"})
 @Since("1.0.0")
 public class ExprBoundBlocks extends SimpleExpression<Block> {
 

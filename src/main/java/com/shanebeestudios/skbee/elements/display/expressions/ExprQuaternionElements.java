@@ -21,7 +21,7 @@ import org.joml.Quaternionf;
         "remove 1 from quat-x of {_q}",
         "reset quat-x of {_q}",
         "set {_x} to quat-x of display right rotation of {_display}"})
-@Since("INSERT VERSION")
+@Since("2.8.2")
 public class ExprQuaternionElements extends SimplePropertyExpression<Quaternionf, Number> {
 
     static {

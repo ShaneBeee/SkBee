@@ -79,7 +79,7 @@ public class SkriptTypes {
                         String boundID = fields.getObject("boundID", String.class);
                         Bound bound = SkBee.getPlugin().getBoundConfig().getBoundFromID(boundID);
                         if (bound == null) {
-                            throw new NullPointerException("Unable to find bound with id '" + boundID + "'");
+                            throw new StreamCorruptedException("Unable to find bound with id '" + boundID + "'");
                         }
                         return bound;
                     }

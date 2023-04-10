@@ -28,7 +28,7 @@ public class EffSendBlockDamage extends Effect {
 
     static {
         Skript.registerEffect(EffSendBlockDamage.class,
-                "make %players% see damage of %block% as %number% [(by|from) %entity%]");
+                "make %players% see damage of %block% as %number% [(by|from) %-entity%]");
     }
 
     private Expression<Player> players;
@@ -59,7 +59,7 @@ public class EffSendBlockDamage extends Effect {
 
         damage = MathUtil.clamp(damage, 0.0f, 1.0f);
 
-        Entity entity = this.damager.getSingle(event);
+        Entity entity = this.damager != null ? this.damager.getSingle(event) : null;
         int entityID = -1;
         if (entity != null) entityID = entity.getEntityId();
 

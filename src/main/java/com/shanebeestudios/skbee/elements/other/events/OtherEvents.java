@@ -14,6 +14,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
@@ -166,6 +167,7 @@ public class OtherEvents {
         Skript.registerEvent("Inventory Move Item", SimpleEvent.class, InventoryMoveItemEvent.class,
                         "inventory move item")
                 .description("Called when some entity or block (e.g. hopper) tries to move items directly from one inventory to another.",
+                        "\nNOTE: This has nothing to do with a player's inventory!!!",
                         "\nWhen this event is called, the initiator may already have removed the item from the source inventory and is ready to move it into the destination inventory.",
                         "\nIf this event is cancelled, the items will be returned to the source inventory, if needed.",
                         "\nIf this event is not cancelled, the initiator will try to put the ItemStack into the destination inventory.",
@@ -282,6 +284,24 @@ public class OtherEvents {
             }
         }, 0);
 
+        // Block Damage Abort Event
+        if (Skript.classExists("org.bukkit.event.block.BlockDamageAbortEvent")) {
+            Skript.registerEvent("Block Damage Abort", SimpleEvent.class, BlockDamageAbortEvent.class,
+                    "block damage abort")
+                    .description("Called when a player stops damaging a Block. Requires MC 1.18.x+")
+                    .examples("on block damage abort:",
+                            "\tsend \"get back to work\"")
+                    .since("2.8.3");
+
+            EventValues.registerEventValue(BlockDamageAbortEvent.class, Player.class, new Getter<>() {
+                @Override
+                public Player get(BlockDamageAbortEvent event) {
+                    return event.getPlayer();
+                }
+            }, EventValues.TIME_NOW);
+        }
+
+        // OTHER EVENT VALUES
         // Click Events
         EventValues.registerEventValue(PlayerInteractEvent.class, BlockFace.class, new Getter<>() {
             @Override
