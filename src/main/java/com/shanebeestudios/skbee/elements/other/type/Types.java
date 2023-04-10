@@ -16,6 +16,8 @@ import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
+import org.bukkit.event.player.PlayerRespawnEvent;
+import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.bukkit.inventory.ItemFlag;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -157,6 +159,20 @@ public class Types {
                     .since("2.6.0")
                     .parser(BLOCK_FACE_ENUM.getParser())
                     .defaultExpression(new SimpleLiteral<>(BlockFace.NORTH, true)));
+        }
+
+        if (Skript.methodExists(PlayerRespawnEvent.class, "getRespawnReason")) {
+            EnumUtils<RespawnReason> RESPAWN_REASON_ENUM = new EnumUtils<>(RespawnReason.class, "", "respawn");
+            Classes.registerClass(new ClassInfo<>(RespawnReason.class, "respawnreason")
+                    .user("respawn ?reasons?")
+                    .name("Respawn Reason")
+                    .description("Represents the reason the respawn event was called. Requires MC 1.19.4+")
+                    .usage(RESPAWN_REASON_ENUM.getAllNames())
+                    .examples("on respawn:",
+                            "\tif respawn reason = death respawn:",
+                            "\t\tgive player 10 diamonds")
+                    .parser(RESPAWN_REASON_ENUM.getParser())
+                    .since("INSERT VERSION"));
         }
     }
 

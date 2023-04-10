@@ -61,3 +61,4 @@ types:
 	bukkitcolor: bukkit col(or|our)¦s
 	quaternion: quaternion¦s
 	transformation: transformation¦s
+	respawnreason: respawn reason¦s
