@@ -80,10 +80,12 @@ public class OtherEvents {
             @Override
             public Slot get(PrepareAnvilEvent event) {
                 return new Slot() {
+                    final ItemStack result = event.getResult();
+
                     @Nullable
                     @Override
                     public ItemStack getItem() {
-                        return event.getResult();
+                        return result;
                     }
 
                     @Override
@@ -93,22 +95,23 @@ public class OtherEvents {
 
                     @Override
                     public int getAmount() {
-                        return event.getResult().getAmount();
+                        if (result != null) return result.getAmount();
+                        return 0;
                     }
 
                     @Override
                     public void setAmount(int amount) {
-                        event.getResult().setAmount(amount);
+                        if (result != null) result.setAmount(amount);
                     }
 
                     @Override
-                    public boolean isSameSlot(Slot o) {
+                    public boolean isSameSlot(@NotNull Slot o) {
                         ItemStack item = o.getItem();
-                        return item != null && item.isSimilar(event.getResult());
+                        return item != null && item.isSimilar(result);
                     }
 
                     @Override
-                    public String toString(@Nullable Event e, boolean debug) {
+                    public @NotNull String toString(@Nullable Event e, boolean debug) {
                         return "anvil inventory result slot";
                     }
                 };
@@ -149,7 +152,7 @@ public class OtherEvents {
 
         EventValues.registerEventValue(EntityBreedEvent.class, Entity.class, new Getter<>() {
             @Override
-            public @Nullable Entity get(EntityBreedEvent breedEvent) {
+            public Entity get(EntityBreedEvent breedEvent) {
                 return breedEvent.getEntity();
             }
         }, 0);
@@ -352,7 +355,7 @@ public class OtherEvents {
         // Click Events
         EventValues.registerEventValue(PlayerInteractEvent.class, BlockFace.class, new Getter<>() {
             @Override
-            public @Nullable BlockFace get(PlayerInteractEvent event) {
+            public BlockFace get(PlayerInteractEvent event) {
                 return event.getBlockFace();
             }
         }, 0);
