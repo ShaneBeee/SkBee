@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.block.Block;
@@ -17,6 +18,7 @@ import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
@@ -272,7 +274,7 @@ public class OtherEvents {
 
         // Block Drop Item Event
         Skript.registerEvent("Block Drop Item", SimpleEvent.class, BlockDropItemEvent.class,
-                "block drop item")
+                        "block drop item")
                 .description("This event is called if a block broken by a player drops an item. ")
                 .examples("")
                 .since("2.6.0");
@@ -287,7 +289,7 @@ public class OtherEvents {
         // Block Damage Abort Event
         if (Skript.classExists("org.bukkit.event.block.BlockDamageAbortEvent")) {
             Skript.registerEvent("Block Damage Abort", SimpleEvent.class, BlockDamageAbortEvent.class,
-                    "block damage abort")
+                            "block damage abort")
                     .description("Called when a player stops damaging a Block. Requires MC 1.18.x+")
                     .examples("on block damage abort:",
                             "\tsend \"get back to work\"")
@@ -300,6 +302,51 @@ public class OtherEvents {
                 }
             }, EventValues.TIME_NOW);
         }
+
+        Skript.registerEvent("Entity Air Change", SimpleEvent.class, EntityAirChangeEvent.class,
+                        "[entity] air change")
+                .description("Called when the amount of air an entity has remaining changes.",
+                        "\n`event-number` = The amount of air the entity will have left (measured in ticks).",
+                        "\n`event-timespan` = The amount of air the entity will have left (as a time span).",
+                        "\n`past event-number` = The amount of air the entity had left before the event (measured in ticks).",
+                        "\n`past event-timespan` = The amount of air the entity had left before the event (as a time span).")
+                .examples("on entity air change:",
+                        "\tif event-entity is a player:",
+                        "\t\tcancel event")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, new Getter<>() {
+            @Override
+            public Number get(EntityAirChangeEvent event) {
+                if (event.getEntity() instanceof LivingEntity livingEntity) return livingEntity.getRemainingAir();
+                return 0;
+            }
+        }, EventValues.TIME_PAST);
+
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new Getter<>() {
+            @Override
+            public Timespan get(EntityAirChangeEvent event) {
+                int ticks = 0;
+                if (event.getEntity() instanceof LivingEntity livingEntity) {
+                    ticks = livingEntity.getRemainingAir();
+                }
+                return Timespan.fromTicks_i(ticks);
+            }
+        }, EventValues.TIME_PAST);
+
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, new Getter<>() {
+            @Override
+            public Number get(EntityAirChangeEvent event) {
+                return event.getAmount();
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new Getter<>() {
+            @Override
+            public Timespan get(EntityAirChangeEvent event) {
+                return Timespan.fromTicks_i(event.getAmount());
+            }
+        }, EventValues.TIME_NOW);
 
         // OTHER EVENT VALUES
         // Click Events
