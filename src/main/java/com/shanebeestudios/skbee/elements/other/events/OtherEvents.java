@@ -24,6 +24,7 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
@@ -348,6 +349,23 @@ public class OtherEvents {
             @Override
             public Timespan get(EntityAirChangeEvent event) {
                 return Timespan.fromTicks_i(event.getAmount());
+            }
+        }, EventValues.TIME_NOW);
+
+        // Spawner Spawn Event
+        Skript.registerEvent("Spawner Spawn", SimpleEvent.class, SpawnerSpawnEvent.class,
+                "spawner spawn")
+                .description("Called when an entity is spawned into a world by a spawner.",
+                        "\n`event-block` = the spawner the entity spawned from")
+                .examples("on spawner spawn:",
+                        "\tif event-entity is a skeleton:",
+                        "\t\tcancel event")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, new Getter<>() {
+            @Override
+            public Block get(SpawnerSpawnEvent event) {
+                return event.getSpawner().getBlock();
             }
         }, EventValues.TIME_NOW);
 
