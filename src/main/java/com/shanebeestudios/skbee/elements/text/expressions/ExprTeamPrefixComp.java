@@ -21,11 +21,11 @@ import org.jetbrains.annotations.NotNull;
 @Description("Get/set prefix/suffix of teams using components.")
 @Examples("set component team prefix of team of player to mini message from \"<color:grey>[<color:aqua>OWNER<color:grey>] \"")
 @Since("2.4.0")
-public class ExprTeamPrefix extends SimplePropertyExpression<Team, BeeComponent> {
+public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, BeeComponent> {
 
     static {
         if (SkBee.getPlugin().getPluginConfig().ELEMENTS_TEAM) {
-            register(ExprTeamPrefix.class, BeeComponent.class, "component team (prefix|1¦suffix)", "teams");
+            register(ExprTeamPrefixComp.class, BeeComponent.class, "component team (prefix|1¦suffix)", "teams");
         }
     }
 

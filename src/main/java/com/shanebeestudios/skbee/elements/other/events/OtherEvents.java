@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.block.Block;
@@ -17,11 +18,13 @@ import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
@@ -78,10 +81,12 @@ public class OtherEvents {
             @Override
             public Slot get(PrepareAnvilEvent event) {
                 return new Slot() {
+                    final ItemStack result = event.getResult();
+
                     @Nullable
                     @Override
                     public ItemStack getItem() {
-                        return event.getResult();
+                        return result;
                     }
 
                     @Override
@@ -91,22 +96,23 @@ public class OtherEvents {
 
                     @Override
                     public int getAmount() {
-                        return event.getResult().getAmount();
+                        if (result != null) return result.getAmount();
+                        return 0;
                     }
 
                     @Override
                     public void setAmount(int amount) {
-                        event.getResult().setAmount(amount);
+                        if (result != null) result.setAmount(amount);
                     }
 
                     @Override
-                    public boolean isSameSlot(Slot o) {
+                    public boolean isSameSlot(@NotNull Slot o) {
                         ItemStack item = o.getItem();
-                        return item != null && item.isSimilar(event.getResult());
+                        return item != null && item.isSimilar(result);
                     }
 
                     @Override
-                    public String toString(@Nullable Event e, boolean debug) {
+                    public @NotNull String toString(@Nullable Event e, boolean debug) {
                         return "anvil inventory result slot";
                     }
                 };
@@ -147,7 +153,7 @@ public class OtherEvents {
 
         EventValues.registerEventValue(EntityBreedEvent.class, Entity.class, new Getter<>() {
             @Override
-            public @Nullable Entity get(EntityBreedEvent breedEvent) {
+            public Entity get(EntityBreedEvent breedEvent) {
                 return breedEvent.getEntity();
             }
         }, 0);
@@ -272,7 +278,7 @@ public class OtherEvents {
 
         // Block Drop Item Event
         Skript.registerEvent("Block Drop Item", SimpleEvent.class, BlockDropItemEvent.class,
-                "block drop item")
+                        "block drop item")
                 .description("This event is called if a block broken by a player drops an item. ")
                 .examples("")
                 .since("2.6.0");
@@ -287,7 +293,7 @@ public class OtherEvents {
         // Block Damage Abort Event
         if (Skript.classExists("org.bukkit.event.block.BlockDamageAbortEvent")) {
             Skript.registerEvent("Block Damage Abort", SimpleEvent.class, BlockDamageAbortEvent.class,
-                    "block damage abort")
+                            "block damage abort")
                     .description("Called when a player stops damaging a Block. Requires MC 1.18.x+")
                     .examples("on block damage abort:",
                             "\tsend \"get back to work\"")
@@ -301,11 +307,73 @@ public class OtherEvents {
             }, EventValues.TIME_NOW);
         }
 
+        Skript.registerEvent("Entity Air Change", SimpleEvent.class, EntityAirChangeEvent.class,
+                        "[entity] air change")
+                .description("Called when the amount of air an entity has remaining changes.",
+                        "\n`event-number` = The amount of air the entity will have left (measured in ticks).",
+                        "\n`event-timespan` = The amount of air the entity will have left (as a time span).",
+                        "\n`past event-number` = The amount of air the entity had left before the event (measured in ticks).",
+                        "\n`past event-timespan` = The amount of air the entity had left before the event (as a time span).")
+                .examples("on entity air change:",
+                        "\tif event-entity is a player:",
+                        "\t\tcancel event")
+                .since("2.8.4");
+
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, new Getter<>() {
+            @Override
+            public Number get(EntityAirChangeEvent event) {
+                if (event.getEntity() instanceof LivingEntity livingEntity) return livingEntity.getRemainingAir();
+                return 0;
+            }
+        }, EventValues.TIME_PAST);
+
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new Getter<>() {
+            @Override
+            public Timespan get(EntityAirChangeEvent event) {
+                int ticks = 0;
+                if (event.getEntity() instanceof LivingEntity livingEntity) {
+                    ticks = livingEntity.getRemainingAir();
+                }
+                return Timespan.fromTicks_i(ticks);
+            }
+        }, EventValues.TIME_PAST);
+
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, new Getter<>() {
+            @Override
+            public Number get(EntityAirChangeEvent event) {
+                return event.getAmount();
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new Getter<>() {
+            @Override
+            public Timespan get(EntityAirChangeEvent event) {
+                return Timespan.fromTicks_i(event.getAmount());
+            }
+        }, EventValues.TIME_NOW);
+
+        // Spawner Spawn Event
+        Skript.registerEvent("Spawner Spawn", SimpleEvent.class, SpawnerSpawnEvent.class,
+                "spawner spawn")
+                .description("Called when an entity is spawned into a world by a spawner.",
+                        "\n`event-block` = the spawner the entity spawned from")
+                .examples("on spawner spawn:",
+                        "\tif event-entity is a skeleton:",
+                        "\t\tcancel event")
+                .since("2.8.4");
+
+        EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, new Getter<>() {
+            @Override
+            public Block get(SpawnerSpawnEvent event) {
+                return event.getSpawner().getBlock();
+            }
+        }, EventValues.TIME_NOW);
+
         // OTHER EVENT VALUES
         // Click Events
         EventValues.registerEventValue(PlayerInteractEvent.class, BlockFace.class, new Getter<>() {
             @Override
-            public @Nullable BlockFace get(PlayerInteractEvent event) {
+            public BlockFace get(PlayerInteractEvent event) {
                 return event.getBlockFace();
             }
         }, 0);

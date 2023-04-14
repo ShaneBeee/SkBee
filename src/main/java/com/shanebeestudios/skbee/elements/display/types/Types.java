@@ -14,7 +14,7 @@ import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Display.Billboard;
 import org.bukkit.entity.ItemDisplay.ItemDisplayTransform;
-import org.bukkit.entity.TextDisplay.TextAligment;
+import org.bukkit.entity.TextDisplay.TextAlignment;
 import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -48,8 +48,8 @@ public class Types {
                 .since("2.8.0")
                 .parser(BILLBOARD_ENUM.getParser()));
 
-        EnumUtils<TextAligment> TEXT_ALIGNMENT_ENUM = new EnumUtils<>(TextAligment.class, "", "aligned");
-        Classes.registerClass(new ClassInfo<>(TextAligment.class, "textalignment")
+        EnumUtils<TextAlignment> TEXT_ALIGNMENT_ENUM = new EnumUtils<>(TextAlignment.class, "", "aligned");
+        Classes.registerClass(new ClassInfo<>(TextAlignment.class, "textalignment")
                 .user("text ?alignments?")
                 .name("DisplayEntity - Text Alignment")
                 .description("Represents the text alignment of a Text Display Entity.",
