@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on respawn:",
         "\tif respawn reason = death respawn:",
         "\t\tgive player 10 diamonds"})
-@Since("INSERT VERSION")
+@Since("2.8.4")
 public class ExprRespawnReason extends SimpleExpression<RespawnReason> {
 
     static {

@@ -172,7 +172,7 @@ public class Types {
                             "\tif respawn reason = death respawn:",
                             "\t\tgive player 10 diamonds")
                     .parser(RESPAWN_REASON_ENUM.getParser())
-                    .since("INSERT VERSION"));
+                    .since("2.8.4"));
         }
     }
 

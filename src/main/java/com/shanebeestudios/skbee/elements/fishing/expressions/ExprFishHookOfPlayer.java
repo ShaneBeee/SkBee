@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Fish Hook - Current")
 @Description("Get the current fish hook attached to a player's fishing rod.")
 @Examples("delete current fish hook of player")
-@Since("INSERT VERSION")
+@Since("2.8.4")
 public class ExprFishHookOfPlayer extends SimplePropertyExpression<Player, Entity> {
 
     static {

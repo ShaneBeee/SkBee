@@ -317,7 +317,7 @@ public class OtherEvents {
                 .examples("on entity air change:",
                         "\tif event-entity is a player:",
                         "\t\tcancel event")
-                .since("INSERT VERSION");
+                .since("2.8.4");
 
         EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, new Getter<>() {
             @Override
@@ -360,7 +360,7 @@ public class OtherEvents {
                 .examples("on spawner spawn:",
                         "\tif event-entity is a skeleton:",
                         "\t\tcancel event")
-                .since("INSERT VERSION");
+                .since("2.8.4");
 
         EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, new Getter<>() {
             @Override
