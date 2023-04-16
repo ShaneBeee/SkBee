@@ -10,6 +10,7 @@ import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -65,12 +66,10 @@ public class Bound implements ConfigurationSerializable {
      * @param loc Location to check
      * @return True if location is within this bound
      */
-    public boolean isInRegion(Location loc) {
-        if (loc != null) {
-            World w = loc.getWorld();
-            if (w != null && w.getName().equals(world)) {
-                return this.boundingBox.contains(loc.toVector());
-            }
+    public boolean isInRegion(@NotNull Location loc) {
+        World w = loc.getWorld();
+        if (w != null && w.getName().equals(world)) {
+            return this.boundingBox.contains(loc.toVector());
         }
         return false;
     }
