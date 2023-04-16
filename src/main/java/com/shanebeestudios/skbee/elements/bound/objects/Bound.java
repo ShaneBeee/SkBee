@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 
 @SuppressWarnings("unused")
@@ -67,8 +66,13 @@ public class Bound implements ConfigurationSerializable {
      * @return True if location is within this bound
      */
     public boolean isInRegion(Location loc) {
-        if (!Objects.requireNonNull(loc.getWorld()).getName().equals(world)) return false;
-        return this.boundingBox.contains(loc.toVector());
+        if (loc != null) {
+            World w = loc.getWorld();
+            if (w != null && w.getName().equals(world)) {
+                return this.boundingBox.contains(loc.toVector());
+            }
+        }
+        return false;
     }
 
     /**
