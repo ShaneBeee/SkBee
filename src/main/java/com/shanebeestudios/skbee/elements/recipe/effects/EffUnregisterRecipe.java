@@ -36,7 +36,7 @@ public class EffUnregisterRecipe extends Effect {
     private Expression<Object> recipes;
 
     static {
-        Skript.registerEffect(EffUnregisterRecipe.class, "(remove|unregister) [recipe[s]] %recipes/namespacedkey/string%");
+        Skript.registerEffect(EffUnregisterRecipe.class, "(remove|unregister) [recipe[s]] %recipes/namespacedkeys/strings%");
     }
 
     @Override
