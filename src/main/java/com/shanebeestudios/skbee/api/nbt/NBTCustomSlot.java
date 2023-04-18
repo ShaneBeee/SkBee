@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.nbt;
 
+import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.inventory.ItemStack;
@@ -24,6 +25,10 @@ public class NBTCustomSlot extends NBTItem {
         ItemStack item = this.slot.getItem();
         if (item == null) return;
         item.setItemMeta(getItem().getItemMeta());
+        // InventorySlot#getItem -> returns a clone
+        if (this.slot instanceof InventorySlot) {
+            this.slot.setItem(item);
+        }
     }
 
 }

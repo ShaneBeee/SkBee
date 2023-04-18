@@ -49,6 +49,7 @@ public class ExprBoundAtLocation extends SimpleExpression<Object> {
             return null;
         }
         Location loc = this.location.getSingle(event);
+        if (loc == null) return null;
         if (ID) {
             List<String> ids = new ArrayList<>();
             for (Bound bound : SkBee.getPlugin().getBoundConfig().getBounds()) {
