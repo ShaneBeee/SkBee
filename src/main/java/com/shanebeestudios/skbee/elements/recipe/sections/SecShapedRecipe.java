@@ -30,7 +30,8 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import java.util.List;
 
 @Name("Recipes - Advanced Shaped Recipe and Living Fucking Hell")
-@Description("Ceates a new shaped recipe using sections and entries")
+@Description({"Ceates a new shaped recipe using sections and entries",
+		"When using the shape entry, it is required to follow a rectangular shape in example 'ab, cde' will not work while 'abc, def' will work"})
 @Examples({
 		"register shaped recipe for diamond named \"&bDiamond\" with id \"my_recipes:blue_diamond\"",
 		"\tshape: \"123\", \"456\", \"789\"",
