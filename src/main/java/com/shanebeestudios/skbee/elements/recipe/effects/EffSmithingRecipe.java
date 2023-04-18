@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -9,23 +8,19 @@ import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.RecipeChoice.ExactChoice;
-import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.SmithingRecipe;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Smithing")
 @Description({"Register a new smithing recipe.",
@@ -43,66 +38,57 @@ public class EffSmithingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffSmithingRecipe.class,
-                "register [new] smithing recipe for %itemtype% using %itemtype/materialchoice% and %itemtype/materialchoice% with id %string%");
+                "register [a] [new] smithing recipe for %itemstack% using %itemstack/materialchoice% and %itemstack/materialchoice% (using|with (id|key)) %string/namespacedkey%");
     }
 
-    @SuppressWarnings("null")
-    private Expression<ItemType> result;
+    private Expression<ItemStack> result;
     private Expression<Object> base;
     private Expression<Object> addition;
-    private Expression<String> key;
+    private Expression<Object> keyID;
 
-    @SuppressWarnings({"unchecked", "null"})
     @Override
-    public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, SkriptParser.@NotNull ParseResult parse) {
-        result = (Expression<ItemType>) exprs[0];
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parse) {
+        result = (Expression<ItemStack>) exprs[0];
         base = (Expression<Object>) exprs[1];
         addition = (Expression<Object>) exprs[2];
-        key = (Expression<String>) exprs[3];
+        keyID = (Expression<Object>) exprs[3];
         return true;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     protected void execute(@NotNull Event event) {
-        ItemType result = this.result.getSingle(event);
+        ItemStack result = this.result.getSingle(event);
         Object base = this.base.getSingle(event);
         Object addition = this.addition.getSingle(event);
+        NamespacedKey key = RecipeUtil.getKey(this.keyID.getSingle(event));
         if (result == null) {
             RecipeUtil.error("Error registering smithing recipe - result is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
         }
-        if (base == null) {
+        else if (base == null) {
             RecipeUtil.error("Error registering smithing recipe - base is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
         }
-        if (addition == null) {
+        else if (addition == null) {
             RecipeUtil.error("Error registering smithing recipe - addition is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
         }
-
-        NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
-        if (key == null) {
+        else if (key == null) {
             RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
             return;
         }
 
+
+        RecipeChoice choiceBase = RecipeUtil.getRecipeChoice(base);
+        RecipeChoice choiceAddition = RecipeUtil.getRecipeChoice(addition);
+        if (choiceBase == null || choiceAddition == null) return;
+
+        SmithingRecipe recipe = new SmithingRecipe(key, result, choiceBase, choiceAddition);
         //Remove duplicates on script reload
         Bukkit.removeRecipe(key);
-
-        ItemStack resultStack = result.getRandom();
-        RecipeChoice choiceBase = getChoice(base);
-        RecipeChoice choiceAddition = getChoice(addition);
-        if (resultStack == null || choiceBase == null || choiceAddition == null) return;
-
-        SmithingRecipe recipe = new SmithingRecipe(
-                key,
-                resultStack,
-                choiceBase,
-                choiceAddition);
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
             RecipeUtil.logRecipe(recipe, recipe.getBase(), recipe.getAddition());
@@ -110,26 +96,12 @@ public class EffSmithingRecipe extends Effect {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "Register new smithing recipe for " + result.toString(e, d) + " using " + base.toString(e, d) + " and " +
-                addition.toString(e, d) + " with id " + key.toString(e, d);
-    }
-
-    private RecipeChoice getChoice(Object object) {
-        if (object instanceof ItemType itemType) {
-            ItemStack itemStack = itemType.getRandom();
-
-            Material material = itemStack.getType();
-            // If ingredient isn't a custom item, just register the material
-            if (itemStack.isSimilar(new ItemStack(material))) {
-                return new MaterialChoice(material);
-            } else {
-                return new ExactChoice(itemStack);
-            }
-        } else if (object instanceof MaterialChoice) {
-            return ((MaterialChoice) object);
-        }
-        return null;
+    public @NotNull String toString(@Nullable Event event, boolean debug) {
+        return String.format("register new smithing recipe for %s using %s and %s with id %s",
+                result.toString(event, debug),
+                base.toString(event, debug),
+                addition.toString(event, debug),
+                keyID.toString(event, debug));
     }
 
 }

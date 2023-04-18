@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -9,22 +8,18 @@ import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.RecipeChoice.ExactChoice;
-import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
 
-@SuppressWarnings({"ConstantConditions", "NullableProblems"})
 @Name("Recipe - StoneCutting")
 @Description({"Register a new stone cutting recipe.",
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
@@ -32,7 +27,8 @@ import org.bukkit.inventory.StonecuttingRecipe;
         "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
         "Requires MC 1.13+"})
-@Examples({"on skript load:", "\tregister new stone cutting recipe for diamond using diamond ore with id \"cutting_diamond\""})
+@Examples({"on skript load:",
+        "\tregister new stone cutting recipe for diamond using diamond ore with id \"cutting_diamond\""})
 @RequiredPlugins("1.14+")
 @Since("1.0.0")
 public class EffStonecuttingRecipe extends Effect {
@@ -41,65 +37,46 @@ public class EffStonecuttingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffStonecuttingRecipe.class,
-                "register [new] stone[ ]cutt(ing|er) recipe for %itemtype% (using|with ingredient) %itemtype/materialchoice% with id %string% [in group %-string%]");
+                "register [a] [new] stone[ ]cutt(ing|er) recipe for %itemstack% (using|with ingredient) %itemstack/materialchoice% (using|with (id|key)) %string/namespacedkey% [(in|with) group %-string%]");
     }
 
-    @SuppressWarnings("null")
-    private Expression<ItemType> item;
+    private Expression<ItemStack> result;
     private Expression<Object> ingredient;
-    private Expression<String> key;
+    private Expression<Object> keyID;
     private Expression<String> group;
 
-    @SuppressWarnings({"unchecked", "null"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-        item = (Expression<ItemType>) exprs[0];
+    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
+        result = (Expression<ItemStack>) exprs[0];
         ingredient = (Expression<Object>) exprs[1];
-        key = (Expression<String>) exprs[2];
+        keyID = (Expression<Object>) exprs[2];
         group = (Expression<String>) exprs[3];
         return true;
     }
 
     @Override
     protected void execute(Event event) {
-        ItemType item = this.item.getSingle(event);
-        Object ingredient = this.ingredient.getSingle(event);
+        ItemStack result = this.result.getSingle(event);
+        RecipeChoice ingredient = RecipeUtil.getRecipeChoice(this.ingredient.getSingle(event));
+        NamespacedKey key = RecipeUtil.getKey(this.keyID.getSingle(event));
+        String group = this.group != null ? this.group.getSingle(event) : "";
 
-        if (item == null) {
+        if (result == null) {
             Skript.error("Error registering stonecutting recipe - result is null");
             Skript.error("Current Item: §6" + this.toString(event, true));
             return;
-        }
-        if (ingredient == null) {
+        } else if (ingredient == null) {
             Skript.error("Error registering stonecutting recipe - ingredient is null");
             Skript.error("Current Item: §6" + this.toString(event, true));
             return;
-        }
-
-        String group = this.group != null ? this.group.getSingle(event) : "";
-
-        NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
-        if (key == null) {
+        } else if (key == null) {
+            Skript.error("Error registering stonecutting recipe - key is null");
             RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
             return;
         }
 
-        RecipeChoice choice;
-        if (ingredient instanceof ItemType) {
-            ItemStack itemStack = ((ItemType) ingredient).getRandom();
-            if (itemStack == null) return;
-            Material material = itemStack.getType();
-
-            // If ingredient isn't a custom item, just register the material
-            if (itemStack.isSimilar(new ItemStack(material))) {
-                choice = new MaterialChoice(material);
-            } else {
-                choice = new ExactChoice(itemStack);
-            }
-        } else {
-            choice = ((MaterialChoice) ingredient);
-        }
-        StonecuttingRecipe recipe = new StonecuttingRecipe(key, item.getRandom(), choice);
+        if (ingredient == null) return;
+        StonecuttingRecipe recipe = new StonecuttingRecipe(key, result, ingredient);
         recipe.setGroup(group);
 
         // Remove duplicates on script reload
@@ -112,9 +89,12 @@ public class EffStonecuttingRecipe extends Effect {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
-        String group = this.group != null ? " in group " + this.group.toString(e, d) : "";
-        return "register new stone cutting recipe for " + item.toString(e, d) + " using " + ingredient.toString(e, d) + group;
+    public String toString(Event event, boolean debug) {
+        return String.format("register new stone custting recipe for %s using %s with id %s%s",
+                result.toString(event, debug),
+                ingredient.toString(event, debug),
+                keyID.toString(event, debug),
+                group != null ? " in group" + group.toString(event, debug) : "");
     }
 
 }

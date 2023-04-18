@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.type;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
@@ -9,10 +10,10 @@ import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import org.bukkit.Keyed;
-import org.bukkit.Tag;
-import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.recipe.CookingBookCategory;
+import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -90,6 +91,27 @@ public class Types {
                 .usage(RECIPE_TYPE_ENUM.getAllNames())
                 .since("2.6.0")
                 .parser(RECIPE_TYPE_ENUM.getParser()));
+
+        if(Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory")) {
+                EnumUtils<CookingBookCategory> COOKING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CookingBookCategory.class);
+                Classes.registerClass(new ClassInfo<>(CookingBookCategory.class, "cookingcategory")
+                        .user("cooking ?categor(y|ies)")
+                        .name("Recipes - Cooking Category")
+                        .description("Represents the type of cooking recipe book categories")
+                        .usage(COOKING_BOOK_CATEGORY_ENUM.getAllNames())
+                        .since("INSERT VERSION")
+                        .parser(COOKING_BOOK_CATEGORY_ENUM.getParser()));
+            }
+        if(Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory")) {
+            EnumUtils<CraftingBookCategory> CRAFTING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CraftingBookCategory.class);
+            Classes.registerClass(new ClassInfo<>(CraftingBookCategory.class, "craftingcategory")
+                    .user("crafting ?categor(y|ies)")
+                    .name("Recipes - Crafting Category")
+                    .description("Represents the type of crafting recipe book categories")
+                    .usage(CRAFTING_BOOK_CATEGORY_ENUM.getAllNames())
+                    .since("INSERT VERSION")
+                    .parser(CRAFTING_BOOK_CATEGORY_ENUM.getParser()));
+        }
     }
 
     private static String matChoiceToString(RecipeChoice.MaterialChoice materialChoice) {

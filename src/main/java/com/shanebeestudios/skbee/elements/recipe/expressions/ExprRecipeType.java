@@ -36,4 +36,5 @@ public class ExprRecipeType extends SimplePropertyExpression<Recipe, RecipeType>
     protected String getPropertyName() {
         return "recipe type";
     }
+
 }

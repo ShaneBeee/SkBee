@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -15,19 +14,18 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.RecipeChoice.ExactChoice;
-import org.bukkit.inventory.RecipeChoice.MaterialChoice;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.recipe.CraftingBookCategory;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"NullableProblems", "ConstantConditions"})
 @Name("Recipe - Shaped/Shapeless")
 @Description({"Register a new shaped/shapeless recipe for a specific item using custom ingredients.",
         "Recipes support items and material choices for ingredients. Material choices allow you to use Minecraft tags or lists of items.",
@@ -45,42 +43,50 @@ import java.util.List;
                 "{_s}, {_s}, {_s}, {_s}, {_s} and {_s} with id \"strong_emerald_chestplate\"", "",
         "\tset {_a} to material choice of every plank",
         "\tregister new shaped recipe for jigsaw block using {_a}, {_a}, {_a}, {_a}, {_a}, {_a}, {_a}, {_a} and {_a} with id \"jigsaw\""})
-@RequiredPlugins("1.13+")
+@RequiredPlugins("Minecraft 1.13+. Minecraft 1.19+ for Categories")
 @Since("1.0.0")
 public class EffCraftingRecipe extends Effect {
+
+    private static final boolean CRAFTING_CATEGORY_EXISTS = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
 
     private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
+        String register = "register [a] [new] ";
+        String recipeForUsingID = " recipe for %itemstack% (using|with ingredients) %itemstacks/materialchoices% (using|with (id|key)) %string/namespacedkey%";
+        String inGroup = " [[and ](in|with) group %-string%]";
+        String inCategory = CRAFTING_CATEGORY_EXISTS ? " [[and ]in category %-craftingcategory%]" : "";
         Skript.registerEffect(EffCraftingRecipe.class,
-                "register [new] (shaped|1¦shapeless) recipe for %itemtype% (using|with ingredients) " +
-                        "%itemtypes/materialchoices% with id %string% [in group %-string%]");
+                register + "shaped" + recipeForUsingID + inGroup + inCategory,
+                register + "shapeless" + recipeForUsingID + inGroup + inCategory);
     }
 
     @SuppressWarnings("null")
-    private Expression<ItemType> item;
+    private Expression<ItemStack> result;
     private Expression<Object> ingredients;
-    private Expression<String> id;
+    private Expression<Object> keyID;
     private Expression<String> group;
+    private Expression<CraftingBookCategory> category;
     private boolean shaped;
 
-    @SuppressWarnings({"unchecked", "null"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
-        item = (Expression<ItemType>) exprs[0];
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        result = (Expression<ItemStack>) exprs[0];
         ingredients = (Expression<Object>) exprs[1];
-        id = (Expression<String>) exprs[2];
+        keyID = (Expression<Object>) exprs[2];
         group = (Expression<String>) exprs[3];
-        shaped = parseResult.mark == 0;
+        category = (Expression<CraftingBookCategory>) exprs[4];
+        shaped = matchedPattern == 0;
         return true;
     }
 
     @Override
     protected void execute(Event event) {
-        ItemType item = this.item.getSingle(event);
+        ItemStack result = this.result.getSingle(event);
         Object[] ingredients = this.ingredients.getAll(event);
+        NamespacedKey key = RecipeUtil.getKey(this.keyID.getSingle(event));
 
-        if (item == null) {
+        if (result == null) {
             RecipeUtil.error("Error registering crafting recipe - result is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
@@ -90,118 +96,84 @@ public class EffCraftingRecipe extends Effect {
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
         }
-
-        String group = this.group != null ? this.group.getSingle(event) : null;
-        String id = this.id.getSingle(event);
-        NamespacedKey key = RecipeUtil.getKey(id);
         if (key == null) {
-            RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
+            RecipeUtil.error("Error registering crafting recipe - key is null");
+            RecipeUtil.error("Current Item: §6'" + this.toString(event, true) + "'");
             return;
         }
-
+        String group = this.group != null ? this.group.getSingle(event) : null;
+        CraftingBookCategory category = this.category != null ? this.category.getSingle(event) : null;
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);
-
         if (shaped)
-            registerShaped(item, ingredients, key, group);
+            registerShaped(result, ingredients, key, group, category);
         else
-            registerShapeless(item, ingredients, key, group);
+            registerShapeless(result, ingredients, key, group, category);
     }
 
-    private void registerShaped(ItemType item, Object[] ingredients, NamespacedKey key, String group) {
-        boolean craftingTable = ingredients.length > 4;
+    private void registerShaped(ItemStack result, Object[] ingredients, NamespacedKey key, @Nullable String group, @Nullable CraftingBookCategory category) {
 
-        ShapedRecipe recipe = new ShapedRecipe(key, item.getRandom());
+        ShapedRecipe recipe = new ShapedRecipe(key, result);
         if (group != null) recipe.setGroup(group);
+        if (category != null) recipe.setCategory(category);
 
-        Character[] oldChar = new Character[]{'1', '2', '3', '4', '5', '6', '7', '8', '9'};
+        // Character[ShapeKey]
+        Character[] oldChar = new Character[]{'a','b','c', 'd','e','f', 'g','h','i'};
         Character[] keyChar = new Character[9];
         for (int i = 0; i < 9; i++) {
             Object object = ingredients.length > i ? ingredients[i] : null;
             if (ingredients.length - 1 < i) {
                 keyChar[i] = ' ';
-            } else if (object instanceof ItemType itemType && itemType.getMaterial() == Material.AIR) {
+            } else if (RecipeUtil.getRecipeChoice(object) == null) {
                 keyChar[i] = ' ';
             } else {
                 keyChar[i] = oldChar[i];
             }
         }
-
-        if (craftingTable) {
-            String one = "" + keyChar[0] + keyChar[1] + keyChar[2];
-            String two = "" + keyChar[3] + keyChar[4] + keyChar[5];
-            String thr = "" + keyChar[6] + keyChar[7] + keyChar[8];
-
-            // Only register a row if it has a key in it
-            List<String> shape = new ArrayList<>();
-            if (!one.equalsIgnoreCase("   ")) shape.add(one);
-            if (!two.equalsIgnoreCase("   ")) shape.add(two);
-            if (!thr.equalsIgnoreCase("   ")) shape.add(thr);
-            recipe.shape(shape.toArray(new String[0]));
+        String one, two, three = null;
+        if (ingredients.length > 4) {
+            one = "" + keyChar[0] + keyChar[1] + keyChar[2];
+            two = "" + keyChar[3] + keyChar[4] + keyChar[5];
+            three = "" + keyChar[6] + keyChar[7] + keyChar[8];
         } else {
-            String one = "" + keyChar[0] + keyChar[1];
-            String two = "" + keyChar[2] + keyChar[3];
-
-            // Only register a row if it has a key in it
-            List<String> shape = new ArrayList<>();
-            if (!one.equalsIgnoreCase("  ")) shape.add(one);
-            if (!two.equalsIgnoreCase("  ")) shape.add(two);
-            recipe.shape(shape.toArray(new String[0]));
+            one = "" + keyChar[0] + keyChar[1];
+            two = "" + keyChar[2] + keyChar[3];
         }
+
+        // Only register a row if it has a key in it
+        List<String> shape = new ArrayList<>();
+        if (!one.isBlank()) shape.add(one);
+        if (!two.isBlank()) shape.add(two);
+        if (three != null && !three.isBlank()) shape.add(three);
+        recipe.shape(shape.toArray(new String[0]));
 
         for (int i = 0; i < ingredients.length; i++) {
-            Object object = ingredients[i];
-            if (object instanceof ItemType) {
-                ItemStack itemStack = ((ItemType) object).getRandom();
-                Material material = itemStack.getType();
-
-                // Make sure this item can be used in a recipe
-                if (material != Material.AIR && material.isItem()) {
-
-                    // If ingredient isn't a custom item, just register the material
-                    if (itemStack.isSimilar(new ItemStack(material))) {
-                        recipe.setIngredient(keyChar[i], material);
-                    } else {
-                        recipe.setIngredient(keyChar[i], new ExactChoice(itemStack));
-                    }
-                }
-            } else if (object instanceof MaterialChoice) {
-                recipe.setIngredient(keyChar[i], ((MaterialChoice) object));
-            }
+            RecipeChoice recipeChoice = RecipeUtil.getRecipeChoice(ingredients[i]);
+            if (recipeChoice == null) continue;
+            recipe.setIngredient(keyChar[i], recipeChoice);
         }
+
         if (config.SETTINGS_DEBUG) {
             RecipeUtil.logShapedRecipe(recipe);
         }
         Bukkit.addRecipe(recipe);
     }
 
-    private void registerShapeless(ItemType item, Object[] ingredients, NamespacedKey key, String group) {
-        ShapelessRecipe recipe = new ShapelessRecipe(key, item.getRandom());
+    private void registerShapeless(ItemStack result, Object[] ingredients, NamespacedKey key, @Nullable String group, @Nullable CraftingBookCategory category) {
+        ShapelessRecipe recipe = new ShapelessRecipe(key, result);
         if (group != null) recipe.setGroup(group);
+        if (category != null) recipe.setCategory(category);
 
-        for (Object ingredient : ingredients) {
-            if (ingredient instanceof ItemType) {
-                ItemStack itemStack = ((ItemType) ingredient).getRandom();
-                Material material = itemStack.getType();
-
-                // Make sure this item can be used in a recipe
-                if (material != Material.AIR && material.isItem()) {
-
-                    // If ingredient isn't a custom item, just register the material
-                    if (itemStack.isSimilar(new ItemStack(material))) {
-                        recipe.addIngredient(material);
-                    } else {
-                        recipe.addIngredient(new ExactChoice(itemStack));
-                    }
-                } else {
-                    if (config.SETTINGS_DEBUG) {
-                        RecipeUtil.warn("ERROR LOADING RECIPE: &7(&b" + key.getKey() + "&7)");
-                        RecipeUtil.warn("Non item &b" + ((ItemType) ingredient).toString(0) + "&e found, this item will be removed from the recipe.");
-                    }
+        for (Object ing : ingredients) {
+            RecipeChoice ingredient = RecipeUtil.getRecipeChoice(ing);
+            if(ingredient == null) {
+                if (config.SETTINGS_DEBUG) {
+                    RecipeUtil.warn("ERROR LOADING RECIPE: &7(&b" + key.getKey() + "&7)");
+                    RecipeUtil.warn("Non item &b" + ing + "&e found, this item will be removed from the recipe.");
                 }
-            } else if (ingredient instanceof MaterialChoice) {
-                recipe.addIngredient(((MaterialChoice) ingredient));
+                continue;
             }
+            recipe.addIngredient(ingredient);
         }
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
@@ -210,13 +182,14 @@ public class EffCraftingRecipe extends Effect {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
-        return String.format("Register new %s recipe for %s using %s with id '%s' %s",
+    public String toString(Event event, boolean debug) {
+        return String.format("register new %s for %s using %s with id %s%s%s",
                 shaped ? "shaped" : "shapeless",
-                item.toString(e, d),
-                ingredients.toString(e, d),
-                id.toString(e, d),
-                this.group != null ? "in group " + this.group.toString(e, d) : "");
+                result.toString(event, debug),
+                ingredients.toString(event, debug),
+                keyID.toString(event, debug),
+                this.group != null ? " and in group " + this.group.toString(event, debug) : "",
+                this.category != null && CRAFTING_CATEGORY_EXISTS ? " in category" + this.category.toString(event, debug) : "");
     }
 
 }

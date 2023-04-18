@@ -1,9 +1,10 @@
 package com.shanebeestudios.skbee.api.recipe;
 
+import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.Timespan;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
-import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -19,11 +20,13 @@ import org.bukkit.inventory.ShapelessRecipe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.NoSuchElementException;
+import java.util.Map;
 
 public class RecipeUtil {
 
     private static final String NAMESPACE = SkBee.getPlugin().getPluginConfig().RECIPE_NAMESPACE;
+    private static final boolean COOKING_CATEGORY_EXISTS = Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory");
+    private static final boolean CRAFTING_CATEGORY_EXISTS = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
 
     /**
      * Get a NamespacedKey from string
@@ -32,39 +35,27 @@ public class RecipeUtil {
      * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
      */
-    public static NamespacedKey getKey(String key) {
+    public static NamespacedKey getKey(Object key) {
         try {
-            NamespacedKey namespacedKey;
-            if (key.contains(":")) {
-                namespacedKey = NamespacedKey.fromString(key.toLowerCase(Locale.ROOT));
-            } else {
-                namespacedKey = new NamespacedKey(NAMESPACE, key.toLowerCase());
+            if (key instanceof NamespacedKey) {
+                return (NamespacedKey) key;
             }
-            if (namespacedKey == null) {
-                error("Invalid namespaced key. Must be [a-z0-9/._-:]: " + key);
-                return null;
+            else if (key instanceof String stringKey) {
+                NamespacedKey namespacedKey;
+                if (stringKey.contains(":")) {
+                    namespacedKey = NamespacedKey.fromString(stringKey.toLowerCase(Locale.ROOT));
+                } else {
+                    namespacedKey = new NamespacedKey(NAMESPACE, stringKey.toLowerCase());
+                }
+                if (namespacedKey != null) {
+                    return namespacedKey;
+                }
             }
-            return namespacedKey;
+            error("Invalid namespaced key. Must be [a-z0-9/._-:]: " + key);
+            return null;
         } catch (IllegalArgumentException ex) {
             error(ex.getMessage());
             return null;
-        }
-    }
-
-    /**
-     * Remove all Minecraft recipes registered to the server
-     */
-    public static void removeAllMCRecipes() {
-        try {
-            List<Recipe> recipes = new ArrayList<>();
-            Bukkit.recipeIterator().forEachRemaining(recipe -> {
-                if (recipe instanceof Keyed && !((Keyed) recipe).getKey().getNamespace().equalsIgnoreCase("minecraft")) {
-                    recipes.add(recipe);
-                }
-            });
-            Bukkit.clearRecipes();
-            recipes.forEach(Bukkit::addRecipe);
-        } catch (NoSuchElementException ignore) {
         }
     }
 
@@ -85,39 +76,63 @@ public class RecipeUtil {
     }
 
     /**
+     * Gets a RecipeChoice depending on the Item
      *
-     * @param itemStack ItemStack to convert to a RecipeChoice
-     * @return ExactChoice or MaterialChoice depending on ItemStack
+     * @param item Object to convert to a RecipeChoice
+     * @return ExactChoice or MaterialChoice depending on Object
      */
-    public static RecipeChoice getRecipeChoice(ItemStack itemStack) {
-        if(itemStack == null)
-            return null;
-        Material material = itemStack.getType();
-        boolean isAir = material.isAir();
-        boolean isSimilar = itemStack.isSimilar(new ItemStack(material));
-        if (isAir) {
-            return null;
+    public static RecipeChoice getRecipeChoice(Object item) {
+        if (item instanceof ItemStack || item instanceof ItemType) {
+            // Skript gives ItemType priority when used in Object class
+            ItemStack itemStack = item instanceof ItemStack ? (ItemStack) item : ((ItemType) item).getRandom();
+            Material material = itemStack.getType();
+            boolean isAir = material.isAir();
+            boolean isSimilar = itemStack.isSimilar(new ItemStack(material));
+            if (isAir) {
+                return null;
+            } else if (isSimilar) {
+                return new MaterialChoice(material);
+            }
+            return new ExactChoice(itemStack);
         }
-        else if (isSimilar) {
-            return  new MaterialChoice(material);
+        else if (item instanceof MaterialChoice materialChoice) {
+            return materialChoice;
         }
-        return new ExactChoice(itemStack);
+        return null;
     }
 
     /**
      *
-     * @param itemStacks ItemStacks to convert to a RecipeChoice
-     * @return ExactChoice or MatrerialChoice depending on ItemStack
+     * @param items Object to convert to a RecipeChoice
+     * @return ExactChoice or MatrerialChoice depending on Object
      */
-    public static RecipeChoice[] getRecipeChoices(ItemStack ...itemStacks) {
+    public static RecipeChoice[] getRecipeChoices(Object ...items) {
         List<RecipeChoice> recipeChoices = new ArrayList<>();
-        for (ItemStack itemStack : itemStacks) {
-            recipeChoices.add(getRecipeChoice(itemStack));
+        for (Object item : items) {
+            recipeChoices.add(getRecipeChoice(item));
         }
         return recipeChoices.toArray(new RecipeChoice[0]);
     }
 
-
+    /**
+     * Gets the ingredients of a crafting recipe
+     *
+     * @param recipe recipe to get the ingredients of
+     * @return An array of ingredients for a recipe
+     */
+    public static ItemStack[] getCraftingIngredients(Recipe recipe) {
+        List<ItemStack> ingredients = new ArrayList<>();
+        if (recipe instanceof ShapedRecipe shapedRecipe) {
+            for (Map.Entry<Character, RecipeChoice> entry : shapedRecipe.getChoiceMap().entrySet()) {
+                ingredients.add(getItemStack(entry.getValue()));
+            }
+        } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
+            for (RecipeChoice recipeChoice : shapelessRecipe.getChoiceList()) {
+                ingredients.add(getItemStack(recipeChoice));
+            }
+        }
+        return ingredients.toArray(new ItemStack[0]);
+    }
 
 
     /**
@@ -144,6 +159,13 @@ public class RecipeUtil {
         String group = recipe.getGroup();
         if (group.length() > 0) {
             log(" - &7Group: &r\"&6%s&r\"", group);
+        } else {
+            log(" - &7Group: &6Undefined");
+        }
+        if(COOKING_CATEGORY_EXISTS) {
+            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
+        } else {
+            log(" - &7Category: &r\"&6Misc&r\"");
         }
         log(" - &7CookTime: &b%s", Timespan.fromTicks_i(recipe.getCookingTime()));
         log(" - &7Experience: &b%s", recipe.getExperience());
@@ -161,6 +183,13 @@ public class RecipeUtil {
         String group = recipe.getGroup();
         if (group.length() > 0) {
             log(" - &7Group: &r\"&6%s&r\"", group);
+        } else {
+            log(" - &7Group: &6Undefined");
+        }
+        if(CRAFTING_CATEGORY_EXISTS) {
+            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
+        } else {
+            log(" - &7Category: &r\"&6Misc&r\"");
         }
         log(" - &7Ingredients:");
         recipe.getChoiceList().forEach(recipeChoice ->
@@ -180,10 +209,17 @@ public class RecipeUtil {
         String group = recipe.getGroup();
         if (group.length() > 0) {
             log(" - &7Group: &r\"&6%s&r\"", group);
+        } else {
+            log(" - &7Group: &6Undefined");
+        }
+        if(CRAFTING_CATEGORY_EXISTS) {
+            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
+        } else {
+            log(" - &7Category: &r\"&6Misc&r\"");
         }
 
         String[] shape = recipe.getShape();
-        String grid = " - &7Shape: &r[&d%s&r]&7";
+        String grid = " - &7Shape: &r[&d%s&r]";
         if (shape.length > 1) grid += "&7, &r[&d%s&r]";
         if (shape.length > 2) grid += "&7, &r[&d%s&r]";
         log(grid, shape);

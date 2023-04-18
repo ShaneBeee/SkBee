@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -16,7 +15,6 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.BlastingRecipe;
@@ -25,11 +23,9 @@ import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.RecipeChoice.ExactChoice;
-import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.SmokingRecipe;
+import org.bukkit.inventory.recipe.CookingBookCategory;
 
-@SuppressWarnings({"NullableProblems", "ConstantConditions"})
 @Name("Recipe - Cooking")
 @Description({"Register new cooking recipes. On 1.13+ you can register recipes for furnaces.",
         "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires.",
@@ -41,111 +37,105 @@ import org.bukkit.inventory.SmokingRecipe;
         "\tregister new furnace recipe for diamond using dirt with id \"furnace_diamond\"",
         "\tregister new blasting recipe for emerald using dirt with id \"my_recipes:blasting_emerald\"",
         "\tregister new smoking recipe for cooked cod named \"Hot Cod\" using puffer fish with id \"smoking_cod\""})
-@RequiredPlugins("1.13+ for furnaces. 1.14+ for smokers, blast furnaces and campfires.")
-@Since("1.0.0")
+@RequiredPlugins("1.13+ for furnaces. 1.14+ for smokers, blast furnaces and campfires. 1.19+ for Categories")
+@Since("1.0.0, INSERT VERSION (Category)")
 public class EffCookingRecipe extends Effect {
+
+    private static final boolean COOKING_CATEGORY_EXISTS = Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory");
 
     private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
+        String register = "register [a] [new] ";
+        String recipeForUsingID = " recipe for %itemstack% (using|with ingredient) %itemstack/materialchoice% (using|with (id|key)) %string/namespacedkey%";
+        String withExperience = " [[and ]with exp[erience] %-number%]";
+        String withCookTime = " [[and ]with cook[ ]time %-timespan%]";
+        String inGroup = " [[and ](in|with) group %-string%]";
+        String inCategory = COOKING_CATEGORY_EXISTS ? " [[and ](in|with) category %-cookingcategory%]" : "";
         Skript.registerEffect(EffCookingRecipe.class,
-                "register [new] (0¦furnace|1¦(blast furnace|blasting)|2¦smok(er|ing)|3¦campfire) recipe for %itemtype% " +
-                        "(using|with ingredient) %itemtype/materialchoice% with id %string% [[and ]with exp[erience] %-number%] " +
-                        "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
+                register + "furnace" + recipeForUsingID + withExperience + withCookTime + inGroup + inCategory,
+                register + "(blast furnace|blasting)" + recipeForUsingID + withExperience + withCookTime + inGroup + inCategory,
+                register + "smok(er|ing)" + recipeForUsingID + withExperience + withCookTime + inGroup + inCategory,
+                register + "campfire" + recipeForUsingID + withExperience + withCookTime + inGroup + inCategory);
     }
 
-    @SuppressWarnings("null")
-    private Expression<ItemType> item;
+    private Expression<ItemStack> result;
     private Expression<Object> ingredient;
-    private Expression<String> key;
+    private Expression<Object> keyID;
     private Expression<Number> experience;
     private Expression<Timespan> cookTime;
     private Expression<String> group;
+    private Expression<CookingBookCategory> category;
     private int recipeType;
 
-    @SuppressWarnings({"unchecked", "null"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
-        item = (Expression<ItemType>) exprs[0];
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        result = (Expression<ItemStack>) exprs[0];
         ingredient = (Expression<Object>) exprs[1];
-        key = (Expression<String>) exprs[2];
+        keyID = (Expression<Object>) exprs[2];
+
         experience = (Expression<Number>) exprs[3];
+
         cookTime = (Expression<Timespan>) exprs[4];
+
         group = (Expression<String>) exprs[5];
-        recipeType = parseResult.mark;
+
+        category = (Expression<CookingBookCategory>) exprs[6];
+        recipeType = matchedPattern;
         return true;
     }
 
     @Override
     protected void execute(Event event) {
-        ItemType res = this.item.getSingle(event);
-        Object ing = this.ingredient.getSingle(event);
-        if (res == null) {
+        ItemStack result = this.result.getSingle(event);
+        RecipeChoice ingredient = RecipeUtil.getRecipeChoice(this.ingredient.getSingle(event));
+        NamespacedKey key = RecipeUtil.getKey(this.keyID.getSingle(event));
+        if (result == null) {
             RecipeUtil.error("Error registering cooking recipe - result is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
-        }
-        if (ing == null) {
+        }  else if (ingredient == null) {
             RecipeUtil.error("Error registering cooking recipe - ingredient is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
-        }
-
-        ItemStack result = res.getRandom();
-        RecipeChoice ingredient;
-        if (ing instanceof ItemType) {
-            ItemStack itemStack = ((ItemType) ing).getRandom();
-            Material material = itemStack.getType();
-
-            // If ingredient isn't a custom item, just register the material
-            if (itemStack.isSimilar(new ItemStack(material))) {
-                ingredient = new MaterialChoice(material);
-            } else {
-                ingredient = new ExactChoice(itemStack);
-            }
-        } else if (ing instanceof MaterialChoice) {
-            ingredient = ((MaterialChoice) ing);
-        } else {
-            return;
-        }
-        String group = this.group != null ? this.group.getSingle(event) : "";
-        NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
-        if (key == null) {
+        } else if (key == null) {
+            RecipeUtil.error("Error registering cooking recipe - key is null");
             RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
             return;
         }
 
-        float xp = experience != null ? experience.getSingle(event).floatValue() : 0;
+        float experience = this.experience != null ? this.experience.getSingle(event).floatValue() : 0;
         int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : getDefaultCookTime(recipeType);
+        String group = this.group != null ? this.group.getSingle(event) : null;
+        CookingBookCategory category = this.category != null && COOKING_CATEGORY_EXISTS ? this.category.getSingle(event) : null;
 
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);
-
-        cookingRecipe(result, ingredient, group, key, xp, cookTime);
+        cookingRecipe(key, result, ingredient, experience, cookTime, group, category);
     }
 
-    private void cookingRecipe(ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp, int cookTime) {
+    private void cookingRecipe(NamespacedKey keyID, ItemStack result, RecipeChoice ingredient, float experience, int cookTime, String group, CookingBookCategory category) {
         CookingRecipe<?> recipe = switch (recipeType) {
             case 1 -> // BLASTING
-                    new BlastingRecipe(key, result, ingredient, xp, cookTime);
+                    new BlastingRecipe(keyID, result, ingredient, experience, cookTime);
             case 2 -> // SMOKING
-                    new SmokingRecipe(key, result, ingredient, xp, cookTime);
+                    new SmokingRecipe(keyID, result, ingredient, experience, cookTime);
             case 3 -> // CAMPFIRE
-                    new CampfireRecipe(key, result, ingredient, xp, cookTime);
+                    new CampfireRecipe(keyID, result, ingredient, experience, cookTime);
             default -> // FURNACE
-                    new FurnaceRecipe(key, result, ingredient, xp, cookTime);
+                    new FurnaceRecipe(keyID, result, ingredient, experience, cookTime);
         };
-
-        recipe.setGroup(group);
+        if(group != null && !group.isBlank()) recipe.setGroup(group);
+        if (category != null) recipe.setCategory(category);
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
             RecipeUtil.logCookingRecipe(recipe);
         }
     }
 
-    private int getDefaultCookTime(int t) {
-        return switch (t) { // BLASTING
-            case 1, 2 -> // SMOKING
+    private int getDefaultCookTime(int type) {
+        return switch (type) {
+            case 1, 2 -> // BLASTING & SMOKING
                     100;
             case 3 -> // CAMPFIRE
                     600;
@@ -155,17 +145,22 @@ public class EffCookingRecipe extends Effect {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
+    public String toString(Event event, boolean debug) {
         String type = switch (recipeType) {
             case 1 -> "blasting";
             case 2 -> "smoking";
             case 3 -> "campfire";
             default -> "furnace";
         };
-        String xp = experience != null ? " and with xp " + experience.toString(e, d) : "";
-        String cook = cookTime != null ? " and with cooktime " + cookTime.toString(e, d) : "";
-        return "register new " + type + " recipe for " + item.toString(e, d) + " using " + ingredient.toString(e, d) +
-                " with id " + key.toString(e, d) + xp + cook;
+        String result = this.result.toString(event, debug);
+        String ingredient = this.ingredient.toString(event, debug);
+        String key = this.keyID.toString(event, debug);
+        String exp = experience != null ? " and with exp " + experience.toString(event, debug) : "";
+        String cooktime = cookTime != null ? " and with cooktime " + cookTime.toString(event, debug) : "";
+        String group = this.group != null ? " with group " + this.group.toString(event, debug) : "";
+        String category = this.category != null && COOKING_CATEGORY_EXISTS ? " and in category " + this.category.toString(event, debug) : "";
+        return String.format("register new %s recipe for %s using %s with id %s%s%s%s%s",
+                type, result, ingredient, key, exp, cooktime, group, category);
     }
 
 }

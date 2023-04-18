@@ -31,24 +31,23 @@ import java.util.List;
 public class ExprRecipeWithId extends SimpleExpression<Recipe> {
 
 	static {
-		Skript.registerExpression(ExprRecipeWithId.class, Recipe.class, ExpressionType.SIMPLE, "recipe[s] (with|from) id[s] %strings%");
+		Skript.registerExpression(ExprRecipeWithId.class, Recipe.class, ExpressionType.SIMPLE, "recipe[s] (using|(with|from) id[s]) %strings/namespacedkeys%");
 	}
 
-	private Expression<String> recipeIds;
+	private Expression<Object> recipeIds;
 
 	@Override
 	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		recipeIds = (Expression<String>) exprs[0];
+		recipeIds = (Expression<Object>) exprs[0];
 		return true;
 	}
 
 	@Override
 	protected @Nullable Recipe[] get(Event event) {
 		List<Recipe> recipes = new ArrayList<>();
-		for (String recipeId : recipeIds.getArray(event)) {
+		for (Object recipeId : recipeIds.getArray(event)) {
 			NamespacedKey recipeKey = RecipeUtil.getKey(recipeId);
-			if(recipeKey != null)
-				recipes.add(Bukkit.getRecipe(recipeKey));
+			if(recipeKey != null) recipes.add(Bukkit.getRecipe(recipeKey));
 		}
 		return recipes.toArray(new Recipe[0]);
 	}
@@ -67,4 +66,5 @@ public class ExprRecipeWithId extends SimpleExpression<Recipe> {
 	public String toString(@Nullable Event event, boolean debug) {
 		return "recipe from id " + recipeIds.toString(event, debug);
 	}
+
 }

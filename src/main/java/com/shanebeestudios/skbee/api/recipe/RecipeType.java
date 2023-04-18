@@ -45,14 +45,6 @@ public enum RecipeType {
         return recipeClass;
     }
 
-    static final Map<Class<? extends Recipe>, RecipeType> BY_CLASS = new HashMap<>();
-
-    static {
-        for (RecipeType recipeType : values()) {
-            BY_CLASS.put(recipeType.getRecipeClass(), recipeType);
-        }
-    }
-
     @Nullable
     public static RecipeType getFromRecipe(Recipe recipe) {
         Class<? extends Recipe> recipeClass = recipe.getClass();

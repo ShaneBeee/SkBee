@@ -60,7 +60,6 @@ public class EvtRecipe {
             }, EventValues.TIME_NOW);
         }
 
-
     }
 
 }

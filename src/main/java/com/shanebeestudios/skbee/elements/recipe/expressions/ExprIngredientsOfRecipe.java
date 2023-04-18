@@ -14,7 +14,6 @@ import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.Recipe;
-import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.SmithingRecipe;
@@ -22,8 +21,8 @@ import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
 
 @Name("Recipe - Ingredients of Recipe")
 @Description("Get the ingredients from a recipe. Requires 1.13+")
@@ -60,15 +59,8 @@ public class ExprIngredientsOfRecipe extends PropertyExpression<Recipe, ItemStac
             else if (recipe instanceof CookingRecipe<?> cookingRecipe) {
                 items.add(RecipeUtil.getItemStack(cookingRecipe.getInputChoice()));
             }
-            else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
-                for (RecipeChoice recipeChoice : shapelessRecipe.getChoiceList()) {
-                    items.add(RecipeUtil.getItemStack(recipeChoice));
-                }
-            }
-            else if (recipe instanceof ShapedRecipe shapedRecipe) {
-                for (Map.Entry<Character, RecipeChoice> entry : shapedRecipe.getChoiceMap().entrySet()) {
-                    items.add(RecipeUtil.getItemStack(entry.getValue()));
-                }
+            else if (recipe instanceof ShapelessRecipe || recipe instanceof ShapedRecipe) {
+                items.addAll(Arrays.asList(RecipeUtil.getCraftingIngredients(recipe)));
             }
         }
         return items.toArray(new ItemStack[0]);
@@ -83,4 +75,5 @@ public class ExprIngredientsOfRecipe extends PropertyExpression<Recipe, ItemStac
     public String toString(@Nullable Event event, boolean debug) {
         return "ingredients of " + getExpr().toString(event, debug);
     }
+
 }

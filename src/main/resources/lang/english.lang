@@ -48,6 +48,8 @@ types:
 	quitreason: quit reason¦s
 	recipetype: recipe type¦s
 	recipe: recipe¦s
+	cookingcategory: cooking[ ]category(y|ies)
+	craftingcategory: crafting[ ]categor(y|ies)
 	objective: objective¦s
 	criteria: criteria¦s
 	rendertype: render type¦s

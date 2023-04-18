@@ -29,16 +29,16 @@ public class ExprRecipeGroup extends SimplePropertyExpression<Recipe, String> {
 	@Override
 	@Nullable
 	public String convert(Recipe recipe) {
-		if (recipe instanceof ShapedRecipe shapedRecipe) {
+		if (recipe instanceof ShapedRecipe shapedRecipe && !shapedRecipe.getGroup().isBlank()) {
 			return shapedRecipe.getGroup();
 		}
-		else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
+		else if (recipe instanceof ShapelessRecipe shapelessRecipe && !shapelessRecipe.getGroup().isBlank()) {
 			return shapelessRecipe.getGroup();
 		}
-		else if (recipe instanceof StonecuttingRecipe stonecuttingRecipe) {
+		else if (recipe instanceof StonecuttingRecipe stonecuttingRecipe && !stonecuttingRecipe.getGroup().isBlank()) {
 			return stonecuttingRecipe.getGroup();
 		}
-		else if (recipe instanceof CookingRecipe<?> cookingRecipe) {
+		else if (recipe instanceof CookingRecipe<?> cookingRecipe && !cookingRecipe.getGroup().isBlank()) {
 			return cookingRecipe.getGroup();
 		}
 		return null;
@@ -53,4 +53,5 @@ public class ExprRecipeGroup extends SimplePropertyExpression<Recipe, String> {
 	protected String getPropertyName() {
 		return "recipe group";
 	}
+
 }
