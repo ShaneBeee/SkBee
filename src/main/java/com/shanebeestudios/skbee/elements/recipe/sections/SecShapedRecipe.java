@@ -29,7 +29,7 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
 
-@Name("Recipes - Advanced Shaped Recipe and Living Fucking Hell")
+@Name("Recipes - Advanced Shaped Recipe")
 @Description({"Ceates a new shaped recipe using sections and entries",
 		"When using the shape entry, it is required to follow a rectangular shape in example 'ab, cde' will not work while 'abc, def' will work"})
 @Examples({
