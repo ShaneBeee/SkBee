@@ -22,49 +22,49 @@ import java.util.List;
 
 @Name("Recipe - Recipe with Id")
 @Description({"Gets a minecraft recipe based off a given recipe id. Requires Minecraft 1.13+",
-		"If no recipe key value is given (i.e. 'skbee' within 'skbee:my_recipe') we default to config recipe key"})
+        "If no recipe key value is given (i.e. 'skbee' within 'skbee:my_recipe') we default to config recipe key"})
 @Examples({"set {_recipe} to recipe from id \"minecraft:oak_door\"",
-		"set {_recipe} to recipe with id \"skbee:my_recipe\"",
-		"set {_recipes::*} to recipe with ids \"someplug:recipe_name\", \"my_recipe\"",
-		"set {_result} to recipe result of {_recipe}"})
+        "set {_recipe} to recipe with id \"skbee:my_recipe\"",
+        "set {_recipes::*} to recipe with ids \"someplug:recipe_name\", \"my_recipe\"",
+        "set {_result} to recipe result of {_recipe}"})
 @Since("INSERT VERSION")
 public class ExprRecipeWithId extends SimpleExpression<Recipe> {
 
-	static {
-		Skript.registerExpression(ExprRecipeWithId.class, Recipe.class, ExpressionType.SIMPLE, "recipe[s] (using|(with|from) id[s]) %strings/namespacedkeys%");
-	}
+    static {
+        Skript.registerExpression(ExprRecipeWithId.class, Recipe.class, ExpressionType.SIMPLE, "recipe[s] (using|(with|from) id[s]) %strings/namespacedkeys%");
+    }
 
-	private Expression<Object> recipeIds;
+    private Expression<Object> recipeIds;
 
-	@Override
-	public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-		recipeIds = (Expression<Object>) exprs[0];
-		return true;
-	}
+    @Override
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        recipeIds = (Expression<Object>) exprs[0];
+        return true;
+    }
 
-	@Override
-	protected @Nullable Recipe[] get(Event event) {
-		List<Recipe> recipes = new ArrayList<>();
-		for (Object recipeId : recipeIds.getArray(event)) {
-			NamespacedKey recipeKey = RecipeUtil.getKey(recipeId);
-			if(recipeKey != null) recipes.add(Bukkit.getRecipe(recipeKey));
-		}
-		return recipes.toArray(new Recipe[0]);
-	}
+    @Override
+    protected @Nullable Recipe[] get(Event event) {
+        List<Recipe> recipes = new ArrayList<>();
+        for (Object recipeId : recipeIds.getArray(event)) {
+            NamespacedKey recipeKey = RecipeUtil.getKey(recipeId);
+            if (recipeKey != null) recipes.add(Bukkit.getRecipe(recipeKey));
+        }
+        return recipes.toArray(new Recipe[0]);
+    }
 
-	@Override
-	public boolean isSingle() {
-		return recipeIds.isSingle();
-	}
+    @Override
+    public boolean isSingle() {
+        return recipeIds.isSingle();
+    }
 
-	@Override
-	public Class<? extends Recipe> getReturnType() {
-		return Recipe.class;
-	}
+    @Override
+    public Class<? extends Recipe> getReturnType() {
+        return Recipe.class;
+    }
 
-	@Override
-	public String toString(@Nullable Event event, boolean debug) {
-		return "recipe from id " + recipeIds.toString(event, debug);
-	}
+    @Override
+    public String toString(@Nullable Event event, boolean debug) {
+        return "recipe from id " + recipeIds.toString(event, debug);
+    }
 
 }

@@ -58,7 +58,7 @@ public class CondHasDiscoveredRecipe extends Condition {
         return String.format("%s %s discovered recipes %s",
                 players.toString(event, debug),
                 isNegated() ? "has not" : "has",
-                recipes.toString(event,debug));
+                recipes.toString(event, debug));
     }
 
 }

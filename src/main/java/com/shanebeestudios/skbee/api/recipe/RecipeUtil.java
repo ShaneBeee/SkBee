@@ -16,6 +16,7 @@ import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.StonecuttingRecipe;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,8 +40,7 @@ public class RecipeUtil {
         try {
             if (key instanceof NamespacedKey) {
                 return (NamespacedKey) key;
-            }
-            else if (key instanceof String stringKey) {
+            } else if (key instanceof String stringKey) {
                 NamespacedKey namespacedKey;
                 if (stringKey.contains(":")) {
                     namespacedKey = NamespacedKey.fromString(stringKey.toLowerCase(Locale.ROOT));
@@ -68,8 +68,7 @@ public class RecipeUtil {
     public static ItemStack getItemStack(RecipeChoice recipeChoice) {
         if (recipeChoice instanceof ExactChoice exactChoice) {
             return exactChoice.getItemStack().clone();
-        }
-        else if (recipeChoice instanceof MaterialChoice materialChoice) {
+        } else if (recipeChoice instanceof MaterialChoice materialChoice) {
             return materialChoice.getItemStack().clone();
         }
         return new ItemStack(Material.AIR);
@@ -94,19 +93,17 @@ public class RecipeUtil {
                 return new MaterialChoice(material);
             }
             return new ExactChoice(itemStack);
-        }
-        else if (item instanceof MaterialChoice materialChoice) {
+        } else if (item instanceof MaterialChoice materialChoice) {
             return materialChoice;
         }
         return null;
     }
 
     /**
-     *
      * @param items Object to convert to a RecipeChoice
      * @return ExactChoice or MatrerialChoice depending on Object
      */
-    public static RecipeChoice[] getRecipeChoices(Object ...items) {
+    public static RecipeChoice[] getRecipeChoices(Object... items) {
         List<RecipeChoice> recipeChoices = new ArrayList<>();
         for (Object item : items) {
             recipeChoices.add(getRecipeChoice(item));
@@ -145,6 +142,9 @@ public class RecipeUtil {
     public static void logRecipe(Recipe recipe, RecipeChoice... ingredients) {
         if (!(recipe instanceof Keyed)) return;
         log("&aRegistered new recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
+        if (recipe instanceof StonecuttingRecipe stonecuttingRecipe && !stonecuttingRecipe.getGroup().isBlank()) {
+            log(" - &7Group: &r\"&6%s&r\"", stonecuttingRecipe.getGroup());
+        }
         log(" - &7Result: &e%s", recipe.getResult());
         log(" - &7Ingredients:");
         for (RecipeChoice ingredient : ingredients) {
@@ -157,12 +157,12 @@ public class RecipeUtil {
         log("&aRegistered new cooking recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         String group = recipe.getGroup();
-        if (group.length() > 0) {
+        if (!group.isBlank()) {
             log(" - &7Group: &r\"&6%s&r\"", group);
         } else {
             log(" - &7Group: &6Undefined");
         }
-        if(COOKING_CATEGORY_EXISTS) {
+        if (COOKING_CATEGORY_EXISTS) {
             log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
         } else {
             log(" - &7Category: &r\"&6Misc&r\"");
@@ -181,12 +181,12 @@ public class RecipeUtil {
         log("&aRegistered new shapeless recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         String group = recipe.getGroup();
-        if (group.length() > 0) {
+        if (!group.isBlank()) {
             log(" - &7Group: &r\"&6%s&r\"", group);
         } else {
             log(" - &7Group: &6Undefined");
         }
-        if(CRAFTING_CATEGORY_EXISTS) {
+        if (CRAFTING_CATEGORY_EXISTS) {
             log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
         } else {
             log(" - &7Category: &r\"&6Misc&r\"");
@@ -207,12 +207,12 @@ public class RecipeUtil {
         log(" - &7Result: &e%s", recipe.getResult());
 
         String group = recipe.getGroup();
-        if (group.length() > 0) {
+        if (!group.isBlank()) {
             log(" - &7Group: &r\"&6%s&r\"", group);
         } else {
             log(" - &7Group: &6Undefined");
         }
-        if(CRAFTING_CATEGORY_EXISTS) {
+        if (CRAFTING_CATEGORY_EXISTS) {
             log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
         } else {
             log(" - &7Category: &r\"&6Misc&r\"");
@@ -224,14 +224,12 @@ public class RecipeUtil {
         if (shape.length > 2) grid += "&7, &r[&d%s&r]";
         log(grid, shape);
         log(" - &7Ingredients:");
-        recipe.getChoiceMap().forEach((character, recipeChoice) -> {
-            if (recipeChoice != null) {
-                log("   - &r'&d%s&r' = &6%s", character, getFancy(recipeChoice));
-            }
-        });
+        recipe.getChoiceMap().forEach((character, recipeChoice) ->
+                log("   - &r'&d%s&r' = &6%s", character, getFancy(recipeChoice)));
     }
 
     private static String getFancy(RecipeChoice matChoice) {
+        if (matChoice == null) return "&r[&bAIR&r]";
         return matChoice.toString()
                 .replace("MaterialChoice{choices=", "")
                 .replace("ExactChoice{choices=", "")

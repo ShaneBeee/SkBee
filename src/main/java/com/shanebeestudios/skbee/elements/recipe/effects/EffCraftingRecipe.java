@@ -11,8 +11,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
@@ -118,7 +118,7 @@ public class EffCraftingRecipe extends Effect {
         if (category != null) recipe.setCategory(category);
 
         // Character[ShapeKey]
-        Character[] oldChar = new Character[]{'a','b','c', 'd','e','f', 'g','h','i'};
+        Character[] oldChar = new Character[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'};
         Character[] keyChar = new Character[9];
         for (int i = 0; i < 9; i++) {
             Object object = ingredients.length > i ? ingredients[i] : null;
@@ -132,12 +132,12 @@ public class EffCraftingRecipe extends Effect {
         }
         String one, two, three = null;
         if (ingredients.length > 4) {
-            one = "" + keyChar[0] + keyChar[1] + keyChar[2];
-            two = "" + keyChar[3] + keyChar[4] + keyChar[5];
-            three = "" + keyChar[6] + keyChar[7] + keyChar[8];
+            one = String.valueOf(keyChar[0]) + keyChar[1] + keyChar[2];
+            two = String.valueOf(keyChar[3]) + keyChar[4] + keyChar[5];
+            three = String.valueOf(keyChar[6]) + keyChar[7] + keyChar[8];
         } else {
-            one = "" + keyChar[0] + keyChar[1];
-            two = "" + keyChar[2] + keyChar[3];
+            one = String.valueOf(keyChar[0]) + keyChar[1];
+            two = String.valueOf(keyChar[2]) + keyChar[3];
         }
 
         // Only register a row if it has a key in it
@@ -166,7 +166,7 @@ public class EffCraftingRecipe extends Effect {
 
         for (Object ing : ingredients) {
             RecipeChoice ingredient = RecipeUtil.getRecipeChoice(ing);
-            if(ingredient == null) {
+            if (ingredient == null) {
                 if (config.SETTINGS_DEBUG) {
                     RecipeUtil.warn("ERROR LOADING RECIPE: &7(&b" + key.getKey() + "&7)");
                     RecipeUtil.warn("Non item &b" + ing + "&e found, this item will be removed from the recipe.");

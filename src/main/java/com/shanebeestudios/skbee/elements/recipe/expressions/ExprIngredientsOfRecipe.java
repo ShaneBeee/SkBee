@@ -48,18 +48,14 @@ public class ExprIngredientsOfRecipe extends PropertyExpression<Recipe, ItemStac
         for (Recipe recipe : recipes) {
             if (recipe instanceof MerchantRecipe merchantRecipe) {
                 items.addAll(merchantRecipe.getIngredients());
-            }
-            else if (recipe instanceof StonecuttingRecipe stonecuttingRecipe) {
+            } else if (recipe instanceof StonecuttingRecipe stonecuttingRecipe) {
                 items.add(RecipeUtil.getItemStack(stonecuttingRecipe.getInputChoice()));
-            }
-            else if (recipe instanceof SmithingRecipe smithingRecipe) {
+            } else if (recipe instanceof SmithingRecipe smithingRecipe) {
                 items.add(RecipeUtil.getItemStack(smithingRecipe.getBase()));
                 items.add(RecipeUtil.getItemStack(smithingRecipe.getAddition()));
-            }
-            else if (recipe instanceof CookingRecipe<?> cookingRecipe) {
+            } else if (recipe instanceof CookingRecipe<?> cookingRecipe) {
                 items.add(RecipeUtil.getItemStack(cookingRecipe.getInputChoice()));
-            }
-            else if (recipe instanceof ShapelessRecipe || recipe instanceof ShapedRecipe) {
+            } else if (recipe instanceof ShapelessRecipe || recipe instanceof ShapedRecipe) {
                 items.addAll(Arrays.asList(RecipeUtil.getCraftingIngredients(recipe)));
             }
         }

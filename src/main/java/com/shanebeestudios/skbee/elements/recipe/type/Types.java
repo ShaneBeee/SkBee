@@ -92,17 +92,17 @@ public class Types {
                 .since("2.6.0")
                 .parser(RECIPE_TYPE_ENUM.getParser()));
 
-        if(Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory")) {
-                EnumUtils<CookingBookCategory> COOKING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CookingBookCategory.class);
-                Classes.registerClass(new ClassInfo<>(CookingBookCategory.class, "cookingcategory")
-                        .user("cooking ?categor(y|ies)")
-                        .name("Recipes - Cooking Category")
-                        .description("Represents the type of cooking recipe book categories")
-                        .usage(COOKING_BOOK_CATEGORY_ENUM.getAllNames())
-                        .since("INSERT VERSION")
-                        .parser(COOKING_BOOK_CATEGORY_ENUM.getParser()));
-            }
-        if(Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory")) {
+        if (Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory")) {
+            EnumUtils<CookingBookCategory> COOKING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CookingBookCategory.class);
+            Classes.registerClass(new ClassInfo<>(CookingBookCategory.class, "cookingcategory")
+                    .user("cooking ?categor(y|ies)")
+                    .name("Recipes - Cooking Category")
+                    .description("Represents the type of cooking recipe book categories")
+                    .usage(COOKING_BOOK_CATEGORY_ENUM.getAllNames())
+                    .since("INSERT VERSION")
+                    .parser(COOKING_BOOK_CATEGORY_ENUM.getParser()));
+        }
+        if (Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory")) {
             EnumUtils<CraftingBookCategory> CRAFTING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CraftingBookCategory.class);
             Classes.registerClass(new ClassInfo<>(CraftingBookCategory.class, "craftingcategory")
                     .user("crafting ?categor(y|ies)")

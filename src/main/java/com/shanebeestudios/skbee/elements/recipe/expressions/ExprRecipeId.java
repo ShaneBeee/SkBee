@@ -11,30 +11,30 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Recipe ID")
 @Description({"Gets the identifier of a recipe",
-		"Requires Minecraft 1.13+"})
+        "Requires Minecraft 1.13+"})
 @Examples({"set {_recipe} to random element out of recipes",
-		"send recipe id of {_recipe}"
+        "send recipe id of {_recipe}"
 })
 @Since("INSERT VERSION")
-public class ExprRecipeId extends SimplePropertyExpression<Recipe,String> {
+public class ExprRecipeId extends SimplePropertyExpression<Recipe, String> {
 
 
-	@Override
-	@Nullable
-	public String convert(Recipe recipe) {
-		if (recipe instanceof Keyed keyed)
-			return keyed.getKey().toString();
-		return null;
-	}
+    @Override
+    @Nullable
+    public String convert(Recipe recipe) {
+        if (recipe instanceof Keyed keyed)
+            return keyed.getKey().toString();
+        return null;
+    }
 
-	@Override
-	public Class<? extends String> getReturnType() {
-		return String.class;
-	}
+    @Override
+    public Class<? extends String> getReturnType() {
+        return String.class;
+    }
 
-	@Override
-	protected String getPropertyName() {
-		return "recipe id";
-	}
+    @Override
+    protected String getPropertyName() {
+        return "recipe id";
+    }
 
 }

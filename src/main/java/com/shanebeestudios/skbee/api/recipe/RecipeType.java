@@ -15,9 +15,6 @@ import org.bukkit.inventory.SmokingRecipe;
 import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.HashMap;
-import java.util.Map;
-
 /**
  * Util class defining types of {@link Recipe recipes}
  */

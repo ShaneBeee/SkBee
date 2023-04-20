@@ -59,8 +59,7 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
                     if (!materials.contains(material))
                         materials.add(material);
                 });
-            }
-            else if (object instanceof Tag<?> tag) {
+            } else if (object instanceof Tag<?> tag) {
                 Tag<Material> materialTag = (Tag<Material>) tag;
                 materialTag.getValues().forEach(material -> {
                     if (!materials.contains(material))

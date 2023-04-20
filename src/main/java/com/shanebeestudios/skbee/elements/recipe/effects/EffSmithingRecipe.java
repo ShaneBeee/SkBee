@@ -11,8 +11,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
@@ -65,18 +65,15 @@ public class EffSmithingRecipe extends Effect {
             RecipeUtil.error("Error registering smithing recipe - result is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
-        }
-        else if (base == null) {
+        } else if (base == null) {
             RecipeUtil.error("Error registering smithing recipe - base is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
-        }
-        else if (addition == null) {
+        } else if (addition == null) {
             RecipeUtil.error("Error registering smithing recipe - addition is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
-        }
-        else if (key == null) {
+        } else if (key == null) {
             RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
             return;
         }

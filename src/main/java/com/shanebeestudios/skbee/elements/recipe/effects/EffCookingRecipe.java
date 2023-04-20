@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
@@ -94,7 +94,7 @@ public class EffCookingRecipe extends Effect {
             RecipeUtil.error("Error registering cooking recipe - result is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
-        }  else if (ingredient == null) {
+        } else if (ingredient == null) {
             RecipeUtil.error("Error registering cooking recipe - ingredient is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
@@ -125,7 +125,7 @@ public class EffCookingRecipe extends Effect {
             default -> // FURNACE
                     new FurnaceRecipe(keyID, result, ingredient, experience, cookTime);
         };
-        if(group != null && !group.isBlank()) recipe.setGroup(group);
+        if (group != null && !group.isBlank()) recipe.setGroup(group);
         if (category != null) recipe.setCategory(category);
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
