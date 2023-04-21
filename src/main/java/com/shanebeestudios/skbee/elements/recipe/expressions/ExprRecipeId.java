@@ -6,6 +6,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.bukkit.Keyed;
+import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
 
@@ -16,20 +17,23 @@ import org.jetbrains.annotations.Nullable;
         "send recipe id of {_recipe}"
 })
 @Since("INSERT VERSION")
-public class ExprRecipeId extends SimplePropertyExpression<Recipe, String> {
+public class ExprRecipeId extends SimplePropertyExpression<Recipe, NamespacedKey> {
 
+    static {
+        register(ExprRecipeId.class, NamespacedKey.class, "recipe id[s]", "recipes");
+    }
 
     @Override
     @Nullable
-    public String convert(Recipe recipe) {
+    public NamespacedKey convert(Recipe recipe) {
         if (recipe instanceof Keyed keyed)
-            return keyed.getKey().toString();
+            return keyed.getKey();
         return null;
     }
 
     @Override
-    public Class<? extends String> getReturnType() {
-        return String.class;
+    public Class<? extends NamespacedKey> getReturnType() {
+        return NamespacedKey.class;
     }
 
     @Override
