@@ -6,6 +6,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.Converters;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -139,6 +140,7 @@ public class Types {
             }
         }
 
+        Converters.registerConverter(NamespacedKey.class, String.class, NamespacedKey::asString);
         if (Classes.getExactClassInfo(NamespacedKey.class) == null) {
             Classes.registerClass(new ClassInfo<>(NamespacedKey.class, "namespacedkey")
                     .user("namespacedkeys?")
@@ -146,7 +148,24 @@ public class Types {
                     .description("NamespacedKeys are a way to declare and specify game objects in Minecraft,",
                             "which can identify built-in and user-defined objects without potential ambiguity or conflicts.",
                             "For more information see Resource Location on McWiki <link>https://minecraft.fandom.com/wiki/Resource_location</link>")
-                    .since("2.6.0"));
+                    .since("2.6.0")
+                    .parser(new Parser<NamespacedKey>() {
+
+                        @Override
+                        public boolean canParse(ParseContext context) {
+                            return false;
+                        }
+
+                        @Override
+                        public String toString(NamespacedKey namespacedKey, int i) {
+                            return namespacedKey.asString();
+                        }
+
+                        @Override
+                        public String toVariableNameString(NamespacedKey namespacedKey) {
+                            return toString(namespacedKey, 0);
+                        }
+                    }));
         }
 
         if (Classes.getExactClassInfo(BlockFace.class) == null) {

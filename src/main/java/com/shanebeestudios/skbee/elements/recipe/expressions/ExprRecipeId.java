@@ -11,7 +11,7 @@ import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Recipe ID")
-@Description({"Gets the identifier of a recipe",
+@Description({"Gets the registered identifier of recipes",
         "Requires Minecraft 1.13+"})
 @Examples({"set {_recipe} to random element out of recipes",
         "send recipe id of {_recipe}"

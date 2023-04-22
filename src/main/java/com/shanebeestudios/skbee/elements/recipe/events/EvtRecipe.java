@@ -32,7 +32,7 @@ public class EvtRecipe {
         EventValues.registerEventValue(PlayerRecipeDiscoverEvent.class, String.class, new Getter<>() {
             @Override
             public String get(PlayerRecipeDiscoverEvent event) {
-                return event.getRecipe().toString();
+                return event.getRecipe().asString();
             }
         }, EventValues.TIME_NOW);
 
