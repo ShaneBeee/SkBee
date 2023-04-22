@@ -17,29 +17,35 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("Text Component - Merge Components")
 @Description("Merge multiple components into one.")
-@Examples("set {_t} to merge components {_t::*}")
-@Since("2.4.0")
+@Examples({"set {_t} to merge components {_t::*}",
+        "set {_t} to merge components {_t::*} joined with newline"})
+@Since("2.4.0, INSERT VERSION (delimiter)")
 public class ExprMergeComponents extends SimpleExpression<BeeComponent> {
 
     static {
         Skript.registerExpression(ExprMergeComponents.class, BeeComponent.class, ExpressionType.SIMPLE,
-                "merge components %textcomponents%");
+                "merge components %textcomponents% [[join[ed]] with %-string%]");
     }
 
     private Expression<BeeComponent> components;
+    private Expression<String> delimiter;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.components = (Expression<BeeComponent>) exprs[0];
+        this.delimiter = (Expression<String>) exprs[1];
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable BeeComponent[] get(Event event) {
+        if (this.components == null)
+            return null;
         BeeComponent[] components = this.components.getArray(event);
-        return new BeeComponent[]{BeeComponent.fromComponents(components)};
+        String delimiter = this.delimiter.getSingle(event);
+        return new BeeComponent[]{BeeComponent.fromComponents(components, delimiter)};
     }
 
     @Override

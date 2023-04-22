@@ -34,7 +34,7 @@ public class EffSendComponent extends Effect {
 
     static {
         Skript.registerEffect(EffSendComponent.class,
-                "send [(text|1¦action[[ ]bar])] component[s] %objects% [to %commandsenders%] [from %-player%]",
+                "send [(text|1¦action[[ ]bar])] component[s] %objects% [to %-commandsenders%] [from %-player%]",
                 "broadcast [text] component[s] %objects% [from %-player%]");
     }
 
