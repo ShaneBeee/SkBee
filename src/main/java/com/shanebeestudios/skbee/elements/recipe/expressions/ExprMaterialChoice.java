@@ -34,8 +34,8 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
 
     static {
         String pattern = SkBee.getPlugin().getPluginConfig().ELEMENTS_MINECRAFT_TAG ?
-                "material choice of %itemtypes/minecrafttags%" :
-                "material choice of %itemtypes%";
+                "material choice (of|using) %itemtypes/minecrafttags%" :
+                "material choice (of|using) %itemtypes%";
         Skript.registerExpression(ExprMaterialChoice.class, MaterialChoice.class, ExpressionType.COMBINED,
                 pattern);
     }
