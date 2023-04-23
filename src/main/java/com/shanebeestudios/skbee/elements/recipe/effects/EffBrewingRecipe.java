@@ -23,14 +23,15 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Registers a new custom brewing stand recipe",
         "Input refers to the bottom 3 slots of a brewing stand",
         "Note: brewing recipes are fairly new within paper, as such support for this is minimal.",
-        "there is currently no way to retrieve all potion recipes or get recipe information like ingredients"})
+        "there is currently no way to retrieve all potion recipes or get recipe information like ingredients",
+        "Requires PaperMC 1.18+"})
 @Examples({"set {_choice} to material choice using magma block, magma cream and blaze rod",
         "register a brewing recipe for lava bucket with input bucket using {_choice}"})
 @Since("INSERT VERSION")
-@RequiredPlugins("Paper 1.18+")
+@RequiredPlugins("PaperMC 1.18+")
 public class EffBrewingRecipe extends Effect {
 
-    private static final boolean HAS_POTION_MIX = Skript.classExists("io.papermc.paper.potion.PotionMix\n ");
+    private static final boolean SUPPORTS_POTION_MIX = Skript.classExists("io.papermc.paper.potion.PotionMix");
     private Expression<ItemStack> result;
 
     private Expression<Object> keyID;
@@ -38,8 +39,11 @@ public class EffBrewingRecipe extends Effect {
     private Expression<Object> ingredient;
 
     static {
-        Skript.registerEffect(EffBrewingRecipe.class,"register [a] [new] brewing[[ ]stand] recipe for %itemstack% with input %itemstack/materialchoice% using %itemstack/materialchoice% (using|with (id|key)) %string/namespacedkey%");
+        if (SUPPORTS_POTION_MIX) {
+            Skript.registerEffect(EffBrewingRecipe.class, "register [a] [new] brewing[[ ]stand] recipe for %itemstack% with input %itemstack/materialchoice% using %itemstack/materialchoice% (using|with (id|key)) %string/namespacedkey%");
+        }
     }
+
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         result = (Expression<ItemStack>) exprs[0];
