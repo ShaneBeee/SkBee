@@ -5,8 +5,10 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
+import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
 import org.bukkit.Bukkit;
 import org.bukkit.event.player.PlayerRecipeDiscoverEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.Recipe;
 
 public class EvtRecipe {
@@ -38,17 +40,18 @@ public class EvtRecipe {
 
         // Player Recipe Book Click Event
         if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent")) {
-            Skript.registerEvent("Recipe Book Click Event", SimpleEvent.class, PlayerRecipeBookClickEvent.class, "[player] recipe book click")
+            Skript.registerEvent("Recipe Book Click", SimpleEvent.class, PlayerRecipeBookClickEvent.class, "[player] recipe book click")
                     .description("Called when the player clicks on a recipe in their recipe book. Requires Paper 1.15+")
                     .examples("on recipe book click:",
                             "\tif event-string = \"minecraft:diamond_sword\":",
                             "\t\tcancel event")
-                    .since("1.5.0");
+                    .since("1.5.0")
+                    .requiredPlugins("PaperMC 1.15+");
 
             EventValues.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, new Getter<>() {
                 @Override
                 public String get(PlayerRecipeBookClickEvent event) {
-                    return event.getRecipe().toString();
+                    return event.getRecipe().asString();
                 }
             }, EventValues.TIME_NOW);
 
@@ -56,6 +59,29 @@ public class EvtRecipe {
                 @Override
                 public Recipe get(PlayerRecipeBookClickEvent event) {
                     return Bukkit.getRecipe(event.getRecipe());
+                }
+            }, EventValues.TIME_NOW);
+        }
+
+        // Player Stonecutter Recipe Select Event
+        if (Skript.classExists("io/papermc/paper/event/player/PlayerStonecutterRecipeSelectEvent")) {
+            Skript.registerEvent("Stonecutter Recipe Select", SimpleEvent.class, PlayerStonecutterRecipeSelectEvent.class,
+                            "[player]")
+                    .description("Called when a player selectsa a recipe in the stone cutter inventory, requires Paper 1.16+")
+                    .since("INSERT VERSION")
+                    .requiredPlugins("PaperMC 1.16+");
+
+            EventValues.registerEventValue(PlayerStonecutterRecipeSelectEvent.class, Recipe.class, new Getter<>() {
+                @Override
+                public Recipe get(PlayerStonecutterRecipeSelectEvent event) {
+                    return event.getStonecuttingRecipe();
+                }
+            }, EventValues.TIME_NOW);
+
+            EventValues.registerEventValue(PlayerStonecutterRecipeSelectEvent.class, Inventory.class, new Getter<>() {
+                @Override
+                public Inventory get(PlayerStonecutterRecipeSelectEvent event) {
+                    return event.getStonecutterInventory();
                 }
             }, EventValues.TIME_NOW);
         }
