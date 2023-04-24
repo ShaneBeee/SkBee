@@ -44,8 +44,9 @@ public class ExprMergeComponents extends SimpleExpression<BeeComponent> {
         if (this.components == null)
             return null;
         BeeComponent[] components = this.components.getArray(event);
-        String delimiter = this.delimiter.getSingle(event);
-        return new BeeComponent[]{BeeComponent.fromComponents(components, delimiter)};
+        if (this.delimiter != null)
+            return new BeeComponent[]{BeeComponent.fromComponents(components, this.delimiter.getSingle(event))};
+        return new BeeComponent[]{BeeComponent.fromComponents(components)};
     }
 
     @Override
