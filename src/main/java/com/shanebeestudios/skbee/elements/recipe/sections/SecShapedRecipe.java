@@ -34,21 +34,24 @@ import java.util.List;
 import java.util.Map;
 
 @Name("Recipes - Advanced Shaped Recipe")
-@Description({"Ceates a new shaped recipe using sections and entries",
-        "When using the shape entry, it is required to follow a rectangular shape in example 'ab, cde' will not work while 'abc, def' will work"})
+@Description({"Ceates a new shaped recipe using sections and entries. Minecraft 1.19+ required for categories.",
+        "\nShape: When using the shape entry, it is required to follow a rectangular shape in example (\"ab\", \"abc\") will not work",
+        "while (\"ab\", \"ab\"), (\"abc\") and (\"a\", \"a\", \"a\") will work.",
+        "The character here will correspond with the character used in ingredients.",
+        "Empty spaces (ex: \"a b\") will represent an empty spot in a recipe, no need to register air.",
+        "\nIngredients: Uses the ingredients expression, with a key/value system (see expression for more info)."})
 @Examples({"register shaped recipe for diamond named \"&bDiamond\" with id \"my_recipes:blue_diamond\"",
-        "\tshape: \"123\", \"456\", \"789\"",
-        "\tingredients: air, blue dye, air, blue dye, diamond, blue dye, air, blue dye, air",
+        "\tshape: \"a\", \"e\", \"a\"",
+        "\tingredients: a:diamond, e:emerald",
         "\tgroup: \"coloured_diamonds\"",
         "\tcategory: misc",
         "\t# Requires MC 1.19 for category",
         "",
         "set {_MUD_BALL} to clay ball with custom model data 1",
         "register shaped recipe for mud with id \"mud\"",
-        "\tshape: \"12\", \"34\"",
-        "\tingredients: {_MUD_BALL}, {_MUD_BALL}, {_MUD_BALL}, {_MUD_BALL}"})
+        "\tshape: \"11\", \"11\"",
+        "\tingredients: 1:{_MUD_BALL}"})
 @Since("INSERT VERSION")
-@RequiredPlugins("MC 1.19 (categories)")
 public class SecShapedRecipe extends Section {
 
     private final Config config = SkBee.getPlugin().getPluginConfig();
@@ -126,7 +129,8 @@ public class SecShapedRecipe extends Section {
             RecipeUtil.error("Error: array size was too large or too small");
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
-        } else if (!isValidShape(shape)) {
+        }
+        else if (!isValidShape(shape)) {
             RecipeUtil.error("Error registering crafting recipe - invalid shape");
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
