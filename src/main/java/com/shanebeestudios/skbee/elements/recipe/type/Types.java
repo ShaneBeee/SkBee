@@ -7,6 +7,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
+import com.shanebeestudios.skbee.api.recipe.Ingredient;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import org.bukkit.Keyed;
@@ -112,6 +113,29 @@ public class Types {
                     .since("INSERT VERSION")
                     .parser(CRAFTING_BOOK_CATEGORY_ENUM.getParser()));
         }
+
+        Classes.registerClass(new ClassInfo<>(Ingredient.class, "ingredient")
+                .user("ingredients?")
+                .name("Recipe - Ingredient")
+                .description("Represents an ingredient for a recipe. See expression for more details.")
+                .since("INSERT VERSION")
+                .parser(new Parser<>() {
+
+                    @Override
+                    public boolean canParse(@NotNull ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public @NotNull String toString(Ingredient ingredient, int flags) {
+                        return "ingredient:'" + ingredient + "'";
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(Ingredient ingredient) {
+                        return toString(ingredient, 0);
+                    }
+                }));
     }
 
     private static String matChoiceToString(RecipeChoice.MaterialChoice materialChoice) {

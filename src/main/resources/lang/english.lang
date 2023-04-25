@@ -65,3 +65,4 @@ types:
 	quaternion: quaternion¦s
 	transformation: transformation¦s
 	respawnreason: respawn reason¦s
+	ingredient: ingredient¦s
