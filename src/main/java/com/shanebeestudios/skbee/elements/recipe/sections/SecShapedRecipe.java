@@ -13,6 +13,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.recipe.Ingredient;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
@@ -22,12 +23,15 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Name("Recipes - Advanced Shaped Recipe")
 @Description({"Ceates a new shaped recipe using sections and entries",
@@ -55,7 +59,7 @@ public class SecShapedRecipe extends Section {
     }
 
     private static final EntryValidator validator = EntryValidator.builder()
-            .addEntryData(new ExpressionEntryData<>("ingredients", null, false, Object.class))
+            .addEntryData(new ExpressionEntryData<>("ingredients", null, false, Ingredient.class))
             .addEntryData(new ExpressionEntryData<>("shape", null, false, String.class))
             .addEntryData(new ExpressionEntryData<>("category", null, true, CraftingBookCategory.class))
             .addEntryData(new ExpressionEntryData<>("group", null, true, String.class))
@@ -64,7 +68,7 @@ public class SecShapedRecipe extends Section {
     private Expression<Object> keyID;
     private Expression<ItemStack> result;
     private Expression<? extends String> shape;
-    private Expression<?> ingredients;
+    private Expression<Ingredient> ingredients;
 
     @Nullable
     private Expression<? extends String> group;
@@ -81,7 +85,7 @@ public class SecShapedRecipe extends Section {
         result = (Expression<ItemStack>) exprs[0];
 
         shape = (Expression<? extends String>) entryContainer.get("shape", false);
-        ingredients = (Expression<?>) entryContainer.get("ingredients", false);
+        ingredients = (Expression<Ingredient>) entryContainer.get("ingredients", false);
         group = (Expression<? extends String>) entryContainer.getOptional("group", true);
         if (CRAFTING_CATEGORY_EXISTS)
             category = (Expression<? extends CraftingBookCategory>) entryContainer.getOptional("category", true);
@@ -126,12 +130,13 @@ public class SecShapedRecipe extends Section {
             RecipeUtil.error("Error registering crafting recipe - invalid shape");
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
-        } else if (String.join("", shape).length() > ingredients.length) { // FIXES out-of-bounds if shape is too small
-            RecipeUtil.error("Error registering crafting recipe - invalid shape/ingredients");
-            RecipeUtil.error("Shape is either missing an entry or too many ingredients are provided"); // Being more specific as this is hard to debug
-            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
-            return;
         }
+//        else if (String.join("", shape).length() > ingredients.length) { // FIXES out-of-bounds if shape is too small
+//            RecipeUtil.error("Error registering crafting recipe - invalid shape/ingredients");
+//            RecipeUtil.error("Shape is either missing an entry or too many ingredients are provided"); // Being more specific as this is hard to debug
+//            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
+//            return;
+//        }
 
         String group = this.group != null ? this.group.getSingle(event) : null;
         CraftingBookCategory category = this.category != null && CRAFTING_CATEGORY_EXISTS ? this.category.getSingle(event) : null;
@@ -142,11 +147,20 @@ public class SecShapedRecipe extends Section {
 
         recipe.shape(shape);
 
+        Map<Character, Object> ingredientMap = new HashMap<>();
+        for (Ingredient ingredient : this.ingredients.getArray(event)) {
+            ingredientMap.put(ingredient.key(), ingredient.item());
+        }
+
         char[] chars = String.join("", shape).toCharArray();
-        for (int i = 0; i < chars.length; i++) {
-            RecipeChoice ingredient = RecipeUtil.getRecipeChoice(ingredients[i]);
+        for (char aChar : chars) {
+            if (aChar == ' ') continue;
+
+            Object ingredient = ingredientMap.get(aChar);
             if (ingredient == null) continue;
-            recipe.setIngredient(chars[i], ingredient);
+            RecipeChoice recipeChoice = RecipeUtil.getRecipeChoice(ingredient);
+            if (recipeChoice == null) continue;
+            recipe.setIngredient(aChar, recipeChoice);
         }
 
         if (config.SETTINGS_DEBUG) {
@@ -176,7 +190,7 @@ public class SecShapedRecipe extends Section {
     }
 
     @Override
-    public String toString(@Nullable Event event, boolean debug) {
+    public @NotNull String toString(@Nullable Event event, boolean debug) {
         return "register shaped recipe for " + result.toString(event, debug) + " with id " + keyID.toString(event, debug);
     }
 
