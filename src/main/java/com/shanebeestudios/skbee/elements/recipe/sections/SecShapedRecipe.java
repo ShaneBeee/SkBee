@@ -5,7 +5,6 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
@@ -79,6 +78,7 @@ public class SecShapedRecipe extends Section {
     private Expression<? extends CraftingBookCategory> category;
 
 
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int MatchedPattern, Kleenean kleenean, ParseResult isDelayed, SectionNode sectionNode, List<TriggerItem> list) {
         EntryContainer entryContainer = validator.validate(sectionNode);
@@ -95,6 +95,7 @@ public class SecShapedRecipe extends Section {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         execute(event);
@@ -122,15 +123,14 @@ public class SecShapedRecipe extends Section {
         }
 
         String[] shape = this.shape.getArray(event);
-        Object[] ingredients = this.ingredients.getConvertedExpression(Object.class).getArray(event); // #getConvertedExpression() this is done to fix an unparsed-literal stack trace
+        Ingredient[] ingredients = this.ingredients.getArray(event);
         ItemStack result = this.result.getSingle(event);
         if (ingredients.length < 1 || ingredients.length > 9) {
             RecipeUtil.error("Error registering crafting recipe - invalid ingredients");
             RecipeUtil.error("Error: array size was too large or too small");
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
-        }
-        else if (!isValidShape(shape)) {
+        } else if (!isValidShape(shape)) {
             RecipeUtil.error("Error registering crafting recipe - invalid shape");
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
@@ -145,6 +145,11 @@ public class SecShapedRecipe extends Section {
         String group = this.group != null ? this.group.getSingle(event) : null;
         CraftingBookCategory category = this.category != null && CRAFTING_CATEGORY_EXISTS ? this.category.getSingle(event) : null;
 
+        if (result == null) {
+            RecipeUtil.error("Error registering crafting recipe - result is null");
+            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
+            return;
+        }
         ShapedRecipe recipe = new ShapedRecipe(key, result);
         if (group != null) recipe.setGroup(group);
         if (category != null) recipe.setCategory(category);
@@ -176,14 +181,11 @@ public class SecShapedRecipe extends Section {
     }
 
     private boolean isValidShape(String... shapes) {
-
         if (shapes == null) return false;
         else if (shapes.length < 1 || shapes.length > 3) return false;
 
         int lastLength = -1;
-        int length = shapes.length;
-        for (int i = 0; i < length; i++) {
-            String row = shapes[i];
+        for (String row : shapes) {
             if (row == null) return false;
             else if (row.length() > 3 || row.length() < 1 || lastLength > row.length()) return false;
             lastLength = row.length();
