@@ -20,10 +20,10 @@ import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Brewing")
-@Description({"Registers a new custom brewing stand recipe",
-        "Input refers to the bottom 3 slots of a brewing stand",
-        "Note: brewing recipes are fairly new within paper, as such support for this is minimal.",
-        "there is currently no way to retrieve all potion recipes or get recipe information like ingredients",
+@Description({"Registers a new custom brewing stand recipe.",
+        "Input refers to the bottom 3 slots of a brewing stand.",
+        "\nNote: brewing recipes are fairly new within Paper, as such support for this is minimal.",
+        "There is currently no way to retrieve all potion recipes or get recipe information like ingredients.",
         "Requires PaperMC 1.18+"})
 @Examples({"set {_choice} to material choice using magma block, magma cream and blaze rod",
         "register a brewing recipe for lava bucket with input bucket using {_choice}"})
@@ -91,3 +91,4 @@ public class EffBrewingRecipe extends Effect {
                 + " with id " + keyID.toString(event, debug);
     }
 }
+

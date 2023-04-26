@@ -11,11 +11,9 @@ import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Recipe ID")
-@Description({"Gets the registered identifier of recipes",
-        "Requires Minecraft 1.13+"})
+@Description("Gets the registered identifier of recipes.")
 @Examples({"set {_recipe} to random element out of recipes",
-        "send recipe id of {_recipe}"
-})
+        "send recipe id of {_recipe}"})
 @Since("INSERT VERSION")
 public class ExprRecipeId extends SimplePropertyExpression<Recipe, NamespacedKey> {
 
@@ -42,3 +40,4 @@ public class ExprRecipeId extends SimplePropertyExpression<Recipe, NamespacedKey
     }
 
 }
+

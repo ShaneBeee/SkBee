@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Recipe - Recipe with Id")
-@Description({"Gets a minecraft recipe based off a given recipe id. Requires Minecraft 1.13+",
+@Description({"Gets a minecraft recipe based off a given recipe id.",
         "If no recipe key value is given (i.e. 'skbee' within 'skbee:my_recipe') we default to config recipe key"})
 @Examples({"set {_recipe} to recipe from id \"minecraft:oak_door\"",
         "set {_recipe} to recipe with id \"skbee:my_recipe\"",
@@ -68,3 +68,4 @@ public class ExprRecipeWithId extends SimpleExpression<Recipe> {
     }
 
 }
+

@@ -13,8 +13,7 @@ import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Group of Recipe")
-@Description({"Get the group of a recipe, not all recipes support groups.",
-        "Requires Minecraft 1.13+"})
+@Description("Get the group of a recipe, not all recipes support groups.")
 @Examples({"set {_recipes::*} to recipes where [recipe group of input is \"custom\"]",
         "set {_recipe} to recipe with id \"someplugin:your_recipe\"",
         "set recipe group of {_recipe} to \"some_cool_group\"",
@@ -52,3 +51,4 @@ public class ExprRecipeGroup extends SimplePropertyExpression<Recipe, String> {
     }
 
 }
+

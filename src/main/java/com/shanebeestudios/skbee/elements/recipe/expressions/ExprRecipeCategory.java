@@ -14,7 +14,7 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Recipe - Category")
-@Description("Returns the category of a valid recipe")
+@Description("Returns the category of a valid recipe. Requires Minecraft 1.19+")
 @Examples({"set {_recipes::*} to recipes with id \"minecraft:oak_planks\", \"skbee:my_recipe\"",
         "broadcast recipe category of {_recipes::*}"})
 @Since("INSERT VERSION")
@@ -50,3 +50,4 @@ public class ExprRecipeCategory extends SimplePropertyExpression<Recipe, Object>
     }
 
 }
+

@@ -22,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Recipes - Discovered")
-@Description({"Get and modify the discovered recipes of a player",
-        "Requires minecraft 1.13+"})
+@Description("Get and modify the discovered recipes of a player.")
 @Examples({"clear discovered recipes of player",
         "add recipe with id \"someplugin:your_recipe\" to discovered recipes of player"})
 @Since("INSERT VERSION")
@@ -112,3 +111,4 @@ public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
     }
 
 }
+

@@ -19,9 +19,8 @@ import java.util.List;
 
 // TODO: add recipe ingredient by shape key, makes support for custom shape more usable in long term
 @Name("Recipes - Recipe Shape")
-@Description({"Gets the registered shape of a Shaped Recipe",
-        "Recipe shape will return an array of the shape, while compacted will return a string in an easier to read format.",
-        "Requires Minecraft 1.13+"})
+@Description({"Gets the registered shape of a Shaped Recipe.",
+        "Recipe shape will return an array of the shape, while compacted will return a string in an easier to read format."})
 @Examples({"send recipe shape of recipe with id \"minecraft:oak_door\" # \"ab\", \"cd\" and \"ef\"",
         "send compacted recipe shape of recipe with id \"minecraft:oak_door\" # \"minecraft:oak_door{ab, cd, ef}\""})
 @Since("INSERT VERSION")
@@ -69,3 +68,4 @@ public class ExprRecipeShape extends PropertyExpression<Recipe, String> {
     }
 
 }
+

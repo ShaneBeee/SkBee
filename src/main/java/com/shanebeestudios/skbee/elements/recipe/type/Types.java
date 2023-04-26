@@ -58,8 +58,7 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(Recipe.class, "recipe")
                 .name("Recipes - Recipe")
                 .user("recipes?")
-                .description("Represents a minecraft recipe which is used to collect information",
-                        "Requires Minecraft 1.13+")
+                .description("Represents a Minecraft recipe which is used to collect information.")
                 .examples("set {_recipe} to recipe with id \"minecraft:oak_door\"", "set {_recipes::*} to recipes from id \"someplugin:custom_recipe\", \"myrecipe\"")
                 .usage("See recipe from id expression")
                 .since("INSERT VERSION")
@@ -98,7 +97,7 @@ public class Types {
             Classes.registerClass(new ClassInfo<>(CookingBookCategory.class, "cookingcategory")
                     .user("cooking ?categor(y|ies)")
                     .name("Recipes - Cooking Category")
-                    .description("Represents the type of cooking recipe book categories")
+                    .description("Represents the type of cooking recipe book categories.")
                     .usage(COOKING_BOOK_CATEGORY_ENUM.getAllNames())
                     .since("INSERT VERSION")
                     .parser(COOKING_BOOK_CATEGORY_ENUM.getParser()));
@@ -108,7 +107,7 @@ public class Types {
             Classes.registerClass(new ClassInfo<>(CraftingBookCategory.class, "craftingcategory")
                     .user("crafting ?categor(y|ies)")
                     .name("Recipes - Crafting Category")
-                    .description("Represents the type of crafting recipe book categories")
+                    .description("Represents the type of crafting recipe book categories.")
                     .usage(CRAFTING_BOOK_CATEGORY_ENUM.getAllNames())
                     .since("INSERT VERSION")
                     .parser(CRAFTING_BOOK_CATEGORY_ENUM.getParser()));
