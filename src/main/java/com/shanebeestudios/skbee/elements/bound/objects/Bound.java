@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.bound.objects;
 
 import com.google.common.base.Preconditions;
+import com.shanebeestudios.skbee.api.util.WorldUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -254,6 +255,15 @@ public class Bound implements ConfigurationSerializable {
         Block block1 = loc1.getBlock();
         Block block2 = loc2.getBlock();
         this.boundingBox = BoundingBox.of(block1, block2);
+    }
+
+    public void makeFull() {
+        World world = getWorld();
+        Vector min = this.boundingBox.getMin().clone();
+        Vector max = this.boundingBox.getMax().clone();
+        min.setY(WorldUtils.getMinHeight(world));
+        max.setY(WorldUtils.getMaxHeight(world));
+        this.boundingBox = BoundingBox.of(min, max);
     }
 
     public void change(Axis axis, Corner corner, int amount) {
