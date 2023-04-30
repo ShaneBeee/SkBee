@@ -29,23 +29,23 @@ import org.jetbrains.annotations.Nullable;
         "Size returns a vector offset from the starting point of the structure. This cannot be changed.",
         "\nNOTE: `reset` will reset the value back to default. (added in v-2.7.2)",
         "Requires MC 1.17.1+"})
-@Examples({"set rotation of {_s} to clockwise 90",
-        "set {_r} to rotation of {_s}",
-        "set {_v} to size of {_s}",
-        "set include entities of structure {_s} to false",
-        "set integrity of structure {_s} to 0.75",
-        "reset rotation of {_s}",
-        "reset integrity of {_s}"})
+@Examples({"set structure rotation of {_s} to clockwise 90",
+        "set {_r} to structure rotation of {_s}",
+        "set {_v} to structure size of {_s}",
+        "set structure include entities of {_s} to false",
+        "set structure integrity of {_s} to 0.75",
+        "reset structure rotation of {_s}",
+        "reset structure integrity of {_s}"})
 @Since("1.12.0")
 public class ExprStructureProperties extends PropertyExpression<StructureBee, Object> {
 
     static {
         Skript.registerExpression(ExprStructureProperties.class, Object.class, ExpressionType.PROPERTY,
-                "mirror of [structure] %structures%",
-                "rotation of [structure] %structures%",
-                "integrity of [structure] %structures%",
-                "include entities of [structure] %structures%",
-                "size of [structure] %structures%");
+                "structure mirror of %structures%",
+                "structure rotation of %structures%",
+                "structure integrity of %structures%",
+                "structure include entities of %structures%",
+                "structure size of %structures%");
     }
 
     private int pattern;

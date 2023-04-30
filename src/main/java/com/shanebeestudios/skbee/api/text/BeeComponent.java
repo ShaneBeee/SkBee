@@ -42,6 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("PatternValidation")
@@ -130,10 +131,22 @@ public class BeeComponent {
     }
 
     public static BeeComponent fromComponents(@Nullable BeeComponent... components) {
+        return fromComponents(components, null);
+    }
+
+    public static BeeComponent fromComponents(@Nullable BeeComponent[] components, @Nullable String delimiter) {
         Component component = Component.empty();
-        for (BeeComponent beeComponent : components) {
-            if (beeComponent == null) continue;
-            component = component.append(beeComponent.component);
+        if (components != null && components.length > 0) {
+            Component delimiterComp = delimiter != null ? Component.text(delimiter) : null;
+            component = component.append(components[0].component);
+            int end = components.length;
+            for (int i = 1; i < end; ++i) {
+                if (components[i] == null) continue;
+                if (delimiterComp != null) {
+                    component = component.append(delimiterComp);
+                }
+                component = component.append(components[i].component);
+            }
         }
         return new BeeComponent(component);
     }
