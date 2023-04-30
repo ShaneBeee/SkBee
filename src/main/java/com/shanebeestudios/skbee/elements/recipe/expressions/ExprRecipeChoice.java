@@ -26,14 +26,11 @@ import java.util.List;
 
 @Name("Recipe - RecipeChoice")
 @Description({"Gets a material choice or exact choice using a set of items or singular item",
-        ""})
-@Examples({
-        "set {_materialChoice} to material choice using every weapon",
+        "material choice will only care for the material type, where exact choice will care for additional information like item names"})
+@Examples({"set {_materialChoice} to material choice using every weapon and any tool",
         "set {_exactChoice} to exact choice using {_item1}, {_item2}, {_item3}",
         "",
-        "set {_materialChoice} to material choice using {_materialChoice}, all armor and turtle helmet",
-        "",
-})
+        "set {_materialChoice} to material choice using {_materialChoice}, all armor and turtle helmet",})
 @Since("INSERT VERSION")
 public class ExprRecipeChoice extends SimpleExpression<RecipeChoice> {
 
@@ -64,12 +61,12 @@ public class ExprRecipeChoice extends SimpleExpression<RecipeChoice> {
         if (exactRecipe) {
             List<ItemStack> itemStacks = new ArrayList<>();
             for (Object object : objects) {
-                if (object instanceof ItemStack itemStack) {
-                    itemStacks.add(itemStack);
-                } else if (object instanceof ItemType itemType) {
+                if (object instanceof ItemType itemType && !itemStacks.contains(itemType.getRandom())) {
                     itemStacks.add(itemType.getRandom());
                 } else if (object instanceof ExactChoice exactChoice) {
-                    itemStacks.addAll(exactChoice.getChoices());
+                    exactChoice.getChoices().stream()
+                            .filter(itemStack -> !itemStacks.contains(itemStack))
+                            .forEach(itemStacks::add);
                 }
             }
             if (itemStacks.size() == 0) return new ExactChoice[0];
@@ -77,9 +74,7 @@ public class ExprRecipeChoice extends SimpleExpression<RecipeChoice> {
         } else {
             List<Material> materials = new ArrayList<>();
             for (Object object : objects) {
-                if (object instanceof ItemStack itemStack) {
-                    materials.add(itemStack.getType());
-                } else if (object instanceof ItemType itemType) {
+                if (object instanceof ItemType itemType) {
                     itemType.getAll().forEach(itemStack -> {
                         if (!materials.contains(itemStack.getType()))
                             materials.add(itemStack.getType());

@@ -95,11 +95,11 @@ public class RecipeUtil {
     public static String recipeChoiceToString(RecipeChoice recipeChoice) {
         List<String> itemTypes = new ArrayList<>();
         if (recipeChoice instanceof ExactChoice exactChoice) {
-            exactChoice.getChoices().forEach(itemStack -> itemTypes.add(new ItemType(itemStack).toString()));
-            return String.format("ExactChoice{choices=[%s]}", StringUtils.join(itemTypes, ", ").toUpperCase());
+            exactChoice.getChoices().forEach(itemStack -> itemTypes.add(itemStack.getType().toString()));
+            return String.format("ExactChoice{choices=[%s]}", StringUtils.join(itemTypes, ", "));
         } else if (recipeChoice instanceof MaterialChoice materialChoice) {
-            materialChoice.getChoices().forEach(material -> itemTypes.add(new ItemType(material).toString()));
-            return String.format("MaterialChoice{choices=[%s]}", StringUtils.join(itemTypes, ", ").toUpperCase());
+            materialChoice.getChoices().forEach(material -> itemTypes.add(material.toString()));
+            return String.format("MaterialChoice{choices=[%s]}", StringUtils.join(itemTypes, ", "));
         }
 
         return "RecipeChoice{choices=[AIR]}";

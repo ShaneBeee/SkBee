@@ -9,8 +9,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.Ingredient;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.CookingRecipe;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
@@ -71,7 +73,11 @@ public class ExprIngredientsOfRecipe extends PropertyExpression<Recipe, Object> 
 
     @Override
     public Class<?> getReturnType() {
-        return Object.class;
+        Class<?> returntype = getExpr().getReturnType();
+        return MerchantRecipe.class.isAssignableFrom(returntype) ? ItemStack.class
+                : ShapedRecipe.class.isAssignableFrom(returntype) ? Ingredient.class
+                : Recipe.class.isAssignableFrom(returntype) ? RecipeChoice.class
+                : Object.class;
     }
 
     @Override

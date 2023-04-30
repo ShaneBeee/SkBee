@@ -10,6 +10,8 @@ import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.recipe.CookingBookCategory;
+import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Recipe - Category")
@@ -39,7 +41,11 @@ public class ExprRecipeCategory extends SimplePropertyExpression<Recipe, Object>
 
     @Override
     public Class<?> getReturnType() {
-        return Object.class;
+        Class<?> returnType = getExpr().getReturnType();
+        return ShapedRecipe.class.isAssignableFrom(returnType) ? CraftingBookCategory.class
+                : ShapelessRecipe.class.isAssignableFrom(returnType) ? CraftingBookCategory.class
+                : CookingRecipe.class.isAssignableFrom(returnType) ? CookingBookCategory.class
+                : Object.class;
     }
 
     @Override
