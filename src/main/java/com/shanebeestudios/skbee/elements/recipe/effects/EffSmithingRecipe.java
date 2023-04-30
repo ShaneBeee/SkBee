@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -27,10 +26,9 @@ import org.jetbrains.annotations.Nullable;
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
         "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
         "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
-        "Note: While 'custom' items will work in these recipes, it appears the smithing table will not recognize them. Requires MC 1.16+"})
+        "\nNote: While 'custom' items will work in these recipes, it appears the smithing table will not recognize them. Requires MC 1.16+"})
 @Examples({"on load:",
         "\tregister new smithing recipe for diamond chestplate using an iron chestplate and a diamond with id \"smith_diamond_chestplate\""})
-@RequiredPlugins("1.16+")
 @Since("1.4.2")
 public class EffSmithingRecipe extends Effect {
 
@@ -38,19 +36,19 @@ public class EffSmithingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffSmithingRecipe.class,
-                "register [a] [new] smithing recipe for %itemstack% using %itemstack/materialchoice% and %itemstack/materialchoice% (using|with (id|key)) %string/namespacedkey%");
+                "register [a] [new] smithing recipe for %itemstack% using %recipechoice% and %recipechoice% (using|with (id|key)) %string/namespacedkey%");
     }
 
     private Expression<ItemStack> result;
-    private Expression<Object> base;
-    private Expression<Object> addition;
+    private Expression<RecipeChoice> base;
+    private Expression<RecipeChoice> addition;
     private Expression<Object> keyID;
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parse) {
         result = (Expression<ItemStack>) exprs[0];
-        base = (Expression<Object>) exprs[1];
-        addition = (Expression<Object>) exprs[2];
+        base = (Expression<RecipeChoice>) exprs[1];
+        addition = (Expression<RecipeChoice>) exprs[2];
         keyID = (Expression<Object>) exprs[3];
         return true;
     }
@@ -58,8 +56,8 @@ public class EffSmithingRecipe extends Effect {
     @Override
     protected void execute(@NotNull Event event) {
         ItemStack result = this.result.getSingle(event);
-        Object base = this.base.getSingle(event);
-        Object addition = this.addition.getSingle(event);
+        RecipeChoice base = RecipeUtil.getRecipeChoice(this.base.getSingle(event));
+        RecipeChoice addition = RecipeUtil.getRecipeChoice(this.addition.getSingle(event));
         NamespacedKey key = RecipeUtil.getKey(this.keyID.getSingle(event));
         if (result == null) {
             RecipeUtil.error("Error registering smithing recipe - result is null");
@@ -78,12 +76,7 @@ public class EffSmithingRecipe extends Effect {
             return;
         }
 
-
-        RecipeChoice choiceBase = RecipeUtil.getRecipeChoice(base);
-        RecipeChoice choiceAddition = RecipeUtil.getRecipeChoice(addition);
-        if (choiceBase == null || choiceAddition == null) return;
-
-        SmithingRecipe recipe = new SmithingRecipe(key, result, choiceBase, choiceAddition);
+        SmithingRecipe recipe = new SmithingRecipe(key, result, base, addition);
         //Remove duplicates on script reload
         Bukkit.removeRecipe(key);
         Bukkit.addRecipe(recipe);

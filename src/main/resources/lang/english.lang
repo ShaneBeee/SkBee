@@ -12,7 +12,6 @@ types:
 	dustoption: dust option¦s @-
 	dusttransition: dust transition¦s @-
 	vibration: vibration¦s @-
-	materialchoice: material choice¦s
 	minecrafttag: minecraft tag¦s
 	structure: structure¦s
 	mirror: mirror¦s
@@ -50,6 +49,8 @@ types:
 	recipe: recipe¦s
 	cookingcategory: cooking[ ]category(y|ies)
 	craftingcategory: crafting[ ]categor(y|ies)
+	recipechoice: recipe[ ]choice¦s
+	ingredient: ingredient¦s
 	objective: objective¦s
 	criteria: criteria¦s
 	rendertype: render type¦s
@@ -65,4 +66,3 @@ types:
 	quaternion: quaternion¦s
 	transformation: transformation¦s
 	respawnreason: respawn reason¦s
-	ingredient: ingredient¦s

@@ -18,6 +18,7 @@ import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
+import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
@@ -28,9 +29,7 @@ import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Name("Recipes - Advanced Shaped Recipe")
 @Description({"Ceates a new shaped recipe using sections and entries. Minecraft 1.19+ required for categories.",
@@ -53,6 +52,14 @@ import java.util.Map;
 @Since("INSERT VERSION")
 public class SecShapedRecipe extends Section {
 
+    public class ShapedRecipeCreateEvent extends Event {
+
+        @Override
+        public @NotNull HandlerList getHandlers() {
+            throw new IllegalStateException();
+        }
+    }
+
     private final Config config = SkBee.getPlugin().getPluginConfig();
     private static final boolean CRAFTING_CATEGORY_EXISTS = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
 
@@ -61,8 +68,8 @@ public class SecShapedRecipe extends Section {
     }
 
     private static final EntryValidator validator = EntryValidator.builder()
-            .addEntryData(new ExpressionEntryData<>("ingredients", null, false, Ingredient.class))
-            .addEntryData(new ExpressionEntryData<>("shape", null, false, String.class))
+            .addEntryData(new ExpressionEntryData<>("ingredients", null, true, Ingredient.class, ShapedRecipeCreateEvent.class))
+            .addEntryData(new ExpressionEntryData<>("shape", null, true, String.class))
             .addEntryData(new ExpressionEntryData<>("category", null, true, CraftingBookCategory.class))
             .addEntryData(new ExpressionEntryData<>("group", null, true, String.class))
             .build();
@@ -70,7 +77,7 @@ public class SecShapedRecipe extends Section {
     private Expression<Object> keyID;
     private Expression<ItemStack> result;
     private Expression<? extends String> shape;
-    private Expression<Ingredient> ingredients;
+    private Expression<? extends Ingredient> ingredients;
 
     @Nullable
     private Expression<? extends String> group;
@@ -80,15 +87,15 @@ public class SecShapedRecipe extends Section {
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
-    public boolean init(Expression<?>[] exprs, int MatchedPattern, Kleenean kleenean, ParseResult isDelayed, SectionNode sectionNode, List<TriggerItem> list) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> list) {
         EntryContainer entryContainer = validator.validate(sectionNode);
         if (entryContainer == null)
             return false;
         keyID = (Expression<Object>) exprs[1];
         result = (Expression<ItemStack>) exprs[0];
 
-        shape = (Expression<? extends String>) entryContainer.get("shape", false);
-        ingredients = (Expression<Ingredient>) entryContainer.get("ingredients", false);
+        shape = (Expression<? extends String>) entryContainer.getOptional("shape", false);
+        ingredients = (Expression<? extends Ingredient>) entryContainer.getOptional("ingredients", false);
         group = (Expression<? extends String>) entryContainer.getOptional("group", true);
         if (CRAFTING_CATEGORY_EXISTS)
             category = (Expression<? extends CraftingBookCategory>) entryContainer.getOptional("category", true);
@@ -112,17 +119,18 @@ public class SecShapedRecipe extends Section {
             RecipeUtil.error("Error registering crafting recipe - result is null");
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
-        } else if (this.shape == null) {
-            RecipeUtil.error("Error registering crafting recipe - invalid shape");
-            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
-            return;
         } else if (this.ingredients == null) {
             RecipeUtil.error("Error registering crafting recipe - invalid ingredients");
+            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
+            return;
+        } else if (this.shape == null) {
+            RecipeUtil.error("Error registering crafting recipe - invalid shape");
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
         }
 
         String[] shape = this.shape.getArray(event);
+        String shapeString = String.join("", shape);
         Ingredient[] ingredients = this.ingredients.getArray(event);
         ItemStack result = this.result.getSingle(event);
         if (ingredients.length < 1 || ingredients.length > 9) {
@@ -135,12 +143,16 @@ public class SecShapedRecipe extends Section {
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
         }
-//        else if (String.join("", shape).length() > ingredients.length) { // FIXES out-of-bounds if shape is too small
-//            RecipeUtil.error("Error registering crafting recipe - invalid shape/ingredients");
-//            RecipeUtil.error("Shape is either missing an entry or too many ingredients are provided"); // Being more specific as this is hard to debug
-//            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
-//            return;
-//        }
+
+        for (Ingredient ingredient : ingredients) {
+            char ingredientKey = ingredient.key();
+            if (!shapeString.contains(String.valueOf(ingredientKey))) {
+                RecipeUtil.error("Error registering crafting recipe - invalid ingredient key");
+                RecipeUtil.error("Error: '" + ingredientKey + "' is not being used in shape");
+                RecipeUtil.error("Current Item: &6" + this.toString(event, true));
+                return;
+            }
+        }
 
         String group = this.group != null ? this.group.getSingle(event) : null;
         CraftingBookCategory category = this.category != null && CRAFTING_CATEGORY_EXISTS ? this.category.getSingle(event) : null;
@@ -156,43 +168,30 @@ public class SecShapedRecipe extends Section {
 
         recipe.shape(shape);
 
-        Map<Character, Object> ingredientMap = new HashMap<>();
         for (Ingredient ingredient : this.ingredients.getArray(event)) {
-            ingredientMap.put(ingredient.key(), ingredient.item());
-        }
-
-        char[] chars = String.join("", shape).toCharArray();
-        for (char aChar : chars) {
-            if (aChar == ' ') continue;
-
-            Object ingredient = ingredientMap.get(aChar);
-            if (ingredient == null) continue;
-            RecipeChoice recipeChoice = RecipeUtil.getRecipeChoice(ingredient);
+            RecipeChoice recipeChoice = RecipeUtil.getRecipeChoice(ingredient.recipeChoice());
             if (recipeChoice == null) continue;
-            recipe.setIngredient(aChar, recipeChoice);
+            recipe.setIngredient(ingredient.key(), recipeChoice);
         }
 
-        if (config.SETTINGS_DEBUG) {
-            RecipeUtil.logShapedRecipe(recipe);
-        }
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);
         Bukkit.addRecipe(recipe);
+        if (config.SETTINGS_DEBUG) {
+            RecipeUtil.logShapedRecipe(recipe);
+        }
     }
 
     private boolean isValidShape(String... shapes) {
-        if (shapes == null) return false;
-        else if (shapes.length < 1 || shapes.length > 3) return false;
+        if (shapes == null || shapes.length < 1 || shapes.length > 3) return false;
 
         int lastLength = -1;
         for (String row : shapes) {
             if (row == null) return false;
-            else if (row.length() > 3 || row.length() < 1 || lastLength > row.length()) return false;
+            if (row.length() > 3 || row.length() < 1 || lastLength > row.length()) return false;
             lastLength = row.length();
         }
-
         return true;
-
     }
 
     @Override

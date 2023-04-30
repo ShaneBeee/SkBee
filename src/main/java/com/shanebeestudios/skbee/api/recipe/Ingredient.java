@@ -1,10 +1,12 @@
 package com.shanebeestudios.skbee.api.recipe;
 
-public record Ingredient(char key, Object item) {
+import org.bukkit.inventory.RecipeChoice;
+
+public record Ingredient(char key, RecipeChoice recipeChoice) {
 
     @Override
     public String toString() {
-        return key + ":" + item.toString();
+        return key + ":" + RecipeUtil.recipeChoiceToString(recipeChoice);
     }
 
 }

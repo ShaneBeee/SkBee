@@ -8,12 +8,12 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.recipe.Ingredient;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.CookingRecipe;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.bukkit.inventory.Recipe;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.SmithingRecipe;
@@ -21,19 +21,21 @@ import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 
 @Name("Recipe - Ingredients of Recipe")
-@Description("Get the ingredients from a recipe. Requires 1.13+")
+@Description({"Get the ingredients from a recipe.",
+        "\nNote: depending on recipe it will return differently i.e shaped recipe will return an ingredient",
+        "where smithing recipe will return a recipe choice"})
 @Examples({"set {_ing::*} to ingredients of recipe with id \"minecraft:diamond_sword\"",
         "loop recipes for iron ingot:",
         "\tset {_ing::*} to ingredients of loop-value"})
 @Since("1.4.0")
-public class ExprIngredientsOfRecipe extends PropertyExpression<Recipe, ItemStack> {
+public class ExprIngredientsOfRecipe extends PropertyExpression<Recipe, Object> {
 
     static {
-        register(ExprIngredientsOfRecipe.class, ItemStack.class, "[recipe] ingredients", "recipes");
+        register(ExprIngredientsOfRecipe.class, Object.class, "[recipe] ingredients", "recipes");
     }
 
     @Override
@@ -43,28 +45,33 @@ public class ExprIngredientsOfRecipe extends PropertyExpression<Recipe, ItemStac
     }
 
     @Override
-    protected ItemStack[] get(Event event, Recipe[] recipes) {
-        List<ItemStack> items = new ArrayList<>();
+    @Nullable
+    protected Object[] get(Event event, Recipe[] recipes) {
+        List<Object> ingredients = new ArrayList<>();
         for (Recipe recipe : recipes) {
             if (recipe instanceof MerchantRecipe merchantRecipe) {
-                items.addAll(merchantRecipe.getIngredients());
+                ingredients.addAll(merchantRecipe.getIngredients());
             } else if (recipe instanceof StonecuttingRecipe stonecuttingRecipe) {
-                items.add(RecipeUtil.getItemStack(stonecuttingRecipe.getInputChoice()));
+                ingredients.add(stonecuttingRecipe.getInputChoice());
             } else if (recipe instanceof SmithingRecipe smithingRecipe) {
-                items.add(RecipeUtil.getItemStack(smithingRecipe.getBase()));
-                items.add(RecipeUtil.getItemStack(smithingRecipe.getAddition()));
+                ingredients.add(smithingRecipe.getBase());
+                ingredients.add(smithingRecipe.getAddition());
             } else if (recipe instanceof CookingRecipe<?> cookingRecipe) {
-                items.add(RecipeUtil.getItemStack(cookingRecipe.getInputChoice()));
-            } else if (recipe instanceof ShapelessRecipe || recipe instanceof ShapedRecipe) {
-                items.addAll(Arrays.asList(RecipeUtil.getCraftingIngredients(recipe)));
+                ingredients.add(cookingRecipe.getInputChoice());
+            } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
+                ingredients.addAll(shapelessRecipe.getChoiceList());
+            } else if (recipe instanceof ShapedRecipe shapedRecipe) {
+                for (Map.Entry<Character, RecipeChoice> entry : shapedRecipe.getChoiceMap().entrySet()) {
+                    ingredients.add(new Ingredient(entry.getKey(), entry.getValue()));
+                }
             }
         }
-        return items.toArray(new ItemStack[0]);
+        return ingredients.toArray(new Object[0]);
     }
 
     @Override
-    public Class<? extends ItemStack> getReturnType() {
-        return ItemStack.class;
+    public Class<?> getReturnType() {
+        return Object.class;
     }
 
     @Override

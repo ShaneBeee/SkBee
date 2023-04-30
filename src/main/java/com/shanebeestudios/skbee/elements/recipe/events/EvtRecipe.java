@@ -23,7 +23,6 @@ public class EvtRecipe {
                 .examples("on recipe discover:",
                         "\tif event-string = \"minecraft:diamond_block\"",
                         "\t\tcancel event")
-                .requiredPlugins("1.13+")
                 .since("1.0.0");
         EventValues.registerEventValue(PlayerRecipeDiscoverEvent.class, Recipe.class, new Getter<>() {
             @Override
@@ -45,8 +44,7 @@ public class EvtRecipe {
                     .examples("on recipe book click:",
                             "\tif event-string = \"minecraft:diamond_sword\":",
                             "\t\tcancel event")
-                    .since("1.5.0")
-                    .requiredPlugins("PaperMC 1.15+");
+                    .since("1.5.0");
 
             EventValues.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, new Getter<>() {
                 @Override
@@ -68,8 +66,7 @@ public class EvtRecipe {
             Skript.registerEvent("Stonecutter Recipe Select", SimpleEvent.class, PlayerStonecutterRecipeSelectEvent.class,
                             "[player]")
                     .description("Called when a player selectsa a recipe in the stone cutter inventory, requires Paper 1.16+")
-                    .since("INSERT VERSION")
-                    .requiredPlugins("PaperMC 1.16+");
+                    .since("INSERT VERSION");
 
             EventValues.registerEventValue(PlayerStonecutterRecipeSelectEvent.class, Recipe.class, new Getter<>() {
                 @Override

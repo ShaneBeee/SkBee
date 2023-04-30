@@ -11,10 +11,12 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.Ingredient;
+import com.shanebeestudios.skbee.elements.recipe.sections.SecShapedRecipe;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Recipe - Ingredient")
+@Name("Recipe - Ingredient and Key")
 @Description({"Represents an ingredient for a recipe. This is a key value system.",
         "\nKey: a single character, must be a number of letter (Variables will not work here).",
         "\nValue: an item or material choice (see material choice expression for more info)."})
@@ -27,25 +29,28 @@ public class ExprRecipeIngredient extends SimpleExpression<Ingredient> {
 
     static {
         Skript.registerExpression(ExprRecipeIngredient.class, Ingredient.class, ExpressionType.PATTERN_MATCHES_EVERYTHING,
-                "<[a-zA-Z0-9]>\\:%itemtype/itemstack/materialchoice%");
+                "<[A-Za-z0-9]>\\:%recipechoice%");
     }
 
     private char key;
-    private Expression<Object> item;
+    private Expression<RecipeChoice> recipeChoice;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.key = parseResult.regexes.get(0).group().charAt(0);
-        this.item = (Expression<Object>) exprs[0];
+        if (!getParser().isCurrentEvent(SecShapedRecipe.ShapedRecipeCreateEvent.class)) {
+            Skript.error("The 'recipe ingredient expression' is only usable within an advanced recipe section.");
+            return false;
+        }
+        key = parseResult.regexes.get(0).group(0).charAt(0);
+        recipeChoice = (Expression<RecipeChoice>) exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable Ingredient[] get(Event event) {
-        Object item = this.item.getSingle(event);
-        return new Ingredient[]{new Ingredient(key, item)};
+    @Nullable
+    protected Ingredient[] get(Event event) {
+        if (recipeChoice == null) return new Ingredient[0];
+        return new Ingredient[]{new Ingredient(key, recipeChoice.getSingle(event))};
     }
 
     @Override
@@ -59,8 +64,8 @@ public class ExprRecipeIngredient extends SimpleExpression<Ingredient> {
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
-        return "ingredient: " + this.key + ":" + this.item.toString(e, d);
+    public String toString(@Nullable Event event, boolean debug) {
+        return key + ":" + recipeChoice.toString(event, debug);
     }
 
 }

@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -32,12 +31,12 @@ import org.bukkit.inventory.recipe.CookingBookCategory;
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
         "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
         "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
-        "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",})
+        "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
+        "Additionally, starting in 1.19 you can register recipe categories, view type for valid entries."})
 @Examples({"on skript load:",
         "\tregister new furnace recipe for diamond using dirt with id \"furnace_diamond\"",
         "\tregister new blasting recipe for emerald using dirt with id \"my_recipes:blasting_emerald\"",
         "\tregister new smoking recipe for cooked cod named \"Hot Cod\" using puffer fish with id \"smoking_cod\""})
-@RequiredPlugins("1.13+ for furnaces. 1.14+ for smokers, blast furnaces and campfires. 1.19+ for Categories")
 @Since("1.0.0, INSERT VERSION (Category)")
 public class EffCookingRecipe extends Effect {
 
@@ -47,7 +46,7 @@ public class EffCookingRecipe extends Effect {
 
     static {
         String register = "register [a] [new] ";
-        String recipeForUsingID = " recipe for %itemstack% (using|with ingredient) %itemstack/materialchoice% (using|with (id|key)) %string/namespacedkey%";
+        String recipeForUsingID = " recipe for %itemstack% (using|with ingredient) %recipechoice% (using|with (id|key)) %string/namespacedkey%";
         String withExperience = " [[and ]with exp[erience] %-number%]";
         String withCookTime = " [[and ]with cook[ ]time %-timespan%]";
         String inGroup = " [[and ](in|with) group %-string%]";
@@ -60,7 +59,7 @@ public class EffCookingRecipe extends Effect {
     }
 
     private Expression<ItemStack> result;
-    private Expression<Object> ingredient;
+    private Expression<RecipeChoice> ingredient;
     private Expression<Object> keyID;
     private Expression<Number> experience;
     private Expression<Timespan> cookTime;
@@ -71,16 +70,14 @@ public class EffCookingRecipe extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         result = (Expression<ItemStack>) exprs[0];
-        ingredient = (Expression<Object>) exprs[1];
+        ingredient = (Expression<RecipeChoice>) exprs[1];
         keyID = (Expression<Object>) exprs[2];
 
         experience = (Expression<Number>) exprs[3];
-
         cookTime = (Expression<Timespan>) exprs[4];
-
         group = (Expression<String>) exprs[5];
-
         category = (Expression<CookingBookCategory>) exprs[6];
+
         recipeType = matchedPattern;
         return true;
     }
@@ -155,12 +152,12 @@ public class EffCookingRecipe extends Effect {
         String result = this.result.toString(event, debug);
         String ingredient = this.ingredient.toString(event, debug);
         String key = this.keyID.toString(event, debug);
-        String exp = experience != null ? " and with exp " + experience.toString(event, debug) : "";
-        String cooktime = cookTime != null ? " and with cooktime " + cookTime.toString(event, debug) : "";
-        String group = this.group != null ? " with group " + this.group.toString(event, debug) : "";
-        String category = this.category != null && COOKING_CATEGORY_EXISTS ? " and in category " + this.category.toString(event, debug) : "";
         return String.format("register new %s recipe for %s using %s with id %s%s%s%s%s",
-                type, result, ingredient, key, exp, cooktime, group, category);
+                type, result, ingredient, key,
+                experience != null ? " and with exp " + experience.toString(event, debug) : "",
+                cookTime != null ? " and with cooktime " + cookTime.toString(event, debug) : "",
+                this.group != null ? " with group " + this.group.toString(event, debug) : "",
+                this.category != null && COOKING_CATEGORY_EXISTS ? " and in category " + this.category.toString(event, debug) : "");
     }
 
 }

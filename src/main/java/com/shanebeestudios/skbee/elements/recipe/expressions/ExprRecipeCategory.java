@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.bukkit.inventory.CookingRecipe;
@@ -18,7 +17,6 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"set {_recipes::*} to recipes with id \"minecraft:oak_planks\", \"skbee:my_recipe\"",
         "broadcast recipe category of {_recipes::*}"})
 @Since("INSERT VERSION")
-@RequiredPlugins("MC 1.19+")
 public class ExprRecipeCategory extends SimplePropertyExpression<Recipe, Object> {
 
     private static final boolean CATEGORIES_EXIST = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");

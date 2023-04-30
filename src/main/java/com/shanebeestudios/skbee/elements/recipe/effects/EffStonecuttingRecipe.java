@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -26,10 +25,9 @@ import org.bukkit.inventory.StonecuttingRecipe;
         "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
         "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
-        "Requires MC 1.13+"})
+        "Requires MC 1.14+"})
 @Examples({"on skript load:",
         "\tregister new stone cutting recipe for diamond using diamond ore with id \"cutting_diamond\""})
-@RequiredPlugins("1.14+")
 @Since("1.0.0")
 public class EffStonecuttingRecipe extends Effect {
 
@@ -37,18 +35,18 @@ public class EffStonecuttingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffStonecuttingRecipe.class,
-                "register [a] [new] stone[ ]cutt(ing|er) recipe for %itemstack% (using|with ingredient) %itemstack/materialchoice% (using|with (id|key)) %string/namespacedkey% [(in|with) group %-string%]");
+                "register [a] [new] stone[ ]cutt(ing|er) recipe for %itemstack% (using|with ingredient) %recipechoice% (using|with (id|key)) %string/namespacedkey% [(in|with) group %-string%]");
     }
 
     private Expression<ItemStack> result;
-    private Expression<Object> ingredient;
+    private Expression<RecipeChoice> ingredient;
     private Expression<Object> keyID;
     private Expression<String> group;
 
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         result = (Expression<ItemStack>) exprs[0];
-        ingredient = (Expression<Object>) exprs[1];
+        ingredient = (Expression<RecipeChoice>) exprs[1];
         keyID = (Expression<Object>) exprs[2];
         group = (Expression<String>) exprs[3];
         return true;

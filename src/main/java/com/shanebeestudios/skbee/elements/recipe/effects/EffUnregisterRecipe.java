@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -34,7 +33,6 @@ import org.jetbrains.annotations.Nullable;
         "remove recipe \"some_plugin:some_recipe\"",
         "unregister potion recipe \"some_plugin:some_other_recipe_brewing_stand\""})
 @Since("1.0.0")
-@RequiredPlugins("MC 1.13, PaperMC 1.18+ (Potions)")
 public class EffUnregisterRecipe extends Effect {
 
     private Expression<Object> recipes;

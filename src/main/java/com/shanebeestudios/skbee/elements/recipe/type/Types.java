@@ -6,9 +6,9 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.recipe.Ingredient;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
+import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import org.bukkit.Keyed;
 import org.bukkit.inventory.Recipe;
@@ -16,24 +16,25 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.recipe.CookingBookCategory;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.ArrayList;
-import java.util.List;
+import org.skriptlang.skript.lang.converter.Converters;
 
 public class Types {
 
     static {
-        Classes.registerClass(new ClassInfo<>(RecipeChoice.MaterialChoice.class, "materialchoice")
-                .name("Material Choice")
-                .user("material choices?")
-                .description("Represents a set of materials/minecraft tags which can be used in some recipes. ",
+        Converters.registerConverter(ItemType.class, RecipeChoice.class, RecipeUtil::getRecipeChoice);
+
+        Classes.registerClass(new ClassInfo<>(RecipeChoice.class, "recipechoice")
+                .name("Recipe Choice")
+                .user("recipe choices?")
+                .description("Represents a set of materials/minecraft tags/itemstacks which can be used in most recipes"
+                        , "", "", "Represents a set of materials/minecraft tags which can be used in some recipes. ",
                         "Requires Minecraft 1.13+")
                 .usage("see material choice expression")
                 .examples("set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
                         "set {_a} to material choice of every sword",
                         "set {_a} to material choice of minecraft tag \"doors\"")
                 .since("1.10.0")
-                .parser(new Parser<RecipeChoice.MaterialChoice>() {
+                .parser(new Parser<RecipeChoice>() {
 
                     @Override
                     public boolean canParse(ParseContext context) {
@@ -41,17 +42,36 @@ public class Types {
                     }
 
                     @Override
-                    public @NotNull String toString(@NotNull RecipeChoice.MaterialChoice matChoice, int flags) {
-                        return matChoiceToString(matChoice);
+                    public @NotNull String toString(@NotNull RecipeChoice recipeChoice, int flags) {
+                        return RecipeUtil.recipeChoiceToString(recipeChoice);
                     }
 
                     @Override
-                    public String toVariableNameString(RecipeChoice.MaterialChoice matChoice) {
-                        return "materialchoice:" + toString(matChoice, 0);
+                    public String toVariableNameString(RecipeChoice recipeChoice) {
+                        return "recipechoice: " + toString(recipeChoice, 0);
+                    }
+                }));
+
+        Classes.registerClass(new ClassInfo<>(Ingredient.class, "ingredient")
+                .user("ingredients?")
+                .name("Recipe - Ingredient")
+                .description("Represents an ingredient for a recipe. See expression for more details.")
+                .since("INSERT VERSION")
+                .parser(new Parser<>() {
+
+                    @Override
+                    public boolean canParse(@NotNull ParseContext context) {
+                        return false;
                     }
 
-                    public String getVariableNamePattern() {
-                        return "materialchoice://s";
+                    @Override
+                    public @NotNull String toString(Ingredient ingredient, int flags) {
+                        return ingredient.toString();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(Ingredient ingredient) {
+                        return "ingredient:'" + toString(ingredient, 0) + "'";
                     }
                 }));
 
@@ -102,6 +122,7 @@ public class Types {
                     .since("INSERT VERSION")
                     .parser(COOKING_BOOK_CATEGORY_ENUM.getParser()));
         }
+
         if (Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory")) {
             EnumUtils<CraftingBookCategory> CRAFTING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CraftingBookCategory.class);
             Classes.registerClass(new ClassInfo<>(CraftingBookCategory.class, "craftingcategory")
@@ -113,34 +134,6 @@ public class Types {
                     .parser(CRAFTING_BOOK_CATEGORY_ENUM.getParser()));
         }
 
-        Classes.registerClass(new ClassInfo<>(Ingredient.class, "ingredient")
-                .user("ingredients?")
-                .name("Recipe - Ingredient")
-                .description("Represents an ingredient for a recipe. See expression for more details.")
-                .since("INSERT VERSION")
-                .parser(new Parser<>() {
-
-                    @Override
-                    public boolean canParse(@NotNull ParseContext context) {
-                        return false;
-                    }
-
-                    @Override
-                    public @NotNull String toString(Ingredient ingredient, int flags) {
-                        return "ingredient:'" + ingredient + "'";
-                    }
-
-                    @Override
-                    public @NotNull String toVariableNameString(Ingredient ingredient) {
-                        return toString(ingredient, 0);
-                    }
-                }));
-    }
-
-    private static String matChoiceToString(RecipeChoice.MaterialChoice materialChoice) {
-        List<String> itemTypes = new ArrayList<>();
-        materialChoice.getChoices().forEach(material -> itemTypes.add(new ItemType(material).toString()));
-        return String.format("MaterialChoice{choices=[%s]}", StringUtils.join(itemTypes, ", "));
     }
 
 }

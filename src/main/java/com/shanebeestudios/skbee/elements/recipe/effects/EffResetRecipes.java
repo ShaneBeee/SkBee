@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -15,12 +14,12 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Recipe - Reset")
-@Description("Reset all recipes or just custom/potion recipes")
+@Description({"Reset all recipes or just custom/potion recipes",
+        "\nNote: potion requires require PaperMC 1.18+"})
 @Examples({"reset all recipes",
         "reset all custom recipes",
         "reset all potion recipes"})
 @Since("INSERT VERSION")
-@RequiredPlugins("MC 1.13+, PaperMC 1.18+ (Potions)")
 public class EffResetRecipes extends Effect {
 
     static {

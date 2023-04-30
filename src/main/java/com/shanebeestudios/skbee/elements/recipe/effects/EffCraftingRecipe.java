@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -34,7 +33,7 @@ import java.util.List;
         "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
         "<b>NOTE:</b> Recipes with 4 or less ingredients will be craftable in the player's crafting grid.",
-        "Requires MC 1.13+"})
+        "Requires MC 1.19+ to use categories"})
 @Examples({"on load:",
         "\tregister new shaped recipe for elytra using air, iron chestplate, air, air, iron chestplate and air with id \"my_recipes:elytra\"",
         "\tset {_s} to emerald named \"&3Strong Emerald\"",
@@ -43,7 +42,6 @@ import java.util.List;
                 "{_s}, {_s}, {_s}, {_s}, {_s} and {_s} with id \"strong_emerald_chestplate\"", "",
         "\tset {_a} to material choice of every plank",
         "\tregister new shaped recipe for jigsaw block using {_a}, {_a}, {_a}, {_a}, {_a}, {_a}, {_a}, {_a} and {_a} with id \"jigsaw\""})
-@RequiredPlugins("Minecraft 1.13+. Minecraft 1.19+ for Categories")
 @Since("1.0.0")
 public class EffCraftingRecipe extends Effect {
 
@@ -53,7 +51,7 @@ public class EffCraftingRecipe extends Effect {
 
     static {
         String register = "register [a] [new] ";
-        String recipeForUsingID = " recipe for %itemstack% (using|with ingredients) %itemstacks/materialchoices% (using|with (id|key)) %string/namespacedkey%";
+        String recipeForUsingID = " recipe for %itemstack% (using|with ingredients) %recipechoices% (using|with (id|key)) %string/namespacedkey%";
         String inGroup = " [[and ](in|with) group %-string%]";
         String inCategory = CRAFTING_CATEGORY_EXISTS ? " [[and ]in category %-craftingcategory%]" : "";
         Skript.registerEffect(EffCraftingRecipe.class,
@@ -63,7 +61,7 @@ public class EffCraftingRecipe extends Effect {
 
     @SuppressWarnings("null")
     private Expression<ItemStack> result;
-    private Expression<Object> ingredients;
+    private Expression<RecipeChoice> ingredients;
     private Expression<Object> keyID;
     private Expression<String> group;
     private Expression<CraftingBookCategory> category;
@@ -72,7 +70,7 @@ public class EffCraftingRecipe extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         result = (Expression<ItemStack>) exprs[0];
-        ingredients = (Expression<Object>) exprs[1];
+        ingredients = (Expression<RecipeChoice>) exprs[1];
         keyID = (Expression<Object>) exprs[2];
         group = (Expression<String>) exprs[3];
         category = (Expression<CraftingBookCategory>) exprs[4];
@@ -83,7 +81,7 @@ public class EffCraftingRecipe extends Effect {
     @Override
     protected void execute(Event event) {
         ItemStack result = this.result.getSingle(event);
-        Object[] ingredients = this.ingredients.getAll(event);
+        RecipeChoice[] ingredients = this.ingredients.getAll(event);
         NamespacedKey key = RecipeUtil.getKey(this.keyID.getSingle(event));
 
         if (result == null) {
@@ -111,7 +109,7 @@ public class EffCraftingRecipe extends Effect {
             registerShapeless(result, ingredients, key, group, category);
     }
 
-    private void registerShaped(ItemStack result, Object[] ingredients, NamespacedKey key, @Nullable String group, @Nullable CraftingBookCategory category) {
+    private void registerShaped(ItemStack result, RecipeChoice[] ingredients, NamespacedKey key, @Nullable String group, @Nullable CraftingBookCategory category) {
 
         ShapedRecipe recipe = new ShapedRecipe(key, result);
         if (group != null) recipe.setGroup(group);
@@ -121,10 +119,10 @@ public class EffCraftingRecipe extends Effect {
         Character[] oldChar = new Character[]{'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i'};
         Character[] keyChar = new Character[9];
         for (int i = 0; i < 9; i++) {
-            Object object = ingredients.length > i ? ingredients[i] : null;
+            RecipeChoice recipeChoice = ingredients.length > i ? ingredients[i] : null;
             if (ingredients.length - 1 < i) {
                 keyChar[i] = ' ';
-            } else if (RecipeUtil.getRecipeChoice(object) == null) {
+            } else if (RecipeUtil.getRecipeChoice(recipeChoice) == null) {
                 keyChar[i] = ' ';
             } else {
                 keyChar[i] = oldChar[i];
@@ -159,17 +157,17 @@ public class EffCraftingRecipe extends Effect {
         Bukkit.addRecipe(recipe);
     }
 
-    private void registerShapeless(ItemStack result, Object[] ingredients, NamespacedKey key, @Nullable String group, @Nullable CraftingBookCategory category) {
+    private void registerShapeless(ItemStack result, RecipeChoice[] ingredients, NamespacedKey key, @Nullable String group, @Nullable CraftingBookCategory category) {
         ShapelessRecipe recipe = new ShapelessRecipe(key, result);
         if (group != null) recipe.setGroup(group);
         if (category != null) recipe.setCategory(category);
 
-        for (Object ing : ingredients) {
+        for (RecipeChoice ing : ingredients) {
             RecipeChoice ingredient = RecipeUtil.getRecipeChoice(ing);
             if (ingredient == null) {
                 if (config.SETTINGS_DEBUG) {
                     RecipeUtil.warn("ERROR LOADING RECIPE: &7(&b" + key.getKey() + "&7)");
-                    RecipeUtil.warn("Non item &b" + ing + "&e found, this item will be removed from the recipe.");
+                    RecipeUtil.warn("Non recipe choice &b" + ing + "&e found, this ingredient will be removed from the recipe.");
                 }
                 continue;
             }

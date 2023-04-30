@@ -16,8 +16,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-
-// TODO: add recipe ingredient by shape key, makes support for custom shape more usable in long term
 @Name("Recipes - Recipe Shape")
 @Description({"Gets the registered shape of a Shaped Recipe.",
         "Recipe shape will return an array of the shape, while compacted will return a string in an easier to read format."})
@@ -44,8 +42,7 @@ public class ExprRecipeShape extends PropertyExpression<Recipe, String> {
     protected String[] get(Event event, Recipe[] recipes) {
         List<String> recipeShapes = new ArrayList<>();
         for (Recipe recipe : recipes) {
-            if (!(recipe instanceof ShapedRecipe)) continue;
-            ShapedRecipe shapedRecipe = (ShapedRecipe) recipe;
+            if (!(recipe instanceof ShapedRecipe shapedRecipe)) continue;
             if (!isCompact) {
                 recipeShapes.addAll(List.of(shapedRecipe.getShape()));
                 continue;

@@ -37,4 +37,5 @@ public class ExprRecipeResult extends SimplePropertyExpression<Recipe, ItemStack
     protected String getPropertyName() {
         return "recipe result";
     }
+
 }

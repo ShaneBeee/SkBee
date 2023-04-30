@@ -3,8 +3,10 @@ package com.shanebeestudios.skbee.api.recipe;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.Timespan;
+import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
+import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -21,7 +23,6 @@ import org.bukkit.inventory.StonecuttingRecipe;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 
 public class RecipeUtil {
 
@@ -60,30 +61,15 @@ public class RecipeUtil {
     }
 
     /**
-     * Gets the ItemStack used for a RecipeChoice
-     *
-     * @param recipeChoice RecipeChoice to get ItemStack from
-     * @return Itemstack from given RecipeChoice
-     */
-    public static ItemStack getItemStack(RecipeChoice recipeChoice) {
-        if (recipeChoice instanceof ExactChoice exactChoice) {
-            return exactChoice.getItemStack().clone();
-        } else if (recipeChoice instanceof MaterialChoice materialChoice) {
-            return materialChoice.getItemStack().clone();
-        }
-        return new ItemStack(Material.AIR);
-    }
-
-    /**
      * Gets a RecipeChoice depending on the Item
      *
-     * @param item Object to convert to a RecipeChoice
+     * @param object Object to convert to a RecipeChoice
      * @return ExactChoice or MaterialChoice depending on Object
      */
-    public static RecipeChoice getRecipeChoice(Object item) {
-        if (item instanceof ItemStack || item instanceof ItemType) {
+    public static RecipeChoice getRecipeChoice(Object object) {
+        if (object instanceof ItemStack || object instanceof ItemType) {
             // Skript gives ItemType priority when used in Object class
-            ItemStack itemStack = item instanceof ItemStack ? (ItemStack) item : ((ItemType) item).getRandom();
+            ItemStack itemStack = object instanceof ItemStack ? (ItemStack) object : ((ItemType) object).getRandom();
             Material material = itemStack.getType();
             boolean isAir = material.isAir();
             boolean isSimilar = itemStack.isSimilar(new ItemStack(material));
@@ -93,55 +79,41 @@ public class RecipeUtil {
                 return new MaterialChoice(material);
             }
             return new ExactChoice(itemStack);
-        } else if (item instanceof MaterialChoice materialChoice) {
-            return materialChoice;
+        } else if (object instanceof RecipeChoice recipeChoice) {
+            return recipeChoice;
         }
         return null;
     }
 
     /**
-     * @param items Object to convert to a RecipeChoice
-     * @return ExactChoice or MatrerialChoice depending on Object
-     */
-    public static RecipeChoice[] getRecipeChoices(Object... items) {
-        List<RecipeChoice> recipeChoices = new ArrayList<>();
-        for (Object item : items) {
-            recipeChoices.add(getRecipeChoice(item));
-        }
-        return recipeChoices.toArray(new RecipeChoice[0]);
-    }
-
-    /**
-     * Gets the ingredients of a crafting recipe
+     * Used as a mediator between RecipeChoice type and Ingredient type
+     * mainly just clean up purposes
      *
-     * @param recipe recipe to get the ingredients of
-     * @return An array of ingredients for a recipe
+     * @param recipeChoice RecipeChoice to format
+     * @return Stringified form of recipe choices, in readable format
      */
-    public static ItemStack[] getCraftingIngredients(Recipe recipe) {
-        List<ItemStack> ingredients = new ArrayList<>();
-        if (recipe instanceof ShapedRecipe shapedRecipe) {
-            for (Map.Entry<Character, RecipeChoice> entry : shapedRecipe.getChoiceMap().entrySet()) {
-                ingredients.add(getItemStack(entry.getValue()));
-            }
-        } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
-            for (RecipeChoice recipeChoice : shapelessRecipe.getChoiceList()) {
-                ingredients.add(getItemStack(recipeChoice));
-            }
+    public static String recipeChoiceToString(RecipeChoice recipeChoice) {
+        List<String> itemTypes = new ArrayList<>();
+        if (recipeChoice instanceof ExactChoice exactChoice) {
+            exactChoice.getChoices().forEach(itemStack -> itemTypes.add(new ItemType(itemStack).toString()));
+            return String.format("ExactChoice{choices=[%s]}", StringUtils.join(itemTypes, ", ").toUpperCase());
+        } else if (recipeChoice instanceof MaterialChoice materialChoice) {
+            materialChoice.getChoices().forEach(material -> itemTypes.add(new ItemType(material).toString()));
+            return String.format("MaterialChoice{choices=[%s]}", StringUtils.join(itemTypes, ", ").toUpperCase());
         }
-        return ingredients.toArray(new ItemStack[0]);
-    }
 
+        return "RecipeChoice{choices=[AIR]}";
+    }
 
     /**
      * Log a recipe to console
-     * Mainly used for debugging purposes
      *
      * @param recipe      Recipe to log
      * @param ingredients Ingredients of recipe to log
      */
     public static void logRecipe(Recipe recipe, RecipeChoice... ingredients) {
-        if (!(recipe instanceof Keyed)) return;
-        log("&aRegistered new recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
+        if (!(recipe instanceof Keyed keyed)) return;
+        log("&aRegistered new recipe: &7(&b%s&7)", keyed.getKey().asString());
         if (recipe instanceof StonecuttingRecipe stonecuttingRecipe && !stonecuttingRecipe.getGroup().isBlank()) {
             log(" - &7Group: &r\"&6%s&r\"", stonecuttingRecipe.getGroup());
         }
@@ -151,6 +123,17 @@ public class RecipeUtil {
             log("   - %s", getFancy(ingredient));
         }
 
+    }
+
+    /**
+     * Log a potion mix to console
+     * @param potionMix PotionMix to log
+     */
+    public static void logPotionMix(PotionMix potionMix) {
+        log("&aRegistered new PotionMix: &7(&b%s&7)", potionMix.getKey().asString());
+        log(" - &7Result: &e%s", potionMix.getResult());
+        log(" - &7Input: &e%s", getFancy(potionMix.getInput()));
+        log(" - &7Ingredient: &e%s", getFancy(potionMix.getIngredient()));
     }
 
     public static void logCookingRecipe(CookingRecipe<?> recipe) {
@@ -192,8 +175,7 @@ public class RecipeUtil {
             log(" - &7Category: &r\"&6Misc&r\"");
         }
         log(" - &7Ingredients:");
-        recipe.getChoiceList().forEach(recipeChoice ->
-                log("   - &6%s", getFancy(recipeChoice)));
+        recipe.getChoiceList().forEach(recipeChoice -> log("   - &6%s", getFancy(recipeChoice)));
     }
 
     /**
@@ -224,13 +206,12 @@ public class RecipeUtil {
         if (shape.length > 2) grid += "&7, &r[&d%s&r]";
         log(grid, shape);
         log(" - &7Ingredients:");
-        recipe.getChoiceMap().forEach((character, recipeChoice) ->
-                log("   - &r'&d%s&r' = &6%s", character, getFancy(recipeChoice)));
+        recipe.getChoiceMap().forEach((character, recipeChoice) -> log("   - &r'&d%s&r' = &6%s", character, getFancy(recipeChoice)));
     }
 
-    private static String getFancy(RecipeChoice matChoice) {
-        if (matChoice == null) return "&r[&bAIR&r]";
-        return matChoice.toString()
+    private static String getFancy(RecipeChoice recipeChoice) {
+        if (recipeChoice == null) return "&r[&bAIR&r]";
+        return recipeChoiceToString(recipeChoice)
                 .replace("MaterialChoice{choices=", "")
                 .replace("ExactChoice{choices=", "")
                 .replace("[", "&r[&b")
