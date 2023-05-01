@@ -31,7 +31,7 @@ public class ExprAllRecipes extends SimpleExpression<Recipe> {
 
     static {
         Skript.registerExpression(ExprAllRecipes.class, Recipe.class, ExpressionType.COMBINED,
-                "[(all [[of] the]|the)] [(1:(mc|minecraft)|2:custom)] recipe[s] [(for|of) %-itemstack%]");
+                "[(all [[of] the]|the)] [(1:(mc|minecraft)|2:custom)] recipe[s] [(for|of) %-itemstacks%]");
     }
 
     private int pattern;
