@@ -43,9 +43,7 @@ public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
         List<Recipe> recipes = new ArrayList<>();
         for (Player player : players) {
             for (NamespacedKey namespacedKey : player.getDiscoveredRecipes()) {
-                Recipe recipe = Bukkit.getRecipe(namespacedKey);
-                if (!recipes.contains(recipe))
-                    recipes.add(recipe);
+                recipes.add(Bukkit.getRecipe(namespacedKey));
             }
         }
         return recipes.toArray(new Recipe[0]);
