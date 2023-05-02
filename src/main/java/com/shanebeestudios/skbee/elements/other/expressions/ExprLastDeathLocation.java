@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"command /death:",
         "\ttrigger:",
         "\t\tteleport player to last death location of player"})
-@Since("INSERT VERSION")
+@Since("2.8.5")
 public class ExprLastDeathLocation extends SimplePropertyExpression<OfflinePlayer, Location> {
 
     static {

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Potion Effect Tier")
 @Description("Get the tier of a potion effect.")
 @Examples("set {_tiers::*} to potion tiers of active potion effects of player")
-@Since("INSERT VERSION")
+@Since("2.8.5")
 public class ExprPotionEffectTier extends SimplePropertyExpression<PotionEffect,Number> {
 
     static {

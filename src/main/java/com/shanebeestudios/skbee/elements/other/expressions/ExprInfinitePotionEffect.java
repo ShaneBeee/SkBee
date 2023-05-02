@@ -26,7 +26,7 @@ import java.util.List;
         "This is only a temp solution until Skript adds a proper solution."})
 @Examples({"set {_potion} to infinite potion effect of night vision of tier 1 without particles",
         "apply {_potion} to player"})
-@Since("INSERT VERSION")
+@Since("2.8.5")
 public class ExprInfinitePotionEffect extends SimpleExpression<PotionEffect> {
 
     static {
