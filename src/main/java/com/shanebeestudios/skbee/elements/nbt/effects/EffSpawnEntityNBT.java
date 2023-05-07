@@ -25,7 +25,8 @@ import javax.annotation.Nullable;
 @Description("Spawn an entity at a location with NBT.")
 @Examples({"set {_n} to nbt compound from \"{NoAI:1b}\"",
         "spawn sheep at player with nbt {_n}",
-        "spawn 1 of zombie at player with nbt nbt compound from \"{NoGravity:1b}\""})
+        "spawn 1 of zombie at player with nbt nbt compound from \"{NoGravity:1b}\"",
+        "spawn an armor stand at player with nbt from \"{Small:1b,NoBasePlate:1b,Marker:1b}\""})
 @Since("1.0.0")
 public class EffSpawnEntityNBT extends Effect {
 
