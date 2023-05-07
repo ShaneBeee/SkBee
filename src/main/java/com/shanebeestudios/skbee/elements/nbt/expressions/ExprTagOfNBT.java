@@ -29,9 +29,9 @@ import java.util.ArrayList;
         "\nNOTE: Entities/blocks can not natively hold custom NBT tags. SkBee allows you to put custom nbt",
         "data in the \"custom\" tag of a block/entity's NBT compound. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen.",
         "That said, this system is a tad convoluted, see the SkBee WIKI for more details.",
-        "\nADD: You can add numbers to number type tags, you can also add numbers/strings/compounds to lists.",
-        "\nREMOVE: You can remove numbers from number type tags, you can also remove numbers/strings from lists.",
-        "(You can NOT remove compounds from lists)"})
+        "\nADD: You can add numbers to number type tags, you can also add numbers/strings/compounds to lists type tags.",
+        "\nREMOVE: You can remove numbers from number type tags, you can also remove numbers/strings from lists type tags.",
+        "(You can NOT remove compounds from lists type tags)"})
 @Examples({"set {_tag} to tag \"Invulnerable\" of nbt compound of target entity",
         "send \"Tag: %tag \"CustomName\" of nbt compound of target entity%\" to player",
         "set {_tag::*} to compound list tag \"Enchantments\" of nbt compound of player's tool",
@@ -64,7 +64,9 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
     private Expression<String> tag;
     private Expression<NBTCompound> nbt;
     @Nullable
-    private Literal<NBTCustomType> nbtType;
+    private Literal<NBTCustomType> nbtTypeLit;
+    @Nullable
+    private Expression<NBTCustomType> nbtType;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -74,11 +76,9 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         if (matchedPattern > 1) {
             Expression<?> expr = exprs[matchedPattern == 2 ? 0 : 1];
             if (expr instanceof Literal<?>) {
-                this.nbtType = (Literal<NBTCustomType>) expr;
-            } else {
-                Skript.error("NBT TYPE must be a literal, variables cannot be used here!");
-                return false;
+                this.nbtTypeLit = (Literal<NBTCustomType>) expr;
             }
+            this.nbtType = (Expression<NBTCustomType>) expr;
         }
         return true;
     }
@@ -104,10 +104,13 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
             if (this.nbtType == null) {
-                Skript.error("add/remove is only supported when using '%nbttype% tag'");
+                Skript.error("add/remove is only supported when using '%nbttype% tag'!");
+                return null;
+            } else if (this.nbtTypeLit == null) {
+                Skript.error("NBT TYPE must be a literal, variables are not accepted!");
                 return null;
             } else {
-                NBTCustomType nbtType = this.nbtType.getSingle();
+                NBTCustomType nbtType = this.nbtTypeLit.getSingle();
                 if (nbtType == NBTCustomType.NBTTagCompoundList && mode == ChangeMode.REMOVE) {
                     Skript.error("NBT compounds cannot be removed from an NBT compound list!");
                     return null;
@@ -117,8 +120,8 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
                 }
             }
         } else if (mode == ChangeMode.SET) {
-            if (this.nbtType != null) {
-                NBTCustomType nbtType = this.nbtType.getSingle();
+            if (this.nbtTypeLit != null) {
+                NBTCustomType nbtType = this.nbtTypeLit.getSingle();
                 if (nbtType != NBTCustomType.NBTTagUUID) {
                     return CollectionUtils.array(nbtType.getTypeClass());
                 }
@@ -144,14 +147,14 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
 
         if (mode == ChangeMode.SET) {
             if (this.nbtType != null) {
-                NBTCustomType type = this.nbtType.getSingle();
+                NBTCustomType type = this.nbtType.getSingle(event);
                 NBTApi.setTag(tag, compound, delta, type);
             } else {
                 NBTApi.setTag(tag, compound, delta);
             }
         } else if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
             if (this.nbtType == null) return;
-            NBTCustomType type = this.nbtType.getSingle();
+            NBTCustomType type = this.nbtType.getSingle(event);
             if (mode == ChangeMode.ADD) {
                 NBTApi.addToTag(tag, compound, delta, type);
             } else {
@@ -162,13 +165,13 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
 
     @Override
     public boolean isSingle() {
-        if (this.nbtType != null) return !this.nbtType.getSingle().isList();
+        if (this.nbtTypeLit != null) return !this.nbtTypeLit.getSingle().isList();
         return true;
     }
 
     @Override
     public @NotNull Class<?> getReturnType() {
-        if (this.nbtType != null) return this.nbtType.getSingle().getTypeClass();
+        if (this.nbtTypeLit != null) return this.nbtTypeLit.getSingle().getTypeClass();
         return Object.class;
     }
 
