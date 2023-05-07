@@ -43,7 +43,13 @@ import java.util.ArrayList;
         "set int tag \"custom;score\" of nbt compound of player to 10",
         "set {_i} to int tag \"Score\" of nbt compound of player",
         "set {_t::*} to compound list tag \"abilities\" of nbt compound of player",
-        "delete tag \"Enchantments\" of nbt item compound of player's tool"})
+        "delete tag \"Enchantments\" of nbt item compound of player's tool",
+        "add 5 to int tag \"points\" of {_n}",
+        "remove 5 from int tag \"points\" of {_n}",
+        "add \"bob\" and \"joe\" to string list tag \"names\" of {_n}",
+        "remove \"bob\" from string list tag \"names\" of {_n}",
+        "add 1,2,3 to byte array tag \"bytes\" of {_n}",
+        "remove 1 and 2 from byte array tag \"bytes\" of {_n}"})
 @Since("1.0.0")
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 
