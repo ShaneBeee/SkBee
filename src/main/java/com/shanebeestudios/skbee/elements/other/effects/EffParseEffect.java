@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
+import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 
@@ -24,7 +25,7 @@ public class EffParseEffect extends Effect {
 
     static {
         if (Skript.methodExists(ParserInstance.class, "get")) {
-            Skript.registerEffect(EffParseEffect.class, "parse effect[s] %strings% [from %commandsender%]");
+            Skript.registerEffect(EffParseEffect.class, "parse effect[s] %strings% [from %-commandsender%]");
         }
     }
 
@@ -42,7 +43,7 @@ public class EffParseEffect extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        CommandSender sender = this.sender.getSingle(event);
+        CommandSender sender = this.sender != null ? this.sender.getSingle(event) : Bukkit.getConsoleSender();
         for (String s : this.effects.getArray(event)) {
             parseEffect(s, sender);
         }
