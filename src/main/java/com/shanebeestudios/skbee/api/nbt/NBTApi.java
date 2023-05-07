@@ -13,7 +13,9 @@ import de.tr7zw.changeme.nbtapi.NBTList;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.Chunk;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
@@ -291,6 +293,8 @@ public class NBTApi {
                     uuid = u;
                 } else if (singleObject instanceof Entity entity) {
                     uuid = entity.getUniqueId();
+                } else if (singleObject instanceof OfflinePlayer offlinePlayer) {
+                    uuid = offlinePlayer.getUniqueId();
                 } else if (singleObject instanceof Number) {
                     ints = new int[object.length];
                     for (int i = 0; i < object.length; i++) {
@@ -485,6 +489,267 @@ public class NBTApi {
                     object.getClass().getCanonicalName() + " &7TYPE: &e" + type);
         }
     }
+
+    /**
+     * Add a value to a tag
+     *
+     * @param tag         Tag to modify
+     * @param nbtCompound Compound to modify
+     * @param object      Value to add
+     * @param type        Type of tag
+     */
+    @SuppressWarnings("RegExpRedundantEscape")
+    public static void addToTag(@NotNull String tag, @NotNull NBTCompound nbtCompound, @NotNull Object[] object, NBTCustomType type) {
+        NBTCompound compound = nbtCompound;
+        String key = tag;
+        if (tag.contains(";")) {
+            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
+            for (int i = 0; i < splits.length - 1; i++) {
+                String split = splits[i];
+                compound = compound.getOrCreateCompound(split);
+            }
+            key = splits[splits.length - 1];
+        }
+
+        // If the tag type doesn't match, return (TagEnd excluded as this means the tag isn't set)
+        NBTCustomType byTag = NBTCustomType.getByTag(compound, key);
+        if (byTag != NBTCustomType.NBTTagEnd && byTag != type) return;
+
+        Object singleObject = object[0];
+        switch (type) {
+            case NBTTagByte -> {
+                if (singleObject instanceof Number number) {
+                    compound.setByte(key, (byte) (compound.getByte(key) + number.byteValue()));
+                }
+            }
+            case NBTTagShort -> {
+                if (singleObject instanceof Number number) {
+                    compound.setShort(key, (short) (compound.getShort(key) + number.shortValue()));
+                }
+            }
+            case NBTTagInt -> {
+                if (singleObject instanceof Number number) {
+                    compound.setInteger(key, compound.getInteger(key) + number.intValue());
+                }
+            }
+            case NBTTagLong -> {
+                if (singleObject instanceof Number number) {
+                    compound.setLong(key, compound.getLong(key) + number.longValue());
+                }
+            }
+            case NBTTagFloat -> {
+                if (singleObject instanceof Number number) {
+                    compound.setFloat(key, compound.getFloat(key) + number.floatValue());
+                }
+            }
+            case NBTTagDouble -> {
+                if (singleObject instanceof Number number) {
+                    compound.setDouble(key, compound.getDouble(key) + number.doubleValue());
+                }
+            }
+            case NBTTagByteArray -> {
+                if (singleObject instanceof Number) {
+                    byte[] byteArray = compound.getByteArray(key);
+                    for (Object o : object) {
+                        if (o instanceof Number number) {
+                            byteArray = ArrayUtils.add(byteArray, number.byteValue());
+                        }
+                    }
+                    compound.setByteArray(key, byteArray);
+                }
+            }
+            case NBTTagIntArray -> {
+                if (singleObject instanceof Number) {
+                    int[] intArray = compound.getIntArray(key);
+                    for (Object o : object) {
+                        if (o instanceof Number number) {
+                            intArray = ArrayUtils.add(intArray, number.intValue());
+                        }
+                    }
+                    compound.setIntArray(key, intArray);
+                }
+            }
+            case NBTTagIntList -> {
+                if (singleObject instanceof Number) {
+                    NBTList<Integer> intList = compound.getIntegerList(key);
+                    for (Object o : object)
+                        if (o instanceof Number number)
+                            intList.add(number.intValue());
+                }
+            }
+            case NBTTagLongList -> {
+                if (singleObject instanceof Number) {
+                    NBTList<Long> longList = compound.getLongList(key);
+                    for (Object o : object)
+                        if (o instanceof Number number)
+                            longList.add(number.longValue());
+                }
+            }
+            case NBTTagFloatList -> {
+                if (singleObject instanceof Number) {
+                    NBTList<Float> floatList = compound.getFloatList(key);
+                    for (Object o : object)
+                        if (o instanceof Number number)
+                            floatList.add(number.floatValue());
+                }
+            }
+            case NBTTagDoubleList -> {
+                if (singleObject instanceof Number) {
+                    NBTList<Double> doubleList = compound.getDoubleList(key);
+                    for (Object o : object)
+                        if (o instanceof Number number)
+                            doubleList.add(number.doubleValue());
+                }
+            }
+            case NBTTagStringList -> {
+                if (singleObject instanceof String) {
+                    NBTList<String> stringList = compound.getStringList(key);
+                    for (Object o : object)
+                        if (o instanceof String string)
+                            stringList.add(string);
+                }
+            }
+            case NBTTagCompoundList -> {
+                if (singleObject instanceof NBTCompound) {
+                    NBTCompoundList compoundList = compound.getCompoundList(key);
+                    for (Object o : object) {
+                        if (o instanceof NBTCompound comp)
+                            compoundList.addCompound(comp);
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Remove a value from a tag
+     *
+     * @param tag         Tag to modify
+     * @param nbtCompound Compound to modify
+     * @param object      Value to remove
+     * @param type        Type of tag
+     */
+    @SuppressWarnings("RegExpRedundantEscape")
+    public static void removeFromTag(@NotNull String tag, @NotNull NBTCompound nbtCompound, @NotNull Object[] object, NBTCustomType type) {
+        NBTCompound compound = nbtCompound;
+        String key = tag;
+        if (tag.contains(";")) {
+            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
+            for (int i = 0; i < splits.length - 1; i++) {
+                String split = splits[i];
+                compound = compound.getOrCreateCompound(split);
+            }
+            key = splits[splits.length - 1];
+        }
+
+        // If tag type does not match, return!
+        if (NBTCustomType.getByTag(compound, key) != type) return;
+
+        Object singleObject = object[0];
+        switch (type) {
+            case NBTTagByte -> {
+                if (singleObject instanceof Number number) {
+                    compound.setByte(key, (byte) (compound.getByte(key) - number.byteValue()));
+                }
+            }
+            case NBTTagShort -> {
+                if (singleObject instanceof Number number) {
+                    compound.setShort(key, (short) (compound.getShort(key) - number.shortValue()));
+                }
+            }
+            case NBTTagInt -> {
+                if (singleObject instanceof Number number) {
+                    compound.setInteger(key, compound.getInteger(key) - number.intValue());
+                }
+            }
+            case NBTTagLong -> {
+                if (singleObject instanceof Number number) {
+                    compound.setLong(key, compound.getLong(key) - number.longValue());
+                }
+            }
+            case NBTTagFloat -> {
+                if (singleObject instanceof Number number) {
+                    compound.setFloat(key, compound.getFloat(key) - number.floatValue());
+                }
+            }
+            case NBTTagDouble -> {
+                if (singleObject instanceof Number number) {
+                    compound.setDouble(key, compound.getDouble(key) - number.doubleValue());
+                }
+            }
+            case NBTTagByteArray -> {
+                if (singleObject instanceof Number) {
+                    byte[] byteArray = compound.getByteArray(key);
+
+                    for (Object o : object) {
+                        if (o instanceof Number number) {
+                            int index = ArrayUtils.indexOf(byteArray, number.byteValue());
+                            byteArray = ArrayUtils.remove(byteArray, index);
+                        }
+                    }
+                    compound.setByteArray(key, byteArray);
+                }
+            }
+            case NBTTagIntArray -> {
+                if (singleObject instanceof Number) {
+                    int[] intArray = compound.getIntArray(key);
+
+                    for (Object o : object) {
+                        if (o instanceof Number number) {
+                            int index = ArrayUtils.indexOf(intArray, number.intValue());
+                            intArray = ArrayUtils.remove(intArray, index);
+                        }
+                    }
+                    compound.setIntArray(key, intArray);
+                }
+            }
+            case NBTTagIntList -> {
+                if (singleObject instanceof Number) {
+                    NBTList<Integer> intList = compound.getIntegerList(key);
+                    for (Object o : object)
+                        if (o instanceof Number number)
+                            intList.remove(number.intValue());
+                }
+            }
+            case NBTTagLongList -> {
+                if (singleObject instanceof Number) {
+                    NBTList<Long> longList = compound.getLongList(key);
+                    for (Object o : object)
+                        if (o instanceof Number number)
+                            longList.remove(number.longValue());
+                }
+            }
+            case NBTTagFloatList -> {
+                if (singleObject instanceof Number) {
+                    NBTList<Float> floatList = compound.getFloatList(key);
+                    for (Object o : object)
+                        if (o instanceof Number number)
+                            floatList.remove(number.floatValue());
+                }
+            }
+            case NBTTagDoubleList -> {
+                if (singleObject instanceof Number) {
+                    NBTList<Double> doubleList = compound.getDoubleList(key);
+                    for (Object o : object)
+                        if (o instanceof Number number)
+                            doubleList.remove(number.doubleValue());
+                }
+            }
+            case NBTTagStringList -> {
+                if (singleObject instanceof String) {
+                    NBTList<String> stringList = compound.getStringList(key);
+                    for (Object o : object)
+                        if (o instanceof String string)
+                            stringList.remove(string);
+                }
+            }
+            case NBTTagCompoundList -> {
+                // Not sure if possible, leave for now
+                // Error has been added in ExprTagOfNBT
+            }
+        }
+    }
+
 
     /**
      * Get a specific tag from an NBT string

@@ -15,34 +15,54 @@ import java.util.Map;
 public enum NBTCustomType {
 
     NBTTagEnd("tag end", NBTType.NBTTagEnd),
-    NBTTagByte("byte", NBTType.NBTTagByte),
-    NBTTagShort("short", NBTType.NBTTagShort),
-    NBTTagInt("int", NBTType.NBTTagInt),
-    NBTTagLong("long", NBTType.NBTTagLong),
-    NBTTagFloat("float", NBTType.NBTTagFloat),
-    NBTTagDouble("double", NBTType.NBTTagDouble),
-    NBTTagByteArray("byte array", NBTType.NBTTagByteArray),
-    NBTTagUUID("uuid", NBTType.NBTTagIntArray),
-    NBTTagIntArray("int array", NBTType.NBTTagIntArray),
-    NBTTagString("string", NBTType.NBTTagString),
-    NBTTagCompound("compound", NBTType.NBTTagCompound),
-    NBTTagDoubleList("double list", NBTType.NBTTagList),
-    NBTTagFloatList("float list", NBTType.NBTTagList),
-    NBTTagLongList("long list", NBTType.NBTTagList),
-    NBTTagIntList("int list", NBTType.NBTTagList),
-    NBTTagCompoundList("compound list", NBTType.NBTTagList),
-    NBTTagStringList("string list", NBTType.NBTTagList);
+    NBTTagByte("byte", NBTType.NBTTagByte, Number.class),
+    NBTTagShort("short", NBTType.NBTTagShort, Number.class),
+    NBTTagInt("int", NBTType.NBTTagInt, Number.class),
+    NBTTagLong("long", NBTType.NBTTagLong, Number.class),
+    NBTTagFloat("float", NBTType.NBTTagFloat, Number.class),
+    NBTTagDouble("double", NBTType.NBTTagDouble, Number.class),
+    NBTTagString("string", NBTType.NBTTagString, String.class),
+    NBTTagUUID("uuid", NBTType.NBTTagIntArray, String.class),
+    NBTTagCompound("compound", NBTType.NBTTagCompound, NBTCompound.class),
+    NBTTagByteArray("byte array", NBTType.NBTTagByteArray, Number[].class, true),
+    NBTTagIntArray("int array", NBTType.NBTTagIntArray, Number[].class, true),
+    NBTTagDoubleList("double list", NBTType.NBTTagList, Number[].class, true),
+    NBTTagFloatList("float list", NBTType.NBTTagList, Number[].class, true),
+    NBTTagLongList("long list", NBTType.NBTTagList, Number[].class, true),
+    NBTTagIntList("int list", NBTType.NBTTagList, Number[].class, true),
+    NBTTagCompoundList("compound list", NBTType.NBTTagList, NBTCompound[].class, true),
+    NBTTagStringList("string list", NBTType.NBTTagList, String[].class,true);
 
     final String name;
     final NBTType nbtType;
+    final Class<?> typeClass;
+    final boolean isList;
 
     NBTCustomType(String name, NBTType nbtType) {
+        this(name, nbtType, Void.class);
+    }
+
+    NBTCustomType(String name, NBTType nbtType, Class<?> typeClass) {
+        this(name, nbtType, typeClass, false);
+    }
+
+    NBTCustomType(String name, NBTType nbtType, Class<?> typeClass, boolean isList) {
         this.name = name + " tag";
         this.nbtType = nbtType;
+        this.typeClass = typeClass;
+        this.isList = isList;
     }
 
     public String getName() {
-        return name;
+        return this.name;
+    }
+
+    public Class<?> getTypeClass() {
+        return this.typeClass;
+    }
+
+    public boolean isList() {
+        return this.isList;
     }
 
     private static final Map<String, NBTCustomType> BY_NAME = new HashMap<>();
