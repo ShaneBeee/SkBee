@@ -22,7 +22,9 @@ import javax.annotation.Nullable;
 @Description("Get an item with nbt.")
 @Examples({"give player diamond sword with nbt compound from \"{Unbreakable:1}\"",
         "set {_n} to nbt compound from \"{Points:10}\"",
-        "set {_i} to netherite axe with nbt {_n}"})
+        "set {_i} to netherite axe with nbt {_n}",
+        "give player diamond sword with nbt from \"{points:1}\"",
+        "give player diamond pickaxe with nbt from \"{Damage:100}\""})
 @Since("1.0.0")
 public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
 
