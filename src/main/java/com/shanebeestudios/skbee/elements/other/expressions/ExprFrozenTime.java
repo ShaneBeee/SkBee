@@ -59,24 +59,24 @@ public class ExprFrozenTime extends SimplePropertyExpression<Entity, Timespan> {
     @SuppressWarnings({"NullableProblems", "ConstantConditions"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        Entity entity = getExpr().getSingle(event);
-        if (entity == null) return;
-
         if (mode == ChangeMode.RESET) {
-            entity.setFreezeTicks(0);
+            for (Entity entity : getExpr().getArray(event)) {
+                entity.setFreezeTicks(0);
+            }
             return;
         }
-
         if (delta != null && delta[0] instanceof Timespan timespan) {
             long timespanTicks = timespan.getTicks_i();
-            long freezeTicks = entity.getFreezeTicks();
 
-            switch (mode) {
-                case ADD -> freezeTicks += timespanTicks;
-                case DELETE -> freezeTicks -= timespanTicks;
-                case SET -> freezeTicks = timespanTicks;
+            for (Entity entity : getExpr().getArray(event)) {
+                long freezeTicks = entity.getFreezeTicks();
+                switch (mode) {
+                    case ADD -> freezeTicks += timespanTicks;
+                    case DELETE -> freezeTicks -= timespanTicks;
+                    case SET -> freezeTicks = timespanTicks;
+                }
+                entity.setFreezeTicks((int) freezeTicks);
             }
-            entity.setFreezeTicks((int) freezeTicks);
         }
     }
 
