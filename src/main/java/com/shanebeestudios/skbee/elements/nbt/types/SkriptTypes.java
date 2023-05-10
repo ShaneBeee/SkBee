@@ -81,9 +81,13 @@ public class SkriptTypes {
         Classes.registerClass(new ClassInfo<>(NBTCompound.class, "nbtcompound")
                 .user("nbt ?compound")
                 .name("NBT - Compound")
-                .description("Represents the NBT compound of an entity/block/item.")
+                .description("Represents the NBT compound of an entity/block/item/file/string.",
+                        "NBT compounds can be merged by adding together, see examples.")
                 .usage("{id:\"minecraft:netherite_axe\",tag:{Damage:0,Enchantments:[{id:\"minecraft:unbreaking\",lvl:2s}]},Count:1b}")
-                .examples("set {_a} to nbt compound of player")
+                .examples("set {_a} to nbt compound of player",
+                        "set {_nbt} to nbt compound of last spawned entity",
+                        "set {_n} to nbt compound from \"{Invisible:1b}\"",
+                        "add {_n} to nbt of target entity")
                 .since("1.6.0")
                 .parser(new Parser<NBTCompound>() {
 
