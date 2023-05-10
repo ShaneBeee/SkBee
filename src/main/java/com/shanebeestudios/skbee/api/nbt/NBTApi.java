@@ -163,6 +163,18 @@ public class NBTApi {
     }
 
     /**
+     * Check if an NBT File already exists
+     *
+     * @param fileName Name of file
+     * @return true if file exists else false
+     */
+    public static boolean nbtFileExists(String fileName) {
+        fileName = !fileName.endsWith(".dat") && !fileName.endsWith(".nbt") ? fileName + ".nbt" : fileName;
+        File file = new File(fileName);
+        return file.exists();
+    }
+
+    /**
      * Merge an {@link NBTCompound} into an {@link ItemType}
      *
      * @param itemType    ItemType to add NBT to
