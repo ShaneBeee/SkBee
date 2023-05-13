@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Get the duration of a potion effect. If running 1.19.4+ and the potion is infinite,",
         "it will return as the max available time."})
 @Examples("set {_duration::*} to potion duration of active potion effects of player")
-@Since("INSERT VERSION")
+@Since("2.8.5")
 public class ExprPotionEffectDuration extends SimplePropertyExpression<PotionEffect, Timespan> {
 
     static {

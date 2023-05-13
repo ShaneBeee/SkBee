@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("Merge multiple components into one.")
 @Examples({"set {_t} to merge components {_t::*}",
         "set {_t} to merge components {_t::*} joined with newline"})
-@Since("2.4.0, INSERT VERSION (delimiter)")
+@Since("2.4.0, 2.8.5 (delimiter)")
 public class ExprMergeComponents extends SimpleExpression<BeeComponent> {
 
     static {

@@ -80,7 +80,29 @@ public class Types {
                 .name("Bukkit Color")
                 .description("Represents a Bukkit color. This is different than a Skript color",
                         "as it adds an alpha channel.")
-                .since("2.8.0"));
+                .since("2.8.0")
+                .parser(new Parser<>() {
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public @NotNull String toString(Color bukkitColor, int flags) {
+                        int alpha = bukkitColor.getAlpha();
+                        int red = bukkitColor.getRed();
+                        int green = bukkitColor.getGreen();
+                        int blue = bukkitColor.getBlue();
+                        return String.format("BukkitColor(a=%s,r=%s,g=%s,b=%s)", alpha, red, green, blue);
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(Color bukkitColor) {
+                        return toString(bukkitColor, 0);
+                    }
+                }));
 
         QUATERNION = new ClassInfo<>(Quaternionf.class, "quaternion")
                 .user("quaternions?")
@@ -101,7 +123,7 @@ public class Types {
                         float y = vec4f.y;
                         float z = vec4f.z;
                         float w = vec4f.w;
-                        return String.format("Quaternion(x=%s, y=%s, z=%s, w=%s)", x,y,z,w);
+                        return String.format("Quaternion(x=%s, y=%s, z=%s, w=%s)", x, y, z, w);
                     }
 
                     @Override

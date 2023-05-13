@@ -25,7 +25,7 @@ public class ExprBlankNBTCompound extends SimpleExpression<NBTCompound> {
 
     static {
         Skript.registerExpression(ExprBlankNBTCompound.class, NBTCompound.class, ExpressionType.SIMPLE,
-                "(blank|empty|new) nbt compound");
+                "[a[n]] (blank|empty|new) nbt compound");
     }
 
     @SuppressWarnings("NullableProblems")
