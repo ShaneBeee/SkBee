@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.api.recipe;
 
 import ch.njol.skript.util.Timespan;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -19,22 +18,23 @@ import java.util.NoSuchElementException;
 
 public class RecipeUtil {
 
-    private static final String NAMESPACE = SkBee.getPlugin().getPluginConfig().RECIPE_NAMESPACE;
-
     /**
      * Get a NamespacedKey from string
      * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
      *
+     * @deprecated Planning to remove all string based ids for recipes in the future, please use Util#getNamespacedkey
+     * more information on this in the future when it's put into action
      * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
      */
+    @Deprecated()
     public static NamespacedKey getKey(String key) {
         try {
             NamespacedKey namespacedKey;
             if (key.contains(":")) {
                 namespacedKey = NamespacedKey.fromString(key.toLowerCase(Locale.ROOT));
             } else {
-                namespacedKey = new NamespacedKey(NAMESPACE, key.toLowerCase());
+                namespacedKey = Util.getNamespacedKey(key, false);
             }
             if (namespacedKey == null) {
                 error("Invalid namespaced key. Must be [a-z0-9/._-:]: " + key);

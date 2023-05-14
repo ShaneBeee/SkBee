@@ -53,7 +53,7 @@ public class ExprNamespacedKey extends SimpleExpression<NamespacedKey> {
     protected @Nullable NamespacedKey[] get(Event event) {
         List<NamespacedKey> namespacedKeys = new ArrayList<>();
         for (String string : this.strings.getArray(event)) {
-            namespacedKeys.add(Util.getMCNamespacedKey(string, true));
+            namespacedKeys.add(Util.getNamespacedKey(string, true));
         }
         return namespacedKeys.toArray(new NamespacedKey[0]);
     }
