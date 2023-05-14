@@ -32,6 +32,12 @@ public class Types {
 
                         @SuppressWarnings("NullableProblems")
                         @Override
+                        public boolean canParse(ParseContext context) {
+                            return context != ParseContext.DEFAULT;
+                        }
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
                         public @Nullable Advancement parse(String string, ParseContext context) {
                             NamespacedKey namespacedKey = Util.getNamespacedKey(string, false);
                             if (namespacedKey != null) {
