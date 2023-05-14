@@ -34,9 +34,12 @@ public class RecipeUtil {
      * Get a NamespacedKey from string
      * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
      *
+     * @deprecated Planning to remove all string based ids for recipes in the future, please use Util#getNamespacedkey
+     * more information on this in the future when it's put into action
      * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
      */
+    @Deprecated()
     public static NamespacedKey getKey(Object key) {
         try {
             if (key instanceof NamespacedKey) {
@@ -46,11 +49,12 @@ public class RecipeUtil {
                 if (stringKey.contains(":")) {
                     namespacedKey = NamespacedKey.fromString(stringKey.toLowerCase(Locale.ROOT));
                 } else {
-                    namespacedKey = new NamespacedKey(NAMESPACE, stringKey.toLowerCase());
+                    namespacedKey = Util.getNamespacedKey(stringKey, false);
                 }
-                if (namespacedKey != null) {
-                    return namespacedKey;
+                if (namespacedKey == null) {
+                    error("Invalid namespaced key. Must be [a-z0-9/._-:]: " + key);
                 }
+                return namespacedKey;
             }
             error("Invalid namespaced key. Must be [a-z0-9/._-:]: " + key);
             return null;

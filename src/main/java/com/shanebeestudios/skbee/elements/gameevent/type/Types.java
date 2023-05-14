@@ -5,6 +5,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.GameEvent;
 import org.bukkit.NamespacedKey;
@@ -16,6 +17,8 @@ import java.util.Collections;
 import java.util.List;
 
 public class Types {
+
+    private static final boolean CONFIG_DEBUG_ENABLED = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
         Classes.registerClass(new ClassInfo<>(GameEvent.class, "gameevent")
@@ -33,7 +36,7 @@ public class Types {
                     @Override
                     public GameEvent parse(String string, ParseContext context) {
                         try {
-                            NamespacedKey namespacedKey = Util.getMCNamespacedKey(string, false);
+                            NamespacedKey namespacedKey = Util.getMCNamespacedKey(string, CONFIG_DEBUG_ENABLED);
                             if (namespacedKey == null) return null;
                             return GameEvent.getByKey(namespacedKey);
                         } catch (IllegalArgumentException ignore) {

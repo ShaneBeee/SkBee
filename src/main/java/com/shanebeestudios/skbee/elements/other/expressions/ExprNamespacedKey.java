@@ -25,7 +25,7 @@ import java.util.List;
         "NamespacedKeys are a string based key which consists of two components - a namespace and a key.",
         "\nNamespaces may only contain lowercase alphanumeric characters, periods, underscores, and hyphens.",
         "Minecraft generally uses the \"minecraft\" namespace for built in objects.",
-        "\nIf a namespace is not provided, the Minecraft namespace will be used by default -> \"minecraft:your_key\"",
+        "\nIf a namespace is not provided, the SkBee config namespace will be used by default -> \"skbee:your_key\"",
         "\nKeys may only contain lowercase alphanumeric characters, periods, underscores, hyphens, and forward slashes.",
         "\nKeep an eye on your console when using namespaced keys as errors will spit out when they're invalid."})
 @Examples({"set {_n} to namespaced key from \"minecraft:log\"",
@@ -36,15 +36,17 @@ public class ExprNamespacedKey extends SimpleExpression<NamespacedKey> {
 
     static {
         Skript.registerExpression(ExprNamespacedKey.class, NamespacedKey.class, ExpressionType.COMBINED,
-                "namespaced[ ]key from %strings%");
+                "[mc:(minecraft|mc)] (namespaced|resource)[ ](key|id[entifier]|location) from %strings%");
     }
 
     private Expression<String> strings;
+    private boolean useMinecraftNamespace;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.strings = (Expression<String>) exprs[0];
+        this.useMinecraftNamespace = parseResult.hasTag("mc");
         return true;
     }
 
@@ -52,8 +54,14 @@ public class ExprNamespacedKey extends SimpleExpression<NamespacedKey> {
     @Override
     protected @Nullable NamespacedKey[] get(Event event) {
         List<NamespacedKey> namespacedKeys = new ArrayList<>();
-        for (String string : this.strings.getArray(event)) {
-            namespacedKeys.add(Util.getMCNamespacedKey(string, true));
+        if (useMinecraftNamespace) {
+            for (String string : this.strings.getArray(event)) {
+                namespacedKeys.add(Util.getMCNamespacedKey(string, true));
+            }
+        } else {
+            for (String string : this.strings.getArray(event)) {
+                namespacedKeys.add(Util.getNamespacedKey(string, true));
+            }
         }
         return namespacedKeys.toArray(new NamespacedKey[0]);
     }
@@ -69,8 +77,8 @@ public class ExprNamespacedKey extends SimpleExpression<NamespacedKey> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "namespaced key from '" + this.strings.toString(e,d) + "'";
+    public @NotNull String toString(@Nullable Event event, boolean debug) {
+        return "namespaced key from '" + this.strings.toString(event, debug) + "'";
     }
 
 }
