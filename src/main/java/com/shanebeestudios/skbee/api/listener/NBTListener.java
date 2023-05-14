@@ -27,11 +27,11 @@ public class NBTListener implements Listener {
     private final boolean BLOCK_EXPLODE;
 
     public NBTListener(Config config) {
-        this.BREAK_BLOCK = config.ELEMENTS_NBT_EVENTS_BREAK_BLOCK;
-        this.PISTON_EXTEND = config.ELEMENTS_NBT_EVENTS_PISTON_EXTEND;
-        this.ENTITY_CHANGE = config.ELEMENTS_NBT_EVENTS_ENTITY_CHANGE_BLOCK;
-        this.ENTITY_EXPLODE = config.ELEMENTS_NBT_EVENTS_ENTITY_EXPLODE;
-        this.BLOCK_EXPLODE = config.ELEMENTS_NBT_EVENTS_BLOCK_EXPLODE;
+        this.BREAK_BLOCK = config.NBT_EVENTS_BREAK_BLOCK;
+        this.PISTON_EXTEND = config.NBT_EVENTS_PISTON_EXTEND;
+        this.ENTITY_CHANGE = config.NBT_EVENTS_ENTITY_CHANGE_BLOCK;
+        this.ENTITY_EXPLODE = config.NBT_EVENTS_ENTITY_EXPLODE;
+        this.BLOCK_EXPLODE = config.NBT_EVENTS_BLOCK_EXPLODE;
     }
 
     // Note regarding event priority:
