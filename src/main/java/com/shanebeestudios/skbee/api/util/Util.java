@@ -109,11 +109,13 @@ public class Util {
         NamespacedKey namespacedKey = null;
         if (key.contains(":")) {
             namespacedKey = NamespacedKey.fromString(key);
-        } else if (SETTINGS_NAMESPACE != null) {
-            namespacedKey = new NamespacedKey(SETTINGS_NAMESPACE, key);
         } else { // Just a safety check, settings_namespace can't be null but in case this is defaulted to.
             try {
-                namespacedKey = new NamespacedKey(SkBee.getPlugin(), key);
+                if (SETTINGS_NAMESPACE != null) {
+                    namespacedKey = new NamespacedKey(SETTINGS_NAMESPACE, key);
+                } else {
+                    namespacedKey = new NamespacedKey(SkBee.getPlugin(), key);
+                }
             } catch (Exception exception) {
                 if (error) {
                     skriptError(exception.getMessage());
