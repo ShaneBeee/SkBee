@@ -77,8 +77,8 @@ public class ExprNamespacedKey extends SimpleExpression<NamespacedKey> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "namespaced key from '" + this.strings.toString(e,d) + "'";
+    public @NotNull String toString(@Nullable Event event, boolean debug) {
+        return "namespaced key from '" + this.strings.toString(event, debug) + "'";
     }
 
 }

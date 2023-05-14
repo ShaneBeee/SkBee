@@ -81,7 +81,7 @@ public class Util {
      * Gets a Minecraft NamespacedKey from string
      * <p>If no colon (':') is not include it will prepend it to the start</p>
      *
-     * @param key Key for new Minecraft NamespacedKey
+     * @param key   Key for new Minecraft NamespacedKey
      * @param error Whether to send a skript/console error if one occurs
      * @return new Minecraft NamespacedKey
      */
@@ -95,7 +95,7 @@ public class Util {
      * Get a NamespacedKey from string
      * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
      *
-     * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
+     * @param key   Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @param error Whether to send a skript/console error if one occurs
      * @return new NamespacedKey
      */
@@ -109,11 +109,9 @@ public class Util {
         NamespacedKey namespacedKey = null;
         if (key.contains(":")) {
             namespacedKey = NamespacedKey.fromString(key);
-        }
-        else if (SETTINGS_NAMESPACE != null) {
+        } else if (SETTINGS_NAMESPACE != null) {
             namespacedKey = new NamespacedKey(SETTINGS_NAMESPACE, key);
-        }
-        else { // Just a safety check, settings_namespace can't be null but in case this is defaulted to.
+        } else { // Just a safety check, settings_namespace can't be null but in case this is defaulted to.
             try {
                 namespacedKey = new NamespacedKey(SkBee.getPlugin(), key);
             } catch (Exception exception) {
