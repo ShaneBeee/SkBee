@@ -29,7 +29,13 @@ public class Types {
                 .usage(getGameEventNames())
                 .examples("")
                 .since("1.14.0")
-                .parser(new Parser<GameEvent>() {
+                .parser(new Parser<>() {
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return context != ParseContext.DEFAULT;
+                    }
 
                     @SuppressWarnings("NullableProblems")
                     @Nullable
