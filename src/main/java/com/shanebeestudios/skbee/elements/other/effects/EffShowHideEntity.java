@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Show/Hide Entities")
-@Description({"Show/hide entities to/from players.",
+@Description({"Show/hide entities to/from players. Requires Minecraft 1.18+",
         "\nNOTE: This is not persistent across server restarts and/or chunk unloading!"})
 @Examples({"make all entities disappear from player",
         "make all mobs appear to all players",
