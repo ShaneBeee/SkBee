@@ -19,6 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 @Name("Bound - All Bounds")
 @Description("Get a list of all bounds, optionally in a specific world.")
@@ -31,11 +32,16 @@ public class ExprBoundAllBounds extends SimpleExpression<Object> {
 
     static {
         Skript.registerExpression(ExprBoundAllBounds.class, Object.class, ExpressionType.SIMPLE,
-                "[(all [[of] the]|the)] bounds [(in|of) %-worlds%]",
-                "[(all [[of] the]|the)] bound ids [(in|of) %-worlds%]");
+                "[(all [[of] the]|the)] [group:[:non[-| ]]temporary] bounds [(in|of) %-worlds%]",
+                "[(all [[of] the]|the)] [group:[:non(-| )]temporary] bound ids [(in|of) %-worlds%]");
+    }
+
+    private enum Group {
+        ALL, NON_TEMPORARY, TEMPORARY
     }
 
     private boolean ID;
+    private Group group;
     private Expression<World> world;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
@@ -43,6 +49,11 @@ public class ExprBoundAllBounds extends SimpleExpression<Object> {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         ID = matchedPattern == 1;
         world = (Expression<World>) exprs[0];
+        if (parseResult.hasTag("group")) {
+            group = parseResult.hasTag("non") ? Group.NON_TEMPORARY : Group.TEMPORARY;
+        } else {
+            group = Group.ALL;
+        }
         return true;
     }
 
@@ -57,6 +68,8 @@ public class ExprBoundAllBounds extends SimpleExpression<Object> {
         if (ID) {
             List<String> bounds = new ArrayList<>();
             SkBee.getPlugin().getBoundConfig().getBounds().forEach(bound -> {
+                if (group == Group.TEMPORARY && !bound.isTemporary()) return;
+                if (group == Group.NON_TEMPORARY && bound.isTemporary()) return;
                 if (finalWorlds != null) {
                     for (World world : finalWorlds) {
                         if (bound.getWorld() == world) {
@@ -71,6 +84,8 @@ public class ExprBoundAllBounds extends SimpleExpression<Object> {
         } else {
             List<Bound> bounds = new ArrayList<>();
             SkBee.getPlugin().getBoundConfig().getBounds().forEach(bound -> {
+                if (group == Group.TEMPORARY && !bound.isTemporary()) return;
+                if (group == Group.NON_TEMPORARY && bound.isTemporary()) return;
                 if (finalWorlds != null) {
                     for (World world : finalWorlds) {
                         if (bound.getWorld() == world) {
@@ -101,7 +116,7 @@ public class ExprBoundAllBounds extends SimpleExpression<Object> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "bound" + (ID ? " ids" : "s" + (this.world != null ? " in world[s] " + this.world.toString(e, d) : ""));
+        return (group.name().toLowerCase(Locale.ENGLISH).replaceFirst("_", " ")) + " bound" + (ID ? " ids" : "s" + (this.world != null ? " in world[s] " + this.world.toString(e, d) : ""));
     }
 
 }
