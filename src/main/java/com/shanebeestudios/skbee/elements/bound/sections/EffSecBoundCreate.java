@@ -67,7 +67,7 @@ public class EffSecBoundCreate extends EffectSection {
     static {
         boundConfig = SkBee.getPlugin().getBoundConfig();
         Skript.registerSection(EffSecBoundCreate.class,
-                "create [a] [new] [:full] bound with id %string% (within|between) %location% and %location%");
+                "create [a] [new] [:temporary] [:full] bound with id %string% (within|between) %location% and %location%");
 
         EventValues.registerEventValue(BoundCreateEvent.class, Bound.class, new Getter<>() {
             @Override
@@ -80,6 +80,7 @@ public class EffSecBoundCreate extends EffectSection {
     private Expression<String> boundID;
     private Expression<Location> loc1, loc2;
     private boolean isFull;
+    private boolean isTemporary;
     private Trigger trigger;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
@@ -89,6 +90,7 @@ public class EffSecBoundCreate extends EffectSection {
         this.loc1 = (Expression<Location>) exprs[1];
         this.loc2 = (Expression<Location>) exprs[2];
         this.isFull = parseResult.hasTag("full");
+        this.isTemporary = parseResult.hasTag("temporary");
         if (sectionNode != null) {
             AtomicBoolean delayed = new AtomicBoolean(false);
             //Runnable afterLoading = () -> delayed.set(!getParser().getHasDelayBefore().isFalse()); // Skript was using this, maybe in the future?!?!
@@ -142,7 +144,7 @@ public class EffSecBoundCreate extends EffectSection {
             lesser.setY(min);
             greater.setY(max);
         }
-        Bound bound = new Bound(lesser, greater, id);
+        Bound bound = new Bound(lesser, greater, id, isTemporary);
         if (bound.getGreaterY() - bound.getLesserY() < 1 ||
                 bound.getGreaterX() - bound.getLesserX() < 1 ||
                 bound.getGreaterZ() - bound.getLesserZ() < 1) {
@@ -163,9 +165,10 @@ public class EffSecBoundCreate extends EffectSection {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String full = this.isFull ? " full " : " ";
+        String temporary = this.isTemporary ? "temporary " : "";
+        String full = this.isFull ? "full " : "";
         String create = " between " + loc1.toString(e, d) + " and " + loc2.toString(e, d);
-        return "create" + full + "bound with id " + this.boundID.toString(e, d) + create;
+        return "create " + temporary + full + "bound with id " + this.boundID.toString(e, d) + create;
     }
 
 }
