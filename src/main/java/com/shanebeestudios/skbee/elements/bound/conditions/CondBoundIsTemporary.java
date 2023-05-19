@@ -14,7 +14,7 @@ import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 public class CondBoundIsTemporary extends PropertyCondition<Bound> {
 
     static {
-        register(CondBoundIsTemporary.class, "temporary", "bound");
+        register(CondBoundIsTemporary.class, "a temporary bound", "bound");
     }
 
     @Override
