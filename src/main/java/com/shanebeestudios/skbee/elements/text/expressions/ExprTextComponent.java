@@ -1,24 +1,20 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.ExprTool;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
-import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.util.ChatUtil;
 import com.shanebeestudios.skbee.api.util.Util;
-import net.kyori.adventure.translation.Translatable;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -76,7 +72,7 @@ public class ExprTextComponent extends SimpleExpression<BeeComponent> {
             } else if (pattern == 1) {
                 components.add(BeeComponent.fromKeybind((String) object));
             } else if (pattern == 2) {
-                String translate = getTranslation(object, e);
+                String translate = ChatUtil.getTranslation(object);
                 if (translate != null) {
                     if (this.objects != null) {
                         components.add(BeeComponent.fromTranslate(translate, this.objects.getArray(e)));
@@ -88,25 +84,6 @@ public class ExprTextComponent extends SimpleExpression<BeeComponent> {
             }
         }
         return components.toArray(new BeeComponent[0]);
-    }
-
-    public static String getTranslation(Object object, Event event) {
-        if (object instanceof ItemStack itemStack) {
-            return itemStack.translationKey();
-        } else if (object instanceof ItemType itemType) {
-            ItemStack itemStack = itemType.getRandom();
-            return itemStack.translationKey();
-        } else if (object instanceof Slot slot) {
-            ItemStack itemStack = slot.getItem();
-            return getTranslation(itemStack, event);
-        } else if (object instanceof ExprTool tool) {
-            return getTranslation(tool.getSingle(event), event);
-        } else if (object instanceof String string) {
-            return string;
-        } else if (object instanceof Translatable translatable) {
-            return translatable.translationKey();
-        }
-        return null;
     }
 
     @Override
