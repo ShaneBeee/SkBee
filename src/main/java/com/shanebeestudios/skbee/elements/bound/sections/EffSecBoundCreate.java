@@ -33,13 +33,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Name("Bound - Create")
 @Description({"Create a bound within 2 locations. This can be used as an effect and as a section.",
-        "Optional value \"full\" is a bound from min to max height of world."})
+        "Optional value \"temporary\" creates a bound which persists until server stops.",
+        "Optional value \"full\" is a bound from min to max height of world.",
+        "These optional values can be used together."})
 @Examples({"create bound with id \"le-test\" between {_1} and {_2}:",
         "\tset bound value \"le-value\" of event-bound to 52",
         "\tset owner of event-bound to player",
         "create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
+        "create a temporary bound with id \"%{_world}%.safezone-%random uuid%\" between {loc1} and {loc2}",
         "create a full bound with id \"spawn\" between {loc} and location of player"})
-@Since("2.5.3")
+@Since("2.5.3, INSERT VERSION (temporary bounds)")
 public class EffSecBoundCreate extends EffectSection {
 
     public static class BoundCreateEvent extends Event {
