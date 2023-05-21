@@ -23,7 +23,7 @@ import java.util.List;
 @Name("Bound - All Bounds")
 @Description("Get a list of non-temporary, temporary, or all bounds, optionally in a specific world.")
 @Examples({"set {_non-temporary::*} to all non-temporary bounds",
-        "set {_temporary::*} to all temporary bounds",
+        "set {_temporary::*} to all temporary bounds in world \"le-world\"",
         "set {_bounds::*} to all bounds in world of player",
         "loop all bounds:",
         "\tif {bounds::%loop-bound%::owner} = player:",
