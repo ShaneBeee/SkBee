@@ -9,7 +9,7 @@ import com.shanebeestudios.skbee.elements.bound.objects.Bound;
 
 @Name("Bound - Is Temporary")
 @Description("Check if a bound is temporary.")
-@Examples("if bound with id \"temporary-bound\" is temporary:")
+@Examples("if bound with id \"temporary-bound\" is a temporary bound:")
 @Since("INSERT VERSION")
 public class CondBoundIsTemporary extends PropertyCondition<Bound> {
 
