@@ -33,13 +33,16 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Name("Bound - Create")
 @Description({"Create a bound within 2 locations. This can be used as an effect and as a section.",
-        "Optional value \"full\" is a bound from min to max height of world."})
+        "Optional value \"temporary\" creates a bound which persists until server stops.",
+        "Optional value \"full\" is a bound from min to max height of world.",
+        "These optional values can be used together."})
 @Examples({"create bound with id \"le-test\" between {_1} and {_2}:",
         "\tset bound value \"le-value\" of event-bound to 52",
         "\tset owner of event-bound to player",
         "create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
+        "create a temporary bound with id \"%{_world}%.safezone-%random uuid%\" between {loc1} and {loc2}",
         "create a full bound with id \"spawn\" between {loc} and location of player"})
-@Since("2.5.3")
+@Since("2.5.3, INSERT VERSION (temporary bounds)")
 public class EffSecBoundCreate extends EffectSection {
 
     public static class BoundCreateEvent extends Event {
@@ -67,7 +70,7 @@ public class EffSecBoundCreate extends EffectSection {
     static {
         boundConfig = SkBee.getPlugin().getBoundConfig();
         Skript.registerSection(EffSecBoundCreate.class,
-                "create [a] [new] [:full] bound with id %string% (within|between) %location% and %location%");
+                "create [a] [new] [:temporary] [:full] bound with id %string% (within|between) %location% and %location%");
 
         EventValues.registerEventValue(BoundCreateEvent.class, Bound.class, new Getter<>() {
             @Override
@@ -80,6 +83,7 @@ public class EffSecBoundCreate extends EffectSection {
     private Expression<String> boundID;
     private Expression<Location> loc1, loc2;
     private boolean isFull;
+    private boolean isTemporary;
     private Trigger trigger;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
@@ -89,6 +93,7 @@ public class EffSecBoundCreate extends EffectSection {
         this.loc1 = (Expression<Location>) exprs[1];
         this.loc2 = (Expression<Location>) exprs[2];
         this.isFull = parseResult.hasTag("full");
+        this.isTemporary = parseResult.hasTag("temporary");
         if (sectionNode != null) {
             AtomicBoolean delayed = new AtomicBoolean(false);
             //Runnable afterLoading = () -> delayed.set(!getParser().getHasDelayBefore().isFalse()); // Skript was using this, maybe in the future?!?!
@@ -142,7 +147,7 @@ public class EffSecBoundCreate extends EffectSection {
             lesser.setY(min);
             greater.setY(max);
         }
-        Bound bound = new Bound(lesser, greater, id);
+        Bound bound = new Bound(lesser, greater, id, isTemporary);
         if (bound.getGreaterY() - bound.getLesserY() < 1 ||
                 bound.getGreaterX() - bound.getLesserX() < 1 ||
                 bound.getGreaterZ() - bound.getLesserZ() < 1) {
@@ -163,9 +168,10 @@ public class EffSecBoundCreate extends EffectSection {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String full = this.isFull ? " full " : " ";
+        String temporary = this.isTemporary ? "temporary " : "";
+        String full = this.isFull ? "full " : "";
         String create = " between " + loc1.toString(e, d) + " and " + loc2.toString(e, d);
-        return "create" + full + "bound with id " + this.boundID.toString(e, d) + create;
+        return "create " + temporary + full + "bound with id " + this.boundID.toString(e, d) + create;
     }
 
 }

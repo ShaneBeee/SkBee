@@ -27,10 +27,22 @@ public class Bound implements ConfigurationSerializable {
 
     private final String world;
     private String id;
+    private final boolean temporary;
     private List<UUID> owners = new ArrayList<>();
     private List<UUID> members = new ArrayList<>();
     private Map<String, Object> values = new HashMap<>();
     private BoundingBox boundingBox;
+
+    /**
+     * Create a new global bound in a {@link World} with ID using a {@link BoundingBox}
+     *
+     * @param world       World this bound is in
+     * @param id          ID of this bound
+     * @param boundingBox BoundingBox of this bound
+     */
+    public Bound(String world, String id, BoundingBox boundingBox) {
+        this(world, id, boundingBox, false);
+    }
 
     /**
      * Create a new bound in a {@link World} with ID using a {@link BoundingBox}
@@ -38,11 +50,24 @@ public class Bound implements ConfigurationSerializable {
      * @param world       World this bound is in
      * @param id          ID of this bound
      * @param boundingBox BoundingBox of this bound
+     * @param temporary Whether this bound is temporary
      */
-    public Bound(String world, String id, BoundingBox boundingBox) {
+    public Bound(String world, String id, BoundingBox boundingBox, boolean temporary) {
         this.world = world;
         this.id = id;
         this.boundingBox = boundingBox;
+        this.temporary = temporary;
+    }
+
+    /**
+     * Create a new global bound between 2 locations (must be in same world)
+     *
+     * @param location  Location 1
+     * @param location2 Location 2
+     * @param id        ID of this bound
+     */
+    public Bound(Location location, Location location2, String id) {
+        this(location, location2, id, false);
     }
 
     /**
@@ -51,14 +76,16 @@ public class Bound implements ConfigurationSerializable {
      * @param location  Location 1
      * @param location2 Location 2
      * @param id        ID of this bound
+     * @param temporary Whether this bound is temporary
      */
-    public Bound(Location location, Location location2, String id) {
+    public Bound(Location location, Location location2, String id, boolean temporary) {
         Preconditions.checkArgument(location.getWorld() == location2.getWorld(), "Worlds have to match");
         this.world = location.getWorld().getName();
         this.id = id;
         Block block1 = location.getBlock();
         Block block2 = location2.getBlock();
         this.boundingBox = BoundingBox.of(block1, block2);
+        this.temporary = temporary;
     }
 
     /**
@@ -375,6 +402,15 @@ public class Bound implements ConfigurationSerializable {
      */
     public BoundingBox getBoundingBox() {
         return this.boundingBox;
+    }
+
+    /**
+     * Check if this bound is temporary
+     *
+     * @return True if this bound is temporary
+     */
+    public boolean isTemporary() {
+        return temporary;
     }
 
     public String toString() {

@@ -78,15 +78,19 @@ public class BoundConfig {
     }
 
     public void saveBound(Bound bound) {
-        boundConfig.set("bounds." + bound.getId(), bound);
         boundsMap.put(bound.getId(), bound);
-        saveConfig();
+        if (!bound.isTemporary()) {
+            boundConfig.set("bounds." + bound.getId(), bound);
+            saveConfig();
+        }
     }
 
     public void removeBound(Bound bound) {
         boundsMap.remove(bound.getId());
-        boundConfig.set("bounds." + bound.getId(), null);
-        saveConfig();
+        if (!bound.isTemporary()) {
+            boundConfig.set("bounds." + bound.getId(), null);
+            saveConfig();
+        }
     }
 
     public boolean boundExists(String id) {
@@ -101,6 +105,7 @@ public class BoundConfig {
 
     public void saveAllBounds() {
         for (Bound bound : boundsMap.values()) {
+            if (bound.isTemporary()) continue;
             boundConfig.set("bounds." + bound.getId(), bound);
             boundsMap.put(bound.getId(), bound);
         }

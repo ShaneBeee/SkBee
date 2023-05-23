@@ -28,28 +28,32 @@ import java.util.Locale;
 @Name("BlockData - Tags")
 @Description({"Customize BlockData tags for blocks.. You can get all the tags in a BlockData or a specific tag.",
         "You can set a specific tag of BlockData."})
-@Examples({"set {_data} to block data of target block of player", "set {_data::*} to block data tags of target block of player",
+@Examples({"set {_data} to block data of target block of player",
+        "set {_data::*} to block data tags of target block of player",
         "set {_water} to block data tag \"waterlogged\" of event-block",
-        "set block data tag \"waterlogged\" of event-block to true"})
+        "set block data tag \"waterlogged\" of event-block to true",
+        "set blockdata tag \"waterlogged\" of event-block without updates to true"})
 @Since("1.0.0")
 public class ExprBlockDataBlock extends SimpleExpression<Object> {
 
     static {
         Skript.registerExpression(ExprBlockDataBlock.class, Object.class, ExpressionType.PROPERTY,
                 "block[ ](data|state) tags of %blocks%",
-                "block[ ](data|state) tag %string% of %blocks%");
+                "block[ ](data|state) tag %string% of %blocks% [1:without updates]");
     }
 
     private Expression<String> tag;
     private Expression<Block> blocks;
     private int parse;
+    private boolean withoutUpdates;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, @NotNull Kleenean kleenean, ParseResult parseResult) {
         this.tag = i == 1 ? (Expression<String>) exprs[0] : null;
         this.blocks = (Expression<Block>) exprs[i];
         this.parse = i;
+        this.withoutUpdates = parseResult.hasTag("1");
         return true;
     }
 
@@ -96,7 +100,7 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
             BlockData blockData;
             switch (parse) {
                 // Tag "string"
-                case 1:
+                case 1 -> {
                     BlockData oldData = block.getBlockData();
                     if (oldData.getAsString().contains("[")) { // only attempt to change data for a block that has possible data
                         String tag = this.tag != null ? this.tag.getSingle(e) : null;
@@ -106,16 +110,17 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
                         try {
                             blockData = Bukkit.createBlockData(newData);
                             blockData = oldData.merge(blockData);
-                            block.setBlockData(blockData);
+                            block.setBlockData(blockData, !this.withoutUpdates);
                         } catch (IllegalArgumentException ex) {
                             Util.debug("Could not parse block data: %s", newData);
                         }
                     }
-                    break;
+                }
                 // Tags
-                case 0:
+                case 0 -> {
                     // Don't think this will work, so we shall ignore it
                     return;
+                }
             }
         }
 
@@ -136,7 +141,8 @@ public class ExprBlockDataBlock extends SimpleExpression<Object> {
         if (parse == 0) {
             return "block data tags of " + this.blocks.toString(e, d);
         } else {
-            return "block data tag " + this.tag.toString(e, d) + " of " + this.blocks.toString(e, d);
+            String updates = this.withoutUpdates ? " without updates" : "";
+            return "block data tag " + this.tag.toString(e, d) + " of " + this.blocks.toString(e, d) + updates;
         }
     }
 
