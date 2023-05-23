@@ -22,7 +22,9 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("Team - Entries")
 @Description("Add/remove entries to/from a team. Entries can be entities or players.")
-@Examples("add all players to team entries of {_team}")
+@Examples({"set {_team} to team named \"my-team\"",
+        "add all players to team entries of {_team}",
+        "add player to team entries of team of target entity"})
 @Since("1.16.0")
 public class ExprTeamEntries extends SimpleExpression<Entity> {
 

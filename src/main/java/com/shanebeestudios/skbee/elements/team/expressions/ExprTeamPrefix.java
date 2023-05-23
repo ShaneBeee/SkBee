@@ -21,7 +21,8 @@ import org.jetbrains.annotations.NotNull;
 @Description("Get/set/delete the prefix/suffix of a team.")
 @Examples({"set team prefix of {_team} to \"[OWNER]\"",
         "set team suffix of {_team} to \"[GOLD]\"",
-        "set {_pre} to team prefix of {_team}"})
+        "set {_pre} to team prefix of {_team}",
+        "set team prefix of team of player to \"[BestTeam]\""})
 @Since("1.16.0")
 public class ExprTeamPrefix extends SimplePropertyExpression<Team, String> {
 

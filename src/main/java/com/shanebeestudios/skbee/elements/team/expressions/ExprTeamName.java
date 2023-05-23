@@ -14,7 +14,9 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Team - Display Name")
 @Description("Represents the display name of a team.")
-@Examples("set team display name of {_team} to \"The Warriors\"")
+@Examples({"set team display name of {_team} to \"The Warriors\"",
+        "set team display name of team of player to \"The Rednecks\"",
+        "set team display name of team named \"blue-team\" to \"Blue Team\""})
 @Since("2.8.4")
 @SuppressWarnings("deprecation")
 public class ExprTeamName extends SimplePropertyExpression<Team, String> {

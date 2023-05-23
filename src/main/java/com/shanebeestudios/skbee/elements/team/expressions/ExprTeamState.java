@@ -17,7 +17,8 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("Team - State")
 @Description("Represents the friendly fire and can see friendly invisibles states of a team.")
-@Examples("set allow friendly fire team state of team named \"a-team\" to true")
+@Examples({"set allow friendly fire team state of team named \"a-team\" to true",
+        "set can see friendly invisbles team state of team of player to false"})
 @Since("1.16.0")
 public class ExprTeamState extends SimplePropertyExpression<Team, Boolean> {
 
