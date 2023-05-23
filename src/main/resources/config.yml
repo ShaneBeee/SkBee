@@ -29,6 +29,20 @@ nbt-events:
   # Whether an entity exploding should remove NBT from broken blocks
   entity-explode: true
 
+# Enable different elements of Recipes
+recipe:
+  # Enable potion recipes
+  # This is a semi-experimental syntax and is prone to changes
+  potion-recipe: false
+
+  # Enable the beta version of experimental syntax changes for registering recipes.
+  # This will remove string based ID searching, forcing the player to define a namespacedkey
+  # This is currently not forced but will be in the future, please give feedback at https://github.com/Shanebeee/SkBee/issues
+  # BEFORE: register new shapeless recipe for %itemstack% using %rcipechoicres% with id %string%
+  # AFTER: register new shapeless recipe for %itemstack% using %recipechoices% with (key|id) %namespacedkey%
+  # Example, register new shapeless recipe for diamond block using dirt with key (namespacedkey from "my_cool_recipe")
+  experimental-syntax: false
+
 # Disable elements you do not plan to use.
 elements:
   # Enable NBT elements

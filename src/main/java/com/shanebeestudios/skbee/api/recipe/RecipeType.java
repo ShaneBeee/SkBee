@@ -25,9 +25,9 @@ public enum RecipeType {
     BLASTING_RECIPE(BlastingRecipe.class),
     CAMPFIRE_RECIPE(CampfireRecipe.class),
     FURNACE_RECIPE(FurnaceRecipe.class),
-    MERCHANT_RECIPE(MerchantRecipe.class),
-    SMITHING_RECIPE(SmithingRecipe.class),
     SMOKING_RECIPE(SmokingRecipe.class),
+    SMITHING_RECIPE(SmithingRecipe.class),
+    MERCHANT_RECIPE(MerchantRecipe.class),
     STONECUTTING_RECIPE(StonecuttingRecipe.class),
     // Represents a complex recipe which has imperative server-defined behavior, eg: armor dyeing.
     COMPLEX_RECIPE(ComplexRecipe.class);

@@ -43,7 +43,8 @@ public class ExprRecipeWithId extends SimpleExpression<Recipe> {
     }
 
     @Override
-    protected @Nullable Recipe[] get(Event event) {
+    @Nullable
+    protected Recipe[] get(Event event) {
         List<Recipe> recipes = new ArrayList<>();
         for (Object recipeId : recipeIds.getArray(event)) {
             NamespacedKey recipeKey = RecipeUtil.getKey(recipeId);

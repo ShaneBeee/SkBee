@@ -33,22 +33,24 @@ import org.jetbrains.annotations.Nullable;
 public class EffSmithingRecipe extends Effect {
 
     private final Config config = SkBee.getPlugin().getPluginConfig();
+    private static final boolean USE_EXPERIMENTAL_SYNTAX = SkBee.getPlugin().getPluginConfig().RECIPE_EXPERIMENTAL_SYNTAX;
 
     static {
+        String STRING_PATTERN = USE_EXPERIMENTAL_SYNTAX ? "with (key|id) %namespacedkey%" : "with id %string%";
         Skript.registerEffect(EffSmithingRecipe.class,
-                "register [a] [new] smithing recipe for %itemstack% using %recipechoice% and %recipechoice% (using|with (id|key)) %string/namespacedkey%");
+                "register [a] [new] smithing recipe for %itemstack% using %recipechoice/itemtype% and %recipechoice/itemtype% " + STRING_PATTERN);
     }
 
     private Expression<ItemStack> result;
-    private Expression<RecipeChoice> base;
-    private Expression<RecipeChoice> addition;
+    private Expression<Object> base;
+    private Expression<Object> addition;
     private Expression<Object> keyID;
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parse) {
         result = (Expression<ItemStack>) exprs[0];
-        base = (Expression<RecipeChoice>) exprs[1];
-        addition = (Expression<RecipeChoice>) exprs[2];
+        base = (Expression<Object>) exprs[1];
+        addition = (Expression<Object>) exprs[2];
         keyID = (Expression<Object>) exprs[3];
         return true;
     }

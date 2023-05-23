@@ -9,12 +9,13 @@ import com.shanebeestudios.skbee.api.recipe.RecipeType;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
 
+
 @Name("Recipe - Recipe Type")
-@Description({"Get the type of a recipe.", "\nID = Minecraft or custom NamespacedKey, see examples."})
-@Examples({"set {_type} to recipe type of recipe with id \"minecraft:oak_door\"",
-        "set {_type} to recipe type of recipe with id \"skbee:some_recipe\"",
-        "set {_type} to recipe type of recipe with id \"my_recipes:some_custom_recipe\"",
-        "if recipe type of recipe with id \"my_recipes:some_custom_recipe\" = shaped recipe:"})
+@Description({"Gets the recipe type of a given recipe."})
+@Examples({"send \"myRecipe: %recipe type of recipe with id \"myrecipe:my_first_skbee_reecipe\"%\"",
+        "send \"myRecipe2: %recipe type of recipe with id \"my_first_skbee_reecipe\"%\"",
+        "send \"somePlugin: %recipe type of recipe with id \"someplugin:some_recipe_id\"%\"",
+        "send \"Minecraft: %recipe type of recipe with id \"minecraft:gold_ingot_from_smelting_raw_gold\"%\""})
 @Since("2.6.0")
 public class ExprRecipeType extends SimplePropertyExpression<Recipe, RecipeType> {
 
@@ -23,7 +24,8 @@ public class ExprRecipeType extends SimplePropertyExpression<Recipe, RecipeType>
     }
 
     @Override
-    public @Nullable RecipeType convert(Recipe recipe) {
+    @Nullable
+    public RecipeType convert(Recipe recipe) {
         return RecipeType.getFromRecipe(recipe);
     }
 

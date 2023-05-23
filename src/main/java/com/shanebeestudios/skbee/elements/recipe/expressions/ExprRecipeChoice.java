@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -12,17 +11,10 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import org.bukkit.Material;
-import org.bukkit.Tag;
+import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.RecipeChoice.ExactChoice;
-import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Name("Recipe - RecipeChoice")
 @Description({"Gets a material choice or exact choice using a set of items or singular item",
@@ -55,44 +47,14 @@ public class ExprRecipeChoice extends SimpleExpression<RecipeChoice> {
     @Override
     @Nullable
     protected RecipeChoice[] get(Event event) {
-        if (choices == null) return null;
-        Object[] objects = this.choices.getArray(event);
-
+        RecipeChoice recipeChoice = null;
         if (exactRecipe) {
-            List<ItemStack> itemStacks = new ArrayList<>();
-            for (Object object : objects) {
-                if (object instanceof ItemType itemType && !itemStacks.contains(itemType.getRandom())) {
-                    itemStacks.add(itemType.getRandom());
-                } else if (object instanceof ExactChoice exactChoice) {
-                    exactChoice.getChoices().stream()
-                            .filter(itemStack -> !itemStacks.contains(itemStack))
-                            .forEach(itemStacks::add);
-                }
-            }
-            if (itemStacks.size() == 0) return new ExactChoice[0];
-            return new RecipeChoice[]{new ExactChoice(itemStacks)};
+            recipeChoice = RecipeUtil.getExactChoice(choices.getArray(event));
         } else {
-            List<Material> materials = new ArrayList<>();
-            for (Object object : objects) {
-                if (object instanceof ItemType itemType) {
-                    itemType.getAll().forEach(itemStack -> {
-                        if (!materials.contains(itemStack.getType()))
-                            materials.add(itemStack.getType());
-                    });
-                } else if (object instanceof Tag<?> tag) {
-                    Tag<Material> materialTag = (Tag<Material>) tag;
-                    materialTag.getValues().stream()
-                            .filter(material -> !materials.contains(material))
-                            .forEach(materials::add);
-                } else if (object instanceof MaterialChoice materialChoice) {
-                    materialChoice.getChoices().stream()
-                            .filter(material -> !materials.contains(material))
-                            .forEach(materials::add);
-                }
-            }
-            if (materials.size() == 0) return new MaterialChoice[0];
-            return new RecipeChoice[]{new MaterialChoice(materials)};
+            recipeChoice = RecipeUtil.getMaterialChoice(choices.getArray(event));
         }
+        if (recipeChoice == null) return null;
+        return new RecipeChoice[]{recipeChoice};
     }
 
     @Override

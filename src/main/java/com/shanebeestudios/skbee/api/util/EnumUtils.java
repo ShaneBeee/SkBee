@@ -58,9 +58,9 @@ public final class EnumUtils<E extends Enum<E>> {
 
         for (E enumConstant : c.getEnumConstants()) {
             String name = enumConstant.name().toLowerCase(Locale.ROOT).replace("_", " ");
-            if (prefix != null && !name.startsWith(prefix))
+            if (prefix != null && !name.startsWith(prefix) && !prefix.isBlank())
                 name = prefix + " " + name;
-            if (suffix != null && !name.endsWith(suffix))
+            if (suffix != null && !name.endsWith(suffix) && !suffix.isBlank())
                 name = name + " " + suffix;
             parseMap.put(name, enumConstant);
             names[enumConstant.ordinal()] = name;

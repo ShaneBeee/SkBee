@@ -62,9 +62,11 @@ public class SecShapedRecipe extends Section {
 
     private final Config config = SkBee.getPlugin().getPluginConfig();
     private static final boolean CRAFTING_CATEGORY_EXISTS = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
+    private static final boolean USE_EXPERIMENTAL_SYNTAX = SkBee.getPlugin().getPluginConfig().RECIPE_EXPERIMENTAL_SYNTAX;
 
     static {
-        Skript.registerSection(SecShapedRecipe.class, "register [a] [new] shaped recipe for %itemstack% (using|with (id|key)) %string/namespacedkey%");
+        String STRING_PATTERN = USE_EXPERIMENTAL_SYNTAX ? "with (key|id) %namespacedkey%" : "with id %string%";
+        Skript.registerSection(SecShapedRecipe.class, "register [a] [new] shaped recipe for %itemstack% " + STRING_PATTERN);
     }
 
     private static final EntryValidator validator = EntryValidator.builder()
@@ -76,13 +78,13 @@ public class SecShapedRecipe extends Section {
 
     private Expression<Object> keyID;
     private Expression<ItemStack> result;
-    private Expression<? extends String> shape;
-    private Expression<? extends Ingredient> ingredients;
+    private Expression<Ingredient> ingredients;
+    private Expression<String> shape;
 
     @Nullable
-    private Expression<? extends String> group;
+    private Expression<String> group;
     @Nullable
-    private Expression<? extends CraftingBookCategory> category;
+    private Expression<CraftingBookCategory> category;
 
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
@@ -94,11 +96,11 @@ public class SecShapedRecipe extends Section {
         keyID = (Expression<Object>) exprs[1];
         result = (Expression<ItemStack>) exprs[0];
 
-        shape = (Expression<? extends String>) entryContainer.getOptional("shape", false);
-        ingredients = (Expression<? extends Ingredient>) entryContainer.getOptional("ingredients", false);
-        group = (Expression<? extends String>) entryContainer.getOptional("group", true);
+        shape = (Expression<String>) entryContainer.getOptional("shape", false);
+        ingredients = (Expression<Ingredient>) entryContainer.getOptional("ingredients", false);
+        group = (Expression<String>) entryContainer.getOptional("group", true);
         if (CRAFTING_CATEGORY_EXISTS)
-            category = (Expression<? extends CraftingBookCategory>) entryContainer.getOptional("category", true);
+            category = (Expression<CraftingBookCategory>) entryContainer.getOptional("category", true);
         return true;
     }
 
@@ -120,11 +122,11 @@ public class SecShapedRecipe extends Section {
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
         } else if (this.ingredients == null) {
-            RecipeUtil.error("Error registering crafting recipe - invalid ingredients");
+            RecipeUtil.error("Error registering crafting recipe - ingredients is null");
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
         } else if (this.shape == null) {
-            RecipeUtil.error("Error registering crafting recipe - invalid shape");
+            RecipeUtil.error("Error registering crafting recipe - shape is null");
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
         }
@@ -133,7 +135,15 @@ public class SecShapedRecipe extends Section {
         String shapeString = String.join("", shape);
         Ingredient[] ingredients = this.ingredients.getArray(event);
         ItemStack result = this.result.getSingle(event);
-        if (ingredients.length < 1 || ingredients.length > 9) {
+        if (result == null) {
+            RecipeUtil.error("Error registering crafting recipe - result is null");
+            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
+            return;
+        } else if (result.getType().isAir()) {
+            RecipeUtil.error("Error registering crafting recipe - result can not be air");
+            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
+            return;
+        } else if (ingredients.length < 1 || ingredients.length > 9) {
             RecipeUtil.error("Error registering crafting recipe - invalid ingredients");
             RecipeUtil.error("Error: array size was too large or too small");
             RecipeUtil.error("Current Item: &6" + this.toString(event, true));
@@ -144,24 +154,8 @@ public class SecShapedRecipe extends Section {
             return;
         }
 
-        for (Ingredient ingredient : ingredients) {
-            char ingredientKey = ingredient.key();
-            if (!shapeString.contains(String.valueOf(ingredientKey))) {
-                RecipeUtil.error("Error registering crafting recipe - invalid ingredient key");
-                RecipeUtil.error("Error: '" + ingredientKey + "' is not being used in shape");
-                RecipeUtil.error("Current Item: &6" + this.toString(event, true));
-                return;
-            }
-        }
-
         String group = this.group != null ? this.group.getSingle(event) : null;
         CraftingBookCategory category = this.category != null && CRAFTING_CATEGORY_EXISTS ? this.category.getSingle(event) : null;
-
-        if (result == null) {
-            RecipeUtil.error("Error registering crafting recipe - result is null");
-            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
-            return;
-        }
         ShapedRecipe recipe = new ShapedRecipe(key, result);
         if (group != null) recipe.setGroup(group);
         if (category != null) recipe.setCategory(category);
@@ -169,8 +163,13 @@ public class SecShapedRecipe extends Section {
         recipe.shape(shape);
 
         for (Ingredient ingredient : this.ingredients.getArray(event)) {
-            RecipeChoice recipeChoice = RecipeUtil.getRecipeChoice(ingredient.recipeChoice());
-            if (recipeChoice == null) continue;
+            RecipeChoice recipeChoice = ingredient.recipeChoice();
+            if (shapeString.contains(String.valueOf(ingredient.key()))) {
+                RecipeUtil.error("Error registering crafting recipe - invalid ingredient key");
+                RecipeUtil.error("Error: '" + ingredient.key() + "' is not being used in shape");
+                RecipeUtil.error("Current Item: &6" + this.toString(event, true));
+                continue;
+            } else if (recipeChoice == null || recipeChoice.getItemStack().getType().isAir()) continue;
             recipe.setIngredient(ingredient.key(), recipeChoice);
         }
 

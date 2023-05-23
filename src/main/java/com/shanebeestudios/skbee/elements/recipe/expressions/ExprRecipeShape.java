@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Recipes - Recipe Shape")
-@Description({"Gets the registered shape of a Shaped Recipe.",
+@Description({"Gets the registered shape of a Shaped Recipe. " +
         "Recipe shape will return an array of the shape, while compacted will return a string in an easier to read format."})
 @Examples({"send recipe shape of recipe with id \"minecraft:oak_door\" # \"ab\", \"cd\" and \"ef\"",
         "send compacted recipe shape of recipe with id \"minecraft:oak_door\" # \"minecraft:oak_door{ab, cd, ef}\""})

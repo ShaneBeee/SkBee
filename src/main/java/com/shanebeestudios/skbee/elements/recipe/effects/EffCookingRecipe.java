@@ -26,12 +26,14 @@ import org.bukkit.inventory.SmokingRecipe;
 import org.bukkit.inventory.recipe.CookingBookCategory;
 
 @Name("Recipe - Cooking")
-@Description({"Register new cooking recipes. On 1.13+ you can register recipes for furnaces.",
-        "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires.",
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
-        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
-        "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
-        "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
+@Description({"Register a new cooking recipe for furnaces. As of 1.14 you're able to register a recipe for smokers, blasting and campfires.",
+        "Recipe Ids are the name of the recipe along with how you'll find it based off given id.",
+        "\nNote: recipe ids are limited to letters, numbers, periods, hyphens, a single colon and underscores. NO SPACES!!!",
+        "By default if no namespace (\'minecraft\', \'plugin\') is defined it will go based off default which is \'skbee\'",
+        "This is changeable within the skbee config to whatever you want following the rules above.",
+        "Ids are used for recipe discovery/unlocking recipes.",
+        "",
+        "You may also include an optional group of recipes, these will group recipes together in the recipe book.",
         "Additionally, starting in 1.19 you can register recipe categories, view type for valid entries."})
 @Examples({"on skript load:",
         "\tregister new furnace recipe for diamond using dirt with id \"furnace_diamond\"",
@@ -41,16 +43,17 @@ import org.bukkit.inventory.recipe.CookingBookCategory;
 public class EffCookingRecipe extends Effect {
 
     private static final boolean COOKING_CATEGORY_EXISTS = Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory");
-
+    private static final boolean USE_EXPERIMENTAL_SYNTAX = SkBee.getPlugin().getPluginConfig().RECIPE_EXPERIMENTAL_SYNTAX;
     private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
+        String STRING_PATTERN = USE_EXPERIMENTAL_SYNTAX ? "with (key|id) %namespacedkey%" : "with id %string%";
         String register = "register [a] [new] ";
-        String recipeForUsingID = " recipe for %itemstack% (using|with ingredient) %recipechoice% (using|with (id|key)) %string/namespacedkey%";
-        String withExperience = " [[and ]with exp[erience] %-number%]";
-        String withCookTime = " [[and ]with cook[ ]time %-timespan%]";
-        String inGroup = " [[and ](in|with) group %-string%]";
-        String inCategory = COOKING_CATEGORY_EXISTS ? " [[and ](in|with) category %-cookingcategory%]" : "";
+        String recipeForUsingID = " recipe for %itemstack% (using|with ingredient) %itemtype/recipechoice% " + STRING_PATTERN;
+        String withExperience = " [[and] with exp[erience] %-number%]";
+        String withCookTime = " [[and] with cook[ ]time %-timespan%]";
+        String inGroup = " [[and] (in|with) group %-string%]";
+        String inCategory = COOKING_CATEGORY_EXISTS ? " [[and] (in|with) category %-cookingcategory%]" : "";
         Skript.registerEffect(EffCookingRecipe.class,
                 register + "furnace" + recipeForUsingID + withExperience + withCookTime + inGroup + inCategory,
                 register + "(blast furnace|blasting)" + recipeForUsingID + withExperience + withCookTime + inGroup + inCategory,
@@ -59,7 +62,7 @@ public class EffCookingRecipe extends Effect {
     }
 
     private Expression<ItemStack> result;
-    private Expression<RecipeChoice> ingredient;
+    private Expression<Object> ingredient;
     private Expression<Object> keyID;
     private Expression<Number> experience;
     private Expression<Timespan> cookTime;
@@ -70,7 +73,7 @@ public class EffCookingRecipe extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         result = (Expression<ItemStack>) exprs[0];
-        ingredient = (Expression<RecipeChoice>) exprs[1];
+        ingredient = (Expression<Object>) exprs[1];
         keyID = (Expression<Object>) exprs[2];
 
         experience = (Expression<Number>) exprs[3];

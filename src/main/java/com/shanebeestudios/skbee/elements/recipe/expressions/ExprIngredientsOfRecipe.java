@@ -8,8 +8,6 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.recipe.Ingredient;
-import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.ItemStack;
@@ -24,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import java.util.Map.Entry;
 
 @Name("Recipe - Ingredients of Recipe")
 @Description({"Get the ingredients from a recipe.",
@@ -63,8 +61,8 @@ public class ExprIngredientsOfRecipe extends PropertyExpression<Recipe, Object> 
             } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
                 ingredients.addAll(shapelessRecipe.getChoiceList());
             } else if (recipe instanceof ShapedRecipe shapedRecipe) {
-                for (Map.Entry<Character, RecipeChoice> entry : shapedRecipe.getChoiceMap().entrySet()) {
-                    ingredients.add(new Ingredient(entry.getKey(), entry.getValue()));
+                for (Entry<Character, RecipeChoice> entry : shapedRecipe.getChoiceMap().entrySet()) {
+                    ingredients.add(entry.getValue());
                 }
             }
         }
@@ -75,7 +73,6 @@ public class ExprIngredientsOfRecipe extends PropertyExpression<Recipe, Object> 
     public Class<?> getReturnType() {
         Class<?> returntype = getExpr().getReturnType();
         return MerchantRecipe.class.isAssignableFrom(returntype) ? ItemStack.class
-                : ShapedRecipe.class.isAssignableFrom(returntype) ? Ingredient.class
                 : Recipe.class.isAssignableFrom(returntype) ? RecipeChoice.class
                 : Object.class;
     }

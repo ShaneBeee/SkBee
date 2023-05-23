@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.StringUtils;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Keyed;
@@ -26,7 +25,6 @@ import java.util.Locale;
 
 public class RecipeUtil {
 
-    private static final String NAMESPACE = SkBee.getPlugin().getPluginConfig().RECIPE_NAMESPACE;
     private static final boolean COOKING_CATEGORY_EXISTS = Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory");
     private static final boolean CRAFTING_CATEGORY_EXISTS = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
 
@@ -90,6 +88,64 @@ public class RecipeUtil {
     }
 
     /**
+     * Gets an ExactChoice using the given objects
+     *
+     * @param objects list of objects to convert to an ExactChoice
+     * @return ExactChoice based off given objects or null if invalid
+     */
+    public static ExactChoice getExactChoice(Object ...objects) {
+        List<ItemStack> itemStacks = new ArrayList<>();
+        for (Object object : objects) {
+            if (object instanceof ExactChoice exactChoice) {
+                for (ItemStack itemStack : exactChoice.getChoices()) {
+                    if (itemStacks.contains(itemStack)) continue;
+                    itemStacks.add(itemStack);
+                }
+            } else if (object instanceof ItemType itemType) {
+                for (ItemStack itemStack : itemType.getAll()) {
+                    if (itemStacks.contains(itemStack)) continue;
+                    itemStacks.add(itemStack);
+                }
+            } else if (object instanceof ItemStack itemStack) {
+                if (!itemStacks.contains(itemStack)) {
+                    itemStacks.add(itemStack);
+                }
+            }
+        }
+        if (itemStacks.size() == 0) return null;
+        return new ExactChoice(itemStacks);
+    }
+
+    /**
+     * Gets a MaterialChoice using the given objects
+     *
+     * @param objects list of objects to convert to a MaterialChoice
+     * @return MaterialChoice based off given objects or null if invalid
+     */
+    public static MaterialChoice getMaterialChoice(Object ...objects) {
+        List<Material> materials = new ArrayList<>();
+        for (Object object : objects) {
+            if (object instanceof MaterialChoice materialChoice) {
+                for (Material choice : materialChoice.getChoices()) {
+                    if (materials.contains(choice)) continue;
+                    materials.add(choice);
+                }
+            } else if (object instanceof ItemType itemType) {
+                for (ItemStack itemStack : itemType.getAll()) {
+                    if (materials.contains(itemStack.getType())) continue;
+                    materials.add(itemStack.getType());
+                }
+            } else if (object instanceof ItemStack itemStack) {
+                if (!materials.contains(itemStack.getType())) {
+                    materials.add(itemStack.getType());
+                }
+            }
+        }
+        if (materials.size() == 0) return null;
+        return new MaterialChoice(materials);
+    }
+
+    /**
      * Used as a mediator between RecipeChoice type and Ingredient type
      * mainly just clean up purposes
      *
@@ -105,8 +161,7 @@ public class RecipeUtil {
             materialChoice.getChoices().forEach(material -> itemTypes.add(material.toString()));
             return String.format("MaterialChoice{choices=[%s]}", StringUtils.join(itemTypes, ", "));
         }
-
-        return "RecipeChoice{choices=[AIR]}";
+        return "RecipeChoice{choices=null}";
     }
 
     /**

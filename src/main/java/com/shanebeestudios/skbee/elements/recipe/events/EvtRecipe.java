@@ -7,9 +7,12 @@ import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent;
 import org.bukkit.Bukkit;
+import org.bukkit.event.inventory.CraftItemEvent;
+import org.bukkit.event.inventory.PrepareItemCraftEvent;
 import org.bukkit.event.player.PlayerRecipeDiscoverEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.Recipe;
+import org.eclipse.jdt.annotation.Nullable;
 
 public class EvtRecipe {
 
@@ -30,9 +33,12 @@ public class EvtRecipe {
                 return Bukkit.getRecipe(event.getRecipe());
             }
         }, EventValues.TIME_NOW);
+
+        // TODO: remove in a future SkBee release, in favor of event-recipe
         EventValues.registerEventValue(PlayerRecipeDiscoverEvent.class, String.class, new Getter<>() {
             @Override
             public String get(PlayerRecipeDiscoverEvent event) {
+                Skript.warning("This event value is deprecated and marked for removal in a future release, please use 'event-recipe' instead");
                 return event.getRecipe().asString();
             }
         }, EventValues.TIME_NOW);
@@ -62,10 +68,10 @@ public class EvtRecipe {
         }
 
         // Player Stonecutter Recipe Select Event
-        if (Skript.classExists("io/papermc/paper/event/player/PlayerStonecutterRecipeSelectEvent")) {
+        if (Skript.classExists("io.papermc.paper.event.player.PlayerStonecutterRecipeSelectEvent")) {
             Skript.registerEvent("Stonecutter Recipe Select", SimpleEvent.class, PlayerStonecutterRecipeSelectEvent.class,
-                            "[player]")
-                    .description("Called when a player selectsa a recipe in the stone cutter inventory, requires Paper 1.16+")
+                            "[player] stone[ ]cutter recipe select")
+                    .description("Called when a player selects a recipe in the stonecutter inventory, requires Paper 1.16+")
                     .since("INSERT VERSION");
 
             EventValues.registerEventValue(PlayerStonecutterRecipeSelectEvent.class, Recipe.class, new Getter<>() {
@@ -83,6 +89,26 @@ public class EvtRecipe {
             }, EventValues.TIME_NOW);
         }
 
+    }
+
+    // Additional SkBee Event Values of existing events within Skript
+    // These events are already existing in skript, so rather than making an additional event
+    // we simply register the event values to these.
+    static {
+
+        EventValues.registerEventValue(CraftItemEvent.class, Recipe.class, new Getter<Recipe, CraftItemEvent>() {
+            @Override
+            public Recipe get(CraftItemEvent event) {
+                return event.getRecipe();
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(PrepareItemCraftEvent.class, Recipe.class, new Getter<Recipe, PrepareItemCraftEvent>() {
+            @Override
+            public @Nullable Recipe get(PrepareItemCraftEvent event) {
+                return event.getRecipe();
+            }
+        }, EventValues.TIME_NOW);
     }
 
 }

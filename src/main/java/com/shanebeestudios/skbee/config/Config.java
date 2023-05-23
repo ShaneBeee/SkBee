@@ -24,6 +24,8 @@ public class Config {
     public boolean NBT_EVENTS_ENTITY_CHANGE_BLOCK;
     public boolean NBT_EVENTS_ENTITY_EXPLODE;
     public boolean NBT_EVENTS_BLOCK_EXPLODE;
+    public boolean RECIPE_POTION_SYNTAX;
+    public boolean RECIPE_EXPERIMENTAL_SYNTAX;
     public boolean ELEMENTS_BOARD;
     public boolean ELEMENTS_OBJECTIVE;
     public boolean ELEMENTS_TEAM;
@@ -104,6 +106,10 @@ public class Config {
         return this.config.getBoolean("nbt-events." + nbtEvent);
     }
 
+    public boolean getRecipe(String recipe) {
+        return this.config.getBoolean("recipe." + recipe);
+    }
+
     private void loadConfigs() {
         this.SETTINGS_DEBUG = getSetting("debug");
         this.SETTINGS_UPDATE_CHECKER = getSetting("update-checker");
@@ -116,6 +122,9 @@ public class Config {
         this.NBT_EVENTS_ENTITY_CHANGE_BLOCK = getNBTEvent("entity-change-block");
         this.NBT_EVENTS_ENTITY_EXPLODE = getNBTEvent("entity-explode");
         this.NBT_EVENTS_BLOCK_EXPLODE = getNBTEvent("block-explode");
+
+        this.RECIPE_POTION_SYNTAX = getRecipe("potion-recipe");
+        this.RECIPE_EXPERIMENTAL_SYNTAX = getRecipe("experimental-syntax");
 
         this.ELEMENTS_BOARD = getElement("scoreboard");
         this.ELEMENTS_OBJECTIVE = getElement("scoreboard-objective");

@@ -24,7 +24,11 @@ import java.util.List;
 @Name("Recipes - Discovered")
 @Description("Get and modify the discovered recipes of a player.")
 @Examples({"clear discovered recipes of player",
-        "add recipe with id \"someplugin:your_recipe\" to discovered recipes of player"})
+        "delete discovered recipes of player",
+        "reset discovered recipes of player",
+        "add \"harvest:harvester_hoe\" to discovered recipes of player",
+        "remove \"trashtaste:dumpster_fire\" from discovered recipes of player",
+        "set discovered recipes of players to recipes"})
 @Since("INSERT VERSION")
 public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
 
@@ -40,13 +44,10 @@ public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
 
     @Override
     protected Recipe[] get(Event event, Player[] players) {
-        List<Recipe> recipes = new ArrayList<>();
-        for (Player player : players) {
-            for (NamespacedKey namespacedKey : player.getDiscoveredRecipes()) {
-                recipes.add(Bukkit.getRecipe(namespacedKey));
-            }
-        }
-        return recipes.toArray(new Recipe[0]);
+        return getExpr().stream(event)
+                .flatMap(player -> player.getDiscoveredRecipes().stream())
+                .map(Bukkit::getRecipe)
+                .toArray(Recipe[]::new);
     }
 
     @Override
@@ -61,38 +62,24 @@ public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
 
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+        List<NamespacedKey> recipes = new ArrayList<>();
+        if (delta != null) {
+            for (Object object : delta) {
+                if (!(object instanceof Keyed keyed)) continue;
+                recipes.add(keyed.getKey());
+            }
+        }
         switch (mode) {
             case RESET, DELETE:
-                for (Player player : getExpr().getArray(event)) {
-                    player.undiscoverRecipes(player.getDiscoveredRecipes());
-                }
-                break;
+                getExpr().stream(event).forEach(player -> player.undiscoverRecipes(player.getDiscoveredRecipes()));
             case SET:
-                for (Player player : getExpr().getArray(event)) {
-                    player.undiscoverRecipes(player.getDiscoveredRecipes());
-                    for (Object object : delta) {
-                        if (object instanceof Recipe recipe && recipe instanceof Keyed keyed)
-                            player.discoverRecipe(keyed.getKey());
-                    }
-                }
+                getExpr().stream(event).forEach(player -> player.discoverRecipes(recipes));
                 break;
             case ADD:
-                for (Player player : getExpr().getArray(event)) {
-                    for (Object object : delta) {
-                        if (object instanceof Recipe recipe && recipe instanceof Keyed keyed)
-                            if (!player.hasDiscoveredRecipe(keyed.getKey()))
-                                player.discoverRecipe(keyed.getKey());
-                    }
-                }
+                getExpr().stream(event).forEach(player -> player.discoverRecipes(recipes));
                 break;
             case REMOVE:
-                for (Player player : getExpr().getArray(event)) {
-                    for (Object object : delta) {
-                        if (object instanceof Recipe recipe && recipe instanceof Keyed keyed)
-                            if (player.hasDiscoveredRecipe(keyed.getKey()))
-                                player.undiscoverRecipe(keyed.getKey());
-                    }
-                }
+                getExpr().stream(event).forEach(player -> player.undiscoverRecipes(recipes));
                 break;
 
         }
@@ -109,4 +96,3 @@ public class ExprDiscoveredRecipes extends PropertyExpression<Player, Recipe> {
     }
 
 }
-

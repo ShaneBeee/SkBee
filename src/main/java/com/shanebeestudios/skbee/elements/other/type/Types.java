@@ -140,8 +140,8 @@ public class Types {
             }
         }
 
-        Converters.registerConverter(NamespacedKey.class, String.class, NamespacedKey::asString);
         if (Classes.getExactClassInfo(NamespacedKey.class) == null) {
+            Converters.registerConverter(NamespacedKey.class, String.class, NamespacedKey::asString);
             Classes.registerClass(new ClassInfo<>(NamespacedKey.class, "namespacedkey")
                     .user("namespacedkeys?")
                     .name("NamespacedKey")

@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.type;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
@@ -16,25 +15,21 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.recipe.CookingBookCategory;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.NotNull;
-import org.skriptlang.skript.lang.converter.Converters;
 
 public class Types {
 
     static {
-        Converters.registerConverter(ItemType.class, RecipeChoice.class, RecipeUtil::getRecipeChoice);
-
         Classes.registerClass(new ClassInfo<>(RecipeChoice.class, "recipechoice")
                 .name("Recipe Choice")
                 .user("recipe choices?")
-                .description("Represents a set of materials/minecraft tags/itemstacks which can be used in most recipes"
-                        , "", "", "Represents a set of materials/minecraft tags which can be used in some recipes. ",
+                .description("Represents a set of materials/minecraft tags/itemstacks which can be used in most recipes",
                         "Requires Minecraft 1.13+")
                 .usage("see material choice expression")
                 .examples("set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
                         "set {_a} to material choice of every sword",
                         "set {_a} to material choice of minecraft tag \"doors\"")
                 .since("1.10.0")
-                .parser(new Parser<RecipeChoice>() {
+                .parser(new Parser<>() {
 
                     @Override
                     public boolean canParse(ParseContext context) {
@@ -82,7 +77,7 @@ public class Types {
                 .examples("set {_recipe} to recipe with id \"minecraft:oak_door\"", "set {_recipes::*} to recipes from id \"someplugin:custom_recipe\", \"myrecipe\"")
                 .usage("See recipe from id expression")
                 .since("INSERT VERSION")
-                .parser(new Parser<Recipe>() {
+                .parser(new Parser<>() {
 
                     @Override
                     public boolean canParse(ParseContext context) {
@@ -108,29 +103,29 @@ public class Types {
                 .user("recipe ?types?")
                 .name("Recipe Type")
                 .description("Represents the types of recipes.")
-                .usage(RECIPE_TYPE_ENUM.getAllNames())
                 .since("2.6.0")
+                .usage(RECIPE_TYPE_ENUM.getAllNames())
                 .parser(RECIPE_TYPE_ENUM.getParser()));
 
         if (Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory")) {
-            EnumUtils<CookingBookCategory> COOKING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CookingBookCategory.class);
+            EnumUtils<CookingBookCategory> COOKING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CookingBookCategory.class, null, "category");
             Classes.registerClass(new ClassInfo<>(CookingBookCategory.class, "cookingcategory")
                     .user("cooking ?categor(y|ies)")
                     .name("Recipes - Cooking Category")
                     .description("Represents the type of cooking recipe book categories.")
-                    .usage(COOKING_BOOK_CATEGORY_ENUM.getAllNames())
                     .since("INSERT VERSION")
+                    .usage(COOKING_BOOK_CATEGORY_ENUM.getAllNames())
                     .parser(COOKING_BOOK_CATEGORY_ENUM.getParser()));
         }
 
         if (Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory")) {
-            EnumUtils<CraftingBookCategory> CRAFTING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CraftingBookCategory.class);
+            EnumUtils<CraftingBookCategory> CRAFTING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CraftingBookCategory.class, null, "category");
             Classes.registerClass(new ClassInfo<>(CraftingBookCategory.class, "craftingcategory")
                     .user("crafting ?categor(y|ies)")
                     .name("Recipes - Crafting Category")
                     .description("Represents the type of crafting recipe book categories.")
-                    .usage(CRAFTING_BOOK_CATEGORY_ENUM.getAllNames())
                     .since("INSERT VERSION")
+                    .usage(CRAFTING_BOOK_CATEGORY_ENUM.getAllNames())
                     .parser(CRAFTING_BOOK_CATEGORY_ENUM.getParser()));
         }
 

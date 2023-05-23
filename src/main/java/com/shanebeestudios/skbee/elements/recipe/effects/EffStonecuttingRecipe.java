@@ -32,21 +32,23 @@ import org.bukkit.inventory.StonecuttingRecipe;
 public class EffStonecuttingRecipe extends Effect {
 
     private final Config config = SkBee.getPlugin().getPluginConfig();
+    private static final boolean USE_EXPERIMENTAL_SYNTAX = SkBee.getPlugin().getPluginConfig().RECIPE_EXPERIMENTAL_SYNTAX;
 
     static {
+        String STRING_PATTERN = USE_EXPERIMENTAL_SYNTAX ? "with (key|id) %namespacedkey%" : "with id %string%";
         Skript.registerEffect(EffStonecuttingRecipe.class,
-                "register [a] [new] stone[ ]cutt(ing|er) recipe for %itemstack% (using|with ingredient) %recipechoice% (using|with (id|key)) %string/namespacedkey% [(in|with) group %-string%]");
+                "register [a] [new] stone[ ]cutt(ing|er) recipe for %itemstack% (using|with ingredient) %recipechoice/itemtype% " + STRING_PATTERN + " [[and] (in|with) group %-string%]");
     }
 
     private Expression<ItemStack> result;
-    private Expression<RecipeChoice> ingredient;
+    private Expression<Object> ingredient;
     private Expression<Object> keyID;
     private Expression<String> group;
 
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         result = (Expression<ItemStack>) exprs[0];
-        ingredient = (Expression<RecipeChoice>) exprs[1];
+        ingredient = (Expression<Object>) exprs[1];
         keyID = (Expression<Object>) exprs[2];
         group = (Expression<String>) exprs[3];
         return true;

@@ -16,28 +16,26 @@ import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Has Discovered")
-@Description("Check if a player has discovered a recipe. Can check recipes you created, another plugin has created, or vanilla Minecraft recipes." +
-        "When checking recipes that are not your own, make sure to include the namespace, ex \"minecraft:diamond_sword\", \"someplugin:some_recipe\". " +
-        "This condition is only available on 1.16+")
-@Examples({"player has discovered recipe from id \"minecraft:furnace\"",
-        "if player has discovered recipe from id \"my_custom_sword\":",
-        "if player has discovered recipe from id \"someplugin:fancy_shovel\":",
-        "if all players have not discovered recipe from id \"minecraft:golden_shovel\":",
-        "if player has not discovered recipe from id \"my_fancy_hoe\":"})
+@Description({"Checks if a player has discovered a recipe. Can check recipes you craeted, another plugin has created, or vanilla Minecraft recipes.",
+        "When checking recipes that are not your own, make sure to include the namespaced. ex: \"minecraft:diamond_sword\", \"someplugin:some_recipe\"",
+        "This condition is only available on Minecraft 1.16+"})
+@Examples({"set {_players::*} to players where [input hasn't discovered recipe with id \"minecraft:furnace\"]",
+        "if player has discovered recipe with id \"someplugin:advanced_sword\":",
+        "if player hasn't discovered recipe with id \"harvest:my_first_recipe\":"})
 @Since("1.4.9")
 public class CondHasDiscoveredRecipe extends Condition {
 
     static {
         Skript.registerCondition(CondHasDiscoveredRecipe.class,
-                "%players% (has|have) discovered %recipes%",
-                "%players% (doesn't|does not|do not|don't) have discovered %recipes%");
+                "%players% (has|have) discovered [recipe[s]] %recipes%",
+                "%players% (has(n't| not)|have(n't| not)) discovered [recipe[s]] %recipes%");
     }
 
     private Expression<Player> players;
     private Expression<Recipe> recipes;
 
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setNegated(matchedPattern == 1);
         players = (Expression<Player>) exprs[0];
         recipes = (Expression<Recipe>) exprs[1];
@@ -46,11 +44,12 @@ public class CondHasDiscoveredRecipe extends Condition {
 
     @Override
     public boolean check(Event event) {
-        return players.check(event, player -> recipes.check(event, recipe -> {
-            if (recipe instanceof Keyed keyed)
-                return player.hasDiscoveredRecipe(keyed.getKey());
+        return recipes.check(event, recipe -> {
+            if (recipe instanceof Keyed keyed) {
+                return players.check(event, player -> player.hasDiscoveredRecipe(keyed.getKey()));
+            }
             return false;
-        }));
+        });
     }
 
     @Override

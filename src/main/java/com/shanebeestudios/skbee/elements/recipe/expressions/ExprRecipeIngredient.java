@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.Ingredient;
+import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.elements.recipe.sections.SecShapedRecipe;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.RecipeChoice;
@@ -29,11 +30,11 @@ public class ExprRecipeIngredient extends SimpleExpression<Ingredient> {
 
     static {
         Skript.registerExpression(ExprRecipeIngredient.class, Ingredient.class, ExpressionType.PATTERN_MATCHES_EVERYTHING,
-                "<[A-Za-z0-9]>\\:%recipechoice%");
+                "<[A-Za-z0-9]>\\:%recipechoice/itemtype%");
     }
 
     private char key;
-    private Expression<RecipeChoice> recipeChoice;
+    private Expression<Object> recipeChoice;
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
@@ -42,15 +43,16 @@ public class ExprRecipeIngredient extends SimpleExpression<Ingredient> {
             return false;
         }
         key = parseResult.regexes.get(0).group(0).charAt(0);
-        recipeChoice = (Expression<RecipeChoice>) exprs[0];
+        recipeChoice = (Expression<Object>) exprs[0];
         return true;
     }
 
     @Override
     @Nullable
     protected Ingredient[] get(Event event) {
+        RecipeChoice recipeChoice = RecipeUtil.getRecipeChoice(this.recipeChoice.getArray(event));
         if (recipeChoice == null) return new Ingredient[0];
-        return new Ingredient[]{new Ingredient(key, recipeChoice.getSingle(event))};
+        return new Ingredient[]{new Ingredient(key, recipeChoice)};
     }
 
     @Override
