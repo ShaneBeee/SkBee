@@ -30,7 +30,7 @@ public class Types {
 
                     @Override
                     public @NotNull String toString(Team team, int flags) {
-                        return team.getName();
+                        return "Team[" + team.getName() + "]";
                     }
 
                     @Override
