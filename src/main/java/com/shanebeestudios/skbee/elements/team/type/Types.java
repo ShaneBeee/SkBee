@@ -2,11 +2,15 @@ package com.shanebeestudios.skbee.elements.team.type;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
+
+import java.io.StreamCorruptedException;
 
 @SuppressWarnings("unused")
 public class Types {
@@ -32,6 +36,35 @@ public class Types {
                     @Override
                     public @NotNull String toVariableNameString(Team team) {
                         return toString(team, 0);
+                    }
+                })
+                .serializer(new Serializer<>() {
+                    @Override
+                    public @NotNull Fields serialize(Team team) {
+                        Fields fields = new Fields();
+                        fields.putObject("name", team.getName());
+                        return fields;
+                    }
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public void deserialize(Team o, Fields f) {
+                    }
+
+                    @Override
+                    protected Team deserialize(@NotNull Fields fields) throws StreamCorruptedException {
+                        String name = fields.getObject("name", String.class);
+                        return TeamManager.getTeam(name);
+                    }
+
+                    @Override
+                    public boolean mustSyncDeserialization() {
+                        return true;
+                    }
+
+                    @Override
+                    protected boolean canBeInstantiated() {
+                        return false;
                     }
                 }));
 
