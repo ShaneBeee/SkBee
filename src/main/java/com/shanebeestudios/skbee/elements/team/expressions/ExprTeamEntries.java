@@ -21,34 +21,46 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Team - Entries")
-@Description("Add/remove entries to/from a team. Entries can be entities or players.")
+@Description({"Add/remove entries to/from a team. Entries can be entities/players or strings.",
+        "\nNOTE: `as strings` is useless when adding/remove. When returning, this will return the",
+        "list how Minecraft stores it, player names and entity UUIDs."})
 @Examples({"set {_team} to team named \"my-team\"",
         "add all players to team entries of {_team}",
-        "add player to team entries of team of target entity"})
-@Since("1.16.0")
-public class ExprTeamEntries extends SimpleExpression<Entity> {
+        "add player to team entries of team of target entity",
+        "kill team entries of team named \"mob-team\"",
+        "add \"Batman\" to team entries of team named \"superheros\"",
+        "set {_entities::*} to team entries of team named \"mobs\"",
+        "set {_strings::*} to team entries as strings of team named \"mobs\""})
+@Since("1.16.0, INSERT VERSION (strings)")
+public class ExprTeamEntries extends SimpleExpression<Object> {
 
     static {
-        Skript.registerExpression(ExprTeamEntries.class, Entity.class, ExpressionType.PROPERTY,
-                "team entries of %team%",
-                "%team%'[s] team entries");
+        Skript.registerExpression(ExprTeamEntries.class, Object.class, ExpressionType.PROPERTY,
+                "team entries [string:as strings] of %team%",
+                "%team%'[s] team entries [string:as strings]");
     }
 
     private Expression<Team> team;
+    private boolean strings;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.team = (Expression<Team>) exprs[0];
+        this.strings = parseResult.hasTag("string");
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected Entity[] get(Event event) {
+    protected Object[] get(Event event) {
         Team team = this.team.getSingle(event);
         if (team != null) {
-            return TeamManager.getEntries(team).toArray(new Entity[0]);
+            if (this.strings) {
+                return team.getEntries().toArray(new String[0]);
+            } else {
+                return TeamManager.getEntries(team).toArray(new Entity[0]);
+            }
         }
         return new Entity[0];
     }
@@ -58,7 +70,8 @@ public class ExprTeamEntries extends SimpleExpression<Entity> {
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
         return switch (mode) {
-            case ADD, REMOVE -> CollectionUtils.array(Entity[].class);
+            case DELETE -> CollectionUtils.array();
+            case ADD, REMOVE -> CollectionUtils.array(Entity[].class, String[].class);
             default -> null;
         };
     }
@@ -68,12 +81,18 @@ public class ExprTeamEntries extends SimpleExpression<Entity> {
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Team team = this.team.getSingle(event);
         if (team != null) {
+            if (mode == ChangeMode.DELETE) {
+                team.getEntries().forEach(team::removeEntry);
+                return;
+            }
             for (Object object : delta) {
                 String entry = null;
                 if (object instanceof Player player) {
                     entry = player.getName();
                 } else if (object instanceof Entity entity) {
                     entry = entity.getUniqueId().toString();
+                } else if (object instanceof String string) {
+                    entry = string;
                 }
                 if (entry == null) continue;
 
@@ -92,13 +111,14 @@ public class ExprTeamEntries extends SimpleExpression<Entity> {
     }
 
     @Override
-    public @NotNull Class<? extends Entity> getReturnType() {
-        return Entity.class;
+    public @NotNull Class<?> getReturnType() {
+        return this.strings ? String.class : Entity.class;
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "team entries of " + this.team.toString(e, d);
+        String string = this.strings ? " as strings " : " ";
+        return "team entries" + string + "of " + this.team.toString(e, d);
     }
 
 }
