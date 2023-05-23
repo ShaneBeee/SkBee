@@ -50,20 +50,21 @@ public class ExprTeam extends SimpleExpression<Team> {
     @Override
     protected @Nullable Team[] get(Event event) {
         switch (pattern) {
-            case 0:
+            case 0 -> {
                 String name = this.name.getSingle(event);
                 if (name != null) {
                     return new Team[]{TeamManager.getTeam(name)};
                 }
-                break;
-            case 1:
+            }
+            case 1 -> {
                 Entity entity = this.entity.getSingle(event);
                 if (entity != null) {
                     return new Team[]{TeamManager.getTeam(entity)};
                 }
-                break;
-            case 2:
+            }
+            case 2 -> {
                 return TeamManager.getTeams().toArray(new Team[0]);
+            }
         }
         return null;
     }
@@ -79,8 +80,13 @@ public class ExprTeam extends SimpleExpression<Team> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean debug) {
-        return "null";
+    public @NotNull String toString(@Nullable Event e, boolean d) {
+        return switch (this.pattern) {
+            case 0 -> "team named " + this.name.toString(e,d);
+            case 1 -> "team of " + this.entity.toString(e,d);
+            case 2 -> "all teams";
+            default -> throw new IllegalStateException("Unexpected value: " + this.pattern);
+        };
     }
 
 }
