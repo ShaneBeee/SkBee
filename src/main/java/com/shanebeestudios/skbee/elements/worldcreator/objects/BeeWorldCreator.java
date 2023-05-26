@@ -148,7 +148,7 @@ public class BeeWorldCreator {
         if (environment != null) {
             worldCreator.environment(environment);
         }
-        if (seed > -1) {
+        if (seed != -1) {
             worldCreator.seed(seed);
         }
 
