@@ -78,7 +78,11 @@ public class StructureBee {
         List<BlockStateBee> blocks = new ArrayList<>();
         if (structure.getPaletteCount() > 0) {
             Palette palette = structure.getPalettes().get(0);
-            palette.getBlocks().forEach(blockState -> blocks.add(new BlockStateBee(blockState)));
+            try {
+                palette.getBlocks().forEach(blockState -> blocks.add(new BlockStateBee(blockState)));
+            } catch (IllegalStateException ignore) {
+                Util.log("Illegal block in palette of structure &r'&b" + this.key + "&r'");
+            }
         }
         return blocks;
     }
