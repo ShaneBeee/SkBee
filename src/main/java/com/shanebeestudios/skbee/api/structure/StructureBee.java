@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.structure;
 
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.PDCWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -20,9 +21,11 @@ import java.util.Random;
 /**
  * Wrapper class for {@link Structure} that includes more information used for saving/placing
  */
+@SuppressWarnings("unused")
 public class StructureBee {
 
     private static final StructureManager STRUCTURE_MANAGER = Bukkit.getStructureManager();
+    private static final String PDC_KEY = "lastSavedLocation";
 
     private final Structure structure;
     private final NamespacedKey key;
@@ -31,10 +34,14 @@ public class StructureBee {
     private Mirror mirror = Mirror.NONE;
     private float integrity = 1f;
     private boolean includeEntities = true;
+    private final PDCWrapper pdcWrapper;
+    private Location lastPlacedLocation;
 
     public StructureBee(Structure structure, NamespacedKey key) {
         this.key = key;
         this.structure = structure;
+        this.pdcWrapper = PDCWrapper.wrap(structure);
+        this.lastPlacedLocation = this.pdcWrapper.getLocation(PDC_KEY);
     }
 
     public void fill(Location location, BlockVector blockVector) {
@@ -42,6 +49,8 @@ public class StructureBee {
     }
 
     public void place(Location location) {
+        this.lastPlacedLocation = location;
+        this.pdcWrapper.setLocation(PDC_KEY, location);
         structure.place(location, includeEntities, rotation, mirror, -1, integrity, new Random());
     }
 
@@ -133,6 +142,16 @@ public class StructureBee {
 
     public BlockVector getSize() {
         return this.structure.getSize();
+    }
+
+    /**
+     * Get the last location this structure was placed at.
+     * <p>This is persistent, and will only work with SkBee placing.</p>
+     *
+     * @return Last location the structure was placed at
+     */
+    public Location getLastPlacedLocation() {
+        return this.lastPlacedLocation;
     }
 
     /**
