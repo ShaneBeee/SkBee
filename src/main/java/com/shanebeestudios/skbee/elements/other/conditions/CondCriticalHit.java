@@ -13,6 +13,7 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -36,7 +37,7 @@ public class CondCriticalHit extends Condition {
             Skript.error("'his is critical' requires a PaperMC server.", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
-        if (!ParserInstance.get().isCurrentEvent(EntityDamageByEntityEvent.class)) {
+        if (!ParserInstance.get().isCurrentEvent(EntityDamageEvent.class)) {
             Skript.error("'hit is critical' is only available in an entity damage event!", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
