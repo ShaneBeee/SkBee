@@ -177,6 +177,8 @@ public class Types {
 
         if (Classes.getExactClassInfo(BarStyle.class) == null && Classes.getClassInfoNoError("bossbarstyle") == null) {
             EnumUtils<BarStyle> BAR_STYLE_ENUM = new EnumUtils<>(BarStyle.class);
+            // Prevent conflict with Skript's `is solid` condition
+            BAR_STYLE_ENUM.replace("solid", "solid bar");
             Classes.registerClass(new ClassInfo<>(BarStyle.class, "bossbarstyle")
                     .user("boss ?bar ?styles?")
                     .name("BossBar Style")
