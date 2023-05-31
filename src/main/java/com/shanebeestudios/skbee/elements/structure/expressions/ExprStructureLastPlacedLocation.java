@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"set {_s} to structure named \"test\"",
         "place structure {_s} above traget block",
         "save structure {_s}"})
-@Since("INSERT VERSION")
+@Since("2.10.0")
 public class ExprStructureLastPlacedLocation extends SimplePropertyExpression<StructureBee, Location> {
 
     static {

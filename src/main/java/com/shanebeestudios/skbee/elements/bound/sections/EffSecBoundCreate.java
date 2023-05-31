@@ -42,7 +42,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         "create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
         "create a temporary bound with id \"%{_world}%.safezone-%random uuid%\" between {loc1} and {loc2}",
         "create a full bound with id \"spawn\" between {loc} and location of player"})
-@Since("2.5.3, INSERT VERSION (temporary bounds)")
+@Since("2.5.3, 2.10.0 (temporary bounds)")
 public class EffSecBoundCreate extends EffectSection {
 
     public static class BoundCreateEvent extends Event {

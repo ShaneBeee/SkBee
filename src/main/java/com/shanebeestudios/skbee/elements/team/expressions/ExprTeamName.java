@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
         "set team display name of team of player to \"The Rednecks\"",
         "set team display name of team named \"blue-team\" to \"Blue Team\"",
         "set {_name} to team name of team of player"})
-@Since("INSERT VERSION")
+@Since("2.10.0")
 @SuppressWarnings("deprecation")
 public class ExprTeamName extends SimplePropertyExpression<Team, String> {
 

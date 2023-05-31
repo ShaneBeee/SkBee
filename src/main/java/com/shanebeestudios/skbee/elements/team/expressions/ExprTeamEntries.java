@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
         "add \"Batman\" to team entries of team named \"superheros\"",
         "set {_entities::*} to team entries of team named \"mobs\"",
         "set {_strings::*} to team entries as strings of team named \"mobs\""})
-@Since("1.16.0, INSERT VERSION (strings)")
+@Since("1.16.0, 2.10.0 (strings)")
 public class ExprTeamEntries extends SimpleExpression<Object> {
 
     static {

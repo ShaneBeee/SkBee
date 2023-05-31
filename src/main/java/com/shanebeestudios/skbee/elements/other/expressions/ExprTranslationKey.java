@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Translation Key")
 @Description({"Gets the translation key from an object. Requires PaperMC."})
 @Examples("set {_t} to translation key of player's tool")
-@Since("INSERT VERSION")
+@Since("2.10.0")
 public class ExprTranslationKey extends SimplePropertyExpression<Object, String> {
 
     static {

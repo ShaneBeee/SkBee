@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("NBT - File Exists")
 @Description("Check if an NBT file already exists.")
 @Examples("if nbt file \"plugins/MyPlugin/test.nbt\" exists:")
-@Since("INSERT VERSION")
+@Since("2.10.0")
 public class CondNBTFileExists extends Condition {
 
     static {

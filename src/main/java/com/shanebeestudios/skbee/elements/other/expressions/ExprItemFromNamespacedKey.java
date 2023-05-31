@@ -24,7 +24,7 @@ import java.util.List;
 @Name("ItemType From NamespacedKey")
 @Description("Get an ItemType from a Minecraft namespaced key.")
 @Examples("set {_i} to itemtype from namespaced key from \"minecraft:stone\"")
-@Since("INSERT VERSION")
+@Since("2.10.0")
 public class ExprItemFromNamespacedKey extends SimpleExpression<ItemType> {
 
     static {

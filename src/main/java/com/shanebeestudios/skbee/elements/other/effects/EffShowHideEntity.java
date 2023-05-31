@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"make all entities disappear from player",
         "make all mobs appear to all players",
         "make target entity of player disappear from all players"})
-@Since("INSERT VERSION")
+@Since("2.10.0")
 public class EffShowHideEntity extends Effect {
 
     private static final SkBee PLUGIN = SkBee.getPlugin();

@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Spawn a falling block data.",
         "This is a temp effect until Skript properly handles block data with spawning of falling blocks."})
 @Examples("le spawn falling snow[layers=3] above target block of player")
-@Since("INSERT VERSION")
+@Since("2.10.0")
 public class EffSpawnFallingBlockData extends Effect {
 
     static {

@@ -16,7 +16,7 @@ import org.jetbrains.annotations.NotNull;
 @Description({"Turn on/off world auto saving. This will prevent changes in the world to be saved to file.",
         "\nThis doesn't appear to work when the server stops, so you may need to manually unload your world."})
 @Examples("set world autosave of world of player to false")
-@Since("INSERT VERSION")
+@Since("2.10.0")
 public class ExprWorldAutoSave extends SimplePropertyExpression<World, Boolean> {
 
     static {
