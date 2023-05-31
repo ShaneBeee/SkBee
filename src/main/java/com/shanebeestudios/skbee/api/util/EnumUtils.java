@@ -115,6 +115,7 @@ public final class EnumUtils<E extends Enum<E>> {
             E e = parseMap.get(toReplace);
             parseMap.put(replacement, e);
             parseMap.remove(toReplace);
+            names[e.ordinal()] = replacement;
         }
     }
 
