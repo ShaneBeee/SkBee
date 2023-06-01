@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.text;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
@@ -27,6 +28,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
@@ -42,13 +44,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
-@SuppressWarnings("PatternValidation")
+@SuppressWarnings({"PatternValidation", "UnstableApiUsage"})
 public class BeeComponent {
 
     // STATIC
+    private static final boolean HAS_SIDES = Skript.classExists("org.bukkit.block.sign.SignSide");
     public static BeeComponent empty() {
         return new BeeComponent(Component.empty());
     }
@@ -272,17 +274,40 @@ public class BeeComponent {
         sendMessage(sender, Bukkit.getServer());
     }
 
-    public void setBlockLine(Block block, int line) {
+    public void setBlockLine(Block block, int line, boolean front) {
         if (block.getState() instanceof Sign sign) {
-            sign.line(line, this.component);
+            if (!front && HAS_SIDES) {
+                // TODO real enum
+                // Just doing this to get a release out
+                try {
+                    Side side = Side.valueOf("BACK");
+                    sign.getSide(side).line(line,this.component);
+                } catch (IllegalArgumentException ignore) {
+                }
+            } else {
+                sign.line(line, this.component);
+            }
             sign.update();
         }
     }
 
     @Nullable
-    public static BeeComponent getSignLine(Block block, int line) {
+    public static BeeComponent getSignLine(Block block, int line, boolean front) {
         if (block.getState() instanceof Sign sign) {
-            return BeeComponent.fromComponent(sign.line(line));
+            Component lineComponent;
+            if (!front && HAS_SIDES) {
+                // TODO real enum
+                // Just doing this to get a release out
+                try {
+                    Side side = Side.valueOf("BACK");
+                    lineComponent = sign.getSide(side).line(line);
+                } catch (IllegalArgumentException ignore) {
+                    return null;
+                }
+            } else {
+                lineComponent = sign.line(line);
+            }
+            return BeeComponent.fromComponent(lineComponent);
         }
         return null;
     }

@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -19,24 +20,35 @@ import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("NullableProblems")
 @Name("Text Component - Sign Line")
-@Description("Get/set lines of signs with text components.")
+@Description({"Get/set lines of a sign with text components. Optionally set the front/back of a sign. (Defaults to front)",
+        "\nNOTE: Setting the back of a sign requires Minecraft 1.20+"})
 @Examples({"set sign line 1 of target block to mini message from \"<rainbow>LINE ONE\"",
         "set sign line 2 of target block to translate component from \"item.minecraft.diamond_sword\"",
-        "set {_line1} to sign line 1 of target block"})
-@Since("2.4.0")
+        "set {_line1} to sign line 1 of target block",
+        "set {_line1} to front sign line 1 of target block",
+        "set back sign line 1 of {_sign} to mini message from \"<rainbow>LINE ONE\""})
+@Since("2.4.0, INSERT VERSION (front|back)")
 public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
 
+    private static final boolean HAS_SIDES = Skript.isRunningMinecraft(1,20);
+
     static {
-        register(ExprSignLines.class, BeeComponent.class, "sign line %number%", "blocks");
+        register(ExprSignLines.class, BeeComponent.class, "[(front|:back)] sign line %number%", "blocks");
     }
 
     private Expression<Number> signLine;
+    private boolean front;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setExpr((Expression<? extends Block>) exprs[1]);
         this.signLine = (Expression<Number>) exprs[0];
+        this.front = !parseResult.hasTag("back");
+        if (!this.front && !HAS_SIDES) {
+            this.front = true;
+            Skript.warning("Setting lines on the back of a sign requires Minecraft 1.20+");
+        }
         return true;
     }
 
@@ -51,7 +63,7 @@ public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
         return get(source, new Getter<>() {
             @Override
             public @Nullable BeeComponent get(Block block) {
-                return BeeComponent.getSignLine(block, signLine - 1);
+                return BeeComponent.getSignLine(block, signLine - 1, front);
             }
         });
     }
@@ -75,7 +87,7 @@ public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
             signLine--;
 
             for (Block block : getExpr().getArray(event)) {
-                component.setBlockLine(block, signLine);
+                component.setBlockLine(block, signLine, this.front);
             }
         }
     }
@@ -87,7 +99,8 @@ public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "sign line " + this.signLine.toString(e, d) + " of " + getExpr().toString(e, d);
+        String front = this.front ? "front" : "back";
+        return front + " sign line " + this.signLine.toString(e, d) + " of " + getExpr().toString(e, d);
     }
 
 }
