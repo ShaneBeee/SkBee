@@ -21,14 +21,13 @@ import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Team - Entries")
-@Description({"Add/remove entries to/from a team. Entries can be entities/players or strings.",
-        "\nNOTE: `as strings` is useless when adding/remove. When returning, this will return the",
-        "list how Minecraft stores it, player names and entity UUIDs."})
+@Description({"Get the entries of a team. Entries can be entities/players or strings.",
+        "\nWhen returning as strings this will return the list how Minecraft stores it, player names and entity UUIDs.",
+        "\nNOTE: adding/removing to/from team entries is now deprecated. Please directly add/remove to/from teams.",
+        "See Team type docs for more info!"})
 @Examples({"set {_team} to team named \"my-team\"",
-        "add all players to team entries of {_team}",
-        "add player to team entries of team of target entity",
+        "clear team entries of {_team}",
         "kill team entries of team named \"mob-team\"",
-        "add \"Batman\" to team entries of team named \"superheros\"",
         "set {_entities::*} to team entries of team named \"mobs\"",
         "set {_strings::*} to team entries as strings of team named \"mobs\""})
 @Since("1.16.0, 2.10.0 (strings)")
@@ -69,11 +68,20 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
     @Nullable
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
-        return switch (mode) {
-            case DELETE -> CollectionUtils.array();
-            case ADD, REMOVE -> CollectionUtils.array(Entity[].class, String[].class);
-            default -> null;
-        };
+        switch (mode) {
+            case ADD, REMOVE -> {
+                // TODO Deprecated INSERT VERSION
+                Skript.warning("You can now add/remove entities/strings to/from teams directly without this expression. " +
+                        "ex: 'add player to team named \"a-team\"'");
+                return CollectionUtils.array(Player[].class, Entity[].class, String[].class);
+            }
+            case DELETE -> {
+                return CollectionUtils.array();
+            }
+            default -> {
+                return null;
+            }
+        }
     }
 
     @SuppressWarnings("NullableProblems")
