@@ -38,7 +38,7 @@ import org.jetbrains.annotations.NotNull;
         "async load chunk at 100,100 in world \"world\"",
         "async load chunk at 1,1 in world of player with ticket",
         "unload chunk at 1,1 in world \"world\""})
-@Since("1.17.0, INSERT VERSION (async)")
+@Since("1.17.0, 2.11.0 (async)")
 public class EffLoadChunk extends Effect {
 
     private static final SkBee PLUGIN = SkBee.getPlugin();

@@ -32,7 +32,7 @@ public class Types {
                         "add all players to team named \"a-team\"",
                         "remove all entities from team named \"the-mobs\"",
                         "delete team named \"z-team\"")
-                .since("1.16.0, INSERT VERSION (add/remove/delete)")
+                .since("1.16.0, 2.11.0 (add/remove/delete)")
                 .parser(new Parser<>() {
                     @SuppressWarnings("NullableProblems")
                     @Override

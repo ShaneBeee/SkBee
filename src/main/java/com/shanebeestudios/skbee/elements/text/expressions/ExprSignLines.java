@@ -27,7 +27,7 @@ import org.jetbrains.annotations.NotNull;
         "set {_line1} to sign line 1 of target block",
         "set {_line1} to front sign line 1 of target block",
         "set back sign line 1 of {_sign} to mini message from \"<rainbow>LINE ONE\""})
-@Since("2.4.0, INSERT VERSION (front|back)")
+@Since("2.4.0, 2.11.0 (front|back)")
 public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
 
     private static final boolean HAS_SIDES = Skript.isRunningMinecraft(1,20);

@@ -23,7 +23,7 @@ import org.eclipse.jdt.annotation.Nullable;
 public class EffTeamRegister extends Effect {
 
     static {
-        // TODO DEPRECATED in INSERT VERSION
+        // TODO DEPRECATED in 2.11.0
         Skript.registerEffect(EffTeamRegister.class, "(|1¦un)register [new] team %string%");
     }
 

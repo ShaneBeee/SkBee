@@ -70,7 +70,7 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
     public Class<?>[] acceptChange(ChangeMode mode) {
         switch (mode) {
             case ADD, REMOVE -> {
-                // TODO Deprecated INSERT VERSION
+                // TODO Deprecated 2.11.0
                 Skript.warning("You can now add/remove entities/strings to/from teams directly without this expression. " +
                         "ex: 'add player to team named \"a-team\"'");
                 return CollectionUtils.array(Player[].class, Entity[].class, String[].class);
