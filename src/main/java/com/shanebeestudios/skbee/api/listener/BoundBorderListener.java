@@ -9,18 +9,26 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerBedEnterEvent;
+import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
+import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
+import org.bukkit.event.vehicle.VehicleEnterEvent;
+import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.jetbrains.annotations.NotNull;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 public class BoundBorderListener implements Listener {
 
+    private final SkBee plugin;
     private final BoundConfig boundConfig;
 
     public BoundBorderListener(SkBee plugin) {
+        this.plugin = plugin;
         this.boundConfig = plugin.getBoundConfig();
     }
 
@@ -56,6 +64,73 @@ public class BoundBorderListener implements Listener {
             Location to = event.getMount().getLocation();
             if (preventBoundMovement(player, from, to)) {
                 event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    private void onVehicleEnter(VehicleEnterEvent event) {
+        if (event.getEntered() instanceof Player player) {
+            Location from = player.getLocation();
+            Location to = event.getVehicle().getLocation();
+            if (preventBoundMovement(player, from, to)) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    private void onVehicleMove(VehicleMoveEvent event) {
+        Vehicle vehicle = event.getVehicle();
+        vehicle.getPassengers().forEach(entity -> {
+            if (entity instanceof Player player) {
+                Location from = event.getFrom();
+                Location to = event.getTo();
+                if (preventBoundMovement(player, from, to)) {
+                    vehicle.removePassenger(player);
+                    // Keep the player looking the same direction
+                    from.setYaw(player.getLocation().getYaw());
+                    from.setPitch(player.getLocation().getPitch());
+                    player.teleport(from);
+                }
+            }
+        });
+    }
+
+    @EventHandler
+    private void onEnterBed(PlayerBedEnterEvent event) {
+        Player player = event.getPlayer();
+        Location from = player.getLocation();
+        Location to = event.getBed().getLocation();
+        if (preventBoundMovement(player, from, to)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler
+    private void onExitBed(PlayerBedLeaveEvent event) {
+        Player player = event.getPlayer();
+        Location from = event.getBed().getLocation();
+        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+            // Find player's new location after leaving bed
+            // have to add a delay as this isn't determinded in the event
+            Location to = player.getLocation();
+            if (preventBoundMovement(player, from, to)) {
+                player.teleport(from.add(0, 1, 0));
+            }
+        }, 1);
+
+    }
+
+    @EventHandler
+    private void onRespawn(PlayerRespawnEvent event) {
+        Player player = event.getPlayer();
+        Location from = player.getLocation();
+        Location to = event.getRespawnLocation();
+        if (preventBoundMovement(player, from, to)) {
+            event.setRespawnLocation(Bukkit.getWorlds().get(0).getSpawnLocation());
+            if (event.isBedSpawn() || event.isAnchorSpawn()) {
+                player.setBedSpawnLocation(null);
             }
         }
     }
