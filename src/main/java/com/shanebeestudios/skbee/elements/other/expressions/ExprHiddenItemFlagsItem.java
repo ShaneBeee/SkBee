@@ -15,10 +15,9 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
-
-@Name("Hidden Item Flags")
+@Name("Item with Hidden Item Flags")
 @Description("Hides the item flags on items, allowing you to make super duper custom items.")
 @Examples({"set player's tool to player's tool with attributes flag hidden",
         "give player 1 of diamond sword of sharpness 5 with hidden enchants flag",
@@ -29,10 +28,10 @@ import javax.annotation.Nullable;
         "set {_i} to unbreakable netherite pickaxe with hidden unbreakable flag",
         "set {_i} to unbreakable diamond sword of sharpness 3 with unbreakable flag and enchants flag hidden"})
 @Since("1.0.0")
-public class ExprHiddenFlags extends SimpleExpression<ItemType> {
+public class ExprHiddenItemFlagsItem extends SimpleExpression<ItemType> {
 
     static {
-        Skript.registerExpression(ExprHiddenFlags.class, ItemType.class, ExpressionType.PROPERTY,
+        Skript.registerExpression(ExprHiddenItemFlagsItem.class, ItemType.class, ExpressionType.PROPERTY,
                 "%itemtype% with all flag[s] hidden",
                 "%itemtype% with %itemflags% hidden",
                 "%itemtype% with hidden %itemflags%");
