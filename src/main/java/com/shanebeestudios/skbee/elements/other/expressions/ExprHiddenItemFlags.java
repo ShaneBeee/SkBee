@@ -22,7 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 @Name("Hidden Item Flags")
-@Description("Represents the hidden item flags of an item. Can be added to, remove from or cleared.")
+@Description("Represents the hidden item flags of an item. Can be added to, remove from or cleared/reset.")
 @Examples({"add enchants flag to hidden item flags of player's tool",
         "add enchants flag and attributes flag to hidden item flags of player's tool",
         "remove enchants flag from hidden item flags of player's tool",
@@ -57,7 +57,7 @@ public class ExprHiddenItemFlags extends PropertyExpression<ItemType, ItemFlag> 
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
             return CollectionUtils.array(ItemFlag[].class);
-        } else if (mode == ChangeMode.DELETE) {
+        } else if (mode == ChangeMode.DELETE || mode == ChangeMode.RESET) {
             return CollectionUtils.array();
         }
         return null;
@@ -66,7 +66,7 @@ public class ExprHiddenItemFlags extends PropertyExpression<ItemType, ItemFlag> 
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (mode == ChangeMode.DELETE) {
+        if (mode == ChangeMode.DELETE || mode == ChangeMode.RESET) {
             for (ItemType itemType : getExpr().getArray(event)) {
                 ItemMeta itemMeta = itemType.getItemMeta();
                 Set<ItemFlag> itemFlags = itemMeta.getItemFlags();
