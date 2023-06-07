@@ -25,6 +25,8 @@ See the [**Wiki**](https://github.com/ShaneBeee/SkBee/wiki) for more detailed in
 Are you running an <ins>**outdated**</ins> version of Minecraft and looking for an <ins>**outdated**</ins> build of SkBee that will work on your <ins>**outdated**</ins> server? Well look no further, here is a list of <ins>**outdated**</ins> builds of SkBee for your <ins>**outdated**</ins> server.    
 Keep in mind, these <ins>**outdated**</ins> builds for <ins>**outdated**</ins> servers are not supported and you will not get support/bug fixes, because they're <ins>**outdated**</ins>!
 
+### <ins>1.17.1</ins>
+[**SkBee 2.11.0**](https://github.com/ShaneBeee/SkBee/releases/tag/2.11.0)
 ### <ins>1.16.5</ins>
 [**SkBee 1.15.3**](https://github.com/ShaneBeee/SkBee/releases/tag/1.15.3)
 ### <ins>1.15.2</ins>
