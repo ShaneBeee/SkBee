@@ -109,11 +109,11 @@ public class Types {
                             }
                             if (mode == ChangeMode.ADD) {
                                 for (Team team : teams) {
-                                    team.addEntries(names);
+                                    names.forEach(team::addEntry);
                                 }
                             } else if (mode == ChangeMode.REMOVE) {
                                 for (Team team : teams) {
-                                    team.removeEntries(names);
+                                    names.forEach(team::removeEntry);
                                 }
                             }
                         }
