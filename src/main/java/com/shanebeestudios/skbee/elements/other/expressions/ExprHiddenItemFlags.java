@@ -28,7 +28,7 @@ import java.util.Set;
         "remove enchants flag from hidden item flags of player's tool",
         "remove armor trim flag and dye flag from item flags of player's tool",
         "clear item flags of player's tool"})
-@Since("INSERT VERSION")
+@Since("2.12.0")
 public class ExprHiddenItemFlags extends PropertyExpression<ItemType, ItemFlag> {
 
     static {
