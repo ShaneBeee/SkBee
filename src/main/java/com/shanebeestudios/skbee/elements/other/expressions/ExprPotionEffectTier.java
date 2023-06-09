@@ -10,7 +10,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Potion Effect Tier")
-@Description("Get the tier of a potion effect.")
+@Description({"Get the tier of a potion effect.",
+        "\nNote: This is the Minecraft potion effect amplifier + 1, Skript adds 1 for some odd reason."})
 @Examples("set {_tiers::*} to potion tiers of active potion effects of player")
 @Since("2.8.5")
 public class ExprPotionEffectTier extends SimplePropertyExpression<PotionEffect,Number> {
@@ -21,7 +22,8 @@ public class ExprPotionEffectTier extends SimplePropertyExpression<PotionEffect,
 
     @Override
     public @Nullable Number convert(PotionEffect potionEffect) {
-        return potionEffect.getAmplifier();
+        // Add 1 because Skript does that for some reason
+        return potionEffect.getAmplifier() + 1;
     }
 
     @Override
