@@ -46,11 +46,12 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"PatternValidation", "UnstableApiUsage"})
+@SuppressWarnings({"PatternValidation"})
 public class BeeComponent {
 
     // STATIC
     private static final boolean HAS_SIDES = Skript.classExists("org.bukkit.block.sign.SignSide");
+
     public static BeeComponent empty() {
         return new BeeComponent(Component.empty());
     }
@@ -277,13 +278,7 @@ public class BeeComponent {
     public void setBlockLine(Block block, int line, boolean front) {
         if (block.getState() instanceof Sign sign) {
             if (!front && HAS_SIDES) {
-                // TODO real enum
-                // Just doing this to get a release out
-                try {
-                    Side side = Side.valueOf("BACK");
-                    sign.getSide(side).line(line,this.component);
-                } catch (IllegalArgumentException ignore) {
-                }
+                sign.getSide(Side.BACK).line(line, this.component);
             } else {
                 sign.line(line, this.component);
             }
@@ -296,14 +291,7 @@ public class BeeComponent {
         if (block.getState() instanceof Sign sign) {
             Component lineComponent;
             if (!front && HAS_SIDES) {
-                // TODO real enum
-                // Just doing this to get a release out
-                try {
-                    Side side = Side.valueOf("BACK");
-                    lineComponent = sign.getSide(side).line(line);
-                } catch (IllegalArgumentException ignore) {
-                    return null;
-                }
+                lineComponent = sign.getSide(Side.BACK).line(line);
             } else {
                 lineComponent = sign.line(line);
             }
