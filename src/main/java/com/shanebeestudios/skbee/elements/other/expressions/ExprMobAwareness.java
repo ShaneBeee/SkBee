@@ -15,6 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Mob Awareness")
 @Description({"Represents whether this mob is aware of its surroundings.",
+        "Turning this off is essentially like turning off the mobs AI.",
         "Unaware mobs will still move if pushed, attacked, etc. but will not move or perform any actions on their own.",
         "Unaware mobs will still be affected by gravity.",
         "Unaware mobs may also have other unspecified behaviours disabled, such as drowning."})
