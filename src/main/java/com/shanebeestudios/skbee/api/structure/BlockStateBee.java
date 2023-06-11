@@ -37,6 +37,14 @@ public class BlockStateBee {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (obj instanceof BlockStateBee blockStateBee) {
+            return this.blockState.equals(blockStateBee.blockState);
+        }
+        return false;
+    }
+
+    @Override
     public String toString() {
         Vector offset = getOffset();
         String data = blockState.getBlockData().getAsString();
