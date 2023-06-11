@@ -2,56 +2,51 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Name("BlockState - ItemType")
 @Description("Represents the itemtype of a block state.")
-@Examples("set {_type} to blockstate itemtype of {_blockstate}")
+@Examples({"set {_type} to blockstate itemtype of {_blockstate}",
+        "set blockstate itemtype of {_blockstate} to stone"})
 @Since("INSERT VERSION")
-public class ExprBlockStateItemType extends SimpleExpression<ItemType> {
+public class ExprBlockStateItemType extends SimplePropertyExpression<BlockStateWrapper, ItemType> {
 
     static {
         Skript.registerExpression(ExprBlockStateItemType.class, ItemType.class, ExpressionType.PROPERTY,
                 "block[ ]state [item[ ]]type of %blockstates%");
     }
 
-    private Expression<BlockStateWrapper> blockState;
-
-    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        blockState = (Expression<BlockStateWrapper>) exprs[0];
-        return true;
+    public @Nullable ItemType convert(BlockStateWrapper blockStateWrapper) {
+        return blockStateWrapper.getItemType();
     }
 
     @SuppressWarnings("NullableProblems")
-    @Nullable
     @Override
-    protected ItemType[] get(Event event) {
-        List<ItemType> itemTypes = new ArrayList<>();
-        for (BlockStateWrapper blockState : blockState.getAll(event)) {
-            itemTypes.add(blockState.getItemType());
-        }
-        return itemTypes.toArray(new ItemType[0]);
+    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+        if (mode == ChangeMode.SET) return CollectionUtils.array(ItemType.class);
+        return null;
     }
 
+    @SuppressWarnings({"ConstantValue", "NullableProblems"})
     @Override
-    public boolean isSingle() {
-        return blockState.isSingle();
+    public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+        if (delta != null && delta[0] instanceof ItemType itemType) {
+            for (BlockStateWrapper blockStateWrapper : getExpr().getArray(event)) {
+                blockStateWrapper.setItemType(itemType);
+            }
+        }
     }
 
     @SuppressWarnings("NullableProblems")
@@ -60,10 +55,9 @@ public class ExprBlockStateItemType extends SimpleExpression<ItemType> {
         return ItemType.class;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
-    public String toString(@Nullable Event e, boolean d) {
-        return "blockstate itemtype of " + blockState.toString(e, d);
+    protected @NotNull String getPropertyName() {
+        return "blockstate itemtype";
     }
 
 }

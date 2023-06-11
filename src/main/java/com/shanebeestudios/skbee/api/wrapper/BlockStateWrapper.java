@@ -45,6 +45,10 @@ public class BlockStateWrapper {
         return blockState.getBlockData();
     }
 
+    public void setBlockData(BlockData blockData) {
+        this.blockState.setBlockData(blockData);
+    }
+
     /**
      * Get an {@link ItemType} from this block state
      *
@@ -52,6 +56,10 @@ public class BlockStateWrapper {
      */
     public ItemType getItemType() {
         return new ItemType(blockState);
+    }
+
+    public void setItemType(ItemType itemType) {
+        this.blockState.setType(itemType.getMaterial());
     }
 
     /**

@@ -179,7 +179,8 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(BlockStateWrapper.class, "blockstate")
                 .user("blockstates?")
                 .name("BlockState")
-                .description("Represents the captured state of a block.",
+                .description("Represents a captured state of a block, which will not change automatically.",
+                        "Unlike Block, which only one object can exist per coordinate, BlockState can exist multiple times for any given Block.",
                         "In a structure, this represents how the block is saved to the structure.",
                         "Requires MC 1.17.1+")
                 .since("1.12.3"));
