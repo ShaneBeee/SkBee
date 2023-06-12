@@ -74,7 +74,7 @@
         <dependency>
             <groupId>fr.mrmicky</groupId>
             <artifactId>fastboard</artifactId>
-            <version>1.2.1</version>
+            <version>2.0.0</version>
         </dependency>
         <dependency>
             <groupId>com.github.ShaneBeeStudios</groupId>
@@ -124,7 +124,7 @@
                         <version>3.2.0</version>
                         <configuration>
                             <!-- Put here wherever you would like the plugin to build -->
-                            <outputDirectory>/Users/ShaneBee/Desktop/Server/Skript/1-19/plugins</outputDirectory>
+                            <outputDirectory>/Users/ShaneBee/Desktop/Server/Skript/1-20/plugins</outputDirectory>
                         </configuration>
                     </plugin>
                 </plugins>
