@@ -9,8 +9,8 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.elements.scoreboard.objects.Board;
-import com.shanebeestudios.skbee.elements.scoreboard.objects.BoardManager;
+import com.shanebeestudios.skbee.api.scoreboard.FastBoardWrapper;
+import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -41,7 +41,7 @@ public class EffScoreboardClear extends Effect {
     @Override
     protected void execute(Event event) {
         for (Player player : this.player.getArray(event)) {
-            Board board = BoardManager.getBoard(player);
+            FastBoardWrapper board = BoardManager.getBoard(player);
             if (board != null) {
                 board.clear();
             }

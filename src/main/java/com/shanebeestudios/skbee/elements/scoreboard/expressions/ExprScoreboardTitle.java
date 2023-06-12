@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.elements.scoreboard.objects.Board;
-import com.shanebeestudios.skbee.elements.scoreboard.objects.BoardManager;
+import com.shanebeestudios.skbee.api.scoreboard.FastBoardWrapper;
+import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -49,7 +49,7 @@ public class ExprScoreboardTitle extends SimpleExpression<String> {
     protected @Nullable String[] get(Event event) {
         List<String> titles = new ArrayList<>();
         for (Player player : this.player.getArray(event)) {
-            Board board = BoardManager.getBoard(player);
+            FastBoardWrapper board = BoardManager.getBoard(player);
             titles.add(board.getTitle());
         }
         return titles.toArray(new String[0]);
@@ -69,7 +69,7 @@ public class ExprScoreboardTitle extends SimpleExpression<String> {
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         String title = delta != null ? (String) delta[0] : null;
         for (Player player : this.player.getArray(event)) {
-            Board board = BoardManager.getBoard(player);
+            FastBoardWrapper board = BoardManager.getBoard(player);
             if (board != null) {
                 board.setTitle(title);
             }

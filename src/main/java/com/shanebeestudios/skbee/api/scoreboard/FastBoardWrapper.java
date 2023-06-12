@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.scoreboard.objects;
+package com.shanebeestudios.skbee.api.scoreboard;
 
 import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.entity.Player;
@@ -6,7 +6,7 @@ import org.bukkit.entity.Player;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Board {
+public class FastBoardWrapper {
 
     private final Player player;
     private FastBoard fastBoard;
@@ -14,7 +14,7 @@ public class Board {
     private String[] lines;
     private boolean visible = true;
 
-    public Board(Player player) {
+    public FastBoardWrapper(Player player) {
         this.player = player;
         this.fastBoard = new FastBoard(player);
         this.lines = new String[15];
@@ -101,7 +101,7 @@ public class Board {
             }
         }
         if (this.fastBoard == null) return;
-        fastBoard.updateLines(lines);
+        this.fastBoard.updateLines(lines);
     }
 
 }

@@ -12,8 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.elements.scoreboard.objects.Board;
-import com.shanebeestudios.skbee.elements.scoreboard.objects.BoardManager;
+import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
+import com.shanebeestudios.skbee.api.scoreboard.FastBoardWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -59,7 +59,7 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
 
         List<String> lines = new ArrayList<>();
         for (Player player : this.player.getArray(event)) {
-            Board board = BoardManager.getBoard(player);
+            FastBoardWrapper board = BoardManager.getBoard(player);
             if (board != null) {
                 lines.add(board.getLine(line));
             }
@@ -87,7 +87,7 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
         if (line < 1 || line > 15) return;
 
         for (Player player : this.player.getArray(event)) {
-            Board board = BoardManager.getBoard(player);
+            FastBoardWrapper board = BoardManager.getBoard(player);
             if (board != null) {
                 if (mode == ChangeMode.SET) {
                     board.setLine(line, lineString);
