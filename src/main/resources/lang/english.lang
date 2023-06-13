@@ -62,3 +62,6 @@ types:
 	quaternion: quaternion¦s
 	transformation: transformation¦s
 	respawnreason: respawn reason¦s
+	armortrim: armor trim¦s
+	trimpattern: trim pattern¦s
+	trimmaterial: trim material¦s
