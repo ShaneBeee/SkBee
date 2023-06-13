@@ -16,6 +16,7 @@ import java.util.Locale;
  * <br>
  * This class is copied from Skript, and modified to allow for not using language nodes
  * <a href="https://github.com/SkriptDev/Skript/blob/master/src/main/java/ch/njol/skript/util/EnumUtils.java">EnumUtils</a>
+ *
  * @author Peter Güttinger
  */
 public final class EnumUtils<E extends Enum<E>> {
@@ -100,6 +101,22 @@ public final class EnumUtils<E extends Enum<E>> {
     public E parse(final String s) {
         validate(false);
         return parseMap.get(s.toLowerCase(Locale.ROOT).replace("_", " "));
+    }
+
+    /**
+     * Replace a specific key with another
+     * <br>Useful to prevent conflicts
+     *
+     * @param toReplace   Key to replace
+     * @param replacement New replacement key
+     */
+    public void replace(String toReplace, String replacement) {
+        if (parseMap.containsKey(toReplace)) {
+            E e = parseMap.get(toReplace);
+            parseMap.put(replacement, e);
+            parseMap.remove(toReplace);
+            names[e.ordinal()] = replacement;
+        }
     }
 
     @SuppressWarnings({"null", "unused"})

@@ -1,7 +1,9 @@
 package com.shanebeestudios.skbee.api.structure;
 
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.PDCWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -20,9 +22,11 @@ import java.util.Random;
 /**
  * Wrapper class for {@link Structure} that includes more information used for saving/placing
  */
+@SuppressWarnings("unused")
 public class StructureBee {
 
     private static final StructureManager STRUCTURE_MANAGER = Bukkit.getStructureManager();
+    private static final String PDC_KEY = "lastSavedLocation";
 
     private final Structure structure;
     private final NamespacedKey key;
@@ -31,10 +35,14 @@ public class StructureBee {
     private Mirror mirror = Mirror.NONE;
     private float integrity = 1f;
     private boolean includeEntities = true;
+    private final PDCWrapper pdcWrapper;
+    private Location lastPlacedLocation;
 
     public StructureBee(Structure structure, NamespacedKey key) {
         this.key = key;
         this.structure = structure;
+        this.pdcWrapper = PDCWrapper.wrap(structure);
+        this.lastPlacedLocation = this.pdcWrapper.getLocation(PDC_KEY);
     }
 
     public void fill(Location location, BlockVector blockVector) {
@@ -42,6 +50,8 @@ public class StructureBee {
     }
 
     public void place(Location location) {
+        this.lastPlacedLocation = location;
+        this.pdcWrapper.setLocation(PDC_KEY, location);
         structure.place(location, includeEntities, rotation, mirror, -1, integrity, new Random());
     }
 
@@ -68,17 +78,21 @@ public class StructureBee {
     }
 
     /**
-     * Get a list of available {@link BlockStateBee BlockStates} of this {@link Structure}
+     * Get a list of available {@link BlockStateWrapper BlockStates} of this {@link Structure}
      * <br>
      * Will return an empty list of no blocks have been filled
      *
      * @return List of available BlockStates
      */
-    public List<BlockStateBee> getBlockStates() {
-        List<BlockStateBee> blocks = new ArrayList<>();
+    public List<BlockStateWrapper> getBlockStates() {
+        List<BlockStateWrapper> blocks = new ArrayList<>();
         if (structure.getPaletteCount() > 0) {
             Palette palette = structure.getPalettes().get(0);
-            palette.getBlocks().forEach(blockState -> blocks.add(new BlockStateBee(blockState)));
+            try {
+                palette.getBlocks().forEach(blockState -> blocks.add(new BlockStateWrapper(blockState, true)));
+            } catch (IllegalStateException ignore) {
+                Util.log("Illegal block in palette of structure &r'&b" + this.key + "&r'");
+            }
         }
         return blocks;
     }
@@ -129,6 +143,16 @@ public class StructureBee {
 
     public BlockVector getSize() {
         return this.structure.getSize();
+    }
+
+    /**
+     * Get the last location this structure was placed at.
+     * <p>This is persistent, and will only work with SkBee placing.</p>
+     *
+     * @return Last location the structure was placed at
+     */
+    public Location getLastPlacedLocation() {
+        return this.lastPlacedLocation;
     }
 
     /**

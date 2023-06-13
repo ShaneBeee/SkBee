@@ -27,7 +27,7 @@ public class SkBee extends JavaPlugin {
     }
 
     // Earliest MC Version that SkBee will support
-    static final int[] EARLIEST_VERSION = new int[]{1, 17, 1};
+    static final int[] EARLIEST_VERSION = new int[]{1, 18, 2};
 
     private static SkBee instance;
     private PluginManager pm;

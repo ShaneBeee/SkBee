@@ -19,7 +19,8 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("deprecation")
 @Name("Team - Color")
 @Description("Get/set the color of a team.")
-@Examples("set team color of {_team} to blue")
+@Examples({"set team color of {_team} to blue",
+        "set team color of team of player to red"})
 @Since("1.16.0")
 public class ExprTeamColor extends SimplePropertyExpression<Team, SkriptColor> {
 

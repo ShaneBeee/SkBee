@@ -15,14 +15,15 @@ import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Team - Register")
 @Description({"Register a new team or unregister an existing team.",
-        "NOTE: You can also use the team expression to get a team, which will register a new team",
-        "if that team does not exist already."})
+        "\nTHIS IS NOW DEPRECATED and will be removed in the future!",
+        "\nYou can use the `team named %string%` expression to get/register or delete a team."})
 @Examples({"on load:",
         "\tregister new team \"a-team\""})
-@Since("1.16.0")
+@Since("1.16.0, DEPRECATED!")
 public class EffTeamRegister extends Effect {
 
     static {
+        // TODO DEPRECATED in 2.11.0
         Skript.registerEffect(EffTeamRegister.class, "(|1¦un)register [new] team %string%");
     }
 
@@ -34,6 +35,12 @@ public class EffTeamRegister extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.name = (Expression<String>) exprs[0];
         this.register = parseResult.mark == 0;
+        String prefix = "DEPRECATED - Will be removed in the future! ";
+        if (this.register) {
+            Skript.warning(prefix + "Please use 'set {_} to team named \"name_here\"'");
+        } else {
+            Skript.warning(prefix + "Please use 'delete team named \"name_here\"'");
+        }
         return true;
     }
 

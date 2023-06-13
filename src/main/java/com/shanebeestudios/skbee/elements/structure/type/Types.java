@@ -4,7 +4,6 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import com.shanebeestudios.skbee.api.structure.BlockStateBee;
 import com.shanebeestudios.skbee.api.structure.StructureBee;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import org.bukkit.block.structure.Mirror;
@@ -59,12 +58,6 @@ public class Types {
                 .usage(ROTATION_ENUM.getAllNames())
                 .since("1.12.0")
                 .parser(ROTATION_ENUM.getParser()));
-
-        Classes.registerClass(new ClassInfo<>(BlockStateBee.class, "blockstate")
-                .user("blockstates?")
-                .name("BlockState")
-                .description("Represents the blockstate of a block saved in a structure. Requires MC 1.17.1+")
-                .since("1.12.3"));
     }
 
 }

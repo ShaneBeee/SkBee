@@ -26,9 +26,9 @@ import java.util.UUID;
 
 @Name("Bound - Owners/Members")
 @Description("Represents the owners and members of a bound. Will be saved as UUIDs in the bound config.")
-@Examples({"add player to members of bound with id \"spawn\"",
-        "remove player from owners of bound with id \"spawn\"",
-        "loop owners of bound with id \"beach\":",
+@Examples({"add player to bound members of bound with id \"spawn\"",
+        "remove player from bound owners of bound with id \"spawn\"",
+        "loop bound owners of bound with id \"beach\":",
         "\tif loop-offline player is online:",
         "\t\tteleport loop-offline player to spawn of world \"world\""})
 @Since("1.15.0")
@@ -36,7 +36,7 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
 
     static {
         Skript.registerExpression(ExprBoundOwnerMember.class, OfflinePlayer.class, ExpressionType.PROPERTY,
-                "(owners|1¦members) of [bound] %bound%");
+                "bound (owner[s]|1¦member[s]) of %bound%");
     }
 
     private Expression<Bound> bound;
@@ -73,14 +73,10 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
     @Nullable
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
-        switch (mode) {
-            case ADD:
-            case REMOVE:
-            case SET:
-            case DELETE:
-                return CollectionUtils.array(OfflinePlayer[].class);
-        }
-        return null;
+        return switch (mode) {
+            case ADD, REMOVE, SET, DELETE -> CollectionUtils.array(OfflinePlayer[].class);
+            default -> null;
+        };
     }
 
     @SuppressWarnings("NullableProblems")
@@ -145,7 +141,7 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return (owners ? "owners" : "members") + " of bound " + this.bound.toString(e, d);
+        return "bound " + (this.owners ? "owners" : "members") + " of bound " + this.bound.toString(e, d);
     }
 
 }

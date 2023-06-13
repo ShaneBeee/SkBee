@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("NBT - Spawn Entity with NBT")
 @Description({"Spawn an entity at a location with NBT.",
-        "The ability to spawn falling was added in INSERT VERSION as a temp effect until Skript properly handles falling blocks",
+        "The ability to spawn falling was added in 2.10.0 as a temp effect until Skript properly handles falling blocks",
         "with block data."})
 @Examples({"set {_n} to nbt compound from \"{NoAI:1b}\"",
         "spawn sheep at player with nbt {_n}",

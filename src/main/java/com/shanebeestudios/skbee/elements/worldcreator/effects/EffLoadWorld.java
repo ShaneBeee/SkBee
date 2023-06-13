@@ -8,6 +8,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
@@ -21,10 +23,13 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 @Name("Load/Unload/Delete World")
-@Description("Load a world from a world creator. Worlds created/loaded with a world creator, are saved in the 'plugins/SkBee/worlds.yml' file " +
-        "and automatically loaded on server start. If you wish to import a world, just use a world creator with a name that matches that world folder." +
-        "You can load a world from a name (assuming this world is in your world directory and not loaded. " +
-        "You can unload a world with an option to save/not save (defaults to saving). You can also delete a world, but only a custom world.")
+@Description({"Load a world from a world creator.",
+        "Worlds created/loaded with a world creator, are saved in the 'plugins/SkBee/worlds.yml' file",
+        "and automatically loaded on server start if auto-load is enabled in the config.",
+        "If you wish to import a world, just use a world creator with a name that matches that world folder.",
+        "You can load a world from a name (assuming this world is in your world directory and not loaded).",
+        "You can unload a world with an option to save/not save (defaults to saving).",
+        "You can also delete a world, but only a custom world."})
 @Examples({"set {_w} to a new world creator named \"my-world\"",
         "load world from world creator {_w}", "",
         "load world \"my-world\"",
@@ -60,43 +65,68 @@ public class EffLoadWorld extends Effect {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected void execute(@NotNull Event e) {
+    protected void execute(Event event) {
+        // not doing anything here since we're walking
+    }
+
+    @SuppressWarnings("NullableProblems")
+    @Override
+    protected @Nullable TriggerItem walk(Event event) {
+        TriggerItem next = getNext();
+
         if (pattern == 0) {
-            BeeWorldCreator worldCreator = this.creator.getSingle(e);
+            BeeWorldCreator worldCreator = this.creator.getSingle(event);
             if (worldCreator != null) {
-                worldCreator.loadWorld();
+                // Let's save you guys for later after the world has loaded
+                Object localVars = Variables.removeLocals(event);
+
+                worldCreator.loadWorld().thenAccept(world1 -> {
+                    // re-set local variables
+                    if (localVars != null) Variables.setLocalVariables(event, localVars);
+
+                    // walk next trigger
+                    if (next != null) TriggerItem.walk(next, event);
+
+                    // remove local vars as we're now done
+                    Variables.removeLocals(event);
+                });
+                return null;
+
             }
         } else if (pattern == 1) {
-            if (this.worldName == null) return;
-            String worldName = this.worldName.getSingle(e);
-            if (worldName == null) return;
-
-            World world = Bukkit.getWorld(worldName);
-            if (world == null) {
-                new WorldCreator(worldName).createWorld();
+            if (this.worldName != null) {
+                String worldName = this.worldName.getSingle(event);
+                if (worldName != null) {
+                    World world = Bukkit.getWorld(worldName);
+                    if (world == null) {
+                        new WorldCreator(worldName).createWorld();
+                    }
+                }
             }
         } else if (pattern == 2) {
-            if (this.world == null) return;
-            World world = this.world.getSingle(e);
-            if (world == null) return;
+            if (this.world == null) return next;
+            World world = this.world.getSingle(event);
+            if (world == null) return next;
 
             unloadWorld(world);
         } else if (pattern == 3) {
-            if (this.worldName == null) return;
-            String worldName = this.worldName.getSingle(e);
-            if (worldName == null) return;
+            if (this.worldName == null) return next;
+            String worldName = this.worldName.getSingle(event);
+            if (worldName == null) return next;
 
             World world = Bukkit.getWorld(worldName);
             if (world != null) {
                 // Kick players and unload the world before deleting
                 if (!unloadWorld(world)) {
-                    // if world could not unload, we dont wanna delete it
-                    return;
+                    // if world could not unload, we don't want to delete it
+                    return next;
                 }
             }
-            BEE_WORLD_CONFIG.deleteWorld(this.worldName.getSingle(e));
+            BEE_WORLD_CONFIG.deleteWorld(this.worldName.getSingle(event));
         }
+        return next;
     }
 
     private boolean unloadWorld(@NotNull World world) {
@@ -120,15 +150,19 @@ public class EffLoadWorld extends Effect {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         switch (pattern) {
-            case 1:
+            case 1 -> {
                 return String.format("load world %s", this.worldName.toString(e, d));
-            case 2:
+            }
+            case 2 -> {
                 String save = this.save ? "and save" : "without saving";
                 return String.format("unload world %s %s", this.world.toString(e, d), save);
-            case 3:
+            }
+            case 3 -> {
                 return String.format("delete world file for %s", this.worldName.toString(e, d));
-            default:
+            }
+            default -> {
                 return String.format("load world from creator %s", this.creator.toString(e, d));
+            }
         }
     }
 

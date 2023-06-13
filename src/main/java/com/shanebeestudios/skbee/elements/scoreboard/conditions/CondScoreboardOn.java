@@ -9,8 +9,8 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.elements.scoreboard.objects.Board;
-import com.shanebeestudios.skbee.elements.scoreboard.objects.BoardManager;
+import com.shanebeestudios.skbee.api.scoreboard.FastBoardWrapper;
+import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -45,7 +45,7 @@ public class CondScoreboardOn extends Condition {
     public boolean check(Event event) {
         Player player = this.player.getSingle(event);
         if (player != null) {
-            Board board = BoardManager.getBoard(player);
+            FastBoardWrapper board = BoardManager.getBoard(player);
             if (board == null) return false;
             return board.isOn() ^ isNegated();
         }

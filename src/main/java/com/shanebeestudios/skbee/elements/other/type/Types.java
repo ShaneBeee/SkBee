@@ -10,6 +10,7 @@ import ch.njol.skript.registrations.Converters;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Spellcaster;
@@ -193,6 +194,15 @@ public class Types {
                     .parser(RESPAWN_REASON_ENUM.getParser())
                     .since("2.8.4"));
         }
+
+        Classes.registerClass(new ClassInfo<>(BlockStateWrapper.class, "blockstate")
+                .user("blockstates?")
+                .name("BlockState")
+                .description("Represents a captured state of a block, which will not change automatically.",
+                        "Unlike Block, which only one object can exist per coordinate, BlockState can exist multiple times for any given Block.",
+                        "In a structure, this represents how the block is saved to the structure.",
+                        "Requires MC 1.17.1+")
+                .since("1.12.3"));
     }
 
 }

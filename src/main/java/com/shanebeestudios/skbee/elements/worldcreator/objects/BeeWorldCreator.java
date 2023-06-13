@@ -13,6 +13,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
 public class BeeWorldCreator {
@@ -31,6 +32,7 @@ public class BeeWorldCreator {
 
     private World world;
     private boolean clone;
+    private boolean saveClone;
 
     public BeeWorldCreator(String worldName) {
         this.worldName = worldName;
@@ -128,96 +130,121 @@ public class BeeWorldCreator {
         this.loadOnStart = Optional.of(loadOnStart);
     }
 
-    public World loadWorld() {
-        World world;
-        WorldCreator worldCreator;
+    public boolean isSaveClone() {
+        return saveClone;
+    }
+
+    public void setSaveClone(boolean saveClone) {
+        this.saveClone = saveClone;
+    }
+
+    public CompletableFuture<World> loadWorld() {
+        CompletableFuture<WorldCreator> worldCreatorCompletableFuture = new CompletableFuture<>();
+        CompletableFuture<World> worldCompletableFuture = new CompletableFuture<>();
         // Copy/Clone world
         if (this.world != null) {
-            worldCreator = clone ? cloneWorld() : copyWorld();
+            worldCreatorCompletableFuture = clone ? cloneWorld() : copyWorld();
         }
         // Create new world
         else {
-            worldCreator = new WorldCreator(this.worldName);
+            worldCreatorCompletableFuture.complete(new WorldCreator(this.worldName));
         }
-        if (worldCreator == null) return null;
+        worldCreatorCompletableFuture.thenAccept(worldCreator -> {
+            World world;
 
-
-        if (worldType != null) {
-            worldCreator.type(worldType);
-        }
-        if (environment != null) {
-            worldCreator.environment(environment);
-        }
-        if (seed > -1) {
-            worldCreator.seed(seed);
-        }
-
-        if (generatorSettings != null) {
-            worldCreator.generatorSettings(generatorSettings);
-        }
-        if (generator != null) {
-            worldCreator.generator(generator);
-        }
-
-        genStructures.ifPresent(worldCreator::generateStructures);
-        hardcore.ifPresent(worldCreator::hardcore);
-
-        world = worldCreator.createWorld();
-        if (world != null) {
-            // Let's pull some values from the world and update our creator if need be
-            if (worldType == null) {
-                //noinspection deprecation
-                worldType = world.getWorldType();
+            if (worldType != null) {
+                worldCreator.type(worldType);
             }
-            if (environment == null) {
-                environment = world.getEnvironment();
+            if (environment != null) {
+                worldCreator.environment(environment);
             }
-            if (seed == -1) {
-                seed = world.getSeed();
-            }
-            if (genStructures.isEmpty()) {
-                genStructures = Optional.of(world.canGenerateStructures());
-            }
-            if (hardcore.isEmpty()) {
-                hardcore = Optional.of(world.isHardcore());
+            if (seed != -1) {
+                worldCreator.seed(seed);
             }
 
-            // Let's update the world with some other values
-            keepSpawnLoaded.ifPresent(world::setKeepSpawnInMemory);
-        }
+            if (generatorSettings != null) {
+                worldCreator.generatorSettings(generatorSettings);
+            }
+            if (generator != null) {
+                worldCreator.generator(generator);
+            }
 
-        SkBee.getPlugin().getBeeWorldConfig().saveWorldToFile(this);
-        return world;
+            genStructures.ifPresent(worldCreator::generateStructures);
+            hardcore.ifPresent(worldCreator::hardcore);
+
+            world = worldCreator.createWorld();
+            if (world != null) {
+                // Let's pull some values from the world and update our creator if need be
+                if (worldType == null) {
+                    //noinspection deprecation
+                    worldType = world.getWorldType();
+                }
+                if (environment == null) {
+                    environment = world.getEnvironment();
+                }
+                if (seed == -1) {
+                    seed = world.getSeed();
+                }
+                if (genStructures.isEmpty()) {
+                    genStructures = Optional.of(world.canGenerateStructures());
+                }
+                if (hardcore.isEmpty()) {
+                    hardcore = Optional.of(world.isHardcore());
+                }
+
+                // Let's update the world with some other values
+                keepSpawnLoaded.ifPresent(world::setKeepSpawnInMemory);
+            }
+
+            SkBee.getPlugin().getBeeWorldConfig().saveWorldToFile(this);
+            worldCompletableFuture.complete(world);
+        });
+        return worldCompletableFuture;
     }
 
-    private WorldCreator copyWorld() {
+    private CompletableFuture<WorldCreator> copyWorld() {
+        CompletableFuture<WorldCreator> worldCreatorCompletableFuture = new CompletableFuture<>();
         WorldCreator worldCreator = new WorldCreator(this.worldName);
         worldCreator.copy(this.world);
-        return worldCreator;
+        worldCreatorCompletableFuture.complete(worldCreator);
+        return worldCreatorCompletableFuture;
     }
 
-    private WorldCreator cloneWorld() {
+    private CompletableFuture<WorldCreator> cloneWorld() {
         File worldSaveLocation = Bukkit.getWorldContainer();
         File worldFile = this.world.getWorldFolder();
-        File newWorldFile = new File(worldSaveLocation, this.worldName);
-        String newWorldFileName = newWorldFile.getName();
-        if (worldFile.exists()) {
-            try {
-                this.world.save();
-                for (File file : Objects.requireNonNull(worldFile.listFiles())) {
-                    String fileName = file.getName();
-                    if (file.isDirectory()) {
-                        FileUtils.copyDirectory(file, new File(newWorldFileName, fileName));
-                    } else if (!fileName.contains("session") && !fileName.contains("uid.dat")) {
-                        FileUtils.copyFile(file, new File(newWorldFileName, fileName));
+        String worldName = this.worldName;
+
+        // Saving causes a bit of lag, we may want to disable this
+        if (isSaveClone()) this.world.save();
+
+        // Let's clone files on another thread
+        CompletableFuture<WorldCreator> worldCompletableFuture = new CompletableFuture<>();
+        Bukkit.getScheduler().runTaskAsynchronously(SkBee.getPlugin(), () -> {
+            File newWorldFile = new File(worldSaveLocation, worldName);
+            String newWorldFileName = newWorldFile.getName();
+            if (worldFile.exists()) {
+                try {
+                    for (File file : Objects.requireNonNull(worldFile.listFiles())) {
+                        String fileName = file.getName();
+                        if (file.isDirectory()) {
+                            FileUtils.copyDirectory(file, new File(newWorldFileName, fileName));
+                        } else if (!fileName.contains("session") && !fileName.contains("uid.dat")) {
+                            FileUtils.copyFile(file, new File(newWorldFileName, fileName));
+                        }
                     }
+                    WorldCreator creator = new WorldCreator(worldName);
+                    Bukkit.getScheduler().runTaskLater(SkBee.getPlugin(), () -> {
+                        // Let's head back to the main thread
+                        worldCompletableFuture.complete(creator);
+                    }, 0);
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-                return new WorldCreator(this.worldName);
-            } catch (IOException e) {
-                e.printStackTrace();
             }
-        }
-        return null;
+        });
+
+        return worldCompletableFuture;
     }
 
     @SuppressWarnings("StringBufferReplaceableByString")

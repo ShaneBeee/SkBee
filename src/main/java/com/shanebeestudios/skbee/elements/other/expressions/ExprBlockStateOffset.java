@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.structure.expressions;
+package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -10,7 +10,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.structure.BlockStateBee;
+import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -19,23 +19,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("BlockState - Offset")
-@Description({"Represents the offset of a block in a structure. This is a vector, distance from the starting block of a structure.",
-        "Requires MC 1.17.1+"})
-@Examples("set {_offset} to offset of blockstate {_blockstate}")
-@Since("1.12.3")
+@Description({"Represents the offset of a blockstate in a structure.",
+        "This is a vector, distance from the starting block of a structure."})
+@Examples("set {_offset} to blockstate offset of {_blockstate}")
+@Since("INSERT VERSION")
 public class ExprBlockStateOffset extends SimpleExpression<Vector> {
 
     static {
         Skript.registerExpression(ExprBlockStateOffset.class, Vector.class, ExpressionType.PROPERTY,
-                "offset of [blockstate[s]] %blockstates%");
+                "block[ ]state offset[s] of %blockstates%");
     }
 
-    private Expression<BlockStateBee> blockstate;
+    private Expression<BlockStateWrapper> blockstate;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        blockstate = (Expression<BlockStateBee>) exprs[0];
+        blockstate = (Expression<BlockStateWrapper>) exprs[0];
         return true;
     }
 
@@ -44,7 +44,7 @@ public class ExprBlockStateOffset extends SimpleExpression<Vector> {
     @Override
     protected Vector[] get(Event event) {
         List<Vector> offsets = new ArrayList<>();
-        for (BlockStateBee blockState : blockstate.getAll(event)) {
+        for (BlockStateWrapper blockState : blockstate.getAll(event)) {
             offsets.add(blockState.getOffset());
         }
         return offsets.toArray(new Vector[0]);
@@ -64,7 +64,7 @@ public class ExprBlockStateOffset extends SimpleExpression<Vector> {
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return "offset of blockstate " + blockstate.toString(e, d);
+        return "blockstate offset of " + blockstate.toString(e, d);
     }
 
 }

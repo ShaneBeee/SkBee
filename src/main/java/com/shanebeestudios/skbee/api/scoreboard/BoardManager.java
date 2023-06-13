@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.scoreboard.objects;
+package com.shanebeestudios.skbee.api.scoreboard;
 
 import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;
@@ -14,17 +14,17 @@ import java.util.UUID;
 
 public class BoardManager implements Listener {
 
-    private static final Map<UUID, Board> BOARDS = new HashMap<>();
+    private static final Map<UUID, FastBoardWrapper> BOARDS = new HashMap<>();
     private static final SkBee PLUGIN = SkBee.getPlugin();
 
     @Nullable
-    public static Board getBoard(Player player) {
+    public static FastBoardWrapper getBoard(Player player) {
         if (!player.isOnline()) return null;
         UUID uuid = player.getUniqueId();
         if (BOARDS.containsKey(uuid)) {
             return BOARDS.get(uuid);
         }
-        Board board = new Board(player);
+        FastBoardWrapper board = new FastBoardWrapper(player);
         BOARDS.put(uuid, board);
         return board;
     }

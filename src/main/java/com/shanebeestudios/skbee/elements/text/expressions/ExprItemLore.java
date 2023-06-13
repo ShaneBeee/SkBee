@@ -78,7 +78,7 @@ public class ExprItemLore extends SimpleExpression<BeeComponent> {
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET || mode == ChangeMode.ADD) {
-            return CollectionUtils.array(BeeComponent.class);
+            return CollectionUtils.array(BeeComponent[].class);
         }
         return null;
     }
