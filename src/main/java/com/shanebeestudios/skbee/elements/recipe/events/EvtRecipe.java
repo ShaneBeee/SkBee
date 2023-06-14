@@ -21,8 +21,7 @@ public class EvtRecipe {
                         "recipe discover[y]")
                 .description("Called when a player unlocks a recipe. ",
                         "`event-string` = the recipe namespace (this will also include either \"minecraft:\" or \"mykeyhere:\")",
-                        "`event-recipe` = the recipe which you clicked upon",
-                        "Requires MC 1.13+")
+                        "`event-recipe` = the recipe which you clicked upon")
                 .examples("on recipe discover:",
                         "\tif event-string = \"minecraft:diamond_block\"",
                         "\t\tcancel event")

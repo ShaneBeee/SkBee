@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
         "it will still show up in their recipe book, but they will not be able to craft it. If need be, you can get",
         "a list of all recipes by simply typing \"/minecraft:recipe give YourName \" in game.",
         "You can remove Minecraft recipes, custom recipes and recipes from other plugins.",
-        "You can remove custom potion recipes by using the potion keyword. Potions requires PaperMC 1.18+"})
+        "You can remove custom potion recipes by using the potion keyword. Potions requires Paper 1.19+"})
 @Examples({"remove mc recipe \"acacia_boat\"",
         "remove minecraft recipe \"cooked_chicken_from_campfire_cooking\"",
         "remove recipe \"minecraft:diamond_sword\"",

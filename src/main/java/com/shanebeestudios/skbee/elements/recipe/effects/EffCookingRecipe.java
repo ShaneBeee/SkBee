@@ -26,7 +26,7 @@ import org.bukkit.inventory.SmokingRecipe;
 import org.bukkit.inventory.recipe.CookingBookCategory;
 
 @Name("Recipe - Cooking")
-@Description({"Register a new cooking recipe for furnaces. As of 1.14 you're able to register a recipe for smokers, blasting and campfires.",
+@Description({"Register a new cooking recipe for furnaces, smokers, blasting and campfires.",
         "Recipe Ids are the name of the recipe along with how you'll find it based off given id.",
         "\nNote: recipe ids are limited to letters, numbers, periods, hyphens, a single colon and underscores. NO SPACES!!!",
         "By default if no namespace (\'minecraft\', \'plugin\') is defined it will go based off default which is \'skbee\'",

@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
         "\nNote: Stackable inputs are buggy and behave poorly with the server. ie. using a bucket and stacking it will replace all with 1 of the result. " +
         "Brewing recipes are fairly new within Paper, as such support for this is minimal. " +
         "There is currently no way to retrieve all potion recipes or get recipe information like ingredients.",
-        "Requires PaperMC 1.18+"})
+        "Requires Paper 1.19+"})
 @Examples({"set {_inputs} to material choice using mundane potion, thick potion, awkward potion",
         "set {_recipe1} to material choice using magma cream, blaze rod and fire charge",
         "set {_recipe2} to material choice using magma block and lava bucket",

@@ -22,8 +22,7 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(RecipeChoice.class, "recipechoice")
                 .name("Recipe Choice")
                 .user("recipe choices?")
-                .description("Represents a set of materials/minecraft tags/itemstacks which can be used in most recipes",
-                        "Requires Minecraft 1.13+")
+                .description("Represents a set of materials/minecraft tags/itemstacks which can be used in most recipes")
                 .usage("see material choice expression")
                 .examples("set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
                         "set {_a} to material choice of every sword",

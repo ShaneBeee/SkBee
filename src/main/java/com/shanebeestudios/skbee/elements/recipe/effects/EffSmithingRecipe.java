@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
         "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
         "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
-        "\nNote: While 'custom' items will work in these recipes, it appears the smithing table will not recognize them. Requires MC 1.16+"})
+        "\nNote: While 'custom' items will work in these recipes, it appears the smithing table will not recognize them."})
 @Examples({"on load:",
         "\tregister new smithing recipe for diamond chestplate using an iron chestplate and a diamond with id \"smith_diamond_chestplate\""})
 @Since("1.4.2")

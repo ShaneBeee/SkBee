@@ -15,7 +15,7 @@ import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Recipe - Reset")
 @Description({"Reset all recipes or just custom/potion recipes",
-        "\nNote: potion requires require PaperMC 1.18+"})
+        "\nNote: potion requires require Paper 1.19+"})
 @Examples({"reset all recipes",
         "reset all custom recipes",
         "reset all potion recipes"})

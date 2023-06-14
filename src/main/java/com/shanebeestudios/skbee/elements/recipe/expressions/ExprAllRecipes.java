@@ -30,7 +30,7 @@ import java.util.List;
 
 @Name("Recipe - All Recipes")
 @Description({"Get a list of all recipes. May be from a specific item, may be just Minecraft recipes or custom recipes.",
-        "Due to some items having more than 1 recipe this may return multiple recipes. Requires 1.13+"})
+        "Due to some items having more than 1 recipe this may return multiple recipes."})
 @Examples({
         "set {_recipes::*} to all recipes",
         "set {_customRecipes::*} to all custom recipes",

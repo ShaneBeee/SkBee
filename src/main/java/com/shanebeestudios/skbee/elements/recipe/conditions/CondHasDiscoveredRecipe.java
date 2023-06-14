@@ -17,8 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Has Discovered")
 @Description({"Checks if a player has discovered a recipe. Can check recipes you craeted, another plugin has created, or vanilla Minecraft recipes.",
-        "When checking recipes that are not your own, make sure to include the namespaced. ex: \"minecraft:diamond_sword\", \"someplugin:some_recipe\"",
-        "This condition is only available on Minecraft 1.16+"})
+        "When checking recipes that are not your own, make sure to include the namespaced. ex: \"minecraft:diamond_sword\", \"someplugin:some_recipe\""})
 @Examples({"set {_players::*} to players where [input hasn't discovered recipe with id \"minecraft:furnace\"]",
         "if player has discovered recipe with id \"someplugin:advanced_sword\":",
         "if player hasn't discovered recipe with id \"harvest:my_first_recipe\":"})
