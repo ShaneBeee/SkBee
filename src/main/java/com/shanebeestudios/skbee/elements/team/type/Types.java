@@ -9,6 +9,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
@@ -84,7 +85,7 @@ public class Types {
                     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
                         if (mode == ChangeMode.DELETE) return CollectionUtils.array();
                         else if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
-                            return CollectionUtils.array(Player[].class, Entity[].class, String[].class);
+                            return CollectionUtils.array(OfflinePlayer[].class, Player[].class, Entity[].class, String[].class);
                         }
                         return null;
                     }
@@ -99,7 +100,7 @@ public class Types {
                         } else {
                             List<String> names = new ArrayList<>();
                             for (Object object : delta) {
-                                if (object instanceof Player player) {
+                                if (object instanceof OfflinePlayer player) {
                                     names.add(player.getName());
                                 } else if (object instanceof Entity entity) {
                                     names.add(entity.getUniqueId().toString());
