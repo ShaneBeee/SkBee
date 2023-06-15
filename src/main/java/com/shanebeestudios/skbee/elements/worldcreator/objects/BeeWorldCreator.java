@@ -211,9 +211,9 @@ public class BeeWorldCreator {
     }
 
     private CompletableFuture<WorldCreator> cloneWorld() {
-        File worldSaveLocation = Bukkit.getWorldContainer();
-        File worldFile = this.world.getWorldFolder();
-        String worldName = this.worldName;
+        File worldContainer = Bukkit.getWorldContainer();
+        File worldDirectorToClone = this.world.getWorldFolder();
+        String cloneName = this.worldName;
 
         // Saving causes a bit of lag, we may want to disable this
         if (isSaveClone()) this.world.save();
@@ -221,19 +221,18 @@ public class BeeWorldCreator {
         // Let's clone files on another thread
         CompletableFuture<WorldCreator> worldCompletableFuture = new CompletableFuture<>();
         Bukkit.getScheduler().runTaskAsynchronously(SkBee.getPlugin(), () -> {
-            File newWorldFile = new File(worldSaveLocation, worldName);
-            String newWorldFileName = newWorldFile.getName();
-            if (worldFile.exists()) {
+            File cloneDirectory = new File(worldContainer, cloneName);
+            if (worldDirectorToClone.exists()) {
                 try {
-                    for (File file : Objects.requireNonNull(worldFile.listFiles())) {
+                    for (File file : Objects.requireNonNull(worldDirectorToClone.listFiles())) {
                         String fileName = file.getName();
                         if (file.isDirectory()) {
-                            FileUtils.copyDirectory(file, new File(newWorldFileName, fileName));
+                            FileUtils.copyDirectory(file, new File(cloneDirectory, fileName));
                         } else if (!fileName.contains("session") && !fileName.contains("uid.dat")) {
-                            FileUtils.copyFile(file, new File(newWorldFileName, fileName));
+                            FileUtils.copyFile(file, new File(cloneDirectory, fileName));
                         }
                     }
-                    WorldCreator creator = new WorldCreator(worldName);
+                    WorldCreator creator = new WorldCreator(cloneName);
                     Bukkit.getScheduler().runTaskLater(SkBee.getPlugin(), () -> {
                         // Let's head back to the main thread
                         worldCompletableFuture.complete(creator);

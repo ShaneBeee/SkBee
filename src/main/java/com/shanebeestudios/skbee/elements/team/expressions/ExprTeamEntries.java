@@ -13,6 +13,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.team.type.TeamManager;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -73,7 +74,7 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
                 // TODO Deprecated 2.11.0
                 Skript.warning("You can now add/remove entities/strings to/from teams directly without this expression. " +
                         "ex: 'add player to team named \"a-team\"'");
-                return CollectionUtils.array(Player[].class, Entity[].class, String[].class);
+                return CollectionUtils.array(OfflinePlayer[].class, Player[].class, Entity[].class, String[].class);
             }
             case DELETE -> {
                 return CollectionUtils.array();
@@ -95,7 +96,7 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
             }
             for (Object object : delta) {
                 String entry = null;
-                if (object instanceof Player player) {
+                if (object instanceof OfflinePlayer player) {
                     entry = player.getName();
                 } else if (object instanceof Entity entity) {
                     entry = entity.getUniqueId().toString();

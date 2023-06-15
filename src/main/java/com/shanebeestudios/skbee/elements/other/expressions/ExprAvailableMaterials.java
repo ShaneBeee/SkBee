@@ -14,10 +14,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import com.shanebeestudios.skbee.api.util.Util;
-import org.bukkit.GameRule;
-import org.bukkit.Material;
-import org.bukkit.Particle;
-import org.bukkit.Sound;
+import com.shanebeestudios.skbee.elements.other.type.Types;
+import org.bukkit.*;
 import org.bukkit.block.Biome;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
@@ -25,6 +23,8 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Minecart;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.meta.trim.TrimMaterial;
+import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.potion.PotionEffectType;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -37,7 +37,8 @@ import java.util.stream.Collectors;
 @Name("Available Objects")
 @Description({"Get a list of all available materials (will return as an itemtype, but it's a mix of blocks and items),",
         "itemtypes, block types (will return as an item type, but only materials which can be placed as a block), block datas,",
-        "entity types, enchantments, potion effect types, biomes, game rules, particles (SkBee particles) and sounds (as strings)."})
+        "entity types, enchantments, potion effect types, biomes, game rules, particles (SkBee particles), sounds (as strings),",
+        "trim materials, and trim patterns."})
 @Examples({"give player random element of all available itemtypes",
         "set {_blocks::*} to all available blocktypes",
         "set target block to random element of all available blockdatas"})
@@ -56,6 +57,9 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
     private static final List<GameRule<?>> GAME_RULES = new ArrayList<>();
     private static final List<Particle> PARTICLES = new ArrayList<>();
     private static final List<String> SOUNDS = new ArrayList<>();
+    // Using object incase running older server ... change later
+    private static final List<Object> TRIM_MATERIALS = new ArrayList<>();
+    private static final List<Object> TRIM_PATTERNS = new ArrayList<>();
 
     static {
         List<Material> materials = Arrays.asList(Material.values());
@@ -122,18 +126,37 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         sounds = sounds.stream().sorted(Comparator.comparing(sound -> sound.getKey().getKey())).collect(Collectors.toList());
         sounds.forEach(sound -> SOUNDS.add(sound.getKey().getKey()));
 
+        if (Types.HAS_ARMOR_TRIM) {
+            List<TrimMaterial> trimMaterials = new ArrayList<>();
+            Registry.TRIM_MATERIAL.forEach(trimMaterials::add);
+            trimMaterials = trimMaterials.stream().sorted(Comparator.comparing(trimMaterial -> trimMaterial.getKey().getKey())).collect(Collectors.toList());
+            TRIM_MATERIALS.addAll(trimMaterials);
+
+            List<TrimPattern> trimPatterns = new ArrayList<>();
+            Registry.TRIM_PATTERN.forEach(trimPatterns::add);
+            trimPatterns = trimPatterns.stream().sorted(Comparator.comparing(trimPattern -> trimPattern.getKey().getKey())).collect(Collectors.toList());
+            TRIM_PATTERNS.addAll(trimPatterns);
+        }
+
+        List<String> patterns = new ArrayList<>();
+        patterns.add("[all] available materials");
+        patterns.add("[all] available item[ ]types");
+        patterns.add("[all] available block[ ]types");
+        patterns.add("[all] available block[ ]datas");
+        patterns.add("[all] available entity[ ]types");
+        patterns.add("[all] available enchantments");
+        patterns.add("[all] available potion effect types");
+        patterns.add("[all] available biomes");
+        patterns.add("[all] available game[ ]rules");
+        patterns.add("[all] available particles");
+        patterns.add("[all] available sounds");
+        if (Types.HAS_ARMOR_TRIM) {
+            patterns.add("[all] available trim materials");
+            patterns.add("[all] available trim patterns");
+        }
+
         Skript.registerExpression(ExprAvailableMaterials.class, Object.class, ExpressionType.SIMPLE,
-                "[all] available materials",
-                "[all] available item[ ]types",
-                "[all] available block[ ]types",
-                "[all] available block[ ]datas",
-                "[all] available entity[ ]types",
-                "[all] available enchantments",
-                "[all] available potion effect types",
-                "[all] available biomes",
-                "[all] available game[ ]rules",
-                "[all] available particles",
-                "[all] available sounds");
+                patterns.toArray(new String[0]));
     }
 
     private int pattern;
@@ -144,6 +167,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         return true;
     }
 
+    @SuppressWarnings("SuspiciousToArrayCall")
     @Override
     protected @Nullable Object[] get(Event e) {
         return switch (pattern) {
@@ -157,6 +181,8 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
             case 8 -> GAME_RULES.toArray(new GameRule[0]);
             case 9 -> PARTICLES.toArray(new Particle[0]);
             case 10 -> SOUNDS.toArray(new String[0]);
+            case 11 -> TRIM_MATERIALS.toArray(new TrimMaterial[0]);
+            case 12 -> TRIM_PATTERNS.toArray(new TrimPattern[0]);
             default -> MATERIALS.toArray(new ItemType[0]);
         };
     }
@@ -177,6 +203,8 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
             case 8 -> GameRule.class;
             case 9 -> Particle.class;
             case 10 -> String.class;
+            case 11 -> TrimMaterial.class;
+            case 12 -> TrimPattern.class;
             default -> ItemType.class;
         };
     }
@@ -194,6 +222,8 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
             case 8 -> "game rules";
             case 9 -> "particles";
             case 10 -> "sounds";
+            case 11 -> "trim materials";
+            case 12 -> "trim patterns";
             default -> "materials";
         };
         return "all available " + type;
