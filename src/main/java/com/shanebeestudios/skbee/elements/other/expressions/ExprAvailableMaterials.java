@@ -15,11 +15,13 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.other.type.Types;
+import org.bukkit.GameEvent;
 import org.bukkit.GameRule;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Registry;
+import org.bukkit.Statistic;
 import org.bukkit.block.Biome;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
@@ -42,7 +44,7 @@ import java.util.stream.Collectors;
 @Description({"Get a list of all available materials (will return as an itemtype, but it's a mix of blocks and items),",
         "itemtypes, block types (will return as an item type, but only materials which can be placed as a block), block datas,",
         "entity types, enchantments, potion effect types, biomes, game rules, particles (SkBee particles), sounds (as string),",
-        "trim materials, and trim patterns."})
+        "game events, statistics, trim materials, and trim patterns."})
 @Examples({"give player random element of all available itemtypes",
         "set {_blocks::*} to all available blocktypes",
         "set target block to random element of all available blockdatas"})
@@ -120,6 +122,8 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         Registration.registerRegistry("enchantments", Enchantment.class, Registry.ENCHANTMENT);
         Registration.registerRegistry("potion effect types", PotionEffectType.class, Registry.POTION_EFFECT_TYPE);
         Registration.registerRegistry("biomes", Biome.class, Registry.BIOME);
+        Registration.registerRegistry("statistics", Statistic.class, Registry.STATISTIC);
+        Registration.registerRegistry("game events", GameEvent.class, Registry.GAME_EVENT);
 
         if (Types.HAS_ARMOR_TRIM) {
             Registration.registerRegistry("trim materials", TrimMaterial.class, Registry.TRIM_MATERIAL);
