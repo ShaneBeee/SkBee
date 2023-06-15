@@ -137,17 +137,17 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
                 Registration.getPatterns());
     }
 
-    private int pattern;
+    private Registration registration;
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.pattern = matchedPattern;
+        this.registration = Registration.REGISTRATIONS.get(matchedPattern);
         return true;
     }
 
     @Override
     protected @Nullable Object[] get(Event event) {
-        return Registration.REGISTRATIONS.get(this.pattern).getItems();
+        return this.registration.getItems();
     }
 
     @Override
@@ -157,12 +157,12 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
     @Override
     public Class<?> getReturnType() {
-        return Registration.REGISTRATIONS.get(this.pattern).type;
+        return this.registration.type;
     }
 
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return Registration.REGISTRATIONS.get(this.pattern).getToString();
+        return this.registration.getToString();
     }
 
     @SuppressWarnings("SameParameterValue")
