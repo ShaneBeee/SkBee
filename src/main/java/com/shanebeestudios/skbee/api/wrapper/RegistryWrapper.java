@@ -67,8 +67,7 @@ public class RegistryWrapper<T extends Keyed> {
 
             @Override
             public @NotNull String toString(T o, int flags) {
-                String className = o.getClass().getSimpleName().replace("Craft", "");
-                return className + ":" + RegistryWrapper.this.toString(o);
+                return RegistryWrapper.this.toString(o);
             }
 
             @Override
