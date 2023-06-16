@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the material and pattern of an armor trim.",
         "These cannot be changed, you'd have to create a new armor trim."})
 @Examples("set {_pattern} to trim pattern of armor trim of player's tool")
-@Since("INSERT VERSION")
+@Since("2.13.0")
 public class ExprArmorTrimMatPat extends SimplePropertyExpression<ArmorTrim, Object> {
 
     static {

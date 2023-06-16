@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
         "Currently this only works for ArmorStands and requies a PaperMC server."})
 @Examples({"spawn an armor stand at player:",
         "\tset ticking state of entity to false"})
-@Since("INSERT VERSION")
+@Since("2.13.0")
 public class ExprTickingState extends SimplePropertyExpression<Entity, Boolean> {
 
     private static final boolean ARMOR_STAND_HAS_TICKING = Skript.methodExists(ArmorStand.class, "canTick");

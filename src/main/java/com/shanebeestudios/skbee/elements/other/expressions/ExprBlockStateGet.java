@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
         "set event-block to air",
         "wait 1 minute",
         "force update {_state} without physics updates"})
-@Since("INSERT VERSION")
+@Since("2.13.0")
 public class ExprBlockStateGet extends SimplePropertyExpression<Block, BlockStateWrapper> {
 
     static {

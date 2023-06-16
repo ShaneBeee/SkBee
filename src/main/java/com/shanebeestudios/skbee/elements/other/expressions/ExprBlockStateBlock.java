@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("BlockState - Block")
 @Description("Gets the block represented by this block state.")
 @Examples("set {_block} to block of {_blockstate}")
-@Since("INSERT VERSION")
+@Since("2.13.0")
 public class ExprBlockStateBlock extends SimplePropertyExpression<BlockStateWrapper, Block> {
 
     static {

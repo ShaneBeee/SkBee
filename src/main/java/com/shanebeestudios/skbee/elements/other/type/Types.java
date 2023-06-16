@@ -198,7 +198,7 @@ public class Types {
                     .name("ArmorTrim")
                     .description("Represents an armor trim that may be applied to an item.",
                             "Requires MC 1.19.4+")
-                    .since("INSERT VERSION")
+                    .since("2.13.0")
                     .parser(new Parser<>() {
 
                         @Override
@@ -225,7 +225,7 @@ public class Types {
                     .name("ArmorTrim - TrimMaterial")
                     .description("Represents a material that may be used in an ArmorTrim.")
                     .usage(TRIM_REGISTRY.getNames())
-                    .since("INSERT VERSION")
+                    .since("2.13.0")
                     .parser(TRIM_REGISTRY.getParser()));
 
             RegistryWrapper<TrimPattern> TRIM_PATTERN_REGISTER = new RegistryWrapper<>(Registry.TRIM_PATTERN, "", "pattern");
@@ -234,7 +234,7 @@ public class Types {
                     .name("ArmorTrim - TrimPattern")
                     .description("Represents a pattern that may be used in an ArmorTrim.")
                     .usage(TRIM_PATTERN_REGISTER.getNames())
-                    .since("INSERT VERSION")
+                    .since("2.13.0")
                     .parser(TRIM_PATTERN_REGISTER.getParser()));
         }
     }
