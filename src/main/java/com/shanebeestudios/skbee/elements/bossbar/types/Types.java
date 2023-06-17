@@ -9,7 +9,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -136,7 +136,7 @@ public class Types {
         // TODO (dec 11/2022)
         // Remove in future
         if (Classes.getExactClassInfo(BarColor.class) == null && Classes.getClassInfoNoError("bossbarcolor") == null) {
-            EnumUtils<BarColor> BAR_COLOR_ENUM = new EnumUtils<>(BarColor.class, "bar", "");
+            EnumWrapper<BarColor> BAR_COLOR_ENUM = new EnumWrapper<>(BarColor.class, "bar", "");
             Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
                     .user("boss ?bar ?colors?")
                     .name("BossBar Color")
@@ -176,7 +176,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(BarStyle.class) == null && Classes.getClassInfoNoError("bossbarstyle") == null) {
-            EnumUtils<BarStyle> BAR_STYLE_ENUM = new EnumUtils<>(BarStyle.class);
+            EnumWrapper<BarStyle> BAR_STYLE_ENUM = new EnumWrapper<>(BarStyle.class);
             // Prevent conflict with Skript's `is solid` condition
             BAR_STYLE_ENUM.replace("solid", "solid bar");
             Classes.registerClass(new ClassInfo<>(BarStyle.class, "bossbarstyle")
@@ -193,7 +193,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(BarFlag.class) == null && Classes.getClassInfoNoError("bossbarflag") == null) {
-            EnumUtils<BarFlag> BAR_FLAG_ENUM = new EnumUtils<>(BarFlag.class);
+            EnumWrapper<BarFlag> BAR_FLAG_ENUM = new EnumWrapper<>(BarFlag.class);
             Classes.registerClass(new ClassInfo<>(BarFlag.class, "bossbarflag")
                     .user("boss ?bar ?flags?")
                     .name("BossBar Flag")

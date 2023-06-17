@@ -6,7 +6,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Villager;
@@ -25,7 +25,7 @@ public class Types {
         // VILLAGER PROFESSION
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Villager.Profession.class) == null) {
-            EnumUtils<Villager.Profession> VILLAGER_PROFESSION_ENUM = new EnumUtils<>(Villager.Profession.class, "", "profession");
+            EnumWrapper<Villager.Profession> VILLAGER_PROFESSION_ENUM = new EnumWrapper<>(Villager.Profession.class, "", "profession");
             Classes.registerClass(new ClassInfo<>(Villager.Profession.class, "profession")
                     .user("professions?")
                     .name("Villager Profession")
@@ -42,7 +42,7 @@ public class Types {
         // VILLAGER TYPE
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Villager.Type.class) == null) {
-            EnumUtils<Villager.Type> VILLAGER_TYPE_ENUM = new EnumUtils<>(Villager.Type.class, "", "villager");
+            EnumWrapper<Villager.Type> VILLAGER_TYPE_ENUM = new EnumWrapper<>(Villager.Type.class, "", "villager");
             Classes.registerClass(new ClassInfo<>(Villager.Type.class, "villagertype")
                     .user("villager ?types?")
                     .name("Villager Type")

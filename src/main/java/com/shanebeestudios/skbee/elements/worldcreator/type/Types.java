@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.worldcreator.type;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.registrations.Classes;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.World.Environment;
@@ -19,7 +19,7 @@ public class Types {
                 .since("1.8.0"));
 
         if (Classes.getExactClassInfo(Environment.class) == null) {
-            EnumUtils<Environment> environments = new EnumUtils<>(Environment.class);
+            EnumWrapper<Environment> environments = new EnumWrapper<>(Environment.class);
             Classes.registerClass(new ClassInfo<>(Environment.class, "environment")
                     .user("environments?")
                     .name("Environment")
@@ -34,7 +34,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(WorldType.class) == null) {
-            EnumUtils<WorldType> worldTypes = new EnumUtils<>(WorldType.class);
+            EnumWrapper<WorldType> worldTypes = new EnumWrapper<>(WorldType.class);
             Classes.registerClass(new ClassInfo<>(WorldType.class, "worldtype")
                     .user("world ?types?")
                     .name("World Type")

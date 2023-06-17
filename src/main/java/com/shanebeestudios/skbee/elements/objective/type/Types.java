@@ -7,7 +7,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
@@ -88,7 +88,7 @@ public class Types {
                     }));
         }
 
-        EnumUtils<RenderType> RENDER_ENUM = new EnumUtils<>(RenderType.class);
+        EnumWrapper<RenderType> RENDER_ENUM = new EnumWrapper<>(RenderType.class);
         Classes.registerClass(new ClassInfo<>(RenderType.class, "rendertype")
                 .user("render ?types?")
                 .name("Scoreboard - Objective Render Type")
@@ -97,7 +97,7 @@ public class Types {
                 .since("2.6.0")
                 .parser(RENDER_ENUM.getParser()));
 
-        EnumUtils<DisplaySlot> DISPLAY_ENUM = new EnumUtils<>(DisplaySlot.class);
+        EnumWrapper<DisplaySlot> DISPLAY_ENUM = new EnumWrapper<>(DisplaySlot.class);
         Classes.registerClass(new ClassInfo<>(DisplaySlot.class, "displayslot")
                 .user("display ?slots?")
                 .name("Scoreboard - Objective Display Slot")

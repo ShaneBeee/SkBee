@@ -7,7 +7,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
@@ -92,7 +92,7 @@ public class Types {
 
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Spellcaster.Spell.class) == null) {
-            EnumUtils<Spellcaster.Spell> SPELL_ENUM = new EnumUtils<>(Spellcaster.Spell.class);
+            EnumWrapper<Spellcaster.Spell> SPELL_ENUM = new EnumWrapper<>(Spellcaster.Spell.class);
             Classes.registerClass(new ClassInfo<>(Spellcaster.Spell.class, "spell")
                     .user("spells?")
                     .name("Spellcaster Spell")
@@ -108,7 +108,7 @@ public class Types {
         // Only register if no other addons have registered this class
         // EntityPotionEffectEvent.Cause
         if (Classes.getExactClassInfo(Cause.class) == null) {
-            EnumUtils<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumUtils<>(Cause.class, "", "effect");
+            EnumWrapper<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumWrapper<>(Cause.class, "", "effect");
             Classes.registerClass(new ClassInfo<>(Cause.class, "potioneffectcause")
                     .user("potion ?effect ?causes?")
                     .name("Potion Effect Cause")
@@ -122,7 +122,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(TransformReason.class) == null) {
-            EnumUtils<TransformReason> TRANSOFORM_REASON = new EnumUtils<>(TransformReason.class);
+            EnumWrapper<TransformReason> TRANSOFORM_REASON = new EnumWrapper<>(TransformReason.class);
             Classes.registerClass(new ClassInfo<>(TransformReason.class, "transformreason")
                     .user("transform ?reasons?")
                     .name("Transform Reason")
@@ -134,7 +134,7 @@ public class Types {
 
         if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
             if (Classes.getExactClassInfo(QuitReason.class) == null) {
-                EnumUtils<QuitReason> QUIT_REASON = new EnumUtils<>(QuitReason.class);
+                EnumWrapper<QuitReason> QUIT_REASON = new EnumWrapper<>(QuitReason.class);
                 Classes.registerClass(new ClassInfo<>(QuitReason.class, "quitreason")
                         .user("quit ?reasons?")
                         .name("Quit Reason")
@@ -156,7 +156,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(BlockFace.class) == null) {
-            EnumUtils<BlockFace> BLOCK_FACE_ENUM = new EnumUtils<>(BlockFace.class);
+            EnumWrapper<BlockFace> BLOCK_FACE_ENUM = new EnumWrapper<>(BlockFace.class);
             Classes.registerClass(new ClassInfo<>(BlockFace.class, "blockface")
                     .user("blockfaces?")
                     .name("BlockFace")
@@ -168,7 +168,7 @@ public class Types {
         }
 
         if (Skript.methodExists(PlayerRespawnEvent.class, "getRespawnReason")) {
-            EnumUtils<RespawnReason> RESPAWN_REASON_ENUM = new EnumUtils<>(RespawnReason.class, "", "respawn");
+            EnumWrapper<RespawnReason> RESPAWN_REASON_ENUM = new EnumWrapper<>(RespawnReason.class, "", "respawn");
             Classes.registerClass(new ClassInfo<>(RespawnReason.class, "respawnreason")
                     .user("respawn ?reasons?")
                     .name("Respawn Reason")

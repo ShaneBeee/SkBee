@@ -5,7 +5,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.api.structure.StructureBee;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
 
@@ -39,7 +39,7 @@ public class Types {
                     }
                 }));
 
-        EnumUtils<Mirror> MIRROR_ENUM = new EnumUtils<>(Mirror.class);
+        EnumWrapper<Mirror> MIRROR_ENUM = new EnumWrapper<>(Mirror.class);
         Classes.registerClass(new ClassInfo<>(Mirror.class, "mirror")
                 .user("mirrors?")
                 .name("Structure - Mirror")
@@ -49,7 +49,7 @@ public class Types {
                 .since("1.12.0")
                 .parser(MIRROR_ENUM.getParser()));
 
-        EnumUtils<StructureRotation> ROTATION_ENUM = new EnumUtils<>(StructureRotation.class);
+        EnumWrapper<StructureRotation> ROTATION_ENUM = new EnumWrapper<>(StructureRotation.class);
         Classes.registerClass(new ClassInfo<>(StructureRotation.class, "structurerotation")
                 .user("structure ?rotations?")
                 .name("Structure - Rotation")

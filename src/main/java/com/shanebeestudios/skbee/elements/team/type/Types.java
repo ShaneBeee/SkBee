@@ -8,7 +8,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -122,7 +122,7 @@ public class Types {
                 }));
 
         if (Classes.getExactClassInfo(Team.Option.class) == null) {
-            EnumUtils<Team.Option> TEAM_OPTIONS = new EnumUtils<>(Team.Option.class);
+            EnumWrapper<Team.Option> TEAM_OPTIONS = new EnumWrapper<>(Team.Option.class);
             Classes.registerClass(new ClassInfo<>(Team.Option.class, "teamoption")
                     .user("team ?options?")
                     .name("Team - Option")
@@ -133,7 +133,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(Team.OptionStatus.class) == null) {
-            EnumUtils<Team.OptionStatus> TEAM_OPTION_STATUS = new EnumUtils<>(Team.OptionStatus.class);
+            EnumWrapper<Team.OptionStatus> TEAM_OPTION_STATUS = new EnumWrapper<>(Team.OptionStatus.class);
             Classes.registerClass(new ClassInfo<>(Team.OptionStatus.class, "teamoptionstatus")
                     .user("team ?option ?status")
                     .name("Team - Option Status")

@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.util;
+package com.shanebeestudios.skbee.api.wrapper;
 
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
@@ -13,19 +13,19 @@ import java.util.List;
 import java.util.Locale;
 
 /**
- * Utility class for managing enums.
+ * Wrapper class for wrapping Enums to be used in Skript
  * <br>
- * This class is copied from Skript, with the language node stripped out
+ * This class is copied from Skript, with the language node stripped out and other changes
  * <a href="https://github.com/SkriptDev/Skript/blob/master/src/main/java/ch/njol/skript/util/EnumUtils.java">EnumUtils</a>
  *
- * @author Peter Güttinger
+ * @author Peter Güttinger (original)
  */
-public final class EnumUtils<E extends Enum<E>> {
+public final class EnumWrapper<E extends Enum<E>> {
 
     private final String[] names;
     private final HashMap<String, E> parseMap = new HashMap<>();
 
-    public EnumUtils(@NotNull Class<E> c) {
+    public EnumWrapper(@NotNull Class<E> c) {
         assert c.isEnum();
         this.names = new String[c.getEnumConstants().length];
 
@@ -36,7 +36,7 @@ public final class EnumUtils<E extends Enum<E>> {
         }
     }
 
-    public EnumUtils(@NotNull Class<E> c, @Nullable String prefix, @Nullable String suffix) {
+    public EnumWrapper(@NotNull Class<E> c, @Nullable String prefix, @Nullable String suffix) {
         assert c.isEnum();
         this.names = new String[c.getEnumConstants().length];
 
@@ -96,21 +96,21 @@ public final class EnumUtils<E extends Enum<E>> {
 
     static class EnumParser<T extends Enum<T>> extends Parser<T> {
 
-        private final EnumUtils<T> enumUtils;
+        private final EnumWrapper<T> enumWrapper;
 
-        public EnumParser(EnumUtils<T> enumUtils) {
-            this.enumUtils = enumUtils;
+        public EnumParser(EnumWrapper<T> enumWrapper) {
+            this.enumWrapper = enumWrapper;
         }
 
         @Nullable
         @Override
         public T parse(@NotNull String s, @NotNull ParseContext context) {
-            return enumUtils.parse(s);
+            return enumWrapper.parse(s);
         }
 
         @Override
         public @NotNull String toString(T o, int flags) {
-            return enumUtils.toString(o, flags);
+            return enumWrapper.toString(o, flags);
         }
 
         @Override

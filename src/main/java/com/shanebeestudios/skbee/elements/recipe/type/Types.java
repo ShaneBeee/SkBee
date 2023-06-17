@@ -7,8 +7,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
-import org.bukkit.Tag;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.inventory.RecipeChoice;
 import org.jetbrains.annotations.NotNull;
 
@@ -50,7 +49,7 @@ public class Types {
                     }
                 }));
 
-        EnumUtils<RecipeType> RECIPE_TYPE_ENUM = new EnumUtils<>(RecipeType.class);
+        EnumWrapper<RecipeType> RECIPE_TYPE_ENUM = new EnumWrapper<>(RecipeType.class);
         Classes.registerClass(new ClassInfo<>(RecipeType.class, "recipetype")
                 .user("recipe ?types?")
                 .name("Recipe Type")
