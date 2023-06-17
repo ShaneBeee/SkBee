@@ -16,16 +16,19 @@ import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
 
+/**
+ * Utility methods for {@link Recipe recipes}
+ */
 public class RecipeUtil {
 
     /**
      * Get a NamespacedKey from string
      * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
      *
-     * @deprecated Planning to remove all string based ids for recipes in the future, please use Util#getNamespacedkey
-     * more information on this in the future when it's put into action
      * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
+     * @deprecated Planning to remove all string based ids for recipes in the future, please use {@link Util#getNamespacedKey(String, boolean)}
+     * more information on this in the future when it's put into action
      */
     @Deprecated()
     public static NamespacedKey getKey(String key) {
@@ -82,6 +85,12 @@ public class RecipeUtil {
 
     }
 
+    /**
+     * Log a cooking recipe to console
+     * Mainly used for debugging purposes
+     *
+     * @param recipe Recipe to log
+     */
     public static void logCookingRecipe(CookingRecipe<?> recipe) {
         log("&aRegistered new cooking recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());

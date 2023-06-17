@@ -55,10 +55,21 @@ public class ComponentWrapper {
     // STATIC
     private static final boolean HAS_SIDES = Skript.classExists("org.bukkit.block.sign.SignSide");
 
+    /**
+     * Create an empty component
+     *
+     * @return Empty component wrapper
+     */
     public static ComponentWrapper empty() {
         return new ComponentWrapper(Component.empty());
     }
 
+    /**
+     * Create a component from text
+     *
+     * @param text Text to add to component
+     * @return Component from text
+     */
     public static ComponentWrapper fromText(String text) {
         Component component;
         if (text.contains("§")) {
@@ -71,6 +82,12 @@ public class ComponentWrapper {
         return new ComponentWrapper(component);
     }
 
+    /**
+     * Create a {@link MiniMessage mini message} from text
+     *
+     * @param text Mini message formatted text
+     * @return Component from text
+     */
     public static ComponentWrapper fromMiniMessage(String text) {
         String string = text;
         // MiniMessage doesn't like these
@@ -85,14 +102,33 @@ public class ComponentWrapper {
         return new ComponentWrapper(MiniMessage.miniMessage().deserialize(string));
     }
 
+    /**
+     * Create a component from a Minecraft keybind
+     *
+     * @param keybind Keybind to create component from
+     * @return Component from keybind
+     */
     public static ComponentWrapper fromKeybind(String keybind) {
         return new ComponentWrapper(Component.keybind(keybind));
     }
 
+    /**
+     * Create a component from a Minecraft translatable string
+     *
+     * @param translate String to translate
+     * @return Component from translation
+     */
     public static ComponentWrapper fromTranslate(String translate) {
         return new ComponentWrapper(Component.translatable(translate));
     }
 
+    /**
+     * Create a component from a Minecraft translatable string
+     *
+     * @param translate String to translate
+     * @param objects   Objects to add into translation
+     * @return Component from translation
+     */
     public static ComponentWrapper fromTranslate(String translate, Object... objects) {
         List<Component> comps = new ArrayList<>();
         for (Object object : objects) {
@@ -132,14 +168,33 @@ public class ComponentWrapper {
         }
     }
 
+    /**
+     * Wrap a component into a component wrapper
+     *
+     * @param component Component to wrap
+     * @return Wrapped component
+     */
     public static ComponentWrapper fromComponent(Component component) {
         return new ComponentWrapper(component);
     }
 
+    /**
+     * Merge components into new component
+     *
+     * @param components Components to merge
+     * @return Merged components
+     */
     public static ComponentWrapper fromComponents(@Nullable ComponentWrapper... components) {
         return fromComponents(components, null);
     }
 
+    /**
+     * Merge components into new component
+     *
+     * @param components Components to merge
+     * @param delimiter  Delimiter between components
+     * @return Merged components
+     */
     public static ComponentWrapper fromComponents(@Nullable ComponentWrapper[] components, @Nullable String delimiter) {
         Component component = Component.empty();
         if (components != null && components.length > 0) {
@@ -165,34 +220,74 @@ public class ComponentWrapper {
         this.component = component;
     }
 
+    /**
+     * Get base component from this wrapper
+     *
+     * @return Base component
+     */
     public Component getComponent() {
         return component;
     }
 
+    /**
+     * Append onto the end of this component
+     *
+     * @param componentWrapper Component wrapper to append
+     */
     public void append(ComponentWrapper componentWrapper) {
         this.component = this.component.append(componentWrapper.component);
     }
 
+    /**
+     * Set the hover event of this component
+     *
+     * @param hoverEvent HoverEvent to add to this component
+     */
     public void setHoverEvent(HoverEvent<?> hoverEvent) {
         this.component = this.component.hoverEvent(hoverEvent);
     }
 
+    /**
+     * Get the hover event of this component
+     *
+     * @return Hover event of this component
+     */
     public HoverEvent<?> getHoverEvent() {
         return this.component.hoverEvent();
     }
 
+    /**
+     * Set the click event of this component
+     *
+     * @param clickEvent Click event to set
+     */
     public void setClickEvent(ClickEvent clickEvent) {
         this.component = this.component.clickEvent(clickEvent);
     }
 
+    /**
+     * Get the click event of this component
+     *
+     * @return Click event of this component
+     */
     public ClickEvent getClickEvent() {
         return this.component.clickEvent();
     }
 
+    /**
+     * Set the color of this component
+     *
+     * @param color Color to set
+     */
     public void setColor(Color color) {
         this.component = this.component.color(ChatUtil.getTextColorFromColor(color));
     }
 
+    /**
+     * Get the color of this component
+     *
+     * @return Color of this component
+     */
     public Color getColor() {
         TextColor textColor = this.component.color();
         if (textColor == null) {
@@ -266,20 +361,43 @@ public class ComponentWrapper {
         return this.component.insertion();
     }
 
+    /**
+     * Send a message to a player
+     *
+     * @param sender   Who sent the message (can be blocked on client)
+     * @param receiver Who is to receive the message
+     */
     @SuppressWarnings("deprecation") // Maybe attend to this later?!?!
     public void sendMessage(@Nullable Player sender, Audience receiver) {
         Identity identity = sender != null ? sender.identity() : Identity.nil();
         receiver.sendMessage(identity, this.component);
     }
 
+    /**
+     * Send an action bar
+     *
+     * @param receiver Who to receive
+     */
     public void sendActionBar(CommandSender receiver) {
         receiver.sendActionBar(this.component);
     }
 
+    /**
+     * Broadcast to all players and console
+     *
+     * @param sender Who sent the broadcast (can be blocked on client)
+     */
     public void broadcast(@Nullable Player sender) {
         sendMessage(sender, Bukkit.getServer());
     }
 
+    /**
+     * Set lines of a sign
+     *
+     * @param block Sign to change
+     * @param line  Line to change
+     * @param front Whether front or back
+     */
     @SuppressWarnings("deprecation") // Remove once we drop 1.19.x support
     public void setBlockLine(Block block, int line, boolean front) {
         if (block.getState() instanceof Sign sign) {
@@ -292,6 +410,14 @@ public class ComponentWrapper {
         }
     }
 
+    /**
+     * Get a component from a sign
+     *
+     * @param block Sign to get lines from
+     * @param line  Line to get
+     * @param front Whether front or back of sign
+     * @return Component from sign lines
+     */
     @SuppressWarnings("deprecation") // Remove once we drop 1.19.x support
     @Nullable
     public static ComponentWrapper getSignLine(Block block, int line, boolean front) {
@@ -307,19 +433,34 @@ public class ComponentWrapper {
         return null;
     }
 
-    public void setEntityName(Entity entity, boolean alwaysOn) {
+    /**
+     * Set the name of an entity
+     *
+     * @param entity        Entity to change name
+     * @param alwaysVisible Whether or not always visible
+     */
+    public void setEntityName(Entity entity, boolean alwaysVisible) {
         entity.customName(this.component);
-        if (alwaysOn) {
-            entity.setCustomNameVisible(true);
-        }
+        entity.setCustomNameVisible(alwaysVisible);
     }
 
+    /**
+     * Set the name of an item
+     *
+     * @param itemType Item to change name
+     */
     public void setItemName(ItemType itemType) {
         ItemMeta itemMeta = itemType.getItemMeta();
         itemMeta.displayName(this.component);
         itemType.setItemMeta(itemMeta);
     }
 
+    /**
+     * Set the name of the inventory
+     * <p>NOTE: This is not permanent, this will just open a new inventory with the new name</p>
+     *
+     * @param inventory Inventory to change name
+     */
     public void setInventoryName(Inventory inventory) {
         if (inventory.getViewers().isEmpty()) return;
 
@@ -345,6 +486,16 @@ public class ComponentWrapper {
         team.suffix(getComponent());
     }
 
+    /**
+     * Send a title to players
+     *
+     * @param players  Players to send to
+     * @param title    Title to send
+     * @param subtitle Subtitle to send
+     * @param stay     How long to stay for
+     * @param fadeIn   How long for fading in
+     * @param fadeOut  How long for fading out
+     */
     public static void sendTitle(Player[] players, @NotNull Object title, @Nullable Object subtitle, long stay, long fadeIn, long fadeOut) {
         Component titleComponent;
         Component subtitleComponent;
@@ -374,6 +525,16 @@ public class ComponentWrapper {
         }
     }
 
+    /**
+     * Send a sign change to a player
+     * <p>This is client side and will not affect the server</p>
+     *
+     * @param player            Player to send sign change to
+     * @param location          Location of the sign
+     * @param componentWrappers Components to show on sign
+     * @param color             Color to show on sign
+     * @param isGlowing         If the sign should glow
+     */
     public static void sendSignChange(Player player, Location location, ComponentWrapper[] componentWrappers, @Nullable DyeColor color, boolean isGlowing) {
         List<Component> components = new ArrayList<>();
         for (int i = 0; i < 4; i++) {

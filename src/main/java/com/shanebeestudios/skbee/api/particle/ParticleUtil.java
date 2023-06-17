@@ -23,6 +23,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Utility class for {@link Particle particles}
+ */
 public class ParticleUtil {
 
     private ParticleUtil() {

@@ -9,6 +9,10 @@ import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataHolder;
 import org.bukkit.persistence.PersistentDataType;
 
+/**
+ * Wrapper for Bukkit {@link PersistentDataContainer PDC}
+ * <p>Contains simplified methods for getting/setting values in PDCs</p>
+ */
 @SuppressWarnings("unused")
 public class PDCWrapper {
 
@@ -16,13 +20,19 @@ public class PDCWrapper {
     private static final PersistentDataType<Integer, Integer> INT = PersistentDataType.INTEGER;
     private static final PersistentDataType<int[], int[]> INT_ARRAY = PersistentDataType.INTEGER_ARRAY;
 
+    /**
+     * Create a wrapper from a persistent data holder
+     *
+     * @param holder Holder of data to wrap
+     * @return New wrapper for PDC of holder
+     */
     public static PDCWrapper wrap(PersistentDataHolder holder) {
         return new PDCWrapper(holder);
     }
 
     private final PersistentDataContainer container;
 
-    public PDCWrapper(PersistentDataHolder holder) {
+    private PDCWrapper(PersistentDataHolder holder) {
         this.container = holder.getPersistentDataContainer();
     }
 
@@ -30,10 +40,22 @@ public class PDCWrapper {
         return new NamespacedKey(SkBee.getPlugin(), key);
     }
 
+    /**
+     * Set a string
+     *
+     * @param key   Key to set
+     * @param value String to be set
+     */
     public void setString(String key, String value) {
         container.set(getKey(key), STRING, value);
     }
 
+    /**
+     * Get a string
+     *
+     * @param key Key of string to get
+     * @return String from PDC
+     */
     public String getString(String key) {
         if (container.has(getKey(key), STRING)) {
             return container.get(getKey(key), STRING);
@@ -41,10 +63,22 @@ public class PDCWrapper {
         return null;
     }
 
+    /**
+     * Set an integer
+     *
+     * @param key   Key of integer to set
+     * @param value Integer to set
+     */
     public void setInt(String key, int value) {
         container.set(getKey(key), INT, value);
     }
 
+    /**
+     * Get an integer
+     *
+     * @param key Key of integer to get
+     * @return Integer from PDC
+     */
     public int getInt(String key) {
         if (container.has(getKey(key), INT)) {
             Integer integer = container.get(getKey(key), INT);
@@ -55,6 +89,12 @@ public class PDCWrapper {
         return 0;
     }
 
+    /**
+     * Set a location
+     *
+     * @param key      Key to set
+     * @param location Location to set
+     */
     public void setLocation(String key, Location location) {
         int[] coords = new int[]{location.getBlockX(), location.getBlockY(), location.getBlockY()};
         String world = location.getWorld().getName();
@@ -62,6 +102,12 @@ public class PDCWrapper {
         container.set(getKey(key + ".world"), STRING, world);
     }
 
+    /**
+     * Get a location
+     *
+     * @param key Key of location
+     * @return Location from PDC
+     */
     public Location getLocation(String key) {
         NamespacedKey worldKey = getKey(key + ".world");
         if (container.has(worldKey, STRING)) {

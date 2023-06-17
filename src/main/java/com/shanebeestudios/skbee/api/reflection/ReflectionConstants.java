@@ -2,6 +2,9 @@ package com.shanebeestudios.skbee.api.reflection;
 
 import ch.njol.skript.Skript;
 
+/**
+ * Constants for different reflection methods
+ */
 public class ReflectionConstants {
 
     // net.minecraft.nbt.TextComponentTagVisitor -> visit(Tag)
