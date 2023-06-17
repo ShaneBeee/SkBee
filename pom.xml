@@ -212,12 +212,20 @@
                 <artifactId>maven-javadoc-plugin</artifactId>
                 <version>3.3.1</version>
                 <configuration>
-                    <excludePackageNames>com.shanebeestudios.skbee.elements.*;com.shanebeestudios.skbee.config;com.shanebeestudios.skbee.metrics;com.shanebeestudios.skbee.api.listener</excludePackageNames>
+                    <excludePackageNames>
+                        com.shanebeestudios.skbee.elements.*;
+                        com.shanebeestudios.skbee.config;
+                        com.shanebeestudios.skbee.metrics;
+                        com.shanebeestudios.skbee.api.listener;
+                        com.shanebeestudios.skbee.api.command;
+                        com.shanebeestudios.skbee
+                    </excludePackageNames>
                     <links>
                         <link>https://hub.spigotmc.org/javadocs/spigot/</link>
                         <link>https://docs.oracle.com/en/java/javase/11/docs/api/</link>
                         <link>https://jd.advntr.dev/api/4.14.0/</link>
                         <link>https://docs.skriptlang.org/javadocs/</link>
+                        <link>https://tr7zw.github.io/Item-NBT-API/v2-api/</link>
                     </links>
                 </configuration>
             </plugin>
