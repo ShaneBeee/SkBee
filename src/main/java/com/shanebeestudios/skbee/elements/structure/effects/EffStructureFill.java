@@ -9,7 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.structure.StructureBee;
+import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -28,14 +28,14 @@ public class EffStructureFill extends Effect {
                 "fill [structure] %structure% (between|within) %location% and %location%");
     }
 
-    private Expression<StructureBee> structure;
+    private Expression<StructureWrapper> structure;
     private Expression<Location> loc1;
     private Expression<Location> loc2;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        structure = (Expression<StructureBee>) exprs[0];
+        structure = (Expression<StructureWrapper>) exprs[0];
         loc1 = (Expression<Location>) exprs[1];
         loc2 = (Expression<Location>) exprs[2];
         return true;
@@ -44,7 +44,7 @@ public class EffStructureFill extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        StructureBee structure = this.structure.getSingle(event);
+        StructureWrapper structure = this.structure.getSingle(event);
         Location loc1 = this.loc1.getSingle(event);
         Location loc2 = this.loc2.getSingle(event);
 

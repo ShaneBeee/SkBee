@@ -9,7 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.structure.StructureBee;
+import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -25,13 +25,13 @@ public class EffStructurePlace extends Effect {
                 "place [structure] %structure% at %location%");
     }
 
-    private Expression<StructureBee> structure;
+    private Expression<StructureWrapper> structure;
     private Expression<Location> location;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        structure = (Expression<StructureBee>) exprs[0];
+        structure = (Expression<StructureWrapper>) exprs[0];
         location = (Expression<Location>) exprs[1];
         return true;
     }
@@ -39,7 +39,7 @@ public class EffStructurePlace extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        StructureBee structure = this.structure.getSingle(event);
+        StructureWrapper structure = this.structure.getSingle(event);
         Location location = this.location.getSingle(event);
 
         if (structure == null || location == null) {

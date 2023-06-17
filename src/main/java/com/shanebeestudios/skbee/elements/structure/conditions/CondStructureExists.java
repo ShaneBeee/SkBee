@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
+import com.shanebeestudios.skbee.api.structure.StructureManager;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -22,10 +22,10 @@ import org.jetbrains.annotations.NotNull;
 @Since("2.3.0")
 public class CondStructureExists extends Condition {
 
-    private static final StructureBeeManager STRUCTURE_BEE_MANAGER;
+    private static final StructureManager STRUCTURE_MANAGER;
 
     static {
-        STRUCTURE_BEE_MANAGER = SkBee.getPlugin().getStructureBeeManager();
+        STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
         Skript.registerCondition(CondStructureExists.class, "structure %string% exists",
                 "structure %string% (doesn't|does not) exist");
     }
@@ -42,7 +42,7 @@ public class CondStructureExists extends Condition {
 
     @Override
     public boolean check(@NotNull Event event) {
-        return this.structure.check(event, STRUCTURE_BEE_MANAGER::structureExists, isNegated());
+        return this.structure.check(event, STRUCTURE_MANAGER::structureExists, isNegated());
     }
 
     @Override

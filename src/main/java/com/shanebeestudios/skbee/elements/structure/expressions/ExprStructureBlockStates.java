@@ -10,8 +10,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
-import com.shanebeestudios.skbee.api.structure.StructureBee;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -27,12 +27,12 @@ public class ExprStructureBlockStates extends SimpleExpression<BlockStateWrapper
                 "blockstates of [structure] %structure%");
     }
 
-    private Expression<StructureBee> structure;
+    private Expression<StructureWrapper> structure;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        structure = (Expression<StructureBee>) exprs[0];
+        structure = (Expression<StructureWrapper>) exprs[0];
         return true;
     }
 
@@ -40,7 +40,7 @@ public class ExprStructureBlockStates extends SimpleExpression<BlockStateWrapper
     @Nullable
     @Override
     protected BlockStateWrapper[] get(Event event) {
-        StructureBee structure = this.structure.getSingle(event);
+        StructureWrapper structure = this.structure.getSingle(event);
         if (structure != null) {
             return structure.getBlockStates().toArray(new BlockStateWrapper[0]);
         }
