@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.api.event;
 
-import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;

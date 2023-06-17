@@ -12,7 +12,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.event.Event;
-import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import com.shanebeestudios.skbee.api.bound.Bound;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Bound - From ID")

@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.bound.objects;
+package com.shanebeestudios.skbee.api.bound;
 
 import com.google.common.base.Preconditions;
 import com.shanebeestudios.skbee.api.util.WorldUtils;
@@ -21,6 +21,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Reprents a bounding box object
+ */
 @SuppressWarnings("unused")
 @SerializableAs("Bound")
 public class Bound implements ConfigurationSerializable {
@@ -50,7 +53,7 @@ public class Bound implements ConfigurationSerializable {
      * @param world       World this bound is in
      * @param id          ID of this bound
      * @param boundingBox BoundingBox of this bound
-     * @param temporary Whether this bound is temporary
+     * @param temporary   Whether this bound is temporary
      */
     public Bound(String world, String id, BoundingBox boundingBox, boolean temporary) {
         this.world = world;
@@ -284,6 +287,10 @@ public class Bound implements ConfigurationSerializable {
         this.boundingBox = BoundingBox.of(block1, block2);
     }
 
+    /**
+     * Make this bound a full bound
+     * <p>Stretch from bottom to top of world</p>
+     */
     public void makeFull() {
         World world = getWorld();
         Vector min = this.boundingBox.getMin().clone();
@@ -323,74 +330,155 @@ public class Bound implements ConfigurationSerializable {
         GREATER, LESSER
     }
 
+    /**
+     * Get the ID of this bound
+     *
+     * @return ID of this bound
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Se the ID of this bound
+     *
+     * @param id New ID
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Get a list of owners of this bound
+     *
+     * @return List of owners of this bound
+     */
     public List<UUID> getOwners() {
         return owners;
     }
 
+    /**
+     * Set the owners of this bound
+     *
+     * @param owners Owners to set
+     */
     public void setOwners(List<UUID> owners) {
         this.owners = owners;
     }
 
+    /**
+     * Clear the owners of this bound
+     */
     public void clearOwners() {
         this.owners.clear();
     }
 
+    /**
+     * Add an owner to this obund
+     *
+     * @param owner Owner to add
+     */
     public void addOwner(UUID owner) {
         if (!this.owners.contains(owner)) {
             this.owners.add(owner);
         }
     }
 
+    /**
+     * Remove an owner from this bound
+     *
+     * @param owner Owner to remove
+     */
     public void removeOwner(UUID owner) {
         this.owners.remove(owner);
     }
 
+    /**
+     * Get a list of members of this bound
+     *
+     * @return List of members
+     */
     public List<UUID> getMembers() {
         return members;
     }
 
+    /**
+     * Set the members of this bound
+     *
+     * @param members Members to set
+     */
     public void setMembers(List<UUID> members) {
         this.members = members;
     }
 
+    /**
+     * Clear the members of this bound
+     */
     public void clearMembers() {
         this.members.clear();
     }
 
+    /**
+     * Add a member to this bound
+     *
+     * @param member Member to add
+     */
     public void addMember(UUID member) {
         if (!this.members.contains(member)) {
             this.members.add(member);
         }
     }
 
+    /**
+     * Remove a member from this bound
+     *
+     * @param member Member to remove
+     */
     public void removeMember(UUID member) {
         this.members.remove(member);
     }
 
+    /**
+     * Set a custom value of this bound
+     *
+     * @param key   Key of value to set
+     * @param value Value to set
+     */
     public void setValue(String key, Object value) {
         this.values.put(key, value);
     }
 
+    /**
+     * Delete a custom value of this bound
+     *
+     * @param key Key of value to delete
+     */
     public void deleteValue(String key) {
         this.values.remove(key);
     }
 
+    /**
+     * Clear all custom values of this bound
+     */
     public void clearValues() {
         this.values = new HashMap<>();
     }
 
+    /**
+     * Get a custom value of this bound
+     *
+     * @param key Key of the value to get
+     * @return Value from bound
+     */
     public Object getValue(String key) {
         return this.values.get(key);
     }
 
+    /**
+     * Get a map of all custom values of this bound
+     *
+     * @return Map of all custom values of this bound
+     */
     public Map<String, Object> getValues() {
         return values;
     }
