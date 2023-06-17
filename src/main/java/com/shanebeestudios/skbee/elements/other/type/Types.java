@@ -30,26 +30,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
+    private static final Map<String,ItemFlag> ITEM_FLAG_MAP = new HashMap<>();
 
     private static String getItemFlagNames() {
-        List<String> flags = new ArrayList<>();
-        for (ItemFlag flag : ItemFlag.values()) {
-            String hide = flag.name().replace("HIDE_", "").toLowerCase(Locale.ROOT);
-            hide += "_flag";
-            flags.add(hide);
-        }
+        List<String> flags = new ArrayList<>(ITEM_FLAG_MAP.keySet());
         Collections.sort(flags);
         return StringUtils.join(flags, ", ");
     }
 
     static {
         if (Classes.getExactClassInfo(ItemFlag.class) == null) {
+            for (ItemFlag itemFlag : ItemFlag.values()) {
+                String name = itemFlag.name().replace("HIDE_", "").toLowerCase(Locale.ROOT) + "_flag";
+                ITEM_FLAG_MAP.put(name, itemFlag);
+            }
             Classes.registerClass(new ClassInfo<>(ItemFlag.class, "itemflag")
                     .user("item ?flags?")
                     .name("Item Flag")
@@ -67,13 +69,9 @@ public class Types {
                         @SuppressWarnings("NullableProblems")
                         @Override
                         public @Nullable ItemFlag parse(String string, ParseContext context) {
-                            String flag = string.replace(" ", "_").toUpperCase(Locale.ROOT);
-                            flag = "HIDE_" + flag.replace("_FLAG", "");
-                            try {
-                                return ItemFlag.valueOf(flag);
-                            } catch (IllegalArgumentException ignore) {
-                                return null;
-                            }
+                            String flag = string.replace(" ", "_");
+                            if (ITEM_FLAG_MAP.containsKey(flag)) return ITEM_FLAG_MAP.get(flag);
+                            return null;
                         }
 
                         @Override
