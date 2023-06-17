@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.util;
+package com.shanebeestudios.skbee.api.wrapper;
 
 import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;

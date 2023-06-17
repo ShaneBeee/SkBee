@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.api.structure;
 
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.util.PDCWrapper;
+import com.shanebeestudios.skbee.api.wrapper.PDCWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import org.bukkit.Bukkit;
