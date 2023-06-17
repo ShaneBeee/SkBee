@@ -5,16 +5,16 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.jetbrains.annotations.NotNull;
 
 public class Types {
 
     static {
         // Allow components to be used anywhere a string can
-        Converters.registerConverter(BeeComponent.class, String.class, BeeComponent::toString);
+        Converters.registerConverter(ComponentWrapper.class, String.class, ComponentWrapper::toString);
 
-        Classes.registerClass(new ClassInfo<>(BeeComponent.class, "textcomponent")
+        Classes.registerClass(new ClassInfo<>(ComponentWrapper.class, "textcomponent")
                 .user("text ?components?")
                 .name("Text Component - Text Component")
                 .description("Text components used for hover/click events. Due to the complexity of these, ",
@@ -26,7 +26,7 @@ public class Types {
                 .since("1.5.0")
                 .parser(new Parser<>() {
                     @Override
-                    public @NotNull String toString(@NotNull BeeComponent o, int flags) {
+                    public @NotNull String toString(@NotNull ComponentWrapper o, int flags) {
                         return o.toString();
                     }
 
@@ -36,7 +36,7 @@ public class Types {
                     }
 
                     @Override
-                    public @NotNull String toVariableNameString(@NotNull BeeComponent o) {
+                    public @NotNull String toVariableNameString(@NotNull ComponentWrapper o) {
                         return o.toString();
                     }
                 }));

@@ -12,7 +12,7 @@ import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -23,10 +23,10 @@ import org.jetbrains.annotations.NotNull;
         "For more info check out the mini message page <link>https://docs.adventure.kyori.net/minimessage/format.html</link>"})
 @Examples("set {_m} to mini message from \"<rainbow>this is a rainbow message\"")
 @Since("2.4.0")
-public class ExprMiniMessage extends SimpleExpression<BeeComponent> {
+public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
 
     static {
-        Skript.registerExpression(ExprMiniMessage.class, BeeComponent.class, ExpressionType.SIMPLE,
+        Skript.registerExpression(ExprMiniMessage.class, ComponentWrapper.class, ExpressionType.SIMPLE,
                 "mini[ ]message from %string%");
     }
 
@@ -45,13 +45,13 @@ public class ExprMiniMessage extends SimpleExpression<BeeComponent> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable BeeComponent[] get(Event event) {
+    protected @Nullable ComponentWrapper[] get(Event event) {
         String string = this.string.getSingle(event);
         if (this.string instanceof VariableString variableString) {
             string = variableString.toUnformattedString(event);
         }
         if (string == null) return null;
-        return new BeeComponent[]{BeeComponent.fromMiniMessage(string)};
+        return new ComponentWrapper[]{ComponentWrapper.fromMiniMessage(string)};
     }
 
     @Override
@@ -60,8 +60,8 @@ public class ExprMiniMessage extends SimpleExpression<BeeComponent> {
     }
 
     @Override
-    public @NotNull Class<? extends BeeComponent> getReturnType() {
-        return BeeComponent.class;
+    public @NotNull Class<? extends ComponentWrapper> getReturnType() {
+        return ComponentWrapper.class;
     }
 
     @Override

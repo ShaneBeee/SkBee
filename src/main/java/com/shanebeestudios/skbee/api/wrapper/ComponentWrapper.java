@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.text;
+package com.shanebeestudios.skbee.api.wrapper;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
@@ -46,17 +46,20 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Wrapper for {@link Component Adventure API Components}
+ */
 @SuppressWarnings({"PatternValidation"})
-public class BeeComponent {
+public class ComponentWrapper {
 
     // STATIC
     private static final boolean HAS_SIDES = Skript.classExists("org.bukkit.block.sign.SignSide");
 
-    public static BeeComponent empty() {
-        return new BeeComponent(Component.empty());
+    public static ComponentWrapper empty() {
+        return new ComponentWrapper(Component.empty());
     }
 
-    public static BeeComponent fromText(String text) {
+    public static ComponentWrapper fromText(String text) {
         Component component;
         if (text.contains("§")) {
             component = LegacyComponentSerializer.legacySection().deserialize(text);
@@ -65,10 +68,10 @@ public class BeeComponent {
         } else {
             component = Component.text(text);
         }
-        return new BeeComponent(component);
+        return new ComponentWrapper(component);
     }
 
-    public static BeeComponent fromMiniMessage(String text) {
+    public static ComponentWrapper fromMiniMessage(String text) {
         String string = text;
         // MiniMessage doesn't like these
         if (text.contains("&")) {
@@ -79,18 +82,18 @@ public class BeeComponent {
             TextComponent deserialize = LegacyComponentSerializer.legacySection().deserialize(string);
             string = PlainTextComponentSerializer.plainText().serialize(deserialize);
         }
-        return new BeeComponent(MiniMessage.miniMessage().deserialize(string));
+        return new ComponentWrapper(MiniMessage.miniMessage().deserialize(string));
     }
 
-    public static BeeComponent fromKeybind(String keybind) {
-        return new BeeComponent(Component.keybind(keybind));
+    public static ComponentWrapper fromKeybind(String keybind) {
+        return new ComponentWrapper(Component.keybind(keybind));
     }
 
-    public static BeeComponent fromTranslate(String translate) {
-        return new BeeComponent(Component.translatable(translate));
+    public static ComponentWrapper fromTranslate(String translate) {
+        return new ComponentWrapper(Component.translatable(translate));
     }
 
-    public static BeeComponent fromTranslate(String translate, Object... objects) {
+    public static ComponentWrapper fromTranslate(String translate, Object... objects) {
         List<Component> comps = new ArrayList<>();
         for (Object object : objects) {
             if (object instanceof String string) {
@@ -106,7 +109,7 @@ public class BeeComponent {
                 comps.add(Component.text(objectString));
             }
         }
-        return new BeeComponent(Component.translatable(translate, comps));
+        return new ComponentWrapper(Component.translatable(translate, comps));
     }
 
     private static Component getItem(Object object) {
@@ -129,18 +132,19 @@ public class BeeComponent {
         }
     }
 
-    public static BeeComponent fromComponent(Component component) {
-        return new BeeComponent(component);
+    public static ComponentWrapper fromComponent(Component component) {
+        return new ComponentWrapper(component);
     }
 
-    public static BeeComponent fromComponents(@Nullable BeeComponent... components) {
+    public static ComponentWrapper fromComponents(@Nullable ComponentWrapper... components) {
         return fromComponents(components, null);
     }
 
-    public static BeeComponent fromComponents(@Nullable BeeComponent[] components, @Nullable String delimiter) {
+    public static ComponentWrapper fromComponents(@Nullable ComponentWrapper[] components, @Nullable String delimiter) {
         Component component = Component.empty();
         if (components != null && components.length > 0) {
             Component delimiterComp = delimiter != null ? Component.text(delimiter) : null;
+            assert components[0] != null;
             component = component.append(components[0].component);
             int end = components.length;
             for (int i = 1; i < end; ++i) {
@@ -151,13 +155,13 @@ public class BeeComponent {
                 component = component.append(components[i].component);
             }
         }
-        return new BeeComponent(component);
+        return new ComponentWrapper(component);
     }
 
     // CLASS
     private Component component;
 
-    public BeeComponent(Component component) {
+    public ComponentWrapper(Component component) {
         this.component = component;
     }
 
@@ -165,8 +169,8 @@ public class BeeComponent {
         return component;
     }
 
-    public void append(BeeComponent beeComponent) {
-        this.component = this.component.append(beeComponent.component);
+    public void append(ComponentWrapper componentWrapper) {
+        this.component = this.component.append(componentWrapper.component);
     }
 
     public void setHoverEvent(HoverEvent<?> hoverEvent) {
@@ -262,6 +266,7 @@ public class BeeComponent {
         return this.component.insertion();
     }
 
+    @SuppressWarnings("deprecation") // Maybe attend to this later?!?!
     public void sendMessage(@Nullable Player sender, Audience receiver) {
         Identity identity = sender != null ? sender.identity() : Identity.nil();
         receiver.sendMessage(identity, this.component);
@@ -275,6 +280,7 @@ public class BeeComponent {
         sendMessage(sender, Bukkit.getServer());
     }
 
+    @SuppressWarnings("deprecation") // Remove once we drop 1.19.x support
     public void setBlockLine(Block block, int line, boolean front) {
         if (block.getState() instanceof Sign sign) {
             if (!front && HAS_SIDES) {
@@ -286,8 +292,9 @@ public class BeeComponent {
         }
     }
 
+    @SuppressWarnings("deprecation") // Remove once we drop 1.19.x support
     @Nullable
-    public static BeeComponent getSignLine(Block block, int line, boolean front) {
+    public static ComponentWrapper getSignLine(Block block, int line, boolean front) {
         if (block.getState() instanceof Sign sign) {
             Component lineComponent;
             if (!front && HAS_SIDES) {
@@ -295,7 +302,7 @@ public class BeeComponent {
             } else {
                 lineComponent = sign.line(line);
             }
-            return BeeComponent.fromComponent(lineComponent);
+            return ComponentWrapper.fromComponent(lineComponent);
         }
         return null;
     }
@@ -341,16 +348,16 @@ public class BeeComponent {
     public static void sendTitle(Player[] players, @NotNull Object title, @Nullable Object subtitle, long stay, long fadeIn, long fadeOut) {
         Component titleComponent;
         Component subtitleComponent;
-        if (title instanceof BeeComponent beeComponent) {
-            titleComponent = beeComponent.getComponent();
+        if (title instanceof ComponentWrapper componentWrapper) {
+            titleComponent = componentWrapper.getComponent();
         } else if (title instanceof String string) {
             titleComponent = Component.text(string);
         } else {
             titleComponent = Component.text("");
         }
 
-        if (subtitle instanceof BeeComponent beeComponent) {
-            subtitleComponent = beeComponent.getComponent();
+        if (subtitle instanceof ComponentWrapper componentWrapper) {
+            subtitleComponent = componentWrapper.getComponent();
         } else if (subtitle instanceof String string) {
             subtitleComponent = Component.text(string);
         } else {
@@ -367,11 +374,11 @@ public class BeeComponent {
         }
     }
 
-    public static void sendSignChange(Player player, Location location, BeeComponent[] beeComponents, @Nullable DyeColor color, boolean isGlowing) {
+    public static void sendSignChange(Player player, Location location, ComponentWrapper[] componentWrappers, @Nullable DyeColor color, boolean isGlowing) {
         List<Component> components = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
-            if (beeComponents.length > i) {
-                components.add(beeComponents[i].component);
+            if (componentWrappers.length > i) {
+                components.add(componentWrappers[i].component);
             } else {
                 components.add(Component.text(""));
             }

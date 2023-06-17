@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -28,12 +28,12 @@ import org.jetbrains.annotations.NotNull;
         "set {_line1} to front sign line 1 of target block",
         "set back sign line 1 of {_sign} to mini message from \"<rainbow>LINE ONE\""})
 @Since("2.4.0, 2.11.0 (front|back)")
-public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
+public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
 
     private static final boolean HAS_SIDES = Skript.isRunningMinecraft(1,20);
 
     static {
-        register(ExprSignLines.class, BeeComponent.class, "[(front|:back)] sign line %number%", "blocks");
+        register(ExprSignLines.class, ComponentWrapper.class, "[(front|:back)] sign line %number%", "blocks");
     }
 
     private Expression<Number> signLine;
@@ -54,7 +54,7 @@ public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected BeeComponent[] get(Event event, Block[] source) {
+    protected ComponentWrapper[] get(Event event, Block[] source) {
         Number signLineSingle = this.signLine.getSingle(event);
         if (signLineSingle == null) return null;
         int signLine = signLineSingle.intValue();
@@ -62,8 +62,8 @@ public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
 
         return get(source, new Getter<>() {
             @Override
-            public @Nullable BeeComponent get(Block block) {
-                return BeeComponent.getSignLine(block, signLine - 1, front);
+            public @Nullable ComponentWrapper get(Block block) {
+                return ComponentWrapper.getSignLine(block, signLine - 1, front);
             }
         });
     }
@@ -71,7 +71,7 @@ public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(BeeComponent.class);
+            return CollectionUtils.array(ComponentWrapper.class);
         }
         return null;
     }
@@ -79,7 +79,7 @@ public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            if (!(delta[0] instanceof BeeComponent component)) return;
+            if (!(delta[0] instanceof ComponentWrapper component)) return;
             Number signLineSingle = this.signLine.getSingle(event);
             if (signLineSingle == null) return;
             int signLine = signLineSingle.intValue();
@@ -93,8 +93,8 @@ public class ExprSignLines extends PropertyExpression<Block, BeeComponent> {
     }
 
     @Override
-    public @NotNull Class<? extends BeeComponent> getReturnType() {
-        return BeeComponent.class;
+    public @NotNull Class<? extends ComponentWrapper> getReturnType() {
+        return ComponentWrapper.class;
     }
 
     @Override

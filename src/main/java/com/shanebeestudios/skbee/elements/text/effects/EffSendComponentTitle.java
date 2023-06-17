@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -76,7 +76,7 @@ public class EffSendComponentTitle extends Effect {
                 fadeIn = fadeOutSingle.getTicks_i();
             }
         }
-        BeeComponent.sendTitle(players, title, subtitle, stay, fadeIn, fadeOut);
+        ComponentWrapper.sendTitle(players, title, subtitle, stay, fadeIn, fadeOut);
     }
 
     @Override

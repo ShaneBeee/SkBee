@@ -14,7 +14,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.BookMeta;
@@ -34,10 +34,10 @@ import javax.annotation.Nullable;
         "set book title of {_i} to \"MyBook\"",
         "give player 1 of {_i}"})
 @Since("1.8.0")
-public class ExprBookPages extends SimpleExpression<BeeComponent> {
+public class ExprBookPages extends SimpleExpression<ComponentWrapper> {
 
     static {
-        Skript.registerExpression(ExprBookPages.class, BeeComponent.class, ExpressionType.PROPERTY,
+        Skript.registerExpression(ExprBookPages.class, ComponentWrapper.class, ExpressionType.PROPERTY,
                 "page %number% of [book] %itemtype%");
     }
 
@@ -56,7 +56,7 @@ public class ExprBookPages extends SimpleExpression<BeeComponent> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected BeeComponent[] get(@NotNull Event e) {
+    protected ComponentWrapper[] get(@NotNull Event e) {
         ItemType item = this.item.getSingle(e);
         if (item == null) return null;
         Material material = item.getMaterial();
@@ -66,7 +66,7 @@ public class ExprBookPages extends SimpleExpression<BeeComponent> {
             int page = num == null ? 0 : num.intValue();
 
             if (bookMeta.getPageCount() >= page) {
-                return new BeeComponent[]{BeeComponent.fromComponent(bookMeta.page(page))};
+                return new ComponentWrapper[]{ComponentWrapper.fromComponent(bookMeta.page(page))};
             }
         }
         return null;
@@ -76,7 +76,7 @@ public class ExprBookPages extends SimpleExpression<BeeComponent> {
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(BeeComponent[].class);
+            return CollectionUtils.array(ComponentWrapper[].class);
         } else {
             return null;
         }
@@ -85,13 +85,13 @@ public class ExprBookPages extends SimpleExpression<BeeComponent> {
     @SuppressWarnings("deprecation")
     @Override
     public void change(@NotNull Event e, @Nullable Object[] delta, @NotNull ChangeMode mode) {
-        BeeComponent[] beeComponents = delta == null ? null : (BeeComponent[]) delta;
+        ComponentWrapper[] componentWrappers = delta == null ? null : (ComponentWrapper[]) delta;
         ItemType book = this.item.getSingle(e);
         if (book == null) return;
 
         Material bookMaterial = book.getMaterial();
 
-        BeeComponent comp = BeeComponent.fromComponents(beeComponents);
+        ComponentWrapper comp = ComponentWrapper.fromComponents(componentWrappers);
 
         if (BOOK.isOfType(bookMaterial)) {
             BookMeta bookMeta = ((BookMeta) book.getItemMeta());
@@ -116,8 +116,8 @@ public class ExprBookPages extends SimpleExpression<BeeComponent> {
     }
 
     @Override
-    public @NotNull Class<? extends BeeComponent> getReturnType() {
-        return BeeComponent.class;
+    public @NotNull Class<? extends ComponentWrapper> getReturnType() {
+        return ComponentWrapper.class;
     }
 
     @Override

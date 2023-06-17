@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
         "set click event of {_t} to a new click event to run command \"/spawn\"",
         "send component {_t} to player"})
 @Since("1.5.0")
-public class ExprClickEventOf extends PropertyExpression<BeeComponent, ClickEvent> {
+public class ExprClickEventOf extends PropertyExpression<ComponentWrapper, ClickEvent> {
 
     static {
         register(ExprClickEventOf.class, ClickEvent.class, "click event", "textcomponents");
@@ -32,14 +32,14 @@ public class ExprClickEventOf extends PropertyExpression<BeeComponent, ClickEven
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        setExpr((Expression<BeeComponent>) exprs[0]);
+        setExpr((Expression<ComponentWrapper>) exprs[0]);
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected ClickEvent @NotNull [] get(Event e, BeeComponent[] source) {
-        return get(source, BeeComponent::getClickEvent);
+    protected ClickEvent @NotNull [] get(Event e, ComponentWrapper[] source) {
+        return get(source, ComponentWrapper::getClickEvent);
     }
 
     @SuppressWarnings("NullableProblems")
@@ -57,7 +57,7 @@ public class ExprClickEventOf extends PropertyExpression<BeeComponent, ClickEven
 
         if (clickEvent == null) return;
 
-        for (BeeComponent component : getExpr().getArray(e)) {
+        for (ComponentWrapper component : getExpr().getArray(e)) {
             component.setClickEvent(clickEvent);
         }
     }

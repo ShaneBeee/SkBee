@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -22,10 +22,10 @@ import org.jetbrains.annotations.NotNull;
         "\nDISPLAY NAME = the name will always show."})
 @Examples("set component entity name of target entity to translate component from \"entity.minecraft.llama\"")
 @Since("2.4.0")
-public class ExprNameEntity extends SimplePropertyExpression<Entity, BeeComponent> {
+public class ExprNameEntity extends SimplePropertyExpression<Entity, ComponentWrapper> {
 
     static {
-        register(ExprNameEntity.class, BeeComponent.class,
+        register(ExprNameEntity.class, ComponentWrapper.class,
                 "component entity (name|1¦display name)", "entities");
     }
 
@@ -39,15 +39,15 @@ public class ExprNameEntity extends SimplePropertyExpression<Entity, BeeComponen
     }
 
     @Override
-    public @Nullable BeeComponent convert(Entity entity) {
-        return BeeComponent.fromComponent(entity.name());
+    public @Nullable ComponentWrapper convert(Entity entity) {
+        return ComponentWrapper.fromComponent(entity.name());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(BeeComponent.class);
+            return CollectionUtils.array(ComponentWrapper.class);
         }
         return null;
     }
@@ -56,7 +56,7 @@ public class ExprNameEntity extends SimplePropertyExpression<Entity, BeeComponen
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            if (delta[0] instanceof BeeComponent component) {
+            if (delta[0] instanceof ComponentWrapper component) {
                 for (Entity entity : getExpr().getArray(event)) {
                     component.setEntityName(entity, alwaysOn);
                 }
@@ -65,8 +65,8 @@ public class ExprNameEntity extends SimplePropertyExpression<Entity, BeeComponen
     }
 
     @Override
-    public @NotNull Class<? extends BeeComponent> getReturnType() {
-        return BeeComponent.class;
+    public @NotNull Class<? extends ComponentWrapper> getReturnType() {
+        return ComponentWrapper.class;
     }
 
     @Override

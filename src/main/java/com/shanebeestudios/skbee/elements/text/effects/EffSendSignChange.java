@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
@@ -36,7 +36,7 @@ public class EffSendSignChange extends Effect {
 
     private Expression<Player> players;
     private Expression<Block> blocks;
-    private Expression<BeeComponent> components;
+    private Expression<ComponentWrapper> components;
     private Expression<SkriptColor> color;
     private boolean glowing;
 
@@ -45,7 +45,7 @@ public class EffSendSignChange extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.players = (Expression<Player>) exprs[0];
         this.blocks = (Expression<Block>) exprs[1];
-        this.components = (Expression<BeeComponent>) exprs[2];
+        this.components = (Expression<ComponentWrapper>) exprs[2];
         this.color = (Expression<SkriptColor>) exprs[3];
         this.glowing = parseResult.hasTag("glowing");
         return true;
@@ -54,7 +54,7 @@ public class EffSendSignChange extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        BeeComponent[] components = this.components.getArray(event);
+        ComponentWrapper[] components = this.components.getArray(event);
         DyeColor dyeColor = null;
         if (this.color != null) {
             SkriptColor skriptColor = this.color.getSingle(event);
@@ -65,7 +65,7 @@ public class EffSendSignChange extends Effect {
 
         for (Block block : this.blocks.getArray(event)) {
             for (Player player : this.players.getArray(event)) {
-                BeeComponent.sendSignChange(player, block.getLocation(), components, dyeColor, this.glowing);
+                ComponentWrapper.sendSignChange(player, block.getLocation(), components, dyeColor, this.glowing);
             }
         }
     }
