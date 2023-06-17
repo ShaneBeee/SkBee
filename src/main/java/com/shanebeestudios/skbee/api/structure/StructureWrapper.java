@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.structure;
 
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import com.shanebeestudios.skbee.api.wrapper.PDCWrapper;
@@ -26,7 +27,11 @@ import java.util.Random;
 public class StructureWrapper {
 
     private static final StructureManager STRUCTURE_MANAGER = Bukkit.getStructureManager();
-    private static final String PDC_KEY = "lastSavedLocation";
+    private static final String ROTATION_KEY = "rotation";
+    private static final String MIRROR_KEY = "mirror";
+    private static final String INTEGRITY_KEY = "integrity";
+    private static final String INCLUDE_ENTITIES_KEY = "includeEntities";
+    private static final String LAST_SAVED_LOCATION_KEY = "lastSavedLocation";
 
     /**
      * Wrap a structure
@@ -42,8 +47,8 @@ public class StructureWrapper {
     private final Structure structure;
     private final NamespacedKey key;
 
-    private StructureRotation rotation = StructureRotation.NONE;
-    private Mirror mirror = Mirror.NONE;
+    private StructureRotation rotation;
+    private Mirror mirror;
     private float integrity = 1f;
     private boolean includeEntities = true;
     private final PDCWrapper pdcWrapper;
@@ -53,7 +58,15 @@ public class StructureWrapper {
         this.key = key;
         this.structure = structure;
         this.pdcWrapper = PDCWrapper.wrap(structure);
-        this.lastPlacedLocation = this.pdcWrapper.getLocation(PDC_KEY);
+        this.rotation = StructureRotation.values()[this.pdcWrapper.getByte(ROTATION_KEY)];
+        this.mirror = Mirror.values()[this.pdcWrapper.getByte(MIRROR_KEY)];
+        if (this.pdcWrapper.hasKey(INTEGRITY_KEY)) {
+            this.integrity = MathUtil.clamp(this.pdcWrapper.getFloat(INTEGRITY_KEY), 0f, 1f);
+        }
+        if (this.pdcWrapper.hasKey(INCLUDE_ENTITIES_KEY)) {
+            this.includeEntities = this.pdcWrapper.getBoolean(INCLUDE_ENTITIES_KEY);
+        }
+        this.lastPlacedLocation = this.pdcWrapper.getLocation(LAST_SAVED_LOCATION_KEY);
     }
 
     /**
@@ -73,7 +86,7 @@ public class StructureWrapper {
      */
     public void place(Location location) {
         this.lastPlacedLocation = location;
-        this.pdcWrapper.setLocation(PDC_KEY, location);
+        this.pdcWrapper.setLocation(LAST_SAVED_LOCATION_KEY, location);
         structure.place(location, includeEntities, rotation, mirror, -1, integrity, new Random());
     }
 
@@ -168,6 +181,7 @@ public class StructureWrapper {
      */
     public void setRotation(StructureRotation rotation) {
         this.rotation = rotation;
+        this.pdcWrapper.setByte(ROTATION_KEY, (byte) rotation.ordinal());
     }
 
     /**
@@ -187,6 +201,7 @@ public class StructureWrapper {
      */
     public void setMirror(Mirror mirror) {
         this.mirror = mirror;
+        this.pdcWrapper.setByte(MIRROR_KEY, ((byte) mirror.ordinal()));
     }
 
     /**
@@ -210,7 +225,8 @@ public class StructureWrapper {
      * @param integrity Integrity of this structure
      */
     public void setIntegrity(float integrity) {
-        this.integrity = integrity;
+        this.integrity = MathUtil.clamp(integrity, 0, 1);
+        this.pdcWrapper.setFloat(INTEGRITY_KEY, this.integrity);
     }
 
     /**
@@ -223,12 +239,13 @@ public class StructureWrapper {
     }
 
     /**
-     * Set whether or not this structure should include entities
+     * Set whether this structure should include entities
      *
      * @param includeEntities Whether to include entities
      */
     public void setIncludeEntities(boolean includeEntities) {
         this.includeEntities = includeEntities;
+        this.pdcWrapper.setBoolean(INCLUDE_ENTITIES_KEY, includeEntities);
     }
 
     /**
@@ -255,10 +272,10 @@ public class StructureWrapper {
      * (including mirror, rotation, integrity and inclusion of entities)
      */
     public void reset() {
-        this.mirror = Mirror.NONE;
-        this.rotation = StructureRotation.NONE;
-        this.integrity = 1.0f;
-        this.includeEntities = true;
+        setMirror(Mirror.NONE);
+        setRotation(StructureRotation.NONE);
+        setIntegrity(1.0f);
+        setIncludeEntities(true);
     }
 
     @Override
