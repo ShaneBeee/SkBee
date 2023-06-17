@@ -55,6 +55,16 @@ public class PDCWrapper {
     }
 
     /**
+     * Check if this PDC has a key
+     *
+     * @param key Key to check
+     * @return True if key is valid
+     */
+    public boolean hasKey(String key) {
+        return this.container.has(getKey(key));
+    }
+
+    /**
      * Delete a value from the PDC
      *
      * @param key Key to remove
