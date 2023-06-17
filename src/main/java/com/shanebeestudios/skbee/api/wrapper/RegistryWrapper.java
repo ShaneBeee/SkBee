@@ -19,10 +19,18 @@ import java.util.List;
  *
  * @param <T> Type of item in the registry
  */
+@SuppressWarnings("unused")
 public class RegistryWrapper<T extends Keyed> {
 
-    private final Registry<T> registry;
-    private final String prefix, suffix;
+    /**
+     * Wrap a registry with optional prefix and suffix
+     *
+     * @param registry Registry to wrap
+     * @return Wrapped registry
+     */
+    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Registry<T> registry) {
+        return wrap(registry, null, null);
+    }
 
     /**
      * Wrap a registry with optional prefix and suffix
@@ -30,8 +38,17 @@ public class RegistryWrapper<T extends Keyed> {
      * @param registry Registry to wrap
      * @param prefix   Optional prefix to prepend to items in registry
      * @param suffix   Optional suffix to append to items in registry
+     * @return Wrapped registry
      */
-    public RegistryWrapper(Registry<T> registry, String prefix, String suffix) {
+    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Registry<T> registry, @Nullable String prefix, @Nullable String suffix) {
+        return new RegistryWrapper<>(registry, prefix, suffix);
+    }
+
+    private final Registry<T> registry;
+    @Nullable
+    private final String prefix, suffix;
+
+    private RegistryWrapper(Registry<T> registry, @Nullable String prefix, @Nullable String suffix) {
         this.registry = registry;
         this.prefix = prefix;
         this.suffix = suffix;

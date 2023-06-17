@@ -217,7 +217,7 @@ public class Types {
                         }
                     }));
 
-            RegistryWrapper<TrimMaterial> TRIM_REGISTRY = new RegistryWrapper<>(Registry.TRIM_MATERIAL, "", "material");
+            RegistryWrapper<TrimMaterial> TRIM_REGISTRY = RegistryWrapper.wrap(Registry.TRIM_MATERIAL, null, "material");
             Classes.registerClass(new ClassInfo<>(TrimMaterial.class, "trimmaterial")
                     .user("trim ?materials?")
                     .name("ArmorTrim - TrimMaterial")
@@ -226,7 +226,7 @@ public class Types {
                     .since("2.13.0")
                     .parser(TRIM_REGISTRY.getParser()));
 
-            RegistryWrapper<TrimPattern> TRIM_PATTERN_REGISTER = new RegistryWrapper<>(Registry.TRIM_PATTERN, "", "pattern");
+            RegistryWrapper<TrimPattern> TRIM_PATTERN_REGISTER = RegistryWrapper.wrap(Registry.TRIM_PATTERN, null, "pattern");
             Classes.registerClass(new ClassInfo<>(TrimPattern.class, "trimpattern")
                     .user("trim ?patterns?")
                     .name("ArmorTrim - TrimPattern")
