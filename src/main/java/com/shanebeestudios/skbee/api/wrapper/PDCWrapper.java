@@ -21,6 +21,7 @@ public class PDCWrapper {
     private static final PersistentDataType<String, String> STRING = PersistentDataType.STRING;
     private static final PersistentDataType<Integer, Integer> INT = PersistentDataType.INTEGER;
     private static final PersistentDataType<Byte, Byte> BYTE = PersistentDataType.BYTE;
+    private static final PersistentDataType<Float, Float> FLOAT = PersistentDataType.FLOAT;
     private static final PersistentDataType<int[], int[]> INT_ARRAY = PersistentDataType.INTEGER_ARRAY;
 
     /**
@@ -136,6 +137,28 @@ public class PDCWrapper {
         Byte byteValue = getValue(key, BYTE);
         if (byteValue == null) return 0;
         return byteValue;
+    }
+
+    /**
+     * Set a float
+     *
+     * @param key   Key of float to set
+     * @param value Float to set
+     */
+    public void setFloat(String key, float value) {
+        setValue(key, FLOAT, value);
+    }
+
+    /**
+     * Get a float
+     *
+     * @param key Key of float to get
+     * @return Float from PDC
+     */
+    public float getFloat(String key) {
+        Float floatValue = getValue(key, FLOAT);
+        if (floatValue == null) return 0;
+        return floatValue;
     }
 
     /**
