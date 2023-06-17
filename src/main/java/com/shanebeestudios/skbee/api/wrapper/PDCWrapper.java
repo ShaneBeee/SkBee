@@ -135,7 +135,7 @@ public class PDCWrapper {
      * @param location Location to set
      */
     public void setLocation(String key, @NotNull Location location) {
-        int[] coords = new int[]{location.getBlockX(), location.getBlockY(), location.getBlockY()};
+        int[] coords = new int[]{location.getBlockX(), location.getBlockY(), location.getBlockZ()};
         String world = location.getWorld().getName();
         setValue(key + ".coords", INT_ARRAY, coords);
         setValue(key + ".world", STRING, world);
