@@ -16,7 +16,8 @@ import org.jetbrains.annotations.NotNull;
         "otherwise it will not persist thru stop/restart."})
 @Examples({"set {_s} to structure named \"test\"",
         "place structure {_s} above traget block",
-        "save structure {_s}"})
+        "save structure {_s}",
+        "set {_last} to last placed location of {_s}"})
 @Since("2.10.0")
 public class ExprStructureLastPlacedLocation extends SimplePropertyExpression<StructureWrapper, Location> {
 
