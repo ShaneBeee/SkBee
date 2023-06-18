@@ -14,6 +14,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
@@ -21,6 +22,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntitySpellCastEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -354,7 +356,7 @@ public class OtherEvents {
 
         // Spawner Spawn Event
         Skript.registerEvent("Spawner Spawn", SimpleEvent.class, SpawnerSpawnEvent.class,
-                "spawner spawn")
+                        "spawner spawn")
                 .description("Called when an entity is spawned into a world by a spawner.",
                         "\n`event-block` = the spawner the entity spawned from")
                 .examples("on spawner spawn:",
@@ -392,6 +394,23 @@ public class OtherEvents {
                 Block placed = event.getBlockPlaced();
                 Block against = event.getBlockAgainst();
                 return against.getFace(placed);
+            }
+        }, 0);
+
+        // Entity Spell Cast Event
+        Skript.registerEvent("Spell Cast", SimpleEvent.class, EntitySpellCastEvent.class,
+                        "[entity] spell cast")
+                .description("Called when a Spellcaster casts a spell.")
+                .examples("on spell cast:",
+                        "\tif event-entity is an evoker:",
+                        "\t\tif event-spell is fangs:",
+                        "\t\t\tcancel event")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(EntitySpellCastEvent.class, Spellcaster.Spell.class, new Getter<>() {
+            @Override
+            public Spellcaster.Spell get(EntitySpellCastEvent event) {
+                return event.getSpell();
             }
         }, 0);
 
