@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.Location;
@@ -15,24 +16,31 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Structure - Place")
-@Description("Place an already created structure into the world. Requires MC 1.17.1+")
-@Examples("place structure {_s} at location above target block of player")
+@Description({"Place an already created structure into the world.",
+        "\nPalette = The palette index of the structure to use, starting at 0, or -1 to pick a random palette.",
+        "A palette represents a variation of a structure.",
+        "Most structures, like the ones generated with structure blocks, only have a single variant.",
+        "Requires MC 1.17.1+"})
+@Examples({"set {_s} to structure named \"minecraft:village/taiga/houses/taiga_cartographer_house_1\"",
+        "place structure {_s} above target block of player"})
 @Since("1.12.0")
 public class EffStructurePlace extends Effect {
 
     static {
         Skript.registerEffect(EffStructurePlace.class,
-                "place [structure] %structure% at %location%");
+                "place [structure] %structure% [using palette %-number%] %directions% %locations%");
     }
 
     private Expression<StructureWrapper> structure;
-    private Expression<Location> location;
+    private Expression<Number> palette;
+    private Expression<Location> locations;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        structure = (Expression<StructureWrapper>) exprs[0];
-        location = (Expression<Location>) exprs[1];
+        this.structure = (Expression<StructureWrapper>) exprs[0];
+        this.palette = (Expression<Number>) exprs[1];
+        this.locations = Direction.combine((Expression<? extends Direction>) exprs[2], (Expression<? extends Location>) exprs[3]);
         return true;
     }
 
@@ -40,18 +48,25 @@ public class EffStructurePlace extends Effect {
     @Override
     protected void execute(Event event) {
         StructureWrapper structure = this.structure.getSingle(event);
-        Location location = this.location.getSingle(event);
-
-        if (structure == null || location == null) {
-            return;
+        int palette = -1;
+        if (this.palette != null) {
+            Number paletteSingle = this.palette.getSingle(event);
+            palette = paletteSingle != null ? paletteSingle.intValue() : -1;
         }
-        structure.place(location);
+
+        if (structure == null) return;
+
+        for (Location location : this.locations.getArray(event)) {
+            structure.place(location, palette);
+        }
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return "paste " + structure.toString(e, d) + " at " + location.toString(e, d);
+        String palette = this.palette != null ? ("using palette " + this.palette.toString(e,d)): "";
+        return "paste " + structure.toString(e, d) + " " + palette +
+                locations.toString(e, d);
     }
 
 }

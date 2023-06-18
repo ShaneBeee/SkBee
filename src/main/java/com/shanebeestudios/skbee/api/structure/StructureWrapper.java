@@ -82,12 +82,24 @@ public class StructureWrapper {
     /**
      * Place the structure at a location
      *
-     * @param location Location to playaer
+     * @param location Location to player
+     * @param palette  Which palette to place (-1 will be random)
      */
-    public void place(Location location) {
+    public void place(Location location, int palette) {
         this.lastPlacedLocation = location;
         this.pdcWrapper.setLocation(LAST_SAVED_LOCATION_KEY, location);
-        structure.place(location, includeEntities, rotation, mirror, -1, integrity, new Random());
+        palette = MathUtil.clamp(palette, -1, this.structure.getPaletteCount() - 1);
+        structure.place(location, includeEntities, rotation, mirror, palette, integrity, new Random());
+    }
+
+    /**
+     * Place the structure at a location
+     * <p>This will place with a random palette, see {@link #place(Location, int)}</p>
+     *
+     * @param location Location to player
+     */
+    public void place(Location location) {
+        place(location, -1);
     }
 
     /**
