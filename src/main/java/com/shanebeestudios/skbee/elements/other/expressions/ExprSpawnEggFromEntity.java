@@ -2,13 +2,13 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.EntityUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import com.shanebeestudios.skbee.api.util.EntityUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -39,7 +39,7 @@ public class ExprSpawnEggFromEntity extends SimplePropertyExpression<Object, Ite
         if (object instanceof Entity entity) {
             entityType = entity.getType();
         } else if (object instanceof EntityData<?> entityData) {
-            entityType = EntityUtils.getByClass(entityData.getType());
+            entityType = EntityUtils.toBukkitEntityType(entityData);
         }
         if (entityType != null) {
             ItemStack spawnEgg = ITEM_FACTORY.getSpawnEgg(entityType);
