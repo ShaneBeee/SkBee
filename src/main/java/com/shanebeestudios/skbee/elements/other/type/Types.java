@@ -9,9 +9,11 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
@@ -21,6 +23,9 @@ import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.meta.trim.ArmorTrim;
+import org.bukkit.inventory.meta.trim.TrimMaterial;
+import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,6 +35,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class Types {
+
+    public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
 
     private static String getItemFlagNames() {
         List<String> flags = new ArrayList<>();
@@ -203,6 +210,52 @@ public class Types {
                         "In a structure, this represents how the block is saved to the structure.",
                         "Requires MC 1.17.1+")
                 .since("1.12.3"));
+
+        if (HAS_ARMOR_TRIM) {
+            Classes.registerClass(new ClassInfo<>(ArmorTrim.class, "armortrim")
+                    .user("armor ?trims?")
+                    .name("ArmorTrim")
+                    .description("Represents an armor trim that may be applied to an item.",
+                            "Requires MC 1.19.4+")
+                    .since("INSERT VERSION")
+                    .parser(new Parser<>() {
+
+                        @Override
+                        public boolean canParse(@NotNull ParseContext context) {
+                            return false;
+                        }
+
+                        @Override
+                        public @NotNull String toString(ArmorTrim o, int flags) {
+                            String material = o.getMaterial().getKey().getKey();
+                            String pattern = o.getPattern().getKey().getKey();
+                            return String.format("ArmorTrim{material='%s',pattern='%s'}", material, pattern);
+                        }
+
+                        @Override
+                        public @NotNull String toVariableNameString(ArmorTrim o) {
+                            return toString(o, 0);
+                        }
+                    }));
+
+            RegistryWrapper<TrimMaterial> TRIM_REGISTRY = new RegistryWrapper<>(Registry.TRIM_MATERIAL, "", "material");
+            Classes.registerClass(new ClassInfo<>(TrimMaterial.class, "trimmaterial")
+                    .user("trim ?materials?")
+                    .name("ArmorTrim - TrimMaterial")
+                    .description("Represents a material that may be used in an ArmorTrim.")
+                    .usage(TRIM_REGISTRY.getNames())
+                    .since("INSERT VERSION")
+                    .parser(TRIM_REGISTRY.getParser()));
+
+            RegistryWrapper<TrimPattern> TRIM_PATTERN_REGISTER = new RegistryWrapper<>(Registry.TRIM_PATTERN, "", "pattern");
+            Classes.registerClass(new ClassInfo<>(TrimPattern.class, "trimpattern")
+                    .user("trim ?patterns?")
+                    .name("ArmorTrim - TrimPattern")
+                    .description("Represents a pattern that may be used in an ArmorTrim.")
+                    .usage(TRIM_PATTERN_REGISTER.getNames())
+                    .since("INSERT VERSION")
+                    .parser(TRIM_PATTERN_REGISTER.getParser()));
+        }
     }
 
 }
