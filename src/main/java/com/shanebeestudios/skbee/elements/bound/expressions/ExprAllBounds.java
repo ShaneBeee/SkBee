@@ -22,12 +22,10 @@ import java.util.List;
 
 @Name("Bound - All Bounds")
 @Description("Get a list of non-temporary, temporary, or all bounds/ids")
-@Examples({
-        "set {_temporaryBounds::*} to all temporary bounds",
+@Examples({"set {_temporaryBounds::*} to all temporary bounds",
         "set {_nonTemporaryBounds::*} to nontemporary bounds",
         "loop all bounds:",
-        "\tbroadcast loop-bound"
-})
+        "\tbroadcast loop-bound"})
 @Since("1.15.0, 2.10.0 (temporary bounds)")
 public class ExprAllBounds extends SimpleExpression<Object> {
     static {
