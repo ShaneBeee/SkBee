@@ -56,10 +56,8 @@ public enum RecipeType {
     @Nullable
     public static RecipeType getFromRecipe(Recipe recipe) {
         Class<? extends Recipe> recipeClass = recipe.getClass();
-        for (RecipeType recipeType : values()) {
-            if (recipeType.getRecipeClass().isAssignableFrom(recipe.getClass())) {
-                return recipeType;
-            }
+        if (BY_CLASS.containsKey(recipeClass)) {
+            return BY_CLASS.get(recipeClass);
         }
         String key = "invalid";
         if (recipe instanceof Keyed keyed) {
