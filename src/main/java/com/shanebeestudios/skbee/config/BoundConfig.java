@@ -128,6 +128,7 @@ public class BoundConfig {
     public Collection<Bound> getBoundsIn(World world) {
         return boundsMap.values().stream().filter(bound -> bound.getWorld().equals(world)).toList();
     }
+
     public Collection<Bound> getBoundsAt(Location location) {
         return boundsMap.values().stream().filter(bound -> bound.isInRegion(location)).toList();
     }

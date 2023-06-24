@@ -9,9 +9,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class Config {
+
     private final SkBee plugin;
     private FileConfiguration config;
     private File configFile;
+
     // Config stuff
     public boolean SETTINGS_DEBUG;
     public boolean SETTINGS_UPDATE_CHECKER;
@@ -101,12 +103,12 @@ public class Config {
         }
     }
 
-    private boolean getElement(String element) {
-        return this.config.getBoolean("elements." + element);
-    }
-
     private boolean getSetting(String setting) {
         return this.config.getBoolean("settings." + setting);
+    }
+
+    private boolean getElement(String element) {
+        return this.config.getBoolean("elements." + element);
     }
 
     private boolean getNBTEvent(String nbtEvent) {
@@ -165,4 +167,5 @@ public class Config {
         this.ELEMENTS_DISPLAY = getElement("display-entity");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
     }
+
 }

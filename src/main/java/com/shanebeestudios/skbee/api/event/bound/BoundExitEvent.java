@@ -57,4 +57,5 @@ public class BoundExitEvent extends BoundEvent implements Cancellable {
     public static HandlerList getHandlerList() {
         return handlers;
     }
+
 }

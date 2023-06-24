@@ -28,6 +28,7 @@ import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 public class BoundBorderListener implements Listener {
+
     private final SkBee plugin;
     private final BoundConfig boundConfig;
     private boolean PLAYER_MOVE;
@@ -241,4 +242,5 @@ public class BoundBorderListener implements Listener {
         }
         return false;
     }
+
 }

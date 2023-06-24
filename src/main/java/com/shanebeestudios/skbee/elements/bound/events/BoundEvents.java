@@ -17,19 +17,23 @@ import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
 
 @SuppressWarnings("unused")
 public class BoundEvents extends SkriptEvent {
+
     static {
+
         EventValues.registerEventValue(BoundEvent.class, Bound.class, new Getter<>() {
             @Override
             public @Nullable Bound get(BoundEvent event) {
                 return event.getBound();
             }
         }, EventValues.TIME_NOW);
+
         EventValues.registerEventValue(BoundEvent.class, String.class, new Getter<>() {
             @Override
             public @Nullable String get(BoundEvent event) {
                 return event.getBound().getId();
             }
         }, EventValues.TIME_NOW);
+
         Skript.registerEvent("Bound - Enter", BoundEvents.class, BoundEnterEvent.class, "(bound enter|enter bound) [with id %-string%]")
                 .description("Called when a player enters a bound. Optional ID of bound. 'event-string' = bound ID.")
                 .examples("on bound enter:",
@@ -38,12 +42,14 @@ public class BoundEvents extends SkriptEvent {
                         "on enter bound with id \"spawn\":",
                         "\tcancel event")
                 .since("1.0.0, 1.12.2 (Bound IDs)");
+
         EventValues.registerEventValue(BoundEnterEvent.class, Player.class, new Getter<>() {
             @Override
             public Player get(BoundEnterEvent event) {
                 return event.getPlayer();
             }
         }, 0);
+
         Skript.registerEvent("Bound - Exit", BoundEvents.class, BoundExitEvent.class, "(bound exit|exit bound) [with id %-string%]")
                 .description("Called when a player exits a bound. Optional ID of bound. 'event-string' = bound ID.")
                 .examples("on bound exit:",
@@ -53,12 +59,14 @@ public class BoundEvents extends SkriptEvent {
                         "on exit bound with id \"spawn\":",
                         "\tcancel event")
                 .since("1.0.0, 1.12.2 (Bound IDs)");
+
         EventValues.registerEventValue(BoundExitEvent.class, Player.class, new Getter<>() {
             @Override
             public Player get(BoundExitEvent event) {
                 return event.getPlayer();
             }
         }, 0);
+
     }
 
     private Literal<String> boundID;
@@ -87,4 +95,5 @@ public class BoundEvents extends SkriptEvent {
     public @NotNull String toString(@Nullable Event event, boolean debug) {
         return "bound enter/exit" + (this.boundID != null ? " with id " + this.boundID.toString(event, debug) : "");
     }
+
 }
