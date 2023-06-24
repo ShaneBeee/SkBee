@@ -48,18 +48,19 @@ public class ExprAllBounds extends SimpleExpression<Object> {
     @Nullable
     @Override
     protected Object[] get(Event event) {
-        List<Object> bounds = new ArrayList<>();
+        List<Bound> bounds = new ArrayList<>();
+        List<String> ids = new ArrayList<>();
         for (Bound bound : boundConfig.getBounds()) {
             if (bounds.contains(bound) || bounds.contains(bound.getId())) continue;
             if (boundType == Kleenean.FALSE && !bound.isTemporary()) continue;
             if (boundType == Kleenean.TRUE && bound.isTemporary()) continue;
             if (ID) {
-                bounds.add(bound.getId());
+                ids.add(bound.getId());
             } else {
                 bounds.add(bound);
             }
         }
-        return bounds.toArray();
+        return ID ? ids.toArray(new String[0]) : bounds.toArray(new Bound[0]);
     }
 
     @Override
