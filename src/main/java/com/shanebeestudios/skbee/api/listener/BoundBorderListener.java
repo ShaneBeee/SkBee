@@ -1,8 +1,8 @@
 package com.shanebeestudios.skbee.api.listener;
 
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
-import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
+import com.shanebeestudios.skbee.api.event.EnterBoundEvent;
+import com.shanebeestudios.skbee.api.event.ExitBoundEvent;
 import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.Bukkit;
@@ -11,19 +11,15 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
-import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerTeleportEvent;
-import org.bukkit.event.vehicle.VehicleDestroyEvent;
 import org.bukkit.event.vehicle.VehicleEnterEvent;
-import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.jetbrains.annotations.NotNull;
-import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
 public class BoundBorderListener implements Listener {
@@ -36,7 +32,7 @@ public class BoundBorderListener implements Listener {
         this.boundConfig = plugin.getBoundConfig();
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler
     private void onBoundBorder(PlayerMoveEvent event) {
         Player player = event.getPlayer();
         Location from = event.getFrom();
@@ -51,7 +47,7 @@ public class BoundBorderListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler
     private void onPlayerTeleport(PlayerTeleportEvent event) {
         Player player = event.getPlayer();
         Location from = event.getFrom();
@@ -61,7 +57,7 @@ public class BoundBorderListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler
     private void onMount(EntityMountEvent event) {
         if (event.getEntity() instanceof Player player) {
             Location from = player.getLocation();
@@ -72,22 +68,7 @@ public class BoundBorderListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onDismount(EntityDismountEvent event) {
-        if (event.getEntity() instanceof Player player) {
-            Location from = event.getDismounted().getLocation();
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                Location to = player.getLocation();
-                if (preventBoundMovement(player, from, to)) {
-                    from.setYaw(player.getLocation().getYaw());
-                    from.setPitch(player.getLocation().getPitch());
-                    player.teleport(from);
-                }
-            }, 1);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler
     private void onVehicleEnter(VehicleEnterEvent event) {
         if (event.getEntered() instanceof Player player) {
             Location from = player.getLocation();
@@ -98,7 +79,7 @@ public class BoundBorderListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler
     private void onVehicleMove(VehicleMoveEvent event) {
         Vehicle vehicle = event.getVehicle();
         vehicle.getPassengers().forEach(entity -> {
@@ -116,39 +97,7 @@ public class BoundBorderListener implements Listener {
         });
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onVehicleDestroy(VehicleDestroyEvent event) {
-        Location from = event.getVehicle().getLocation();
-        Bukkit.getScheduler().runTaskLater(plugin, () -> {
-            for (Entity passenger : event.getVehicle().getPassengers()) {
-                Location to = passenger.getLocation();
-                if (passenger instanceof Player player) {
-                    if (preventBoundMovement(player, from, to)) {
-                        from.setYaw(player.getLocation().getYaw());
-                        from.setPitch(player.getLocation().getPitch());
-                        player.teleport(from);
-                    }
-                }
-            }
-        }, 1);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onVehicleExit(VehicleExitEvent event) {
-        Location from = event.getVehicle().getLocation();
-        if (event.getExited() instanceof Player player) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                Location to = player.getLocation();
-                if (preventBoundMovement(player, from, to)) {
-                    from.setYaw(player.getLocation().getYaw());
-                    from.setPitch(player.getLocation().getPitch());
-                    player.teleport(from);
-                }
-            }, 1);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler
     private void onEnterBed(PlayerBedEnterEvent event) {
         Player player = event.getPlayer();
         Location from = player.getLocation();
@@ -158,7 +107,7 @@ public class BoundBorderListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler
     private void onExitBed(PlayerBedLeaveEvent event) {
         Player player = event.getPlayer();
         Location from = event.getBed().getLocation();
@@ -173,7 +122,7 @@ public class BoundBorderListener implements Listener {
 
     }
 
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    @EventHandler
     private void onRespawn(PlayerRespawnEvent event) {
         Player player = event.getPlayer();
         Location from = player.getLocation();
@@ -190,19 +139,18 @@ public class BoundBorderListener implements Listener {
         // Only detect body movement not head movement
         from.setPitch(to.getPitch());
         from.setYaw(to.getYaw());
-        // Skip same location and different worlds
         if (to.equals(from)) return false;
-        if (!to.getWorld().equals(from.getWorld())) return false;
-        for (Bound bound : boundConfig.getBoundsIn(from.getWorld())) {
+
+        for (Bound bound : boundConfig.getBounds()) {
             if (bound.isInRegion(to) && !bound.isInRegion(from)) {
-                BoundEnterEvent enterEvent = new BoundEnterEvent(bound, player);
+                EnterBoundEvent enterEvent = new EnterBoundEvent(bound, player);
                 Bukkit.getPluginManager().callEvent(enterEvent);
                 if (enterEvent.isCancelled()) {
                     return true;
                 }
             }
             if (!bound.isInRegion(to) && bound.isInRegion(from)) {
-                BoundExitEvent exitEvent = new BoundExitEvent(bound, player);
+                ExitBoundEvent exitEvent = new ExitBoundEvent(bound, player);
                 Bukkit.getPluginManager().callEvent(exitEvent);
                 if (exitEvent.isCancelled()) {
                     return true;
