@@ -2,9 +2,10 @@ package com.shanebeestudios.skbee.config;
 
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.WorldUtils;
-import com.shanebeestudios.skbee.api.bound.Bound;
+import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -122,6 +123,13 @@ public class BoundConfig {
 
     public Collection<Bound> getBounds() {
         return boundsMap.values();
+    }
+
+    public Collection<Bound> getBoundsIn(World world) {
+        return boundsMap.values().stream().filter(bound -> bound.getWorld().equals(world)).toList();
+    }
+    public Collection<Bound> getBoundsAt(Location location) {
+        return boundsMap.values().stream().filter(bound -> bound.isInRegion(location)).toList();
     }
 
 }
