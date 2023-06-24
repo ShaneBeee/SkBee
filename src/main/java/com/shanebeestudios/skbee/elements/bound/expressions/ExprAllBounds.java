@@ -28,6 +28,7 @@ import java.util.List;
         "\tbroadcast loop-bound"})
 @Since("1.15.0, 2.10.0 (temporary bounds)")
 public class ExprAllBounds extends SimpleExpression<Object> {
+
     static {
         Skript.registerExpression(ExprAllBounds.class, Object.class, ExpressionType.SIMPLE,
                 "[all [[of] the]] [-1:temporary|1:non[-| ]temporary] bound[s] [:id[s]]");
@@ -83,4 +84,5 @@ public class ExprAllBounds extends SimpleExpression<Object> {
             case UNKNOWN -> "all bound" + ID;
         };
     }
+
 }

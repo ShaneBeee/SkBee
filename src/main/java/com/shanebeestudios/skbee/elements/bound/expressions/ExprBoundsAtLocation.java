@@ -28,6 +28,7 @@ import java.util.List;
         "\tbroadcast loop-bound"})
 @Since("1.0.0, INSERT VERSION (temporary/non-temporary)")
 public class ExprBoundsAtLocation extends SimpleExpression<Object> {
+
     static {
         Skript.registerExpression(ExprBoundsAtLocation.class, Object.class, ExpressionType.COMBINED,
                 "[all [[of] the]|the] [-1:temporary|1:non[-| ]temporary] bound[s] [:id[s]] at %locations%");
@@ -89,4 +90,5 @@ public class ExprBoundsAtLocation extends SimpleExpression<Object> {
             case UNKNOWN -> "all bound" + ID + atLocation;
         };
     }
+
 }

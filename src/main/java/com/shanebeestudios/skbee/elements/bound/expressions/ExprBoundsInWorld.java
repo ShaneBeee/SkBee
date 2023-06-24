@@ -1,4 +1,5 @@
 package com.shanebeestudios.skbee.elements.bound.expressions;
+
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -15,8 +16,10 @@ import com.shanebeestudios.skbee.config.BoundConfig;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.List;
+
 @Name("Bound - Bounds in world")
 @Description("Get a list of non-temporary, temporary, or all bounds/ids inside a world.")
 @Examples({"set {_temporaryBounds::*} to temporary bounds in world of player",
@@ -25,14 +28,17 @@ import java.util.List;
         "\tbroadcast loop-bound"})
 @Since("INSERT VERSION")
 public class ExprBoundsInWorld extends SimpleExpression<Object> {
+
     static {
         Skript.registerExpression(ExprBoundsInWorld.class, Object.class, ExpressionType.SIMPLE,
                 "[all [[of] the]|the] [-1:temporary|1:non[-| ]temporary] bound[s] [:id[s]] in %worlds%");
     }
+
     private static final BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
     private Expression<World> worlds;
     private boolean ID;
     private Kleenean boundType;
+
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parse) {
         this.worlds = (Expression<World>) exprs[0];
@@ -40,6 +46,7 @@ public class ExprBoundsInWorld extends SimpleExpression<Object> {
         this.boundType = Kleenean.get(parse.mark);
         return true;
     }
+
     @Override
     protected @Nullable Object[] get(Event event) {
         List<Object> bounds = new ArrayList<>();
@@ -57,10 +64,12 @@ public class ExprBoundsInWorld extends SimpleExpression<Object> {
         }
         return bounds.toArray();
     }
+
     @Override
     public boolean isSingle() {
         return false;
     }
+
     @Override
     public Class<?> getReturnType() {
         if (ID) {
@@ -69,6 +78,7 @@ public class ExprBoundsInWorld extends SimpleExpression<Object> {
             return Bound.class;
         }
     }
+
     @Override
     public String toString(@Nullable Event event, boolean debug) {
         String ID = this.ID ? " ids" : "s";
@@ -79,4 +89,5 @@ public class ExprBoundsInWorld extends SimpleExpression<Object> {
             case UNKNOWN -> "all bound" + ID + inWorld;
         };
     }
+
 }
