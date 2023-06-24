@@ -5,6 +5,7 @@ import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
 import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
 import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -31,13 +32,40 @@ public class BoundBorderListener implements Listener {
     private final SkBee plugin;
     private final BoundConfig boundConfig;
 
+    private boolean PLAYER_MOVE;
+    private boolean PLAYER_TELEPORT;
+    private boolean PLAYER_BED_LEAVE;
+    private boolean PLAYER_BED_ENTER;
+    private boolean PLAYER_RESPAWN;
+    private boolean ENTITY_MOUNT;
+    private boolean ENTITY_DISMOUNT;
+    private boolean VEHICLE_MOVE;
+    private boolean VEHICLE_DESTROY;
+    private boolean VEHICLE_EXIT;
+    private boolean VEHICLE_ENTER;
+
     public BoundBorderListener(SkBee plugin) {
+        Config config = plugin.getPluginConfig();
         this.plugin = plugin;
         this.boundConfig = plugin.getBoundConfig();
+
+        this.PLAYER_MOVE = config.BOUND_EVENTS_PLAYER_MOVE;
+        this.PLAYER_TELEPORT = config.BOUND_EVENTS_PLAYER_TELEPORT;
+        this.PLAYER_RESPAWN = config.BOUND_EVENTS_PLAYER_RESPAWN;
+        this.PLAYER_BED_ENTER = config.BOUND_EVENTS_PLAYER_BED_ENTER;
+        this.PLAYER_BED_LEAVE = config.BOUND_EVENTS_PLAYER_BED_LEAVE;
+        this.ENTITY_MOUNT = config.BOUND_EVENTS_ENTITY_MOUNT;
+        this.ENTITY_DISMOUNT = config.BOUND_EVENTS_ENTITY_DISMOUNT;
+        this.VEHICLE_ENTER = config.BOUND_EVENTS_VEHICLE_ENTER;
+        this.VEHICLE_EXIT = config.BOUND_EVENTS_VEHICLE_EXIT;
+        this.VEHICLE_MOVE = config.BOUND_EVENTS_VEHICLE_MOVE;
+        this.VEHICLE_DESTROY = config.BOUND_EVENTS_VEHICLE_DESTROY;
+
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onBoundBorder(PlayerMoveEvent event) {
+        if (!this.PLAYER_MOVE) return;
         Player player = event.getPlayer();
         Location from = event.getFrom();
         Location to = event.getTo();
@@ -53,6 +81,7 @@ public class BoundBorderListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onPlayerTeleport(PlayerTeleportEvent event) {
+        if (!this.PLAYER_TELEPORT) return;
         Player player = event.getPlayer();
         Location from = event.getFrom();
         Location to = event.getTo();
@@ -62,7 +91,49 @@ public class BoundBorderListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onRespawn(PlayerRespawnEvent event) {
+        if (!this.PLAYER_RESPAWN) return;
+        Player player = event.getPlayer();
+        Location from = player.getLocation();
+        Location to = event.getRespawnLocation();
+        if (preventBoundMovement(player, from, to)) {
+            event.setRespawnLocation(Bukkit.getWorlds().get(0).getSpawnLocation());
+            if (event.isBedSpawn() || event.isAnchorSpawn()) {
+                player.setBedSpawnLocation(null);
+            }
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onEnterBed(PlayerBedEnterEvent event) {
+        if (!this.PLAYER_BED_ENTER) return;
+        Player player = event.getPlayer();
+        Location from = player.getLocation();
+        Location to = event.getBed().getLocation();
+        if (preventBoundMovement(player, from, to)) {
+            event.setCancelled(true);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onExitBed(PlayerBedLeaveEvent event) {
+        if (!this.PLAYER_BED_LEAVE) return;
+        Player player = event.getPlayer();
+        Location from = event.getBed().getLocation();
+        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
+            // Find player's new location after leaving bed
+            // have to add a delay as this isn't determinded in the event
+            Location to = player.getLocation();
+            if (preventBoundMovement(player, from, to)) {
+                player.teleport(from.add(0, 1, 0));
+            }
+        }, 1);
+
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onMount(EntityMountEvent event) {
+        if (!this.ENTITY_MOUNT) return;
         if (event.getEntity() instanceof Player player) {
             Location from = player.getLocation();
             Location to = event.getMount().getLocation();
@@ -74,6 +145,7 @@ public class BoundBorderListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onDismount(EntityDismountEvent event) {
+        if (!this.ENTITY_DISMOUNT) return;
         if (event.getEntity() instanceof Player player) {
             Location from = event.getDismounted().getLocation();
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
@@ -89,6 +161,7 @@ public class BoundBorderListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onVehicleEnter(VehicleEnterEvent event) {
+        if (!this.VEHICLE_ENTER) return;
         if (event.getEntered() instanceof Player player) {
             Location from = player.getLocation();
             Location to = event.getVehicle().getLocation();
@@ -99,7 +172,24 @@ public class BoundBorderListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
+    private void onVehicleExit(VehicleExitEvent event) {
+        if (!this.VEHICLE_EXIT) return;
+        Location from = event.getVehicle().getLocation();
+        if (event.getExited() instanceof Player player) {
+            Bukkit.getScheduler().runTaskLater(plugin, () -> {
+                Location to = player.getLocation();
+                if (preventBoundMovement(player, from, to)) {
+                    from.setYaw(player.getLocation().getYaw());
+                    from.setPitch(player.getLocation().getPitch());
+                    player.teleport(from);
+                }
+            }, 1);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onVehicleMove(VehicleMoveEvent event) {
+        if (!this.VEHICLE_MOVE) return;
         Vehicle vehicle = event.getVehicle();
         vehicle.getPassengers().forEach(entity -> {
             if (entity instanceof Player player) {
@@ -118,6 +208,7 @@ public class BoundBorderListener implements Listener {
 
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onVehicleDestroy(VehicleDestroyEvent event) {
+        if (!this.VEHICLE_DESTROY) return;
         Location from = event.getVehicle().getLocation();
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             for (Entity passenger : event.getVehicle().getPassengers()) {
@@ -131,59 +222,6 @@ public class BoundBorderListener implements Listener {
                 }
             }
         }, 1);
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onVehicleExit(VehicleExitEvent event) {
-        Location from = event.getVehicle().getLocation();
-        if (event.getExited() instanceof Player player) {
-            Bukkit.getScheduler().runTaskLater(plugin, () -> {
-                Location to = player.getLocation();
-                if (preventBoundMovement(player, from, to)) {
-                    from.setYaw(player.getLocation().getYaw());
-                    from.setPitch(player.getLocation().getPitch());
-                    player.teleport(from);
-                }
-            }, 1);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onEnterBed(PlayerBedEnterEvent event) {
-        Player player = event.getPlayer();
-        Location from = player.getLocation();
-        Location to = event.getBed().getLocation();
-        if (preventBoundMovement(player, from, to)) {
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onExitBed(PlayerBedLeaveEvent event) {
-        Player player = event.getPlayer();
-        Location from = event.getBed().getLocation();
-        Bukkit.getScheduler().runTaskLater(this.plugin, () -> {
-            // Find player's new location after leaving bed
-            // have to add a delay as this isn't determinded in the event
-            Location to = player.getLocation();
-            if (preventBoundMovement(player, from, to)) {
-                player.teleport(from.add(0, 1, 0));
-            }
-        }, 1);
-
-    }
-
-    @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
-    private void onRespawn(PlayerRespawnEvent event) {
-        Player player = event.getPlayer();
-        Location from = player.getLocation();
-        Location to = event.getRespawnLocation();
-        if (preventBoundMovement(player, from, to)) {
-            event.setRespawnLocation(Bukkit.getWorlds().get(0).getSpawnLocation());
-            if (event.isBedSpawn() || event.isAnchorSpawn()) {
-                player.setBedSpawnLocation(null);
-            }
-        }
     }
 
     private boolean preventBoundMovement(@NotNull Player player, @NotNull Location from, @NotNull Location to) {

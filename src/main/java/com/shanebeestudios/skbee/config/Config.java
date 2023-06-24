@@ -24,11 +24,22 @@ public class Config {
     public boolean NBT_EVENTS_ENTITY_CHANGE_BLOCK;
     public boolean NBT_EVENTS_ENTITY_EXPLODE;
     public boolean NBT_EVENTS_BLOCK_EXPLODE;
+    public boolean ELEMENTS_BOUND;
+    public boolean BOUND_EVENTS_PLAYER_MOVE;
+    public boolean BOUND_EVENTS_PLAYER_TELEPORT;
+    public boolean BOUND_EVENTS_PLAYER_RESPAWN;
+    public boolean BOUND_EVENTS_PLAYER_BED_ENTER;
+    public boolean BOUND_EVENTS_PLAYER_BED_LEAVE;
+    public boolean BOUND_EVENTS_ENTITY_MOUNT;
+    public boolean BOUND_EVENTS_ENTITY_DISMOUNT;
+    public boolean BOUND_EVENTS_VEHICLE_ENTER;
+    public boolean BOUND_EVENTS_VEHICLE_EXIT;
+    public boolean BOUND_EVENTS_VEHICLE_DESTROY;
+    public boolean BOUND_EVENTS_VEHICLE_MOVE;
     public boolean ELEMENTS_BOARD;
     public boolean ELEMENTS_OBJECTIVE;
     public boolean ELEMENTS_TEAM;
     public boolean ELEMENTS_RECIPE;
-    public boolean ELEMENTS_BOUND;
     public boolean ELEMENTS_STRUCTURE;
     public boolean ELEMENTS_VIRTUAL_FURNACE;
     public boolean ELEMENTS_TEXT_COMPONENT;
@@ -104,6 +115,10 @@ public class Config {
         return this.config.getBoolean("nbt-events." + nbtEvent);
     }
 
+    private boolean getBoundEvent(String boundEvent) {
+        return this.config.getBoolean("bound-events." + boundEvent);
+    }
+
     private void loadConfigs() {
         this.SETTINGS_DEBUG = getSetting("debug");
         this.SETTINGS_UPDATE_CHECKER = getSetting("update-checker");
@@ -117,11 +132,23 @@ public class Config {
         this.NBT_EVENTS_ENTITY_EXPLODE = getNBTEvent("entity-explode");
         this.NBT_EVENTS_BLOCK_EXPLODE = getNBTEvent("block-explode");
 
+        this.ELEMENTS_BOUND = getElement("bound");
+        this.BOUND_EVENTS_PLAYER_MOVE = getBoundEvent("player-move");
+        this.BOUND_EVENTS_PLAYER_TELEPORT = getBoundEvent("player-teleport");
+        this.BOUND_EVENTS_PLAYER_RESPAWN = getBoundEvent("player-respawn");
+        this.BOUND_EVENTS_PLAYER_BED_ENTER = getBoundEvent("player-bed-enter");
+        this.BOUND_EVENTS_PLAYER_BED_LEAVE = getBoundEvent("player-bed-leave");
+        this.BOUND_EVENTS_ENTITY_MOUNT = getBoundEvent("entity-mount");
+        this.BOUND_EVENTS_ENTITY_DISMOUNT = getBoundEvent("entity-dismount");
+        this.BOUND_EVENTS_VEHICLE_ENTER = getBoundEvent("vehicle-enter");
+        this.BOUND_EVENTS_VEHICLE_EXIT = getBoundEvent("vehicle-exit");
+        this.BOUND_EVENTS_VEHICLE_MOVE = getBoundEvent("vehicle-move");
+        this.BOUND_EVENTS_VEHICLE_DESTROY = getBoundEvent("vehicle-destroy");
+
         this.ELEMENTS_BOARD = getElement("scoreboard");
         this.ELEMENTS_OBJECTIVE = getElement("scoreboard-objective");
         this.ELEMENTS_TEAM = getElement("team");
         this.ELEMENTS_RECIPE = getElement("recipe");
-        this.ELEMENTS_BOUND = getElement("bound");
         this.ELEMENTS_STRUCTURE = getElement("structure");
         this.ELEMENTS_VIRTUAL_FURNACE = getElement("virtual-furnace");
         this.ELEMENTS_TEXT_COMPONENT = getElement("text-component");
