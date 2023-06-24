@@ -40,7 +40,7 @@ public class SkriptTypes {
                         String greater = getLoc(bound.getGreaterCorner());
                         String lesser = getLoc(bound.getLesserCorner());
                         String world = bound.getWorld().getName();
-                        return String.format((bound.isTemporary() ? "temporary bound" : "bound") + " '%s' between %s and %s in world \"%s\"",
+                        return String.format((bound.isTemporary() ? "Temporary bound" : "Bound") + " '%s' between %s and %s in world \"%s\"",
                                 bound.getId(), lesser, greater, world);
                     }
 
@@ -49,6 +49,9 @@ public class SkriptTypes {
                         return String.format("bound:%s", bound.getId());
                     }
 
+                    public String getVariableNamePattern() {
+                        return "bound:.+";
+                    }
                 })
                 .serializer(new Serializer<>() {
                     @Override
