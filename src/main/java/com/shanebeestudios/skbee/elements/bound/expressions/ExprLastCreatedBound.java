@@ -10,7 +10,9 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.config.BoundConfig;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
@@ -21,6 +23,8 @@ import org.eclipse.jdt.annotation.Nullable;
         "resize last created bound between {_pos1^2} and {_pos2^2}"})
 @Since("INSERT VERSION")
 public class ExprLastCreatedBound extends SimpleExpression<Bound> {
+
+    private static final BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
 
     static {
         Skript.registerExpression(ExprLastCreatedBound.class, Bound.class, ExpressionType.SIMPLE,
@@ -37,6 +41,10 @@ public class ExprLastCreatedBound extends SimpleExpression<Bound> {
     @Override
     protected @Nullable Bound[] get(Event event) {
         if (lastCreated == null) return null;
+        if (!boundConfig.boundExists(lastCreated.getId())) {
+            lastCreated = null;
+            return null;
+        }
         return new Bound[]{lastCreated};
     }
 
