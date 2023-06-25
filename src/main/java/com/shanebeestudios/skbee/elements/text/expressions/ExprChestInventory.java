@@ -10,7 +10,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryType;
@@ -34,12 +34,12 @@ public class ExprChestInventory extends SimpleExpression<Inventory> {
     }
 
     private Expression<Number> rows;
-    private Expression<BeeComponent> name;
+    private Expression<ComponentWrapper> name;
 
     @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        name = (Expression<BeeComponent>) exprs[matchedPattern];
+        name = (Expression<ComponentWrapper>) exprs[matchedPattern];
         rows = (Expression<Number>) exprs[matchedPattern ^ 1];
         return true;
     }
@@ -57,7 +57,7 @@ public class ExprChestInventory extends SimpleExpression<Inventory> {
         if (size < 0) size = 0;
         if (size > 54) size = 54;
 
-        BeeComponent name = this.name.getSingle(event);
+        ComponentWrapper name = this.name.getSingle(event);
         if (name == null) return null;
         return new Inventory[]{Bukkit.createInventory(null, size, name.getComponent())};
     }

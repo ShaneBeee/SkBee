@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -28,12 +28,12 @@ import javax.annotation.Nullable;
         "set color format of {_t} to rgb(100, 0, 160)",
         "set insertion format of {_t} to \"ooooo\""})
 @Since("1.5.1")
-public class ExprComponentFormat extends PropertyExpression<BeeComponent, Object> {
+public class ExprComponentFormat extends PropertyExpression<ComponentWrapper, Object> {
 
     private static final int COLOR = 0, BOLD = 1, ITALIC = 2, OBFUSCATED = 3, STRIKETHROUGH = 4, UNDERLINE = 5, FONT = 6, INSERT = 7;
 
     static {
-        if (Skript.methodExists(BeeComponent.class, "setInsertion", String.class)) {
+        if (Skript.methodExists(ComponentWrapper.class, "setInsertion", String.class)) {
             register(ExprComponentFormat.class, Object.class,
                     "(color|1¦bold|2¦italic|3¦(obfuscate[d]|magic)|4¦strikethrough|5¦underline[d]|6¦font|7¦insert[ion]) format",
                     "textcomponents");
@@ -50,12 +50,12 @@ public class ExprComponentFormat extends PropertyExpression<BeeComponent, Object
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
         pattern = parseResult.mark;
-        setExpr((Expression<BeeComponent>) exprs[0]);
+        setExpr((Expression<ComponentWrapper>) exprs[0]);
         return true;
     }
 
     @Override
-    protected Object @NotNull [] get(@NotNull Event e, BeeComponent @NotNull [] source) {
+    protected Object @NotNull [] get(@NotNull Event e, ComponentWrapper @NotNull [] source) {
         return get(source, component -> switch (pattern) {
             case COLOR -> component.getColor();
             case BOLD -> component.isBold();
@@ -84,49 +84,49 @@ public class ExprComponentFormat extends PropertyExpression<BeeComponent, Object
         switch (pattern) {
             case COLOR:
                 if (object instanceof Color color) {
-                    for (BeeComponent component : getExpr().getArray(e)) {
+                    for (ComponentWrapper component : getExpr().getArray(e)) {
                         component.setColor(color);
                     }
                 }
                 break;
             case BOLD:
-                for (BeeComponent component : getExpr().getArray(e)) {
+                for (ComponentWrapper component : getExpr().getArray(e)) {
                     boolean bold = !(object instanceof Boolean) || (boolean) object;
                     component.setBold(bold);
                 }
                 break;
             case ITALIC:
-                for (BeeComponent component : getExpr().getArray(e)) {
+                for (ComponentWrapper component : getExpr().getArray(e)) {
                     boolean italic = !(object instanceof Boolean) || (boolean) object;
                     component.setItalic(italic);
                 }
                 break;
             case OBFUSCATED:
-                for (BeeComponent component : getExpr().getArray(e)) {
+                for (ComponentWrapper component : getExpr().getArray(e)) {
                     boolean obfuscated = !(object instanceof Boolean) || (boolean) object;
                     component.setObfuscated(obfuscated);
                 }
                 break;
             case STRIKETHROUGH:
-                for (BeeComponent component : getExpr().getArray(e)) {
+                for (ComponentWrapper component : getExpr().getArray(e)) {
                     boolean strike = !(object instanceof Boolean) || (boolean) object;
                     component.setStrikethrough(strike);
                 }
                 break;
             case UNDERLINE:
-                for (BeeComponent component : getExpr().getArray(e)) {
+                for (ComponentWrapper component : getExpr().getArray(e)) {
                     boolean underline = !(object instanceof Boolean) || (boolean) object;
                     component.setUnderlined(underline);
                 }
                 break;
             case FONT:
                 String font = object instanceof String ? ((String) object) : object.toString();
-                for (BeeComponent beeComponent : getExpr().getArray(e)) {
-                    beeComponent.setFont(font);
+                for (ComponentWrapper componentWrapper : getExpr().getArray(e)) {
+                    componentWrapper.setFont(font);
                 }
             case INSERT:
                 String insert = object instanceof String ? ((String) object) : object.toString();
-                for (BeeComponent component : getExpr().getArray(e)) {
+                for (ComponentWrapper component : getExpr().getArray(e)) {
                     component.setInsertion(insert);
                 }
                 break;

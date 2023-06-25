@@ -3,6 +3,12 @@ package com.shanebeestudios.skbee.api.util;
 import com.shanebeestudios.skbee.api.reflection.ReflectionConstants;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Utility class for {@link Entity Entities}

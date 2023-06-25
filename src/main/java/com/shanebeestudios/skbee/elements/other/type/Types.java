@@ -8,7 +8,7 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.Converters;
 import ch.njol.util.StringUtils;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
@@ -31,26 +31,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
+    private static final Map<String,ItemFlag> ITEM_FLAG_MAP = new HashMap<>();
 
     private static String getItemFlagNames() {
-        List<String> flags = new ArrayList<>();
-        for (ItemFlag flag : ItemFlag.values()) {
-            String hide = flag.name().replace("HIDE_", "").toLowerCase(Locale.ROOT);
-            hide += "_flag";
-            flags.add(hide);
-        }
+        List<String> flags = new ArrayList<>(ITEM_FLAG_MAP.keySet());
         Collections.sort(flags);
         return StringUtils.join(flags, ", ");
     }
 
     static {
         if (Classes.getExactClassInfo(ItemFlag.class) == null) {
+            for (ItemFlag itemFlag : ItemFlag.values()) {
+                String name = itemFlag.name().replace("HIDE_", "").toLowerCase(Locale.ROOT) + "_flag";
+                ITEM_FLAG_MAP.put(name, itemFlag);
+            }
             Classes.registerClass(new ClassInfo<>(ItemFlag.class, "itemflag")
                     .user("item ?flags?")
                     .name("Item Flag")
@@ -68,13 +70,9 @@ public class Types {
                         @SuppressWarnings("NullableProblems")
                         @Override
                         public @Nullable ItemFlag parse(String string, ParseContext context) {
-                            String flag = string.replace(" ", "_").toUpperCase(Locale.ROOT);
-                            flag = "HIDE_" + flag.replace("_FLAG", "");
-                            try {
-                                return ItemFlag.valueOf(flag);
-                            } catch (IllegalArgumentException ignore) {
-                                return null;
-                            }
+                            String flag = string.replace(" ", "_");
+                            if (ITEM_FLAG_MAP.containsKey(flag)) return ITEM_FLAG_MAP.get(flag);
+                            return null;
                         }
 
                         @Override
@@ -95,7 +93,7 @@ public class Types {
 
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Spellcaster.Spell.class) == null) {
-            EnumUtils<Spellcaster.Spell> SPELL_ENUM = new EnumUtils<>(Spellcaster.Spell.class);
+            EnumWrapper<Spellcaster.Spell> SPELL_ENUM = new EnumWrapper<>(Spellcaster.Spell.class);
             Classes.registerClass(new ClassInfo<>(Spellcaster.Spell.class, "spell")
                     .user("spells?")
                     .name("Spellcaster Spell")
@@ -111,7 +109,7 @@ public class Types {
         // Only register if no other addons have registered this class
         // EntityPotionEffectEvent.Cause
         if (Classes.getExactClassInfo(Cause.class) == null) {
-            EnumUtils<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumUtils<>(Cause.class, "", "effect");
+            EnumWrapper<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumWrapper<>(Cause.class, "", "effect");
             Classes.registerClass(new ClassInfo<>(Cause.class, "potioneffectcause")
                     .user("potion ?effect ?causes?")
                     .name("Potion Effect Cause")
@@ -125,7 +123,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(TransformReason.class) == null) {
-            EnumUtils<TransformReason> TRANSOFORM_REASON = new EnumUtils<>(TransformReason.class);
+            EnumWrapper<TransformReason> TRANSOFORM_REASON = new EnumWrapper<>(TransformReason.class);
             Classes.registerClass(new ClassInfo<>(TransformReason.class, "transformreason")
                     .user("transform ?reasons?")
                     .name("Transform Reason")
@@ -137,7 +135,7 @@ public class Types {
 
         if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
             if (Classes.getExactClassInfo(QuitReason.class) == null) {
-                EnumUtils<QuitReason> QUIT_REASON = new EnumUtils<>(QuitReason.class);
+                EnumWrapper<QuitReason> QUIT_REASON = new EnumWrapper<>(QuitReason.class);
                 Classes.registerClass(new ClassInfo<>(QuitReason.class, "quitreason")
                         .user("quit ?reasons?")
                         .name("Quit Reason")
@@ -177,7 +175,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(BlockFace.class) == null) {
-            EnumUtils<BlockFace> BLOCK_FACE_ENUM = new EnumUtils<>(BlockFace.class);
+            EnumWrapper<BlockFace> BLOCK_FACE_ENUM = new EnumWrapper<>(BlockFace.class);
             Classes.registerClass(new ClassInfo<>(BlockFace.class, "blockface")
                     .user("blockfaces?")
                     .name("BlockFace")
@@ -189,7 +187,7 @@ public class Types {
         }
 
         if (Skript.methodExists(PlayerRespawnEvent.class, "getRespawnReason")) {
-            EnumUtils<RespawnReason> RESPAWN_REASON_ENUM = new EnumUtils<>(RespawnReason.class, "", "respawn");
+            EnumWrapper<RespawnReason> RESPAWN_REASON_ENUM = new EnumWrapper<>(RespawnReason.class, "", "respawn");
             Classes.registerClass(new ClassInfo<>(RespawnReason.class, "respawnreason")
                     .user("respawn ?reasons?")
                     .name("Respawn Reason")
@@ -217,7 +215,7 @@ public class Types {
                     .name("ArmorTrim")
                     .description("Represents an armor trim that may be applied to an item.",
                             "Requires MC 1.19.4+")
-                    .since("INSERT VERSION")
+                    .since("2.13.0")
                     .parser(new Parser<>() {
 
                         @Override
@@ -238,22 +236,22 @@ public class Types {
                         }
                     }));
 
-            RegistryWrapper<TrimMaterial> TRIM_REGISTRY = new RegistryWrapper<>(Registry.TRIM_MATERIAL, "", "material");
+            RegistryWrapper<TrimMaterial> TRIM_REGISTRY = RegistryWrapper.wrap(Registry.TRIM_MATERIAL, null, "material");
             Classes.registerClass(new ClassInfo<>(TrimMaterial.class, "trimmaterial")
                     .user("trim ?materials?")
                     .name("ArmorTrim - TrimMaterial")
                     .description("Represents a material that may be used in an ArmorTrim.")
                     .usage(TRIM_REGISTRY.getNames())
-                    .since("INSERT VERSION")
+                    .since("2.13.0")
                     .parser(TRIM_REGISTRY.getParser()));
 
-            RegistryWrapper<TrimPattern> TRIM_PATTERN_REGISTER = new RegistryWrapper<>(Registry.TRIM_PATTERN, "", "pattern");
+            RegistryWrapper<TrimPattern> TRIM_PATTERN_REGISTER = RegistryWrapper.wrap(Registry.TRIM_PATTERN, null, "pattern");
             Classes.registerClass(new ClassInfo<>(TrimPattern.class, "trimpattern")
                     .user("trim ?patterns?")
                     .name("ArmorTrim - TrimPattern")
                     .description("Represents a pattern that may be used in an ArmorTrim.")
                     .usage(TRIM_PATTERN_REGISTER.getNames())
-                    .since("INSERT VERSION")
+                    .since("2.13.0")
                     .parser(TRIM_PATTERN_REGISTER.getParser()));
         }
     }

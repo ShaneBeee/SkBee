@@ -9,7 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.structure.StructureBee;
+import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,24 +23,24 @@ public class EffStructureSave extends Effect {
         Skript.registerEffect(EffStructureSave.class, "(save|1¦delete) [structure[s]] %structures%");
     }
 
-    private Expression<StructureBee> structures;
+    private Expression<StructureWrapper> structures;
     private boolean save;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        structures = (Expression<StructureBee>) exprs[0];
+        structures = (Expression<StructureWrapper>) exprs[0];
         save = parseResult.mark == 0;
         return true;
     }
 
     @Override
     protected void execute(Event e) {
-        for (StructureBee structureBee : this.structures.getAll(e)) {
+        for (StructureWrapper structureWrapper : this.structures.getAll(e)) {
             if (save)
-                structureBee.save();
+                structureWrapper.save();
             else
-                structureBee.delete();
+                structureWrapper.delete();
         }
     }
 

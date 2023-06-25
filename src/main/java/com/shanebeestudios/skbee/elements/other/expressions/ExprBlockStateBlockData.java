@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Represents the blockdata of a block state.")
 @Examples({"set {_data} to blockstate blockdata of {_blockstate}",
         "set blockstate blockdata of {_blockstate} to stone[]"})
-@Since("INSERT VERSION")
+@Since("2.13.0")
 public class ExprBlockStateBlockData extends SimplePropertyExpression<BlockStateWrapper, BlockData> {
 
     static {

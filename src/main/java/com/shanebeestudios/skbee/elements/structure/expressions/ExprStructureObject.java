@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.structure.StructureBee;
-import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
+import com.shanebeestudios.skbee.api.structure.StructureWrapper;
+import com.shanebeestudios.skbee.api.structure.StructureManager;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -30,13 +30,13 @@ import java.util.List;
         "set {_s} to structure named \"my-house\"",
         "set {_s::*} to structures named \"house1\" and \"house2\""})
 @Since("1.12.0")
-public class ExprStructureObject extends SimpleExpression<StructureBee> {
+public class ExprStructureObject extends SimpleExpression<StructureWrapper> {
 
-    private static final StructureBeeManager STRUCTURE_BEE_MANAGER;
+    private static final StructureManager STRUCTURE_MANAGER;
 
     static {
-        STRUCTURE_BEE_MANAGER = SkBee.getPlugin().getStructureBeeManager();
-        Skript.registerExpression(ExprStructureObject.class, StructureBee.class, ExpressionType.SIMPLE,
+        STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
+        Skript.registerExpression(ExprStructureObject.class, StructureWrapper.class, ExpressionType.SIMPLE,
                 "structure[s] named %strings%");
     }
 
@@ -53,16 +53,16 @@ public class ExprStructureObject extends SimpleExpression<StructureBee> {
     @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
-    protected StructureBee[] get(Event event) {
-        List<StructureBee> structures = new ArrayList<>();
+    protected StructureWrapper[] get(Event event) {
+        List<StructureWrapper> structures = new ArrayList<>();
         for (String file : fileString.getAll(event)) {
-            assert STRUCTURE_BEE_MANAGER != null;
-            StructureBee structure = STRUCTURE_BEE_MANAGER.getStructure(file);
+            assert STRUCTURE_MANAGER != null;
+            StructureWrapper structure = STRUCTURE_MANAGER.getStructure(file);
             if (structure != null) {
                 structures.add(structure);
             }
         }
-        return structures.toArray(new StructureBee[0]);
+        return structures.toArray(new StructureWrapper[0]);
     }
 
     @Override
@@ -72,8 +72,8 @@ public class ExprStructureObject extends SimpleExpression<StructureBee> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public Class<? extends StructureBee> getReturnType() {
-        return StructureBee.class;
+    public Class<? extends StructureWrapper> getReturnType() {
+        return StructureWrapper.class;
     }
 
     @SuppressWarnings("NullableProblems")

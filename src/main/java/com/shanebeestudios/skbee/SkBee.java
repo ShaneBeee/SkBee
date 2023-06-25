@@ -2,12 +2,12 @@ package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
-import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
+import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
-import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
-import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import com.shanebeestudios.skbee.config.BoundConfig;
+import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bstats.bukkit.Metrics;
@@ -35,7 +35,7 @@ public class SkBee extends JavaPlugin {
     BoundConfig boundConfig = null;
     VirtualFurnaceAPI virtualFurnaceAPI;
     BeeWorldConfig beeWorldConfig;
-    StructureBeeManager structureBeeManager = null;
+    StructureManager structureManager = null;
     AddonLoader addonLoader = null;
 
     @Override
@@ -153,12 +153,12 @@ public class SkBee extends JavaPlugin {
     }
 
     /**
-     * Get an instance of the {@link StructureBeeManager}
+     * Get an instance of the {@link StructureManager}
      *
      * @return Instance of the Structure Bee Manager
      */
-    public StructureBeeManager getStructureBeeManager() {
-        return structureBeeManager;
+    public StructureManager getStructureManager() {
+        return structureManager;
     }
 
     public AddonLoader getAddonLoader() {

@@ -7,7 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.event.Event;
@@ -22,19 +22,19 @@ import java.util.List;
         "NOTE: This will only rename OPEN inventories, not inventories saved in variables."})
 @Examples("set component inventory title of player's current inventory to {_t}")
 @Since("2.4.0")
-public class ExprNameInventory extends SimplePropertyExpression<Inventory, BeeComponent> {
+public class ExprNameInventory extends SimplePropertyExpression<Inventory, ComponentWrapper> {
 
     static {
-        register(ExprNameInventory.class, BeeComponent.class,
+        register(ExprNameInventory.class, ComponentWrapper.class,
                 "component inventory (name|title)", "inventories");
     }
 
     @Override
-    public @Nullable BeeComponent convert(Inventory inventory) {
+    public @Nullable ComponentWrapper convert(Inventory inventory) {
         List<HumanEntity> viewers = inventory.getViewers();
         if (viewers.size() > 0) {
             Component title = viewers.get(0).getOpenInventory().title();
-            return BeeComponent.fromComponent(title);
+            return ComponentWrapper.fromComponent(title);
         }
         return null;
     }
@@ -43,7 +43,7 @@ public class ExprNameInventory extends SimplePropertyExpression<Inventory, BeeCo
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(BeeComponent.class);
+            return CollectionUtils.array(ComponentWrapper.class);
         }
         return null;
     }
@@ -52,7 +52,7 @@ public class ExprNameInventory extends SimplePropertyExpression<Inventory, BeeCo
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            if (delta[0] instanceof BeeComponent component) {
+            if (delta[0] instanceof ComponentWrapper component) {
                 for (Inventory inventory : getExpr().getArray(event)) {
                     component.setInventoryName(inventory);
                 }
@@ -61,8 +61,8 @@ public class ExprNameInventory extends SimplePropertyExpression<Inventory, BeeCo
     }
 
     @Override
-    public @NotNull Class<? extends BeeComponent> getReturnType() {
-        return BeeComponent.class;
+    public @NotNull Class<? extends ComponentWrapper> getReturnType() {
+        return ComponentWrapper.class;
     }
 
     @Override

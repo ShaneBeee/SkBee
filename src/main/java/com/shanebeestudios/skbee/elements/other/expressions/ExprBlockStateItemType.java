@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Represents the itemtype of a block state.")
 @Examples({"set {_type} to blockstate itemtype of {_blockstate}",
         "set blockstate itemtype of {_blockstate} to stone"})
-@Since("INSERT VERSION")
+@Since("2.13.0")
 public class ExprBlockStateItemType extends SimplePropertyExpression<BlockStateWrapper, ItemType> {
 
     static {

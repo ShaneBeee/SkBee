@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.WorldUtils;
-import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;

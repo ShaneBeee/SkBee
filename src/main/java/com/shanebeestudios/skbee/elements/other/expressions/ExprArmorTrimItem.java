@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
         "set armor trim of player's helmet to armor trim from gold_material and eye_pattern",
         "delete armor trim of player's leggings",
         "reset armor trim of player's boots"})
-@Since("INSERT VERSION")
+@Since("2.13.0")
 public class ExprArmorTrimItem extends SimplePropertyExpression<ItemType, ArmorTrim> {
 
     static {

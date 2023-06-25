@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -63,14 +63,14 @@ public class EffSendComponent extends Effect {
 
         Player sender = this.sender != null ? this.sender.getSingle(event) : null;
         for (Object object : this.components.getArray(event)) {
-            BeeComponent component = BeeComponent.empty();
-            if (object instanceof BeeComponent beeComponent) {
-                component = beeComponent;
+            ComponentWrapper component = ComponentWrapper.empty();
+            if (object instanceof ComponentWrapper componentWrapper) {
+                component = componentWrapper;
             } else if (object instanceof String string) {
-                component.append(BeeComponent.fromText(string));
+                component.append(ComponentWrapper.fromText(string));
             } else {
                 String string = Classes.toString(object);
-                component.append(BeeComponent.fromText(string));
+                component.append(ComponentWrapper.fromText(string));
             }
 
             if (this.broadcast) {

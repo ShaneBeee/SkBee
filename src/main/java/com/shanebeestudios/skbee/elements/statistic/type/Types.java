@@ -3,7 +3,7 @@ package com.shanebeestudios.skbee.elements.statistic.type;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Statistic;
 import org.bukkit.Statistic.Type;
 
@@ -14,7 +14,7 @@ import java.util.List;
 public class Types {
 
     static {
-        EnumUtils<Statistic> STATISTICS_ENUM = new EnumUtils<>(Statistic.class);
+        EnumWrapper<Statistic> STATISTICS_ENUM = new EnumWrapper<>(Statistic.class);
         Classes.registerClass(new ClassInfo<>(Statistic.class, "statistic")
                 .user("statistics?")
                 .name("Statistic")

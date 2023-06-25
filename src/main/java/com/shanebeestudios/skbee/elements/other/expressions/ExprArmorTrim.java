@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Create a new armor trim to be applied to an item. Requires MC 1.19.4+")
 @Examples({"set {_trim} to armor trim using gold_material with eye_pattern",
         "add armor trim using gold_material with eye_pattern to armor trim of player's helmet"})
-@Since("INSERT VERSION")
+@Since("2.13.0")
 public class ExprArmorTrim extends SimpleExpression<ArmorTrim> {
 
     static {

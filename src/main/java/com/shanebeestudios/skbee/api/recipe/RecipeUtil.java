@@ -23,6 +23,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Utility methods for {@link Recipe recipes}
+ */
 public class RecipeUtil {
 
     private static final boolean COOKING_CATEGORY_EXISTS = Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory");
@@ -32,10 +35,10 @@ public class RecipeUtil {
      * Get a NamespacedKey from string
      * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
      *
-     * @deprecated Planning to remove all string based ids for recipes in the future, please use Util#getNamespacedkey
-     * more information on this in the future when it's put into action
      * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
+     * @deprecated Planning to remove all string based ids for recipes in the future, please use Util#getNamespacedkey
+     * more information on this in the future when it's put into action
      */
     @Deprecated()
     public static NamespacedKey getKey(Object key) {
@@ -195,6 +198,12 @@ public class RecipeUtil {
         log(" - &7Ingredient: &e%s", getFancy(potionMix.getIngredient()));
     }
 
+    /**
+     * Log a cooking recipe to console
+     * Mainly used for debugging purposes
+     *
+     * @param recipe Recipe to log
+     */
     public static void logCookingRecipe(CookingRecipe<?> recipe) {
         log("&aRegistered new cooking recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());

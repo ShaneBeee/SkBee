@@ -8,12 +8,12 @@ import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
-import com.shanebeestudios.skbee.api.structure.StructureBeeManager;
+import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
-import com.shanebeestudios.skbee.elements.bound.config.BoundConfig;
+import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
 import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
@@ -280,7 +280,7 @@ public class AddonLoader {
             return;
         }
 
-        this.plugin.structureBeeManager = new StructureBeeManager();
+        this.plugin.structureManager = new StructureManager();
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.structure");
             Util.logLoading("&5Structure Elements &asuccessfully loaded");

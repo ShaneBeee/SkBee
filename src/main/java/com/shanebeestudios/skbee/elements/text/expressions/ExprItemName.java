@@ -8,7 +8,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -17,23 +17,23 @@ import org.jetbrains.annotations.NotNull;
 @Description("Get/set the component name of an ItemType.")
 @Examples("set component item name of player's tool to translate component of \"item.minecraft.diamond_sword\"")
 @Since("2.4.0")
-public class ExprItemName extends SimplePropertyExpression<ItemType, BeeComponent> {
+public class ExprItemName extends SimplePropertyExpression<ItemType, ComponentWrapper> {
 
     static {
-        register(ExprItemName.class, BeeComponent.class,
+        register(ExprItemName.class, ComponentWrapper.class,
                 "component item[[ ]type] name", "itemtypes");
     }
 
     @Override
-    public @Nullable BeeComponent convert(ItemType itemType) {
-        return BeeComponent.fromComponent(itemType.getItemMeta().displayName());
+    public @Nullable ComponentWrapper convert(ItemType itemType) {
+        return ComponentWrapper.fromComponent(itemType.getItemMeta().displayName());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(BeeComponent.class);
+            return CollectionUtils.array(ComponentWrapper.class);
         }
         return null;
     }
@@ -42,7 +42,7 @@ public class ExprItemName extends SimplePropertyExpression<ItemType, BeeComponen
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            if (delta[0] instanceof BeeComponent component) {
+            if (delta[0] instanceof ComponentWrapper component) {
                 for (ItemType itemType : getExpr().getArray(event)) {
                     component.setItemName(itemType);
                 }
@@ -51,8 +51,8 @@ public class ExprItemName extends SimplePropertyExpression<ItemType, BeeComponen
     }
 
     @Override
-    public @NotNull Class<? extends BeeComponent> getReturnType() {
-        return BeeComponent.class;
+    public @NotNull Class<? extends ComponentWrapper> getReturnType() {
+        return ComponentWrapper.class;
     }
 
     @Override

@@ -8,7 +8,7 @@ import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
-import com.shanebeestudios.skbee.api.util.EnumUtils;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
@@ -39,7 +39,7 @@ public class Types {
                 .description("Represents the brightness attributes of a Display Entity.", McWIKI)
                 .since("2.8.0"));
 
-        EnumUtils<Billboard> BILLBOARD_ENUM = new EnumUtils<>(Billboard.class);
+        EnumWrapper<Billboard> BILLBOARD_ENUM = new EnumWrapper<>(Billboard.class);
         Classes.registerClass(new ClassInfo<>(Billboard.class, "displaybillboard")
                 .user("display ?billboards?")
                 .name("DisplayEntity - Billboard")
@@ -48,7 +48,7 @@ public class Types {
                 .since("2.8.0")
                 .parser(BILLBOARD_ENUM.getParser()));
 
-        EnumUtils<TextAlignment> TEXT_ALIGNMENT_ENUM = new EnumUtils<>(TextAlignment.class, "", "aligned");
+        EnumWrapper<TextAlignment> TEXT_ALIGNMENT_ENUM = new EnumWrapper<>(TextAlignment.class, "", "aligned");
         Classes.registerClass(new ClassInfo<>(TextAlignment.class, "textalignment")
                 .user("text ?alignments?")
                 .name("DisplayEntity - Text Alignment")
@@ -59,7 +59,7 @@ public class Types {
                 .since("2.8.0")
                 .parser(TEXT_ALIGNMENT_ENUM.getParser()));
 
-        EnumUtils<ItemDisplayTransform> TRANSFORM_ENUM = new EnumUtils<>(ItemDisplayTransform.class, "", "transform");
+        EnumWrapper<ItemDisplayTransform> TRANSFORM_ENUM = new EnumWrapper<>(ItemDisplayTransform.class, "", "transform");
         Classes.registerClass(new ClassInfo<>(ItemDisplayTransform.class, "itemdisplaytransform")
                 .user("item ?display ?transforms?")
                 .name("DisplayEntity - Item Display Transform")

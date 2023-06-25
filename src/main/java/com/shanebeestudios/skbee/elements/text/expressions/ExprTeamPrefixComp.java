@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
 import org.eclipse.jdt.annotation.Nullable;
@@ -21,11 +21,11 @@ import org.jetbrains.annotations.NotNull;
 @Description("Get/set prefix/suffix of teams using components.")
 @Examples("set component team prefix of team of player to mini message from \"<color:grey>[<color:aqua>OWNER<color:grey>] \"")
 @Since("2.4.0")
-public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, BeeComponent> {
+public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, ComponentWrapper> {
 
     static {
         if (SkBee.getPlugin().getPluginConfig().ELEMENTS_TEAM) {
-            register(ExprTeamPrefixComp.class, BeeComponent.class, "component team (prefix|1¦suffix)", "teams");
+            register(ExprTeamPrefixComp.class, ComponentWrapper.class, "component team (prefix|1¦suffix)", "teams");
         }
     }
 
@@ -39,15 +39,15 @@ public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, BeeCompon
     }
 
     @Override
-    public @Nullable BeeComponent convert(Team team) {
-        return BeeComponent.fromComponent(prefix ? team.prefix() : team.suffix());
+    public @Nullable ComponentWrapper convert(Team team) {
+        return ComponentWrapper.fromComponent(prefix ? team.prefix() : team.suffix());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(BeeComponent.class);
+            return CollectionUtils.array(ComponentWrapper.class);
         }
         return null;
     }
@@ -55,7 +55,7 @@ public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, BeeCompon
     @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (delta[0] instanceof BeeComponent component) {
+        if (delta[0] instanceof ComponentWrapper component) {
             if (mode == ChangeMode.SET) {
                 for (Team team : getExpr().getArray(event)) {
                     if (prefix) {
@@ -69,8 +69,8 @@ public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, BeeCompon
     }
 
     @Override
-    public @NotNull Class<? extends BeeComponent> getReturnType() {
-        return BeeComponent.class;
+    public @NotNull Class<? extends ComponentWrapper> getReturnType() {
+        return ComponentWrapper.class;
     }
 
     @Override

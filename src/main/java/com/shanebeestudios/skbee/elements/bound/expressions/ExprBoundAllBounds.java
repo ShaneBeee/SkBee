@@ -11,7 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.elements.bound.objects.Bound;
+import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;

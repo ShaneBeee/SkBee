@@ -14,7 +14,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -29,10 +29,10 @@ import java.util.List;
 @Description("Get/set the lore of an item using text components.")
 @Examples("set component lore of player's tool to mini message from \"<rainbow>OOO RAINBOW LORE\"")
 @Since("2.4.0")
-public class ExprItemLore extends SimpleExpression<BeeComponent> {
+public class ExprItemLore extends SimpleExpression<ComponentWrapper> {
 
     static {
-        Skript.registerExpression(ExprItemLore.class, BeeComponent.class, ExpressionType.PROPERTY,
+        Skript.registerExpression(ExprItemLore.class, ComponentWrapper.class, ExpressionType.PROPERTY,
                 "[the] component [item] lore of %itemstack/itemtype/slot%",
                 "%itemstack/itemtype/slot%'[s] component [item] lore");
     }
@@ -48,7 +48,7 @@ public class ExprItemLore extends SimpleExpression<BeeComponent> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable BeeComponent[] get(Event event) {
+    protected @Nullable ComponentWrapper[] get(Event event) {
         ItemMeta meta;
         Object item = this.item.getSingle(event);
         if (item instanceof ItemType itemType) {
@@ -66,19 +66,19 @@ public class ExprItemLore extends SimpleExpression<BeeComponent> {
             return null;
         }
 
-        List<BeeComponent> components = new ArrayList<>();
+        List<ComponentWrapper> components = new ArrayList<>();
         List<Component> lore = meta.lore();
         if (lore != null) {
-            lore.forEach(component -> components.add(BeeComponent.fromComponent(component)));
+            lore.forEach(component -> components.add(ComponentWrapper.fromComponent(component)));
         }
-        return components.toArray(new BeeComponent[0]);
+        return components.toArray(new ComponentWrapper[0]);
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET || mode == ChangeMode.ADD) {
-            return CollectionUtils.array(BeeComponent[].class);
+            return CollectionUtils.array(ComponentWrapper[].class);
         }
         return null;
     }
@@ -108,7 +108,7 @@ public class ExprItemLore extends SimpleExpression<BeeComponent> {
         }
 
         for (Object object : delta) {
-            if (object instanceof BeeComponent component) {
+            if (object instanceof ComponentWrapper component) {
                 lores.add(component.getComponent());
             }
         }
@@ -129,8 +129,8 @@ public class ExprItemLore extends SimpleExpression<BeeComponent> {
     }
 
     @Override
-    public @NotNull Class<? extends BeeComponent> getReturnType() {
-        return BeeComponent.class;
+    public @NotNull Class<? extends ComponentWrapper> getReturnType() {
+        return ComponentWrapper.class;
     }
 
     @Override

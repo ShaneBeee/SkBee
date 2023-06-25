@@ -11,7 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.structure.StructureBee;
+import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
 import org.bukkit.event.Event;
@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
         "reset structure rotation of {_s}",
         "reset structure integrity of {_s}"})
 @Since("1.12.0")
-public class ExprStructureProperties extends PropertyExpression<StructureBee, Object> {
+public class ExprStructureProperties extends PropertyExpression<StructureWrapper, Object> {
 
     static {
         Skript.registerExpression(ExprStructureProperties.class, Object.class, ExpressionType.PROPERTY,
@@ -49,20 +49,20 @@ public class ExprStructureProperties extends PropertyExpression<StructureBee, Ob
     }
 
     private int pattern;
-    private Expression<StructureBee> structures;
+    private Expression<StructureWrapper> structures;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         pattern = matchedPattern;
-        structures = (Expression<StructureBee>) exprs[0];
+        structures = (Expression<StructureWrapper>) exprs[0];
         setExpr(structures);
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected Object[] get(Event event, StructureBee[] source) {
+    protected Object[] get(Event event, StructureWrapper[] source) {
         return get(source, structure -> switch (pattern) {
             case 0 -> structure.getMirror();
             case 1 -> structure.getRotation();
@@ -94,7 +94,7 @@ public class ExprStructureProperties extends PropertyExpression<StructureBee, Ob
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         boolean reset = mode == ChangeMode.RESET;
         if (mode == ChangeMode.SET || reset) {
-            for (StructureBee structure : getExpr().getArray(event)) {
+            for (StructureWrapper structure : getExpr().getArray(event)) {
                 switch (pattern) {
                     case 0 -> structure.setMirror(reset ? Mirror.NONE : (Mirror) delta[0]);
                     case 1 -> structure.setRotation(reset ? StructureRotation.NONE : (StructureRotation) delta[0]);

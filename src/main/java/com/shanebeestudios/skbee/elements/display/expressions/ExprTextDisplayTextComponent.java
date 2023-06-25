@@ -8,7 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.text.BeeComponent;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import com.shanebeestudios.skbee.elements.display.types.Types;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
@@ -21,19 +21,19 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the text component of a Text Display Entity.", Types.McWIKI})
 @Examples("set display component of {_display} to mini message from \"<rainbow>OOO A RAINBOW\"")
 @Since("2.8.0")
-public class ExprTextDisplayTextComponent extends SimplePropertyExpression<Entity, BeeComponent> {
+public class ExprTextDisplayTextComponent extends SimplePropertyExpression<Entity, ComponentWrapper> {
 
     static {
         if (SkBee.getPlugin().getAddonLoader().isTextComponentEnabled()) {
-            register(ExprTextDisplayTextComponent.class, BeeComponent.class, "display [text] component", "entities");
+            register(ExprTextDisplayTextComponent.class, ComponentWrapper.class, "display [text] component", "entities");
         }
     }
 
     @Override
-    public @Nullable BeeComponent convert(Entity entity) {
+    public @Nullable ComponentWrapper convert(Entity entity) {
         if (entity instanceof TextDisplay textDisplay) {
             Component text = textDisplay.text();
-            return BeeComponent.fromComponent(text);
+            return ComponentWrapper.fromComponent(text);
         }
         return null;
     }
@@ -41,15 +41,15 @@ public class ExprTextDisplayTextComponent extends SimplePropertyExpression<Entit
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(BeeComponent.class);
+        if (mode == ChangeMode.SET) return CollectionUtils.array(ComponentWrapper.class);
         return null;
     }
 
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (delta != null && delta[0] instanceof BeeComponent beeComponent) {
-            Component component = beeComponent.getComponent();
+        if (delta != null && delta[0] instanceof ComponentWrapper componentWrapper) {
+            Component component = componentWrapper.getComponent();
             for (Entity entity : getExpr().getArray(event)) {
                 if (entity instanceof TextDisplay textDisplay) {
                     textDisplay.text(component);
@@ -59,8 +59,8 @@ public class ExprTextDisplayTextComponent extends SimplePropertyExpression<Entit
     }
 
     @Override
-    public @NotNull Class<? extends BeeComponent> getReturnType() {
-        return BeeComponent.class;
+    public @NotNull Class<? extends ComponentWrapper> getReturnType() {
+        return ComponentWrapper.class;
     }
 
     @Override
