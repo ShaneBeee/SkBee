@@ -287,6 +287,17 @@ public class Bound implements ConfigurationSerializable {
         this.boundingBox = BoundingBox.of(block1, block2);
     }
 
+    public Bound copy(Bound bound, String id) {
+        Location lesserCorner = bound.getLesserCorner().clone();
+        Location greaterCorner = bound.getGreaterCorner().clone();
+        Bound newBound = new Bound(lesserCorner, greaterCorner, id, bound.isTemporary());
+        newBound.setOwners(bound.getOwners());
+        newBound.setMembers(bound.getOwners());
+        newBound.setBoundingBox(bound.getBoundingBox().clone());
+        newBound.values = bound.values;
+        return newBound;
+    }
+
     /**
      * Make this bound a full bound
      * <p>Stretch from bottom to top of world</p>
@@ -490,6 +501,10 @@ public class Bound implements ConfigurationSerializable {
      */
     public BoundingBox getBoundingBox() {
         return this.boundingBox;
+    }
+
+    public void setBoundingBox(BoundingBox box) {
+        this.boundingBox = box;
     }
 
     /**
