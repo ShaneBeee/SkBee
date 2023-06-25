@@ -9,6 +9,8 @@ import com.shanebeestudios.skbee.api.recipe.Ingredient;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import org.bukkit.Keyed;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.recipe.CookingBookCategory;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
@@ -105,7 +107,8 @@ public class Types {
                 .parser(RECIPE_TYPE_ENUM.getParser()));
 
         if (Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory")) {
-            EnumUtils<CookingBookCategory> COOKING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CookingBookCategory.class, null, "category");
+            EnumWrapper<CookingBookCategory> COOKING_BOOK_CATEGORY_ENUM = new EnumWrapper<>(CookingBookCategory.class, null, "category");
+            EnumWrapper<CraftingBookCategory> CRAFTING_BOOK_CATEGORY_ENUM = new EnumWrapper<>(CraftingBookCategory.class, null, "category");
             Classes.registerClass(new ClassInfo<>(CookingBookCategory.class, "cookingcategory")
                     .user("cooking ?categor(y|ies)")
                     .name("Recipes - Cooking Category")
@@ -113,10 +116,7 @@ public class Types {
                     .since("INSERT VERSION")
                     .usage(COOKING_BOOK_CATEGORY_ENUM.getAllNames())
                     .parser(COOKING_BOOK_CATEGORY_ENUM.getParser()));
-        }
 
-        if (Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory")) {
-            EnumUtils<CraftingBookCategory> CRAFTING_BOOK_CATEGORY_ENUM = new EnumUtils<>(CraftingBookCategory.class, null, "category");
             Classes.registerClass(new ClassInfo<>(CraftingBookCategory.class, "craftingcategory")
                     .user("crafting ?categor(y|ies)")
                     .name("Recipes - Crafting Category")
