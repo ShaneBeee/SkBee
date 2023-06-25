@@ -15,6 +15,9 @@ import org.bukkit.inventory.SmokingRecipe;
 import org.bukkit.inventory.StonecuttingRecipe;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Util class defining types of {@link Recipe recipes}
  */
@@ -25,9 +28,9 @@ public enum RecipeType {
     BLASTING_RECIPE(BlastingRecipe.class),
     CAMPFIRE_RECIPE(CampfireRecipe.class),
     FURNACE_RECIPE(FurnaceRecipe.class),
-    SMOKING_RECIPE(SmokingRecipe.class),
-    SMITHING_RECIPE(SmithingRecipe.class),
     MERCHANT_RECIPE(MerchantRecipe.class),
+    SMITHING_RECIPE(SmithingRecipe.class),
+    SMOKING_RECIPE(SmokingRecipe.class),
     STONECUTTING_RECIPE(StonecuttingRecipe.class),
     // Represents a complex recipe which has imperative server-defined behavior, eg: armor dyeing.
     COMPLEX_RECIPE(ComplexRecipe.class);
@@ -40,6 +43,14 @@ public enum RecipeType {
 
     public Class<? extends Recipe> getRecipeClass() {
         return recipeClass;
+    }
+
+    static final Map<Class<? extends Recipe>, RecipeType> BY_CLASS = new HashMap<>();
+
+    static {
+        for (RecipeType recipeType : values()) {
+            BY_CLASS.put(recipeType.getRecipeClass(), recipeType);
+        }
     }
 
     @Nullable
