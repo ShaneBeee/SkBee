@@ -15,15 +15,13 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Fishing - Experience")
 @Description("Get and modify the amount of experience dropped in a fishing event.")
-@Examples({
-        "on fishing:",
+@Examples({"on fishing:",
         "\tadd 10xp to fishing experience",
-        "\tsend fishing experience to player",
-})
+        "\tsend fishing experience to player"})
 @Since("INSERT VERSION")
 public class ExprFishingExperience extends SimpleExpression<Experience> {
 
@@ -91,5 +89,5 @@ public class ExprFishingExperience extends SimpleExpression<Experience> {
     public String toString(@Nullable Event event, boolean debug) {
         return "fishing experience";
     }
-    
+
 }
