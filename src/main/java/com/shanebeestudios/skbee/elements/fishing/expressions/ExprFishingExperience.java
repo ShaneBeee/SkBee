@@ -43,8 +43,7 @@ public class ExprFishingExperience extends SimpleExpression<Experience> {
 
     @Override
     protected @Nullable Experience[] get(Event event) {
-        if (!(event instanceof PlayerFishEvent playerFishEvent)) return null;
-        Experience experience = new Experience(playerFishEvent.getExpToDrop());
+        Experience experience = new Experience(((PlayerFishEvent) event).getExpToDrop());
         return new Experience[]{experience};
     }
 
