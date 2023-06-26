@@ -15,6 +15,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Fishing - Experience")
@@ -30,6 +31,7 @@ public class ExprFishingExperience extends SimpleExpression<Experience> {
                 "fish[ing] [event] experience");
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!getParser().isCurrentEvent(PlayerFishEvent.class)) {
@@ -39,12 +41,14 @@ public class ExprFishingExperience extends SimpleExpression<Experience> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable Experience[] get(Event event) {
         Experience experience = new Experience(((PlayerFishEvent) event).getExpToDrop());
         return new Experience[]{experience};
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         return switch (mode) {
@@ -54,6 +58,7 @@ public class ExprFishingExperience extends SimpleExpression<Experience> {
         };
     }
 
+    @SuppressWarnings({"NullableProblems", "ConstantValue", "DataFlowIssue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (!(event instanceof PlayerFishEvent playerFishEvent)) return;
@@ -81,12 +86,12 @@ public class ExprFishingExperience extends SimpleExpression<Experience> {
     }
 
     @Override
-    public Class<? extends Experience> getReturnType() {
+    public @NotNull Class<? extends Experience> getReturnType() {
         return Experience.class;
     }
 
     @Override
-    public String toString(@Nullable Event event, boolean debug) {
+    public @NotNull String toString(@Nullable Event event, boolean debug) {
         return "fishing experience";
     }
 
