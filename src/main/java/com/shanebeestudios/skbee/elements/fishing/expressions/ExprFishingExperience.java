@@ -18,7 +18,7 @@ import org.bukkit.event.player.PlayerFishEvent;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Fishing - Experience")
-@Description("Get and modify the amount of experience dropped in a fishing event")
+@Description("Get and modify the amount of experience dropped in a fishing event.")
 @Examples({
         "on fishing:",
         "\tadd 10xp to fishing experience",
@@ -91,4 +91,5 @@ public class ExprFishingExperience extends SimpleExpression<Experience> {
     public String toString(@Nullable Event event, boolean debug) {
         return "fishing experience";
     }
+    
 }
