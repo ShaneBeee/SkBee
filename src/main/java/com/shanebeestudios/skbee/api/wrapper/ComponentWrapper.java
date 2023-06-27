@@ -230,6 +230,17 @@ public class ComponentWrapper {
     }
 
     /**
+     * Get the children of a component
+     *
+     * @return List of children
+     */
+    public List<ComponentWrapper> getChildren() {
+        List<ComponentWrapper> children = new ArrayList<>();
+        this.component.children().forEach(child -> children.add(fromComponent(child)));
+        return children;
+    }
+
+    /**
      * Append onto the end of this component
      *
      * @param componentWrapper Component wrapper to append
