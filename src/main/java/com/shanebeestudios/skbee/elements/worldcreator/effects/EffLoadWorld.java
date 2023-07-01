@@ -132,17 +132,11 @@ public class EffLoadWorld extends Effect {
     private boolean unloadWorld(@NotNull World world) {
         World mainWorld = Bukkit.getWorlds().get(0);
         if (world == mainWorld) {
-            if (Bukkit.getWorlds().size() > 1) {
-                mainWorld = Bukkit.getWorlds().get(1);
-            } else {
-                mainWorld = null;
-            }
+            // We can't unload the main world
+            return false;
         }
         // Teleport remaining players out of this world to be safe
-        if (mainWorld != null) {
-            World finalMainWorld = mainWorld;
-            world.getPlayers().forEach(player -> player.teleport(finalMainWorld.getSpawnLocation()));
-        }
+        world.getPlayers().forEach(player -> player.teleport(mainWorld.getSpawnLocation()));
 
         return Bukkit.unloadWorld(world, this.save);
     }
