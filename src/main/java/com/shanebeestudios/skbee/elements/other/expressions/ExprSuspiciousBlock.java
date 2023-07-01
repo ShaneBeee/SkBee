@@ -14,14 +14,15 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.BrushableBlock;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
+
 @Name("Suspicious Block - Item")
-@Description({"Represents the item hiding in a Suspicious Block.",
-        "As of Minecraft 1.19.4 the only block is Suspicious Sand."})
-@Examples("set suspicious item of target block to a diamond")
-@Since("2.8.1")
+@Description({"Represents the item hiding in a Suspicious Block."})
+@Examples({"set suspicious item of target block to a diamond",
+        "delete suspicious item of block at location(199,10,-199, \"very_goodNames\")"})
+@Since("2.8.1, INSERT VERSION (suspicious gravel")
 public class ExprSuspiciousBlock extends SimplePropertyExpression<Block, ItemType> {
 
     static {
