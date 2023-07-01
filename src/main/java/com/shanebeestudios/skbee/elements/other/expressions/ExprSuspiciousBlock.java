@@ -11,7 +11,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.SuspiciousSand;
+import org.bukkit.block.BrushableBlock;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.eclipse.jdt.annotation.Nullable;
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 public class ExprSuspiciousBlock extends SimplePropertyExpression<Block, ItemType> {
 
     static {
-        if (Skript.classExists("org.bukkit.block.SuspiciousSand")) {
+        if (Skript.classExists("org.bukkit.block.BrushableBlock")) {
             register(ExprSuspiciousBlock.class, ItemType.class, "suspicious item", "blocks");
         }
     }
@@ -34,9 +34,9 @@ public class ExprSuspiciousBlock extends SimplePropertyExpression<Block, ItemTyp
     @Override
     public @Nullable ItemType convert(Block block) {
         BlockState state = block.getState();
-        if (state instanceof SuspiciousSand suspiciousSand) {
-            ItemStack item = suspiciousSand.getItem();
-            if (item != null) return new ItemType(item);
+        if (state instanceof BrushableBlock brushableBlock) {
+            ItemStack item = brushableBlock.getItem();
+            if (item != null && !item.getType().isAir()) return new ItemType(item);
         }
         return null;
     }
@@ -57,9 +57,9 @@ public class ExprSuspiciousBlock extends SimplePropertyExpression<Block, ItemTyp
 
         for (Block block : getExpr().getArray(event)) {
             BlockState state = block.getState();
-            if (state instanceof SuspiciousSand suspiciousSand) {
-                suspiciousSand.setItem(itemStack);
-                suspiciousSand.update();
+            if (state instanceof BrushableBlock brushableBlock) {
+                brushableBlock.setItem(itemStack);
+                brushableBlock.update();
             }
         }
     }
