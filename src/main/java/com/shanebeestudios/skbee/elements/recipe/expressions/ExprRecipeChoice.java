@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - RecipeChoice")
-@Description("Create a recipe choice for exact match or material matching")
+@Description("Create a recipe choice for exact match or material matching.")
 @Examples({"on load:",
         "\tset {rc::every_sword} to material choice of every sword",
         "\tset {rc::every_sword_named} to exact choice of every sword named \"sample test\""})
@@ -37,8 +37,8 @@ public class ExprRecipeChoice extends SimpleExpression<RecipeChoice> {
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parse) {
-        useExactChoice = matchedPattern == 1;
-        choices = (Expression<Object>) exprs[0];
+        this.useExactChoice = matchedPattern == 1;
+        this.choices = (Expression<Object>) exprs[0];
         return true;
     }
 
