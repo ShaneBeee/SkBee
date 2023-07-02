@@ -14,13 +14,13 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Structure - Save/Delete")
-@Description("Save a structure to file (will overwrite if already in that file), or delete a structure file. Requires MC 1.17.1+")
+@Description("Save a structure to file (will overwrite if file already exists), or delete a structure file. Requires MC 1.17.1+")
 @Examples({"save structure {_s}", "save structures {_s::*}", "delete structure {_s}"})
 @Since("1.12.0")
 public class EffStructureSave extends Effect {
 
     static {
-        Skript.registerEffect(EffStructureSave.class, "(save|1¦delete) [structure[s]] %structures%");
+        Skript.registerEffect(EffStructureSave.class, "(save|1¦delete) [s:structure[s]] %structures%");
     }
 
     private Expression<StructureWrapper> structures;
@@ -29,15 +29,20 @@ public class EffStructureSave extends Effect {
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        structures = (Expression<StructureWrapper>) exprs[0];
-        save = parseResult.mark == 0;
+        this.structures = (Expression<StructureWrapper>) exprs[0];
+        this.save = parseResult.mark == 0;
+        if (!parseResult.hasTag("s")) {
+            Skript.warning("While \"structure\" may be optional, in the future it will be required (to prevent conflict)."
+                    + "Please make sure to include it!");
+        }
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected void execute(Event e) {
-        for (StructureWrapper structureWrapper : this.structures.getAll(e)) {
-            if (save)
+    protected void execute(Event event) {
+        for (StructureWrapper structureWrapper : this.structures.getAll(event)) {
+            if (this.save)
                 structureWrapper.save();
             else
                 structureWrapper.delete();
@@ -47,7 +52,7 @@ public class EffStructureSave extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return String.format("%s structure[s] %s", save ? "save" : "delete", this.structures.toString(e, d));
+        return String.format("%s structure[s] %s", this.save ? "save" : "delete", this.structures.toString(e, d));
     }
 
 }

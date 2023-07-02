@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents the item hiding in a Suspicious Block. Requires Minecraft 1.19.4+"})
 @Examples({"set suspicious item of target block to a diamond",
         "delete suspicious item of block at location(199,10,-199, \"very_goodNames\")"})
-@Since("2.8.1, INSERT VERSION (suspicious gravel)")
+@Since("2.8.1, 2.14.0 (suspicious gravel)")
 public class ExprSuspiciousBlock extends SimplePropertyExpression<Block, ItemType> {
 
     private static final boolean HAS_SUSPICIOUS_SAND = Skript.classExists("org.bukkit.block.SuspiciousSand");

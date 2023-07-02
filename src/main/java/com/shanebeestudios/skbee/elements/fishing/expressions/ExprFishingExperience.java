@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on fishing:",
         "\tadd 10xp to fishing experience",
         "\tsend fishing experience to player"})
-@Since("INSERT VERSION")
+@Since("2.14.0")
 public class ExprFishingExperience extends SimpleExpression<Experience> {
 
     static {

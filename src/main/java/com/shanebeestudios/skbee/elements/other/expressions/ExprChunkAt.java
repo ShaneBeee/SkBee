@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Get a chunk using chunk coords.")
 @Examples({"set {_chunk} to chunk at 1,1",
         "set {_chunk} to chunk at 1,1 in world \"world\""})
-@Since("INSERT VERSION")
+@Since("2.14.0")
 public class ExprChunkAt extends SimpleExpression<Chunk> {
 
     static {
