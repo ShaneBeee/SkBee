@@ -26,7 +26,7 @@ public class ReflectionConstants {
         } else if (Skript.isRunningMinecraft(1, 17)) {
             return v117;
         }
-        throw new IllegalArgumentException("Unknown Version");
+        throw new IllegalArgumentException("Unknown Version: " + Skript.getMinecraftVersion());
     }
 
 }

@@ -273,13 +273,6 @@ public class AddonLoader {
             return;
         }
 
-        // This was added in Oct/2021 (so just before 1.18 came out)
-        if (!Skript.methodExists(Bukkit.class, "getStructureManager")) {
-            Util.logLoading("&cIt appears structure elements are not available on your server version.");
-            Util.logLoading("&5Structure Elements &cdisabled");
-            return;
-        }
-
         this.plugin.structureManager = new StructureManager();
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.structure");
