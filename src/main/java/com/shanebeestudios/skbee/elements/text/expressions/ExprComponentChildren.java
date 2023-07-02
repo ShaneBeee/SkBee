@@ -21,7 +21,7 @@ import java.util.List;
 @Name("Text Component - Children")
 @Description("Get the children of a text component. This essentially splits the component up into its parts.")
 @Examples("set {_children::*} to component children of {_textcomp}")
-@Since("INSERT VERSION")
+@Since("2.14.0")
 public class ExprComponentChildren extends SimpleExpression<ComponentWrapper> {
 
     static {

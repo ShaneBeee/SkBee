@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Min/Max World Height")
 @Description("Get the min/max height of a world.")
 @Examples("set {_height} to max height of world of player")
-@Since("INSERT VERSION")
+@Since("2.14.0")
 public class ExprWorldHeight extends SimplePropertyExpression<World, Number> {
 
     static {

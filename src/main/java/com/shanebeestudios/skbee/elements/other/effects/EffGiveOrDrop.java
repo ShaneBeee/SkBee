@@ -26,7 +26,7 @@ import java.util.List;
 @Description("Attempts to give an item to a player and if they dont have room it will drop instead.")
 @Examples({"give or drop a diamond to player",
         "give or drop {_items::*} to all players"})
-@Since("INSERT VERSION")
+@Since("2.14.0")
 public class EffGiveOrDrop extends Effect {
 
     static {

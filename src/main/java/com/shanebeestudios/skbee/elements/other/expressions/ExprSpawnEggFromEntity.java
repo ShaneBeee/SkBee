@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Gets a spawn egg from an entity/entityType. Requires Paper.")
 @Examples({"set {_egg} to spawn egg of last spawned entity",
         "set {_egg} to spawn egg of (spawner type of target block)"})
-@Since("INSERT VERSION")
+@Since("2.14.0")
 public class ExprSpawnEggFromEntity extends SimplePropertyExpression<Object, ItemType> {
 
     private static final ItemFactory ITEM_FACTORY = Bukkit.getItemFactory();

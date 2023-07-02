@@ -405,7 +405,7 @@ public class OtherEvents {
                         "\tif event-entity is an evoker:",
                         "\t\tif event-spell is fangs:",
                         "\t\t\tcancel event")
-                .since("INSERT VERSION");
+                .since("2.14.0");
 
         EventValues.registerEventValue(EntitySpellCastEvent.class, Spellcaster.Spell.class, new Getter<>() {
             @Override
