@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.EntityUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -27,7 +28,6 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
-import org.bukkit.entity.Minecart;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
@@ -37,7 +37,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Name("Available Objects")
@@ -79,34 +81,22 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
 
         // Register entity types
-        List<EntityType> entityTypes = Arrays.asList(EntityType.values());
-        List<EntityData> entityDatas = new ArrayList<>();
-        entityTypes = entityTypes.stream().sorted(Comparator.comparing(Enum::toString)).collect(Collectors.toList());
-        for (EntityType entityType : entityTypes) {
+        // Using a map to prevent adding doubles to a list
+        Map<String, EntityData> entityDataMap = new HashMap<>();
+        for (EntityType entityType : EntityType.values()) {
             Class<? extends Entity> entityClass = entityType.getEntityClass();
             if (entityClass == null) {
                 continue;
             }
-            EntityData<?> entityData = EntityData.fromClass(entityClass);
-            if (entityData.getType() == Entity.class) {
+            EntityData<?> entityData = EntityUtils.toSkriptEntityData(entityType);
+            //noinspection ConstantValue
+            if (entityData == null) {
                 Util.debug("Skript is missing EntityType: %s", entityType.getKey());
                 continue;
             }
-            // Silly minecart issues with Skript
-            if (Minecart.class.isAssignableFrom(entityClass)) {
-                entityDatas.add(entityData);
-                continue;
-            }
-            // Prevent doubling up of entity types
-            if (entityDatas.contains(entityData)) {
-                EntityData<?> superType = entityData.getSuperType();
-                if (!entityDatas.contains(superType)) {
-                    entityDatas.add(superType);
-                }
-                continue;
-            }
-            entityDatas.add(entityData);
+            entityDataMap.put(entityData.toString(), entityData);
         }
+        List<EntityData> entityDatas = entityDataMap.values().stream().sorted(Comparator.comparing(Object::toString)).collect(Collectors.toList());
         Registration.registerList("entity[ ]types", EntityData.class, entityDatas);
 
         // Register enums (which don't have a registry)
@@ -118,9 +108,12 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         particles = particles.stream().sorted(Comparator.comparing(ParticleUtil::getName)).collect(Collectors.toList());
         Registration.registerList("particles", Particle.class, particles);
 
+        List<PotionEffectType> potions = Arrays.asList(PotionEffectType.values());
+        potions = potions.stream().sorted(Comparator.comparing(potionEffectType -> potionEffectType.getKey().key())).collect(Collectors.toList());
+        Registration.registerList("potion effect types", PotionEffectType.class, potions);
+
         // Register registries
         Registration.registerRegistry("enchantments", Enchantment.class, Registry.ENCHANTMENT);
-        Registration.registerRegistry("potion effect types", PotionEffectType.class, Registry.POTION_EFFECT_TYPE);
         Registration.registerRegistry("biomes", Biome.class, Registry.BIOME);
         Registration.registerRegistry("statistics", Statistic.class, Registry.STATISTIC);
         Registration.registerRegistry("game events", GameEvent.class, Registry.GAME_EVENT);
