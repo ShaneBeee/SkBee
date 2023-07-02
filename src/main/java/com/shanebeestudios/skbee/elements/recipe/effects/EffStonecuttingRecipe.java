@@ -49,10 +49,10 @@ public class EffStonecuttingRecipe extends Effect {
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-        result = (Expression<ItemStack>) exprs[0];
-        ingredient = (Expression<Object>) exprs[1];
-        key = (Expression<String>) exprs[2];
-        group = (Expression<String>) exprs[3];
+        this.result = (Expression<ItemStack>) exprs[0];
+        this.ingredient = (Expression<Object>) exprs[1];
+        this.key = (Expression<String>) exprs[2];
+        this.group = (Expression<String>) exprs[3];
         return true;
     }
 

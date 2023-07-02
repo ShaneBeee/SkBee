@@ -27,7 +27,7 @@ public class ExprChoicesOf extends PropertyExpression<RecipeChoice, ItemType> {
 
     static {
         // Currently little to no use of this expression, until ExprIngredientsOfRecipe change to return RecipeChoice
-        register(ExprChoicesOf.class, ItemType.class, "choices", "recipechoices");
+        register(ExprChoicesOf.class, ItemType.class, "[(all [[of] the]|the)] choices", "recipechoices");
     }
 
     @Override

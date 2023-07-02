@@ -50,7 +50,7 @@ public class EffCraftingRecipe extends Effect {
     static {
         Skript.registerEffect(EffCraftingRecipe.class,
                 "register [a] [new] shaped recipe for %itemstack% (using|with ingredients) %recipechoices/itemtypes% with id %string% [in group %-string%]",
-                "register [a] [new] shappeless recipe for %itemstack% (using|with ingredients) %recipechoices/itemtypes% with id %string% [in group %-string%]");
+                "register [a] [new] shapeless recipe for %itemstack% (using|with ingredients) %recipechoices/itemtypes% with id %string% [in group %-string%]");
     }
 
     @SuppressWarnings("null")
@@ -63,11 +63,11 @@ public class EffCraftingRecipe extends Effect {
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        result = (Expression<ItemStack>) exprs[0];
-        ingredients = (Expression<Object>) exprs[1];
-        id = (Expression<String>) exprs[2];
-        group = (Expression<String>) exprs[3];
-        shaped = matchedPattern == 0;
+        this.result = (Expression<ItemStack>) exprs[0];
+        this.ingredients = (Expression<Object>) exprs[1];
+        this.id = (Expression<String>) exprs[2];
+        this.group = (Expression<String>) exprs[3];
+        this.shaped = matchedPattern == 0;
         return true;
     }
 
@@ -174,10 +174,10 @@ public class EffCraftingRecipe extends Effect {
     @Override
     public String toString(Event event, boolean debug) {
         return String.format("Register new %s recipe for %s using %s with id '%s' %s",
-                shaped ? "shaped" : "shapeless",
-                result.toString(event, debug),
-                ingredients.toString(event, debug),
-                id.toString(event, debug),
+                this.shaped ? "shaped" : "shapeless",
+                this.result.toString(event, debug),
+                this.ingredients.toString(event, debug),
+                this.id.toString(event, debug),
                 this.group != null ? "in group " + this.group.toString(event, debug) : "");
     }
 

@@ -18,7 +18,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - RecipeChoice")
-@Description("Create a recipe choice for exact match or material matching.")
+@Description({"Create a recipe choice for exact match or material matching.",
+        "Material choice is a list of materials that contain no special data like names or lore. These will compare directly with the base material.",
+        "Exact choice, refers to a list of items that MUST match exactly with the given lore or names, such as a diamond sword with the name \"demon slayer\""})
 @Examples({"on load:",
         "\tset {rc::every_sword} to material choice of every sword",
         "\tset {rc::every_sword_named} to exact choice of every sword named \"sample test\""})

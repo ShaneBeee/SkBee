@@ -168,15 +168,14 @@ public class RecipeUtil {
         if (object == null) return null;
         if (object instanceof RecipeChoice recipeChoice) return recipeChoice;
         if (object instanceof ItemStack itemStack) {
-            boolean isSimilar = itemStack.isSimilar(new ItemStack(itemStack.getType()));
             if (itemStack.getType().isAir()) return null;
-            if (isSimilar) return new MaterialChoice(itemStack.getType());
+            if (itemStack.isSimilar(new ItemStack(itemStack.getType())))
+                return new MaterialChoice(itemStack.getType());
             return new ExactChoice(itemStack);
         } else if (object instanceof ItemType itemType) {
             ItemStack item = itemType.getRandom();
-            boolean isSimilar = item.isSimilar(new ItemStack(item.getType()));
             if (item.getType().isAir()) return null;
-            if (isSimilar) {
+            if (item.isSimilar(new ItemStack(item.getType()))) {
                 return getMaterialChoice(itemType);
             } else {
                 return getExactChoice(itemType);
@@ -196,7 +195,7 @@ public class RecipeUtil {
      * @return ExactChoice or null if invalid
      */
     @Nullable
-    public static ExactChoice getExactChoice(Object... objects) {
+    public static ExactChoice getExactChoice(Object... objects)  {
         if (objects == null) return null;
         List<ItemStack> itemStacks = new ArrayList<>();
         for (Object object : objects) {
@@ -207,14 +206,12 @@ public class RecipeUtil {
                 }
             } else if (object instanceof ItemStack itemStack) {
                 if (itemStacks.contains(itemStack)) continue;
-                boolean isAir = itemStack.getType().isAir();
-                if (isAir) continue;
+                if (itemStack.getType().isAir()) continue;
                 itemStacks.add(itemStack);
             } else if (object instanceof ItemType itemType) {
                 for (ItemStack itemStack : itemType.getAll()) {
                     if (itemStacks.contains(itemStack)) continue;
-                    boolean isAir = itemStack.getType().isAir();
-                    if (isAir) continue;
+                    if (itemStack.getType().isAir()) continue;
                     itemStacks.add(itemStack);
                 }
             }

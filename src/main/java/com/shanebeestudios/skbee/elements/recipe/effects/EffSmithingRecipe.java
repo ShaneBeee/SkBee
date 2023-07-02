@@ -57,10 +57,10 @@ public class EffSmithingRecipe extends Effect {
             Skript.error("Smithing recipes no longer work when running minecraft 1.20 and above, support for this will be added back in the future.");
             return false;
         }
-        result = (Expression<ItemStack>) exprs[0];
-        base = (Expression<Object>) exprs[1];
-        addition = (Expression<Object>) exprs[2];
-        key = (Expression<String>) exprs[3];
+        this.result = (Expression<ItemStack>) exprs[0];
+        this.base = (Expression<Object>) exprs[1];
+        this.addition = (Expression<Object>) exprs[2];
+        this.key = (Expression<String>) exprs[3];
         return true;
     }
 
