@@ -181,7 +181,11 @@ public class RecipeUtil {
             } else {
                 return getExactChoice(itemType);
             }
+        } else if (object instanceof Tag<?> tag) {
+            // Honestly this shouldn't ever be reached unless we add syntax like %recipechoice/itemtype/minecrafttag%
+            return getMaterialChoice(tag);
         }
+
         return null;
     }
 
@@ -262,7 +266,6 @@ public class RecipeUtil {
     }
 
     public static Collection<ItemType> getChoices(RecipeChoice recipeChoice) {
-
         List<ItemType> choices = new ArrayList<>();
         if (recipeChoice instanceof ExactChoice exactChoice) {
             for (ItemStack itemStack : exactChoice.getChoices()) {
