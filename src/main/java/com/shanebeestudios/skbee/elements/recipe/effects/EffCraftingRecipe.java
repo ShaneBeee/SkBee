@@ -49,8 +49,8 @@ public class EffCraftingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffCraftingRecipe.class,
-                "register [a] [new] shaped recipe for %itemstack% (using|with ingredients) %reicpechoices/itemtypes% with id %string% [in group %-string%]",
-                "register [a] [new] shappeless recipe for %itemstack% (using|with ingredients) %reicpechoices/itemtypes% with id %string% [in group %-string%]");
+                "register [a] [new] shaped recipe for %itemstack% (using|with ingredients) %recipechoices/itemtypes% with id %string% [in group %-string%]",
+                "register [a] [new] shappeless recipe for %itemstack% (using|with ingredients) %recipechoices/itemtypes% with id %string% [in group %-string%]");
     }
 
     @SuppressWarnings("null")
