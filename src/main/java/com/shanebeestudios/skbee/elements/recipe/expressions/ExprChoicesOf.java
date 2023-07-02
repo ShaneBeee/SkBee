@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("RecipeChoice - Choices")
-@Description("Get all choices of a recipe choice")
+@Description("Get all choices of a recipe choice.")
 @Examples({"broadcast choices of material choice using every sword",
         "broadcast choices of exact choice using every sword named \"Sample Text\""})
 @Since("INSERT VERSION")
@@ -54,4 +54,5 @@ public class ExprChoicesOf extends PropertyExpression<RecipeChoice, ItemType> {
     public @NotNull String toString(@Nullable Event event, boolean debug) {
         return "choices of " + getExpr().toString(event, debug);
     }
+    
 }

@@ -43,7 +43,6 @@ public class EffCookingRecipe extends Effect {
 
     private final Config config = SkBee.getPlugin().getPluginConfig();
 
-
     static {
         String extra = " [[and] with exp[erience] %-number%] [[and] with cook[ ]time %-timespan%] [[and] in group %-string%]";
         Skript.registerEffect(EffCookingRecipe.class,
