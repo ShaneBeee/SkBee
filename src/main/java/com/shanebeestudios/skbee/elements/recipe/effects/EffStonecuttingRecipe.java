@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -12,16 +11,13 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.RecipeChoice.ExactChoice;
-import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
 
 @SuppressWarnings({"ConstantConditions", "NullableProblems"})
@@ -41,11 +37,11 @@ public class EffStonecuttingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffStonecuttingRecipe.class,
-                "register [new] stone[ ]cutt(ing|er) recipe for %itemtype% (using|with ingredient) %itemtype/materialchoice% with id %string% [in group %-string%]");
+                "register [new] stone[ ]cutt(ing|er) recipe for %itemstack% (using|with ingredient) %recipechoice/itemtype% with id %string% [in group %-string%]");
     }
 
     @SuppressWarnings("null")
-    private Expression<ItemType> item;
+    private Expression<ItemStack> result;
     private Expression<Object> ingredient;
     private Expression<String> key;
     private Expression<String> group;
@@ -53,7 +49,7 @@ public class EffStonecuttingRecipe extends Effect {
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-        item = (Expression<ItemType>) exprs[0];
+        result = (Expression<ItemStack>) exprs[0];
         ingredient = (Expression<Object>) exprs[1];
         key = (Expression<String>) exprs[2];
         group = (Expression<String>) exprs[3];
@@ -62,10 +58,10 @@ public class EffStonecuttingRecipe extends Effect {
 
     @Override
     protected void execute(Event event) {
-        ItemType item = this.item.getSingle(event);
-        Object ingredient = this.ingredient.getSingle(event);
+        ItemStack result = this.result.getSingle(event);
+        RecipeChoice recipeChoice = RecipeUtil.getRecipeChoice(this.ingredient.getSingle(event));
 
-        if (item == null) {
+        if (result == null) {
             Skript.error("Error registering stonecutting recipe - result is null");
             Skript.error("Current Item: §6" + this.toString(event, true));
             return;
@@ -76,7 +72,7 @@ public class EffStonecuttingRecipe extends Effect {
             return;
         }
 
-        String group = this.group != null ? this.group.getSingle(event) : "";
+        String group = this.group != null ? this.group.getSingle(event) : null;
 
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
         if (key == null) {
@@ -84,27 +80,11 @@ public class EffStonecuttingRecipe extends Effect {
             return;
         }
 
-        RecipeChoice choice;
-        if (ingredient instanceof ItemType) {
-            ItemStack itemStack = ((ItemType) ingredient).getRandom();
-            if (itemStack == null) return;
-            Material material = itemStack.getType();
-
-            // If ingredient isn't a custom item, just register the material
-            if (itemStack.isSimilar(new ItemStack(material))) {
-                choice = new MaterialChoice(material);
-            } else {
-                choice = new ExactChoice(itemStack);
-            }
-        } else {
-            choice = ((MaterialChoice) ingredient);
-        }
-        StonecuttingRecipe recipe = new StonecuttingRecipe(key, item.getRandom(), choice);
-        recipe.setGroup(group);
+        StonecuttingRecipe recipe = new StonecuttingRecipe(key, result, recipeChoice);
+        if (group != null && !group.isBlank()) recipe.setGroup(group);
 
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);
-
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
             RecipeUtil.logRecipe(recipe, recipe.getInputChoice());
@@ -112,9 +92,9 @@ public class EffStonecuttingRecipe extends Effect {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
-        String group = this.group != null ? " in group " + this.group.toString(e, d) : "";
-        return "register new stone cutting recipe for " + item.toString(e, d) + " using " + ingredient.toString(e, d) + group;
+    public String toString(Event event, boolean debug) {
+        String group = this.group != null ? " in group " + this.group.toString(event, debug) : "";
+        return "register new stone cutting recipe for " + result.toString(event, debug) + " using " + ingredient.toString(event, debug) + group;
     }
 
 }
