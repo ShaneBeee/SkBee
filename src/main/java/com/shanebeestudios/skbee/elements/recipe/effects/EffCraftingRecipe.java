@@ -62,12 +62,12 @@ public class EffCraftingRecipe extends Effect {
 
     @SuppressWarnings({"unchecked", "null"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         result = (Expression<ItemStack>) exprs[0];
         ingredients = (Expression<Object>) exprs[1];
         id = (Expression<String>) exprs[2];
         group = (Expression<String>) exprs[3];
-        shaped = parseResult.mark == 0;
+        shaped = matchedPattern == 0;
         return true;
     }
 
