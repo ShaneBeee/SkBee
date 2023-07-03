@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.bossbar.types;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
@@ -9,15 +8,15 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
-import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
+import org.bukkit.entity.Player;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,10 +31,12 @@ public class Types {
                     .user("boss ?bars?")
                     .name("BossBar")
                     .description("Represents a BossBar. Either from an entity or a custom one.",
-                            "Custom BossBars can be deleted, BossBars of entities can't be deleted.",
+                            "Players can be added to/removed from BossBars.",
+                            "Custom BossBars can be deleted, BossBars of entities cannot be deleted.",
                             "NOTE: BossBars from entities cannot be saved in global variables, as the entity may not be loaded",
                             "on the server when that variable is trying to load. Custom BossBars can be saved in variables.")
-                    .examples("set {_bar} to boss bar named \"le-bar\"")
+                    .examples("set {_bar} to boss bar named \"le-bar\"",
+                            "add all players to {_bar}")
                     .since("1.16.0")
                     .parser(new Parser<>() {
 
@@ -65,15 +66,28 @@ public class Types {
                         @SuppressWarnings("NullableProblems")
                         @Override
                         public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+                            if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) return CollectionUtils.array(Player[].class);
                             if (mode == ChangeMode.DELETE) return CollectionUtils.array();
                             return null;
                         }
 
-                        @SuppressWarnings("NullableProblems")
+                        @SuppressWarnings({"NullableProblems", "ConstantValue"})
                         @Override
-                        public void change(BossBar[] what, @Nullable Object[] delta, ChangeMode mode) {
+                        public void change(BossBar[] bossBars, @Nullable Object[] delta, ChangeMode mode) {
+                            if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
+                                if (delta == null) return;
+
+                                for (BossBar bossBar : bossBars) {
+                                    for (Object object : delta) {
+                                        if (object instanceof Player player) {
+                                            if (mode == ChangeMode.ADD) bossBar.addPlayer(player);
+                                            else bossBar.removePlayer(player);
+                                        }
+                                    }
+                                }
+                            }
                             if (mode == ChangeMode.DELETE) {
-                                for (BossBar bossBar : what) {
+                                for (BossBar bossBar : bossBars) {
                                     bossBar.removeAll();
                                     if (bossBar instanceof KeyedBossBar keyedBossBar) {
                                         Bukkit.removeBossBar(keyedBossBar.getKey());
@@ -130,49 +144,6 @@ public class Types {
         } else {
             Util.logLoading("&eIt looks like another addon registered 'bossbar' already.");
             Util.logLoading("&eYou may have to use their BossBars in SkBee's BossBar elements.");
-        }
-
-
-        // TODO (dec 11/2022)
-        // Remove in future
-        if (Classes.getExactClassInfo(BarColor.class) == null && Classes.getClassInfoNoError("bossbarcolor") == null) {
-            EnumWrapper<BarColor> BAR_COLOR_ENUM = new EnumWrapper<>(BarColor.class, "bar", "");
-            Classes.registerClass(new ClassInfo<>(BarColor.class, "bossbarcolor")
-                    .user("boss ?bar ?colors?")
-                    .name("BossBar Color")
-                    .description("Represents the color options of a BossBar. ",
-                            "Colors are prefixed with \"bar\" (such as `bar blue`) to differentiate from Skript colors.",
-                            "\nDEPRECATED: Will be removed in the future")
-                    .usage(BAR_COLOR_ENUM.getAllNames())
-                    .examples("set bar color of {_bar} to bar blue")
-                    .since("1.16.0")
-                    .parser(new Parser<>() {
-
-                        @SuppressWarnings("NullableProblems")
-                        @Override
-                        public boolean canParse(ParseContext context) {
-                            return true;
-                        }
-
-                        @SuppressWarnings("NullableProblems")
-                        @Override
-                        public @Nullable BarColor parse(String string, ParseContext context) {
-                            Skript.warning("Please use SkriptColors instead of BarColors, BarColors will be removed in the future.");
-                            return BAR_COLOR_ENUM.parse(string);
-                        }
-
-                        @SuppressWarnings("NullableProblems")
-                        @Override
-                        public String toString(BarColor o, int flags) {
-                            return BAR_COLOR_ENUM.toString(o, flags);
-                        }
-
-                        @SuppressWarnings("NullableProblems")
-                        @Override
-                        public String toVariableNameString(BarColor o) {
-                            return BAR_COLOR_ENUM.toString(o, 0);
-                        }
-                    }));
         }
 
         if (Classes.getExactClassInfo(BarStyle.class) == null && Classes.getClassInfoNoError("bossbarstyle") == null) {
