@@ -20,8 +20,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("Send Block Damage")
 @Description({"Send fake block damage to a player.",
-        "\nEntity = the entity who is damaging the block. Only 1 entity can damage a block at a time.",
-        "\nNOTE: Setting to 0 for some reason does NOT reset this. ¯\\_(ツ)_/¯"})
+        "\nEntity = the entity who is damaging the block. Only 1 entity can damage a block at a time."})
 @Examples("make player see damage of target block as 0.5")
 @Since("2.6.0")
 public class EffSendBlockDamage extends Effect {
