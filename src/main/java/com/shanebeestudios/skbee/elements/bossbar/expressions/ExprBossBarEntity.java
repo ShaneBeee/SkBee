@@ -28,7 +28,7 @@ import java.util.List;
         "server when that variable is trying to load. Custom BossBars and BossBars from players can be saved in variables."})
 @Examples({"set {_bar} to boss bar of target entity",
         "set {_bars::*} to boss bars of player"})
-@Since("INSERT VERSION")
+@Since("2.14.1")
 public class ExprBossBarEntity extends SimpleExpression<BossBar> {
 
     static {

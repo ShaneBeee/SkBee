@@ -30,7 +30,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"set {_bar} to boss bar with id \"le-bar\" with title \"My BossBar\"",
         "set {_bar} to boss bar with id \"le-bar\" with title \"Le Title\" with color pink with progress 50",
         "add all players to {_bar}"})
-@Since("INSERT VERSION")
+@Since("2.14.1")
 public class ExprBossBarCreate extends SimpleExpression<BossBar> {
 
     static {

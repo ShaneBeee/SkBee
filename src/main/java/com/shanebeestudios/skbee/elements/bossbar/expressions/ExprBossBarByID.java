@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"delete boss bar with id \"le-bar\"",
         "set {_bar} to boss bar with id \"le-bar\"",
         "add all players to {_bar}"})
-@Since("INSERT VERSION")
+@Since("2.14.1")
 public class ExprBossBarByID extends SimpleExpression<BossBar> {
 
     static {

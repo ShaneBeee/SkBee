@@ -22,7 +22,7 @@ import java.util.List;
 @Name("BossBar - All")
 @Description("Get a list of all BossBars.")
 @Examples("set {_bars::*} to all bossbars")
-@Since("INSERT VERSION")
+@Since("2.14.1")
 public class ExprBossBarAll extends SimpleExpression<BossBar> {
 
     static {
