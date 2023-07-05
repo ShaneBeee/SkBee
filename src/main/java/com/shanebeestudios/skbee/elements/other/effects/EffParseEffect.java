@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.command.EffectCommandEvent;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -9,9 +8,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
@@ -45,17 +44,7 @@ public class EffParseEffect extends Effect {
     protected void execute(Event event) {
         CommandSender sender = this.sender != null ? this.sender.getSingle(event) : Bukkit.getConsoleSender();
         for (String s : this.effects.getArray(event)) {
-            parseEffect(s, sender);
-        }
-    }
-
-    private void parseEffect(String effect, CommandSender sender) {
-        ParserInstance parserInstance = ParserInstance.get();
-        parserInstance.setCurrentEvent("effect command", EffectCommandEvent.class);
-        Effect parse = Effect.parse(effect, null);
-        parserInstance.deleteCurrentEvent();
-        if (parse != null) {
-            TriggerItem.walk(parse, new EffectCommandEvent(sender, effect));
+            SkriptUtils.parseEffect(s, sender);
         }
     }
 
