@@ -59,10 +59,16 @@ public class AddonLoader {
         if (!Skript.isAcceptRegistrations()) {
             // SkBee should be loading right after Skript, during Skript's registration period
             // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
-            // We need to find the route of this issue, so far the only plugin I know that does this is FAWE
-            Util.log("&cSkript is no longer accepting registrations.");
-            Util.log("&cNo clue how this could happen.");
-            Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
+            // We need to find the route of this issue, so far the only plugin I know that does this is PlugMan
+            Util.log("&cSkript is no longer accepting registrations, addons can no longer be loaded!");
+            if (Bukkit.getPluginManager().getPlugin("PlugMan") != null) {
+                Util.log("&cIt appears you're running PlugMan.");
+                Util.log("&cIf you're trying to reload/enable SkBee with PlugMan.... you can't.");
+                Util.log("&ePlease restart your server!");
+            } else {
+                Util.log("&cNo clue how this could happen.");
+                Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
+            }
             return false;
         }
         Version version = new Version(SkBee.EARLIEST_VERSION);
@@ -71,10 +77,11 @@ public class AddonLoader {
             Util.log("&7For outdated server versions please see: &ehttps://github.com/ShaneBeee/SkBee#outdated");
             return false;
         }
+        loadSkriptElements();
         return true;
     }
 
-    void loadSkriptElements() {
+    private void loadSkriptElements() {
         this.addon = Skript.registerAddon(this.plugin);
         this.addon.setLanguageFileDirectory("lang");
 
