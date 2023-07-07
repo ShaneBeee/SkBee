@@ -1,17 +1,26 @@
 package com.shanebeestudios.skbee.api.recipe;
 
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.Timespan;
+import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.inventory.CookingRecipe;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.RecipeChoice.ExactChoice;
+import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
 import java.util.NoSuchElementException;
@@ -146,6 +155,143 @@ public class RecipeUtil {
                 log("   - &r'&d%s&r' = &6%s", character, getFancy(recipeChoice));
             }
         });
+    }
+
+    /**
+     * Get a recipe choice based off given argument
+     *
+     * @param object object to get RecipeChoice from
+     * @return RecipeChoice or null if invalid
+     */
+    @Nullable
+    public static RecipeChoice getRecipeChoice(Object object) {
+        if (object == null) return null;
+        if (object instanceof RecipeChoice recipeChoice) return recipeChoice;
+        if (object instanceof ItemStack itemStack) {
+            if (itemStack.getType().isAir()) return null;
+            if (itemStack.isSimilar(new ItemStack(itemStack.getType())))
+                return new MaterialChoice(itemStack.getType());
+            return new ExactChoice(itemStack);
+        } else if (object instanceof ItemType itemType) {
+            ItemStack item = itemType.getRandom();
+            if (item.getType().isAir()) return null;
+            if (item.isSimilar(new ItemStack(item.getType()))) {
+                return getMaterialChoice(itemType);
+            } else {
+                return getExactChoice(itemType);
+            }
+        } else if (object instanceof Tag<?> tag) {
+            // Honestly this shouldn't ever be reached unless we add syntax like %recipechoice/itemtype/minecrafttag%
+            return getMaterialChoice(tag);
+        }
+
+        return null;
+    }
+
+    /**
+     * Get an ExactChoice from a list of objects
+     *
+     * @param objects list of objects to get an exact choice from
+     * @return ExactChoice or null if invalid
+     */
+    @Nullable
+    public static ExactChoice getExactChoice(Object... objects)  {
+        if (objects == null) return null;
+        List<ItemStack> itemStacks = new ArrayList<>();
+        for (Object object : objects) {
+            if (object instanceof ExactChoice exactChoice) {
+                for (ItemStack itemStack : exactChoice.getChoices()) {
+                    if (itemStacks.contains(itemStack)) continue;
+                    itemStacks.add(itemStack);
+                }
+            } else if (object instanceof ItemStack itemStack) {
+                if (itemStacks.contains(itemStack)) continue;
+                if (itemStack.getType().isAir()) continue;
+                itemStacks.add(itemStack);
+            } else if (object instanceof ItemType itemType) {
+                for (ItemStack itemStack : itemType.getAll()) {
+                    if (itemStacks.contains(itemStack)) continue;
+                    if (itemStack.getType().isAir()) continue;
+                    itemStacks.add(itemStack);
+                }
+            }
+        }
+        if (itemStacks.size() == 0) return null;
+        return new ExactChoice(itemStacks);
+    }
+
+    /**
+     * Get a MaterialChoice from a list of objects
+     *
+     * @param objects list of objects to get a material choice from
+     * @return MaterialChoice or null if invalid
+     */
+    @Nullable
+    public static MaterialChoice getMaterialChoice(Object... objects) {
+        if (objects == null) return null;
+        List<Material> materials = new ArrayList<>();
+        for (Object object : objects) {
+            if (object instanceof MaterialChoice materialChoice) {
+                for (Material material : materialChoice.getChoices()) {
+                    if (materials.contains(material)) continue;
+                    materials.add(material);
+                }
+            } else if (object instanceof ItemStack itemStack) {
+                Material material = itemStack.getType();
+                if (materials.contains(material)) continue;
+                if (material.isAir()) continue;
+                materials.add(material);
+            } else if (object instanceof ItemType itemType) {
+                for (ItemStack itemStack : itemType.getAll()) {
+                    Material material = itemStack.getType();
+                    if (materials.contains(material)) continue;
+                    if (material.isAir()) continue;
+                    materials.add(material);
+                }
+            } else if (object instanceof Tag<?> tag) {
+                Tag<Material> materialTag = (Tag<Material>) tag;
+                if (materialTag.getValues().size() == 0) continue;
+                for (Material material : (materialTag.getValues())) {
+                    if (materials.contains(material)) continue;
+                    if (material.isAir()) continue;
+                    materials.add(material);
+                }
+            }
+        }
+        if (materials.size() == 0) return null;
+        return new MaterialChoice(materials);
+    }
+
+    public static Collection<ItemType> getChoices(RecipeChoice recipeChoice) {
+        List<ItemType> choices = new ArrayList<>();
+        if (recipeChoice instanceof ExactChoice exactChoice) {
+            for (ItemStack itemStack : exactChoice.getChoices()) {
+                ItemType itemType = new ItemType(itemStack);
+                if (choices.contains(itemType)) continue;
+                choices.add(itemType);
+            }
+        } else if (recipeChoice instanceof  MaterialChoice materialChoice) {
+            for (Material material : materialChoice.getChoices()) {
+                ItemType itemType = new ItemType(material);
+                if (choices.contains(itemType)) continue;
+                choices.add(itemType);
+            }
+        }
+        return choices;
+    }
+
+    public static String recipeChoiceToString(RecipeChoice recipeChoice) {
+        List<String> itemTypes = new ArrayList<>();
+        if (recipeChoice instanceof RecipeChoice.MaterialChoice materialChoice) {
+            materialChoice.getChoices().forEach(material -> itemTypes.add(new ItemType(material).toString()));
+            return String.format("MaterialChoice{choices=[%s]}",
+                    StringUtils.join(itemTypes, ", "));
+        } else if (recipeChoice instanceof RecipeChoice.ExactChoice exactChoice) {
+            exactChoice.getChoices().forEach(itemStack -> itemTypes.add(new ItemType(itemStack).toString()));
+            return String.format("ExactChoice{choices=[%s]}",
+                    StringUtils.join(itemTypes, ", "));
+        }
+        return String.format("RecipeChoice{choices=[]}", StringUtils.join(itemTypes, ", "));
     }
 
     private static String getFancy(RecipeChoice matChoice) {

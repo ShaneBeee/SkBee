@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -13,10 +12,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.BlastingRecipe;
@@ -25,9 +23,10 @@ import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.bukkit.inventory.RecipeChoice.ExactChoice;
-import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.SmokingRecipe;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings({"NullableProblems", "ConstantConditions"})
 @Name("Recipe - Cooking")
@@ -48,14 +47,18 @@ public class EffCookingRecipe extends Effect {
     private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
-        Skript.registerEffect(EffCookingRecipe.class,
-                "register [new] (0¦furnace|1¦(blast furnace|blasting)|2¦smok(er|ing)|3¦campfire) recipe for %itemtype% " +
-                        "(using|with ingredient) %itemtype/materialchoice% with id %string% [[and ]with exp[erience] %-number%] " +
-                        "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
+        String required = " recipe for %itemstack% (using|with ingredient) %recipechoice/itemtype% with id %string%";
+        String optionalExtra = " [[and] with exp[erience] %-number%] [[and] with cook[ ]time %-timespan%] [[and] in group %-string%]";
+        String[] cookingTypes = new String[]{"furnace", "(blast furnace|blasting)", "smok(er|ing)", "campfire"};
+        List<String> cookingRecipes = new ArrayList<>();
+        for (String cookingType : cookingTypes) {
+            cookingRecipes.add("register [a] [new] " + cookingType + required + optionalExtra);
+        }
+        Skript.registerEffect(EffCookingRecipe.class, cookingRecipes.toArray(new String[0]));
     }
 
     @SuppressWarnings("null")
-    private Expression<ItemType> item;
+    private Expression<ItemStack> result;
     private Expression<Object> ingredient;
     private Expression<String> key;
     private Expression<Number> experience;
@@ -65,50 +68,34 @@ public class EffCookingRecipe extends Effect {
 
     @SuppressWarnings({"unchecked", "null"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
-        item = (Expression<ItemType>) exprs[0];
-        ingredient = (Expression<Object>) exprs[1];
-        key = (Expression<String>) exprs[2];
-        experience = (Expression<Number>) exprs[3];
-        cookTime = (Expression<Timespan>) exprs[4];
-        group = (Expression<String>) exprs[5];
-        recipeType = parseResult.mark;
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        this.result = (Expression<ItemStack>) exprs[0];
+        this.ingredient = (Expression<Object>) exprs[1];
+        this.key = (Expression<String>) exprs[2];
+        this.experience = (Expression<Number>) exprs[3];
+        this.cookTime = (Expression<Timespan>) exprs[4];
+        this.group = (Expression<String>) exprs[5];
+        this.recipeType = matchedPattern;
+        Bukkit.broadcastMessage("" + matchedPattern);
         return true;
     }
 
     @Override
     protected void execute(Event event) {
-        ItemType res = this.item.getSingle(event);
-        Object ing = this.ingredient.getSingle(event);
-        if (res == null) {
+        ItemStack result = this.result.getSingle(event);
+        RecipeChoice ingredient = RecipeUtil.getRecipeChoice(this.ingredient.getSingle(event));
+        if (result == null) {
             RecipeUtil.error("Error registering cooking recipe - result is null");
-            RecipeUtil.error("Current Item: §6" + this.toString(event, true));
+            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
         }
-        if (ing == null) {
+        if (ingredient == null) {
             RecipeUtil.error("Error registering cooking recipe - ingredient is null");
-            RecipeUtil.error("Current Item: §6" + this.toString(event, true));
+            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
         }
 
-        ItemStack result = res.getRandom();
-        RecipeChoice ingredient;
-        if (ing instanceof ItemType) {
-            ItemStack itemStack = ((ItemType) ing).getRandom();
-            Material material = itemStack.getType();
-
-            // If ingredient isn't a custom item, just register the material
-            if (itemStack.isSimilar(new ItemStack(material))) {
-                ingredient = new MaterialChoice(material);
-            } else {
-                ingredient = new ExactChoice(itemStack);
-            }
-        } else if (ing instanceof MaterialChoice) {
-            ingredient = ((MaterialChoice) ing);
-        } else {
-            return;
-        }
-        String group = this.group != null ? this.group.getSingle(event) : "";
+        String group = this.group != null ? this.group.getSingle(event) : null;
         NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
         if (key == null) {
             RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
@@ -136,7 +123,7 @@ public class EffCookingRecipe extends Effect {
                     new FurnaceRecipe(key, result, ingredient, xp, cookTime);
         };
 
-        recipe.setGroup(group);
+        if (group != null && !group.isBlank()) recipe.setGroup(group);
         Bukkit.addRecipe(recipe);
         if (config.SETTINGS_DEBUG) {
             RecipeUtil.logCookingRecipe(recipe);
@@ -155,17 +142,17 @@ public class EffCookingRecipe extends Effect {
     }
 
     @Override
-    public String toString(Event e, boolean d) {
-        String type = switch (recipeType) {
+    public String toString(Event event, boolean debug) {
+        String type = switch (this.recipeType) {
             case 1 -> "blasting";
             case 2 -> "smoking";
             case 3 -> "campfire";
             default -> "furnace";
         };
-        String xp = experience != null ? " and with xp " + experience.toString(e, d) : "";
-        String cook = cookTime != null ? " and with cooktime " + cookTime.toString(e, d) : "";
-        return "register new " + type + " recipe for " + item.toString(e, d) + " using " + ingredient.toString(e, d) +
-                " with id " + key.toString(e, d) + xp + cook;
+        String xp = this.experience != null ? " and with xp " + this.experience.toString(event, debug) : "";
+        String cook = this.cookTime != null ? " and with cooktime " + this.cookTime.toString(event, debug) : "";
+        return "register new " + type + " recipe for " + this.result.toString(event, debug) + " using " + this.ingredient.toString(event, debug) +
+                " with id " + this.key.toString(event, debug) + xp + cook;
     }
 
 }
