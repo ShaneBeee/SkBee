@@ -1,6 +1,10 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -12,15 +16,28 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
+@Name("Recipe - Brewing Recipe")
+@Description({"Register a custom brewing stand recipe. Requires PaperMC 1.18+",
+        "",
+        "input refers to the bottom 3 ingredient slots, please note when using items that can stack " +
+                "this will replace all items in the slot with 1 of the result",
+        "",
+        "Note:\n",
+        "Paper has a pretty bad API for potions as such support for this is minimal",
+        "issues you have may or may not be solvable please report any of your issues to the issue tracker."})
+@Examples({"register new brewing stand recipe with id \"stone_from_magma_block\" for stone using magma block with input cobblestone",
+        "set {_choice} to material choice using magma block, blaze rod and lava bucket",
+        "register new brewing recipe with id \"stone_from_heat\" for stone using {_choice} with input cobblestone"})
+@Since("INSERT VERSION")
 public class EffBrewingRecipe extends Effect {
 
     private static final boolean SUPPORTS_POTION_MIX = Skript.classExists("io.papermc.paper.potion.PotionMix");
 
     static {
         Skript.registerEffect(EffBrewingRecipe.class,
-                "register [a] [new] brewing[[ ]stand] recipe with id %string% for %itemstack% using %recipechoice/itemtype% [and] with input %recipechoice/itemtype%");
+                "register [a] [new] brewing[[ ]stand] recipe with id %string% for %itemstack% (using|with ingredient) %recipechoice/itemtype% [and] with input %recipechoice/itemtype%");
     }
 
     private Expression<ItemStack> result;
