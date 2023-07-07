@@ -85,10 +85,10 @@ public class ExprBoundsInWorld extends SimpleExpression<Object> {
         String ID = this.ID ? " ids" : "s";
         String inWorld = " in world " + worlds.toString(event, debug);
         return switch (boundType) {
-            case TRUE -> "all non-temporary bound" + ID + inWorld;
-            case FALSE -> "all temporary bound" + ID + inWorld;
-            case UNKNOWN -> "all bound" + ID + inWorld;
-        };
+            case TRUE -> "all non-temporary bound";
+            case FALSE -> "all temporary bound";
+            case UNKNOWN -> "all bound";
+        } + ID + inWorld;
     }
 
 }

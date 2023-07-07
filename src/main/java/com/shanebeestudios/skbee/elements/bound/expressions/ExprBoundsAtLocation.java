@@ -86,10 +86,10 @@ public class ExprBoundsAtLocation extends SimpleExpression<Object> {
         String ID = this.ID ? " ids" : "s";
         String atLocation = " at " + locations.toString(event, debug);
         return switch (boundType) {
-            case TRUE -> "all non-temporary bound" + ID + atLocation;
-            case FALSE -> "all temporary bound" + ID + atLocation;
-            case UNKNOWN -> "all bound" + ID + atLocation;
-        };
+            case TRUE -> "all non-temporary bound";
+            case FALSE -> "all temporary bound";
+            case UNKNOWN -> "all bound";
+        } + ID + atLocation;
     }
 
 }
