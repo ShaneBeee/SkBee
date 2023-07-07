@@ -80,10 +80,10 @@ public class ExprAllBounds extends SimpleExpression<Object> {
     public @NotNull String toString(@Nullable Event event, boolean debug) {
         String ID = this.ID ? " ids" : "s";
         return switch (boundType) {
-            case TRUE -> "all non-temporary bound" + ID;
-            case FALSE -> "all temporary bound" + ID;
-            case UNKNOWN -> "all bound" + ID;
-        };
+            case TRUE -> "all non-temporary bound";
+            case FALSE -> "all temporary bound";
+            case UNKNOWN -> "all bound";
+        }  + ID;
     }
 
 }

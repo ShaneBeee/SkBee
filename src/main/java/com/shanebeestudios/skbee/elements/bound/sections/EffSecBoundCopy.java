@@ -25,7 +25,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Name("Bound - Copy Bound")
-@Description("Create an exact replica of an existing bound with a new id")
+@Description("Create an exact replica of an existing bound with a new id.")
 @Examples({"create a copy of bound with id \"some_bound\" with id \"some_bound_copy\"",
         "create a copy of bound with id \"some_bound\" with id \"some_bound_copy\":",
         "\tresize the bound between {_pos1} and {_pos2}",

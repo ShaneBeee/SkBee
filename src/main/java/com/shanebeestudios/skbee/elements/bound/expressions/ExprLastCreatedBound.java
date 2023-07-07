@@ -17,7 +17,7 @@ import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
 
 @Name("Bound - Last Created Bound")
-@Description("Returns the last created bound")
+@Description("Returns the last created bound.")
 @Examples({"create a bound with id \"\" between {_pos1} and {_pos2}",
         "broadcast last created bound",
         "resize last created bound between {_pos1^2} and {_pos2^2}"})
@@ -62,4 +62,5 @@ public class ExprLastCreatedBound extends SimpleExpression<Bound> {
     public String toString(@Nullable Event event, boolean b) {
         return "lastly created bound";
     }
+
 }
