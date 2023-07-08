@@ -15,20 +15,6 @@ settings:
   # Example, when using the namespaced key expression `namespaced key from "some_cool_namespace"` (`skbee:some_cool_namespace`)
   namespace: "skbee"
 
-# Enable different event listeners for NBT
-nbt-events:
-  # Whether breaking a block should remove NBT
-  block-break: true
-  # Whether pistons pushing blocks should remove NBT
-  piston-extend: true
-  # Whether an entity changing a block should remove NBT
-  # Examples would be rabbit breaking carrots or enderman picking up blocks
-  entity-change-block: true
-  # Whether a block exploding should remove NBT
-  block-explode: true
-  # Whether an entity exploding should remove NBT from broken blocks
-  entity-explode: true
-
 # Disable elements you do not plan to use.
 elements:
   # Enable NBT elements
@@ -103,3 +89,46 @@ elements:
   # Enable display entity elements
   # This is specifically for Minecraft 1.19.4+
   display-entity: true
+
+# Enable different event listeners for NBT
+nbt-events:
+  # Whether breaking a block should remove NBT
+  block-break: true
+  # Whether pistons pushing blocks should remove NBT
+  piston-extend: true
+  # Whether an entity changing a block should remove NBT
+  # Examples would be rabbit breaking carrots or enderman picking up blocks
+  entity-change-block: true
+  # Whether a block exploding should remove NBT
+  block-explode: true
+  # Whether an entity exploding should remove NBT from broken blocks
+  entity-explode: true
+
+# Enable different event listeners for Bounds
+bound-events:
+  # Whether a player moving should be checked
+  player-move: true
+  # Whether a player teleporting should be checked
+  # Examples would be teleporting using ender pearls or commands
+  player-teleport: true
+  # Whether a player respawning should be checked
+  # Examples would be respawn anchors and player beds
+  player-respawn: true
+  # Whether a player entering a bed should be checked
+  player-bed-enter: true
+  # Whether a player leaving a bed should be checked
+  player-bed-leave: true
+  # Whether a player mounting an entity should be checked
+  # Entities like riding an ender pearl or arrows using special methods
+  entity-mount: true
+  # Whether a player dismounting an entity should be checked
+  entity-dismount: true
+  # Whether a player entering a vehicle should be checked
+  # Similar to entity mount but only for boats, minecarts, ect...
+  vehicle-enter: true
+  # Whether a player existing a vehicle should be checked
+  vehicle-exit: true
+  # Whether a player moving in a vehicle should be checked
+  vehicle-move: true
+  # Whether breaking a vehicle should be checked
+  vehicle-destroy: true

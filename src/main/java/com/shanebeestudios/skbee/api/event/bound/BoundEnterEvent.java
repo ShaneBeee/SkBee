@@ -1,41 +1,36 @@
-package com.shanebeestudios.skbee.api.event;
+package com.shanebeestudios.skbee.api.event.bound;
 
 import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 
 /**
- * Called when a player exits a bound
+ * Called when a player enters a bound
  */
-public class ExitBoundEvent extends Event implements Cancellable {
+public class BoundEnterEvent extends BoundEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
-    private final Bound bound;
     private final Player player;
     private boolean cancelled = false;
 
-    public ExitBoundEvent(Bound bound, Player player) {
-        this.bound = bound;
+    public BoundEnterEvent(Bound bound, Player player) {
+        super(bound);
         this.player = player;
     }
 
-    /** The player that exits the bound
-     * @return Player that exited the bound
+    /**
+     * The player that entered the bound
+     *
+     * @return Player that entered the bound
      */
     public Player getPlayer() {
         return player;
     }
 
-    /** The bound that was exited
-     * @return Bound that was exited
-     */
-    public Bound getBound() {
-        return bound;
-    }
-
-    /** Check if this event is cancelled
+    /**
+     * Check if this event is cancelled
+     *
      * @return True if event is cancelled
      */
     @Override
@@ -43,7 +38,9 @@ public class ExitBoundEvent extends Event implements Cancellable {
         return cancelled;
     }
 
-    /** Cancel this event
+    /**
+     * Cancel this event
+     *
      * @param cancelled Whether this event should be cancelled or not
      */
     @Override
