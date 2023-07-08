@@ -2,12 +2,14 @@ package com.shanebeestudios.skbee.elements.other.events;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.lang.Unit;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -58,75 +60,77 @@ public class OtherEvents {
             }
         }, 0);
 
-        Skript.registerEvent("Anvil Prepare Event", SimpleEvent.class, PrepareAnvilEvent.class, "anvil prepare")
-                .description("Called when a player attempts to combine 2 items in an anvil.",
-                        "'event-slot' represents the result slot, can be used to get or set.")
-                .examples("on anvil prepare:",
-                        "\tif slot 0 of event-inventory is a diamond sword:",
-                        "\t\tif slot 1 of event-inventory is an enchanted book:",
-                        "\t\t\tif stored enchants of slot 1 of event-inventory contains sharpness 5:",
-                        "\t\t\t\tset {_i} to slot 0 of event-inventory",
-                        "\t\t\t\tadd \"&aOOOOOOO\" and \"&bAHHHHHH\" to lore of {_i}",
-                        "\t\t\t\tenchant {_i} with sharpness 6",
-                        "\t\t\t\tset event-slot to {_i}",
-                        "\t\t\t\tset repair cost of event-inventory to 30")
-                .since("1.11.0");
+        if (!Util.isRunningSkript27()) {
+            Skript.registerEvent("Anvil Prepare Event", SimpleEvent.class, PrepareAnvilEvent.class, "anvil prepare")
+                    .description("Called when a player attempts to combine 2 items in an anvil.",
+                            "'event-slot' represents the result slot, can be used to get or set.")
+                    .examples("on anvil prepare:",
+                            "\tif slot 0 of event-inventory is a diamond sword:",
+                            "\t\tif slot 1 of event-inventory is an enchanted book:",
+                            "\t\t\tif stored enchants of slot 1 of event-inventory contains sharpness 5:",
+                            "\t\t\t\tset {_i} to slot 0 of event-inventory",
+                            "\t\t\t\tadd \"&aOOOOOOO\" and \"&bAHHHHHH\" to lore of {_i}",
+                            "\t\t\t\tenchant {_i} with sharpness 6",
+                            "\t\t\t\tset event-slot to {_i}",
+                            "\t\t\t\tset repair cost of event-inventory to 30")
+                    .since("1.11.0");
 
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
-            @Override
-            public Player get(PrepareAnvilEvent event) {
-                return (Player) event.getView().getPlayer();
-            }
-        }, 0);
+            EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
+                @Override
+                public Player get(PrepareAnvilEvent event) {
+                    return (Player) event.getView().getPlayer();
+                }
+            }, 0);
 
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Slot.class, new Getter<>() {
-            @Override
-            public Slot get(PrepareAnvilEvent event) {
-                return new Slot() {
-                    final ItemStack result = event.getResult();
+            EventValues.registerEventValue(PrepareAnvilEvent.class, Slot.class, new Getter<>() {
+                @Override
+                public Slot get(PrepareAnvilEvent event) {
+                    return new Slot() {
+                        final ItemStack result = event.getResult();
 
-                    @Nullable
-                    @Override
-                    public ItemStack getItem() {
-                        return result;
-                    }
+                        @Nullable
+                        @Override
+                        public ItemStack getItem() {
+                            return result;
+                        }
 
-                    @Override
-                    public void setItem(@Nullable ItemStack item) {
-                        event.setResult(item);
-                    }
+                        @Override
+                        public void setItem(@Nullable ItemStack item) {
+                            event.setResult(item);
+                        }
 
-                    @Override
-                    public int getAmount() {
-                        if (result != null) return result.getAmount();
-                        return 0;
-                    }
+                        @Override
+                        public int getAmount() {
+                            if (result != null) return result.getAmount();
+                            return 0;
+                        }
 
-                    @Override
-                    public void setAmount(int amount) {
-                        if (result != null) result.setAmount(amount);
-                    }
+                        @Override
+                        public void setAmount(int amount) {
+                            if (result != null) result.setAmount(amount);
+                        }
 
-                    @Override
-                    public boolean isSameSlot(@NotNull Slot o) {
-                        ItemStack item = o.getItem();
-                        return item != null && item.isSimilar(result);
-                    }
+                        @Override
+                        public boolean isSameSlot(@NotNull Slot o) {
+                            ItemStack item = o.getItem();
+                            return item != null && item.isSimilar(result);
+                        }
 
-                    @Override
-                    public @NotNull String toString(@Nullable Event e, boolean debug) {
-                        return "anvil inventory result slot";
-                    }
-                };
-            }
-        }, 0);
+                        @Override
+                        public @NotNull String toString(@Nullable Event e, boolean debug) {
+                            return "anvil inventory result slot";
+                        }
+                    };
+                }
+            }, 0);
 
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Inventory.class, new Getter<>() {
-            @Override
-            public Inventory get(PrepareAnvilEvent event) {
-                return event.getInventory();
-            }
-        }, 0);
+            EventValues.registerEventValue(PrepareAnvilEvent.class, Inventory.class, new Getter<>() {
+                @Override
+                public Inventory get(PrepareAnvilEvent event) {
+                    return event.getInventory();
+                }
+            }, 0);
+        }
 
         // Player shear entity event
         Skript.registerEvent("Shear Entity", SimpleEvent.class, PlayerShearEntityEvent.class, "[player] shear entity")

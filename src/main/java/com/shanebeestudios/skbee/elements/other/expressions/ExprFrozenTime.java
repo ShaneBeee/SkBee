@@ -13,6 +13,7 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -39,6 +40,7 @@ public class ExprFrozenTime extends SimplePropertyExpression<Entity, Timespan> {
             Skript.error("Frozen time is not available on your server version!", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
+        Util.skript27Warning("freeze time", "expression");
         return super.init(exprs, matchedPattern, isDelayed, parseResult);
     }
 

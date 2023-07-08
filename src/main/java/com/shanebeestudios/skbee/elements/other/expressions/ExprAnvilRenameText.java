@@ -4,6 +4,10 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.inventory.AnvilInventory;
 import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
@@ -24,6 +28,12 @@ public class ExprAnvilRenameText extends SimplePropertyExpression<Inventory, Str
 
     static {
         register(ExprAnvilRenameText.class, String.class, "[anvil] (rename text|repair name)", "inventories");
+    }
+
+    @Override
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        Util.skript27Warning("anvil text input", "expression");
+        return super.init(exprs, matchedPattern, isDelayed, parseResult);
     }
 
     @Nullable

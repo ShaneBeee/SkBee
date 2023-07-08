@@ -13,6 +13,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.entity.Pathfinder;
 import com.destroystokyo.paper.entity.Pathfinder.PathResult;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -46,6 +47,7 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
             Skript.error("This expression requires a PaperMC server or a fork of.");
             return false;
         }
+        Util.skript27Warning("pathfind", "effect");
         setExpr((Expression<LivingEntity>) exprs[1]);
         speed = (Expression<Number>) exprs[0];
         return true;

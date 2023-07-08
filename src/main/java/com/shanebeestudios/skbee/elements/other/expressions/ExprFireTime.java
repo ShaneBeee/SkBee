@@ -6,8 +6,12 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Timespan;
+import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -25,6 +29,12 @@ public class ExprFireTime extends SimplePropertyExpression<Entity, Timespan> {
 
     static {
         register(ExprFireTime.class, Timespan.class, "fire time", "entities");
+    }
+
+    @Override
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        Util.skript27Warning("entity fire burn duration", "expression");
+        return super.init(exprs, matchedPattern, isDelayed, parseResult);
     }
 
     @Override
