@@ -46,10 +46,6 @@ elements:
   # Enable Text Component elements
   text-component: true
 
-  # Enable pathfinding elements
-  # Note: Only available on Paper
-  pathfinding: true
-
   # Enable world creator elements
   world-creator: true
   # Whether or not custom worlds should automatically load on server start

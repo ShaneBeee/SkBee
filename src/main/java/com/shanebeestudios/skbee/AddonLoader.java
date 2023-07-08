@@ -93,7 +93,6 @@ public class AddonLoader {
         loadTeamElements();
         loadBoundElements();
         loadTextElements();
-        loadPathElements();
         loadStructureElements();
         loadOtherElements();
         loadVirtualFurnaceElements();
@@ -254,20 +253,6 @@ public class AddonLoader {
             addon.loadClasses("com.shanebeestudios.skbee.elements.text");
             Util.logLoading("&5Text Component Elements &asuccessfully loaded");
             this.textComponentEnabled = true;
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
-        }
-    }
-
-    private void loadPathElements() {
-        if (!this.config.ELEMENTS_PATHFINDING) {
-            Util.logLoading("&5Pathfinding Elements &cdisabled via config");
-            return;
-        }
-        try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.path");
-            Util.logLoading("&5Pathfinding Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);

@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.path.expressions;
+package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;

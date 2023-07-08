@@ -43,7 +43,6 @@ public class Config {
     public boolean ELEMENTS_STRUCTURE;
     public boolean ELEMENTS_VIRTUAL_FURNACE;
     public boolean ELEMENTS_TEXT_COMPONENT;
-    public boolean ELEMENTS_PATHFINDING;
     public boolean ELEMENTS_WORLD_CREATOR;
     public boolean ELEMENTS_GAME_EVENT;
     public boolean ELEMENTS_BOSS_BAR;
@@ -152,7 +151,6 @@ public class Config {
         this.ELEMENTS_STRUCTURE = getElement("structure");
         this.ELEMENTS_VIRTUAL_FURNACE = getElement("virtual-furnace");
         this.ELEMENTS_TEXT_COMPONENT = getElement("text-component");
-        this.ELEMENTS_PATHFINDING = getElement("pathfinding");
         this.ELEMENTS_WORLD_CREATOR = getElement("world-creator");
         this.ELEMENTS_GAME_EVENT = getElement("game-event");
         this.ELEMENTS_BOSS_BAR = getElement("boss-bar");
