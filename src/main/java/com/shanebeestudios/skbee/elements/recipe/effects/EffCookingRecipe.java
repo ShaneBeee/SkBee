@@ -76,7 +76,6 @@ public class EffCookingRecipe extends Effect {
         this.cookTime = (Expression<Timespan>) exprs[4];
         this.group = (Expression<String>) exprs[5];
         this.recipeType = matchedPattern;
-        Bukkit.broadcastMessage("" + matchedPattern);
         return true;
     }
 
