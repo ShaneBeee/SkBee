@@ -86,28 +86,33 @@ public class AddonLoader {
         this.addon.setLanguageFileDirectory("lang");
 
         int[] elementCountBefore = SkriptUtils.getElementCount();
+        // Load first as it's the base for many things
+        loadOtherElements();
+        // Load next as both are used in other places
         loadNBTElements();
+        loadTextElements();
+
+        // Load in alphabetical order (to make "/skbee info" easier to read)
+        loadAdvancementElements();
+        loadBossBarElements();
+        loadBoundElements();
+        loadDisplayEntityElements();
+        loadFishingElements();
+        loadGameEventElements();
+        loadParticleElements();
+        loadParticleElements();
+        loadRayTraceElements();
         loadRecipeElements();
         loadScoreboardElements();
-        loadObjectiveElements();
-        loadTeamElements();
-        loadBoundElements();
-        loadTextElements();
-        loadStructureElements();
-        loadOtherElements();
-        loadVirtualFurnaceElements();
-        loadWorldCreatorElements();
-        loadGameEventElements();
-        loadBossBarElements();
+        loadScoreboardObjectiveElements();
         loadStatisticElements();
-        loadVillagerElements();
-        loadAdvancementElements();
-        loadWorldBorderElements();
-        loadParticleElements();
+        loadStructureElements();
         loadTagElements();
-        loadRayTraceElements();
-        loadFishingElements();
-        loadDisplayEntityElements();
+        loadTeamElements();
+        loadVillagerElements();
+        loadVirtualFurnaceElements();
+        loadWorldBorderElements();
+        loadWorldCreatorElements();
 
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
@@ -177,7 +182,7 @@ public class AddonLoader {
         }
     }
 
-    private void loadObjectiveElements() {
+    private void loadScoreboardObjectiveElements() {
         if (!this.config.ELEMENTS_OBJECTIVE) {
             Util.logLoading("&5Scoreboard Objective Elements &cdisabled via config");
             return;
@@ -495,7 +500,7 @@ public class AddonLoader {
     }
 
     public boolean isTextComponentEnabled() {
-        return textComponentEnabled;
+        return this.textComponentEnabled;
     }
 
 }
