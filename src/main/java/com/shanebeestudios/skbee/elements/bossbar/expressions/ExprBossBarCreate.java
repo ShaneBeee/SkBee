@@ -26,7 +26,9 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("BossBar - Create")
 @Description({"Create your own custom BossBar.",
-        "\nNOTE: Progress is a number between 0-100."})
+        "\nNOTE: Progress is a number between 0-100.",
+        "\nNOTE: This just creates a new custom bossbar. It will by default not be visible to anyone",
+        "until you actually add players to it. See examples!!!"})
 @Examples({"set {_bar} to boss bar with id \"le-bar\" with title \"My BossBar\"",
         "set {_bar} to boss bar with id \"le-bar\" with title \"Le Title\" with color pink with progress 50",
         "add all players to {_bar}"})
