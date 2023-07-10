@@ -6,7 +6,9 @@ labels: ''
 assignees: ''
 
 ---
-<!-- If this template is not filled out, your issue will be closed -->
+<!-- If this template is not filled out, your issue will be closed ... no questions asked!!!
+
+MAKE SURE TO FILL OUT THE TEMPLATE-->
 
 **Describe the bug**   
 A clear and concise description of what the bug is.

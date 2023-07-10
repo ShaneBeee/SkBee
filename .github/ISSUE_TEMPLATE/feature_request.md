@@ -6,6 +6,9 @@ labels: ''
 assignees: ''
 
 ---
+<!-- If this template is not filled out, your issue will be closed ... no questions asked!!!
+
+MAKE SURE TO FILL OUT THE TEMPLATE-->
 
 **Is your feature request related to a problem? Please describe.**
 A clear and concise description of what the problem is. Ex. I'm always frustrated when [...]
