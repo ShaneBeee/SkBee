@@ -50,6 +50,13 @@ body:
     validations:
       required: true
 
+  - type: input
+    attributes:
+      label: SkBee Info
+      description: Run '/skbee info' and paste here!
+    validations:
+      required: true
+
   - type: textarea
     attributes:
       label: Additional Information
