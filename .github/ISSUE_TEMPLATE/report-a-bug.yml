@@ -1,0 +1,60 @@
+name: 🐞 Bug Report
+description: Report an unexpected behaviour
+title: "[BUG]"
+body:
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: Describe the observed behavior
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps
+    attributes:
+      label: Steps to reproduce
+      description: How do you reproduce this? Please provide as much step-by-step detail as possible.
+      value: |
+        1.
+        2.
+        3.
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+      description: What did you expect to happen when the reproduce steps are followed?
+      placeholder: Tell us what you expected to see!
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: SkBee Version
+      description: Which version of SkBee are you using?
+      placeholder: |
+        Ex: "1.0.0"
+    validations:
+      required: true
+
+  - type: input
+    attributes:
+      label: Server Version
+      description: Which version of the server and MC are you using?
+      placeholder: |
+        Ex: "Paper 1.19.2"
+    validations:
+      required: true
+
+  - type: textarea
+    attributes:
+      label: Additional Information
+      description: Any additional information that may help us solve the bug.
+      placeholder: |
+        Ex: "Using Spigot instead of Paper"
+    validations:
+      required: false
