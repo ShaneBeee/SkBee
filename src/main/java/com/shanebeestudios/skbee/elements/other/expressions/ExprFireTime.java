@@ -39,7 +39,7 @@ public class ExprFireTime extends SimplePropertyExpression<Entity, Timespan> {
 
     @Override
     public @Nullable Timespan convert(Entity entity) {
-        return Timespan.fromTicks_i(entity.getFireTicks());
+        return Timespan.fromTicks_i(Math.max(entity.getFireTicks(), 0));
     }
 
     @SuppressWarnings("NullableProblems")
