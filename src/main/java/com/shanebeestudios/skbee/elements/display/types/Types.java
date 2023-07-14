@@ -267,7 +267,7 @@ public class Types {
                 .description("Creates a new AxisAngle4f using a vector and angle (Will be converted and returned as a Quaternion).",
                         "I have no clue what this is, ask ThatOneWizard!")
                 .examples("set {_v} to betterAxisAngle(0.25, vector(0,0,1))")
-                .since("INSERT VERSION"));
+                .since("2.15.0"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("transformation", new Parameter[]{
                 new Parameter<>("translation", DefaultClasses.VECTOR, true, null),

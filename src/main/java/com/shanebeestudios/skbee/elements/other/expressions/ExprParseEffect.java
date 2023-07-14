@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
         "\ttrigger:",
         "\t\tif parse effect arg-1 = false:",
         "\t\t\tsend \"ERROR: %arg-1%\""})
-@Since("INSERT VERSION")
+@Since("2.15.0")
 public class ExprParseEffect extends SimpleExpression<Boolean> {
 
     static {

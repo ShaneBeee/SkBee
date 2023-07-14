@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
         "play hurt animation on all players",
         "play hurt animation on all players with yaw 270",
         "play hurt animation on all mobs"})
-@Since("INSERT VERSION")
+@Since("2.15.0")
 public class EffHurtAnimation extends Effect {
 
     static {

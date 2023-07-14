@@ -21,7 +21,7 @@ import org.eclipse.jdt.annotation.Nullable;
 @Examples({"create a bound with id \"\" between {_pos1} and {_pos2}",
         "broadcast last created bound",
         "resize last created bound between {_pos1^2} and {_pos2^2}"})
-@Since("INSERT VERSION")
+@Since("2.15.0")
 public class ExprLastCreatedBound extends SimpleExpression<Bound> {
 
     private static final BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();

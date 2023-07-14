@@ -26,7 +26,7 @@ import java.util.List;
         "set {_nonTemporaryBounds::*} to nontemporary bounds at {_loc}",
         "loop all bounds at {locations::*}:",
         "\tbroadcast loop-bound"})
-@Since("1.0.0, INSERT VERSION (temporary/non-temporary)")
+@Since("1.0.0, 2.15.0 (temporary/non-temporary)")
 public class ExprBoundsAtLocation extends SimpleExpression<Object> {
 
     static {

@@ -26,7 +26,7 @@ import java.util.List;
         "set {_nonTemporaryBounds::*} to nontemporary bounds in world(\"world_nether\")",
         "loop all bounds in {worlds::*}:",
         "\tbroadcast loop-bound"})
-@Since("INSERT VERSION")
+@Since("2.15.0")
 public class ExprBoundsInWorld extends SimpleExpression<Object> {
 
     static {
