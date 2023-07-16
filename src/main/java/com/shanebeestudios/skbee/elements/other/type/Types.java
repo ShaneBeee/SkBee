@@ -20,7 +20,6 @@ import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.bukkit.inventory.ItemFlag;
@@ -31,7 +30,12 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 public class Types {
 
@@ -130,17 +134,15 @@ public class Types {
                     .parser(TRANSOFORM_REASON.getParser()));
         }
 
-        if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
-            if (Classes.getExactClassInfo(QuitReason.class) == null) {
-                EnumWrapper<QuitReason> QUIT_REASON = new EnumWrapper<>(QuitReason.class);
-                Classes.registerClass(new ClassInfo<>(QuitReason.class, "quitreason")
-                        .user("quit ?reasons?")
-                        .name("Quit Reason")
-                        .description("Represents the different reasons for calling the player quit event (Requires Paper).")
-                        .usage(QUIT_REASON.getAllNames())
-                        .since("2.6.0")
-                        .parser(QUIT_REASON.getParser()));
-            }
+        if (Classes.getExactClassInfo(PlayerQuitEvent.QuitReason.class) == null) {
+            EnumWrapper<PlayerQuitEvent.QuitReason> QUIT_REASON = new EnumWrapper<>(PlayerQuitEvent.QuitReason.class);
+            Classes.registerClass(new ClassInfo<>(PlayerQuitEvent.QuitReason.class, "quitreason")
+                    .user("quit ?reasons?")
+                    .name("Quit Reason")
+                    .description("Represents the different reasons for calling the player quit event (Requires Paper).")
+                    .usage(QUIT_REASON.getAllNames())
+                    .since("2.6.0")
+                    .parser(QUIT_REASON.getParser()));
         }
 
         if (Classes.getExactClassInfo(NamespacedKey.class) == null) {
