@@ -22,7 +22,6 @@ public class PDCWrapper {
     private static final PersistentDataType<Integer, Integer> INT = PersistentDataType.INTEGER;
     private static final PersistentDataType<Byte, Byte> BYTE = PersistentDataType.BYTE;
     private static final PersistentDataType<Float, Float> FLOAT = PersistentDataType.FLOAT;
-    private static final PersistentDataType<Byte, Boolean> BOOLEAN = PersistentDataType.BOOLEAN;
     private static final PersistentDataType<int[], int[]> INT_ARRAY = PersistentDataType.INTEGER_ARRAY;
 
     /**
@@ -82,7 +81,7 @@ public class PDCWrapper {
      * @param value Boolean to set
      */
     public void setBoolean(String key, boolean value) {
-        this.container.set(getKey(key), BOOLEAN, value);
+        this.container.set(getKey(key), BYTE, value ? (byte) 1 : 0);
     }
 
     /**
@@ -94,8 +93,8 @@ public class PDCWrapper {
     public boolean getBoolean(String key) {
         NamespacedKey namespacedKey = getKey(key);
         if (this.container.has(namespacedKey)) {
-            Boolean aBoolean = this.container.get(namespacedKey, BOOLEAN);
-            if (aBoolean != null) return aBoolean;
+            Byte aByte = this.container.get(namespacedKey, BYTE);
+            if (aByte != null) return aByte != 0;
         }
         return false;
     }
