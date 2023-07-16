@@ -6,6 +6,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
@@ -22,7 +23,11 @@ import org.jetbrains.annotations.Nullable;
 @Since("INSERT VERSION")
 public class ExprQuitReason extends SimpleExpression<QuitReason> {
 
-    public static final boolean SUPPORTS_QUIT_REASON = Skript.methodExists(PlayerQuitEvent.class, "getReason");
+    static {
+        Skript.registerExpression(ExprQuitReason.class, QuitReason.class, ExpressionType.SIMPLE, "quit reason");
+    }
+
+    private static final boolean SUPPORTS_QUIT_REASON = Skript.methodExists(PlayerQuitEvent.class, "getReason");
 
     @Override
     public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, ParseResult parseResult) {
