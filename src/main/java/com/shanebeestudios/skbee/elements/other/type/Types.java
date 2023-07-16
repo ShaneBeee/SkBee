@@ -134,15 +134,17 @@ public class Types {
                     .parser(TRANSOFORM_REASON.getParser()));
         }
 
-        if (Classes.getExactClassInfo(PlayerQuitEvent.QuitReason.class) == null) {
-            EnumWrapper<PlayerQuitEvent.QuitReason> QUIT_REASON = new EnumWrapper<>(PlayerQuitEvent.QuitReason.class);
-            Classes.registerClass(new ClassInfo<>(PlayerQuitEvent.QuitReason.class, "quitreason")
-                    .user("quit ?reasons?")
-                    .name("Quit Reason")
-                    .description("Represents the different reasons for calling the player quit event (Requires Paper).")
-                    .usage(QUIT_REASON.getAllNames())
-                    .since("2.6.0")
-                    .parser(QUIT_REASON.getParser()));
+        if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
+            if (Classes.getExactClassInfo(PlayerQuitEvent.QuitReason.class) == null) {
+                EnumWrapper<PlayerQuitEvent.QuitReason> QUIT_REASON = new EnumWrapper<>(PlayerQuitEvent.QuitReason.class);
+                Classes.registerClass(new ClassInfo<>(PlayerQuitEvent.QuitReason.class, "quitreason")
+                        .user("quit ?reasons?")
+                        .name("Quit Reason")
+                        .description("Represents the different reasons for calling the player quit event (Requires Paper).")
+                        .usage(QUIT_REASON.getAllNames())
+                        .since("2.6.0")
+                        .parser(QUIT_REASON.getParser()));
+            }
         }
 
         if (Classes.getExactClassInfo(NamespacedKey.class) == null) {

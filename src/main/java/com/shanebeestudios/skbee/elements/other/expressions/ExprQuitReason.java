@@ -14,6 +14,10 @@ public class ExprQuitReason extends SimpleExpression<QuitReason> {
 
     @Override
     public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, ParseResult parseResult) {
+        if (!Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
+            Skript.error("The 'quit reason' expression can only be used on PaperMC servers.");
+            return false;
+        }
         if (!getParser().isCurrentEvent(PlayerQuitEvent.class)) {
             Skript.error("The 'quit reason' expression can only be used in a player quit event.");
             return false;
