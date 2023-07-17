@@ -20,6 +20,7 @@ import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.bukkit.inventory.ItemFlag;
@@ -135,9 +136,9 @@ public class Types {
         }
 
         if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
-            if (Classes.getExactClassInfo(PlayerQuitEvent.QuitReason.class) == null) {
-                EnumWrapper<PlayerQuitEvent.QuitReason> QUIT_REASON = new EnumWrapper<>(PlayerQuitEvent.QuitReason.class);
-                Classes.registerClass(new ClassInfo<>(PlayerQuitEvent.QuitReason.class, "quitreason")
+            if (Classes.getExactClassInfo(QuitReason.class) == null) {
+                EnumWrapper<QuitReason> QUIT_REASON = new EnumWrapper<>(QuitReason.class);
+                Classes.registerClass(new ClassInfo<>(QuitReason.class, "quitreason")
                         .user("quit ?reasons?")
                         .name("Quit Reason")
                         .description("Represents the different reasons for calling the player quit event (Requires Paper).")
