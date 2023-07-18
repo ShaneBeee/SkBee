@@ -30,7 +30,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
         "create a copy of bound with id \"some_bound\" with id \"some_bound_copy\":",
         "\tresize the bound between {_pos1} and {_pos2}",
         "\tadd {_player} to bound owners of bound"})
-@Since("INSERT VERSION")
+@Since("2.15.0")
 public class EffSecBoundCopy extends EffectSection {
 
     private static final BoundConfig boundConfig;

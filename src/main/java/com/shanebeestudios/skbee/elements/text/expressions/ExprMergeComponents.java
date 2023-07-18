@@ -19,7 +19,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("Merge multiple components into one. If adding strings/texts, they will be converted into components.")
 @Examples({"set {_t} to merge components {_t::*}",
         "set {_t} to merge components {_t::*} joined with newline"})
-@Since("2.4.0, 2.8.5 (delimiter), INSERT VERSION (strings)")
+@Since("2.4.0, 2.8.5 (delimiter), 2.15.0 (strings)")
 public class ExprMergeComponents extends SimpleExpression<ComponentWrapper> {
 
     static {
