@@ -13,8 +13,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Spawner - Spawn Count")
-@Description({"Get how many mobs attempt to spawn.",
-        "Default is 4"})
+@Description("Get how many mobs attempt to spawn. Default is 4.")
 @Examples({"on place of mob spawner:",
         "\tset spawner spawn count of event-block to 10",
         "\tadd 10 to spawn count of event-block",

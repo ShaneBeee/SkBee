@@ -18,7 +18,7 @@ public class EvtSpawnerSpawn extends SkriptEvent {
 
     static {
         Skript.registerEvent("Spawner - Spawn", EvtSpawnerSpawn.class, SpawnerSpawnEvent.class,
-                        "spawner spawn[ing] [of %entitydatas%]6")
+                        "spawner spawn[ing] [of %entitydatas%]")
                 .description("Called whenever an entity is spawned via a spawner.")
                 .examples("on spawner spawn of zombie:",
                         "\treset spawner timer of event-block")

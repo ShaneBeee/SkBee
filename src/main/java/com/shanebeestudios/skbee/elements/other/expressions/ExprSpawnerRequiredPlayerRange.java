@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Spawner - Required Player Range")
 @Description({"Get the maximum distance(squared) a player can be in order for a spawner to be active.",
         "If this value is less than 0, the spawner is always active (given that there are players online).",
-        "Otherwise if the value is 0 the spawner is never active", // Documentation is incorrect, saying <= 0 is always active
+        "Otherwise if the value is 0 the spawner is never active.", // Documentation is incorrect, saying <= 0 is always active
         "Default value is 16."})
 @Examples({"on place of mob spawner:",
         "\tset required player range of event-block to 0"})

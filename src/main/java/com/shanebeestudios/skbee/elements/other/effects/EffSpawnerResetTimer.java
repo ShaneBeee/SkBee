@@ -15,8 +15,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Spawner - Reset Timer")
-@Description({"Resets the spawner timer for a spawner.",
-        "Requires a PaperMC server"})
+@Description("Resets the spawner timer for a spawner. Requires a PaperMC server.")
 @Examples({"on spawner spawn:",
         "\treset spawner timer"})
 @Since("INSERT VERSION")

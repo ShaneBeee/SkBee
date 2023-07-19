@@ -19,9 +19,9 @@ import org.jetbrains.annotations.Nullable;
 
 
 @Name("Spawner - Spawn Delay")
-@Description({"The delay between a spawner spawning a new entity",
-        "Maximum default is 800 ticks (40 seconds)",
-        "Minimum default is 200 ticks (10 seconds)"})
+@Description({"The delay between a spawner spawning a new entity.",
+        "Maximum default is 800 ticks (40 seconds).",
+        "Minimum default is 200 ticks (10 seconds)."})
 @Examples({"on place of mob spawner:",
         "\tset spawner spawn delay of event-block to 3 seconds",
         "\tadd 100 to max spawn delay of event-block",
