@@ -23,7 +23,7 @@ public class ExprBlockStateGet extends SimplePropertyExpression<Block, BlockStat
 
     static {
         register(ExprBlockStateGet.class, BlockStateWrapper.class,
-                "(captured|block)[ ]state", "blocks");
+                "(captured|block)[ ]state[s]", "blocks");
     }
 
     @Override
