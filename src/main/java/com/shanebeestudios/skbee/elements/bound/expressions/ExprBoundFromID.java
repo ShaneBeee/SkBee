@@ -7,13 +7,17 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.config.BoundConfig;
 import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Name("Bound - From ID")
 @Description("Get a bound object from a bound ID")
@@ -23,28 +27,34 @@ public class ExprBoundFromID extends SimpleExpression<Bound> {
 
     static {
         Skript.registerExpression(ExprBoundFromID.class, Bound.class, ExpressionType.SIMPLE,
-                "bound (of|from|with) id %string%");
+                "bound[s] (of|from|with) id[s] %strings%");
     }
 
-    private Expression<String> id;
+    private Expression<String> ids;
+    private static final BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
 
     @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-        this.id = (Expression<String>) exprs[0];
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
+        this.ids = (Expression<String>) exprs[0];
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     protected Bound[] get(Event event) {
-        String id = this.id.getSingle(event);
-        return new Bound[]{SkBee.getPlugin().getBoundConfig().getBoundFromID(id)};
+        List<Bound> bounds = new ArrayList<>();
+        for (String id : this.ids.getArray(event)) {
+            Bound bound = boundConfig.getBoundFromID(id);
+            if (bounds.contains(bound)) continue;
+            bounds.add(bound);
+        }
+        return bounds.toArray(new Bound[0]);
     }
 
     @Override
     public boolean isSingle() {
-        return true;
+        return ids.isSingle();
     }
 
     @Override
@@ -53,8 +63,8 @@ public class ExprBoundFromID extends SimpleExpression<Bound> {
     }
 
     @Override
-    public @NotNull String toString(Event e, boolean d) {
-        return "bound from id " + this.id.toString(e, d);
+    public @NotNull String toString(Event event, boolean debug) {
+        return "bound from id " + this.ids.toString(event, debug);
     }
 
 }

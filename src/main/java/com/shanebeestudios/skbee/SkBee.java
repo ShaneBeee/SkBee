@@ -36,8 +36,9 @@ public class SkBee extends JavaPlugin {
     VirtualFurnaceAPI virtualFurnaceAPI;
     BeeWorldConfig beeWorldConfig;
     StructureManager structureManager = null;
-    AddonLoader addonLoader = null;
+    private AddonLoader addonLoader = null;
 
+    @SuppressWarnings("deprecation")
     @Override
     public void onEnable() {
         // Let's get this party started...
@@ -52,7 +53,6 @@ public class SkBee extends JavaPlugin {
             pm.disablePlugin(this);
             return;
         }
-        addonLoader.loadSkriptElements();
         loadCommands();
         loadMetrics();
 
@@ -94,7 +94,7 @@ public class SkBee extends JavaPlugin {
     private void loadMetrics() { //6719
         Metrics metrics = new Metrics(this, 6719);
         metrics.addCustomChart(new SimplePie("skript_version", () -> Skript.getVersion().toString()));
-        metrics.addCustomChart(new SimplePie("virtual_furnace", () -> "" + config.ELEMENTS_VIRTUAL_FURNACE));
+        metrics.addCustomChart(new SimplePie("virtual_furnace", () -> String.valueOf(config.ELEMENTS_VIRTUAL_FURNACE)));
     }
 
     @Override

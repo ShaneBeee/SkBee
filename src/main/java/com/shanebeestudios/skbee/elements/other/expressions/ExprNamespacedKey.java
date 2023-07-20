@@ -36,7 +36,7 @@ public class ExprNamespacedKey extends SimpleExpression<NamespacedKey> {
 
     static {
         Skript.registerExpression(ExprNamespacedKey.class, NamespacedKey.class, ExpressionType.COMBINED,
-                "[mc:(minecraft|mc)] (namespaced|resource)[ ](key|id[entifier]|location) from %strings%");
+                "(mc:(minecraft|mc)|namespaced|resource)[ ](key|id[entifier]|location) [from] %strings%");
     }
 
     private Expression<String> strings;

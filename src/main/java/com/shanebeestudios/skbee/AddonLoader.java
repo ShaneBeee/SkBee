@@ -59,10 +59,16 @@ public class AddonLoader {
         if (!Skript.isAcceptRegistrations()) {
             // SkBee should be loading right after Skript, during Skript's registration period
             // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
-            // We need to find the route of this issue, so far the only plugin I know that does this is FAWE
-            Util.log("&cSkript is no longer accepting registrations.");
-            Util.log("&cNo clue how this could happen.");
-            Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
+            // We need to find the route of this issue, so far the only plugin I know that does this is PlugMan
+            Util.log("&cSkript is no longer accepting registrations, addons can no longer be loaded!");
+            if (Bukkit.getPluginManager().getPlugin("PlugMan") != null) {
+                Util.log("&cIt appears you're running PlugMan.");
+                Util.log("&cIf you're trying to reload/enable SkBee with PlugMan.... you can't.");
+                Util.log("&ePlease restart your server!");
+            } else {
+                Util.log("&cNo clue how this could happen.");
+                Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
+            }
             return false;
         }
         Version version = new Version(SkBee.EARLIEST_VERSION);
@@ -71,37 +77,42 @@ public class AddonLoader {
             Util.log("&7For outdated server versions please see: &ehttps://github.com/ShaneBeee/SkBee#outdated");
             return false;
         }
+        loadSkriptElements();
         return true;
     }
 
-    void loadSkriptElements() {
+    private void loadSkriptElements() {
         this.addon = Skript.registerAddon(this.plugin);
         this.addon.setLanguageFileDirectory("lang");
 
         int[] elementCountBefore = SkriptUtils.getElementCount();
+        // Load first as it's the base for many things
+        loadOtherElements();
+        // Load next as both are used in other places
         loadNBTElements();
+        loadTextElements();
+
+        // Load in alphabetical order (to make "/skbee info" easier to read)
+        loadAdvancementElements();
+        loadBossBarElements();
+        loadBoundElements();
+        loadDisplayEntityElements();
+        loadFishingElements();
+        loadGameEventElements();
+        loadParticleElements();
+        loadParticleElements();
+        loadRayTraceElements();
         loadRecipeElements();
         loadScoreboardElements();
-        loadObjectiveElements();
-        loadTeamElements();
-        loadBoundElements();
-        loadTextElements();
-        loadPathElements();
-        loadStructureElements();
-        loadOtherElements();
-        loadVirtualFurnaceElements();
-        loadWorldCreatorElements();
-        loadGameEventElements();
-        loadBossBarElements();
+        loadScoreboardObjectiveElements();
         loadStatisticElements();
-        loadVillagerElements();
-        loadAdvancementElements();
-        loadWorldBorderElements();
-        loadParticleElements();
+        loadStructureElements();
         loadTagElements();
-        loadRayTraceElements();
-        loadFishingElements();
-        loadDisplayEntityElements();
+        loadTeamElements();
+        loadVillagerElements();
+        loadVirtualFurnaceElements();
+        loadWorldBorderElements();
+        loadWorldCreatorElements();
 
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
@@ -171,7 +182,7 @@ public class AddonLoader {
         }
     }
 
-    private void loadObjectiveElements() {
+    private void loadScoreboardObjectiveElements() {
         if (!this.config.ELEMENTS_OBJECTIVE) {
             Util.logLoading("&5Scoreboard Objective Elements &cdisabled via config");
             return;
@@ -253,30 +264,9 @@ public class AddonLoader {
         }
     }
 
-    private void loadPathElements() {
-        if (!this.config.ELEMENTS_PATHFINDING) {
-            Util.logLoading("&5Pathfinding Elements &cdisabled via config");
-            return;
-        }
-        try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.path");
-            Util.logLoading("&5Pathfinding Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
-        }
-    }
-
     private void loadStructureElements() {
         if (!this.config.ELEMENTS_STRUCTURE) {
             Util.logLoading("&5Structure Elements &cdisabled via config");
-            return;
-        }
-
-        // This was added in Oct/2021 (so just before 1.18 came out)
-        if (!Skript.methodExists(Bukkit.class, "getStructureManager")) {
-            Util.logLoading("&cIt appears structure elements are not available on your server version.");
-            Util.logLoading("&5Structure Elements &cdisabled");
             return;
         }
 
@@ -510,7 +500,7 @@ public class AddonLoader {
     }
 
     public boolean isTextComponentEnabled() {
-        return textComponentEnabled;
+        return this.textComponentEnabled;
     }
 
 }

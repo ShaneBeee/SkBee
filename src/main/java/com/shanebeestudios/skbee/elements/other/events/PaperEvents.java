@@ -19,6 +19,7 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
+import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
@@ -228,7 +229,7 @@ public class PaperEvents {
         // == BLOCK EVENTS == //
 
         // Anvil Damaged Event
-        if (Skript.classExists("com.destroystokyo.paper.event.block.AnvilDamagedEvent")) {
+        if (Skript.classExists("com.destroystokyo.paper.event.block.AnvilDamagedEvent") && !Util.isRunningSkript27()) {
             Skript.registerEvent("Anvil Damaged Event", SimpleEvent.class, AnvilDamagedEvent.class, "anvil damage")
                     .description("Called when an anvil is damaged from being used. Requires Paper 1.13+")
                     .examples("on anvil damage:",

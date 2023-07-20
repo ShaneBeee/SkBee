@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.entity.LookAnchor;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -46,6 +47,7 @@ public class EffLookAt extends Effect {
             Skript.error("This effect is not supported by you server, it requires a PaperMC server.", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
+        Util.skript27Warning("look at", "effect");
         this.entities = (Expression<Entity>) exprs[0];
         this.lookAt = (Expression<Location>) exprs[1];
         return true;

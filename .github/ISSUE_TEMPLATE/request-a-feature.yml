@@ -1,0 +1,33 @@
+name: 👷 Feature Request
+description: Request an addition or change to SkBee
+title: "[SUGGESTION]"
+body:
+  - type: textarea
+    id: suggestion
+    attributes:
+      label: Suggestion
+      description: What would you like to see improved?
+      placeholder: |
+        The more details, the better
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives
+      description: Describe alternatives you've considered
+      placeholder: |
+        The more details, the better
+    validations:
+      required: true
+
+  - type: textarea
+    id: additional
+    attributes:
+      label: Additional Information
+      description: Any additional information that may help us out.
+      placeholder: |
+        Ex: "I know that Paper has API <link here>"
+    validations:
+      required: false

@@ -19,10 +19,6 @@ public class TeamManager {
     private static final Pattern UUID_PATTERN = Pattern.compile("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}");
 
     public static Team getTeam(String name) {
-        // Team names in 1.17.x only support 16 chars
-        if (!Skript.isRunningMinecraft(1, 18) && name.length() > 16) {
-            name = name.substring(0, 16);
-        }
         Team team = SCOREBOARD.getTeam(name);
         if (team == null) {
             team = SCOREBOARD.registerNewTeam(name);
@@ -41,10 +37,6 @@ public class TeamManager {
     }
 
     public static void unregisterTeam(String name) {
-        // Team names in 1.17.x only support 16 chars
-        if (!Skript.isRunningMinecraft(1, 18) && name.length() > 16) {
-            name = name.substring(0, 16);
-        }
         Team team = SCOREBOARD.getTeam(name);
         if (team != null) {
             team.unregister();

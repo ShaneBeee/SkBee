@@ -87,6 +87,12 @@ public class EffCraftingRecipe extends Effect {
             return;
         }
 
+        if (ingredients.length != 4 && ingredients.length != 9) {
+            RecipeUtil.error("Error registering crafting recipe - requires 4 or 9 ingredients");
+            RecipeUtil.error("Current Item: §6" + this.toString(event, true));
+            return;
+        }
+
         String group = this.group != null ? this.group.getSingle(event) : null;
         String id = this.id.getSingle(event);
         NamespacedKey key = RecipeUtil.getKey(id);

@@ -1,6 +1,11 @@
 package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.command.EffectCommandEvent;
+import ch.njol.skript.lang.Effect;
+import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.lang.parser.ParserInstance;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 
 import java.lang.reflect.Field;
@@ -60,6 +65,25 @@ public class SkriptUtils {
         i[4] = Skript.getSections().size();
 
         return i;
+    }
+
+    /**
+     * Parse a string as an effect
+     *
+     * @param stringEffect String to parse
+     * @param sender       Who it was sent from
+     * @return True if parsed correctly else false
+     */
+    public static boolean parseEffect(String stringEffect, CommandSender sender) {
+        ParserInstance parserInstance = ParserInstance.get();
+        parserInstance.setCurrentEvent("effect command", EffectCommandEvent.class);
+        Effect effect = Effect.parse(stringEffect, null);
+        parserInstance.deleteCurrentEvent();
+        if (effect != null) {
+            return TriggerItem.walk(effect, new EffectCommandEvent(sender, stringEffect));
+        } else {
+            return false;
+        }
     }
 
 }

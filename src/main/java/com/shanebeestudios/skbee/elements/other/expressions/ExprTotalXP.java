@@ -13,6 +13,7 @@ import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.util.PlayerUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.eclipse.jdt.annotation.Nullable;
@@ -32,6 +33,7 @@ public class ExprTotalXP extends PropertyExpression<Player, Integer> {
     @SuppressWarnings({"unchecked", "null", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        Util.skript27Warning("total experience", "expression");
         setExpr((Expression<Player>) exprs[0]);
         return true;
     }

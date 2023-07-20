@@ -109,7 +109,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         Registration.registerList("particles", Particle.class, particles);
 
         List<PotionEffectType> potions = Arrays.asList(PotionEffectType.values());
-        potions = potions.stream().sorted(Comparator.comparing(potionEffectType -> potionEffectType.getKey().key())).collect(Collectors.toList());
+        potions = potions.stream().sorted(Comparator.comparing(potionEffectType -> potionEffectType.getKey().getKey())).collect(Collectors.toList());
         Registration.registerList("potion effect types", PotionEffectType.class, potions);
 
         // Register registries

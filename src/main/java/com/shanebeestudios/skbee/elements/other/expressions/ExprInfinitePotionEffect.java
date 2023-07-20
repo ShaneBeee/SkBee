@@ -23,7 +23,7 @@ import java.util.List;
 @Description({"Represents an infinite potion effect. This is similar to Skript's potion effect expression except it is infinite time.",
         "This can be used in Skript's `apply %potion effects% to %living entities%` effect!",
         "\nNOTE: This will cause console errors when sending as a string (This is an issue in Skript itself).",
-        "This is only a temp solution until Skript adds a proper solution."})
+        "This is only a temp solution until Skript adds a proper solution. Requires Minecraft 1.19.4+"})
 @Examples({"set {_potion} to infinite potion effect of night vision of tier 1 without particles",
         "apply {_potion} to player"})
 @Since("2.8.5")

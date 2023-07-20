@@ -3,14 +3,16 @@ package com.shanebeestudios.skbee.elements.other.type;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
-import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
+import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
+import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockFace;
@@ -28,6 +30,7 @@ import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -38,7 +41,7 @@ import java.util.Map;
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
-    private static final Map<String,ItemFlag> ITEM_FLAG_MAP = new HashMap<>();
+    private static final Map<String, ItemFlag> ITEM_FLAG_MAP = new HashMap<>();
 
     private static String getItemFlagNames() {
         List<String> flags = new ArrayList<>(ITEM_FLAG_MAP.keySet());
@@ -152,7 +155,40 @@ public class Types {
                     .description("NamespacedKeys are a way to declare and specify game objects in Minecraft,",
                             "which can identify built-in and user-defined objects without potential ambiguity or conflicts.",
                             "For more information see Resource Location on McWiki <link>https://minecraft.fandom.com/wiki/Resource_location</link>")
-                    .since("2.6.0"));
+                    .since("2.6.0")
+                    .serializer(new Serializer<>() {
+                        @Override
+                        public @NotNull Fields serialize(NamespacedKey namespacedKey) {
+                            Fields fields = new Fields();
+                            fields.putObject("key", namespacedKey.toString());
+                            return fields;
+                        }
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public void deserialize(NamespacedKey o, Fields f) {
+                        }
+
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        protected NamespacedKey deserialize(Fields fields) throws StreamCorruptedException {
+                            String key = fields.getObject("key", String.class);
+                            if (key == null) {
+                                throw new StreamCorruptedException("NamespacedKey string is null");
+                            }
+                            return NamespacedKey.fromString(key);
+                        }
+
+                        @Override
+                        public boolean mustSyncDeserialization() {
+                            return true;
+                        }
+
+                        @Override
+                        protected boolean canBeInstantiated() {
+                            return false;
+                        }
+                    }));
         }
 
         if (Classes.getExactClassInfo(BlockFace.class) == null) {

@@ -2,7 +2,9 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -11,7 +13,6 @@ import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
-import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
@@ -21,10 +22,15 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("NamespacedKey - From Object")
 @Description("Get the namespaced key of an object.")
+@Examples({"set {_key} to mc key of target block",
+        "set {_key} to namespaced key of player's tool",
+        "set {_key} to minecraft key of biome at player"})
+@Since("2.6.0")
 public class ExprNamespacedKeyObject extends SimplePropertyExpression<Object, NamespacedKey> {
 
     static {
-        register(ExprNamespacedKeyObject.class, NamespacedKey.class, "namespaced[ ]key", "objects");
+        register(ExprNamespacedKeyObject.class, NamespacedKey.class,
+                "(mc|minecraft|namespaced|resource)[ ](key|id[entifier]|location)", "objects");
     }
 
     @SuppressWarnings("NullableProblems")

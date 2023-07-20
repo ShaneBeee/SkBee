@@ -8,8 +8,8 @@ import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.util.MathUtil;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Color;
 import org.bukkit.entity.Display;
 import org.bukkit.entity.Display.Billboard;
@@ -19,6 +19,7 @@ import org.bukkit.util.Transformation;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.joml.AxisAngle4d;
 import org.joml.AxisAngle4f;
 import org.joml.Quaternionf;
 import org.joml.Vector3f;
@@ -248,6 +249,25 @@ public class Types {
                         "I have no clue what this is, ask ThatOneWizard!")
                 .examples("set {_v} to axisAngle(0.25,0,0,1)")
                 .since("2.8.1"));
+
+        Functions.registerFunction(new SimpleJavaFunction<>("axisAngleFromVector", new Parameter[]{
+                new Parameter<>("angle", DefaultClasses.NUMBER, true, null),
+                new Parameter<>("vector", DefaultClasses.VECTOR, true, null)
+        }, QUATERNION, true) {
+            @SuppressWarnings("NullableProblems")
+            @Override
+            public @Nullable Quaternionf[] executeSimple(Object[][] params) {
+                float angle = ((Number) params[0][0]).floatValue();
+                Vector vector = (Vector) params[1][0];
+                AxisAngle4d axisAngle4f = new AxisAngle4d((angle * Math.PI / 180),
+                        vector.getX(), vector.getY(), vector.getZ());
+                return new Quaternionf[]{new Quaternionf(axisAngle4f)};
+            }
+        }
+                .description("Creates a new AxisAngle4f using a vector and angle (Will be converted and returned as a Quaternion).",
+                        "I have no clue what this is, ask ThatOneWizard!")
+                .examples("set {_v} to betterAxisAngle(0.25, vector(0,0,1))")
+                .since("2.15.0"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("transformation", new Parameter[]{
                 new Parameter<>("translation", DefaultClasses.VECTOR, true, null),

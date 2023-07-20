@@ -171,7 +171,11 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
 
     @Override
     public @NotNull Class<?> getReturnType() {
-        if (this.nbtTypeLit != null) return this.nbtTypeLit.getSingle().getTypeClass();
+        if (this.nbtTypeLit != null) {
+            Class<?> typeClass = this.nbtTypeLit.getSingle().getTypeClass();
+            if (typeClass.getComponentType() != null) return typeClass.getComponentType();
+            return typeClass;
+        }
         return Object.class;
     }
 

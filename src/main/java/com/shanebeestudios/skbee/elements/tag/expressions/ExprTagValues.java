@@ -55,7 +55,7 @@ public class ExprTagValues extends SimpleExpression<Object> {
                 } else if (value instanceof EntityType entityType) {
                     Class<? extends Entity> entityClass = entityType.getEntityClass();
                     if (entityClass != null) {
-                        EntityData.fromClass(entityClass);
+                        objects.add(EntityData.fromClass(entityClass));
                     }
                 }
             });
@@ -75,7 +75,7 @@ public class ExprTagValues extends SimpleExpression<Object> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "tag values of " + this.tags.toString(e,d);
+        return "tag values of " + this.tags.toString(e, d);
     }
 
 }

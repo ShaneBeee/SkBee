@@ -12,19 +12,18 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.event.bound.BoundCreateEvent;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.WorldUtils;
 import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.elements.bound.expressions.ExprLastCreatedBound;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
-import org.bukkit.event.HandlerList;
 import org.eclipse.jdt.annotation.Nullable;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,39 +44,12 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Since("2.5.3, 2.10.0 (temporary bounds)")
 public class EffSecBoundCreate extends EffectSection {
 
-    public static class BoundCreateEvent extends Event {
-
-        private final Bound bound;
-
-        public BoundCreateEvent(Bound bound) {
-            this.bound = bound;
-        }
-
-        public Bound getBound() {
-            return bound;
-        }
-
-        @Override
-        @NotNull
-        public HandlerList getHandlers() {
-            throw new IllegalStateException();
-        }
-
-    }
-
     private static final BoundConfig boundConfig;
 
     static {
         boundConfig = SkBee.getPlugin().getBoundConfig();
         Skript.registerSection(EffSecBoundCreate.class,
                 "create [a] [new] [:temporary] [:full] bound with id %string% (within|between) %location% and %location%");
-
-        EventValues.registerEventValue(BoundCreateEvent.class, Bound.class, new Getter<>() {
-            @Override
-            public @Nullable Bound get(BoundCreateEvent event) {
-                return event.getBound();
-            }
-        }, 0);
     }
 
     private Expression<String> boundID;
@@ -154,6 +126,7 @@ public class EffSecBoundCreate extends EffectSection {
             Util.skriptError("&cBounding box must have a size of at least 2x2x2 &7(&6%s&7)", toString(event, true));
             return super.walk(event, false);
         }
+        ExprLastCreatedBound.lastCreated = bound;
         boundConfig.saveBound(bound);
 
         if (trigger != null) {
@@ -167,11 +140,11 @@ public class EffSecBoundCreate extends EffectSection {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event event, boolean debug) {
         String temporary = this.isTemporary ? "temporary " : "";
         String full = this.isFull ? "full " : "";
-        String create = " between " + loc1.toString(e, d) + " and " + loc2.toString(e, d);
-        return "create " + temporary + full + "bound with id " + this.boundID.toString(e, d) + create;
+        String create = " between " + loc1.toString(event, debug) + " and " + loc2.toString(event, debug);
+        return "create " + temporary + full + "bound with id " + this.boundID.toString(event, debug) + create;
     }
 
 }

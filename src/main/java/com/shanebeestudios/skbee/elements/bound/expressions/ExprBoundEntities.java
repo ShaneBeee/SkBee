@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
+import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
@@ -31,7 +32,7 @@ public class ExprBoundEntities extends SimpleExpression<Entity> {
 
     static {
         Skript.registerExpression(ExprBoundEntities.class, Entity.class, ExpressionType.SIMPLE,
-                "[(all [[of] the]|the)] %*entitydatas% (of|in) bound[s] %bounds%");
+                "[(all [[of] the]|the)] %*entitydatas% (of|in|within) bound[s] %bounds%");
     }
 
     private Expression<EntityData<?>> entityDatas;
