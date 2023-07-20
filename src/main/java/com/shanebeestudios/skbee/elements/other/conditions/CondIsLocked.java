@@ -11,10 +11,10 @@ import org.bukkit.block.Container;
 
 @Name("Is Locked")
 @Description("Check if a container or beacon is in a locked state.")
-@Examples({"on right click on shulker box or beacon",
+@Examples({"on right click on shulker box or beacon:",
         "\tclicked block is locked",
         "\tplayer has permission \"see.locked\"",
-        "send action bar \"%lock of clicked block%\" to player"})
+        "\tsend action bar \"%lock of clicked block%\" to player"})
 @Since("INSERT VERSION")
 public class CondIsLocked extends PropertyCondition<Block> {
 

@@ -15,10 +15,10 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Lock of Block")
 @Description("Get or set the lock of a container or beacon.")
-@Examples({"on right click on shulker box or beacon",
+@Examples({"on right click on shulker box or beacon:",
         "\tclicked block is locked",
         "\tplayer has permission \"see.locked\"",
-        "send action bar \"%lock of clicked block%\" to player"})
+        "\tsend action bar \"%lock of clicked block%\" to player"})
 @Since("INSERT VERSION")
 public class ExprLockableLock extends SimplePropertyExpression<Block, String> {
 
