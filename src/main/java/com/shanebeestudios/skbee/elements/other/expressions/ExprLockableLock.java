@@ -14,7 +14,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Lock of Block")
-@Description("Get or set the lock of a container or beacon")
+@Description("Get or set the lock of a container or beacon.")
 @Examples({"on right click on shulker box or beacon",
         "\tclicked block is locked",
         "\tplayer has permission \"see.locked\"",

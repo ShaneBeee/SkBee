@@ -10,7 +10,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.Container;
 
 @Name("Is Locked")
-@Description("Check if a container or beacon is in a locked state")
+@Description("Check if a container or beacon is in a locked state.")
 @Examples({"on right click on shulker box or beacon",
         "\tclicked block is locked",
         "\tplayer has permission \"see.locked\"",
