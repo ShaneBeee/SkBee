@@ -18,12 +18,12 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on right click on shulker box or beacon:",
         "\tclicked block is locked",
         "\tplayer has permission \"see.locked\"",
-        "\tsend action bar \"%lock of clicked block%\" to player"})
+        "\tsend action bar \"%container key of clicked block%\" to player"})
 @Since("INSERT VERSION")
-public class ExprLockableLock extends SimplePropertyExpression<Block, String> {
+public class ExprLockableKey extends SimplePropertyExpression<Block, String> {
 
     static {
-        register(ExprLockableLock.class, String.class, "lock", "blocks");
+        register(ExprLockableKey.class, String.class, "(container|lockable) key", "blocks");
     }
 
     @Override
@@ -74,7 +74,7 @@ public class ExprLockableLock extends SimplePropertyExpression<Block, String> {
 
     @Override
     protected String getPropertyName() {
-        return "lockable key";
+        return "container key";
     }
 
 }
