@@ -32,6 +32,7 @@ public class EvtPreSpawn extends SkriptEvent {
                             "pre [creature] spawn[ing] [of %entitydatas%]")
                     .description("Called before an entity is spawned into the world.",
                             "Note: The spawning entity does not exist when this event is called only the entitytype exists.",
+                            "This event is called very frequently, and can cause server lag, use it sparingly.",
                             "\nevent-spawnreason = the reason the entity is spawned.",
                             "\nevent-location = the location the spawned entity will appear.",
                             "\nevent-entitytype = the type of entity being spawned.")
