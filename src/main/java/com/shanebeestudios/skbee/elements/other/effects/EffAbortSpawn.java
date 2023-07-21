@@ -15,8 +15,8 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Abort Creature Spawn")
 @Description({"Abort a creature spawn event, preventing it from retrying more attempts after canceling.",
-        "aborting should only be done if you're blanket blocking this entity type from spawning."})
-@Examples({"on pre creature spawn of an animal",
+        "Aborting should only be done if you're blanket blocking this entity type from spawning."})
+@Examples({"on pre creature spawn of an animal:",
         "\tcancel event",
         "\tabort creature spawn"})
 @Since("INSERT VERSION")
@@ -25,8 +25,7 @@ public class EffAbortSpawn extends Effect {
     private static final boolean HAS_PRE_SPAWN_EVENT = Skript.classExists("com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent");
 
     static {
-        Skript.registerEffect(EffAbortSpawn.class,
-                "[:un]abort creature spawn");
+        Skript.registerEffect(EffAbortSpawn.class, "[:un]abort creature spawn");
     }
 
     private boolean abort;
@@ -55,4 +54,5 @@ public class EffAbortSpawn extends Effect {
     public String toString(@Nullable Event event, boolean b) {
         return (abort ? "" : "un") + "abort creature spawn";
     }
+
 }
