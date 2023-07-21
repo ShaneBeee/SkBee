@@ -16,13 +16,14 @@ import org.jetbrains.annotations.Nullable;
 @Name("Anvil Rename Text")
 @Description("Represents the text the player enters into an anvil. This can not be set.")
 @Examples({"on anvil prepare:",
-        "\tif slot 0 of event-inventory is raw chicken:",
+        "\tif slot 0 of event-inventory is chicken:",
         "\t\tif slot 1 of event-inventory is an enchanted book:",
         "\t\t\tif stored enchants of slot 1 of event-inventory contains sharpness 5:",
         "\t\t\t\tset {_i} to cooked chicken",
         "\t\t\t\tset name of {_i} to colored anvil rename text of event-inventory",
         "\t\t\t\tenchant {_i} with sharpness 6",
         "\t\t\t\tset event-slot to {_i}",
+        "\t\t\t\twait 1 tick #seems to be needed to set repair cost",
         "\t\t\t\tset repair cost of event-inventory to 30"})
 public class ExprAnvilRenameText extends SimplePropertyExpression<Inventory, String> {
 
