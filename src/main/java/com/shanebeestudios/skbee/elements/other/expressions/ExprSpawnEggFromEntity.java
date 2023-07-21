@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Spawn Egg from Entity")
-@Description("Gets a spawn egg from an entity/entityType. Requires Paper.")
+@Description("Gets a spawn egg from an entity/entityType. Requires Paper, or Spigot 1.20.1+.")
 @Examples({"set {_egg} to spawn egg of last spawned entity",
         "set {_egg} to spawn egg of (spawner type of target block)"})
 @Since("2.14.0")
