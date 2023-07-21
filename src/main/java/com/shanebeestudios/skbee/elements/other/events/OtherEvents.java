@@ -18,6 +18,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.Event;
+import org.bukkit.event.block.BellRingEvent;
 import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
@@ -433,6 +434,27 @@ public class OtherEvents {
             public @Nullable Projectile get(EntityShootBowEvent event) {
                 if (event.getProjectile() instanceof Projectile projectile) return projectile;
                 return null;
+            }
+        }, EventValues.TIME_NOW);
+
+        // Bell Ring Event
+        Skript.registerEvent("Bell Ring", SimpleEvent.class, BellRingEvent.class, "bell ring")
+                .description("Called when a bell is being rung.")
+                .examples("on bell ring:",
+                        "\tkill all mobs in radius 5 of event-block")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(BellRingEvent.class, Entity.class, new Getter<>() {
+            @Override
+            public @Nullable Entity get(BellRingEvent event) {
+                return event.getEntity();
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(BellRingEvent.class, BlockFace.class, new Getter<>() {
+            @Override
+            public @NotNull BlockFace get(BellRingEvent event) {
+                return event.getDirection();
             }
         }, EventValues.TIME_NOW);
     }
