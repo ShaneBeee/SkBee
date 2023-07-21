@@ -15,6 +15,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDamageAbortEvent;
@@ -23,6 +24,7 @@ import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntitySpellCastEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
@@ -417,6 +419,22 @@ public class OtherEvents {
             }
         }, 0);
 
+        // Entity Shoot Bow Event
+        Skript.registerEvent("Entity Shoot Bow", SimpleEvent.class, EntityShootBowEvent.class,
+                        "entity shoot bow")
+                .description("Called when a LivingEntity shoots a bow firing an arrow.")
+                .examples("on entity shoot bow:",
+                        "\tif name of shot bow != \"Mr Bow\":",
+                        "\t\tcancel event")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(EntityShootBowEvent.class, Projectile.class, new Getter<>() {
+            @Override
+            public @Nullable Projectile get(EntityShootBowEvent event) {
+                if (event.getProjectile() instanceof Projectile projectile) return projectile;
+                return null;
+            }
+        }, EventValues.TIME_NOW);
     }
 
 }
