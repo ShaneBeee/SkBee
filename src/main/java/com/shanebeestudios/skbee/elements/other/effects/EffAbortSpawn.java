@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Abort Creature Spawn")
 @Description({"Abort a creature spawn event, preventing it from retrying more attempts after canceling.",
-        "aborting should only be done if you're blanket blocking this entity type from spawning"})
+        "aborting should only be done if you're blanket blocking this entity type from spawning."})
 @Examples({"on pre creature spawn of an animal",
         "\tcancel event",
         "\tabort creature spawn"})
