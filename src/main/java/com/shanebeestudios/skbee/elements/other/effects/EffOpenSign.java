@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Open Sign")
 @Description({"Open a sign's GUI to a player, to allow them to edit it.",
+        "If it wasn't obvious, the sign must actually be placed in the world, it's NOT a virtual sign.",
         "Requires Paper (not sure which version, but at least 1.12.x).",
         "Spigot added support for this in MC 1.18.",
         "Front/Back support added in MC 1.20."})
