@@ -6,17 +6,22 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
 import com.shanebeestudios.skbee.api.event.bound.BoundEvent;
+import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
+import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
-import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
 
 @SuppressWarnings("unused")
 public class BoundEvents extends SkriptEvent {
+
+    private static BoundBorderListener boundBorderListener;
 
     static {
 
@@ -75,6 +80,12 @@ public class BoundEvents extends SkriptEvent {
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
         boundID = (Literal<String>) args[0];
+        if (boundBorderListener == null) {
+            // Register listener when a bound event is actually used
+            SkBee plugin = SkBee.getPlugin();
+            boundBorderListener = new BoundBorderListener(plugin);
+            Bukkit.getPluginManager().registerEvents(boundBorderListener, plugin);
+        }
         return true;
     }
 

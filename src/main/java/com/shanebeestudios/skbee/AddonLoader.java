@@ -4,17 +4,16 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Version;
-import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.config.BoundConfig;
-import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
+import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
@@ -229,7 +228,6 @@ public class AddonLoader {
         }
         try {
             this.plugin.boundConfig = new BoundConfig(this.plugin);
-            pluginManager.registerEvents(new BoundBorderListener(this.plugin), this.plugin);
             addon.loadClasses("com.shanebeestudios.skbee.elements.bound");
             Util.logLoading("&5Bound Elements &asuccessfully loaded");
         } catch (IOException ex) {
@@ -481,7 +479,7 @@ public class AddonLoader {
             Util.logLoading("&5Display Entity elements &cdisabled via config");
             return;
         }
-        if (!Skript.isRunningMinecraft(1,19,4)) {
+        if (!Skript.isRunningMinecraft(1, 19, 4)) {
             Util.logLoading("&5Display Entity elements &cdisabled &7(&eRequires Minecraft 1.19.4+&7)");
             return;
         }
