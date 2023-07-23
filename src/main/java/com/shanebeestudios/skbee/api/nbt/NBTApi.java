@@ -98,7 +98,10 @@ public class NBTApi {
             if (DEBUG) {
                 ex.printStackTrace();
             } else {
-                Util.skriptError("&cCause: &e%s", ex.getMessage());
+                // 3 deep to get the Mojang CommandSyntaxException
+                String cause = ex.getCause().getCause().getCause().toString();
+                cause = cause.replace("com.mojang.brigadier.exceptions.CommandSyntaxException", "MalformedNBT");
+                Util.skriptError("&cMessage: &e%s", cause);
             }
             return null;
         }
