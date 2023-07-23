@@ -121,10 +121,11 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             }
             if (compound != null) {
                 if (isCopy) {
-                    return new NBTContainer(compound.toString());
-                } else {
-                    return compound;
+                    NBTContainer emptyContainer = new NBTContainer();
+                    emptyContainer.mergeCompound(compound);
+                    compound = emptyContainer;
                 }
+                return compound;
             }
             return null;
         });
