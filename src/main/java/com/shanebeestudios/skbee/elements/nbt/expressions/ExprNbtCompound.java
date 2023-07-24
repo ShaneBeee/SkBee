@@ -15,15 +15,16 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomBlock;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomEntity;
+import com.shanebeestudios.skbee.api.nbt.NBTCustomItemType;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomSlot;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomTileEntity;
-import com.shanebeestudios.skbee.api.nbt.NBTCustomItemType;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
@@ -53,7 +54,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-                "[:full] nbt [compound] [:copy] (of|from) %blocks/entities/itemtypes/itemstacks/slots/strings/chunks%",
+                "[:full] nbt [compound] [:copy] (of|from) %blocks/offlineplayers/entities/itemtypes/itemstacks/slots/strings/chunks%",
                 "nbt [compound] [:copy] (of|from) file[s] %strings%");
     }
 
@@ -80,6 +81,9 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 } else if (NBTApi.supportsBlockNBT()) {
                     compound = new NBTCustomBlock(block).getData();
                 }
+            } else if (object instanceof OfflinePlayer offlinePlayer) {
+                if (offlinePlayer.isOnline()) compound = new NBTCustomEntity(offlinePlayer.getPlayer());
+                else compound = NBTApi.getNBTOfflinePlayer(offlinePlayer);
             } else if (object instanceof Entity entity) {
                 compound = new NBTCustomEntity(entity);
             } else if (object instanceof ItemType itemType) {

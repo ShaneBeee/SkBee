@@ -166,6 +166,23 @@ public class NBTApi {
     }
 
     /**
+     * Get an {@link NBTCustomOfflinePlayer}
+     * <p>This internally just creates a new NBTFile from the player data folder</p>
+     *
+     * @param offlinePlayer OfflinePlayer to grab nbt for
+     * @return NBTCustomOfflinePlayer
+     */
+    public static NBTCustomOfflinePlayer getNBTOfflinePlayer(OfflinePlayer offlinePlayer) {
+        // Only return if player data file exists
+        if (!offlinePlayer.hasPlayedBefore()) return null;
+        try {
+            return new NBTCustomOfflinePlayer(offlinePlayer);
+        } catch (IOException ignore) {
+            return null;
+        }
+    }
+
+    /**
      * Check if an NBT File already exists
      *
      * @param fileName Name of file
