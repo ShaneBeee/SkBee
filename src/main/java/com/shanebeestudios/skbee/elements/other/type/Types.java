@@ -9,7 +9,6 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
-import com.shanebeestudios.skbee.api.beacon.BeaconTier;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
@@ -272,15 +271,6 @@ public class Types {
                     .since("2.13.0")
                     .parser(TRIM_PATTERN_REGISTER.getParser()));
         }
-
-        EnumWrapper<BeaconTier> BEACON_TIER = new EnumWrapper<>(BeaconTier.class);
-        Classes.registerClass(new ClassInfo<>(BeaconTier.class, "beacontier")
-                .user("beacon ?tiers?")
-                .name("Beacon Tier")
-                .description("Represents a tier of beacon current placed with the world.")
-                .since("INSERT VERSION")
-                .usage(BEACON_TIER.getAllNames())
-                .parser(BEACON_TIER.getParser()));
 
     }
 

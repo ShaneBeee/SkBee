@@ -345,7 +345,7 @@ public class PaperEvents {
                     return e.getPlayer();
                 }
             }, EventValues.TIME_NOW);
-            // TODO These two values will make more sense in the future (Currently have a PR for potion effects in Skript)
+
             EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffectType.class, new Getter<>() {
                 @Override
                 public PotionEffectType get(BeaconEffectEvent e) {
