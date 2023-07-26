@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Beacon - Entities in effect range")
+@Name("Beacon - Entities in Effect Range")
 @Description("Returns a list of entities in the effect range of a beacon.")
 @Examples({"command /effected_entities:",
         "\ttrigger:",
