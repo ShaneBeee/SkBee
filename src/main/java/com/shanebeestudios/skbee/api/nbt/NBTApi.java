@@ -98,7 +98,10 @@ public class NBTApi {
             if (DEBUG) {
                 ex.printStackTrace();
             } else {
-                Util.skriptError("&cCause: &e%s", ex.getMessage());
+                // 3 deep to get the Mojang CommandSyntaxException
+                String cause = ex.getCause().getCause().getCause().toString();
+                cause = cause.replace("com.mojang.brigadier.exceptions.CommandSyntaxException", "MalformedNBT");
+                Util.skriptError("&cMessage: &e%s", cause);
             }
             return null;
         }
@@ -158,6 +161,23 @@ public class NBTApi {
         try {
             return new NBTFile(new File(fileName));
         } catch (IOException e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get an {@link NBTCustomOfflinePlayer}
+     * <p>This internally just creates a new NBTFile from the player data folder</p>
+     *
+     * @param offlinePlayer OfflinePlayer to grab nbt for
+     * @return NBTCustomOfflinePlayer
+     */
+    public static NBTCustomOfflinePlayer getNBTOfflinePlayer(OfflinePlayer offlinePlayer) {
+        // Only return if player data file exists
+        if (!offlinePlayer.hasPlayedBefore()) return null;
+        try {
+            return new NBTCustomOfflinePlayer(offlinePlayer);
+        } catch (IOException ignore) {
             return null;
         }
     }
