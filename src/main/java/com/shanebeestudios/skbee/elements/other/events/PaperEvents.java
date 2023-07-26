@@ -20,8 +20,11 @@ import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import com.shanebeestudios.skbee.api.util.Util;
+import io.papermc.paper.event.block.BeaconActivatedEvent;
+import io.papermc.paper.event.block.BeaconDeactivatedEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
+import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -136,6 +139,75 @@ public class PaperEvents {
                 @Override
                 public Number get(PlayerStopUsingItemEvent event) {
                     return event.getTicksHeldFor();
+                }
+            }, 0);
+        }
+
+        // Player Change Beacon Effect Event
+        if (Skript.classExists("io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent")) {
+            Skript.registerEvent("Beacon - Player Change Effect", SimpleEvent.class, PlayerChangeBeaconEffectEvent.class, "[player] change beacon [potion] effect[s]", "beacon [potion] effect change")
+                    .description("Called when a player changes the current potion effects of a beacon")
+                    .examples("on beacon potion effect change:",
+                            "\tprimary beacon effect of event-block is jump boost",
+                            "\tset primary beacon effect of event-block to levitation")
+                    .since("INSERT VERSION");
+
+            EventValues.registerEventValue(PlayerChangeBeaconEffectEvent.class, Block.class, new Getter<>() {
+                @Override
+                public Block get(PlayerChangeBeaconEffectEvent event) {
+                    return event.getBeacon();
+                }
+            }, EventValues.TIME_NOW);
+
+        }
+
+        // Player Quit Event
+        if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
+            EventValues.registerEventValue(PlayerQuitEvent.class, PlayerQuitEvent.QuitReason.class, new Getter<>() {
+                @Override
+                public @NotNull PlayerQuitEvent.QuitReason get(PlayerQuitEvent event) {
+                    return event.getReason();
+                }
+            }, 0);
+        }
+
+        // Player Chunk Load Event
+        if (Skript.classExists("io.papermc.paper.event.packet.PlayerChunkLoadEvent")) {
+            Skript.registerEvent("Player Chunk Load", SimpleEvent.class, PlayerChunkLoadEvent.class,
+                            "player chunk (send|load)")
+                    .description("Is called when a Player receives a Chunk.",
+                            "Can for example be used for spawning a fake entity when the player receives a chunk. ",
+                            "Should only be used for packet/clientside related stuff. Not intended for modifying server side state.",
+                            "\nRequires a PaperMC server.")
+                    .examples("on player chunk send:",
+                            "\tloop all blocks in event-chunk:",
+                            "\t\tif loop-block is diamond ore:",
+                            "\t\t\tmake player see loop-block as stone")
+                    .since("2.6.1");
+
+            EventValues.registerEventValue(PlayerChunkLoadEvent.class, Player.class, new Getter<>() {
+                @Override
+                public @Nullable Player get(PlayerChunkLoadEvent event) {
+                    return event.getPlayer();
+                }
+            }, 0);
+        }
+
+        // Player Chunk Unload Event
+        if (Skript.classExists("io.papermc.paper.event.packet.PlayerChunkUnloadEvent")) {
+            Skript.registerEvent("Player Chunk Unload", SimpleEvent.class, PlayerChunkUnloadEvent.class,
+                            "player chunk unload")
+                    .description("Is called when a Player receives a chunk unload packet.",
+                            "Should only be used for packet/clientside related stuff. Not intended for modifying server side.",
+                            "\nRequires a PaperMC server.")
+                    .examples("on player chunk unload:",
+                            "\tsend \"looks like you lost your chunk cowboy!\" to player")
+                    .since("2.6.1");
+
+            EventValues.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, new Getter<>() {
+                @Override
+                public @Nullable Player get(PlayerChunkUnloadEvent event) {
+                    return event.getPlayer();
                 }
             }, 0);
         }
@@ -272,72 +344,40 @@ public class PaperEvents {
                 public Player get(BeaconEffectEvent e) {
                     return e.getPlayer();
                 }
-            }, 0);
+            }, EventValues.TIME_NOW);
             // TODO These two values will make more sense in the future (Currently have a PR for potion effects in Skript)
             EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffectType.class, new Getter<>() {
                 @Override
                 public PotionEffectType get(BeaconEffectEvent e) {
                     return e.getEffect().getType();
                 }
-            }, 0);
+            }, EventValues.TIME_NOW);
             EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffect.class, new Getter<>() {
                 @Override
                 public @NotNull PotionEffect get(BeaconEffectEvent e) {
                     return e.getEffect();
                 }
-            }, 0);
+            }, EventValues.TIME_NOW);
         }
 
-        // Player Quit Event
-        if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
-            EventValues.registerEventValue(PlayerQuitEvent.class, PlayerQuitEvent.QuitReason.class, new Getter<>() {
-                @Override
-                public @NotNull PlayerQuitEvent.QuitReason get(PlayerQuitEvent event) {
-                    return event.getReason();
-                }
-            }, 0);
+        // Beacon Deactivated Event
+        if (Skript.classExists("io.papermc.paper.event.block.BeaconDeactivatedEvent")) {
+            Skript.registerEvent("Beacon Deactivation", SimpleEvent.class, BeaconDeactivatedEvent.class, "beacon (deactivate|deactivation)")
+                    .description("Called when a beacon is deactivated from breaking or losing required blocks")
+                    .examples("on beacon deactivation:",
+                            "\tbroadcast \"%event-block% is no longer activated, :cry:\"");
+
         }
 
-        // PlayerChunkLoadEvent
-        if (Skript.classExists("io.papermc.paper.event.packet.PlayerChunkLoadEvent")) {
-            Skript.registerEvent("Player Chunk Load", SimpleEvent.class, PlayerChunkLoadEvent.class,
-                            "player chunk (send|load)")
-                    .description("Is called when a Player receives a Chunk.",
-                            "Can for example be used for spawning a fake entity when the player receives a chunk. ",
-                            "Should only be used for packet/clientside related stuff. Not intended for modifying server side state.",
-                            "\nRequires a PaperMC server.")
-                    .examples("on player chunk send:",
-                            "\tloop all blocks in event-chunk:",
-                            "\t\tif loop-block is diamond ore:",
-                            "\t\t\tmake player see loop-block as stone")
-                    .since("2.6.1");
-
-            EventValues.registerEventValue(PlayerChunkLoadEvent.class, Player.class, new Getter<>() {
-                @Override
-                public @Nullable Player get(PlayerChunkLoadEvent event) {
-                    return event.getPlayer();
-                }
-            }, 0);
+        // Beacon Activated Event
+        if (Skript.classExists("io.papermc.paper.event.block.BeaconActivatedEvent")) {
+            Skript.registerEvent("Beacon Activation", SimpleEvent.class, BeaconActivatedEvent.class, "beacon (activate|activation)")
+                    .description("Called when a beacon is successfully activated by having correct blocks")
+                    .examples("on beacon activation",
+                            "\tset primary effect of event-block to strength")
+                    .since("INSERT VERSION");
         }
 
-        // PlayerChunkUnloadEvent
-        if (Skript.classExists("io.papermc.paper.event.packet.PlayerChunkUnloadEvent")) {
-            Skript.registerEvent("Player Chunk Unload", SimpleEvent.class, PlayerChunkUnloadEvent.class,
-                            "player chunk unload")
-                    .description("Is called when a Player receives a chunk unload packet.",
-                            "Should only be used for packet/clientside related stuff. Not intended for modifying server side.",
-                            "\nRequires a PaperMC server.")
-                    .examples("on player chunk unload:",
-                            "\tsend \"looks like you lost your chunk cowboy!\" to player")
-                    .since("2.6.1");
-
-            EventValues.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, new Getter<>() {
-                @Override
-                public @Nullable Player get(PlayerChunkUnloadEvent event) {
-                    return event.getPlayer();
-                }
-            }, 0);
-        }
     }
 
 }
