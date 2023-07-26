@@ -18,8 +18,11 @@ import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Beacon - Primary/Secondary Effect")
-@Description("The primary/secondary potion effect of a beacon.")
+@Description({"The primary/secondary potion effect of a beacon.",
+        "Note: When getting the primary/secondary potion effect it will return as a Potion Effect and not a Potion Effect Type"})
 @Examples({"on right click on a beacon with a diamond:",
+        "broadcast \"Primary: %primary beacon effect of clicked block%\"",
+        "broadcast \"Secondary: %secondary beacon effect of clicked block%\"",
         "\tset primary beacon effect of clicked block to strength",
         "\tclear secondary beacon potion effect"})
 @Since("INSERT VERSION")
