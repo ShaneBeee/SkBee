@@ -11,7 +11,7 @@ import org.bukkit.block.Block;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Beacon - Tier")
-@Description("Returns the current tier of a beacon block")
+@Description("Returns the current tier of a beacon block.")
 @Examples({"on right click on a beacon:",
         "\tsend \"The current tier of this block is %beacon tier of event-block%\""})
 @Since("INSERT VERSION")

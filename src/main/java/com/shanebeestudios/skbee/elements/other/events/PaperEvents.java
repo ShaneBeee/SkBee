@@ -146,7 +146,7 @@ public class PaperEvents {
         // Player Change Beacon Effect Event
         if (Skript.classExists("io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent")) {
             Skript.registerEvent("Beacon - Player Change Effect", SimpleEvent.class, PlayerChangeBeaconEffectEvent.class, "[player] change beacon [potion] effect[s]", "beacon [potion] effect change")
-                    .description("Called when a player changes the current potion effects of a beacon")
+                    .description("Called when a player changes the current potion effects of a beacon.")
                     .examples("on beacon potion effect change:",
                             "\tprimary beacon effect of event-block is jump boost",
                             "\tset primary beacon effect of event-block to levitation")
@@ -363,7 +363,7 @@ public class PaperEvents {
         // Beacon Deactivated Event
         if (Skript.classExists("io.papermc.paper.event.block.BeaconDeactivatedEvent")) {
             Skript.registerEvent("Beacon Deactivation", SimpleEvent.class, BeaconDeactivatedEvent.class, "beacon (deactivate|deactivation)")
-                    .description("Called when a beacon is deactivated from breaking or losing required blocks")
+                    .description("Called when a beacon is deactivated from breaking or losing required amount blocks.")
                     .examples("on beacon deactivation:",
                             "\tbroadcast \"%event-block% is no longer activated, :cry:\"");
 
@@ -372,7 +372,7 @@ public class PaperEvents {
         // Beacon Activated Event
         if (Skript.classExists("io.papermc.paper.event.block.BeaconActivatedEvent")) {
             Skript.registerEvent("Beacon Activation", SimpleEvent.class, BeaconActivatedEvent.class, "beacon (activate|activation)")
-                    .description("Called when a beacon is successfully activated by having correct blocks")
+                    .description("Called when a beacon is successfully activated by having correct amount of blocks.")
                     .examples("on beacon activation",
                             "\tset primary effect of event-block to strength")
                     .since("INSERT VERSION");

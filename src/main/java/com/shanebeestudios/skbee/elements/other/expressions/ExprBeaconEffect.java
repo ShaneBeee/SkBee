@@ -19,7 +19,9 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Beacon - Primary/Secondary Effect")
 @Description({"The primary/secondary potion effect of a beacon.",
-        "Note: When getting the primary/secondary potion effect it will return as a Potion Effect and not a Potion Effect Type"})
+        "Note:",
+        "\nWhen getting the primary/secondary potion effect it will return as a Potion Effect and not a Potion Effect Type.",
+        "\nIf you update the beacon inventory by opening it and placing an item you will lose any custom effects not normally applicable."})
 @Examples({"on right click on a beacon with a diamond:",
         "broadcast \"Primary: %primary beacon effect of clicked block%\"",
         "broadcast \"Secondary: %secondary beacon effect of clicked block%\"",

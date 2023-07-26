@@ -277,7 +277,7 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(BeaconTier.class, "beacontier")
                 .user("beacon ?tiers?")
                 .name("Beacon Tier")
-                .description("Represents a tier of beacon placed in a world")
+                .description("Represents a tier of beacon current placed with the world.")
                 .since("INSERT VERSION")
                 .usage(BEACON_TIER.getAllNames())
                 .parser(BEACON_TIER.getParser()));
