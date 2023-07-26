@@ -23,7 +23,7 @@ public enum BeaconTier {
         this.tier = tier;
     }
 
-    public int getTier() {
+    public Integer getTier() {
         return tier;
     }
 
