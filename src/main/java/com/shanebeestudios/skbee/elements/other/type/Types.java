@@ -271,6 +271,7 @@ public class Types {
                     .since("2.13.0")
                     .parser(TRIM_PATTERN_REGISTER.getParser()));
         }
+
     }
 
 }
