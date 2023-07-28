@@ -60,7 +60,8 @@ public class AddonLoader {
             // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
             // We need to find the route of this issue, so far the only plugin I know that does this is PlugMan
             Util.log("&cSkript is no longer accepting registrations, addons can no longer be loaded!");
-            if (Bukkit.getPluginManager().getPlugin("PlugMan") != null) {
+            Plugin plugMan = Bukkit.getPluginManager().getPlugin("PlugMan");
+            if (plugMan != null && plugMan.isEnabled()) {
                 Util.log("&cIt appears you're running PlugMan.");
                 Util.log("&cIf you're trying to reload/enable SkBee with PlugMan.... you can't.");
                 Util.log("&ePlease restart your server!");
