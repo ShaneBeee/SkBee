@@ -32,7 +32,25 @@ public class EvtPotionEffect extends SkriptEvent {
                         "event-potioneffect = new effect.",
                         "past event-potioneffect = old effect.",
                         "event-potioneffecttype = type of potion effect.")
-                .examples("")
+                .examples("on potion effect added:",
+                        "\tif event-potioneffecttype = night vision:",
+                        "\t\tcancel event",
+                        "\t\tsend \"NO NIGHT VISION FOR YOU!!!\"",
+                        "",
+                        "on potion effect added:",
+                        "\tif event-potioneffectcause = totem_effect:",
+                        "\t\tteleport player to {spawn}",
+                        "",
+                        "on potion effect changed:",
+                        "\tremove event-potioneffecttype from player",
+                        "\t",
+                        "on potion effect cleared:",
+                        "\tif event-entity is a player:",
+                        "\t\tbroadcast \"ALL EFFECTS CLEARED FOR: %event-entity%\"",
+                        "",
+                        "on potion effect removed:",
+                        "\tif event-potioneffecttype = night vision:",
+                        "\t\tkill event-entity")
                 .since("1.17.0");
 
         EventValues.registerEventValue(EntityPotionEffectEvent.class, PotionEffect.class, new Getter<>() {
