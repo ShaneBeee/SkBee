@@ -438,25 +438,27 @@ public class OtherEvents {
         }, EventValues.TIME_NOW);
 
         // Bell Ring Event
-        Skript.registerEvent("Bell Ring", SimpleEvent.class, BellRingEvent.class, "bell ring")
-                .description("Called when a bell is being rung.")
-                .examples("on bell ring:",
-                        "\tkill all mobs in radius 5 of event-block")
-                .since("2.16.0");
+        if (Skript.classExists("org.bukkit.event.block.BellRingEvent")) {
+            Skript.registerEvent("Bell Ring", SimpleEvent.class, BellRingEvent.class, "bell ring")
+                    .description("Called when a bell is being rung. Requires Minecraft 1.19.4+")
+                    .examples("on bell ring:",
+                            "\tkill all mobs in radius 5 of event-block")
+                    .since("2.16.0");
 
-        EventValues.registerEventValue(BellRingEvent.class, Entity.class, new Getter<>() {
-            @Override
-            public @Nullable Entity get(BellRingEvent event) {
-                return event.getEntity();
-            }
-        }, EventValues.TIME_NOW);
+            EventValues.registerEventValue(BellRingEvent.class, Entity.class, new Getter<>() {
+                @Override
+                public @Nullable Entity get(BellRingEvent event) {
+                    return event.getEntity();
+                }
+            }, EventValues.TIME_NOW);
 
-        EventValues.registerEventValue(BellRingEvent.class, BlockFace.class, new Getter<>() {
-            @Override
-            public @NotNull BlockFace get(BellRingEvent event) {
-                return event.getDirection();
-            }
-        }, EventValues.TIME_NOW);
+            EventValues.registerEventValue(BellRingEvent.class, BlockFace.class, new Getter<>() {
+                @Override
+                public @NotNull BlockFace get(BellRingEvent event) {
+                    return event.getDirection();
+                }
+            }, EventValues.TIME_NOW);
+        }
     }
 
 }
