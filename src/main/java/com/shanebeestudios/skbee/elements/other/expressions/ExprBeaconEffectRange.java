@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
         "loop 11 times:",
         "\tremove 10 from beacon effect range of event-block",
         "reset effect range of event-block"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprBeaconEffectRange extends SimplePropertyExpression<Block, Number> {
 
     private static final boolean SUPPORTS_EFFECT_RANGE = Skript.methodExists(Beacon.class, "getEffectRange");

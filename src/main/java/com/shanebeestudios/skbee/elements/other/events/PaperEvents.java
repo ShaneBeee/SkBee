@@ -150,7 +150,7 @@ public class PaperEvents {
                     .examples("on beacon potion effect change:",
                             "\tprimary beacon effect of event-block is jump boost",
                             "\tset primary beacon effect of event-block to levitation")
-                    .since("INSERT VERSION");
+                    .since("2.16.0");
 
             EventValues.registerEventValue(PlayerChangeBeaconEffectEvent.class, Block.class, new Getter<>() {
                 @Override
@@ -375,7 +375,7 @@ public class PaperEvents {
                     .description("Called when a beacon is successfully activated by having correct amount of blocks.")
                     .examples("on beacon activation",
                             "\tset primary effect of event-block to strength")
-                    .since("INSERT VERSION");
+                    .since("2.16.0");
         }
 
     }

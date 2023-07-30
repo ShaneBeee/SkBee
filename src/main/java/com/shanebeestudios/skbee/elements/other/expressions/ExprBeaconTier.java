@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Returns the current tier of a beacon block.")
 @Examples({"on right click on a beacon:",
         "\tsend \"The current tier of this block is %beacon tier of event-block%\""})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprBeaconTier extends SimplePropertyExpression<Block, Integer> {
 
     static {

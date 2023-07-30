@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
         "Default value is 4."})
 @Examples({"on place of mob spawner:",
         "\tset spawn range of event-block to random integer between 0 and 10"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprSpawnerSpawnRange extends SimplePropertyExpression<Block, Integer> {
 
     static {

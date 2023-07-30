@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on entity shoot bow:",
         "\tif name of shot bow != \"Mr Bow\":",
         "\t\tcancel event"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprShootBowShotBow extends SimpleExpression<ItemType> {
 
     static {

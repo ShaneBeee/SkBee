@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on pre creature spawn of an animal:",
         "\tcancel event",
         "\tabort creature spawn"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class EffAbortSpawn extends Effect {
 
     private static final boolean HAS_PRE_SPAWN_EVENT = Skript.classExists("com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent");

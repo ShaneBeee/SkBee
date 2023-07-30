@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
         "\nNOTE: Setting doesn't appear to do anything, server bug I guess?!?!"})
 @Examples({"on entity shoot bow:",
         "\tmake player ride projectile entity"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprShootBowProjectile extends SimpleExpression<Entity> {
 
     static {

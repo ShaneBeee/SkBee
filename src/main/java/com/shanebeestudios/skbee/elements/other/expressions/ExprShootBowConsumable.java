@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on entity shoot bow:",
         "\tif consumed item is not an arrow:",
         "\t\tcancel event"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprShootBowConsumable extends SimpleExpression<ItemType> {
 
     static {

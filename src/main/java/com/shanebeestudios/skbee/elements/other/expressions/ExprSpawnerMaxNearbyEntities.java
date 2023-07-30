@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
         "remove 10 from maximum nearby entities of {_spawner}",
         "reset maximum nearby entities of {_spawner}",
         "set maximum nearby entities of {_spawner} to 10"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprSpawnerMaxNearbyEntities extends SimplePropertyExpression<Block, Integer> {
 
     static {

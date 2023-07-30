@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
         "Default value is 16."})
 @Examples({"on place of mob spawner:",
         "\tset required player range of event-block to 0"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprSpawnerRequiredPlayerRange extends SimplePropertyExpression<Block, Integer> {
 
     static {

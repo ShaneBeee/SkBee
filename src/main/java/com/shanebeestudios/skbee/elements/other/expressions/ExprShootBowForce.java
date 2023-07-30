@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on entity shoot bow:",
         "\tif shot force < 0.5:",
         "\t\tcancel event"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprShootBowForce extends SimpleExpression<Number> {
 
     static {

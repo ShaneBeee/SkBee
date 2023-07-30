@@ -14,7 +14,7 @@ import org.bukkit.block.CreatureSpawner;
         "\tloop {spawners::*}:",
         "\t\tloop-value is activated",
         "\t\tbroadcast loop-value"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class CondSpawnerIsActivated extends PropertyCondition<Block> {
 
     static {

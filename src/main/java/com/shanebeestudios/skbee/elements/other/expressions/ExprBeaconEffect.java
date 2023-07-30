@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
         "\tbroadcast \"Secondary: %secondary beacon effect of clicked block%\"",
         "\tset primary beacon effect of clicked block to strength",
         "\tclear secondary beacon potion effect"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprBeaconEffect extends SimplePropertyExpression<Block, PotionEffect> {
 
     static {

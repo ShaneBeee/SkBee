@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
         "\tset spawner spawn count of event-block to 10",
         "\tadd 10 to spawn count of event-block",
         "\treset spawn count of event-block"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprSpawnerSpawnCount extends SimplePropertyExpression<Block, Integer> {
 
     static {

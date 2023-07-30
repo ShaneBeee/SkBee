@@ -38,7 +38,7 @@ public class EvtPreSpawn extends SkriptEvent {
                             "\nevent-entitytype = the type of entity being spawned.")
                     .examples("on pre spawn of a pig:",
                             "\tbroadcast \"a %event-entitytype% is spawning in\"")
-                    .since("INSERT VERSION");
+                    .since("2.16.0");
 
             EventValues.registerEventValue(PreCreatureSpawnEvent.class, Location.class, new Getter<>() {
                 @Override
@@ -72,7 +72,7 @@ public class EvtPreSpawn extends SkriptEvent {
                             "\nevent-block = the block location of the spawner spawning the entity.")
                     .examples("on pre spawner spawn of a zombie:",
                             "\tbroadcast \"%event-entitytype% is spawning in\"")
-                    .since("INSERT VERSION");
+                    .since("2.16.0");
 
             EventValues.registerEventValue(PreSpawnerSpawnEvent.class, Block.class, new Getter<>() {
                 @Override
@@ -92,7 +92,7 @@ public class EvtPreSpawn extends SkriptEvent {
                             "\nevent-entity = the entity the spawned phantom is spawning for.")
                     .examples("on pre phantom spawn:",
                             "\tbroadcast \"Watch out %event-entity% a phantom is coming!\"")
-                    .since("INSERT VERSION");
+                    .since("2.16.0");
 
             EventValues.registerEventValue(PhantomPreSpawnEvent.class, Entity.class, new Getter<>() {
                 @Override

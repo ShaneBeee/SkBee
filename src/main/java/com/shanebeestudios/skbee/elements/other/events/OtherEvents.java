@@ -427,7 +427,7 @@ public class OtherEvents {
                 .examples("on entity shoot bow:",
                         "\tif name of shot bow != \"Mr Bow\":",
                         "\t\tcancel event")
-                .since("INSERT VERSION");
+                .since("2.16.0");
 
         EventValues.registerEventValue(EntityShootBowEvent.class, Projectile.class, new Getter<>() {
             @Override
@@ -442,7 +442,7 @@ public class OtherEvents {
                 .description("Called when a bell is being rung.")
                 .examples("on bell ring:",
                         "\tkill all mobs in radius 5 of event-block")
-                .since("INSERT VERSION");
+                .since("2.16.0");
 
         EventValues.registerEventValue(BellRingEvent.class, Entity.class, new Getter<>() {
             @Override

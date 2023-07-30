@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
         "For the Notchian client this name defaults to \"vanilla\". Some modified clients report other names such as \"forge\".",
         "Requires a PaperMC server."})
 @Examples("broadcast client brand of player")
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprClientBrand extends SimplePropertyExpression<Player, String> {
 
     static {

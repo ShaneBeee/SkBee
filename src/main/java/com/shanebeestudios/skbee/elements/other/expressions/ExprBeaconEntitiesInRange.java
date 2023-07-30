@@ -28,7 +28,7 @@ import java.util.List;
         "\ttrigger:",
         "\t\tset {_block} to target block of player",
         "\t\tsend all entities in beacon effect range of {_block}"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprBeaconEntitiesInRange extends SimpleExpression<LivingEntity> {
 
     static {

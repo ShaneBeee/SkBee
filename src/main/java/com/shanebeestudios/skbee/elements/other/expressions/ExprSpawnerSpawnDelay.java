@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
         "\tadd 100 to max spawn delay of event-block",
         "\tremove 1 second from min spawn delay of event-block",
         "\treset spawn delay of event-block"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprSpawnerSpawnDelay extends SimplePropertyExpression<Block, Timespan> {
 
     static {

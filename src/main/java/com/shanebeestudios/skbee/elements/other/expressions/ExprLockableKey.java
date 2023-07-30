@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
         "\tclicked block is locked",
         "\tplayer has permission \"see.locked\"",
         "\tsend action bar \"%container key of clicked block%\" to player"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprLockableKey extends SimplePropertyExpression<Block, String> {
 
     static {

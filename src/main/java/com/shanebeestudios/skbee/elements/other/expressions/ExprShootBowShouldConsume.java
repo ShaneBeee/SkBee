@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on entity shoot bow:",
         "\tif shot bow is a bow:",
         "\t\tset should consume item to false"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprShootBowShouldConsume extends SimpleExpression<Boolean> {
 
     static {

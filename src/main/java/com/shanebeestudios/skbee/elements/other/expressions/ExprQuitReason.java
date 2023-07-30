@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on quit:",
         "\tif quit reason is kicked:",
         "\t\tbroadcast \"%player% is a loser and was kicked haha\""})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class ExprQuitReason extends SimpleExpression<QuitReason> {
 
     static {

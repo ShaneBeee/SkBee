@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Resets the spawner timer for a spawner. Requires a PaperMC server.")
 @Examples({"on spawner spawn:",
         "\treset spawner timer"})
-@Since("INSERT VERSION")
+@Since("2.16.0")
 public class EffSpawnerResetTimer extends Effect {
 
     static {
