@@ -28,6 +28,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -81,9 +82,10 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 } else if (NBTApi.supportsBlockNBT()) {
                     compound = new NBTCustomBlock(block).getData();
                 }
+            } else if (object instanceof Player player) {
+                compound = new NBTCustomEntity(player);
             } else if (object instanceof OfflinePlayer offlinePlayer) {
-                if (offlinePlayer.isOnline()) compound = new NBTCustomEntity(offlinePlayer.getPlayer());
-                else compound = NBTApi.getNBTOfflinePlayer(offlinePlayer);
+                compound = NBTApi.getNBTOfflinePlayer(offlinePlayer);
             } else if (object instanceof Entity entity) {
                 compound = new NBTCustomEntity(entity);
             } else if (object instanceof ItemType itemType) {
