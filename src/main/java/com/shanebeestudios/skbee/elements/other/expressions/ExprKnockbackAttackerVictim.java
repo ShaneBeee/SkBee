@@ -39,7 +39,7 @@ public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> {
             Skript.error("Cannot use 'knockback attacker/victim' outside of knockback event", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
-        this.attacker = parseResult.hasTag("mark");
+        this.attacker = parseResult.hasTag("attacker");
         return true;
     }
 
