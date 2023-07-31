@@ -32,8 +32,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("NBT - Compound Of")
 @Description({"Get the NBT compound of a block/entity/item/file/chunk. Optionally you can return a copy of the compound. This way you can modify it without",
