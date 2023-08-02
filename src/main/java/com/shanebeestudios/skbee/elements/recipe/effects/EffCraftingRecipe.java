@@ -85,12 +85,7 @@ public class EffCraftingRecipe extends Effect {
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
         }
-        if (ingredients == null) {
-            RecipeUtil.error("Error registering crafting recipe - ingredient is null");
-            RecipeUtil.error("Current Item: §6" + this.toString(event, true));
-            return;
-        }
-
+        // Ingredients can't be null, however length can be '0'
         if (ingredients.length == 0) {
             RecipeUtil.error("Error registering crafting recipe - requires 4 or 9 ingredients");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
