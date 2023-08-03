@@ -30,7 +30,7 @@ import java.util.Locale;
         "set block data tag \"waterlogged\" of {_blockData} to true",
         "set block data tag \"waterlogged\" of event-block to true",
         "set blockdata tag \"waterlogged\" of event-block without updates to true"})
-@Since("1.0.0, INSERT VERSION (Variable Support)")
+@Since("1.0.0, 2.16.1 (Variable Support)")
 public class ExprBlockDataTag extends SimpleExpression<Object> {
 
     static {

@@ -24,7 +24,7 @@ import java.util.List;
 @Description("Get a list of all block data tags of a Block or BlockData.")
 @Examples({"set {_data::*} to block data tags of target block of player",
         "loop block data tags of target block of player:"})
-@Since("1.0.0, INSERT VERSION (BlockData Support)")
+@Since("1.0.0, 2.16.1 (BlockData Support)")
 public class ExprBlockDataTags extends SimpleExpression<String> {
 
     static {
