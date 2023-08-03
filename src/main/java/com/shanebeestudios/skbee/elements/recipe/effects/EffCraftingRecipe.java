@@ -12,8 +12,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -85,15 +85,15 @@ public class EffCraftingRecipe extends Effect {
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
         }
-        if (ingredients == null) {
-            RecipeUtil.error("Error registering crafting recipe - ingredient is null");
+        // Ingredients can't be null, however length can be '0'
+        if (ingredients.length == 0) {
+            RecipeUtil.error("Error registering crafting recipe - a minimum of at least 1 ingredient needs to be defined");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
         }
-
-        if (ingredients.length != 4 && ingredients.length != 9) {
-            RecipeUtil.error("Error registering crafting recipe - requires 4 or 9 ingredients");
-            RecipeUtil.error("Current Item: §6" + this.toString(event, true));
+        if (ingredients.length > 9) {
+            RecipeUtil.error("Error registering crafting recipe - a maximum of 9 ingredients can be defined");
+            RecipeUtil.error("Current Item: &6" + this.toString(event, true));
             return;
         }
 
