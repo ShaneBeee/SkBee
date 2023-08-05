@@ -116,12 +116,14 @@ public class AddonLoader {
 
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
+        int total = 0;
         for (int i = 0; i < elementCountBefore.length; i++) {
             finish[i] = elementCountAfter[i] - elementCountBefore[i];
+            total += finish[i];
         }
         String[] elementNames = new String[]{"event", "effect", "expression", "condition", "section"};
 
-        Util.log("Loaded elements:");
+        Util.log("Loaded (%s) elements:", total);
         for (int i = 0; i < finish.length; i++) {
             Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
         }
