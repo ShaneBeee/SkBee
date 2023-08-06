@@ -10,6 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemFactory;
@@ -33,6 +34,7 @@ public class ExprSpawnEggFromEntity extends SimplePropertyExpression<Object, Ite
         }
     }
 
+    @SuppressWarnings("ConstantValue")
     @Override
     public @Nullable ItemType convert(Object object) {
         EntityType entityType = null;
@@ -42,8 +44,14 @@ public class ExprSpawnEggFromEntity extends SimplePropertyExpression<Object, Ite
             entityType = EntityUtils.toBukkitEntityType(entityData);
         }
         if (entityType != null) {
-            ItemStack spawnEgg = ITEM_FACTORY.getSpawnEgg(entityType);
-            if (spawnEgg != null) return new ItemType(spawnEgg);
+            Object spawnEggObject = ITEM_FACTORY.getSpawnEgg(entityType);
+            // Paper method originally returned ItemStack
+            // New Bukkit method returns Material
+            if (spawnEggObject instanceof ItemStack itemStack) {
+                return new ItemType(itemStack);
+            } else if (spawnEggObject instanceof Material material) {
+                return new ItemType(material);
+            }
         }
         return null;
     }
