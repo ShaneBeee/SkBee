@@ -13,6 +13,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
+import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockFace;
@@ -41,6 +42,7 @@ import java.util.Map;
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
+    public static boolean HAS_CHUNK_LOAD_LEVEL = Skript.classExists("org.bukkit.Chunk$LoadLevel");
     private static final Map<String, ItemFlag> ITEM_FLAG_MAP = new HashMap<>();
 
     private static String getItemFlagNames() {
@@ -272,6 +274,21 @@ public class Types {
                     .parser(TRIM_PATTERN_REGISTER.getParser()));
         }
 
+        if (HAS_CHUNK_LOAD_LEVEL) {
+            EnumWrapper<LoadLevel> LOAD_LEVEL_ENUM = new EnumWrapper<>(LoadLevel.class);
+            Classes.registerClass(new ClassInfo<>(LoadLevel.class, "chunkloadlevel")
+                    .user("chunk ?load ?levels?")
+                    .name("Chunk Load Level")
+                    .description("Represents the types of load levels of a chunk.",
+                            "\n`border` = Most game logic is not processed, including entities and redstone.",
+                            "\n`entity_ticking` = All game logic is processed.",
+                            "\n`inaccessible` = No game logic is processed, world generation may still occur.",
+                            "\n`ticking` = All game logic except entities is processed.",
+                            "\n`unloaded` = This chunk is not loaded.")
+                    .usage(LOAD_LEVEL_ENUM.getAllNames())
+                    .parser(LOAD_LEVEL_ENUM.getParser())
+                    .since("INSERT VERSION"));
+        }
     }
 
 }
