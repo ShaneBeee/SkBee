@@ -6,8 +6,8 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.entity.AbstractVillager;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.ItemStack;
@@ -26,14 +26,12 @@ public class Types {
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Villager.Profession.class) == null) {
             EnumWrapper<Villager.Profession> VILLAGER_PROFESSION_ENUM = new EnumWrapper<>(Villager.Profession.class, "", "profession");
-            Classes.registerClass(new ClassInfo<>(Villager.Profession.class, "profession")
+            Classes.registerClass(VILLAGER_PROFESSION_ENUM.getClassInfo("profession")
                     .user("professions?")
                     .name("Villager Profession")
                     .description("Represent the types of professions for villagers.",
                             "Due to not parsing correctly, the professions are suffixed with 'profession'.")
-                    .usage(VILLAGER_PROFESSION_ENUM.getAllNames())
-                    .since("1.17.0")
-                    .parser(VILLAGER_PROFESSION_ENUM.getParser()));
+                    .since("1.17.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'profession' already.");
             Util.logLoading("You may have to use their profession in SkBee's 'Villager Profession' expression.");
@@ -43,14 +41,12 @@ public class Types {
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Villager.Type.class) == null) {
             EnumWrapper<Villager.Type> VILLAGER_TYPE_ENUM = new EnumWrapper<>(Villager.Type.class, "", "villager");
-            Classes.registerClass(new ClassInfo<>(Villager.Type.class, "villagertype")
+            Classes.registerClass(VILLAGER_TYPE_ENUM.getClassInfo("villagertype")
                     .user("villager ?types?")
                     .name("Villager Type")
                     .description("Represents the types of villagers.",
                             "Due to possible overlaps with biomes, types are suffixed with 'villager'.")
-                    .usage(VILLAGER_TYPE_ENUM.getAllNames())
-                    .since("1.17.0")
-                    .parser(VILLAGER_TYPE_ENUM.getParser()));
+                    .since("1.17.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'villagertype' already.");
             Util.logLoading("You may have to use their villagertype in SkBee's 'Villager Type' expression.");

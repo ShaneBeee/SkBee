@@ -41,33 +41,27 @@ public class Types {
                 .since("2.8.0"));
 
         EnumWrapper<Billboard> BILLBOARD_ENUM = new EnumWrapper<>(Billboard.class);
-        Classes.registerClass(new ClassInfo<>(Billboard.class, "displaybillboard")
+        Classes.registerClass(BILLBOARD_ENUM.getClassInfo("displaybillboard")
                 .user("display ?billboards?")
                 .name("DisplayEntity - Billboard")
                 .description("Represents the Billboard of a Display Entity.", McWIKI)
-                .usage(BILLBOARD_ENUM.getAllNames())
-                .since("2.8.0")
-                .parser(BILLBOARD_ENUM.getParser()));
+                .since("2.8.0"));
 
         EnumWrapper<TextAlignment> TEXT_ALIGNMENT_ENUM = new EnumWrapper<>(TextAlignment.class, "", "aligned");
-        Classes.registerClass(new ClassInfo<>(TextAlignment.class, "textalignment")
+        Classes.registerClass(TEXT_ALIGNMENT_ENUM.getClassInfo("textalignment")
                 .user("text ?alignments?")
                 .name("DisplayEntity - Text Alignment")
                 .description("Represents the text alignment of a Text Display Entity.",
                         "NOTE: While I understand these names do not directly align with Minecraft,",
                         "I had to suffix them to deal with conflict issues.", McWIKI)
-                .usage(TEXT_ALIGNMENT_ENUM.getAllNames())
-                .since("2.8.0")
-                .parser(TEXT_ALIGNMENT_ENUM.getParser()));
+                .since("2.8.0"));
 
         EnumWrapper<ItemDisplayTransform> TRANSFORM_ENUM = new EnumWrapper<>(ItemDisplayTransform.class, "", "transform");
-        Classes.registerClass(new ClassInfo<>(ItemDisplayTransform.class, "itemdisplaytransform")
+        Classes.registerClass(TRANSFORM_ENUM.getClassInfo("itemdisplaytransform")
                 .user("item ?display ?transforms?")
                 .name("DisplayEntity - Item Display Transform")
                 .description("Represents the item display transform of an Item Display Entity.", McWIKI)
-                .usage(TRANSFORM_ENUM.getAllNames())
-                .since("2.8.0")
-                .parser(TRANSFORM_ENUM.getParser()));
+                .since("2.8.0"));
 
         TRANSFORMATION = new ClassInfo<>(Transformation.class, "transformation")
                 .user("transformations?")

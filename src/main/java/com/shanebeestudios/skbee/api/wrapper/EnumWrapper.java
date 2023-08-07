@@ -83,20 +83,11 @@ public final class EnumWrapper<E extends Enum<E>> {
         return names[e.ordinal()];
     }
 
-    public String getAllNames() {
+    private String getAllNames() {
         List<String> names = new ArrayList<>();
         Collections.addAll(names, this.names);
         Collections.sort(names);
         return StringUtils.join(names, ", ");
-    }
-
-    /**
-     * Get an instance of the {@link EnumParser} for this Enum
-     *
-     * @return EnumParser for this Enum
-     */
-    public EnumParser<E> getParser() {
-        return new EnumParser<>(this);
     }
 
     static class EnumParser<T extends Enum<T>> extends Parser<T> {
@@ -132,8 +123,7 @@ public final class EnumWrapper<E extends Enum<E>> {
      * @return ClassInfo with default praser and usage
      */
     public ClassInfo<E> getClassInfo(String codeName) {
-        return new ClassInfo<>(this.enumClass, codeName).usage(getAllNames()).parser(getParser());
+        return new ClassInfo<>(this.enumClass, codeName).usage(getAllNames()).parser(new EnumParser<>(this));
     }
-
 
 }

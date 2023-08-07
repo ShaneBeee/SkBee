@@ -98,13 +98,11 @@ public class Types {
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Spellcaster.Spell.class) == null) {
             EnumWrapper<Spellcaster.Spell> SPELL_ENUM = new EnumWrapper<>(Spellcaster.Spell.class);
-            Classes.registerClass(new ClassInfo<>(Spellcaster.Spell.class, "spell")
+            Classes.registerClass(SPELL_ENUM.getClassInfo("spell")
                     .user("spells?")
                     .name("Spellcaster Spell")
                     .description("Represents the different spells of a spellcaster.")
-                    .usage(SPELL_ENUM.getAllNames())
-                    .since("1.17.0")
-                    .parser(SPELL_ENUM.getParser()));
+                    .since("1.17.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'spell' already.");
             Util.logLoading("You may have to use their spells in SkBee's 'Spell-caster Spell' expression.");
@@ -114,13 +112,11 @@ public class Types {
         // EntityPotionEffectEvent.Cause
         if (Classes.getExactClassInfo(Cause.class) == null) {
             EnumWrapper<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumWrapper<>(Cause.class, "", "effect");
-            Classes.registerClass(new ClassInfo<>(Cause.class, "potioneffectcause")
+            Classes.registerClass(POTION_EFFECT_EVENT_CAUSE.getClassInfo("potioneffectcause")
                     .user("potion ?effect ?causes?")
                     .name("Potion Effect Cause")
                     .description("Represents the different causes of an entity potion effect event.")
-                    .usage(POTION_EFFECT_EVENT_CAUSE.getAllNames())
-                    .since("1.17.0")
-                    .parser(POTION_EFFECT_EVENT_CAUSE.getParser()));
+                    .since("1.17.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'potioneffectcause' already.");
             Util.logLoading("You may have to use their potion effect causes in SkBee's 'Entity Potion Effect' event.");
@@ -128,25 +124,21 @@ public class Types {
 
         if (Classes.getExactClassInfo(TransformReason.class) == null) {
             EnumWrapper<TransformReason> TRANSOFORM_REASON = new EnumWrapper<>(TransformReason.class);
-            Classes.registerClass(new ClassInfo<>(TransformReason.class, "transformreason")
+            Classes.registerClass(TRANSOFORM_REASON.getClassInfo("transformreason")
                     .user("transform ?reasons?")
                     .name("Transform Reason")
                     .description("Represents the different reasons for transforming in the entity transform event.")
-                    .usage(TRANSOFORM_REASON.getAllNames())
-                    .since("2.5.3")
-                    .parser(TRANSOFORM_REASON.getParser()));
+                    .since("2.5.3"));
         }
 
         if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
             if (Classes.getExactClassInfo(QuitReason.class) == null) {
                 EnumWrapper<QuitReason> QUIT_REASON = new EnumWrapper<>(QuitReason.class);
-                Classes.registerClass(new ClassInfo<>(QuitReason.class, "quitreason")
+                Classes.registerClass(QUIT_REASON.getClassInfo("quitreason")
                         .user("quit ?reasons?")
                         .name("Quit Reason")
                         .description("Represents the different reasons for calling the player quit event (Requires Paper).")
-                        .usage(QUIT_REASON.getAllNames())
-                        .since("2.6.0")
-                        .parser(QUIT_REASON.getParser()));
+                        .since("2.6.0"));
             }
         }
 
@@ -195,27 +187,23 @@ public class Types {
 
         if (Classes.getExactClassInfo(BlockFace.class) == null) {
             EnumWrapper<BlockFace> BLOCK_FACE_ENUM = new EnumWrapper<>(BlockFace.class);
-            Classes.registerClass(new ClassInfo<>(BlockFace.class, "blockface")
+            Classes.registerClass(BLOCK_FACE_ENUM.getClassInfo("blockface")
                     .user("blockfaces?")
                     .name("BlockFace")
                     .description("Represents the face of a block.")
-                    .usage(BLOCK_FACE_ENUM.getAllNames())
                     .since("2.6.0")
-                    .parser(BLOCK_FACE_ENUM.getParser())
                     .defaultExpression(new SimpleLiteral<>(BlockFace.NORTH, true)));
         }
 
         if (Skript.methodExists(PlayerRespawnEvent.class, "getRespawnReason")) {
             EnumWrapper<RespawnReason> RESPAWN_REASON_ENUM = new EnumWrapper<>(RespawnReason.class, "", "respawn");
-            Classes.registerClass(new ClassInfo<>(RespawnReason.class, "respawnreason")
+            Classes.registerClass(RESPAWN_REASON_ENUM.getClassInfo("respawnreason")
                     .user("respawn ?reasons?")
                     .name("Respawn Reason")
                     .description("Represents the reason the respawn event was called. Requires MC 1.19.4+")
-                    .usage(RESPAWN_REASON_ENUM.getAllNames())
                     .examples("on respawn:",
                             "\tif respawn reason = death respawn:",
                             "\t\tgive player 10 diamonds")
-                    .parser(RESPAWN_REASON_ENUM.getParser())
                     .since("2.8.4"));
         }
 
@@ -276,7 +264,7 @@ public class Types {
 
         if (HAS_CHUNK_LOAD_LEVEL) {
             EnumWrapper<LoadLevel> LOAD_LEVEL_ENUM = new EnumWrapper<>(LoadLevel.class, "", "level");
-            Classes.registerClass(new ClassInfo<>(LoadLevel.class, "chunkloadlevel")
+            Classes.registerClass(LOAD_LEVEL_ENUM.getClassInfo("chunkloadlevel")
                     .user("chunk ?load ?levels?")
                     .name("Chunk Load Level")
                     .description("Represents the types of load levels of a chunk.",
@@ -285,8 +273,6 @@ public class Types {
                             "\n`inaccessible_level` = No game logic is processed, world generation may still occur.",
                             "\n`ticking_level` = All game logic except entities is processed.",
                             "\n`unloaded_level` = This chunk is not loaded.")
-                    .usage(LOAD_LEVEL_ENUM.getAllNames())
-                    .parser(LOAD_LEVEL_ENUM.getParser())
                     .since("INSERT VERSION"));
         }
     }

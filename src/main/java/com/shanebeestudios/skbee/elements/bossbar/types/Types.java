@@ -66,7 +66,8 @@ public class Types {
                         @SuppressWarnings("NullableProblems")
                         @Override
                         public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-                            if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) return CollectionUtils.array(Player[].class);
+                            if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)
+                                return CollectionUtils.array(Player[].class);
                             if (mode == ChangeMode.DELETE) return CollectionUtils.array();
                             return null;
                         }
@@ -150,14 +151,12 @@ public class Types {
             EnumWrapper<BarStyle> BAR_STYLE_ENUM = new EnumWrapper<>(BarStyle.class);
             // Prevent conflict with Skript's `is solid` condition
             BAR_STYLE_ENUM.replace("solid", "solid bar");
-            Classes.registerClass(new ClassInfo<>(BarStyle.class, "bossbarstyle")
+            Classes.registerClass(BAR_STYLE_ENUM.getClassInfo("bossbarstyle")
                     .user("boss ?bar ?styles?")
                     .name("BossBar Style")
                     .description("Represents the style options of a BossBar.")
-                    .usage(BAR_STYLE_ENUM.getAllNames())
                     .examples("set bar style of {_bar} to segmented 20")
-                    .since("1.16.0")
-                    .parser(BAR_STYLE_ENUM.getParser()));
+                    .since("1.16.0"));
         } else {
             Util.logLoading("&eIt looks like another addon registered 'boss bar style' already.");
             Util.logLoading("&eYou may have to use their BossBar styles in SkBee's BossBar elements.");
@@ -165,14 +164,12 @@ public class Types {
 
         if (Classes.getExactClassInfo(BarFlag.class) == null && Classes.getClassInfoNoError("bossbarflag") == null) {
             EnumWrapper<BarFlag> BAR_FLAG_ENUM = new EnumWrapper<>(BarFlag.class);
-            Classes.registerClass(new ClassInfo<>(BarFlag.class, "bossbarflag")
+            Classes.registerClass(BAR_FLAG_ENUM.getClassInfo("bossbarflag")
                     .user("boss ?bar ?flags?")
                     .name("BossBar Flag")
                     .description("Represents the flag options of a BossBar.")
-                    .usage(BAR_FLAG_ENUM.getAllNames())
                     .examples("set bar flag darken sky of {_bar} to true")
-                    .since("1.16.0")
-                    .parser(BAR_FLAG_ENUM.getParser()));
+                    .since("1.16.0"));
         } else {
             Util.logLoading("&eIt looks like another addon registered 'boss bar flag' already.");
             Util.logLoading("&eYou may have to use their BossBar flags in SkBee's BossBar elements.");

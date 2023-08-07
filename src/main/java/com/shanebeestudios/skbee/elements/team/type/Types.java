@@ -123,24 +123,20 @@ public class Types {
 
         if (Classes.getExactClassInfo(Team.Option.class) == null) {
             EnumWrapper<Team.Option> TEAM_OPTIONS = new EnumWrapper<>(Team.Option.class);
-            Classes.registerClass(new ClassInfo<>(Team.Option.class, "teamoption")
+            Classes.registerClass(TEAM_OPTIONS.getClassInfo("teamoption")
                     .user("team ?options?")
                     .name("Team - Option")
-                    .usage(TEAM_OPTIONS.getAllNames())
                     .description("Represents an option for a team.")
-                    .since("1.16.0")
-                    .parser(TEAM_OPTIONS.getParser()));
+                    .since("1.16.0"));
         }
 
         if (Classes.getExactClassInfo(Team.OptionStatus.class) == null) {
             EnumWrapper<Team.OptionStatus> TEAM_OPTION_STATUS = new EnumWrapper<>(Team.OptionStatus.class);
-            Classes.registerClass(new ClassInfo<>(Team.OptionStatus.class, "teamoptionstatus")
+            Classes.registerClass(TEAM_OPTION_STATUS.getClassInfo("teamoptionstatus")
                     .user("team ?option ?status")
                     .name("Team - Option Status")
-                    .usage(TEAM_OPTION_STATUS.getAllNames())
                     .description("Represents an option status for a team option")
-                    .since("1.16.0")
-                    .parser(TEAM_OPTION_STATUS.getParser()));
+                    .since("1.16.0"));
         }
     }
 

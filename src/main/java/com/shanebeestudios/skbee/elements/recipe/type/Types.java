@@ -50,13 +50,11 @@ public class Types {
                 }));
 
         EnumWrapper<RecipeType> RECIPE_TYPE_ENUM = new EnumWrapper<>(RecipeType.class);
-        Classes.registerClass(new ClassInfo<>(RecipeType.class, "recipetype")
+        Classes.registerClass(RECIPE_TYPE_ENUM.getClassInfo("recipetype")
                 .user("recipe ?types?")
                 .name("Recipe Type")
                 .description("Represents the types of recipes.")
-                .usage(RECIPE_TYPE_ENUM.getAllNames())
-                .since("2.6.0")
-                .parser(RECIPE_TYPE_ENUM.getParser()));
+                .since("2.6.0"));
     }
 
     private static String matChoiceToString(RecipeChoice.MaterialChoice materialChoice) {

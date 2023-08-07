@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.statistic.type;
 
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
@@ -15,7 +14,7 @@ public class Types {
 
     static {
         EnumWrapper<Statistic> STATISTICS_ENUM = new EnumWrapper<>(Statistic.class);
-        Classes.registerClass(new ClassInfo<>(Statistic.class, "statistic")
+        Classes.registerClass(STATISTICS_ENUM.getClassInfo("statistic")
                 .user("statistics?")
                 .name("Statistic")
                 .description("Represents the different statistics for a player.",
@@ -23,8 +22,7 @@ public class Types {
                         "Underscores in stat names are not required, you can use spaces.",
                         "NOTE: 'play_one_minute' stat's name is misleading, it's actually amount of ticks played.")
                 .usage(getNames())
-                .since("1.17.0")
-                .parser(STATISTICS_ENUM.getParser()));
+                .since("1.17.0"));
     }
 
     /**

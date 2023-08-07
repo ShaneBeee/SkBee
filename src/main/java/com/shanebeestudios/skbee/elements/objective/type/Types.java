@@ -89,22 +89,18 @@ public class Types {
         }
 
         EnumWrapper<RenderType> RENDER_ENUM = new EnumWrapper<>(RenderType.class);
-        Classes.registerClass(new ClassInfo<>(RenderType.class, "rendertype")
+        Classes.registerClass(RENDER_ENUM.getClassInfo("rendertype")
                 .user("render ?types?")
                 .name("Scoreboard - Objective Render Type")
                 .description("Controls the way in which an Objective is rendered client side.")
-                        .usage(RENDER_ENUM.getAllNames())
-                .since("2.6.0")
-                .parser(RENDER_ENUM.getParser()));
+                .since("2.6.0"));
 
         EnumWrapper<DisplaySlot> DISPLAY_ENUM = new EnumWrapper<>(DisplaySlot.class);
-        Classes.registerClass(new ClassInfo<>(DisplaySlot.class, "displayslot")
+        Classes.registerClass(DISPLAY_ENUM.getClassInfo("displayslot")
                 .user("display ?slots?")
                 .name("Scoreboard - Objective Display Slot")
                 .description("Locations for displaying objectives to the player")
-                .usage(DISPLAY_ENUM.getAllNames())
-                .since("2.6.0")
-                .parser(DISPLAY_ENUM.getParser()));
+                .since("2.6.0"));
     }
 
 }
