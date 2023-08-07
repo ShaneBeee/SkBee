@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.wrapper;
 
+import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.util.StringUtils;
@@ -23,11 +24,13 @@ import java.util.Locale;
  */
 public final class EnumWrapper<E extends Enum<E>> {
 
+    private final Class<E> enumClass;
     private final String[] names;
     private final HashMap<String, E> parseMap = new HashMap<>();
 
     public EnumWrapper(@NotNull Class<E> c) {
         assert c.isEnum();
+        this.enumClass = c;
         this.names = new String[c.getEnumConstants().length];
 
         for (E enumConstant : c.getEnumConstants()) {
@@ -39,6 +42,7 @@ public final class EnumWrapper<E extends Enum<E>> {
 
     public EnumWrapper(@NotNull Class<E> c, @Nullable String prefix, @Nullable String suffix) {
         assert c.isEnum();
+        this.enumClass = c;
         this.names = new String[c.getEnumConstants().length];
 
         for (E enumConstant : c.getEnumConstants()) {
@@ -120,5 +124,16 @@ public final class EnumWrapper<E extends Enum<E>> {
         }
 
     }
+
+    /**
+     * Create ClassInfo with default praser and usage
+     *
+     * @param codeName Name for class info
+     * @return ClassInfo with default praser and usage
+     */
+    public ClassInfo<E> getClassInfo(String codeName) {
+        return new ClassInfo<>(this.enumClass, codeName).usage(getAllNames()).parser(getParser());
+    }
+
 
 }
