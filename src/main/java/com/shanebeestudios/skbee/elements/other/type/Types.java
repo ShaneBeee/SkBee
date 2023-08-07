@@ -275,16 +275,16 @@ public class Types {
         }
 
         if (HAS_CHUNK_LOAD_LEVEL) {
-            EnumWrapper<LoadLevel> LOAD_LEVEL_ENUM = new EnumWrapper<>(LoadLevel.class);
+            EnumWrapper<LoadLevel> LOAD_LEVEL_ENUM = new EnumWrapper<>(LoadLevel.class, "", "level");
             Classes.registerClass(new ClassInfo<>(LoadLevel.class, "chunkloadlevel")
                     .user("chunk ?load ?levels?")
                     .name("Chunk Load Level")
                     .description("Represents the types of load levels of a chunk.",
-                            "\n`border` = Most game logic is not processed, including entities and redstone.",
-                            "\n`entity_ticking` = All game logic is processed.",
-                            "\n`inaccessible` = No game logic is processed, world generation may still occur.",
-                            "\n`ticking` = All game logic except entities is processed.",
-                            "\n`unloaded` = This chunk is not loaded.")
+                            "\n`border_level` = Most game logic is not processed, including entities and redstone.",
+                            "\n`entity_ticking_level` = All game logic is processed.",
+                            "\n`inaccessible_level` = No game logic is processed, world generation may still occur.",
+                            "\n`ticking_level` = All game logic except entities is processed.",
+                            "\n`unloaded_level` = This chunk is not loaded.")
                     .usage(LOAD_LEVEL_ENUM.getAllNames())
                     .parser(LOAD_LEVEL_ENUM.getParser())
                     .since("INSERT VERSION"));
