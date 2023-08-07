@@ -34,7 +34,7 @@ public class CondCriticalHit extends Condition {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!Skript.methodExists(EntityDamageByEntityEvent.class, "isCritical")) {
-            Skript.error("'his is critical' requires a PaperMC server.", ErrorQuality.SEMANTIC_ERROR);
+            Skript.error("'hit is critical' requires a PaperMC server.", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
         if (!ParserInstance.get().isCurrentEvent(EntityDamageEvent.class)) {
