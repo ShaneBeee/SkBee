@@ -13,6 +13,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Quit Reason")
@@ -23,16 +24,15 @@ import org.jetbrains.annotations.Nullable;
 @Since("2.16.0")
 public class ExprQuitReason extends SimpleExpression<QuitReason> {
 
-    private static final boolean SUPPORTS_QUIT_REASON = Skript.methodExists(PlayerQuitEvent.class, "getReason");
-
     static {
-        if (SUPPORTS_QUIT_REASON) {
+        if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
             Skript.registerExpression(ExprQuitReason.class, QuitReason.class, ExpressionType.SIMPLE, "quit reason");
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, ParseResult parseResult) {
+    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
         if (!getParser().isCurrentEvent(PlayerQuitEvent.class)) {
             Skript.error("The 'quit reason' expression can only be used in a player quit event.");
             return false;
@@ -40,16 +40,16 @@ public class ExprQuitReason extends SimpleExpression<QuitReason> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     @Nullable
     protected QuitReason[] get(Event event) {
-        if (!(event instanceof PlayerQuitEvent)) return null;
-        QuitReason reason = ((PlayerQuitEvent) event).getReason();
-        return new QuitReason[]{reason};
+        if (!(event instanceof PlayerQuitEvent quitEvent)) return null;
+        return new QuitReason[]{quitEvent.getReason()};
     }
 
     @Override
-    public Class<? extends QuitReason> getReturnType() {
+    public @NotNull Class<? extends QuitReason> getReturnType() {
         return QuitReason.class;
     }
 
@@ -59,7 +59,7 @@ public class ExprQuitReason extends SimpleExpression<QuitReason> {
     }
 
     @Override
-    public String toString(@Nullable Event event, boolean debug) {
+    public @NotNull String toString(@Nullable Event event, boolean debug) {
         return "quit reason";
     }
 
