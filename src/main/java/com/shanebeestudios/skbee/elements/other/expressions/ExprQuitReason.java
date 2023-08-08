@@ -23,18 +23,17 @@ import org.jetbrains.annotations.Nullable;
 @Since("2.16.0")
 public class ExprQuitReason extends SimpleExpression<QuitReason> {
 
-    static {
-        Skript.registerExpression(ExprQuitReason.class, QuitReason.class, ExpressionType.SIMPLE, "quit reason");
-    }
-
     private static final boolean SUPPORTS_QUIT_REASON = Skript.methodExists(PlayerQuitEvent.class, "getReason");
+
+    static {
+        if (SUPPORTS_QUIT_REASON) {
+            Skript.registerExpression(ExprQuitReason.class, QuitReason.class, ExpressionType.SIMPLE, "quit reason");
+        }
+    }
 
     @Override
     public boolean init(Expression<?>[] expressions, int i, Kleenean kleenean, ParseResult parseResult) {
-        if (!SUPPORTS_QUIT_REASON) {
-            Skript.error("The 'quit reason' expression can only be used on PaperMC servers.");
-            return false;
-        } else if (!getParser().isCurrentEvent(PlayerQuitEvent.class)) {
+        if (!getParser().isCurrentEvent(PlayerQuitEvent.class)) {
             Skript.error("The 'quit reason' expression can only be used in a player quit event.");
             return false;
         }
@@ -44,7 +43,7 @@ public class ExprQuitReason extends SimpleExpression<QuitReason> {
     @Override
     @Nullable
     protected QuitReason[] get(Event event) {
-        if (!(event instanceof PlayerQuitEvent) || !SUPPORTS_QUIT_REASON) return null;
+        if (!(event instanceof PlayerQuitEvent)) return null;
         QuitReason reason = ((PlayerQuitEvent) event).getReason();
         return new QuitReason[]{reason};
     }
@@ -60,7 +59,7 @@ public class ExprQuitReason extends SimpleExpression<QuitReason> {
     }
 
     @Override
-    public String toString(@Nullable Event event, boolean b) {
+    public String toString(@Nullable Event event, boolean debug) {
         return "quit reason";
     }
 
