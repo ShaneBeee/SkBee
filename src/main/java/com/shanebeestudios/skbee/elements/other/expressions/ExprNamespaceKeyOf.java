@@ -14,7 +14,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("NamespacedKey - Namespace/Key")
 @Description({"Gets the namespace or namespace key of a NamespacedKey object."})
 @Examples({"set {_items::*} to namespacedkey of every sword",
-		"loop {_items::*}:",
+        "loop {_items::*}:",
         "\tbroadcast loop-value",
         "\tbroadcast namespace of loop-value",
         "\tbroadcast namespace key of loop-value"})
