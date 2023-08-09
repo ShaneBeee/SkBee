@@ -33,17 +33,26 @@ public class ExprDisplayViewRange extends SimplePropertyExpression<Entity, Numbe
     @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(Number.class);
+        if (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)
+            return CollectionUtils.array(Number.class);
+        else if (mode == ChangeMode.RESET) return CollectionUtils.array();
         return null;
     }
 
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (delta != null && delta[0] instanceof Number num) {
-            float changeValue = num.floatValue();
-            for (Entity entity : getExpr().getArray(event)) {
-                if (entity instanceof Display display) display.setViewRange(changeValue);
+        for (Entity entity : getExpr().getArray(event)) {
+            if (entity instanceof Display display) {
+                float oldValue = display.getViewRange();
+                float changeValue = (delta != null && delta[0] instanceof Number num) ? num.floatValue() : 1;
+                switch (mode) {
+                    case REMOVE -> changeValue = oldValue - changeValue;
+                    case ADD -> changeValue += oldValue;
+                    case RESET -> changeValue = 1; // Default value in Minecraft.
+                }
+                display.setViewRange(changeValue);
+
             }
         }
     }
