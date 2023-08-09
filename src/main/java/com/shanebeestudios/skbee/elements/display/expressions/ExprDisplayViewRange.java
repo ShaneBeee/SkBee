@@ -41,7 +41,7 @@ public class ExprDisplayViewRange extends SimplePropertyExpression<Entity, Numbe
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof Number num) {
-            float changeValue = num.intValue();
+            float changeValue = num.floatValue();
             for (Entity entity : getExpr().getArray(event)) {
                 if (entity instanceof Display display) display.setViewRange(changeValue);
             }
