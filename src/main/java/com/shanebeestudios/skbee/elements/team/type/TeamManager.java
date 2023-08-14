@@ -18,6 +18,10 @@ public class TeamManager {
     private static final boolean ENTITY_TEAM = Skript.methodExists(Scoreboard.class, "getEntityTeam", Entity.class);
     private static final Pattern UUID_PATTERN = Pattern.compile("(?i)[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}");
 
+    public static boolean isRegistered(String name) {
+        return SCOREBOARD.getTeam(name) != null;
+    }
+
     public static Team getTeam(String name) {
         Team team = SCOREBOARD.getTeam(name);
         if (team == null) {
