@@ -15,7 +15,6 @@ import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
-import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
@@ -43,15 +42,6 @@ public class PaperEvents {
 
     static {
         // == PLAYER EVENTS == //
-
-        // Player Armor Change Event
-        if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerArmorChangeEvent")) {
-            Skript.registerEvent("Armor Change Event", SimpleEvent.class, PlayerArmorChangeEvent.class, "player change armor")
-                    .description("Called when the player themselves change their armor items. Requires Paper 1.12.2+")
-                    .examples("on player change armor:",
-                            "\tset helmet of player to pumpkin")
-                    .since("1.3.1");
-        }
 
         // Player Recipe Book Click Event
         if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent")) {
@@ -280,7 +270,7 @@ public class PaperEvents {
         // Entity Add To World Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityAddToWorldEvent")) {
             Skript.registerEvent("Entity Add to World", SimpleEvent.class, EntityAddToWorldEvent.class,
-                    "entity add[ed] to world")
+                            "entity add[ed] to world")
                     .description("Fired any time an entity is being added to the world for any reason.",
                             "Not to be confused with entity spawn event. This will fire anytime a chunk is reloaded too. Requires a PaperMC server.")
                     .examples("on entity added to world:",
@@ -291,7 +281,7 @@ public class PaperEvents {
         // Entity Removed from World Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent")) {
             Skript.registerEvent("Entity Remove from World", SimpleEvent.class, EntityRemoveFromWorldEvent.class,
-                    "entity remove[d] from world")
+                            "entity remove[d] from world")
                     .description("Fired any time an entity is being removed from a world for any reason. Requires a PaperMC server.")
                     .examples("on entity removed from world:",
                             "\tbroadcast \"a lonely %event-entity% left the world.\"")
