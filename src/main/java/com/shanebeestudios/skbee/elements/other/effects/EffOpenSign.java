@@ -24,7 +24,8 @@ import org.jetbrains.annotations.Nullable;
         "If it wasn't obvious, the sign must actually be placed in the world, it's NOT a virtual sign.",
         "Requires Paper (not sure which version, but at least 1.12.x).",
         "Spigot added support for this in MC 1.18.",
-        "Front/Back support added in MC 1.20."})
+        "Front/Back support added in MC 1.20.",
+        "\n**NOTE**: This appears to no longer work in 1.20+ with a distance of 7.5+ (client side issue)."})
 @Examples({"open sign gui of target block to player",
         "open target block's sign gui to player",
         "open sign back of target block to player"})
