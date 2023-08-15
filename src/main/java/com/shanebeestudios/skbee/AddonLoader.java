@@ -100,7 +100,6 @@ public class AddonLoader {
         loadFishingElements();
         loadGameEventElements();
         loadParticleElements();
-        loadParticleElements();
         loadRayTraceElements();
         loadRecipeElements();
         loadScoreboardElements();
