@@ -121,10 +121,10 @@ public class SecClickEventCallback extends Section {
 
     @Override
     @NotNull
-    public String toString(@Nullable Event event, boolean d) {
-        String uses = this.uses != null ? (" with " + this.uses.toString(event, d) + " uses") : "";
-        String time = this.lifeTime != null ? (" with lifetime of " + this.lifeTime.toString(event, d)) : "";
-        return "create click event callback for " + this.component.toString(event, d) + uses + time;
+    public String toString(@Nullable Event e, boolean d) {
+        String uses = this.uses != null ? (" with " + this.uses.toString(e, d) + " uses") : "";
+        String time = this.lifeTime != null ? (" with lifetime of " + this.lifeTime.toString(e, d)) : "";
+        return "create click event callback for " + this.component.toString(e, d) + uses + time;
     }
 
 }
