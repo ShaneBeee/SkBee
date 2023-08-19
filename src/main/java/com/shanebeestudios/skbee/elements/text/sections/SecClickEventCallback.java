@@ -90,8 +90,7 @@ public class SecClickEventCallback extends Section {
 
 
     @Override
-    @Nullable
-    protected TriggerItem walk(Event event) {
+    protected @Nullable TriggerItem walk(Event event) {
         ComponentWrapper component = this.component.getSingle(event);
         if (component != null) {
             int uses = 1;
@@ -120,8 +119,7 @@ public class SecClickEventCallback extends Section {
     }
 
     @Override
-    @NotNull
-    public String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(@Nullable Event e, boolean d) {
         String uses = this.uses != null ? (" with " + this.uses.toString(e, d) + " uses") : "";
         String time = this.lifeTime != null ? (" with lifetime of " + this.lifeTime.toString(e, d)) : "";
         return "create click event callback for " + this.component.toString(e, d) + uses + time;
