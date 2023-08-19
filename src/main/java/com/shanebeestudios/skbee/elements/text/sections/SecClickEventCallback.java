@@ -88,7 +88,6 @@ public class SecClickEventCallback extends Section {
         return true;
     }
 
-
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         ComponentWrapper component = this.component.getSingle(event);
