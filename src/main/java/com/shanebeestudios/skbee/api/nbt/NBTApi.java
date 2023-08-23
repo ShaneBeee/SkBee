@@ -249,7 +249,7 @@ public class NBTApi {
      * @param object      Value of tag to set to
      * @param type        Type of tag to set
      */
-    @SuppressWarnings("RegExpRedundantEscape")
+    @SuppressWarnings({"RegExpRedundantEscape", "ListRemoveInLoop"})
     public static void setTag(@NotNull String tag, @NotNull NBTCompound nbtCompound, @NotNull Object[] object, NBTCustomType type) {
         NBTCompound compound = nbtCompound;
         String key = tag;
@@ -358,55 +358,78 @@ public class NBTApi {
             case NBTTagIntList:
                 if (singleObject instanceof Number) {
                     NBTList<Integer> intList = compound.getIntegerList(key);
-                    intList.clear();
+                    int size = intList.size();
                     for (Object o : object)
                         if (o instanceof Number number)
                             intList.add(number.intValue());
+
+                    for (int i = 0; i < size; i++) {
+                        intList.remove(0);
+                    }
                 }
                 break;
             case NBTTagLongList:
                 if (singleObject instanceof Number) {
                     NBTList<Long> longList = compound.getLongList(key);
-                    longList.clear();
+                    int size = longList.size();
                     for (Object o : object)
                         if (o instanceof Number number)
                             longList.add(number.longValue());
+
+                    for (int i = 0; i < size; i++) {
+                        longList.remove(0);
+                    }
                 }
                 break;
             case NBTTagFloatList:
                 if (singleObject instanceof Number) {
                     NBTList<Float> floatList = compound.getFloatList(key);
-                    floatList.clear();
+                    int size = floatList.size();
                     for (Object o : object)
                         if (o instanceof Number number)
                             floatList.add(number.floatValue());
+
+                    for (int i = 0; i < size; i++) {
+                        floatList.remove(0);
+                    }
                 }
                 break;
             case NBTTagDoubleList:
                 if (singleObject instanceof Number) {
                     NBTList<Double> doubleList = compound.getDoubleList(key);
-                    doubleList.clear();
+                    int size = doubleList.size();
                     for (Object o : object)
                         if (o instanceof Number number)
                             doubleList.add(number.doubleValue());
+
+                    for (int i = 0; i < size; i++) {
+                        doubleList.remove(0);
+                    }
                 }
                 break;
             case NBTTagStringList:
                 if (singleObject instanceof String) {
                     NBTList<String> stringList = compound.getStringList(key);
-                    stringList.clear();
+                    int size = stringList.size();
                     for (Object o : object)
                         if (o instanceof String string)
                             stringList.add(string);
+                    for (int i = 0; i < size; i++) {
+                        stringList.remove(0);
+                    }
                 }
                 break;
             case NBTTagCompoundList:
                 if (singleObject instanceof NBTCompound) {
                     NBTCompoundList compoundList = compound.getCompoundList(key);
-                    compoundList.clear();
+                    int size = compoundList.size();
                     for (Object o : object) {
                         if (o instanceof NBTCompound comp)
                             compoundList.addCompound(comp);
+                    }
+
+                    for (int i = 0; i < size; i++) {
+                        compoundList.remove(0);
                     }
                 }
                 break;
