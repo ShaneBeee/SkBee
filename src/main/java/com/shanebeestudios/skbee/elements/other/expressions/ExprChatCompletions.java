@@ -34,7 +34,7 @@ import java.util.List;
         "add all worlds to chat completions of player",
         "set chat completions of player to \"potatoes\" and \"popcorn\"",
         "reset chat completions of player"})
-@Since("INSERT VERSION")
+@Since("2.17.0")
 public class ExprChatCompletions extends PropertyExpression<Player, String> {
 
     static {

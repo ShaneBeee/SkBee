@@ -273,7 +273,7 @@ public class Types {
                             "\n`inaccessible_level` = No game logic is processed, world generation may still occur.",
                             "\n`ticking_level` = All game logic except entities is processed.",
                             "\n`unloaded_level` = This chunk is not loaded.")
-                    .since("INSERT VERSION"));
+                    .since("2.17.0"));
         }
     }
 

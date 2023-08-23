@@ -30,7 +30,7 @@ public class EvtPlayerUseUnknown extends SkriptEvent {
                             "\nRequires PaperMC.")
                     .examples("oh right click unknown entity:",
                             "\tteleport player to spawn of world \"world\"")
-                    .since("INSERT VERSION");
+                    .since("2.17.0");
 
             EventValues.registerEventValue(PlayerUseUnknownEntityEvent.class, Number.class, new Getter<>() {
                 @Override

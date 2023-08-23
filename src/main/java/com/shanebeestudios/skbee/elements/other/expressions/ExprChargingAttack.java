@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents a RangedEntity that is \"charging\" up an attack, by raising its hands.",
         "\nRangedEntities: Drowned, Illusioner, Llama, Piglin, Pillager, Skeleton, Snowman, Stray, TraderLlama, Witch, Wither, WitherSkeleton."})
 @Examples("set charging attack of last spawned entity to true")
-@Since("INSERT VERSION")
+@Since("2.17.0")
 public class ExprChargingAttack extends SimplePropertyExpression<Entity, Boolean> {
 
     static {

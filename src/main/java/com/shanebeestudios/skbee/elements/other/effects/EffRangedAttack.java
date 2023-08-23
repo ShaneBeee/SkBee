@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
         "This should be a value between 0 and 1, represented as targetDistance/maxDistance.",
         "\nRangedEntities: Drowned, Illusioner, Llama, Piglin, Pillager, Skeleton, Snowman, Stray, TraderLlama, Witch, Wither, WitherSkeleton."})
 @Examples("make last spawned entity range attack player with charge 0.5")
-@Since("INSERT VERSION")
+@Since("2.17.0")
 public class EffRangedAttack extends Effect {
 
     static {

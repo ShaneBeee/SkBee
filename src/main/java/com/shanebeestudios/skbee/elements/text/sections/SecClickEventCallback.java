@@ -51,7 +51,7 @@ import java.util.List;
         "create a callback for {_t}:",
         "\tgive player random item out of available item types",
         "send components (merge components {_t} and {_t2} with \" \") to players"})
-@Since("INSERT VERSION")
+@Since("2.17.0")
 public class SecClickEventCallback extends Section {
 
     private static class ComponentCallbackEvent extends PlayerEvent {

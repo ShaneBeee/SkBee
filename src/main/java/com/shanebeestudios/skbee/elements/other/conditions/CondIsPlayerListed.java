@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Is Player Listed")
 @Description("Check if a player is listed (shown in PlayerList) for another player. Requires PaperMC 1.20.1+")
 @Examples("if player is listed for {_p}:")
-@Since("INSERT VERSION")
+@Since("2.17.0")
 public class CondIsPlayerListed extends Condition {
 
     static {

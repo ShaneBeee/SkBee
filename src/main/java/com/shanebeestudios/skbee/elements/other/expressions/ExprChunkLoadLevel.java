@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Get the load level of a chunk. See type for description of levels. Requires Minecraft 1.19.4+")
 @Examples({"if load level of chunk at {_loc} = entity_ticking_level:",
         "\tdrop a diamond at {_loc}"})
-@Since("INSERT VERSION")
+@Since("2.17.0")
 public class ExprChunkLoadLevel extends SimplePropertyExpression<Chunk, LoadLevel> {
 
     static {

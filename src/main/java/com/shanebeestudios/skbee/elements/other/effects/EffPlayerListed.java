@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("List/unlist a player for a player. (show/hide them in PlayerList for each other). Requires PaperMC 1.20.1+")
 @Examples({"unlist all players for player",
         "list (all players in world of player) for player"})
-@Since("INSERT VERSION")
+@Since("2.17.0")
 public class EffPlayerListed extends Effect {
 
     static {

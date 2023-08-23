@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
         "Useful for updating clients to new advancements/recipes/tags.",
         "\nRequires PaperMC 1.20.1+"})
 @Examples({"update server recipes", "update server resources"})
-@Since("INSERT VERSION")
+@Since("2.17.0")
 public class EffUpdateRecipeResources extends Effect {
 
     private static final boolean HAS_METHODS = Skript.methodExists(Bukkit.class, "updateRecipes");

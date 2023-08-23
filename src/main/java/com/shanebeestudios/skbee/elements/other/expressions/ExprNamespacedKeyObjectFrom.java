@@ -27,7 +27,7 @@ import java.util.List;
         "\nCurrently supported types: attribute type, biome, enchantment, entity type, item type, potion effect type, statistic."})
 @Examples({"set {_n} to mc key from \"minecraft:zombie\"",
         "set {_e} to entity type from key {_n}"})
-@Since("INSERT VERSION")
+@Since("2.17.0")
 public class ExprNamespacedKeyObjectFrom extends SimpleExpression<Object> {
 
     static {
