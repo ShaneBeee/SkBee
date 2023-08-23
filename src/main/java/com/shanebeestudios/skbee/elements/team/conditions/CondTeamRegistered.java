@@ -17,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Team - Is Registered")
 @Description("Check if a team is registered.")
 @Examples("if team \"a-team\" is registered:")
-@Since("INSERT VEERSION")
+@Since("2.17.0")
 public class CondTeamRegistered extends Condition {
 
     static {
