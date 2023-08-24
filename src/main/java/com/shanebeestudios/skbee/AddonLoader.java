@@ -300,7 +300,6 @@ public class AddonLoader {
         try {
             pluginManager.registerEvents(new EntityListener(), this.plugin);
             addon.loadClasses("com.shanebeestudios.skbee.elements.other");
-            Util.logLoading("&5Other Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);
