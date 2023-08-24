@@ -31,6 +31,7 @@ public class Types {
                             "Some particles require extra data, these are distinguished by their data type within the square brackets.",
                             "DustOption, DustTransition and Vibration each have their own functions to build the appropriate data for these particles.")
                     .usage(ParticleUtil.getNamesAsString())
+                    .after("itemtype")
                     .since("1.9.0")
                     .parser(new Parser<>() {
 
