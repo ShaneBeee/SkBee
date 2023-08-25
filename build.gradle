@@ -3,6 +3,7 @@ import org.apache.tools.ant.filters.ReplaceTokens
 plugins {
     id 'java'
     id 'com.github.johnrengelman.shadow' version '8.1.1'
+    id 'maven-publish'
 }
 
 compileJava {
@@ -88,4 +89,14 @@ tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
     into '/Users/ShaneBee/Desktop/Server/Skript/1-20/plugins'
+}
+
+publishing {
+    publications {
+        maven(MavenPublication) {
+            groupId 'com.shanebeestudios'
+            artifactId 'SkBee'
+            version project.version
+        }
+    }
 }
