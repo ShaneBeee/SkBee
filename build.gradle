@@ -1,0 +1,85 @@
+import org.apache.tools.ant.filters.ReplaceTokens
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '8.1.1'
+}
+
+compileJava {
+    sourceCompatibility = '17'
+    targetCompatibility = '17'
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+
+    // Paper
+    maven { url 'https://repo.papermc.io/repository/maven-public/' }
+
+    // Skript
+    maven { url 'https://repo.skriptlang.org/releases' }
+
+    // JitPack
+    maven { url 'https://jitpack.io' }
+
+    // CodeMC (NBT-API)
+    maven { url 'https://repo.codemc.io/repository/maven-public/' }
+}
+
+dependencies {
+    // Paper
+    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+
+    // Skript
+    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.6.4') {
+        transitive = false
+    }
+
+    // commons-io
+    compileOnly("commons-io:commons-io:2.11.0")
+    compileOnly("org.apache.commons:commons-text:1.10.0")
+
+    // NBT-API
+    implementation("de.tr7zw:item-nbt-api:2.11.3")
+
+    // FastBoard
+    implementation("fr.mrmicky:fastboard:2.0.0")
+
+    // Virtual Furnace
+    implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.0.0-Beta12") {
+        exclude(group: 'org.jetbrains', module: 'annotations')
+    }
+
+    // bStats
+    implementation(group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.2')
+}
+
+build {
+    dependsOn(shadowJar)
+}
+
+processResources {
+    filter ReplaceTokens, tokens: ["version": project.property("version")]
+    from("lang/") {
+        include '*.lang'
+        into 'lang/'
+    }
+}
+
+shadowJar {
+    archiveClassifier = null
+    relocate("de.tr7zw.changeme.nbtapi", "com.shanebeestudios.skbee.api.nbt")
+    relocate("de.tr7zw.annotations", "com.shanebeestudios.skbee.api.nbt.annotations")
+    relocate("fr.mrmicky.fastboard", "com.shanebeestudios.skbee.api.fastboard")
+    relocate("com.shanebeestudios.vf", "com.shanebeestudios.skbee.api.virtualfurnace")
+    relocate("org.bstats", "com.shanebeestudios.skbee.metrics")
+    exclude('META-INF/**', 'VirtualFurnace.properties', 'furnaces.yml', 'tiles.yml', 'LICENSE')
+}
+
+// Run task to build jar to another spot
+tasks.register('server', Copy) {
+    from shadowJar
+    // Change this to wherever you want your jar to build
+    into '/Users/ShaneBee/Desktop/Server/Skript/1-20/plugins'
+}

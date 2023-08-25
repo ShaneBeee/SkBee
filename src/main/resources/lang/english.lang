@@ -1,4 +1,4 @@
-version: ${project.version}
+version: @version@
 
 types:
 	worldcreator: world creator
