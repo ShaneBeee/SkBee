@@ -32,10 +32,10 @@ import javax.annotation.Nullable;
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
         "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
         "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
-        "Note: While 'custom' items will work in these recipes, it appears the smithing table will not recognize them. Requires MC 1.16+"})
+        "Note: While 'custom' items will work in these recipes, it appears the smithing table will not recognize them. Requires MC 1.16+",
+        "\n<b>NOTE:</b>Temporarily removed in 1.20+ as Minecraft has changed how these recipes work!"})
 @Examples({"on load:",
         "\tregister new smithing recipe for diamond chestplate using an iron chestplate and a diamond with id \"smith_diamond_chestplate\""})
-@RequiredPlugins("1.16+")
 @Since("1.4.2")
 public class EffSmithingRecipe extends Effect {
 
@@ -59,6 +59,10 @@ public class EffSmithingRecipe extends Effect {
         base = (Expression<Object>) exprs[1];
         addition = (Expression<Object>) exprs[2];
         key = (Expression<String>) exprs[3];
+        if (Skript.isRunningMinecraft(1,20)) {
+            Skript.error("Smithing recipes have been temporarily removed as Minecraft has changed how these recipes work!");
+            return false;
+        }
         return true;
     }
 
