@@ -100,3 +100,15 @@ publishing {
         }
     }
 }
+
+javadoc {
+    destinationDir = file("${buildDir}/javadoc")
+    options {
+        links('https://hub.spigotmc.org/javadocs/spigot/')
+        links('https://docs.skriptlang.org/javadocs/')
+        links('https://tr7zw.github.io/Item-NBT-API/v2-api/')
+        links('https://jd.advntr.dev/api/4.14.0/')
+    }
+    exclude("com/shanebeestudios/skbee/config", "com/shanebeestudios/skbee/api/listener", "com/shanebeestudios/skbee/elements",
+            "com/shanebeestudios/skbee/api/command", "com/shanebeestudios/skbee/AddonLoader.java")
+}
