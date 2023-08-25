@@ -11,14 +11,16 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.CookingRecipe;
-import org.bukkit.inventory.FurnaceRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
+import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.SmithingRecipe;
@@ -37,14 +39,9 @@ import java.util.List;
 @Since("1.4.0")
 public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
 
-    private static final boolean HAS_COOKING = Skript.classExists("org.bukkit.inventory.CookingRecipe");
-    private static final boolean HAS_STONECUTTING = Skript.classExists("org.bukkit.inventory.StonecuttingRecipe");
-
     static {
-        if (Skript.classExists("org.bukkit.Keyed")) {
-            Skript.registerExpression(ExprIngredientsOfRecipe.class, ItemType.class, ExpressionType.COMBINED,
-                    "[(all [[of] the]|the)] ingredients (for|of) recipe %string%");
-        }
+        Skript.registerExpression(ExprIngredientsOfRecipe.class, ItemType.class, ExpressionType.COMBINED,
+                "[(all [[of] the]|the)] ingredients (for|of) recipe %string%");
     }
 
     private Expression<String> recipe;
@@ -52,50 +49,53 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        recipe = (Expression<String>) exprs[0];
+        this.recipe = (Expression<String>) exprs[0];
         return true;
     }
 
     @Nullable
     @Override
-    protected ItemType[] get(Event e) {
+    protected ItemType[] get(Event event) {
+        String recipeSingle = this.recipe.getSingle(event);
+        if (recipeSingle == null) return null;
+
+        NamespacedKey namespacedKey = Util.getNamespacedKey(recipeSingle, false);
+        if (namespacedKey == null) return null;
+
         List<ItemType> items = new ArrayList<>();
-        Bukkit.recipeIterator().forEachRemaining(recipe -> {
-            if (recipe instanceof Keyed keyed && keyed.getKey().toString().equalsIgnoreCase(this.recipe.getSingle(e))) {
-                if (recipe instanceof ShapedRecipe shapedRecipe) {
-                    String[] shape = shapedRecipe.getShape();
-                    int length = Math.max(shape.length, shape[0].length());
-                    for (int i = 0; i < Math.pow(length, 2); i++) {
-                        items.add(new ItemType(Material.AIR));
-                    }
-                    for (int i = 0; i < shape.length; i++) {
-                        for (int x = 0; x < shape[i].length(); x++) {
-                            ItemStack ingredient = shapedRecipe.getIngredientMap().get(shape[i].toCharArray()[x]);
-                            if (ingredient != null) items.set(i * length + x, new ItemType(ingredient));
-                        }
-                    }
-                } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
-                    for (ItemStack ingredient : shapelessRecipe.getIngredientList()) {
-                        if (ingredient == null) continue;
-                        items.add(new ItemType(ingredient));
-                    }
-                } else if (HAS_COOKING && recipe instanceof CookingRecipe<?> cookingRecipe) {
-                    items.add(new ItemType(cookingRecipe.getInput()));
-                } else if (recipe instanceof FurnaceRecipe furnaceRecipe) {
-                    items.add(new ItemType(furnaceRecipe.getInput()));
-                } else if (recipe instanceof MerchantRecipe merchantRecipe) {
-                    for (ItemStack ingredient : merchantRecipe.getIngredients()) {
-                        if (ingredient == null) continue;
-                        items.add(new ItemType(ingredient));
-                    }
-                } else if (HAS_STONECUTTING && recipe instanceof StonecuttingRecipe stonecuttingRecipe) {
-                    items.add(new ItemType(stonecuttingRecipe.getInput()));
-                } else if (recipe instanceof SmithingRecipe smithingRecipe) {
-                    items.add(new ItemType(smithingRecipe.getBase().getItemStack()));
-                    items.add(new ItemType(smithingRecipe.getAddition().getItemStack()));
+        Recipe recipe = Bukkit.getRecipe(namespacedKey);
+        if (recipe instanceof Keyed keyed && keyed.getKey().equals(namespacedKey)) {
+            if (recipe instanceof ShapedRecipe shapedRecipe) {
+                String[] shape = shapedRecipe.getShape();
+                int length = Math.max(shape.length, shape[0].length());
+                for (int i = 0; i < Math.pow(length, 2); i++) {
+                    items.add(new ItemType(Material.AIR));
                 }
+                for (int i = 0; i < shape.length; i++) {
+                    for (int x = 0; x < shape[i].length(); x++) {
+                        ItemStack ingredient = shapedRecipe.getIngredientMap().get(shape[i].toCharArray()[x]);
+                        if (ingredient != null) items.set(i * length + x, new ItemType(ingredient));
+                    }
+                }
+            } else if (recipe instanceof ShapelessRecipe shapelessRecipe) {
+                for (ItemStack ingredient : shapelessRecipe.getIngredientList()) {
+                    if (ingredient == null) continue;
+                    items.add(new ItemType(ingredient));
+                }
+            } else if (recipe instanceof CookingRecipe<?> cookingRecipe) {
+                items.add(new ItemType(cookingRecipe.getInput()));
+            } else if (recipe instanceof MerchantRecipe merchantRecipe) {
+                for (ItemStack ingredient : merchantRecipe.getIngredients()) {
+                    if (ingredient == null) continue;
+                    items.add(new ItemType(ingredient));
+                }
+            } else if (recipe instanceof StonecuttingRecipe stonecuttingRecipe) {
+                items.add(new ItemType(stonecuttingRecipe.getInput()));
+            } else if (recipe instanceof SmithingRecipe smithingRecipe) {
+                items.add(new ItemType(smithingRecipe.getBase().getItemStack()));
+                items.add(new ItemType(smithingRecipe.getAddition().getItemStack()));
             }
-        });
+        }
 
         return items.toArray(new ItemType[0]);
     }
@@ -112,6 +112,7 @@ public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
 
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return "ingredients of recipe " + recipe.toString(e, d);
+        return "ingredients of recipe " + this.recipe.toString(e, d);
     }
+
 }
