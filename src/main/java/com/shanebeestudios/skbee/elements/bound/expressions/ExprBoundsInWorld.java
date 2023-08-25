@@ -39,6 +39,7 @@ public class ExprBoundsInWorld extends SimpleExpression<Object> {
     private boolean ID;
     private Kleenean boundType;
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parse) {
         this.worlds = (Expression<World>) exprs[0];

@@ -62,7 +62,7 @@ public class EffSmithingRecipe extends Effect {
         return true;
     }
 
-    @SuppressWarnings("ConstantConditions")
+    @SuppressWarnings({"ConstantConditions", "deprecation"})
     @Override
     protected void execute(@NotNull Event event) {
         ItemType result = this.result.getSingle(event);

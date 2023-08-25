@@ -546,6 +546,7 @@ public class ComponentWrapper {
      * @param color             Color to show on sign
      * @param isGlowing         If the sign should glow
      */
+    @SuppressWarnings("deprecation")
     public static void sendSignChange(Player player, Location location, ComponentWrapper[] componentWrappers, @Nullable DyeColor color, boolean isGlowing) {
         List<Component> components = new ArrayList<>();
         for (int i = 0; i < 4; i++) {

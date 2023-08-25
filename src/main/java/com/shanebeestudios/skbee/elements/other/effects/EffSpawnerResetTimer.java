@@ -28,6 +28,7 @@ public class EffSpawnerResetTimer extends Effect {
     private static final boolean SUPPORTS_RESET_TIMER = Skript.methodExists(CreatureSpawner.class, "resetTimer");
     private Expression<Block> blocks;
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!SUPPORTS_RESET_TIMER) {

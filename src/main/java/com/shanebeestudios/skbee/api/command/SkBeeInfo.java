@@ -21,10 +21,12 @@ public class SkBeeInfo implements TabExecutor {
 
     private final PluginDescriptionFile desc;
 
+    @SuppressWarnings("deprecation")
     public SkBeeInfo(SkBee plugin) {
         this.desc = plugin.getDescription();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
         if (args.length > 0 && args[0].equalsIgnoreCase("info")) {

@@ -11,6 +11,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
@@ -44,7 +45,7 @@ public class ExprArmorChange extends SimpleExpression<ItemType> {
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        if (!ScriptLoader.isCurrentEvent(PlayerArmorChangeEvent.class)) {
+        if (!ParserInstance.get().isCurrentEvent(PlayerArmorChangeEvent.class)) {
             Skript.error("The expression 'armor item' can only be used in an armor change event", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }

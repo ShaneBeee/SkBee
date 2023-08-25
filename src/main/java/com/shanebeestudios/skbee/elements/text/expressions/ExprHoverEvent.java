@@ -51,7 +51,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems"})
+    @SuppressWarnings({"NullableProblems", "UnstableApiUsage", "deprecation"})
     @Nullable
     @Override
     protected HoverEvent[] get(Event event) {

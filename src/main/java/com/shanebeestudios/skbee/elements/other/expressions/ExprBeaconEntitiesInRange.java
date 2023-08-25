@@ -39,6 +39,7 @@ public class ExprBeaconEntitiesInRange extends SimpleExpression<LivingEntity> {
     private EntityData<?>[] entities;
     private Expression<Block> blocks;
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         blocks = (Expression<Block>) exprs[1];

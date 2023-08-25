@@ -36,7 +36,7 @@ public class ExprMerchant extends SimpleExpression<Merchant> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "deprecation"})
     @Override
     protected @Nullable Merchant[] get(Event event) {
         String name = this.name.getSingle(event);

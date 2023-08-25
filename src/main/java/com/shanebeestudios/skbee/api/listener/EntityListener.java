@@ -19,6 +19,7 @@ public class EntityListener implements Listener {
         event.setCancelled(entityBlockInteractEvent.isCancelled());
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler
     private void onPlayerTrample(PlayerInteractEvent event) {
         if (event.getAction() != Action.PHYSICAL) return;

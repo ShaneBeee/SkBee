@@ -107,6 +107,7 @@ public class EvtPreSpawn extends SkriptEvent {
 
     private EntityData[] spawnedEntities = null;
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Literal<?>[] literals, int matchedPattern, ParseResult parseResult) {
         this.spawnedEntities = literals[0] == null ? null : ((Literal<EntityData<?>>) literals[0]).getAll();

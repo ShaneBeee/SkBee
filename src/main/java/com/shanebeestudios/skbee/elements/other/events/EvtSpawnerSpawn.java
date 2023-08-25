@@ -12,6 +12,7 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.SpawnerSpawnEvent;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class EvtSpawnerSpawn extends SkriptEvent {
@@ -35,12 +36,14 @@ public class EvtSpawnerSpawn extends SkriptEvent {
 
     private EntityData<?>[] spawnedEntities;
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Literal<?>[] literals, int matchedPattern, ParseResult parseResult) {
         this.spawnedEntities = literals[0] == null ? null : ((Literal<EntityData<?>>) literals[0]).getAll();
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
         if (spawnedEntities == null) return true;
@@ -55,7 +58,7 @@ public class EvtSpawnerSpawn extends SkriptEvent {
     }
 
     @Override
-    public String toString(@Nullable Event event, boolean b) {
+    public @NotNull String toString(@Nullable Event event, boolean b) {
         return "spawner spawn" + (this.spawnedEntities != null ? " of " + Classes.toString(this.spawnedEntities) : "");
     }
 

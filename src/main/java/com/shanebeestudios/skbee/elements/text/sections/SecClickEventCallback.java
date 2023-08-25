@@ -78,6 +78,7 @@ public class SecClickEventCallback extends Section {
     private Expression<Timespan> lifeTime;
     private Trigger trigger;
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
                         SectionNode sectionNode, List<TriggerItem> triggerItems) {

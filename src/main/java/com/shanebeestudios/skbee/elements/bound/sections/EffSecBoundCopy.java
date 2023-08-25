@@ -45,6 +45,7 @@ public class EffSecBoundCopy extends EffectSection {
     private Expression<String> id;
     private Trigger trigger;
 
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> list) {
         bound = (Expression<Bound>) exprs[0];

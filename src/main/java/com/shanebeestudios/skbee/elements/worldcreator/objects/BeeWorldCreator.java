@@ -41,9 +41,9 @@ public class BeeWorldCreator {
         this.keepSpawnLoaded = Optional.empty();
     }
 
+    @SuppressWarnings("deprecation")
     public BeeWorldCreator(@NotNull World world, String name, boolean clone) {
         this.worldName = name;
-        //noinspection deprecation
         this.worldType = world.getWorldType();
         this.environment = world.getEnvironment();
         this.genStructures = Optional.of(world.canGenerateStructures());
@@ -138,6 +138,7 @@ public class BeeWorldCreator {
         this.saveClone = saveClone;
     }
 
+    @SuppressWarnings("deprecation")
     public CompletableFuture<World> loadWorld() {
         CompletableFuture<WorldCreator> worldCreatorCompletableFuture = new CompletableFuture<>();
         CompletableFuture<World> worldCompletableFuture = new CompletableFuture<>();
@@ -176,7 +177,6 @@ public class BeeWorldCreator {
             if (world != null) {
                 // Let's pull some values from the world and update our creator if need be
                 if (worldType == null) {
-                    //noinspection deprecation
                     worldType = world.getWorldType();
                 }
                 if (environment == null) {
