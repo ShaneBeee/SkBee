@@ -27,10 +27,10 @@ public class RecipeUtil {
      *
      * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
-     * @deprecated Planning to remove all string based ids for recipes in the future, please use {@link Util#getNamespacedKey(String, boolean)}
-     * more information on this in the future when it's put into action
-     */
-    @Deprecated()
+//     * @deprecated Planning to remove all string based ids for recipes in the future, please use {@link Util#getNamespacedKey(String, boolean)}
+//     * more information on this in the future when it's put into action
+//     */
+//    @Deprecated() // TODO removed this for now til we actually deal with it (too many warnings)
     public static NamespacedKey getKey(String key) {
         try {
             NamespacedKey namespacedKey;
@@ -125,7 +125,6 @@ public class RecipeUtil {
      *
      * @param recipe Recipe to log
      */
-    @SuppressWarnings("ConfusingArgumentToVarargsMethod")
     public static void logShapedRecipe(ShapedRecipe recipe) {
         log("&aRegistered new shaped recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
@@ -139,7 +138,7 @@ public class RecipeUtil {
         String grid = " - &7Shape: &r[&d%s&r]&7";
         if (shape.length > 1) grid += "&7, &r[&d%s&r]";
         if (shape.length > 2) grid += "&7, &r[&d%s&r]";
-        log(grid, shape);
+        log(grid, (Object[]) shape);
         log(" - &7Ingredients:");
         recipe.getChoiceMap().forEach((character, recipeChoice) -> {
             if (recipeChoice != null) {
