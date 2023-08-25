@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -14,6 +15,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("TimeSpan - Numbers")
 @Description("Get the ticks/seconds/minutes/hours of a timespan.")
 @Examples("set {_ticks} to ticks of {_timespan}")
+@Since("1.17.0")
 public class ExprTimeSpanNumbers extends SimplePropertyExpression<Timespan, Number> {
 
     static {
