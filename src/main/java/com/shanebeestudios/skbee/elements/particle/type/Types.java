@@ -145,7 +145,7 @@ public class Types {
                 new Parameter<>("to", DefaultClasses.LOCATION, true, null),
                 new Parameter<>("arrivalTime", DefaultClasses.TIMESPAN, true, null)
         }, Classes.getExactClassInfo(Vibration.class), true) {
-            @SuppressWarnings("NullableProblems")
+            @SuppressWarnings({"NullableProblems", "removal"})
             @Override
             public Vibration[] executeSimple(Object[][] params) {
                 if (params[0].length == 0 || params[1].length == 0) {
@@ -155,7 +155,6 @@ public class Types {
                 Location origin = new Location(null, 0, 0, 0);
                 Location destination = (Location) params[0][0];
                 int arrivalTime = (int) ((Timespan) params[1][0]).getTicks_i();
-                //noinspection removal
                 Vibration vibration = new Vibration(origin, new Vibration.Destination.BlockDestination(destination), arrivalTime);
                 return new Vibration[]{vibration};
             }
