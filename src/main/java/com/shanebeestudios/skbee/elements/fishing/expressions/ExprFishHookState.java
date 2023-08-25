@@ -8,7 +8,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.FishHook.HookState;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Fish Hook - Hooked State")

@@ -9,7 +9,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.World;
 import org.bukkit.WorldBorder;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class Types {
 

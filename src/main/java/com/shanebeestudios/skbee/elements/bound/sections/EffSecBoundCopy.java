@@ -19,7 +19,7 @@ import com.shanebeestudios.skbee.api.event.bound.BoundCreateEvent;
 import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprLastCreatedBound;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;

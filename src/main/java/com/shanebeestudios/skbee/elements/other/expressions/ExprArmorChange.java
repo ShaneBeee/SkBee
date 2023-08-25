@@ -20,7 +20,7 @@ import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent.SlotType;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Armor Change Event - Item")
 @Description("Get the old/new item in an armor change event. Defaults to new. " +

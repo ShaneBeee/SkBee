@@ -14,7 +14,7 @@ import ch.njol.util.Kleenean;
 import org.bukkit.Chunk;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Chunk - Contains BlockData")

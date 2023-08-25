@@ -21,7 +21,7 @@ import org.bukkit.Statistic;
 import org.bukkit.Statistic.Type;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Event;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;

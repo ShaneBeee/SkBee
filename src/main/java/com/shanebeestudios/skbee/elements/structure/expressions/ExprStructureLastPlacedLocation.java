@@ -7,7 +7,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.Location;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Structure - Last Placed Location")

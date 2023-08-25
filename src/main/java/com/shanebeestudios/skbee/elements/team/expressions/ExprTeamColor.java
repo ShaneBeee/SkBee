@@ -13,7 +13,7 @@ import com.shanebeestudios.skbee.api.util.ChatUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
-import org.eclipse.jdt.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("deprecation")
