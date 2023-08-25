@@ -57,6 +57,12 @@ dependencies {
 
 build {
     dependsOn(shadowJar)
+    tasks.withType(JavaCompile).tap {
+        configureEach {
+            options.compilerArgs.add("-Xlint:unchecked")
+            options.compilerArgs.add("-Xlint:deprecation")
+        }
+    }
 }
 
 processResources {
