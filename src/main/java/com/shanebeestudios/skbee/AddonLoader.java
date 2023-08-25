@@ -28,6 +28,7 @@ import org.bukkit.scoreboard.Team;
 
 import java.io.IOException;
 
+@SuppressWarnings("CallToPrintStackTrace")
 public class AddonLoader {
 
     private final SkBee plugin;
