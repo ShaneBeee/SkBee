@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.api.nbt;
 
 import ch.njol.skript.aliases.ItemType;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Pair;
 import com.shanebeestudios.skbee.api.util.Util;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
@@ -109,17 +110,19 @@ public class NBTApi {
 
     @SuppressWarnings("RegExpRedundantEscape")
     @Nullable
-    public static NBTCompound getNestedCompound(String tag, NBTCompound compound) {
-        if (compound == null) return null;
+    public static Pair<String, NBTCompound> getNestedCompound(String tag, NBTCompound compound) {
+        if (compound == null || tag == null) return null;
         if (tag.contains(";")) {
             String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
             for (int i = 0; i < splits.length - 1; i++) {
                 String split = splits[i];
                 if (compound == null) return null;
                 compound = compound.getOrCreateCompound(split);
+                tag = splits[splits.length - 1];
             }
         }
-        return compound;
+        if (compound == null || tag == null) return null;
+        return new Pair<>(tag, compound);
     }
 
     @SuppressWarnings("RegExpRedundantEscape")
@@ -229,13 +232,12 @@ public class NBTApi {
             nbtCustom.deleteCustomNBT();
             return;
         }
-        if (tag.contains(";")) {
-            compound = getNestedCompound(tag, compound);
-            tag = getNestedTag(tag);
-        }
-        if (compound != null) {
-            compound.removeKey(tag);
-        }
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        if (nestedCompound == null) return;
+
+        tag = nestedCompound.first();
+        compound = nestedCompound.second();
+        compound.removeKey(tag);
     }
 
     /**
@@ -440,11 +442,11 @@ public class NBTApi {
      * @param object   Value of tag to set to
      */
     public static void setTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull Object[] object) {
-        if (tag.contains(";")) {
-            compound = getNestedCompound(tag, compound);
-            tag = getNestedTag(tag);
-        }
-        if (compound == null) return;
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        if (nestedCompound == null) return;
+
+        tag = nestedCompound.first();
+        compound = nestedCompound.second();
 
         Object singleObject = object[0];
         NBTCustomType customType = NBTCustomType.NBTTagEnd;
@@ -490,11 +492,11 @@ public class NBTApi {
      */
     @SuppressWarnings("RegExpRedundantEscape")
     public static void addToTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull Object[] object, NBTCustomType type) {
-        if (tag.contains(";")) {
-            compound = getNestedCompound(tag, compound);
-            tag = getNestedTag(tag);
-        }
-        if (compound == null) return;
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        if (nestedCompound == null) return;
+
+        tag = nestedCompound.first();
+        compound = nestedCompound.second();
 
         // If the tag type doesn't match, return (TagEnd excluded as this means the tag isn't set)
         NBTCustomType byTag = NBTCustomType.getByTag(compound, tag);
@@ -616,11 +618,11 @@ public class NBTApi {
      */
     @SuppressWarnings("RegExpRedundantEscape")
     public static void removeFromTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull Object[] object, NBTCustomType type) {
-        if (tag.contains(";")) {
-            compound = getNestedCompound(tag, compound);
-            tag = getNestedTag(tag);
-        }
-        if (compound == null) return;
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        if (nestedCompound == null) return;
+
+        tag = nestedCompound.first();
+        compound = nestedCompound.second();
 
         // If tag type does not match, return!
         if (NBTCustomType.getByTag(compound, tag) != type) return;
@@ -741,11 +743,12 @@ public class NBTApi {
      * @return Object from the NBT string
      */
     public static Object getTag(String tag, NBTCompound compound) {
-        if (compound == null) return null;
-        if (tag.contains(";")) {
-            compound = getNestedCompound(tag, compound);
-            tag = getNestedTag(tag);
-        }
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        if (nestedCompound == null) return null;
+
+        tag = nestedCompound.first();
+        compound = nestedCompound.second();
+
         NBTCustomType type = NBTCustomType.getByTag(compound, tag);
         if (type == null) {
             return null;
@@ -768,12 +771,11 @@ public class NBTApi {
      * @return Object from the NBT string
      */
     public static Object getTag(String tag, NBTCompound compound, NBTCustomType type) {
-        if (compound == null) return null;
-        if (tag.contains(";")) {
-            compound = getNestedCompound(tag, compound);
-            tag = getNestedTag(tag);
-        }
-        if (compound == null) return null;
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        if (nestedCompound == null) return null;
+
+        tag = nestedCompound.first();
+        compound = nestedCompound.second();
 
         switch (type) {
             case NBTTagString -> {

@@ -12,6 +12,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
+import com.shanebeestudios.skbee.api.util.Pair;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -51,8 +52,11 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
         if (tag == null || compound == null) {
             return null;
         }
-        compound = NBTApi.getNestedCompound(tag, compound);
-        tag = NBTApi.getNestedTag(tag);
+        Pair<String, NBTCompound> nestedCompound = NBTApi.getNestedCompound(tag, compound);
+        if (nestedCompound == null) return null;
+
+        tag = nestedCompound.first();
+        compound = nestedCompound.second();
         return new NBTCustomType[]{NBTCustomType.getByTag(compound, tag)};
     }
 
