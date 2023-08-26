@@ -12,6 +12,7 @@ import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTFile;
+import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -25,7 +26,7 @@ public class SkriptTypes {
         @Override
         public Class<?>[] acceptChange(ChangeMode mode) {
             return switch (mode) {
-                case ADD,DELETE -> CollectionUtils.array(NBTCompound.class);
+                case ADD, DELETE -> CollectionUtils.array(NBTCompound.class);
                 default -> null;
             };
         }
@@ -89,7 +90,7 @@ public class SkriptTypes {
                         "set {_n} to nbt compound from \"{Invisible:1b}\"",
                         "add {_n} to nbt of target entity")
                 .since("1.6.0")
-                .parser(new Parser<NBTCompound>() {
+                .parser(new Parser<>() {
 
                     @Override
                     public boolean canParse(@NotNull ParseContext context) {
@@ -98,23 +99,19 @@ public class SkriptTypes {
 
                     @Override
                     public String toString(@NotNull NBTCompound nbt, int flags) {
-                        return nbt.toString();
+                        return getNBTString(nbt);
                     }
 
                     @Override
                     public String toVariableNameString(@NotNull NBTCompound nbt) {
-                        return "nbt:" + nbt;
-                    }
-
-                    public String getVariableNamePattern() {
-                        return "nbt:.+";
+                        return "nbt:" + toString(nbt, 0);
                     }
                 })
                 .serializer(new Serializer<>() {
                     @Override
                     public @NotNull Fields serialize(@NotNull NBTCompound nbt) {
                         Fields fields = new Fields();
-                        fields.putObject("nbt", nbt.toString());
+                        fields.putObject("nbt", getNBTString(nbt));
                         return fields;
                     }
 
@@ -147,6 +144,17 @@ public class SkriptTypes {
                     }
                 })
                 .changer(NBT_COMPOUND_CHANGER));
+    }
+
+    private static final String NBT_EMPTY = new NBTContainer("{}").toString();
+
+    private static String getNBTString(@NotNull NBTCompound nbtCompound) {
+        try {
+            return nbtCompound.toString();
+        } catch (NbtApiException ignore) {
+            // Error can occur when a parent compound is deleted
+            return NBT_EMPTY;
+        }
     }
 
 }
