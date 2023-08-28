@@ -10,6 +10,7 @@ import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
+import de.tr7zw.changeme.nbtapi.NBTListCompound;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
@@ -30,6 +31,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * Main NBT api for SkBee
@@ -38,6 +41,7 @@ public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")
     private static final boolean SUPPORTS_BLOCK_NBT = PersistentDataHolder.class.isAssignableFrom(Chunk.class);
+    private static final Pattern SUB_LIST_PATTERN = Pattern.compile("\\[\\d+]");
     private static boolean ENABLED;
     private static boolean DEBUG;
 
@@ -108,7 +112,22 @@ public class NBTApi {
         return compound;
     }
 
-    @SuppressWarnings("RegExpRedundantEscape")
+    @SuppressWarnings("ResultOfMethodCallIgnored")
+    private static Pair<String, Integer> getArrayPos(String tag, NBTCompound compound) {
+        if (tag.matches("\\w+\\[\\d+]")) {
+            Matcher matcher = SUB_LIST_PATTERN.matcher(tag);
+            matcher.find();
+            tag = tag.split("\\[")[0];
+            int pos = Integer.parseInt(matcher.group(0).replace("[", "").replace("]", ""));
+            NBTType type = compound.getType(tag);
+            if (type == NBTType.NBTTagList || type == NBTType.NBTTagByteArray || type == NBTType.NBTTagIntArray) {
+                return new Pair<>(tag, pos);
+            }
+        }
+        return null;
+    }
+
+    @SuppressWarnings({"RegExpRedundantEscape"})
     @Nullable
     public static Pair<String, NBTCompound> getNestedCompound(String tag, NBTCompound compound) {
         if (compound == null || tag == null) return null;
@@ -117,7 +136,17 @@ public class NBTApi {
             for (int i = 0; i < splits.length - 1; i++) {
                 String split = splits[i];
                 if (compound == null) return null;
-                compound = compound.getOrCreateCompound(split);
+
+                Pair<String, Integer> arrayPos = getArrayPos(split, compound);
+                if (arrayPos != null) {
+                    split = arrayPos.first();
+                    NBTCompoundList compoundList = compound.getCompoundList(split);
+                    if (compoundList != null) {
+                        compound = compoundList.get(arrayPos.second());
+                    }
+                } else {
+                    compound = compound.getOrCreateCompound(split);
+                }
                 tag = splits[splits.length - 1];
             }
         }
@@ -250,47 +279,97 @@ public class NBTApi {
      */
     @SuppressWarnings({"RegExpRedundantEscape", "ListRemoveInLoop"})
     public static void setTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull Object[] object, NBTCustomType type) {
-        String key = tag;
-        if (tag.contains(";")) {
-            String[] splits = tag.split(";(?=(([^\\\"]*\\\"){2})*[^\\\"]*$)");
-            for (int i = 0; i < splits.length - 1; i++) {
-                String split = splits[i];
-                compound = compound.getOrCreateCompound(split);
-            }
-            key = splits[splits.length - 1];
-        }
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        if (nestedCompound == null) return;
+
+        tag = nestedCompound.first();
+        compound = nestedCompound.second();
 
         Object singleObject = object[0];
+
+        Pair<String, Integer> checkArrayPos = getArrayPos(tag, compound);
+        if (checkArrayPos != null) {
+            tag = checkArrayPos.first();
+            Integer pos = checkArrayPos.second();
+            NBTType nbtType = compound.getType(tag);
+            if (type == NBTCustomType.NBTTagByte && nbtType == NBTType.NBTTagByteArray && singleObject instanceof Number change) {
+                byte[] byteArray = compound.getByteArray(tag);
+                if (byteArray.length > pos) byteArray[pos] = change.byteValue();
+            } else if (type == NBTCustomType.NBTTagInt && nbtType == NBTType.NBTTagIntArray && singleObject instanceof Number change) {
+                int[] intArray = compound.getIntArray(tag);
+                if (intArray.length > pos) intArray[pos] = change.intValue();
+            } else if (nbtType == NBTType.NBTTagList) {
+                NBTType listType = compound.getListType(tag);
+                switch (listType) {
+                    case NBTTagInt -> {
+                        NBTList<Integer> integerList = compound.getIntegerList(tag);
+                        if (singleObject instanceof Number number && integerList.size() > pos)
+                            integerList.set(pos, number.intValue());
+                    }
+                    case NBTTagLong -> {
+                        NBTList<Long> longList = compound.getLongList(tag);
+                        if (singleObject instanceof Number number && longList.size() > pos)
+                            longList.set(pos, number.longValue());
+                    }
+                    case NBTTagFloat -> {
+                        NBTList<Float> floatList = compound.getFloatList(tag);
+                        if (singleObject instanceof Number number && floatList.size() > pos)
+                            floatList.set(pos, number.floatValue());
+                    }
+                    case NBTTagDouble -> {
+                        NBTList<Double> doubleList = compound.getDoubleList(tag);
+                        if (singleObject instanceof Number number && doubleList.size() > pos)
+                            doubleList.set(pos, number.doubleValue());
+                    }
+                    case NBTTagString -> {
+                        NBTList<String> stringList = compound.getStringList(tag);
+                        if (singleObject instanceof String string && stringList.size() > pos)
+                            stringList.set(pos, string);
+                    }
+                    case NBTTagCompound -> {
+                        NBTCompoundList compoundList = compound.getCompoundList(tag);
+                        if (singleObject instanceof NBTCompound comp && compoundList.size() > pos) {
+                            NBTListCompound nbtListCompound = compoundList.get(pos);
+                            nbtListCompound.clearNBT();
+                            nbtListCompound.mergeCompound(comp);
+                        }
+                    }
+                }
+            }
+            return;
+        }
+
+
         switch (type) {
             case NBTTagByte:
                 if (singleObject instanceof Number number) {
-                    compound.setByte(key, number.byteValue());
+                    compound.setByte(tag, number.byteValue());
                 }
                 break;
             case NBTTagShort:
                 if (singleObject instanceof Number number) {
-                    compound.setShort(key, number.shortValue());
+                    compound.setShort(tag, number.shortValue());
                 }
                 break;
             case NBTTagInt:
                 if (singleObject instanceof Number number) {
-                    compound.setInteger(key, number.intValue());
+                    compound.setInteger(tag, number.intValue());
                 }
                 break;
 
             case NBTTagLong:
                 if (singleObject instanceof Number number) {
-                    compound.setLong(key, number.longValue());
+                    compound.setLong(tag, number.longValue());
                 }
                 break;
             case NBTTagFloat:
                 if (singleObject instanceof Number number) {
-                    compound.setFloat(key, number.floatValue());
+                    compound.setFloat(tag, number.floatValue());
                 }
                 break;
             case NBTTagDouble:
                 if (singleObject instanceof Number number) {
-                    compound.setDouble(key, number.doubleValue());
+                    compound.setDouble(tag, number.doubleValue());
                 }
                 break;
             case NBTTagByteArray:
@@ -299,7 +378,7 @@ public class NBTApi {
                     for (int i = 0; i < object.length; i++) {
                         ba[i] = ((Number) object[i]).byteValue();
                     }
-                    compound.setByteArray(key, ba);
+                    compound.setByteArray(tag, ba);
                 }
                 break;
             case NBTTagIntArray:
@@ -308,7 +387,7 @@ public class NBTApi {
                     for (int i = 0; i < object.length; i++) {
                         ia[i] = ((Number) object[i]).intValue();
                     }
-                    compound.setIntArray(key, ia);
+                    compound.setIntArray(tag, ia);
                 }
                 break;
             case NBTTagUUID:
@@ -333,29 +412,29 @@ public class NBTApi {
                 }
                 if (uuid != null) {
                     //ints = Util.uuidToIntArray(uuid);
-                    compound.setUUID(key, uuid);
+                    compound.setUUID(tag, uuid);
                     break;
                 }
                 if (ints.length > 0) {
-                    compound.setIntArray(key, ints);
+                    compound.setIntArray(tag, ints);
                 }
                 break;
             case NBTTagString:
                 if (singleObject instanceof String string) {
-                    compound.setString(key, string);
+                    compound.setString(tag, string);
                 }
                 break;
             case NBTTagCompound:
                 if (singleObject instanceof NBTCompound nbt) {
-                    compound.removeKey(key);
+                    compound.removeKey(tag);
                     NBTContainer emptyContainer = new NBTContainer("{}");
-                    NBTCompound keyCompound = emptyContainer.getOrCreateCompound(key);
+                    NBTCompound keyCompound = emptyContainer.getOrCreateCompound(tag);
                     keyCompound.mergeCompound(nbt);
                     compound.mergeCompound(emptyContainer);
                 }
             case NBTTagIntList:
                 if (singleObject instanceof Number) {
-                    NBTList<Integer> intList = compound.getIntegerList(key);
+                    NBTList<Integer> intList = compound.getIntegerList(tag);
                     int size = intList.size();
                     for (Object o : object)
                         if (o instanceof Number number)
@@ -368,7 +447,7 @@ public class NBTApi {
                 break;
             case NBTTagLongList:
                 if (singleObject instanceof Number) {
-                    NBTList<Long> longList = compound.getLongList(key);
+                    NBTList<Long> longList = compound.getLongList(tag);
                     int size = longList.size();
                     for (Object o : object)
                         if (o instanceof Number number)
@@ -381,7 +460,7 @@ public class NBTApi {
                 break;
             case NBTTagFloatList:
                 if (singleObject instanceof Number) {
-                    NBTList<Float> floatList = compound.getFloatList(key);
+                    NBTList<Float> floatList = compound.getFloatList(tag);
                     int size = floatList.size();
                     for (Object o : object)
                         if (o instanceof Number number)
@@ -394,7 +473,7 @@ public class NBTApi {
                 break;
             case NBTTagDoubleList:
                 if (singleObject instanceof Number) {
-                    NBTList<Double> doubleList = compound.getDoubleList(key);
+                    NBTList<Double> doubleList = compound.getDoubleList(tag);
                     int size = doubleList.size();
                     for (Object o : object)
                         if (o instanceof Number number)
@@ -407,7 +486,7 @@ public class NBTApi {
                 break;
             case NBTTagStringList:
                 if (singleObject instanceof String) {
-                    NBTList<String> stringList = compound.getStringList(key);
+                    NBTList<String> stringList = compound.getStringList(tag);
                     int size = stringList.size();
                     for (Object o : object)
                         if (o instanceof String string)
@@ -419,7 +498,7 @@ public class NBTApi {
                 break;
             case NBTTagCompoundList:
                 if (singleObject instanceof NBTCompound) {
-                    NBTCompoundList compoundList = compound.getCompoundList(key);
+                    NBTCompoundList compoundList = compound.getCompoundList(tag);
                     int size = compoundList.size();
                     for (Object o : object) {
                         if (o instanceof NBTCompound comp)
@@ -497,12 +576,29 @@ public class NBTApi {
 
         tag = nestedCompound.first();
         compound = nestedCompound.second();
+        Object singleObject = object[0];
+
+        Pair<String, Integer> arrayPos = getArrayPos(tag, compound);
+        if (arrayPos != null) {
+            Object getter = getTag(tag, compound, type);
+            if (getter instanceof Byte oldValue && singleObject instanceof Long changer) {
+                setTag(tag, compound, new Object[]{(oldValue + changer)}, type);
+            } else if (getter instanceof Integer oldValue && singleObject instanceof Long changer) {
+                setTag(tag, compound, new Object[]{(oldValue + changer)}, type);
+            } else if (getter instanceof Long oldValue && singleObject instanceof Long changer) {
+                setTag(tag, compound, new Object[]{(oldValue + changer)}, type);
+            } else if (getter instanceof Double oldValue && singleObject instanceof Double changer) {
+                setTag(tag, compound, new Object[]{(oldValue + changer)}, type);
+            } else if (getter instanceof Float oldValue && singleObject instanceof Double changer) {
+                setTag(tag, compound, new Object[]{(oldValue + changer)}, type);
+            }
+            return;
+        }
 
         // If the tag type doesn't match, return (TagEnd excluded as this means the tag isn't set)
         NBTCustomType byTag = NBTCustomType.getByTag(compound, tag);
         if (byTag != NBTCustomType.NBTTagEnd && byTag != type) return;
 
-        Object singleObject = object[0];
         switch (type) {
             case NBTTagByte -> {
                 if (singleObject instanceof Number number) {
@@ -623,11 +719,28 @@ public class NBTApi {
 
         tag = nestedCompound.first();
         compound = nestedCompound.second();
+        Object singleObject = object[0];
+
+        Pair<String, Integer> arrayPos = getArrayPos(tag, compound);
+        if (arrayPos != null) {
+            Object getter = getTag(tag, compound, type);
+            if (getter instanceof Byte oldValue && singleObject instanceof Long changer) {
+                setTag(tag, compound, new Object[]{(oldValue - changer)}, type);
+            } else if (getter instanceof Integer oldValue && singleObject instanceof Long changer) {
+                setTag(tag, compound, new Object[]{(oldValue - changer)}, type);
+            } else if (getter instanceof Long oldValue && singleObject instanceof Long changer) {
+                setTag(tag, compound, new Object[]{(oldValue - changer)}, type);
+            } else if (getter instanceof Double oldValue && singleObject instanceof Double changer) {
+                setTag(tag, compound, new Object[]{(oldValue - changer)}, type);
+            } else if (getter instanceof Float oldValue && singleObject instanceof Double changer) {
+                setTag(tag, compound, new Object[]{(oldValue - changer)}, type);
+            }
+            return;
+        }
 
         // If tag type does not match, return!
         if (NBTCustomType.getByTag(compound, tag) != type) return;
 
-        Object singleObject = object[0];
         switch (type) {
             case NBTTagByte -> {
                 if (singleObject instanceof Number number) {
@@ -750,6 +863,28 @@ public class NBTApi {
         compound = nestedCompound.second();
 
         NBTCustomType type = NBTCustomType.getByTag(compound, tag);
+
+        Pair<String, Integer> arrayPos = getArrayPos(tag, compound);
+        if (arrayPos != null) {
+            String arrayTag = arrayPos.first();
+            NBTType nbtType = compound.getType(arrayTag);
+            if (nbtType == NBTType.NBTTagByteArray) {
+                type = NBTCustomType.NBTTagByte;
+            } else if (nbtType == NBTType.NBTTagIntArray) {
+                type = NBTCustomType.NBTTagInt;
+            } else if (nbtType == NBTType.NBTTagList) {
+                type = switch (compound.getListType(arrayTag)) {
+                    case NBTTagInt -> NBTCustomType.NBTTagInt;
+                    case NBTTagLong -> NBTCustomType.NBTTagLong;
+                    case NBTTagFloat -> NBTCustomType.NBTTagFloat;
+                    case NBTTagDouble -> NBTCustomType.NBTTagDouble;
+                    case NBTTagString -> NBTCustomType.NBTTagString;
+                    case NBTTagCompound -> NBTCustomType.NBTTagCompound;
+                    default -> null;
+                };
+            }
+        }
+
         if (type == null) {
             return null;
         }
@@ -776,6 +911,38 @@ public class NBTApi {
 
         tag = nestedCompound.first();
         compound = nestedCompound.second();
+
+        Pair<String, Integer> arrayPos = getArrayPos(tag, compound);
+        if (arrayPos != null) {
+            tag = arrayPos.first();
+            int pos = arrayPos.second();
+            NBTType listType = compound.getListType(tag);
+
+            NBTList<?> nbtList = null;
+            if (type == NBTCustomType.NBTTagByte && compound.getType(tag) == NBTType.NBTTagByteArray) {
+                byte[] byteArray = compound.getByteArray(tag);
+                if (byteArray.length > pos) return byteArray[pos];
+            } else if (type == NBTCustomType.NBTTagInt) {
+                if (compound.getType(tag) == NBTType.NBTTagIntArray) {
+                    int[] intArray = compound.getIntArray(tag);
+                    if (intArray.length > pos) return intArray[pos];
+                } else if (listType == NBTType.NBTTagInt) {
+                    nbtList = compound.getIntegerList(tag);
+                }
+            } else if (type == NBTCustomType.NBTTagString && listType == NBTType.NBTTagString) {
+                nbtList = compound.getStringList(tag);
+            } else if (type == NBTCustomType.NBTTagCompound && listType == NBTType.NBTTagCompound) {
+                nbtList = compound.getCompoundList(tag);
+            } else if (type == NBTCustomType.NBTTagLong && listType == NBTType.NBTTagLong) {
+                nbtList = compound.getLongList(tag);
+            } else if (type == NBTCustomType.NBTTagDouble && listType == NBTType.NBTTagDouble) {
+                nbtList = compound.getDoubleList(tag);
+            } else if (type == NBTCustomType.NBTTagFloat && listType == NBTType.NBTTagFloat) {
+                nbtList = compound.getFloatList(tag);
+            }
+            if (nbtList != null && nbtList.size() > pos) return nbtList.get(pos);
+            return null;
+        }
 
         switch (type) {
             case NBTTagString -> {

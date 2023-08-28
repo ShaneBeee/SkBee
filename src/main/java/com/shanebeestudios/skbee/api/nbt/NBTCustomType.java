@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.nbt;
 import ch.njol.util.StringUtils;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTType;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -24,6 +25,7 @@ public enum NBTCustomType {
     NBTTagString("string", NBTType.NBTTagString, String.class),
     NBTTagUUID("uuid", NBTType.NBTTagIntArray, String.class),
     NBTTagCompound("compound", NBTType.NBTTagCompound, NBTCompound.class),
+
     NBTTagByteArray("byte array", NBTType.NBTTagByteArray, Number[].class, true),
     NBTTagIntArray("int array", NBTType.NBTTagIntArray, Number[].class, true),
     NBTTagDoubleList("double list", NBTType.NBTTagList, Number[].class, true),
@@ -74,6 +76,11 @@ public enum NBTCustomType {
                 BY_NAME.put(type.name, type);
             BY_TYPE.put(type.nbtType, type);
         }
+        for (NBTType value : NBTType.values()) {
+            if (!BY_TYPE.containsKey(value)) {
+                throw new IllegalArgumentException("Missing NBTCustomType for NBTType: " + value);
+            }
+        }
     }
 
     @Nullable
@@ -91,17 +98,17 @@ public enum NBTCustomType {
         NBTType nbtType = compound.getType(key);
         if (BY_TYPE.containsKey(nbtType)) {
             if (nbtType == NBTType.NBTTagList) {
-                if (compound.getIntegerList(key).size() > 0)
+                if (!compound.getIntegerList(key).isEmpty())
                     return NBTTagIntList;
-                else if (compound.getLongList(key).size() > 0)
+                else if (!compound.getLongList(key).isEmpty())
                     return NBTTagLongList;
-                else if (compound.getFloatList(key).size() > 0)
+                else if (!compound.getFloatList(key).isEmpty())
                     return NBTTagFloatList;
-                else if (compound.getDoubleList(key).size() > 0)
+                else if (!compound.getDoubleList(key).isEmpty())
                     return NBTTagDoubleList;
-                else if (compound.getCompoundList(key).size() > 0)
+                else if (!compound.getCompoundList(key).isEmpty())
                     return NBTTagCompoundList;
-                else if (compound.getStringList(key).size() > 0)
+                else if (!compound.getStringList(key).isEmpty())
                     return NBTTagStringList;
             }
             return BY_TYPE.get(nbtType);
@@ -113,6 +120,11 @@ public enum NBTCustomType {
         List<String> names = new ArrayList<>(BY_NAME.keySet());
         Collections.sort(names);
         return StringUtils.join(names, ", ");
+    }
+
+    @NotNull
+    public static NBTCustomType getByType(NBTType type) {
+        return BY_TYPE.get(type);
     }
 
 }
