@@ -12,18 +12,17 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
 import net.kyori.adventure.title.Title.Times;
 import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -44,16 +43,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * Wrapper for {@link Component Adventure API Components}
  */
-@SuppressWarnings({"PatternValidation"})
+@SuppressWarnings({"PatternValidation", "deprecation"})
 public class ComponentWrapper {
 
     // STATIC
     private static final boolean HAS_SIDES = Skript.classExists("org.bukkit.block.sign.SignSide");
+    private static final Map<String, String> FORMATS = new HashMap<>();
+
+    static {
+        for (ChatColor value : ChatColor.values()) {
+            FORMATS.put(String.valueOf(value.getChar()), "<" + value.name().toLowerCase(Locale.ROOT) + ">");
+        }
+        // ChatColor names this "magic"
+        FORMATS.put("k", "<obfuscated>");
+    }
 
     /**
      * Create an empty component
@@ -91,13 +102,11 @@ public class ComponentWrapper {
     public static ComponentWrapper fromMiniMessage(String text) {
         String string = text;
         // MiniMessage doesn't like these
-        if (text.contains("&")) {
-            TextComponent deserialize = LegacyComponentSerializer.legacyAmpersand().deserialize(string);
-            string = PlainTextComponentSerializer.plainText().serialize(deserialize);
-        }
-        if (text.contains("§")) {
-            TextComponent deserialize = LegacyComponentSerializer.legacySection().deserialize(string);
-            string = PlainTextComponentSerializer.plainText().serialize(deserialize);
+        if (text.contains("&") || text.contains("§")) {
+            for (String code : FORMATS.keySet()) {
+                string = string.replace("&" + code, FORMATS.get(code));
+                string = string.replace("§" + code, FORMATS.get(code));
+            }
         }
         return new ComponentWrapper(MiniMessage.miniMessage().deserialize(string));
     }
@@ -201,8 +210,7 @@ public class ComponentWrapper {
             Component delimiterComp = delimiter != null ? Component.text(delimiter) : null;
             assert components[0] != null;
             component = component.append(components[0].component);
-            int end = components.length;
-            for (int i = 1; i < end; ++i) {
+            for (int i = 1; i < components.length; ++i) {
                 if (components[i] == null) continue;
                 if (delimiterComp != null) {
                     component = component.append(delimiterComp);
