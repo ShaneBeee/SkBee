@@ -33,6 +33,7 @@ import java.util.List;
         "so you will see console messages where a player runs the command \"/paper callback\" in your console.",
         "\nNOTE: Paper didn't make this command available by default",
         "so you'll have to give your players the permission `bukkit.command.paper.callback`.",
+        "(As of PaperMC 1.20.1[build-169], the permission is no longer required).",
         "\n`uses` = The amount of times the player can click this. Defaults to 1. Use `-1` for unlimited uses.",
         "\n`lifetime` = How long the player has til they can't click it. Defaults to 12 hours."})
 @Examples({"set {_t} to mini message from \"JOIN US AT SPAWN FOR A SPECIAL EVENT (10 SECONDS REMAINING!)\"",
