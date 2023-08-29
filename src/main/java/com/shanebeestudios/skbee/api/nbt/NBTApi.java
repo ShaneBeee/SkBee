@@ -347,10 +347,13 @@ public class NBTApi {
                 break;
             case NBTTagCompound:
                 if (singleObject instanceof NBTCompound nbt) {
-                    compound.removeKey(key);
+                    // Create a copy of the nbt we're going to merge in
                     NBTContainer emptyContainer = new NBTContainer("{}");
-                    NBTCompound keyCompound = emptyContainer.getOrCreateCompound(key);
-                    keyCompound.mergeCompound(nbt);
+                    NBTCompound subCompound = emptyContainer.getOrCreateCompound(key);
+                    subCompound.mergeCompound(nbt);
+
+                    // Clear out old key before merging
+                    compound.removeKey(key);
                     compound.mergeCompound(emptyContainer);
                 }
             case NBTTagIntList:
