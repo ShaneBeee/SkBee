@@ -373,6 +373,28 @@ public class ComponentWrapper {
     }
 
     /**
+     * Replace a string with a component
+     *
+     * @param text        String to replace
+     * @param replacement To replace with
+     */
+    @SuppressWarnings("LanguageMismatch")
+    public void replace(String text, ComponentWrapper replacement) {
+        this.component = this.component.replaceText(c -> c.match(text).replacement(replacement.component));
+    }
+
+    /**
+     * Rpelace a string with a string
+     *
+     * @param text        String to replace
+     * @param replacement To replace with
+     */
+    @SuppressWarnings("LanguageMismatch")
+    public void replace(String text, String replacement) {
+        this.component = this.component.replaceText(c -> c.match(text).replacement(replacement));
+    }
+
+    /**
      * Send a message to a player
      *
      * @param sender   Who sent the message (can be blocked on client)
