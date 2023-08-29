@@ -430,7 +430,7 @@ public class NBTApi {
                     NBTContainer copy = new NBTContainer();
                     copy.mergeCompound(nbt);
 
-                    NBTCompound subCompound = compound.getOrCreateCompound(key);
+                    NBTCompound subCompound = compound.getOrCreateCompound(tag);
                     // Clear out old data before merging
                     subCompound.clearNBT();
                     subCompound.mergeCompound(copy);
