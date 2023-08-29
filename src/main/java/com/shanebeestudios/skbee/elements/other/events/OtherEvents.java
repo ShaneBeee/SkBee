@@ -9,6 +9,7 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import com.shanebeestudios.skbee.api.util.Util;
+import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
@@ -27,6 +28,7 @@ import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntitySpellCastEvent;
+import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -459,6 +461,31 @@ public class OtherEvents {
                 }
             }, EventValues.TIME_NOW);
         }
+
+        // Entity Teleport Event
+        Skript.registerEvent("Entity Teleport", SimpleEvent.class, EntityTeleportEvent.class, "entity teleport")
+                .description("Thrown when a non-player entity is teleported from one location to another.",
+                        "This may be as a result of natural causes (Enderman, Shulker), pathfinding (Wolf), or commands (/teleport).",
+                        "\n`past event-location` = Location teleported from.",
+                        "\n`event-location` = Location teleported to.")
+                .examples("on entity teleport:",
+                        "\tif event-entity is an enderman:",
+                        "\t\tcancel event")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(EntityTeleportEvent.class, Location.class, new Getter<>() {
+            @Override
+            public Location get(EntityTeleportEvent event) {
+                return event.getFrom();
+            }
+        }, EventValues.TIME_PAST);
+
+        EventValues.registerEventValue(EntityTeleportEvent.class, Location.class, new Getter<>() {
+            @Override
+            public Location get(EntityTeleportEvent event) {
+                return event.getTo();
+            }
+        }, EventValues.TIME_NOW);
     }
 
 }
