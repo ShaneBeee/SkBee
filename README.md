@@ -23,9 +23,14 @@ See the [**Wiki**](https://github.com/ShaneBeee/SkBee/wiki) for more detailed in
 
 ## [**JavaDocs**](https://shanebeee.github.io/SkBee/)
 
+## <ins>OpenSource</ins>
+SkBee is proudly built using JetBrains' IntelliJ IDEA!
+We here at SkBee proudly support open source development with a big thanks to JetBrains for the [open source license](https://jb.gg/OpenSourceSupport).
+
+![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png)
 
 ## <ins>Outdated</ins>
-Are you running an <ins>**outdated**</ins> version of Minecraft and looking for an <ins>**outdated**</ins> build of SkBee that will work on your <ins>**outdated**</ins> server? Well look no further, here is a list of <ins>**outdated**</ins> builds of SkBee for your <ins>**outdated**</ins> server.    
+Are you running an <ins>**outdated**</ins> version of Minecraft and looking for an <ins>**outdated**</ins> build of SkBee that will work on your <ins>**outdated**</ins> server? Well look no further, here is a list of <ins>**outdated**</ins> builds of SkBee for your <ins>**outdated**</ins> server.
 Keep in mind, these <ins>**outdated**</ins> builds for <ins>**outdated**</ins> servers are not supported and you will not get support/bug fixes, because they're <ins>**outdated**</ins>!
 
 ### <ins>1.17.1</ins>
