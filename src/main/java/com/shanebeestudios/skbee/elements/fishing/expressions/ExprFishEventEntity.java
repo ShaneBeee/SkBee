@@ -38,7 +38,7 @@ public class ExprFishEventEntity extends SimpleExpression<Entity> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!ParserInstance.get().isCurrentEvent(PlayerFishEvent.class)) {
-            Skript.error("Fish event caught entity/hook can only be used in a fishing event", ErrorQuality.SEMANTIC_ERROR);
+            Skript.error("'" + parseResult.expr + "' can only be used in a fishing event", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
         pattern = matchedPattern;

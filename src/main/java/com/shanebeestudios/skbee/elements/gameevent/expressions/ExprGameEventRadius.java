@@ -36,7 +36,7 @@ public class ExprGameEventRadius extends SimpleExpression<Number> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!ParserInstance.get().isCurrentEvent(GenericGameEvent.class)) {
-            Skript.error("The expression 'game event radius' can only be used in a generic game event", ErrorQuality.SEMANTIC_ERROR);
+            Skript.error("'" + parseResult.expr + "' can only be used in a generic game event", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
         return true;

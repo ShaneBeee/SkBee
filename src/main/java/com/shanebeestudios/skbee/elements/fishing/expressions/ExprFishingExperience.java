@@ -35,7 +35,7 @@ public class ExprFishingExperience extends SimpleExpression<Experience> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!getParser().isCurrentEvent(PlayerFishEvent.class)) {
-            Skript.error("The fishing experience expression, can only be used within fishing events.");
+            Skript.error("'" + parseResult.expr + "' can only be used in a fishing event");
             return false;
         }
         return true;

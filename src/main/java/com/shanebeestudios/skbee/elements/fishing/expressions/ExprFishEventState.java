@@ -35,7 +35,7 @@ public class ExprFishEventState extends SimpleExpression<State> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!ParserInstance.get().isCurrentEvent(PlayerFishEvent.class)) {
-            Skript.error("Fish event state can only be used in a fishing event", ErrorQuality.SEMANTIC_ERROR);
+            Skript.error("'" + parseResult.expr + "' can only be used in a fishing event", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
         return true;
