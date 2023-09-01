@@ -122,7 +122,7 @@ public class BoundBorderListener implements Listener {
             // have to add a delay as this isn't determinded in the event
             Location to = player.getLocation();
             if (preventBoundMovement(player, from, to)) {
-                player.teleport(from.add(0, 1, 0));
+                player.teleport(from.clone().add(0, 1, 0));
             }
         }, 1);
     }
@@ -143,7 +143,7 @@ public class BoundBorderListener implements Listener {
     private void onDismount(EntityDismountEvent event) {
         if (!this.ENTITY_DISMOUNT) return;
         if (event.getEntity() instanceof Player player) {
-            Location from = event.getDismounted().getLocation();
+            Location from = event.getDismounted().getLocation().clone();
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 Location to = player.getLocation();
                 if (preventBoundMovement(player, from, to)) {
@@ -170,7 +170,7 @@ public class BoundBorderListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onVehicleExit(VehicleExitEvent event) {
         if (!this.VEHICLE_EXIT) return;
-        Location from = event.getVehicle().getLocation();
+        Location from = event.getVehicle().getLocation().clone();
         if (event.getExited() instanceof Player player) {
             Bukkit.getScheduler().runTaskLater(plugin, () -> {
                 Location to = player.getLocation();
@@ -189,7 +189,7 @@ public class BoundBorderListener implements Listener {
         Vehicle vehicle = event.getVehicle();
         vehicle.getPassengers().forEach(entity -> {
             if (entity instanceof Player player) {
-                Location from = event.getFrom();
+                Location from = event.getFrom().clone();
                 Location to = event.getTo();
                 if (preventBoundMovement(player, from, to)) {
                     vehicle.removePassenger(player);
@@ -205,7 +205,7 @@ public class BoundBorderListener implements Listener {
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onVehicleDestroy(VehicleDestroyEvent event) {
         if (!this.VEHICLE_DESTROY) return;
-        Location from = event.getVehicle().getLocation();
+        Location from = event.getVehicle().getLocation().clone();
         Bukkit.getScheduler().runTaskLater(plugin, () -> {
             for (Entity passenger : event.getVehicle().getPassengers()) {
                 Location to = passenger.getLocation();
