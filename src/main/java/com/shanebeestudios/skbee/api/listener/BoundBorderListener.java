@@ -31,17 +31,17 @@ public class BoundBorderListener implements Listener {
 
     private final SkBee plugin;
     private final BoundConfig boundConfig;
-    private boolean PLAYER_MOVE;
-    private boolean PLAYER_TELEPORT;
-    private boolean PLAYER_BED_LEAVE;
-    private boolean PLAYER_BED_ENTER;
-    private boolean PLAYER_RESPAWN;
-    private boolean ENTITY_MOUNT;
-    private boolean ENTITY_DISMOUNT;
-    private boolean VEHICLE_MOVE;
-    private boolean VEHICLE_DESTROY;
-    private boolean VEHICLE_EXIT;
-    private boolean VEHICLE_ENTER;
+    private final boolean PLAYER_MOVE;
+    private final boolean PLAYER_TELEPORT;
+    private final boolean PLAYER_BED_LEAVE;
+    private final boolean PLAYER_BED_ENTER;
+    private final boolean PLAYER_RESPAWN;
+    private final boolean ENTITY_MOUNT;
+    private final boolean ENTITY_DISMOUNT;
+    private final boolean VEHICLE_MOVE;
+    private final boolean VEHICLE_DESTROY;
+    private final boolean VEHICLE_EXIT;
+    private final boolean VEHICLE_ENTER;
 
     public BoundBorderListener(SkBee plugin) {
         Config config = plugin.getPluginConfig();
@@ -161,6 +161,9 @@ public class BoundBorderListener implements Listener {
         if (event.getEntered() instanceof Player player) {
             Location from = player.getLocation();
             Location to = event.getVehicle().getLocation();
+            if (preventBoundMovement(player, from, to)) {
+                event.setCancelled(true);
+            }
         }
     }
 
@@ -218,6 +221,8 @@ public class BoundBorderListener implements Listener {
     }
 
     private boolean preventBoundMovement(@NotNull Player player, @NotNull Location from, @NotNull Location to) {
+        // Clone to prevent changing event values
+        from = from.clone();
         // Only detect body movement not head movement
         from.setPitch(to.getPitch());
         from.setYaw(to.getYaw());
