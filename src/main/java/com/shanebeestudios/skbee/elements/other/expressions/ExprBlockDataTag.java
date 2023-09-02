@@ -98,10 +98,10 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
                 BlockData newBlockData = changeBlockData(oldblockData, tag, delta[0]);
                 blockDataList.add(newBlockData);
             } else if (object instanceof Block block) {
+                update = false;
                 BlockData newBlockData = changeBlockData(block.getBlockData(), tag, delta[0]);
                 if (newBlockData == null) continue;
                 block.setBlockData(newBlockData, this.applyPhysics);
-                update = false;
             }
         }
         // Apparently Block can't be changed, so we have to do this weird method
