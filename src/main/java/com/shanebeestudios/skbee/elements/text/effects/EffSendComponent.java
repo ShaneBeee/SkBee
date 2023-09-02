@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
         "As of 1.16.0 you can also send action bar components to players and you can also send normal strings."})
 @Examples({"set {_comp::1} to text component of \"hi player \"",
         "set {_comp::2} to text component of \"hover over me for a special message!\"",
-        "set hover event of {_comp::2} to hover event to show \"OoO look ma I'm hovering!\"",
+        "set hover event of {_comp::2} to hover event showing \"OoO look ma I'm hovering!\"",
         "send component {_comp::*} to player",
         "send components {_comp::*} and \" ooo pretty!\" to player",
         "send actionbar component {_comp::1} to player"})
