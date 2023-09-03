@@ -467,6 +467,7 @@ public class NBTApi {
                     if (d < Float.MAX_VALUE && d > Float.MIN_VALUE) customType = NBTCustomType.NBTTagFloat;
                     else customType = NBTCustomType.NBTTagDouble;
                 } else if (singleObject instanceof NBTCompound) customType = NBTCustomType.NBTTagCompound;
+                else if (singleObject instanceof OfflinePlayer || singleObject instanceof Entity) customType = NBTCustomType.NBTTagUUID;
             } else {
                 if (singleObject instanceof String) customType = NBTCustomType.NBTTagStringList;
                 else if (singleObject instanceof Long l) {
