@@ -263,7 +263,9 @@ public class NBTApi {
         Object singleObject = object[0];
         switch (type) {
             case NBTTagByte:
-                if (singleObject instanceof Number number) {
+                if (singleObject instanceof Boolean bool) {
+                    compound.setByte(key, (byte) (bool ? 1 : 0));
+                } else if (singleObject instanceof Number number) {
                     compound.setByte(key, number.byteValue());
                 }
                 break;
@@ -456,12 +458,8 @@ public class NBTApi {
 
         if (!compound.hasTag(tag)) {
             if (object.length == 1) {
-                if (singleObject instanceof Boolean bool) {
-                    // Special case
-                    setTag(tag, compound, new Object[]{bool ? 1 : 0}, NBTCustomType.NBTTagByte);
-                    return;
-                }
-                if (singleObject instanceof String) customType = NBTCustomType.NBTTagString;
+                if (singleObject instanceof Boolean) customType = NBTCustomType.NBTTagByte;
+                else if (singleObject instanceof String) customType = NBTCustomType.NBTTagString;
                 else if (singleObject instanceof Long l) {
                     if (l < Integer.MAX_VALUE && l > Integer.MIN_VALUE) customType = NBTCustomType.NBTTagInt;
                     else customType = NBTCustomType.NBTTagLong;
