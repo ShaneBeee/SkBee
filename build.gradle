@@ -12,6 +12,9 @@ compileJava {
     options.encoding = 'UTF-8'
 }
 
+// SkBee version
+version = '2.17.0'
+
 repositories {
     mavenCentral()
 
@@ -42,14 +45,16 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.11.3")
+    implementation("de.tr7zw:item-nbt-api:2.11.3") {
+        transitive = false
+    }
 
     // FastBoard
     implementation("fr.mrmicky:fastboard:2.0.0")
 
     // Virtual Furnace
     implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.0.0-Beta12") {
-        exclude(group: 'org.jetbrains', module: 'annotations')
+        transitive = false
     }
 
     // bStats
@@ -67,11 +72,7 @@ build {
 }
 
 processResources {
-    filter ReplaceTokens, tokens: ["version": project.property("version")]
-    from("lang/") {
-        include '*.lang'
-        into 'lang/'
-    }
+    filter ReplaceTokens, tokens: ["version": project.version]
 }
 
 shadowJar {
@@ -109,6 +110,7 @@ javadoc {
         links('https://tr7zw.github.io/Item-NBT-API/v2-api/')
         links('https://jd.advntr.dev/api/4.14.0/')
     }
+    options.addStringOption('Xdoclint:none', '-quiet')
     exclude("com/shanebeestudios/skbee/config", "com/shanebeestudios/skbee/api/listener", "com/shanebeestudios/skbee/elements",
             "com/shanebeestudios/skbee/api/command", "com/shanebeestudios/skbee/AddonLoader.java")
 }
