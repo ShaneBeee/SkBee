@@ -9,9 +9,6 @@ depend:
   - Skript
 loadbefore:
   - SkQuery
-libraries:
-  - commons-io:commons-io:2.11.0
-  - org.apache.commons:commons-text:1.10.0
 commands:
   skbee:
     description: Main SkBee command
