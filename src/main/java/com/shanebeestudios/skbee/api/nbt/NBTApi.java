@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.nbt;
 
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Pair;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -345,6 +346,8 @@ public class NBTApi {
             case NBTTagString:
                 if (singleObject instanceof String string) {
                     compound.setString(key, string);
+                } else {
+                    compound.setString(key, Classes.toString(singleObject));
                 }
                 break;
             case NBTTagCompound:
@@ -467,7 +470,9 @@ public class NBTApi {
                     if (d < Float.MAX_VALUE && d > Float.MIN_VALUE) customType = NBTCustomType.NBTTagFloat;
                     else customType = NBTCustomType.NBTTagDouble;
                 } else if (singleObject instanceof NBTCompound) customType = NBTCustomType.NBTTagCompound;
-                else if (singleObject instanceof OfflinePlayer || singleObject instanceof Entity) customType = NBTCustomType.NBTTagUUID;
+                else if (singleObject instanceof OfflinePlayer || singleObject instanceof Entity)
+                    customType = NBTCustomType.NBTTagUUID;
+                else customType = NBTCustomType.NBTTagString;
             } else {
                 if (singleObject instanceof String) customType = NBTCustomType.NBTTagStringList;
                 else if (singleObject instanceof Long l) {
