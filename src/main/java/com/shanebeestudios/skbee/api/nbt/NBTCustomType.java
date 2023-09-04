@@ -15,42 +15,40 @@ import java.util.Map;
 public enum NBTCustomType {
 
     NBTTagEnd("tag end", NBTType.NBTTagEnd),
+    // Numbers
     NBTTagByte("byte", NBTType.NBTTagByte, Number.class),
     NBTTagShort("short", NBTType.NBTTagShort, Number.class),
     NBTTagInt("int", NBTType.NBTTagInt, Number.class),
     NBTTagLong("long", NBTType.NBTTagLong, Number.class),
     NBTTagFloat("float", NBTType.NBTTagFloat, Number.class),
     NBTTagDouble("double", NBTType.NBTTagDouble, Number.class),
+    // Other
     NBTTagString("string", NBTType.NBTTagString, String.class),
-    NBTTagUUID("uuid", NBTType.NBTTagIntArray, String.class),
     NBTTagCompound("compound", NBTType.NBTTagCompound, NBTCompound.class),
-    NBTTagByteArray("byte array", NBTType.NBTTagByteArray, Number[].class, true),
-    NBTTagIntArray("int array", NBTType.NBTTagIntArray, Number[].class, true),
-    NBTTagDoubleList("double list", NBTType.NBTTagList, Number[].class, true),
-    NBTTagFloatList("float list", NBTType.NBTTagList, Number[].class, true),
-    NBTTagLongList("long list", NBTType.NBTTagList, Number[].class, true),
-    NBTTagIntList("int list", NBTType.NBTTagList, Number[].class, true),
-    NBTTagCompoundList("compound list", NBTType.NBTTagList, NBTCompound[].class, true),
-    NBTTagStringList("string list", NBTType.NBTTagList, String[].class,true);
+    // Custom
+    NBTTagUUID("uuid", NBTType.NBTTagIntArray, String.class),
+    // Lists and Arrays
+    NBTTagByteArray("byte array", NBTType.NBTTagByteArray, Number[].class),
+    NBTTagIntArray("int array", NBTType.NBTTagIntArray, Number[].class),
+    NBTTagDoubleList("double list", NBTType.NBTTagList, Number[].class),
+    NBTTagFloatList("float list", NBTType.NBTTagList, Number[].class),
+    NBTTagLongList("long list", NBTType.NBTTagList, Number[].class),
+    NBTTagIntList("int list", NBTType.NBTTagList, Number[].class),
+    NBTTagCompoundList("compound list", NBTType.NBTTagList, NBTCompound[].class),
+    NBTTagStringList("string list", NBTType.NBTTagList, String[].class);
 
     final String name;
     final NBTType nbtType;
     final Class<?> typeClass;
-    final boolean isList;
 
     NBTCustomType(String name, NBTType nbtType) {
         this(name, nbtType, Void.class);
     }
 
     NBTCustomType(String name, NBTType nbtType, Class<?> typeClass) {
-        this(name, nbtType, typeClass, false);
-    }
-
-    NBTCustomType(String name, NBTType nbtType, Class<?> typeClass, boolean isList) {
         this.name = name + " tag";
         this.nbtType = nbtType;
         this.typeClass = typeClass;
-        this.isList = isList;
     }
 
     public String getName() {
@@ -59,10 +57,6 @@ public enum NBTCustomType {
 
     public Class<?> getTypeClass() {
         return this.typeClass;
-    }
-
-    public boolean isList() {
-        return this.isList;
     }
 
     private static final Map<String, NBTCustomType> BY_NAME = new HashMap<>();
@@ -91,17 +85,17 @@ public enum NBTCustomType {
         NBTType nbtType = compound.getType(key);
         if (BY_TYPE.containsKey(nbtType)) {
             if (nbtType == NBTType.NBTTagList) {
-                if (compound.getIntegerList(key).size() > 0)
+                if (!compound.getIntegerList(key).isEmpty())
                     return NBTTagIntList;
-                else if (compound.getLongList(key).size() > 0)
+                else if (!compound.getLongList(key).isEmpty())
                     return NBTTagLongList;
-                else if (compound.getFloatList(key).size() > 0)
+                else if (!compound.getFloatList(key).isEmpty())
                     return NBTTagFloatList;
-                else if (compound.getDoubleList(key).size() > 0)
+                else if (!compound.getDoubleList(key).isEmpty())
                     return NBTTagDoubleList;
-                else if (compound.getCompoundList(key).size() > 0)
+                else if (!compound.getCompoundList(key).isEmpty())
                     return NBTTagCompoundList;
-                else if (compound.getStringList(key).size() > 0)
+                else if (!compound.getStringList(key).isEmpty())
                     return NBTTagStringList;
             }
             return BY_TYPE.get(nbtType);
