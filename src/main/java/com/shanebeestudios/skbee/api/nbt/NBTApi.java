@@ -357,6 +357,8 @@ public class NBTApi {
                     copy.mergeCompound(nbt);
 
                     NBTCompound subCompound = compound.getOrCreateCompound(key);
+                    // While this shouldn't happen, the API likes to do this for blocks
+                    if (subCompound == null) return;
                     // Clear out old data before merging
                     subCompound.clearNBT();
                     subCompound.mergeCompound(copy);
