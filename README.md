@@ -21,7 +21,7 @@ See the [**Wiki**](https://github.com/ShaneBeee/SkBee/wiki) for more detailed in
 ## Docs
 [![SkriptHubViewTheDocs](http://skripthub.net/static/addon/ViewTheDocsButton.png)](http://skripthub.net/docs/?addon=SkBee)
 
-## [**JavaDocs**](https://shanebeee.github.io/docs/skbee/)
+## [**JavaDocs**](https://shanebeee.github.io/docs/SkBee/)
 
 ## <ins>OpenSource</ins>
 SkBee is proudly built using JetBrains' IntelliJ IDEA!
