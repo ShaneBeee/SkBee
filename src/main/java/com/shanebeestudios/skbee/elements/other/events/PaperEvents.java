@@ -290,37 +290,6 @@ public class PaperEvents {
 
         // == BLOCK EVENTS == //
 
-        // Anvil Damaged Event
-        if (Skript.classExists("com.destroystokyo.paper.event.block.AnvilDamagedEvent") && !Util.isRunningSkript27()) {
-            Skript.registerEvent("Anvil Damaged Event", SimpleEvent.class, AnvilDamagedEvent.class, "anvil damage")
-                    .description("Called when an anvil is damaged from being used. Requires Paper 1.13+")
-                    .examples("on anvil damage:",
-                            "\tloop viewers of event-inventory:",
-                            "\t\tif loop-player has permission \"no.anvil.break\"",
-                            "\t\t\tcancel event")
-                    .since("1.5.0");
-            EventValues.registerEventValue(AnvilDamagedEvent.class, Inventory.class, new Getter<>() {
-                @Override
-                public @NotNull Inventory get(@NotNull AnvilDamagedEvent event) {
-                    return event.getInventory();
-                }
-            }, 0);
-            EventValues.registerEventValue(AnvilDamagedEvent.class, Block.class, new Getter<>() {
-                @Nullable
-                @Override
-                public Block get(AnvilDamagedEvent event) {
-                    return event.getViewers().get(0).getTargetBlockExact(10);
-                }
-            }, 0);
-            EventValues.registerEventValue(AnvilDamagedEvent.class, Player.class, new Getter<>() {
-                @Nullable
-                @Override
-                public Player get(AnvilDamagedEvent event) {
-                    return ((Player) event.getViewers().get(0));
-                }
-            }, 0);
-        }
-
         // Beacon Effect Event
         if (Skript.classExists("com.destroystokyo.paper.event.block.BeaconEffectEvent")) {
             Skript.registerEvent("Beacon Effect", SimpleEvent.class, BeaconEffectEvent.class, "beacon effect")
