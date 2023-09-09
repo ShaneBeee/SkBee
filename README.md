@@ -21,10 +21,10 @@ See the [**Wiki**](https://github.com/ShaneBeee/SkBee/wiki) for more detailed in
 ## Docs
 [![SkriptHubViewTheDocs](http://skripthub.net/static/addon/ViewTheDocsButton.png)](http://skripthub.net/docs/?addon=SkBee)
 
-## [**JavaDocs**](https://shanebeee.github.io/SkBee/)
+## [**JavaDocs**](https://shanebeee.github.io/docs/skbee/)
 
 ## <ins>OpenSource</ins>
-SkBee is proudly built using JetBrains' IntelliJ IDEA!     
+SkBee is proudly built using JetBrains' IntelliJ IDEA!
 We here at SkBee proudly support open source development with a big thanks to JetBrains for the [open source license](https://jb.gg/OpenSourceSupport).
 
 <img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="200">
