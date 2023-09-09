@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"while player is connected:",
         "\tgive player a diamond",
         "\twait 1 minute"})
-@Since("INSERT VERSION")
+@Since("2.18.0")
 public class CondPlayerIsConnected extends PropertyCondition<OfflinePlayer> {
 
     static {

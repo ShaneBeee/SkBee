@@ -25,7 +25,7 @@ import java.util.List;
 @Name("Recipe - Experience")
 @Description("Get the experience gained from a cooking recipe.")
 @Examples("set {_time} to experience of recipe with id \"minecraft:cooked_chicken\"")
-@Since("INSERT VERSION")
+@Since("2.18.0")
 public class ExprRecipeExperience extends SimpleExpression<Number> {
 
     static {

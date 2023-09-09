@@ -471,7 +471,7 @@ public class OtherEvents {
                 .examples("on entity teleport:",
                         "\tif event-entity is an enderman:",
                         "\t\tcancel event")
-                .since("INSERT VERSION");
+                .since("2.18.0");
 
         EventValues.registerEventValue(EntityTeleportEvent.class, Location.class, new Getter<>() {
             @Override

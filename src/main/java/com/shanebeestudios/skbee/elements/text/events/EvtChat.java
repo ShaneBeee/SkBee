@@ -18,7 +18,7 @@ public class EvtChat {
                         "\tset {_m::2} to async chat message",
                         "\tset {_m} to merge components {_m::*}",
                         "\tset async chat format to {_m}")
-                .since("INSERT VERSION");
+                .since("2.18.0");
     }
 
 }

@@ -26,7 +26,7 @@ import java.util.List;
 @Name("Recipe - CookTime")
 @Description("Get the cooktime of a cooking recipes.")
 @Examples("set {_time} to cooktime of recipe with id \"minecraft:cooked_chicken\"")
-@Since("INSERT VERSION")
+@Since("2.18.0")
 public class ExprRecipeCookTime extends SimpleExpression<Timespan> {
 
     static {

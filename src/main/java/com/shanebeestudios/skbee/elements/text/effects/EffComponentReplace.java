@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Replace a string with another string or text component in a text component. Supports regex patterns."})
 @Examples({"component replace \"puppy\" with \"***\" in {_comp}",
         "component replace \"\\d+\" with \"0\" in {_comp}"})
-@Since("INSERT VERSION")
+@Since("2.18.0")
 public class EffComponentReplace extends Effect {
 
     static {

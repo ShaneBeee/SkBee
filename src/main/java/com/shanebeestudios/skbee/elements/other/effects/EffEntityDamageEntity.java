@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
         "Optional fake damage cause which you can retrieve with Skript's `last damage cause` expression."})
 @Examples({"make last spawned entity damage player by 10",
         "make target entity damage player by 1 with fake damage cause poison"})
-@Since("2.8.0, INSERT VERSION (damage cause)")
+@Since("2.8.0, 2.18.0 (damage cause)")
 public class EffEntityDamageEntity extends Effect {
 
     static {

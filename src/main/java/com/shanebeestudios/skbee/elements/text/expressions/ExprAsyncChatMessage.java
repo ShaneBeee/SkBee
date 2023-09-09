@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
         "\tset {_m::2} to async chat message",
         "\tset {_m} to merge components {_m::*}",
         "\tset async chat format to {_m}"})
-@Since("INSERT VERSION")
+@Since("2.18.0")
 public class ExprAsyncChatMessage extends SimpleExpression<ComponentWrapper> {
 
     static {
