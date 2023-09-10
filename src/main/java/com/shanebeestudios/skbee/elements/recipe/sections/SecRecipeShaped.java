@@ -45,7 +45,7 @@ import java.util.Map;
         "\n`group` = Define a group to group your recipes together in the recipe book",
         "(an example would be having 3 recipes with the same outcome but a variety of ingredients) (optional).",
         "\n`category` = The recipe book category your recipe will be in (optional).",
-        "Options are building, redstone, equiptment, misc.",
+        "Options are \"building\", \"redstone\", \"equiptment\", \"misc\".",
         "\n`ingredients` = This section is where you will set the ingredients to correspend with your shape."})
 @Examples({"on load:",
         "\tregister shaped recipe with id \"custom:fancy_stone\" for stone named \"&aFANCY STONE\":",
