@@ -140,10 +140,10 @@ public class SecCookingRecipe extends Section {
     }
 
     @Override
-    public String toString(@Nullable Event event, boolean debug) {
+    public String toString(@Nullable Event e, boolean d) {
         return "register a new " + recipeType.toString().toLowerCase(Locale.ROOT)
-                + "recipe with id " + this.recipeId.toString(event, debug)
-                + " for " + this.recipeResult.toString(event, debug);
+                + "recipe with id " + this.recipeId.toString(e, d)
+                + " for " + this.recipeResult.toString(e, d);
     }
 
 }
