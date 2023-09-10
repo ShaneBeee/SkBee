@@ -31,7 +31,10 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 @Name("Recipe - Register Shaped Recipe")
 @Description({"This section allows you to register a shaped recipe, define the shape and set ingredients.",
@@ -42,12 +45,13 @@ import java.util.List;
         "\n`group` = Define a group to group your recipes together in the recipe book",
         "(an example would be having 3 recipes with the same outcome but a variety of ingredients) (optional).",
         "\n`category` = The recipe book category your recipe will be in (optional).",
+        "Options are building, redstone, equiptment, misc.",
         "\n`ingredients` = This section is where you will set the ingredients to correspend with your shape."})
 @Examples({"on load:",
         "\tregister shaped recipe with id \"custom:fancy_stone\" for stone named \"&aFANCY STONE\":",
         "\t\tshape: \"aaa\", \"aba\", \"aaa\"",
         "\t\tgroup: \"bloop\"",
-        "\t\tcategory: CraftingBookCategory.BUILDING #!ingore this just testing !#",
+        "\t\tcategory: \"building\"",
         "\t\tingredients:",
         "\t\t\tset ingredient of \"a\" to stone",
         "\t\t\tset ingredient of \"b\" to diamond",
@@ -72,8 +76,13 @@ import java.util.List;
 public class SecRecipeShaped extends Section {
 
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
+    private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
 
     static {
+        for (CraftingBookCategory value : CraftingBookCategory.values()) {
+            String name = value.name().toLowerCase(Locale.ROOT);
+            CATEGORY_MAP.put(name, value);
+        }
         Skript.registerSection(SecRecipeShaped.class, "register shaped recipe with id %string% (for|with result) %itemtype%");
     }
 
@@ -81,11 +90,11 @@ public class SecRecipeShaped extends Section {
     private Expression<ItemType> result;
     private Expression<String> shape;
     private Expression<String> group;
-    private Expression<CraftingBookCategory> category;
+    private Expression<String> category;
     private final EntryValidator entries = EntryValidator.builder()
             .addEntryData(new ExpressionEntryData<>("shape", null, false, String.class))
             .addEntryData(new ExpressionEntryData<>("group", null, true, String.class))
-            .addEntryData(new ExpressionEntryData<>("category", null, true, CraftingBookCategory.class))
+            .addEntryData(new ExpressionEntryData<>("category", null, true, String.class))
             .addSection("ingredients", false)
             .build();
     private Trigger ingredientSection;
@@ -105,7 +114,7 @@ public class SecRecipeShaped extends Section {
             return false;
         }
         this.group = (Expression<String>) container.getOptional("group", false);
-        this.category = (Expression<CraftingBookCategory>) container.getOptional("category", false);
+        this.category = (Expression<String>) container.getOptional("category", false);
 
         // Set the event for the ingredients section
         ParserInstance.get().setCurrentEvent("ingredients section", ShapedRecipeCreateEvent.class);
@@ -162,8 +171,9 @@ public class SecRecipeShaped extends Section {
             if (group != null) shapedRecipe.setGroup(group);
         }
         if (this.category != null) {
-            CraftingBookCategory category = this.category.getSingle(event);
-            if (category != null) shapedRecipe.setCategory(category);
+            String category = this.category.getSingle(event);
+            if (category != null && CATEGORY_MAP.containsKey(category))
+                shapedRecipe.setCategory(CATEGORY_MAP.get(category));
         }
 
         // Execute ingredients section
