@@ -1,15 +1,21 @@
 package com.shanebeestudios.skbee.api.recipe;
 
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.Timespan;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.inventory.CookingRecipe;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.RecipeChoice.ExactChoice;
+import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,11 +33,10 @@ public class RecipeUtil {
      *
      * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
-//     * @deprecated Planning to remove all string based ids for recipes in the future, please use {@link Util#getNamespacedKey(String, boolean)}
-//     * more information on this in the future when it's put into action
-//     */
-//    @Deprecated() // TODO removed this for now til we actually deal with it (too many warnings)
+     */
+    @Nullable
     public static NamespacedKey getKey(String key) {
+        if (key == null) return null;
         try {
             NamespacedKey namespacedKey;
             if (key.contains(":")) {
@@ -48,6 +53,36 @@ public class RecipeUtil {
             error(ex.getMessage());
             return null;
         }
+    }
+
+    // TODO Update the recipe choice pr to reflect sections and new changes.
+    public static RecipeChoice getRecipeChoice(Object object) {
+        if (object instanceof RecipeChoice recipeChoice)
+            return recipeChoice;
+        if (object instanceof ItemStack itemStack) {
+            Material material = itemStack.getType();
+            if (!material.isItem() || material.isAir()) return null;
+            if (itemStack.isSimilar(new ItemStack(material))) {
+                return new MaterialChoice(material);
+            } else {
+                return new ExactChoice(itemStack);
+            }
+        }
+        if (object instanceof ItemType itemType) {
+            List<ItemStack> all_types = new ArrayList<>();
+            Material material = itemType.getMaterial();
+            if (!material.isItem() || material.isAir()) return null;
+            // Get all possible types from an inputted item type (i.e. every sword named "Fancy Sword")
+            for (ItemStack itemStack : itemType.getAll()) {
+                all_types.add(itemStack);
+            }
+            if (itemType.isSimilar(new ItemType(material))) {
+                return new MaterialChoice(all_types.stream().map(ItemStack::getType).toList());
+            } else {
+                return new ExactChoice(all_types);
+            }
+        }
+        return null;
     }
 
     /**
