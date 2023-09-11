@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.recipe;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.util.Timespan;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
@@ -21,15 +22,18 @@ import java.util.NoSuchElementException;
  */
 public class RecipeUtil {
 
+    private static final boolean HAS_CATEGORY = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
+
     /**
      * Get a NamespacedKey from string
      * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
      *
      * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
-//     * @deprecated Planning to remove all string based ids for recipes in the future, please use {@link Util#getNamespacedKey(String, boolean)}
-//     * more information on this in the future when it's put into action
-//     */
+     * //     * @deprecated Planning to remove all string based ids for recipes in the future, please use {@link Util#getNamespacedKey(String, boolean)}
+     * //     * more information on this in the future when it's put into action
+     * //
+     */
 //    @Deprecated() // TODO removed this for now til we actually deal with it (too many warnings)
     public static NamespacedKey getKey(String key) {
         try {
@@ -95,8 +99,11 @@ public class RecipeUtil {
         log("&aRegistered new cooking recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         String group = recipe.getGroup();
-        if (group.length() > 0) {
+        if (!group.isEmpty()) {
             log(" - &7Group: &r\"&6%s&r\"", group);
+        }
+        if (HAS_CATEGORY) {
+            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
         }
         log(" - &7CookTime: &b%s", Timespan.fromTicks_i(recipe.getCookingTime()));
         log(" - &7Experience: &b%s", recipe.getExperience());
@@ -112,8 +119,11 @@ public class RecipeUtil {
         log("&aRegistered new shapeless recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         String group = recipe.getGroup();
-        if (group.length() > 0) {
+        if (!group.isEmpty()) {
             log(" - &7Group: &r\"&6%s&r\"", group);
+        }
+        if (HAS_CATEGORY) {
+            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
         }
         log(" - &7Ingredients:");
         recipe.getChoiceList().forEach(recipeChoice ->
@@ -130,8 +140,11 @@ public class RecipeUtil {
         log(" - &7Result: &e%s", recipe.getResult());
 
         String group = recipe.getGroup();
-        if (group.length() > 0) {
+        if (!group.isEmpty()) {
             log(" - &7Group: &r\"&6%s&r\"", group);
+        }
+        if (HAS_CATEGORY) {
+            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
         }
 
         String[] shape = recipe.getShape();
