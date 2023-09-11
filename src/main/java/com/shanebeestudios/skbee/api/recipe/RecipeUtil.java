@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.recipe;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.Timespan;
+import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -20,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.NoSuchElementException;
 
 /**
@@ -34,58 +34,52 @@ public class RecipeUtil {
      * Get a NamespacedKey from string
      * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
      *
+     * @deprecated use {@link Util#getNamespacedKey(String, boolean)} instead
      * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
      */
+    // TODO remove instances of `getKey` usage in other files before 3.0 release
+    @Deprecated
     @Nullable
     public static NamespacedKey getKey(String key) {
         if (key == null) return null;
         try {
-            NamespacedKey namespacedKey;
-            if (key.contains(":")) {
-                namespacedKey = NamespacedKey.fromString(key.toLowerCase(Locale.ROOT));
-            } else {
-                namespacedKey = Util.getNamespacedKey(key, false);
-            }
-            if (namespacedKey == null) {
-                error("Invalid namespaced key. Must be [a-z0-9/._-:]: " + key);
-                return null;
-            }
-            return namespacedKey;
+            return Util.getNamespacedKey(key, false);
         } catch (IllegalArgumentException ex) {
             error(ex.getMessage());
             return null;
         }
     }
 
-    // TODO Update the recipe choice pr to reflect sections and new changes.
+    /**
+     *
+     * @param object a RecipeChoice or an ItemStack/ItemType to convert to RecipeChoice
+     * @return null if an invalid object/item or air, otherwise a RecipeChoice
+     */
+    @Nullable
     public static RecipeChoice getRecipeChoice(Object object) {
-        if (object instanceof RecipeChoice recipeChoice)
-            return recipeChoice;
-        if (object instanceof ItemStack itemStack) {
+        RecipeChoice recipeChoice = null;
+        if (object instanceof Slot slot) {
+            ItemStack itemStack = slot.getItem();
+            if (itemStack == null) return null;
             Material material = itemStack.getType();
             if (!material.isItem() || material.isAir()) return null;
-            if (itemStack.isSimilar(new ItemStack(material))) {
-                return new MaterialChoice(material);
-            } else {
-                return new ExactChoice(itemStack);
-            }
-        }
-        if (object instanceof ItemType itemType) {
-            List<ItemStack> all_types = new ArrayList<>();
+            recipeChoice = itemStack.isSimilar(new ItemStack(material)) ? new MaterialChoice(material)
+                    : new ExactChoice(itemStack);
+        } else if (object instanceof ItemType itemType) {
             Material material = itemType.getMaterial();
             if (!material.isItem() || material.isAir()) return null;
-            // Get all possible types from an inputted item type (i.e. every sword named "Fancy Sword")
-            for (ItemStack itemStack : itemType.getAll()) {
-                all_types.add(itemStack);
-            }
-            if (itemType.isSimilar(new ItemType(material))) {
-                return new MaterialChoice(all_types.stream().map(ItemStack::getType).toList());
-            } else {
-                return new ExactChoice(all_types);
-            }
+            recipeChoice = itemType.isSimilar(new ItemType(material)) ? new MaterialChoice(itemType.getRandom().getType())
+                    : new ExactChoice(itemType.getRandom());
+        } else if (object instanceof ItemStack itemStack) {
+            Material material = itemStack.getType();
+            if (!material.isItem() || material.isAir()) return null;
+            recipeChoice = itemStack.isSimilar(new ItemStack(material)) ? new MaterialChoice(material)
+                    : new ExactChoice(itemStack);
+        } else if (object instanceof RecipeChoice choice) {
+            recipeChoice = choice;
         }
-        return null;
+        return recipeChoice;
     }
 
     /**
