@@ -40,7 +40,6 @@ import java.util.Map;
 
 @Name("Recipe - Register Cooking Recipe")
 @Description({
-        // Reviewer note: damn there are periods, any suggestions to make this better?
         "This section allows you to register any cooking recipe and define special properties.",
         "\n`input` = The item the recipe requires as an input to output the result (Required).",
         "\n`cooktime` = How long the recipe will take to finish cooking before result is given (Optional).",
@@ -51,14 +50,14 @@ import java.util.Map;
         "\n`category` = Which category in the recipe book this recipe should appear within (Optional 1.19.4+).",
         "Valid category types are \"food\", \"blocks\", \"misc\", if no category is defined it defaults to \"misc\"."
 })
-@Examples({"register new furnace recipe with id \"\" for sand:",
+@Examples({"register new furnace recipe with id \"sieve:gravel_to_sand\" for sand:",
         "\tinput: gravel",
         "\tgroup: \"sieve\"",
         "\tcooktime: 1 minecraft day # 20 minutes",
         "\texperience: 6",
         "\tcategory: \"blocks\"",
         "",
-        "register new campfire recipe with id \"\" for gravel:",
+        "register new campfire recipe with id \"sieve:cobblestone_to_gravel\" for gravel:",
         "\tinput: cobblestone",
         "\tgroup: \"sieve\"",
         "\tcategory: \"blocks\"",
@@ -67,9 +66,8 @@ import java.util.Map;
         "\tinput: rotten flesh",
         "\tcategory: \"food\"",
         "",
-        "set {_item} to any sword of sharpness 5 named \"Fancy Sword\" with lore \"&7&oI'm so fancy\"",
-        "register new blast furnace recipe with id \"its_a_gamble\" for {_item}:",
-        "\tinput: plain {_item}"})
+        "register a new blast furnace recipe with id \"firery_sword\" for diamond sword of fire aspect named \"Flaming Sword\"",
+        "\tinput: diamond sword"})
 @Since("INSERT VERSION")
 public class SecRecipeCooking extends Section {
 
