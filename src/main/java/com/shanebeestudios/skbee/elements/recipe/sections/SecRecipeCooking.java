@@ -92,7 +92,7 @@ public class SecRecipeCooking extends Section {
     private CookingRecipeType recipeType;
     private Expression<String> recipeId;
     private Expression<ItemStack> recipeResult;
-    private Expression<Object> recipeInput;
+    private Expression<?> recipeInput;
     private Expression<String> recipeCategory;
     private Expression<String> recipeGroup;
     private Expression<Timespan> cookTime;
@@ -108,8 +108,7 @@ public class SecRecipeCooking extends Section {
         this.recipeType = CookingRecipeType.valueOf(recipeType);
         this.recipeId = (Expression<String>) exprs[0];
         this.recipeResult = (Expression<ItemStack>) exprs[1];
-        this.recipeInput = (Expression<Object>) container.get("input", false);
-
+        this.recipeInput = ((Expression<?>) container.get("input", false)).getConvertedExpression(Object.class);
         this.recipeCategory = (Expression<String>) container.getOptional("category", false);
         this.recipeGroup = (Expression<String>) container.getOptional("group", false);
         this.cookTime = (Expression<Timespan>) container.getOptional("cooktime", false);
@@ -132,7 +131,7 @@ public class SecRecipeCooking extends Section {
         NamespacedKey namespacedKey = Util.getNamespacedKey(recipeId, false);
         ItemStack result = this.recipeResult.getSingle(event);
         // #getConvertedExpression() is used to prevent the famous 'UnparsedLiterals must be converted before use'
-        RecipeChoice input = this.recipeInput != null ? RecipeUtil.getRecipeChoice(this.recipeInput.getConvertedExpression(Object.class).getSingle(event)) : null;
+        RecipeChoice input = this.recipeInput != null ? RecipeUtil.getRecipeChoice(this.recipeInput.getSingle(event)) : null;
         int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : recipeType.getCookTime();
         float experience = this.experience != null ? this.experience.getSingle(event).floatValue() : 0;
 
@@ -143,7 +142,12 @@ public class SecRecipeCooking extends Section {
             RecipeUtil.error("Invalid/Missing recipe result: &e" + this.toString(event, DEBUG));
             return;
         } else if (input == null) {
-            RecipeUtil.error("Invalid/Missing recipe input: &e" + this.recipeInput.toString(event, DEBUG));
+            if (this.recipeInput != null) {
+                RecipeUtil.error("Invalid/Missing recipe input: &e" + this.recipeInput.toString(event, DEBUG));
+            } else {
+                // When an invalid expression like 'I AM REAL SYNTAX' is used, skript doesn't error this catches it
+                RecipeUtil.error("Invalid/Missing recipe input: &egiven recipe input is an invalid expression");
+            }
             return;
         }
 
