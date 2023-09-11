@@ -41,15 +41,14 @@ import java.util.Map;
 @Name("Recipe - Register Cooking Recipe")
 @Description({
         // Reviewer note: damn there are periods, any suggestions to make this better?
-        "This section allows you to register any cooking recipe add define special properties.",
-        "",
-        "\n'input' = The item the recipe requires as an input to output the result (Required).",
-        "\n'cooktime' = How long the recipe will take to finish cooking before result is given (Optional).",
-        "\n'experience' = The amount of experience gained when the recipe is finished cooking (Optional).",
+        "This section allows you to register any cooking recipe and define special properties.",
+        "\n`input` = The item the recipe requires as an input to output the result (Required).",
+        "\n`cooktime` = How long the recipe will take to finish cooking before result is given (Optional).",
+        "\n`experience` = The amount of experience gained when the recipe is finished cooking (Optional).",
         "Default cook times are, furnace = 10 seconds, smoker/blast furnace = 5 seconds and campfire = 30 seconds",
-        "\n'group' = You can define a group in which all recipes under this are sorted together in the recipe book (Optional).",
+        "\n`group` = You can define a group in which all recipes under this are sorted together in the recipe book (Optional).",
         "Examples of this in game are beds and wood types.",
-        "\n'category' = Which category in the recipe book this recipe should appear within (Optional 1.19.4+).",
+        "\n`category` = Which category in the recipe book this recipe should appear within (Optional 1.19.4+).",
         "Valid category types are \"food\", \"blocks\", \"misc\", if no category is defined it defaults to \"misc\"."
 })
 @Examples({"register new furnace recipe with id \"\" for sand:",
