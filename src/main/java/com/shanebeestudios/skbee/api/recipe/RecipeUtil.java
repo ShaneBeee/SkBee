@@ -22,7 +22,7 @@ import java.util.NoSuchElementException;
  */
 public class RecipeUtil {
 
-    private static final boolean HAS_CATEGORY = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
+    public static final boolean HAS_CATEGORY = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
 
     /**
      * Get a NamespacedKey from string
