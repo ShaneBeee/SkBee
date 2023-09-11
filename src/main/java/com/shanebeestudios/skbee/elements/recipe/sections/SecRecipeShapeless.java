@@ -40,7 +40,7 @@ import java.util.Map;
         "You can optionally add a group and category.",
         "\n`group` = Define a group to group your recipes together in the recipe book",
         "(an example would be having 3 recipes with the same outcome but a variety of ingredients) (optional).",
-        "\n`category` = The recipe book category your recipe will be in (optional).",
+        "\n`category` = The recipe book category your recipe will be in (optional) [Requires MC 1.19+].",
         "Options are \"building\", \"redstone\", \"equiptment\", \"misc\".",
         "\n`ingredients` = This section is where you will add the ingredients."})
 @Examples({"on load:",
@@ -68,13 +68,19 @@ import java.util.Map;
 public class SecRecipeShapeless extends Section {
 
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
-    private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
+    private static final boolean HAS_CATEGORY = RecipeUtil.HAS_CATEGORY;
+    private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>(); // TODO this will cause errors on lower versions, will fix later
+    private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR_BUILDER = EntryValidator.builder();
 
     static {
         for (CraftingBookCategory value : CraftingBookCategory.values()) {
             String name = value.name().toLowerCase(Locale.ROOT);
             CATEGORY_MAP.put(name, value);
         }
+        ENTRY_VALIDATOR_BUILDER.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
+        if (HAS_CATEGORY)
+            ENTRY_VALIDATOR_BUILDER.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
+        ENTRY_VALIDATOR_BUILDER.addSection("ingredients", false);
         Skript.registerSection(SecRecipeShapeless.class, "register shapeless recipe with id %string% (for|with result) %itemtype%");
     }
 
@@ -82,11 +88,7 @@ public class SecRecipeShapeless extends Section {
     private Expression<ItemType> result;
     private Expression<String> group;
     private Expression<String> category;
-    private final EntryValidator entries = EntryValidator.builder()
-            .addEntryData(new ExpressionEntryData<>("group", null, true, String.class))
-            .addEntryData(new ExpressionEntryData<>("category", null, true, String.class))
-            .addSection("ingredients", false)
-            .build();
+    private final EntryValidator entries = ENTRY_VALIDATOR_BUILDER.build();
     private Trigger ingredientSection;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
@@ -98,7 +100,7 @@ public class SecRecipeShapeless extends Section {
         this.id = (Expression<String>) exprs[0];
         this.result = (Expression<ItemType>) exprs[1];
         this.group = (Expression<String>) container.getOptional("group", false);
-        this.category = (Expression<String>) container.getOptional("category", false);
+        this.category = HAS_CATEGORY ? (Expression<String>) container.getOptional("category", false) : null;
 
         // Set the event for the ingredients section
         ParserInstance.get().setCurrentEvent("ingredients section", ShapelessRecipeCreateEvent.class);

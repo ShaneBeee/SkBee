@@ -44,7 +44,7 @@ import java.util.Map;
         "Blank spaces will just be empty spaces in a crafting grid.",
         "\n`group` = Define a group to group your recipes together in the recipe book",
         "(an example would be having 3 recipes with the same outcome but a variety of ingredients) (optional).",
-        "\n`category` = The recipe book category your recipe will be in (optional).",
+        "\n`category` = The recipe book category your recipe will be in (optional) [Requires MC 1.19+].",
         "Options are \"building\", \"redstone\", \"equiptment\", \"misc\".",
         "\n`ingredients` = This section is where you will set the ingredients to correspend with your shape."})
 @Examples({"on load:",
@@ -77,12 +77,18 @@ public class SecRecipeShaped extends Section {
 
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
+    private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR_BUILDER = EntryValidator.builder();
 
     static {
         for (CraftingBookCategory value : CraftingBookCategory.values()) {
             String name = value.name().toLowerCase(Locale.ROOT);
             CATEGORY_MAP.put(name, value);
         }
+        ENTRY_VALIDATOR_BUILDER.addEntryData(new ExpressionEntryData<>("shape", null, false, String.class));
+        ENTRY_VALIDATOR_BUILDER.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
+        if (RecipeUtil.HAS_CATEGORY)
+            ENTRY_VALIDATOR_BUILDER.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
+        ENTRY_VALIDATOR_BUILDER.addSection("ingredients", false);
         Skript.registerSection(SecRecipeShaped.class, "register shaped recipe with id %string% (for|with result) %itemtype%");
     }
 
@@ -91,12 +97,7 @@ public class SecRecipeShaped extends Section {
     private Expression<String> shape;
     private Expression<String> group;
     private Expression<String> category;
-    private final EntryValidator entries = EntryValidator.builder()
-            .addEntryData(new ExpressionEntryData<>("shape", null, false, String.class))
-            .addEntryData(new ExpressionEntryData<>("group", null, true, String.class))
-            .addEntryData(new ExpressionEntryData<>("category", null, true, String.class))
-            .addSection("ingredients", false)
-            .build();
+    private final EntryValidator entries = ENTRY_VALIDATOR_BUILDER.build();
     private Trigger ingredientSection;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
@@ -114,7 +115,7 @@ public class SecRecipeShaped extends Section {
             return false;
         }
         this.group = (Expression<String>) container.getOptional("group", false);
-        this.category = (Expression<String>) container.getOptional("category", false);
+        this.category = RecipeUtil.HAS_CATEGORY ? (Expression<String>) container.getOptional("category", false) : null;
 
         // Set the event for the ingredients section
         ParserInstance.get().setCurrentEvent("ingredients section", ShapedRecipeCreateEvent.class);
