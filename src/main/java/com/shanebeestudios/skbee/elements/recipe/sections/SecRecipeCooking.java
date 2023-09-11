@@ -30,6 +30,7 @@ import org.bukkit.inventory.recipe.CookingBookCategory;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
+import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.HashMap;
@@ -73,22 +74,21 @@ import java.util.Map;
 @Since("INSERT VERSION")
 public class SecRecipeCooking extends Section {
 
-    private static final EntryValidator entries = EntryValidator.builder()
-            .addEntryData(new ExpressionEntryData<>("input", null, false, Object.class))
-            .addEntryData(new ExpressionEntryData<>("group", null, true, String.class))
-            .addEntryData(new ExpressionEntryData<>("category", null, true, String.class))
-            .addEntryData(new ExpressionEntryData<>("cooktime", null, true, Timespan.class))
-            .addEntryData(new ExpressionEntryData<>("experience", null, true, Number.class))
-            .build();
-
+    private static final EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
     private static final Map<String, CookingBookCategory> CATEGORY_MAP = new HashMap<>();
-    private static final boolean HAS_CATEGORY = Skript.classExists("org.bukkit.inventory.recipe.CookingBookCategory");
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
-        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] :(furnace|smoker|blast furnace|campfire) recipe with id %string% for %itemstack%");
-        for (CookingBookCategory category : CookingBookCategory.values()) {
-            CATEGORY_MAP.put(category.toString().toLowerCase(Locale.ROOT), category);
+        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (:furnace|:smoker|:blast furnace|:campfire) recipe with id %string% for %itemstack%");
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, Object.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("cooktime", null, true, Timespan.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("experience", null, true, Number.class));
+        if (RecipeUtil.HAS_CATEGORY) {
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
+            for (CookingBookCategory category : CookingBookCategory.values()) {
+                CATEGORY_MAP.put(category.toString().toLowerCase(Locale.ROOT), category);
+            }
         }
     }
 
@@ -104,10 +104,9 @@ public class SecRecipeCooking extends Section {
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        EntryContainer container = entries.validate(sectionNode);
+        EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
         if (container == null) return false;
 
-        // Reviewer note: separated to maintain readability when reading code
         String recipeType = parseResult.tags.get(0).toUpperCase(Locale.ROOT).replaceAll(" ", "_");
         this.recipeType = CookingRecipeType.valueOf(recipeType);
         this.recipeId = (Expression<String>) exprs[0];
@@ -115,11 +114,6 @@ public class SecRecipeCooking extends Section {
         this.recipeInput = (Expression<Object>) container.get("input", false);
 
         this.recipeCategory = (Expression<String>) container.getOptional("category", false);
-        if (!HAS_CATEGORY && this.recipeCategory != null) {
-            // Reviewer note: you go any clue on how to word category error?
-            Skript.error("left to be decided");
-            return false;
-        }
         this.recipeGroup = (Expression<String>) container.getOptional("group", false);
         this.cookTime = (Expression<Timespan>) container.getOptional("cooktime", false);
         this.experience = (Expression<Number>) container.getOptional("experience", false);
@@ -165,7 +159,7 @@ public class SecRecipeCooking extends Section {
         };
         if (this.recipeCategory != null) {
             String category = this.recipeCategory.getSingle(event);
-            if (category != null && CATEGORY_MAP.get(category.toLowerCase(Locale.ROOT)) != null)
+            if (category != null && CATEGORY_MAP.containsKey(category.toLowerCase(Locale.ROOT)))
                 recipe.setCategory(CATEGORY_MAP.get(category.toLowerCase(Locale.ROOT)));
         }
 
