@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.config.SectionNode;
@@ -13,8 +12,7 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.parser.ParserInstance;
-import ch.njol.skript.lang.util.SimpleEvent;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
@@ -70,17 +68,17 @@ public class SecRecipeShapeless extends Section {
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     private static final boolean HAS_CATEGORY = RecipeUtil.HAS_CATEGORY;
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>(); // TODO this will cause errors on lower versions, will fix later
-    private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR_BUILDER = EntryValidator.builder();
+    private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
 
     static {
         for (CraftingBookCategory value : CraftingBookCategory.values()) {
             String name = value.name().toLowerCase(Locale.ROOT);
             CATEGORY_MAP.put(name, value);
         }
-        ENTRY_VALIDATOR_BUILDER.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
         if (HAS_CATEGORY)
-            ENTRY_VALIDATOR_BUILDER.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
-        ENTRY_VALIDATOR_BUILDER.addSection("ingredients", false);
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
+        ENTRY_VALIDATOR.addSection("ingredients", false);
         Skript.registerSection(SecRecipeShapeless.class, "register shapeless recipe with id %string% (for|with result) %itemtype%");
     }
 
@@ -88,13 +86,12 @@ public class SecRecipeShapeless extends Section {
     private Expression<ItemType> result;
     private Expression<String> group;
     private Expression<String> category;
-    private final EntryValidator entries = ENTRY_VALIDATOR_BUILDER.build();
     private Trigger ingredientSection;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        EntryContainer container = entries.validate(sectionNode);
+        EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
         if (container == null) return false;
 
         this.id = (Expression<String>) exprs[0];
@@ -102,10 +99,9 @@ public class SecRecipeShapeless extends Section {
         this.group = (Expression<String>) container.getOptional("group", false);
         this.category = HAS_CATEGORY ? (Expression<String>) container.getOptional("category", false) : null;
 
-        // Set the event for the ingredients section
-        ParserInstance.get().setCurrentEvent("ingredients section", ShapelessRecipeCreateEvent.class);
+        // Parse the ingredients section
         SectionNode ingredients = container.get("ingredients", SectionNode.class, false);
-        this.ingredientSection = new Trigger(ParserInstance.get().getCurrentScript(), "recipe ingredients", new SimpleEvent(), ScriptLoader.loadItems(ingredients));
+        this.ingredientSection = loadCode(ingredients, "ingredients section", ShapelessRecipeCreateEvent.class);
         return true;
     }
 
@@ -117,6 +113,8 @@ public class SecRecipeShapeless extends Section {
     }
 
     private void execute(Event event) {
+        Object localVars = Variables.copyLocalVariables(event);
+
         String id = this.id.getSingle(event);
         if (id == null) {
             RecipeUtil.error("Invalid/Missing recipe ID: &e" + this.toString(event, false));
@@ -146,7 +144,10 @@ public class SecRecipeShapeless extends Section {
         // Execute ingredients section
         // Recipe ingredients are set in there
         ShapelessRecipeCreateEvent recipeEvent = new ShapelessRecipeCreateEvent(shapelessRecipe);
-        this.ingredientSection.execute(recipeEvent);
+        Variables.setLocalVariables(recipeEvent, localVars);
+        TriggerItem.walk(this.ingredientSection, recipeEvent);
+        Variables.setLocalVariables(event, localVars);
+        Variables.removeLocals(recipeEvent);
 
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);
