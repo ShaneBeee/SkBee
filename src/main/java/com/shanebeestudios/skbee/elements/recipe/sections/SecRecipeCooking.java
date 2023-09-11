@@ -143,7 +143,6 @@ public class SecRecipeCooking extends Section {
             RecipeUtil.error("Invalid/Missing recipe result: &e" + this.toString(event, DEBUG));
             return;
         } else if (input == null) {
-            // Reviewer note: swapped to `this.FIELD.toString()` for entries to try and provide further debug info when logging
             RecipeUtil.error("Invalid/Missing recipe input: &e" + this.recipeInput.toString(event, DEBUG));
             return;
         }
