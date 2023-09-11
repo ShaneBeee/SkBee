@@ -42,9 +42,7 @@ public class RecipeUtil {
     @Deprecated
     @Nullable
     public static NamespacedKey getKey(String key) {
-        if (key == null) {
-            return null;
-        }
+        if (key == null) return null;
         return Util.getNamespacedKey(key, false);
     }
 
@@ -56,28 +54,23 @@ public class RecipeUtil {
      */
     @Nullable
     public static RecipeChoice getRecipeChoice(Object object) {
-        RecipeChoice recipeChoice = null;
-        if (object instanceof Slot slot) {
-            ItemStack itemStack = slot.getItem();
-            if (itemStack == null) return null;
+        if (object instanceof ItemStack itemStack) {
             Material material = itemStack.getType();
             if (!material.isItem() || material.isAir()) return null;
-            recipeChoice = itemStack.isSimilar(new ItemStack(material)) ? new MaterialChoice(material)
-                    : new ExactChoice(itemStack);
+
+            if (itemStack.isSimilar(new ItemStack(material))) {
+                return new MaterialChoice(material);
+            } else {
+                return new ExactChoice(itemStack);
+            }
+        } else if (object instanceof Slot slot) {
+            return getRecipeChoice(slot.getItem());
         } else if (object instanceof ItemType itemType) {
-            Material material = itemType.getMaterial();
-            if (!material.isItem() || material.isAir()) return null;
-            recipeChoice = itemType.isSimilar(new ItemType(material)) ? new MaterialChoice(itemType.getRandom().getType())
-                    : new ExactChoice(itemType.getRandom());
-        } else if (object instanceof ItemStack itemStack) {
-            Material material = itemStack.getType();
-            if (!material.isItem() || material.isAir()) return null;
-            recipeChoice = itemStack.isSimilar(new ItemStack(material)) ? new MaterialChoice(material)
-                    : new ExactChoice(itemStack);
+            return getRecipeChoice(itemType.getRandom());
         } else if (object instanceof RecipeChoice choice) {
-            recipeChoice = choice;
+            return choice;
         }
-        return recipeChoice;
+        return null;
     }
 
     /**
