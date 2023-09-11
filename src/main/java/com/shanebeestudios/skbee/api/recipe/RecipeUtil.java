@@ -53,8 +53,9 @@ public class RecipeUtil {
 
     /**
      *
-     * @param object a RecipeChoice or an ItemStack/ItemType to convert to RecipeChoice
+     * @param object a RecipeChoice or ItemStack/ItemType/Slot that will be converted to a RecipeChoice
      * @return null if an invalid object/item or air, otherwise a RecipeChoice
+     *
      */
     @Nullable
     public static RecipeChoice getRecipeChoice(Object object) {
