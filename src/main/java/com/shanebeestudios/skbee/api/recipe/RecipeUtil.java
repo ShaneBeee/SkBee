@@ -42,13 +42,10 @@ public class RecipeUtil {
     @Deprecated
     @Nullable
     public static NamespacedKey getKey(String key) {
-        if (key == null) return null;
-        try {
-            return Util.getNamespacedKey(key, false);
-        } catch (IllegalArgumentException ex) {
-            error(ex.getMessage());
+        if (key == null) {
             return null;
         }
+        return Util.getNamespacedKey(key, false);
     }
 
     /**

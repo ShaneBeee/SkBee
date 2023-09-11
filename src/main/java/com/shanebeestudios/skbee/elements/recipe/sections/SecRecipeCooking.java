@@ -39,7 +39,7 @@ import java.util.Map;
 
 @Name("Recipe - Register Cooking Recipe")
 @Description({
-        // Reviewer note: damn there's periods, any suggestions to make this better?
+        // Reviewer note: damn there are periods, any suggestions to make this better?
         "This section allows you to register any cooking recipe add define special properties.",
         "",
         "\n'input' = The item the recipe requires as an input to output the result (Required).",
@@ -51,9 +51,7 @@ import java.util.Map;
         "\n'category' = Which category in the recipe book this recipe should appear within (Optional 1.19.4+).",
         "Valid category types are \"food\", \"blocks\", \"misc\", if no category is defined it defaults to \"misc\"."
 })
-// Reviewer note: using blank spaces at top and bottom since docs don't let us define separate doc examples.
-@Examples({"",
-        "register new furnace recipe with id \"\" for sand:",
+@Examples({"register new furnace recipe with id \"\" for sand:",
         "\tinput: gravel",
         "\tgroup: \"sieve\"",
         "\tcooktime: 1 minecraft day # 20 minutes",
@@ -71,8 +69,7 @@ import java.util.Map;
         "",
         "set {_item} to any sword of sharpness 5 named \"Fancy Sword\" with lore \"&7&oI'm so fancy\"",
         "register new blast furnace recipe with id \"its_a_gamble\" for {_item}:",
-        "\tinput: plain {_item}",
-        ""})
+        "\tinput: plain {_item}"})
 @Since("INSERT VERSION")
 public class SecRecipeCooking extends Section {
 
