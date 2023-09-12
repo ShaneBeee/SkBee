@@ -71,13 +71,14 @@ public class SecRecipeShapeless extends Section {
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
 
     static {
-        for (CraftingBookCategory value : CraftingBookCategory.values()) {
-            String name = value.name().toLowerCase(Locale.ROOT);
-            CATEGORY_MAP.put(name, value);
-        }
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
-        if (HAS_CATEGORY)
+        if (HAS_CATEGORY) {
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
+            for (CraftingBookCategory value : CraftingBookCategory.values()) {
+                String name = value.name().toLowerCase(Locale.ROOT);
+                CATEGORY_MAP.put(name, value);
+            }
+        }
         ENTRY_VALIDATOR.addSection("ingredients", false);
         Skript.registerSection(SecRecipeShapeless.class, "register shapeless recipe with id %string% (for|with result) %itemtype%");
     }
