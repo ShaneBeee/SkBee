@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.NoSuchElementException;
 
 /**
@@ -45,10 +46,8 @@ public class RecipeUtil {
     }
 
     /**
-     *
      * @param object a RecipeChoice or ItemStack/ItemType/Slot that will be converted to a RecipeChoice
      * @return null if an invalid object/item or air, otherwise a RecipeChoice
-     *
      */
     @Nullable
     public static RecipeChoice getRecipeChoice(Object object) {
@@ -113,7 +112,8 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logCookingRecipe(CookingRecipe<?> recipe) {
-        log("&aRegistered new cooking recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
+        String type = recipe.getClass().getSimpleName().replace("Recipe", "").toLowerCase(Locale.ROOT);
+        log("&aRegistered new %s recipe: &7(&b%s&7)", type, ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         String group = recipe.getGroup();
         if (!group.isEmpty()) {
