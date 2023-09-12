@@ -44,7 +44,7 @@ import java.util.Map;
         "\n`input` = The item the recipe requires as an input to output the result (Required).",
         "\n`cooktime` = How long the recipe will take to finish cooking before result is given (Optional).",
         "\n`experience` = The amount of experience gained when the recipe is finished cooking (Optional).",
-        "Default cook times are, furnace = 10 seconds, smoker/blast furnace = 5 seconds and campfire = 30 seconds.",
+        "Default cook times are, furnace = 10 seconds, smoking/blasting = 5 seconds and campfire = 30 seconds.",
         "\n`group` = You can define a group in which all recipes under this are sorted together in the recipe book (Optional).",
         "Examples of this in game are beds and wood types.",
         "\n`category` = Which category in the recipe book this recipe should appear within (Optional 1.19.4+).",
@@ -61,11 +61,11 @@ import java.util.Map;
         "\tgroup: \"sieve\"",
         "\tcategory: \"blocks\"",
         "",
-        "register new smoker recipe with id \"chef:beef_jerky\" for cooked mutton named \"&oBeef&r Jerky\":",
+        "register new smoking recipe with id \"chef:beef_jerky\" for cooked mutton named \"&oBeef&r Jerky\":",
         "\tinput: rotten flesh",
         "\tcategory: \"food\"",
         "",
-        "register a new blast furnace recipe with id \"firery_sword\" for diamond sword of fire aspect named \"Flaming Sword\"",
+        "register a new blasting recipe with id \"firery_sword\" for diamond sword of fire aspect named \"Flaming Sword\"",
         "\tinput: diamond sword"})
 @Since("INSERT VERSION")
 public class SecRecipeCooking extends Section {
@@ -75,7 +75,7 @@ public class SecRecipeCooking extends Section {
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
-        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoker|2:blast furnace|3:campfire) recipe with id %string% (for|with result) %itemstack%");
+        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe with id %string% (for|with result) %itemstack%");
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, Object.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("cooktime", null, true, Timespan.class));
@@ -152,8 +152,8 @@ public class SecRecipeCooking extends Section {
 
         CookingRecipe<?> recipe = switch (this.recipeType) {
             case FURNACE -> new FurnaceRecipe(namespacedKey, result, input, experience, cookTime);
-            case SMOKER -> new SmokingRecipe(namespacedKey, result, input, experience, cookTime);
-            case BLAST_FURNACE -> new BlastingRecipe(namespacedKey, result, input, experience, cookTime);
+            case SMOKING -> new SmokingRecipe(namespacedKey, result, input, experience, cookTime);
+            case BLASTING -> new BlastingRecipe(namespacedKey, result, input, experience, cookTime);
             case CAMPFIRE -> new CampfireRecipe(namespacedKey, result, input, experience, cookTime);
         };
         if (this.recipeCategory != null) {
