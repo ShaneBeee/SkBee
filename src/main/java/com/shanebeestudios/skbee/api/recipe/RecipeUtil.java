@@ -34,12 +34,10 @@ public class RecipeUtil {
      * Get a NamespacedKey from string
      * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
      *
-     * @deprecated use {@link Util#getNamespacedKey(String, boolean)} instead
      * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
      * @return New NamespacedKey
      */
     // TODO remove instances of `getKey` usage in other files before 3.0 release
-    @Deprecated
     @Nullable
     public static NamespacedKey getKey(String key) {
         if (key == null) return null;
