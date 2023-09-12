@@ -27,6 +27,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.SmokingRecipe;
 import org.bukkit.inventory.recipe.CookingBookCategory;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
@@ -39,17 +40,15 @@ import java.util.Locale;
 import java.util.Map;
 
 @Name("Recipe - Register Cooking Recipe")
-@Description({
-        "This section allows you to register any cooking recipe and define special properties.",
+@Description({"This section allows you to register any cooking recipe and define special properties.",
         "\n`input` = The item the recipe requires as an input to output the result (Required).",
         "\n`cooktime` = How long the recipe will take to finish cooking before result is given (Optional).",
         "\n`experience` = The amount of experience gained when the recipe is finished cooking (Optional).",
-        "Default cook times are, furnace = 10 seconds, smoker/blast furnace = 5 seconds and campfire = 30 seconds",
+        "Default cook times are, furnace = 10 seconds, smoker/blast furnace = 5 seconds and campfire = 30 seconds.",
         "\n`group` = You can define a group in which all recipes under this are sorted together in the recipe book (Optional).",
         "Examples of this in game are beds and wood types.",
         "\n`category` = Which category in the recipe book this recipe should appear within (Optional 1.19.4+).",
-        "Valid category types are \"food\", \"blocks\", \"misc\", if no category is defined it defaults to \"misc\"."
-})
+        "Valid category types are \"food\", \"blocks\", \"misc\", if no category is defined it defaults to \"misc\"."})
 @Examples({"register new furnace recipe with id \"sieve:gravel_to_sand\" for sand:",
         "\tinput: gravel",
         "\tgroup: \"sieve\"",
@@ -76,7 +75,7 @@ public class SecRecipeCooking extends Section {
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
-        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (:furnace|:smoker|:blast furnace|:campfire) recipe with id %string% for %itemstack%");
+        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoker|2:blast furnace|3:campfire) recipe with id %string% (for|with result) %itemstack%");
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, Object.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("cooktime", null, true, Timespan.class));
@@ -104,8 +103,7 @@ public class SecRecipeCooking extends Section {
         EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
         if (container == null) return false;
 
-        String recipeType = parseResult.tags.get(0).toUpperCase(Locale.ROOT).replaceAll(" ", "_");
-        this.recipeType = CookingRecipeType.valueOf(recipeType);
+        this.recipeType = CookingRecipeType.values()[parseResult.mark];
         this.recipeId = (Expression<String>) exprs[0];
         this.recipeResult = (Expression<ItemStack>) exprs[1];
         this.recipeInput = ((Expression<?>) container.get("input", false)).getConvertedExpression(Object.class);
@@ -116,6 +114,7 @@ public class SecRecipeCooking extends Section {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         execute(event);
@@ -132,7 +131,7 @@ public class SecRecipeCooking extends Section {
         ItemStack result = this.recipeResult.getSingle(event);
         // #getConvertedExpression() is used to prevent the famous 'UnparsedLiterals must be converted before use'
         RecipeChoice input = this.recipeInput != null ? RecipeUtil.getRecipeChoice(this.recipeInput.getSingle(event)) : null;
-        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : recipeType.getCookTime();
+        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : this.recipeType.getCookTime();
         float experience = this.experience != null ? this.experience.getSingle(event).floatValue() : 0;
 
         if (namespacedKey == null) {
@@ -151,9 +150,9 @@ public class SecRecipeCooking extends Section {
             return;
         }
 
-        CookingRecipe<?> recipe = switch (recipeType) {
-            case SMOKER -> new SmokingRecipe(namespacedKey, result, input, experience, cookTime);
+        CookingRecipe<?> recipe = switch (this.recipeType) {
             case FURNACE -> new FurnaceRecipe(namespacedKey, result, input, experience, cookTime);
+            case SMOKER -> new SmokingRecipe(namespacedKey, result, input, experience, cookTime);
             case BLAST_FURNACE -> new BlastingRecipe(namespacedKey, result, input, experience, cookTime);
             case CAMPFIRE -> new CampfireRecipe(namespacedKey, result, input, experience, cookTime);
         };
@@ -172,9 +171,9 @@ public class SecRecipeCooking extends Section {
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
-        return "register a new " + recipeType.toString().toLowerCase(Locale.ROOT)
-                + "recipe with id " + this.recipeId.toString(e, d)
+    public @NotNull String toString(@Nullable Event e, boolean d) {
+        return "register a new " + this.recipeType.toString().toLowerCase(Locale.ROOT)
+                + " recipe with id " + this.recipeId.toString(e, d)
                 + " for " + this.recipeResult.toString(e, d);
     }
 
