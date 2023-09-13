@@ -15,6 +15,7 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -33,7 +34,7 @@ import java.util.List;
         "base and addition items. Requires MC 1.13+",
         "\n`template` = Represents the first slot in the smithing inventory.",
         "\n`base` = Represents the second slot in the smithing inventory.",
-        "\n`addition` = Represents the third slot in the smithing inventory."})
+        "\n`addition` = Represents the third slot in the smithing inventory (Optional)."})
 @Examples({"on load:",
         "\tregister smithing transform recipe with id \"test:smithing\" with result emerald of unbreaking named \"&cFire Stone\" with all flags hidden:",
         "\t\ttemplate: paper named \"&cFire Paper\"",
@@ -51,7 +52,7 @@ public class SecRecipeSmithing extends Section {
                     "register [a] [new] smithing [transform] recipe with id %string% (for|with result) %itemstack%");
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("template", null, false, Object.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("base", null, false, Object.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("addition", null, false, Object.class));
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("addition", null, true, Object.class));
         }
     }
 
@@ -71,7 +72,8 @@ public class SecRecipeSmithing extends Section {
         this.result = (Expression<ItemStack>) exprs[1];
         this.template = ((Expression<?>) container.get("template", false)).getConvertedExpression(Object.class);
         this.base = ((Expression<?>) container.get("base", false)).getConvertedExpression(Object.class);
-        this.addition = ((Expression<?>) container.get("addition", false)).getConvertedExpression(Object.class);
+        this.addition = ((Expression<?>) container.getOptional("addition", false));
+        if (this.addition != null) this.addition = this.addition.getConvertedExpression(Object.class);
         return true;
     }
 
@@ -107,8 +109,7 @@ public class SecRecipeSmithing extends Section {
             RecipeUtil.error("Invalid/Missing recipe template: &e" + this.toString(event, DEBUG));
             return;
         } else if (addition == null) {
-            RecipeUtil.error("Invalid/Missing recipe addition: &e" + this.toString(event, DEBUG));
-            return;
+            addition = new RecipeChoice.MaterialChoice(Material.AIR);
         }
 
         SmithingTransformRecipe recipe = new SmithingTransformRecipe(key, result, template, base, addition);
