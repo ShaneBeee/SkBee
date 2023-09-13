@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.util.Util;
+import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
@@ -175,6 +176,18 @@ public class RecipeUtil {
                 log("   - &r'&d%s&r' = &6%s", character, getFancy(recipeChoice));
             }
         });
+    }
+
+    /**
+     * Log a brewing recipe to console
+     *
+     * @param potionMix PotionMix to log
+     */
+    public static void logBrewingRecipe(PotionMix potionMix) {
+        log("&aRegistered new shaped recipe: &7(&b%s&7)", potionMix.getKey().toString());
+        log(" - &7Result: &e%s", potionMix.getResult());
+        log(" - &7Ingredient: %s", getFancy(potionMix.getIngredient()));
+        log(" - &7Input: %s", getFancy(potionMix.getInput()));
     }
 
     private static String getFancy(RecipeChoice matChoice) {
