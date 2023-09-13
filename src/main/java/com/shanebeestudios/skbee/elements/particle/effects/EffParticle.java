@@ -76,24 +76,32 @@ public class EffParticle extends Effect {
         return true;
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
-    protected void execute(@NotNull Event e) {
+    protected void execute(@NotNull Event event) {
         if (this.count == null || this.particle == null || this.location == null) return;
 
-        boolean hasExtra = this.extra != null;
-        Number countSingle = this.count.getSingle(e);
+        Number countSingle = this.count.getSingle(event);
         int count = countSingle != null ? countSingle.intValue() : 0;
 
-        Particle particle = this.particle.getSingle(e);
-        Location[] locations = this.location.getArray(e);
-        Vector offset = this.offset != null ? this.offset.getSingle(e) : new Vector(0, 0, 0);
-        double extra = hasExtra ? this.extra.getSingle(e).doubleValue() : 1;
-        Object data = this.data != null ? this.data.getSingle(e) : null;
-        Player[] players = this.players != null ? this.players.getArray(e) : null;
+        Particle particle = this.particle.getSingle(event);
+        if (particle == null) return;
 
-        for (Location location : locations) {
-            ParticleUtil.spawnParticle(players, particle, location, count, data, offset, extra, force);
+        Vector offset = new Vector(0, 0, 0);
+        if (this.offset != null) {
+            Vector offsetSingle = this.offset.getSingle(event);
+            if (offsetSingle != null) offset = offsetSingle;
+        }
+        double extra = 1;
+        if (this.extra != null) {
+            Number extraSingle = this.extra.getSingle(event);
+            extra = extraSingle != null ? extraSingle.doubleValue() : 1;
+        }
+
+        Object data = this.data != null ? this.data.getSingle(event) : null;
+        Player[] players = this.players != null ? this.players.getArray(event) : null;
+
+        for (Location location : this.location.getArray(event)) {
+            ParticleUtil.spawnParticle(particle, players, location, count, data, offset, extra, force);
         }
     }
 
