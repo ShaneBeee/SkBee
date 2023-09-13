@@ -111,7 +111,7 @@ public class SecRecipeBrewing extends Section {
         POTION_BREWER.removePotionMix(namespacedKey);
         PotionMix potionMix = new PotionMix(namespacedKey, result, input, ingredient);
         POTION_BREWER.addPotionMix(potionMix);
-        RecipeUtil.logBrewingRecipe(potionMix);
+        if (DEBUG) RecipeUtil.logBrewingRecipe(potionMix);
     }
 
     @Override
