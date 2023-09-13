@@ -14,6 +14,7 @@ import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
@@ -133,7 +134,7 @@ public class ParticleUtil {
         return "UNKNOWN";
     }
 
-    public static void spawnParticle(@Nullable Player[] players, Particle particle, Location location, int count, Object data, Vector offset, double extra, boolean force) {
+    public static void spawnParticle(@NotNull Particle particle, @Nullable Player[] players, @NotNull Location location, int count, Object data, Vector offset, double extra, boolean force) {
         Object particleData = getData(particle, data);
         if (particle.getDataType() != Void.class && particleData == null) return;
 
