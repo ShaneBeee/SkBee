@@ -14,8 +14,7 @@ import com.shanebeestudios.skbee.api.reflection.ChatReflection;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("NBT - Pretty NBT String")
 @Description({"Get a 'pretty' NBT string. This is colored the same as when using the vanilla Minecraft '/data' command. ",
@@ -26,7 +25,7 @@ import javax.annotation.Nullable;
         "send pretty nbt from {_nbt} to player",
         "send pretty nbt from {_nbt} with split \" \" to console"})
 @Since("1.6.0")
-public class ExprPrettyNBT extends PropertyExpression<NBTCompound, String> {
+public class ExprPrettyNBT extends PropertyExpression<Object, String> {
 
     static {
         Skript.registerExpression(ExprPrettyNBT.class, String.class, ExpressionType.PROPERTY,
@@ -39,15 +38,19 @@ public class ExprPrettyNBT extends PropertyExpression<NBTCompound, String> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
-        setExpr((Expression<? extends NBTCompound>) exprs[0]);
+        setExpr(exprs[0]);
         split = (Expression<String>) exprs[1];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    protected String @NotNull [] get(@NotNull Event e, NBTCompound @NotNull [] source) {
-        String split = this.split != null ? this.split.getSingle(e) : null;
-        return get(source, nbt -> ChatReflection.getPrettyNBT(nbt, split));
+    protected String[] get(Event event, Object[] source) {
+        String split = this.split != null ? this.split.getSingle(event) : null;
+        return get(source, object -> {
+            if (object instanceof NBTCompound compound) return ChatReflection.getPrettyNBT(compound, split);
+            return null;
+        });
     }
 
     @Override
@@ -57,7 +60,8 @@ public class ExprPrettyNBT extends PropertyExpression<NBTCompound, String> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "pretty nbt from " + getExpr().toString(e, d) + (split != null ? " with split " + split.toString(e, d) : "");
+        return "pretty nbt from " + getExpr().toString(e, d) +
+                (this.split != null ? " with split " + this.split.toString(e, d) : "");
     }
 
 }
