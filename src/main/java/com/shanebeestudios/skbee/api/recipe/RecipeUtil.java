@@ -18,6 +18,7 @@ import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
+import org.bukkit.inventory.SmithingTransformRecipe;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -188,6 +189,19 @@ public class RecipeUtil {
         log(" - &7Result: &e%s", potionMix.getResult());
         log(" - &7Ingredient: %s", getFancy(potionMix.getIngredient()));
         log(" - &7Input: %s", getFancy(potionMix.getInput()));
+    }
+
+    /**
+     * Log a smithing transform recipe to console
+     *
+     * @param recipe Recipe to log
+     */
+    public static void logSmithingRecipe(SmithingTransformRecipe recipe) {
+        log("&aRegistered new smithing recipe: &7(&b%s&7)", recipe.getKey().toString());
+        log(" - &7Result: &e%s", recipe.getResult());
+        log(" - &7Template: %s", getFancy(recipe.getTemplate()));
+        log(" - &7Base: %s", getFancy(recipe.getBase()));
+        log(" - &7Addition: %s", getFancy(recipe.getAddition()));
     }
 
     private static String getFancy(RecipeChoice matChoice) {
