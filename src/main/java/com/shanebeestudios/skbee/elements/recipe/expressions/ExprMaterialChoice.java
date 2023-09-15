@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.event.Event;
@@ -50,9 +51,8 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
     }
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
-    @Nullable
     @Override
-    protected MaterialChoice[] get(Event event) {
+    protected MaterialChoice @Nullable [] get(Event event) {
         List<Material> materials = new ArrayList<>();
         for (Object object : this.objects.getArray(event)) {
             if (object instanceof ItemType itemType) {
@@ -60,8 +60,8 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
                     Material material = itemStack.getType();
                     if (!materials.contains(material)) materials.add(material);
                 });
-            } else if (HAS_TAGS && object instanceof Tag<?> tag) {
-                MaterialChoice materialChoice = new MaterialChoice((Tag<Material>) tag);
+            } else if (HAS_TAGS && RecipeUtil.isMaterialTag(object)) {
+                MaterialChoice materialChoice = new MaterialChoice((Tag<Material>) object);
                 materialChoice.getChoices().forEach(material -> {
                     if (!materials.contains(material)) materials.add(material);
                 });

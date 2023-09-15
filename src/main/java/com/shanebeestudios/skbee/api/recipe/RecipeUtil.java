@@ -10,6 +10,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -21,6 +22,8 @@ import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -211,6 +214,22 @@ public class RecipeUtil {
                 .replace("[", "&r[&b")
                 .replace(",", "&r,&b")
                 .replace("]}", "&r]");
+    }
+
+    /**
+     * Check if a {@link Tag} is a Material Tag
+     *
+     * @param object Object to check
+     * @return True if material tag
+     */
+    public static boolean isMaterialTag(Object object) {
+        if (object instanceof Tag<?> tag) {
+            ParameterizedType superC = (ParameterizedType) tag.getClass().getGenericSuperclass();
+            for (Type arg : superC.getActualTypeArguments()) {
+                if (arg.equals(Material.class)) return true;
+            }
+        }
+        return false;
     }
 
     /**
