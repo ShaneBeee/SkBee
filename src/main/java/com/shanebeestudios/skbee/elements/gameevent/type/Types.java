@@ -24,6 +24,7 @@ public class Types {
                 .description("Represents a Minecraft 'GameEvent', mainly used by Skulk Sensors. Requires MC 1.17+.",
                         "See McWiki for more details -> https://minecraft.fandom.com/wiki/Sculk_Sensor#Vibration_amplitudes")
                 .usage(getGameEventNames())
+                .after("itemtype")
                 .examples("")
                 .since("1.14.0")
                 .parser(new Parser<>() {
