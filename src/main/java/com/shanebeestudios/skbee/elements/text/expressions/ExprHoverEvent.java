@@ -23,6 +23,8 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 @Name("Text Component - Hover Event")
@@ -37,7 +39,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     static {
         Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
                 // TODO scheduled for removal of "item" (july 8/2023)
-                "[a] [new] hover event showing [item] %strings/itemtype%");
+                "[a] [new] hover event showing [item] %strings/itemtypes%");
     }
 
     private Expression<?> object;
@@ -61,12 +63,15 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             BinaryTagHolder nbt = BinaryTagHolder.binaryTagHolder(itemType.getItemMeta().getAsString());
             ShowItem showItem = ShowItem.of(key, amount, nbt);
             return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_ITEM, showItem)};
-        } else if (this.object.getArray(event) instanceof String[] strings) {
+        } else {
+            List<String> strings = new ArrayList<>();
+            for (Object object : this.object.getArray(event)) {
+                if (object instanceof String string) strings.add(string);
+            }
             String join = StringUtils.join(strings, "\n");
             Component texts = ComponentWrapper.fromText(join).getComponent();
             return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_TEXT, texts)};
         }
-        return null;
     }
 
     @Override
