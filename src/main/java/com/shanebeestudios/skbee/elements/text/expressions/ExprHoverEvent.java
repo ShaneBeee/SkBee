@@ -16,7 +16,9 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.HoverEvent.Action;
+import net.kyori.adventure.text.event.HoverEvent.ShowEntity;
 import net.kyori.adventure.text.event.HoverEvent.ShowItem;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -24,7 +26,7 @@ import javax.annotation.Nullable;
 
 @SuppressWarnings("rawtypes")
 @Name("Text Component - Hover Event")
-@Description({"Create a new hover event. Can show texts, text components or an item to a player.",
+@Description({"Create a new hover event. Can show texts, text components, an item or an entity to a player.",
         "'showing %itemtype%' requires Minecraft 1.18.2+"})
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
         "set hover event of {_t} to a new hover event showing player's tool",
@@ -35,7 +37,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     static {
         Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
                 // TODO scheduled for removal of "item" (july 8/2023)
-                "[a] [new] hover event showing [item] %strings/textcomponents/itemtypes%");
+                "[a] [new] hover event showing [item] %strings/textcomponents/itemtypes/entities%");
     }
 
     private Expression<?> object;
@@ -53,7 +55,11 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     @Nullable
     @Override
     protected HoverEvent[] get(Event event) {
-        if (this.object.isSingle() && this.object.getSingle(event) instanceof ItemType itemType) {
+        if (this.object.isSingle() && this.object.getSingle(event) instanceof Entity entity) {
+            Key key = entity.getType().key();
+            ShowEntity showEntity = ShowEntity.showEntity(key, entity.getUniqueId());
+            return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_ENTITY, showEntity)};
+        } else if (this.object.isSingle() && this.object.getSingle(event) instanceof ItemType itemType) {
             Key key = itemType.getMaterial().key();
             int amount = itemType.getAmount();
             BinaryTagHolder nbt = BinaryTagHolder.binaryTagHolder(itemType.getItemMeta().getAsString());
