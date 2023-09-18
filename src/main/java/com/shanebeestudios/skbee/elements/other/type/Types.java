@@ -17,6 +17,7 @@ import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
@@ -214,7 +215,25 @@ public class Types {
                         "Unlike Block, which only one object can exist per coordinate, BlockState can exist multiple times for any given Block.",
                         "In a structure, this represents how the block is saved to the structure.",
                         "Requires MC 1.17.1+")
-                .since("1.12.3"));
+                .since("1.12.3")
+                .parser(new Parser<>() {
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public @NotNull String toString(BlockStateWrapper blockState, int flags) {
+                        BlockState bs = blockState.getBukkitBlockState();
+                        return String.format("BlockState{type=%s,location=%s}", bs.getType(), bs.getLocation());
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(BlockStateWrapper blockStateWrapper) {
+                        return toString(blockStateWrapper, 0);
+                    }
+                }));
 
         if (HAS_ARMOR_TRIM) {
             Classes.registerClass(new ClassInfo<>(ArmorTrim.class, "armortrim")

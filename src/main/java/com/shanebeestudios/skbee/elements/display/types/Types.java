@@ -9,10 +9,11 @@ import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import com.shanebeestudios.skbee.api.util.MathUtil;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Color;
-import org.bukkit.entity.Display;
 import org.bukkit.entity.Display.Billboard;
+import org.bukkit.entity.Display.Brightness;
 import org.bukkit.entity.ItemDisplay.ItemDisplayTransform;
 import org.bukkit.entity.TextDisplay.TextAlignment;
 import org.bukkit.util.Transformation;
@@ -34,11 +35,12 @@ public class Types {
 
     // TYPES
     static {
-        Classes.registerClass(new ClassInfo<>(Display.Brightness.class, "displaybrightness")
+        Classes.registerClass(new ClassInfo<>(Brightness.class, "displaybrightness")
                 .user("display ?brightness(es)?")
                 .name("DisplayEntity - Display Brightness")
                 .description("Represents the brightness attributes of a Display Entity.", McWIKI)
-                .since("2.8.0"));
+                .since("2.8.0")
+                .parser(SkriptUtils.getDefaultParser()));
 
         EnumWrapper<Billboard> BILLBOARD_ENUM = new EnumWrapper<>(Billboard.class);
         Classes.registerClass(BILLBOARD_ENUM.getClassInfo("displaybillboard")
@@ -67,7 +69,8 @@ public class Types {
                 .user("transformations?")
                 .name("DisplayEntity - Transformation")
                 .description("Represents a transformation of a Display Entity.", McWIKI)
-                .since("2.8.0");
+                .since("2.8.0")
+                .parser(SkriptUtils.getDefaultParser());
         Classes.registerClass(TRANSFORMATION);
 
         Classes.registerClass(new ClassInfo<>(Color.class, "bukkitcolor")
@@ -136,10 +139,10 @@ public class Types {
                 new Parameter<>("blockLight", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("skyLight", DefaultClasses.NUMBER, true, null)
 
-        }, Classes.getExactClassInfo(Display.Brightness.class), true) {
+        }, Classes.getExactClassInfo(Brightness.class), true) {
             @SuppressWarnings("NullableProblems")
             @Override
-            public Display.@Nullable Brightness[] executeSimple(Object[][] params) {
+            public @Nullable Brightness[] executeSimple(Object[][] params) {
                 if (params[0].length == 0 || params[1].length == 0) {
                     return null;
                 }
@@ -147,7 +150,7 @@ public class Types {
                 int sky = ((Number) params[1][0]).intValue();
                 block = MathUtil.clamp(block, 0, 15);
                 sky = MathUtil.clamp(sky, 0, 15);
-                return new Display.Brightness[]{new Display.Brightness(block, sky)};
+                return new Brightness[]{new Brightness(block, sky)};
             }
         }
                 .description("Creates a new display brightness object for use on a Display Entity.",

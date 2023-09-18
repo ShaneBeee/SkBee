@@ -12,9 +12,11 @@ import ch.njol.skript.util.Color;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.Timespan;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.Particle.DustTransition;
 import org.bukkit.Vibration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -89,10 +91,12 @@ public class Types {
                         return toString(o, 0);
                     }
                 }));
-        Classes.registerClass(new ClassInfo<>(Particle.DustTransition.class, "dusttransition")
-                .name(ClassInfo.NO_DOC).user("dust ?transitions?"));
+        Classes.registerClass(new ClassInfo<>(DustTransition.class, "dusttransition")
+                .name(ClassInfo.NO_DOC).user("dust ?transitions?")
+                .parser(SkriptUtils.getDefaultParser()));
         Classes.registerClass(new ClassInfo<>(Vibration.class, "vibration")
-                .name(ClassInfo.NO_DOC).user("vibrations?"));
+                .name(ClassInfo.NO_DOC).user("vibrations?")
+                .parser(SkriptUtils.getDefaultParser()));
 
 
         // == FUNCTIONS ==
@@ -122,16 +126,14 @@ public class Types {
                 new Parameter<>("fromColor", DefaultClasses.COLOR, true, null),
                 new Parameter<>("toColor", DefaultClasses.COLOR, true, null),
                 new Parameter<>("size", DefaultClasses.NUMBER, true, null)
-        }, Classes.getExactClassInfo(Particle.DustTransition.class), true) {
+        }, Classes.getExactClassInfo(DustTransition.class), true) {
             @SuppressWarnings("NullableProblems")
             @Override
-            public Particle.DustTransition[] executeSimple(Object[][] params) {
+            public DustTransition[] executeSimple(Object[][] params) {
                 org.bukkit.Color fromColor = ((Color) params[0][0]).asBukkitColor();
                 org.bukkit.Color toColor = ((Color) params[1][0]).asBukkitColor();
                 float size = ((Number) params[2][0]).floatValue();
-                return new Particle.DustTransition[]{
-                        new Particle.DustTransition(fromColor, toColor, size)
-                };
+                return new DustTransition[]{new DustTransition(fromColor, toColor, size)};
             }
         }.description("Creates a new dust transition to be used with 'dust_color_transition' particle.",
                         "Color can either be a regular color or an RGB color using Skript's rgb() function.",
