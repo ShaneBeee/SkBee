@@ -11,11 +11,9 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
-import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.HoverEvent.Action;
 import net.kyori.adventure.text.event.HoverEvent.ShowItem;
@@ -23,12 +21,10 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
-import java.util.ArrayList;
-import java.util.List;
 
 @SuppressWarnings("rawtypes")
 @Name("Text Component - Hover Event")
-@Description({"Create a new hover event. Can show text or an item to a player.",
+@Description({"Create a new hover event. Can show texts, text components or an item to a player.",
         "'showing %itemtype%' requires Minecraft 1.18.2+"})
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
         "set hover event of {_t} to a new hover event showing player's tool",
@@ -39,7 +35,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     static {
         Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
                 // TODO scheduled for removal of "item" (july 8/2023)
-                "[a] [new] hover event showing [item] %strings/itemtypes%");
+                "[a] [new] hover event showing [item] %strings/textcomponents/itemtypes%");
     }
 
     private Expression<?> object;
@@ -64,13 +60,15 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             ShowItem showItem = ShowItem.of(key, amount, nbt);
             return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_ITEM, showItem)};
         } else {
-            List<String> strings = new ArrayList<>();
+            ComponentWrapper hover = ComponentWrapper.empty();
             for (Object object : this.object.getArray(event)) {
-                if (object instanceof String string) strings.add(string);
+                if (object instanceof String string) {
+                    hover.append(ComponentWrapper.fromText(string));
+                } else if (object instanceof ComponentWrapper component) {
+                    hover.append(component);
+                }
             }
-            String join = StringUtils.join(strings, "\n");
-            Component texts = ComponentWrapper.fromText(join).getComponent();
-            return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_TEXT, texts)};
+            return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_TEXT, hover.getComponent())};
         }
     }
 
