@@ -23,6 +23,8 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings("rawtypes")
 @Name("Text Component - Hover Event")
@@ -66,14 +68,15 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             ShowItem showItem = ShowItem.of(key, amount, nbt);
             return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_ITEM, showItem)};
         } else {
-            ComponentWrapper hover = ComponentWrapper.empty();
+            List<ComponentWrapper> components = new ArrayList<>();
             for (Object object : this.object.getArray(event)) {
                 if (object instanceof String string) {
-                    hover.append(ComponentWrapper.fromText(string));
+                    components.add(ComponentWrapper.fromText(string));
                 } else if (object instanceof ComponentWrapper component) {
-                    hover.append(component);
+                    components.add(component);
                 }
             }
+            ComponentWrapper hover = ComponentWrapper.fromComponents(components.toArray(new ComponentWrapper[0]), "\n");
             return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_TEXT, hover.getComponent())};
         }
     }
