@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.elements.other.type;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.Comparator;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
@@ -279,6 +280,10 @@ public class Types {
                     .usage(TRIM_PATTERN_REGISTER.getNames())
                     .since("2.13.0")
                     .parser(TRIM_PATTERN_REGISTER.getParser()));
+
+            // Register Comparators
+            register(TrimPattern.class, TrimPattern.class);
+            register(TrimMaterial.class, TrimMaterial.class);
         }
 
         if (HAS_CHUNK_LOAD_LEVEL) {
@@ -294,6 +299,21 @@ public class Types {
                             "\n`unloaded_level` = This chunk is not loaded.")
                     .since("2.17.0"));
         }
+    }
+    // Shortcut comparator method
+    private static <T1, T2> void register(final Class<T1> class1, final Class<T2> class2) {
+        // TODO change to new compartor class (from Skript 2.7) in SkBee 3.0.0
+        ch.njol.skript.registrations.Comparators.registerComparator(class1, class2, new Comparator<>() {
+            @Override
+            public @NotNull Relation compare(T1 o1, T2 o2) {
+                return Relation.get(o1.equals(o2));
+            }
+
+            @Override
+            public boolean supportsOrdering() {
+                return false;
+            }
+        });
     }
 
 }
