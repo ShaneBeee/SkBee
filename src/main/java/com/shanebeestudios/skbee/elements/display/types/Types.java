@@ -27,8 +27,8 @@ import org.joml.Vector3f;
 
 public class Types {
 
-    public static final String McWIKI = "See <link>https://minecraft.fandom.com/wiki/Display#Entity_data</link> for more details.";
-    public static final String McWiki_INTERACTION = "See <link>https://minecraft.fandom.com/wiki/Interaction#Entity_data</link> for more details.";
+    public static final String McWIKI = "See <link>https://minecraft.wiki/w/Display#Entity_data</link> for more details.";
+    public static final String McWiki_INTERACTION = "See <link>https://minecraft.wiki/w/Interaction#Entity_data</link> for more details.";
     public static ClassInfo<Transformation> TRANSFORMATION;
     public static ClassInfo<Quaternionf> QUATERNION;
 

@@ -150,7 +150,7 @@ public class Types {
                     .name("NamespacedKey")
                     .description("NamespacedKeys are a way to declare and specify game objects in Minecraft,",
                             "which can identify built-in and user-defined objects without potential ambiguity or conflicts.",
-                            "For more information see Resource Location on McWiki <link>https://minecraft.fandom.com/wiki/Resource_location</link>")
+                            "For more information see Resource Location on McWiki <link>https://minecraft.wiki/w/Resource_location</link>")
                     .since("2.6.0")
                     .serializer(new Serializer<>() {
                         @Override

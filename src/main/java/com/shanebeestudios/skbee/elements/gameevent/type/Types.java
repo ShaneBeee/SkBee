@@ -35,7 +35,7 @@ public class Types {
                 .name("Game Event")
                 .user("game ?events?")
                 .description("Represents a Minecraft 'GameEvent', mainly used by Skulk Sensors. Requires MC 1.17+.",
-                        "See McWiki for more details -> https://minecraft.fandom.com/wiki/Sculk_Sensor#Vibration_amplitudes")
+                        "See McWiki for more details -> https://minecraft.wiki/w/Sculk_Sensor#Vibration_amplitudes")
                 .usage(namesString)
                 .after("itemtype")
                 .examples("")
