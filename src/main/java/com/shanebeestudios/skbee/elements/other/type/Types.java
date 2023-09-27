@@ -15,8 +15,8 @@ import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.NamespacedKey;
-import org.bukkit.Registry;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
@@ -148,7 +148,7 @@ public class Types {
                     .name("NamespacedKey")
                     .description("NamespacedKeys are a way to declare and specify game objects in Minecraft,",
                             "which can identify built-in and user-defined objects without potential ambiguity or conflicts.",
-                            "For more information see Resource Location on McWiki <link>https://minecraft.fandom.com/wiki/Resource_location</link>")
+                            "For more information see Resource Location on McWiki <link>https://minecraft.wiki/w/Resource_location</link>")
                     .since("2.6.0")
                     .serializer(new Serializer<>() {
                         @Override
@@ -214,7 +214,25 @@ public class Types {
                         "Unlike Block, which only one object can exist per coordinate, BlockState can exist multiple times for any given Block.",
                         "In a structure, this represents how the block is saved to the structure.",
                         "Requires MC 1.17.1+")
-                .since("1.12.3"));
+                .since("1.12.3")
+                .parser(new Parser<>() {
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public @NotNull String toString(BlockStateWrapper blockState, int flags) {
+                        BlockState bs = blockState.getBukkitBlockState();
+                        return String.format("BlockState{type=%s,location=%s}", bs.getType(), bs.getLocation());
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(BlockStateWrapper blockStateWrapper) {
+                        return toString(blockStateWrapper, 0);
+                    }
+                }));
 
         if (HAS_ARMOR_TRIM) {
             Classes.registerClass(new ClassInfo<>(ArmorTrim.class, "armortrim")
@@ -243,7 +261,7 @@ public class Types {
                         }
                     }));
 
-            RegistryWrapper<TrimMaterial> TRIM_REGISTRY = RegistryWrapper.wrap(Registry.TRIM_MATERIAL, null, "material");
+            RegistryWrapper<TrimMaterial> TRIM_REGISTRY = RegistryWrapper.wrap(TrimMaterial.class, null, "material");
             Classes.registerClass(new ClassInfo<>(TrimMaterial.class, "trimmaterial")
                     .user("trim ?materials?")
                     .name("ArmorTrim - TrimMaterial")
@@ -252,7 +270,7 @@ public class Types {
                     .since("2.13.0")
                     .parser(TRIM_REGISTRY.getParser()));
 
-            RegistryWrapper<TrimPattern> TRIM_PATTERN_REGISTER = RegistryWrapper.wrap(Registry.TRIM_PATTERN, null, "pattern");
+            RegistryWrapper<TrimPattern> TRIM_PATTERN_REGISTER = RegistryWrapper.wrap(TrimPattern.class, null, "pattern");
             Classes.registerClass(new ClassInfo<>(TrimPattern.class, "trimpattern")
                     .user("trim ?patterns?")
                     .name("ArmorTrim - TrimPattern")

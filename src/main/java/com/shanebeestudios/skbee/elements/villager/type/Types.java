@@ -6,6 +6,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.entity.AbstractVillager;
@@ -92,7 +93,8 @@ public class Types {
                     .name("Merchant Inventory")
                     .description("Represents a trading inventory between a player and a merchant.",
                             "The holder of this Inventory is the owning Villager, or null if the player is trading with a custom merchant.")
-                    .since("1.17.0"));
+                    .since("1.17.0")
+                    .parser(SkriptUtils.getDefaultParser()));
         }
 
         // MERCHANT RECIPE

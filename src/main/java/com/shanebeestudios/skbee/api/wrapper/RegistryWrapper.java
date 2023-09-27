@@ -1,9 +1,12 @@
 package com.shanebeestudios.skbee.api.wrapper;
 
+import ch.njol.skript.classes.Comparator;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.registrations.Comparators;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.util.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -25,33 +28,44 @@ public class RegistryWrapper<T extends Keyed> {
     /**
      * Wrap a registry with optional prefix and suffix
      *
-     * @param registry Registry to wrap
+     * @param registryClass Class of registry to wrap
      * @return Wrapped registry
      */
-    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Registry<T> registry) {
-        return wrap(registry, null, null);
+    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Class<T> registryClass) {
+        return wrap(registryClass, null, null);
     }
 
     /**
      * Wrap a registry with optional prefix and suffix
      *
-     * @param registry Registry to wrap
-     * @param prefix   Optional prefix to prepend to items in registry
-     * @param suffix   Optional suffix to append to items in registry
+     * @param registryClass Class of registry to wrap
+     * @param prefix        Optional prefix to prepend to items in registry
+     * @param suffix        Optional suffix to append to items in registry
      * @return Wrapped registry
      */
-    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Registry<T> registry, @Nullable String prefix, @Nullable String suffix) {
-        return new RegistryWrapper<>(registry, prefix, suffix);
+    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Class<T> registryClass, @Nullable String prefix, @Nullable String suffix) {
+        return new RegistryWrapper<>(registryClass, prefix, suffix);
     }
 
     private final Registry<T> registry;
     @Nullable
     private final String prefix, suffix;
 
-    private RegistryWrapper(Registry<T> registry, @Nullable String prefix, @Nullable String suffix) {
-        this.registry = registry;
+    private RegistryWrapper(Class<T> registryClass, @Nullable String prefix, @Nullable String suffix) {
+        this.registry = Bukkit.getRegistry(registryClass);
         this.prefix = prefix;
         this.suffix = suffix;
+        Comparators.registerComparator(registryClass, registryClass, new Comparator<>() {
+            @Override
+            public @NotNull Relation compare(T o1, T o2) {
+                return Relation.get(o1.equals(o2));
+            }
+
+            @Override
+            public boolean supportsOrdering() {
+                return false;
+            }
+        });
     }
 
     /**

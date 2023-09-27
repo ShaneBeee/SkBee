@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("Scoreboard - Criteria Create")
 @Description({"Get one of the default Minecraft scoreboard criterias",
-        "(see McWiki <link>https://minecraft.fandom.com/wiki/Scoreboard#Criteria</link>) or create your own."})
+        "(see McWiki <link>https://minecraft.wiki/w/Scoreboard#Criteria</link>) or create your own."})
 @Examples("set {_c} to criteria with id \"health\"")
 @Since("2.6.0")
 public class ExprCriteriaCreate extends SimpleExpression<Criteria> {

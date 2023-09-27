@@ -1,8 +1,10 @@
 package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Parser;
 import ch.njol.skript.command.EffectCommandEvent;
 import ch.njol.skript.lang.Effect;
+import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import org.bukkit.command.CommandSender;
@@ -84,6 +86,32 @@ public class SkriptUtils {
         } else {
             return false;
         }
+    }
+
+    /** Get a default instance of a Parser for ClassInfos
+     * @param <T> ClassType
+     * @return New instance of default parser
+     */
+    public static <T> Parser<T> getDefaultParser() {
+        return new Parser<T>() {
+            @SuppressWarnings("NullableProblems")
+            @Override
+            public boolean canParse(ParseContext context) {
+                return false;
+            }
+
+            @SuppressWarnings("NullableProblems")
+            @Override
+            public String toString(T o, int flags) {
+                return o.toString();
+            }
+
+            @SuppressWarnings("NullableProblems")
+            @Override
+            public String toVariableNameString(T o) {
+                return o.toString();
+            }
+        };
     }
 
 }

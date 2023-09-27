@@ -101,6 +101,11 @@ public class Util {
      */
     @Nullable
     public static NamespacedKey getNamespacedKey(@NotNull String key, boolean error) {
+        if (key.length() > 255) {
+            if (error)
+                skriptError("An invalid key was provided, key must be less than 256 characters: %s", key);
+            return null;
+        }
         key = key.toLowerCase();
         if (key.contains(" ")) {
             key = key.replace(" ", "_");

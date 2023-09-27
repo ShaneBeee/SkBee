@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.elements.worldcreator.type;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.registrations.Classes;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
@@ -16,7 +17,8 @@ public class Types {
                 .name("World Creator")
                 .description("Used to create new worlds.")
                 .examples("set {_creator} to new world creator named \"my-world\"")
-                .since("1.8.0"));
+                .since("1.8.0")
+                .parser(SkriptUtils.getDefaultParser()));
 
         if (Classes.getExactClassInfo(Environment.class) == null) {
             EnumWrapper<Environment> ENVIRONMENT_ENUM = new EnumWrapper<>(Environment.class);

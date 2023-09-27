@@ -1,8 +1,10 @@
 package com.shanebeestudios.skbee.api.wrapper;
 
 import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.Comparator;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.registrations.Comparators;
 import ch.njol.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,6 +40,7 @@ public final class EnumWrapper<E extends Enum<E>> {
             parseMap.put(name, enumConstant);
             names[enumConstant.ordinal()] = name;
         }
+        registerComparator(c);
     }
 
     public EnumWrapper(@NotNull Class<E> c, @Nullable String prefix, @Nullable String suffix) {
@@ -54,6 +57,7 @@ public final class EnumWrapper<E extends Enum<E>> {
             parseMap.put(name, enumConstant);
             names[enumConstant.ordinal()] = name;
         }
+        registerComparator(c);
     }
 
     @Nullable
@@ -124,6 +128,20 @@ public final class EnumWrapper<E extends Enum<E>> {
      */
     public ClassInfo<E> getClassInfo(String codeName) {
         return new ClassInfo<>(this.enumClass, codeName).usage(getAllNames()).parser(new EnumParser<>(this));
+    }
+
+    private void registerComparator(Class<E> c) {
+        Comparators.registerComparator(c, c, new Comparator<>() {
+            @Override
+            public @NotNull Relation compare(E o1, E o2) {
+                return Relation.get(o1.equals(o2));
+            }
+
+            @Override
+            public boolean supportsOrdering() {
+                return false;
+            }
+        });
     }
 
 }

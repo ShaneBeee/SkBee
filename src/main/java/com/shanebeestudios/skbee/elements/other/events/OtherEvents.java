@@ -8,7 +8,6 @@ import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
-import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -61,6 +60,26 @@ public class OtherEvents {
             @Override
             public Block get(EntityBlockInteractEvent event) {
                 return event.getBlock();
+            }
+        }, 0);
+        Skript.registerEvent("Anvil Prepare Event", SimpleEvent.class, PrepareAnvilEvent.class, "[skbee] anvil prepare")
+                .description("Called when a player attempts to combine 2 items in an anvil.",
+                        "'event-slot' represents the result slot, can be used to get or set.")
+                .examples("on anvil prepare:",
+                        "\tif slot 0 of event-inventory is a diamond sword:",
+                        "\t\tif slot 1 of event-inventory is an enchanted book:",
+                        "\t\t\tif stored enchants of slot 1 of event-inventory contains sharpness 5:",
+                        "\t\t\t\tset {_i} to slot 0 of event-inventory",
+                        "\t\t\t\tadd \"&aOOOOOOO\" and \"&bAHHHHHH\" to lore of {_i}",
+                        "\t\t\t\tenchant {_i} with sharpness 6",
+                        "\t\t\t\tset event-slot to {_i}",
+                        "\t\t\t\tset repair cost of event-inventory to 30")
+                .since("1.11.0");
+
+        EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
+            @Override
+            public Player get(PrepareAnvilEvent event) {
+                return (Player) event.getView().getPlayer();
             }
         }, 0);
 

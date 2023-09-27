@@ -67,7 +67,7 @@ public class Types {
                     .user("criterias?")
                     .name("Scoreboard - Criteria")
                     .description("Represents a criteria for a scoreboard objective.",
-                            "More info: <link>https://minecraft.fandom.com/wiki/Scoreboard#Criteria</link>")
+                            "More info: <link>https://minecraft.wiki/w/Scoreboard#Criteria</link>")
                     .since("2.6.0")
                     .parser(new Parser<>() {
 
