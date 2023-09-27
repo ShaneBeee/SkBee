@@ -83,55 +83,6 @@ public class OtherEvents {
             }
         }, 0);
 
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Slot.class, new Getter<>() {
-            @Override
-            public Slot get(PrepareAnvilEvent event) {
-                return new Slot() {
-                    final ItemStack result = event.getResult();
-
-                    @Nullable
-                    @Override
-                    public ItemStack getItem() {
-                        return result;
-                    }
-
-                    @Override
-                    public void setItem(@Nullable ItemStack item) {
-                        event.setResult(item);
-                    }
-
-                    @Override
-                    public int getAmount() {
-                        if (result != null) return result.getAmount();
-                        return 0;
-                    }
-
-                    @Override
-                    public void setAmount(int amount) {
-                        if (result != null) result.setAmount(amount);
-                    }
-
-                    @Override
-                    public boolean isSameSlot(@NotNull Slot o) {
-                        ItemStack item = o.getItem();
-                        return item != null && item.isSimilar(result);
-                    }
-
-                    @Override
-                    public @NotNull String toString(@Nullable Event e, boolean debug) {
-                        return "anvil inventory result slot";
-                    }
-                };
-            }
-        }, 0);
-
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Inventory.class, new Getter<>() {
-            @Override
-            public Inventory get(PrepareAnvilEvent event) {
-                return event.getInventory();
-            }
-        }, 0);
-
         // Player shear entity event
         Skript.registerEvent("Shear Entity", SimpleEvent.class, PlayerShearEntityEvent.class, "[player] shear entity")
                 .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")

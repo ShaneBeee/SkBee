@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.event.Event;
@@ -27,58 +28,47 @@ import java.util.List;
         "This allows you to have one specific slot of a recipe to accept multiple items, without having to create multiple recipes.",
         "Do note that material choices do not accept custom items (ie: items with names, lore, enchants, etc). Requires Minecraft 1.13+"})
 @Examples({"set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
-        "set {_a} to material choice of every sword",
-        "set {_m} to minecraft tag \"minecraft:planks\"",
-        "set {_a} to material choice of tag {_m}"})
+        "set {_choice} to material choice of every sword",
+        "set {_choice} to material choice of every sword and every axe",
+        "set {_choice} to material choice of minecraft tag \"minecraft:planks\""})
 @Since("1.10.0")
 public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
 
+    private static final boolean HAS_TAGS = SkBee.getPlugin().getPluginConfig().ELEMENTS_MINECRAFT_TAG;
+
     static {
-        String[] patterns = SkBee.getPlugin().getPluginConfig().ELEMENTS_MINECRAFT_TAG ?
-                new String[]{"material choice of %itemtypes%", "material choice of [minecraft] tag %minecrafttag%"} :
-                new String[]{"material choice of %itemtypes%"};
         Skript.registerExpression(ExprMaterialChoice.class, MaterialChoice.class, ExpressionType.COMBINED,
-                patterns);
+                HAS_TAGS ? "material choice of %itemtypes/minecrafttags%" : "material choice of %itemtypes%");
     }
 
-    private int pattern;
-    private Expression<ItemType> itemTypes;
-    private Expression<Tag<Material>> tags;
+    private Expression<?> objects;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        pattern = matchedPattern;
-        if (pattern == 0) {
-            itemTypes = (Expression<ItemType>) exprs[0];
-        } else if (pattern == 1) {
-            tags = (Expression<Tag<Material>>) exprs[0];
-        }
+        this.objects = exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
-    @Nullable
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
-    protected MaterialChoice[] get(Event event) {
-        if (pattern == 0) {
-            List<Material> materials = new ArrayList<>();
-            for (ItemType type : itemTypes.getArray(event)) {
-                type.getAll().forEach(itemStack -> {
+    protected MaterialChoice @Nullable [] get(Event event) {
+        List<Material> materials = new ArrayList<>();
+        for (Object object : this.objects.getArray(event)) {
+            if (object instanceof ItemType itemType) {
+                itemType.getAll().forEach(itemStack -> {
                     Material material = itemStack.getType();
-                    if (!materials.contains(material)) {
-                        materials.add(material);
-                    }
+                    if (!materials.contains(material)) materials.add(material);
+                });
+            } else if (HAS_TAGS && RecipeUtil.isMaterialTag(object)) {
+                MaterialChoice materialChoice = new MaterialChoice((Tag<Material>) object);
+                materialChoice.getChoices().forEach(material -> {
+                    if (!materials.contains(material)) materials.add(material);
                 });
             }
-            if (materials.size() > 0) {
-                return new MaterialChoice[]{new MaterialChoice(materials)};
-            }
-        } else if (pattern == 1) {
-            Tag<Material> tag = tags.getSingle(event);
-            if (tag != null) {
-                return new MaterialChoice[]{new MaterialChoice(tag)};
-            }
+        }
+        if (!materials.isEmpty()) {
+            return new MaterialChoice[]{new MaterialChoice(materials)};
         }
         return null;
     }
@@ -97,8 +87,7 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
     @SuppressWarnings("NullableProblems")
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return String.format("material choice of %s",
-                pattern == 0 ? itemTypes.toString(e, d) : "tag " + tags.toString(e, d));
+        return "material choice of " + this.objects.toString(e, d);
     }
 
 }
