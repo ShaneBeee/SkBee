@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
         "reset display teleport duration of {_display}",
         "add 10 to display teleport duration of {_display}",
         "remove 5 from display teleport duration of {_display}"})
-@Since("INSERT VERSION")
+@Since("2.18.3")
 public class ExprDisplayTeleportDuration extends SimplePropertyExpression<Entity, Number> {
 
     static {
