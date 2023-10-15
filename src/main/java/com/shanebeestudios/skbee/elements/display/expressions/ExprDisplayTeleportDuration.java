@@ -41,7 +41,7 @@ public class ExprDisplayTeleportDuration extends SimplePropertyExpression<Entity
 
     @Override
     public @Nullable Number convert(Entity entity) {
-        //if (entity instanceof Display display) return display.getTeleportDuration();
+        if (entity instanceof Display display) return display.getTeleportDuration();
         return null;
     }
 
@@ -74,7 +74,7 @@ public class ExprDisplayTeleportDuration extends SimplePropertyExpression<Entity
                 };
                 // Minecraft clamps this, but Bukkit throws an error
                 duration = MathUtil.clamp(duration, 0, 59);
-                //display.setTeleportDuration(duration);
+                display.setTeleportDuration(duration);
             }
         }
     }
