@@ -83,7 +83,7 @@ shadowJar {
     relocate("fr.mrmicky.fastboard", "com.shanebeestudios.skbee.api.fastboard")
     relocate("com.shanebeestudios.vf", "com.shanebeestudios.skbee.api.virtualfurnace")
     relocate("org.bstats", "com.shanebeestudios.skbee.metrics")
-    exclude('META-INF/**', 'VirtualFurnace.properties', 'furnaces.yml', 'tiles.yml', 'LICENSE')
+    exclude('META-INF/**', 'LICENSE')
 }
 
 // Run task to build jar to another spot
