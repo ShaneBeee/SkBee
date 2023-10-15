@@ -34,7 +34,7 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.20.1-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
 
     // Skript
     compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.7.0') {
@@ -51,7 +51,7 @@ dependencies {
     }
 
     // FastBoard
-    implementation("fr.mrmicky:fastboard:2.0.0-patch") // temp fix for 1.20.2
+    implementation("fr.mrmicky:fastboard:2.0.1")
 
     // Virtual Furnace
     implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.0.0-Beta12") {
