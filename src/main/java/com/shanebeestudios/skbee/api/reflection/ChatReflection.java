@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.reflection;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.scoreboard.Team;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -10,6 +11,7 @@ import java.lang.reflect.Method;
 /**
  * Reflection class for chat related stuff
  */
+@SuppressWarnings("CallToPrintStackTrace")
 public class ChatReflection {
 
     // Cache these classes/methods to prevent retrieving them too often
@@ -46,7 +48,7 @@ public class ChatReflection {
      *                 (usually spaces)
      * @return Pretty string of NBTCompound
      */
-    public static String getPrettyNBT(NBTCompound compound, String split) {
+    public static @Nullable String getPrettyNBT(NBTCompound compound, String split) {
         Object nmsNBT = new NBTContainer(compound.toString()).getCompound();
         String s = split != null ? split : "";
         try {
@@ -92,6 +94,7 @@ public class ChatReflection {
      * @param team   Team to set prefix for
      * @param prefix Prefix to set
      */
+    // TODO note: CraftBukkit finally removed these limits on July 2023 (MC 1.20.1)
     @SuppressWarnings("deprecation") // This is a Paper deprecation
     public static void setTeamPrefix(Team team, String prefix) {
         if (CRAFT_TEAM == null || PREFIX_COMP_METHOD == null || SET_PREFIX == null) {
@@ -116,6 +119,7 @@ public class ChatReflection {
      * @param team   Team to set suffix for
      * @param suffix Suffix to set
      */
+    // TODO note: CraftBukkit finally removed these limits on July 15, 2023 (MC 1.20.1)
     @SuppressWarnings("deprecation") // This is a Paper deprecation
     public static void setTeamSuffix(Team team, String suffix) {
         if (CRAFT_TEAM == null || PREFIX_COMP_METHOD == null || SET_SUFFIX == null) {

@@ -56,6 +56,12 @@ public class AddonLoader {
             Util.log("&cThis could mean SkBee is being forced to load before Skript.");
             return false;
         }
+        Version skriptVersion = Skript.getVersion();
+        if (skriptVersion.isSmallerThan(new Version(2, 7))) {
+            Util.log("&cDependency Skript outdated, plugin disabling.");
+            Util.log("&eSkBee requires Skript 2.7+ but found Skript " + skriptVersion);
+            return false;
+        }
         if (!Skript.isAcceptRegistrations()) {
             // SkBee should be loading right after Skript, during Skript's registration period
             // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works

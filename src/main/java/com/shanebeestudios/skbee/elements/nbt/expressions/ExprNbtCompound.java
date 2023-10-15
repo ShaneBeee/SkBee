@@ -15,6 +15,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomBlock;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomEntity;
+import com.shanebeestudios.skbee.api.nbt.NBTCustomItemStack;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomItemType;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomSlot;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomTileEntity;
@@ -99,7 +100,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                     return NBTItem.convertItemtoNBT(itemStack);
                 } else {
                     if (itemStack.getType() == Material.AIR) return null;
-                    compound = new NBTItem(itemStack, true);
+                    compound = new NBTCustomItemStack(itemStack);
                 }
             } else if (object instanceof Slot slot) {
                 ItemStack stack = slot.getItem();

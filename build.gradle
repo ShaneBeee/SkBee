@@ -13,7 +13,7 @@ compileJava {
 }
 
 // SkBee version
-version = '2.18.3'
+version = '3.0.0'
 
 repositories {
     mavenCentral()
@@ -37,7 +37,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
 
     // Skript
-    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.6.4') {
+    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.7.0') {
         transitive = false
     }
 
@@ -46,12 +46,12 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.12.0-SNAPSHOT") {
+    implementation("de.tr7zw:item-nbt-api:2.12.0") {
         transitive = false
     }
 
     // FastBoard
-    implementation("fr.mrmicky:fastboard:2.0.0-patch") // temp fix for 1.20.2
+    implementation("fr.mrmicky:fastboard:2.0.1")
 
     // Virtual Furnace
     implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.0.0-Beta12") {
