@@ -16,6 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@SuppressWarnings("deprecation") // GameEvent.values() <-- paper did this I'm assuming
 public class Types {
 
     private static final Map<String, GameEvent> GAME_EVENT_MAP = new HashMap<>();
