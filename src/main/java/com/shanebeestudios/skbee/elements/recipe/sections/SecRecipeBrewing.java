@@ -31,14 +31,20 @@ import java.util.List;
 
 @Name("Recipe - Register Brewing Recipe")
 @Description({"This section allows you to register a brewing recipe, define the ingredient and input. Requires a PaperMC server.",
+        "\n`id` = The ID of this recipe.",
+        "\n`result` = The resulting outpout of this recipe.",
         "\n`ingredient` = Represents the item put in the top of the brewer.",
-        "\n`input` = Represents the 3 bottle slots."})
+        "\n`input` = Represents the item put in the 3 bottle slots."})
 @Examples({"on load:",
-        "\tregister brewing recipe with id \"custom:brew_glow_diamond\" with result diamond of unbreaking with all flags hidden:",
+        "\tregister brewing recipe:",
+        "\t\tid: \"custom:brew_glow_diamond\"",
+        "\t\tresult: diamond of unbreaking with all flags hidden",
         "\t\tingredient: glowstone dust",
         "\t\tinput: potato",
         "\t\t",
-        "\tregister brewing recipe with id \"custom:yummy_soup\" with result mushroom stew named \"&bYummy Soup\":",
+        "\tregister brewing recipe:",
+        "\t\tid: \"custom:yummy_soup\"",
+        "\t\tresult: mushroom stew named \"&bYummy Soup\"",
         "\t\tingredient: glowstone dust",
         "\t\tinput: water bottle"})
 @Since("INSERT VERSION")
@@ -51,13 +57,15 @@ public class SecRecipeBrewing extends Section {
     static {
         if (Skript.classExists("io.papermc.paper.potion.PotionMix")) {
             Skript.registerSection(SecRecipeBrewing.class,
-                    "register [a] [new] (brewing recipe|potion mix) with id %string% (for|with result) %itemstack%");
+                    "register [a] [new] (brewing recipe|potion mix)");
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("ingredient", null, false, Object.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, Object.class));
         }
     }
 
-    private Expression<String> recipeId;
+    private Expression<String> id;
     private Expression<ItemStack> result;
     private Expression<?> ingredient;
     private Expression<?> input;
@@ -68,8 +76,16 @@ public class SecRecipeBrewing extends Section {
         EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
         if (container == null) return false;
 
-        this.recipeId = (Expression<String>) exprs[0];
-        this.result = (Expression<ItemStack>) exprs[1];
+        this.id = (Expression<String>) container.getOptional("id", false);
+        if (this.id == null) {
+            Skript.error("Invalid/Empty 'id' entry");
+            return false;
+        }
+        this.result = (Expression<ItemStack>) container.getOptional("result", false);
+        if (this.result == null) {
+            Skript.error("Invalid/Empty 'result' entry");
+            return false;
+        }
         this.ingredient = ((Expression<?>) container.get("ingredient", false)).getConvertedExpression(Object.class);
         this.input = ((Expression<?>) container.get("input", false)).getConvertedExpression(Object.class);
         return true;
@@ -83,7 +99,7 @@ public class SecRecipeBrewing extends Section {
     }
 
     private void execute(Event event) {
-        String recipeId = this.recipeId.getSingle(event);
+        String recipeId = this.id.getSingle(event);
         if (recipeId == null) {
             RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
             return;
@@ -116,7 +132,7 @@ public class SecRecipeBrewing extends Section {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "register brewing recipe with id " + this.recipeId.toString(e, d) + " for " + this.result.toString(e, d);
+        return "register brewing recipe";
     }
 
 }

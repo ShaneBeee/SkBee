@@ -31,12 +31,16 @@ import java.util.List;
 
 @Name("Recipe - Register Smithing Recipe")
 @Description({"This section allows you to register a smithing transform recipe, define the output as well as the template, ",
-        "base and addition items. Requires MC 1.13+",
+        "base and addition items. Requires MC 1.20+",
+        "\n`id` = The ID for your recipe.",
+        "\n`result` = The resulting item of this recipe.",
         "\n`template` = Represents the first slot in the smithing inventory.",
         "\n`base` = Represents the second slot in the smithing inventory.",
         "\n`addition` = Represents the third slot in the smithing inventory (Optional)."})
 @Examples({"on load:",
-        "\tregister smithing transform recipe with id \"test:smithing\" with result emerald of unbreaking named \"&cFire Stone\" with all flags hidden:",
+        "\tregister smithing transform recipe:",
+        "\t\tid: \"test:smithing\"",
+        "\t\tresult: emerald of unbreaking named \"&cFire Stone\" with all flags hidden",
         "\t\ttemplate: paper named \"&cFire Paper\"",
         "\t\tbase: diamond",
         "\t\taddition: blaze powder"})
@@ -49,14 +53,16 @@ public class SecRecipeSmithing extends Section {
     static {
         if (Skript.isRunningMinecraft(1, 20)) {
             Skript.registerSection(SecRecipeSmithing.class,
-                    "register [a] [new] smithing [transform] recipe with id %string% (for|with result) %itemstack%");
+                    "register [a] [new] smithing [transform] recipe");
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("template", null, false, Object.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("base", null, false, Object.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("addition", null, true, Object.class));
         }
     }
 
-    private Expression<String> recipeId;
+    private Expression<String> id;
     private Expression<ItemStack> result;
     private Expression<?> template;
     private Expression<?> base;
@@ -68,8 +74,16 @@ public class SecRecipeSmithing extends Section {
         EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
         if (container == null) return false;
 
-        this.recipeId = (Expression<String>) exprs[0];
-        this.result = (Expression<ItemStack>) exprs[1];
+        this.id = (Expression<String>) container.getOptional("id", false);
+        if (this.id == null) {
+            Skript.error("Invalid/Empty 'id' entry");
+            return false;
+        }
+        this.result = (Expression<ItemStack>) container.getOptional("result", false);
+        if (this.result == null) {
+            Skript.error("Invalid/Empty 'result' entry");
+            return false;
+        }
         this.template = ((Expression<?>) container.get("template", false)).getConvertedExpression(Object.class);
         this.base = ((Expression<?>) container.get("base", false)).getConvertedExpression(Object.class);
         this.addition = ((Expression<?>) container.getOptional("addition", false));
@@ -85,7 +99,7 @@ public class SecRecipeSmithing extends Section {
     }
 
     private void execute(Event event) {
-        String recipeId = this.recipeId.getSingle(event);
+        String recipeId = this.id.getSingle(event);
         if (recipeId == null) {
             RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
             return;
@@ -123,7 +137,7 @@ public class SecRecipeSmithing extends Section {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "register smithing recipe with id " + this.recipeId.toString(e, d) + " for " + this.result.toString(e, d);
+        return "register smithing recipe";
     }
 
 }

@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -17,9 +16,11 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.event.recipe.ShapedRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.NotNull;
@@ -37,6 +38,8 @@ import java.util.Map;
 @Name("Recipe - Register Shaped Recipe")
 @Description({"This section allows you to register a shaped recipe, define the shape and set ingredients.",
         "You can optionally add a group and category.",
+        "\n`id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
+        "\n`result` = The resulting item of this recipe.",
         "\n`shape` = A list of strings (1 to 3 strings) which each have 1-3 characters (must be the same char count per string).",
         "These correspect to the ingredients set for these shapes. (See examples for details.)",
         "Blank spaces will just be empty spaces in a crafting grid.",
@@ -46,7 +49,9 @@ import java.util.Map;
         "Options are \"building\", \"redstone\", \"equiptment\", \"misc\".",
         "\n`ingredients` = This section is where you will set the ingredients to correspend with your shape."})
 @Examples({"on load:",
-        "\tregister shaped recipe with id \"custom:fancy_stone\" for stone named \"&aFANCY STONE\":",
+        "\tregister shaped recipe with:",
+        "\t\tid: \"custom:fancy_stone\"",
+        "\t\tresult: stone named \"&aFANCY STONE\"",
         "\t\tshape: \"aaa\", \"aba\", \"aaa\"",
         "\t\tgroup: \"bloop\"",
         "\t\tcategory: \"building\"",
@@ -54,18 +59,24 @@ import java.util.Map;
         "\t\t\tset ingredient of \"a\" to stone",
         "\t\t\tset ingredient of \"b\" to diamond",
         "",
-        "\tregister shaped recipe with id \"custom:fancy_sword\" for diamond sword of unbreaking 5 named \"&bStrong Sword\":",
+        "\tregister shaped recipe:",
+        "\t\tid: \"custom:fancy_sword\"",
+        "\t\tresult: diamond sword of unbreaking 5 named \"&bStrong Sword\"",
         "\t\tshape: \"a\", \"a\", \"b\"",
         "\t\tingredients:",
         "\t\t\tset ingredient of \"a\" to emerald",
         "\t\t\tset ingredient of \"b\" to stick named \"DOOM\"",
         "",
-        "\tregister shaped recipe with id \"custom:string\" for 4 of string:",
+        "\tregister shaped recipe:",
+        "\t\tid: \"custom:string\"",
+        "\t\tresult: 4 of string",
         "\t\tshape: \"a\"",
         "\t\tingredients:",
         "\t\t\tset ingredient of \"a\" to material choice of all wool",
         "",
-        "\tregister shaped recipe with id \"custom:bee_2\" with result (skull of \"MHF_Bee\" parsed as offline player) named \"&bMr &3Bee\":",
+        "\tregister shaped recipe:",
+        "\t\tid: \"custom:bee_2\"",
+        "\t\tresult: (skull of \"MHF_Bee\" parsed as offline player) named \"&bMr &3Bee\"",
         "\t\tshape: \"x x\", \" z \", \"x x\"",
         "\t\tingredients:",
         "\t\t\tset ingredient of \"x\" to honeycomb",
@@ -78,6 +89,9 @@ public class SecRecipeShaped extends Section {
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
 
     static {
+        Skript.registerSection(SecRecipeShaped.class, "register [a] [new] shaped recipe");
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("shape", null, false, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
         if (RecipeUtil.HAS_CATEGORY) {
@@ -88,11 +102,10 @@ public class SecRecipeShaped extends Section {
             }
         }
         ENTRY_VALIDATOR.addSection("ingredients", false);
-        Skript.registerSection(SecRecipeShaped.class, "register shaped recipe with id %string% (for|with result) %itemtype%");
     }
 
     private Expression<String> id;
-    private Expression<ItemType> result;
+    private Expression<ItemStack> result;
     private Expression<String> shape;
     private Expression<String> group;
     private Expression<String> category;
@@ -104,8 +117,16 @@ public class SecRecipeShaped extends Section {
         EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
         if (container == null) return false;
 
-        this.id = (Expression<String>) exprs[0];
-        this.result = (Expression<ItemType>) exprs[1];
+        this.id = (Expression<String>) container.getOptional("id", false);
+        if (this.id == null) {
+            Skript.error("Invalid/Empty 'id' entry");
+            return false;
+        }
+        this.result = (Expression<ItemStack>) container.getOptional("result", false);
+        if (this.result == null) {
+            Skript.error("Invalid/Empty 'result' entry");
+            return false;
+        }
         this.shape = (Expression<String>) container.getOptional("shape", false);
         if (this.shape == null) {
             Skript.error("Invalid/Empty 'shape' entry");
@@ -135,11 +156,11 @@ public class SecRecipeShaped extends Section {
             RecipeUtil.error("Invalid/Missing recipe ID: &e" + this.toString(event, false));
             return;
         }
-        NamespacedKey key = RecipeUtil.getKey(id);
+        NamespacedKey key = Util.getNamespacedKey(id, false);
         if (key == null) return;
 
-        ItemType result = this.result.getSingle(event);
-        if (result == null || result.getMaterial().isAir() || !result.getMaterial().isItem()) {
+        ItemStack result = this.result.getSingle(event);
+        if (result == null || result.getType().isAir() || !result.getType().isItem()) {
             RecipeUtil.error("Invalid result: &e" + result);
             return;
         }
@@ -163,7 +184,7 @@ public class SecRecipeShaped extends Section {
         }
 
         // Start recipe registration
-        ShapedRecipe shapedRecipe = new ShapedRecipe(key, result.getRandom());
+        ShapedRecipe shapedRecipe = new ShapedRecipe(key, result);
         shapedRecipe.shape(shape);
         if (this.group != null) {
             String group = this.group.getSingle(event);
@@ -191,9 +212,7 @@ public class SecRecipeShaped extends Section {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String id = this.id.toString(e, d);
-        String result = this.result.toString(e, d);
-        return "register shaped recipe with id " + id + " with result " + result;
+        return "register shaped recipe";
     }
 
 }

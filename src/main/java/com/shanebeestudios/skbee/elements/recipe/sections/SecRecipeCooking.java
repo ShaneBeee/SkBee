@@ -41,6 +41,8 @@ import java.util.Map;
 
 @Name("Recipe - Register Cooking Recipe")
 @Description({"This section allows you to register any cooking recipe and define special properties.",
+        "\n`id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
+        "\n`result` = The resulting item of this recipe.",
         "\n`input` = The item the recipe requires as an input to output the result (Required).",
         "\n`cooktime` = How long the recipe will take to finish cooking before result is given (Optional).",
         "\n`experience` = The amount of experience gained when the recipe is finished cooking (Optional).",
@@ -49,23 +51,31 @@ import java.util.Map;
         "Examples of this in game are beds and wood types.",
         "\n`category` = Which category in the recipe book this recipe should appear within (Optional 1.19.4+).",
         "Valid category types are \"food\", \"blocks\", \"misc\", if no category is defined it defaults to \"misc\"."})
-@Examples({"register new furnace recipe with id \"sieve:gravel_to_sand\" for sand:",
+@Examples({"register new furnace recipe:",
+        "\tid: \"sieve:gravel_to_sand\"",
+        "\tresult: sand",
         "\tinput: gravel",
         "\tgroup: \"sieve\"",
         "\tcooktime: 1 minecraft day # 20 minutes",
         "\texperience: 6",
         "\tcategory: \"blocks\"",
         "",
-        "register new campfire recipe with id \"sieve:cobblestone_to_gravel\" for gravel:",
+        "register new campfire recipe:",
+        "\tid: \"sieve:cobblestone_to_gravel\"",
+        "\tresult: gravel",
         "\tinput: cobblestone",
         "\tgroup: \"sieve\"",
         "\tcategory: \"blocks\"",
         "",
-        "register new smoking recipe with id \"chef:beef_jerky\" for cooked mutton named \"&oBeef&r Jerky\":",
+        "register new smoking recipe:",
+        "\tid: \"chef:beef_jerky\"",
+        "\tresult: cooked mutton named \"&oBeef&r Jerky\"",
         "\tinput: rotten flesh",
         "\tcategory: \"food\"",
         "",
-        "register a new blasting recipe with id \"firery_sword\" for diamond sword of fire aspect named \"Flaming Sword\"",
+        "register a new blasting recipe",
+        "\tid: \"firery_sword\"",
+        "\tresult: diamond sword of fire aspect named \"Flaming Sword\"",
         "\tinput: diamond sword"})
 @Since("INSERT VERSION")
 public class SecRecipeCooking extends Section {
@@ -75,7 +85,9 @@ public class SecRecipeCooking extends Section {
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
-        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe with id %string% (for|with result) %itemstack%");
+        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe");
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, Object.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("cooktime", null, true, Timespan.class));
@@ -89,11 +101,11 @@ public class SecRecipeCooking extends Section {
     }
 
     private CookingRecipeType recipeType;
-    private Expression<String> recipeId;
-    private Expression<ItemStack> recipeResult;
-    private Expression<?> recipeInput;
-    private Expression<String> recipeCategory;
-    private Expression<String> recipeGroup;
+    private Expression<String> id;
+    private Expression<ItemStack> result;
+    private Expression<?> input;
+    private Expression<String> category;
+    private Expression<String> group;
     private Expression<Timespan> cookTime;
     private Expression<Number> experience;
 
@@ -104,11 +116,19 @@ public class SecRecipeCooking extends Section {
         if (container == null) return false;
 
         this.recipeType = CookingRecipeType.values()[parseResult.mark];
-        this.recipeId = (Expression<String>) exprs[0];
-        this.recipeResult = (Expression<ItemStack>) exprs[1];
-        this.recipeInput = ((Expression<?>) container.get("input", false)).getConvertedExpression(Object.class);
-        this.recipeCategory = (Expression<String>) container.getOptional("category", false);
-        this.recipeGroup = (Expression<String>) container.getOptional("group", false);
+        this.id = (Expression<String>) container.getOptional("id", false);
+        if (this.id == null) {
+            Skript.error("Invalid/Empty 'id' entry");
+            return false;
+        }
+        this.result = (Expression<ItemStack>) container.getOptional("result", false);
+        if (this.result == null) {
+            Skript.error("Invalid/Empty 'result' entry");
+            return false;
+        }
+        this.input = ((Expression<?>) container.get("input", false)).getConvertedExpression(Object.class);
+        this.category = (Expression<String>) container.getOptional("category", false);
+        this.group = (Expression<String>) container.getOptional("group", false);
         this.cookTime = (Expression<Timespan>) container.getOptional("cooktime", false);
         this.experience = (Expression<Number>) container.getOptional("experience", false);
         return true;
@@ -122,15 +142,15 @@ public class SecRecipeCooking extends Section {
     }
 
     private void execute(Event event) {
-        String recipeId = this.recipeId.getSingle(event);
+        String recipeId = this.id.getSingle(event);
         if (recipeId == null) {
             RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
             return;
         }
         NamespacedKey namespacedKey = Util.getNamespacedKey(recipeId, false);
-        ItemStack result = this.recipeResult.getSingle(event);
+        ItemStack result = this.result.getSingle(event);
         // #getConvertedExpression() is used to prevent the famous 'UnparsedLiterals must be converted before use'
-        RecipeChoice input = this.recipeInput != null ? RecipeUtil.getRecipeChoice(this.recipeInput.getSingle(event)) : null;
+        RecipeChoice input = this.input != null ? RecipeUtil.getRecipeChoice(this.input.getSingle(event)) : null;
         int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : this.recipeType.getCookTime();
         float experience = this.experience != null ? this.experience.getSingle(event).floatValue() : 0;
 
@@ -141,8 +161,8 @@ public class SecRecipeCooking extends Section {
             RecipeUtil.error("Invalid/Missing recipe result: &e" + this.toString(event, DEBUG));
             return;
         } else if (input == null) {
-            if (this.recipeInput != null) {
-                RecipeUtil.error("Invalid/Missing recipe input: &e" + this.recipeInput.toString(event, DEBUG));
+            if (this.input != null) {
+                RecipeUtil.error("Invalid/Missing recipe input: &e" + this.input.toString(event, DEBUG));
             } else {
                 // When an invalid expression like 'I AM REAL SYNTAX' is used, skript doesn't error this catches it
                 RecipeUtil.error("Invalid/Missing recipe input: &egiven recipe input is an invalid expression");
@@ -156,13 +176,13 @@ public class SecRecipeCooking extends Section {
             case BLASTING -> new BlastingRecipe(namespacedKey, result, input, experience, cookTime);
             case CAMPFIRE -> new CampfireRecipe(namespacedKey, result, input, experience, cookTime);
         };
-        if (this.recipeCategory != null) {
-            String category = this.recipeCategory.getSingle(event);
+        if (this.category != null) {
+            String category = this.category.getSingle(event);
             if (category != null && CATEGORY_MAP.containsKey(category.toLowerCase(Locale.ROOT)))
                 recipe.setCategory(CATEGORY_MAP.get(category.toLowerCase(Locale.ROOT)));
         }
 
-        String recipeGroup = this.recipeGroup != null ? this.recipeGroup.getSingle(event) : null;
+        String recipeGroup = this.group != null ? this.group.getSingle(event) : null;
         if (recipeGroup != null && !recipeGroup.isBlank())
             recipe.setGroup(recipeGroup);
         Bukkit.removeRecipe(namespacedKey);
@@ -172,9 +192,7 @@ public class SecRecipeCooking extends Section {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "register a new " + this.recipeType.toString().toLowerCase(Locale.ROOT)
-                + " recipe with id " + this.recipeId.toString(e, d)
-                + " for " + this.recipeResult.toString(e, d);
+        return "register a new " + this.recipeType.toString().toLowerCase(Locale.ROOT) + " recipe";
     }
 
 }

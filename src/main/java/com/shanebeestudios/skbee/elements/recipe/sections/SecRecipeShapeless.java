@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -20,6 +19,7 @@ import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.NotNull;
@@ -35,18 +35,23 @@ import java.util.Map;
 
 @Name("Recipe - Register Shapeless Recipe")
 @Description({"This section allows you to register a shapeless recipe and add ingredients.",
-        "You can optionally add a group and category.",
+        "\n`id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
+        "\n`result` = The resulting item of this recipe.",
         "\n`group` = Define a group to group your recipes together in the recipe book",
         "(an example would be having 3 recipes with the same outcome but a variety of ingredients) (optional).",
         "\n`category` = The recipe book category your recipe will be in (optional) [Requires MC 1.19+].",
         "Options are \"building\", \"redstone\", \"equiptment\", \"misc\".",
         "\n`ingredients` = This section is where you will add the ingredients."})
 @Examples({"on load:",
-        "\tregister shapeless recipe with id \"custom:string\" for 4 string:",
+        "\tregister shapeless recipe:",
+        "\t\tid: \"custom:string\"",
+        "\t\tresult: 4 string",
         "\t\tingredients:",
         "\t\t\tadd material choice of every wool to ingredients",
         "",
-        "\tregister shapeless recipe with id \"custom:totem_of_undying\" for totem of undying:",
+        "\tregister shapeless recipe:",
+        "\t\tid: \"custom:totem_of_undying\"",
+        "\t\tresult: totem of undying",
         "\t\tgroup: \"custom tools\"",
         "\t\tcategory: \"redstone\"",
         "\t\tingredients:",
@@ -56,7 +61,9 @@ import java.util.Map;
         "\t\t\tadd end rod to ingredients",
         "\t\t\tadd wither skeleton skull to ingredients",
         "",
-        "\tregister shapeless recipe with id \"custom:end_rod\" for end rod:",
+        "\tregister shapeless recipe:",
+        "\t\tid: \"custom:end_rod\"",
+        "\t\tresult: end rod",
         "\t\tgroup: \"custom tools\"",
         "\t\tcategory: \"redstone\"",
         "\t\tingredients:",
@@ -71,6 +78,9 @@ public class SecRecipeShapeless extends Section {
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
 
     static {
+        Skript.registerSection(SecRecipeShapeless.class, "register shapeless recipe with id %string% (for|with result) %itemtype%");
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
         if (HAS_CATEGORY) {
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
@@ -80,11 +90,10 @@ public class SecRecipeShapeless extends Section {
             }
         }
         ENTRY_VALIDATOR.addSection("ingredients", false);
-        Skript.registerSection(SecRecipeShapeless.class, "register shapeless recipe with id %string% (for|with result) %itemtype%");
     }
 
     private Expression<String> id;
-    private Expression<ItemType> result;
+    private Expression<ItemStack> result;
     private Expression<String> group;
     private Expression<String> category;
     private Trigger ingredientSection;
@@ -95,8 +104,8 @@ public class SecRecipeShapeless extends Section {
         EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
         if (container == null) return false;
 
-        this.id = (Expression<String>) exprs[0];
-        this.result = (Expression<ItemType>) exprs[1];
+        this.id = (Expression<String>) container.getOptional("id", false);
+        this.result = (Expression<ItemStack>) container.getOptional("result", false);
         this.group = (Expression<String>) container.getOptional("group", false);
         this.category = HAS_CATEGORY ? (Expression<String>) container.getOptional("category", false) : null;
 
@@ -124,14 +133,14 @@ public class SecRecipeShapeless extends Section {
         NamespacedKey key = RecipeUtil.getKey(id);
         if (key == null) return;
 
-        ItemType result = this.result.getSingle(event);
-        if (result == null || result.getMaterial().isAir() || !result.getMaterial().isItem()) {
+        ItemStack result = this.result.getSingle(event);
+        if (result == null || result.getType().isAir() || !result.getType().isItem()) {
             RecipeUtil.error("Invalid result: &e" + result);
             return;
         }
 
         // Start recipe registration
-        ShapelessRecipe shapelessRecipe = new ShapelessRecipe(key, result.getRandom());
+        ShapelessRecipe shapelessRecipe = new ShapelessRecipe(key, result);
         if (this.group != null) {
             String group = this.group.getSingle(event);
             if (group != null) shapelessRecipe.setGroup(group);
@@ -158,9 +167,7 @@ public class SecRecipeShapeless extends Section {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String id = this.id.toString(e, d);
-        String result = this.result.toString(e, d);
-        return "register shapeless recipe with id " + id + " with result " + result;
+        return "register shapeless recipe";
     }
 
 }
