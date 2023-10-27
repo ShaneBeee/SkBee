@@ -78,7 +78,7 @@ public class SecRecipeShapeless extends Section {
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
 
     static {
-        Skript.registerSection(SecRecipeShapeless.class, "register shapeless recipe with id %string% (for|with result) %itemtype%");
+        Skript.registerSection(SecRecipeShapeless.class, "register [a] [new] shapeless recipe");
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
