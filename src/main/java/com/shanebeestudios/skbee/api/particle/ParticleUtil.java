@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.particle;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
@@ -8,6 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.Particle.DustTransition;
+import org.bukkit.Registry;
 import org.bukkit.Vibration;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -27,6 +29,7 @@ import java.util.Map;
 /**
  * Utility class for {@link Particle particles}
  */
+@SuppressWarnings("CallToPrintStackTrace")
 public class ParticleUtil {
 
     private ParticleUtil() {
@@ -35,29 +38,38 @@ public class ParticleUtil {
     private static final Map<String, Particle> PARTICLES = new HashMap<>();
     private static final Map<Particle, String> PARTICLE_NAMES = new HashMap<>();
 
-    // Load and map Minecraft particle names
-    // Bukkit does not have any API for getting the Minecraft names of particles (how stupid)
-    // This method fetches them from the server and maps them with the Bukkit particle enums
     static {
-        Class<?> cbParticle = ReflectionUtils.getOBCClass("CraftParticle");
-        try {
-            assert cbParticle != null;
-            Field bukkitParticleField = cbParticle.getDeclaredField("bukkit");
-            bukkitParticleField.setAccessible(true);
-            Field mcKeyField = cbParticle.getDeclaredField("minecraftKey");
-            mcKeyField.setAccessible(true);
+        // Added in Spigot 1.20.2 (oct 20/2023)
+        if (Skript.methodExists(Particle.class, "getKey")) {
+            Registry.PARTICLE_TYPE.forEach(particle -> {
+                String key = particle.getKey().getKey();
+                PARTICLES.put(key, particle);
+                PARTICLE_NAMES.put(particle, key);
+            });
+        } else {
+            // Load and map Minecraft particle names
+            // Prior to 1.20.2, Bukkit does not have any API for getting the Minecraft names of particles (how stupid)
+            // This method fetches them from the server and maps them with the Bukkit particle enums
+            Class<?> cbParticle = ReflectionUtils.getOBCClass("CraftParticle");
+            try {
+                assert cbParticle != null;
+                Field bukkitParticleField = cbParticle.getDeclaredField("bukkit");
+                bukkitParticleField.setAccessible(true);
+                Field mcKeyField = cbParticle.getDeclaredField("minecraftKey");
+                mcKeyField.setAccessible(true);
 
-            for (Object enumConstant : cbParticle.getEnumConstants()) {
-                String mcKey = mcKeyField.get(enumConstant).toString().replace("minecraft:", "");
-                Particle bukkitParticle = (Particle) bukkitParticleField.get(enumConstant);
+                for (Object enumConstant : cbParticle.getEnumConstants()) {
+                    String mcKey = mcKeyField.get(enumConstant).toString().replace("minecraft:", "");
+                    Particle bukkitParticle = (Particle) bukkitParticleField.get(enumConstant);
 
-                if (!bukkitParticle.toString().contains("LEGACY")) {
-                    PARTICLES.put(mcKey, bukkitParticle);
-                    PARTICLE_NAMES.put(bukkitParticle, mcKey);
+                    if (!bukkitParticle.toString().contains("LEGACY")) {
+                        PARTICLES.put(mcKey, bukkitParticle);
+                        PARTICLE_NAMES.put(bukkitParticle, mcKey);
+                    }
                 }
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                e.printStackTrace();
             }
-        } catch (NoSuchFieldException | IllegalAccessException e) {
-            e.printStackTrace();
         }
     }
 
@@ -153,6 +165,7 @@ public class ParticleUtil {
         }
     }
 
+    @Nullable
     private static Object getData(Particle particle, Object data) {
         Class<?> dataType = particle.getDataType();
         if (dataType == Void.class) {
