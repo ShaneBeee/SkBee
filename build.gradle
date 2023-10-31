@@ -77,6 +77,10 @@ processResources {
 }
 
 shadowJar {
+    manifest {
+        attributes "Main-Class" : "pong.Pong"
+    }
+
     archiveClassifier = null
     relocate("de.tr7zw.changeme.nbtapi", "com.shanebeestudios.skbee.api.nbt")
     relocate("de.tr7zw.annotations", "com.shanebeestudios.skbee.api.nbt.annotations")
