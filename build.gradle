@@ -13,7 +13,7 @@ compileJava {
 }
 
 // SkBee version
-version = '2.18.4'
+version = '3.0.0'
 
 repositories {
     mavenCentral()
@@ -37,7 +37,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.20.2-R0.1-SNAPSHOT")
 
     // Skript
-    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.6.4') {
+    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.7.1') {
         transitive = false
     }
 

@@ -145,21 +145,4 @@ public class Util {
         return new int[]{(int) (most >> 32), (int) most, (int) (least >> 32), (int) least};
     }
 
-    private static final boolean USING_NEW_SKRIPT = Skript.getVersion().compareTo(2, 7) >= 0;
-
-    // Method for checking if running Skript 2.7
-    // Added this method here so I can easily keep track of what to remove in the future
-    public static boolean isRunningSkript27() {
-        return USING_NEW_SKRIPT;
-    }
-
-    // Method for warning about new stuff in Skript 2.7
-    // Added this method here so I can easily keep track of what to remove in the future
-    public static void skript27Warning(String replacement, String type) {
-        if (USING_NEW_SKRIPT) {
-            Skript.warning("[SkBee] Please use Skript's '" + replacement + "' " + type +
-                    ". This " + type + " will be removed from SkBee in the future!");
-        }
-    }
-
 }

@@ -8,12 +8,12 @@ import java.util.Objects;
 /**
  * Wrapper class for {@link NBTItem} using a Skript {@link Slot}
  */
-public class NBTCustomSlot extends NBTItem {
+public class NBTCustomSlot extends NBTCustomItemStack {
 
     private final Slot slot;
 
     public NBTCustomSlot(Slot slot) {
-        super(Objects.requireNonNull(slot.getItem()), true);
+        super(Objects.requireNonNull(slot.getItem()));
         this.slot = slot;
     }
 
