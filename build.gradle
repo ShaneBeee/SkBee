@@ -78,7 +78,7 @@ processResources {
 
 shadowJar {
     manifest {
-        attributes "Main-Class" : "pong.Pong"
+        attributes "Main-Class" : "com.shanebeestudios.skbee.pong.Pong"
     }
 
     archiveClassifier = null

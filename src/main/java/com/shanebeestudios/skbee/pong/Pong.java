@@ -1,12 +1,9 @@
-package pong;
+package com.shanebeestudios.skbee.pong;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.InputMethodEvent;
-import java.awt.event.InputMethodListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.geom.Point2D;
 import java.util.concurrent.ThreadLocalRandom;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
