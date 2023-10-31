@@ -4,9 +4,9 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.Timespan;
-import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -17,11 +17,11 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Spellcaster;
-import org.bukkit.event.Event;
 import org.bukkit.event.block.BellRingEvent;
 import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.MoistureChangeEvent;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -433,6 +433,21 @@ public class OtherEvents {
                 return event.getTo();
             }
         }, EventValues.TIME_NOW);
+
+        // Moisture Change Event
+        Skript.registerEvent("Moisture Change", SimpleEvent.class, MoistureChangeEvent.class, "moisture change")
+                .description("Called when the moisture level of a farmland block changes.")
+                .examples("on moisture change:",
+                        "\tcancel event",
+                        "\tset event-block to farmland[moisture=7]")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(MoistureChangeEvent.class, Block.class, new Getter<>() {
+            @Override
+            public @NotNull Block get(MoistureChangeEvent event) {
+                return new BlockStateBlock(event.getNewState());
+            }
+        }, EventValues.TIME_FUTURE);
     }
 
 }
