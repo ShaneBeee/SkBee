@@ -130,6 +130,9 @@ public class NBTApi {
     }
 
     public static boolean hasTag(NBTCompound compound, String tag) {
+        if (!tag.contains(";")) {
+            return compound.hasTag(tag);
+        }
         String subTag = tag.substring(0, tag.lastIndexOf(";")).replace(".", "\\.").replace(";", ".");
         NBTCompound subCompound = (NBTCompound) compound.resolveCompound(subTag);
         return subCompound != null && subCompound.hasTag(getNestedTag(tag));
