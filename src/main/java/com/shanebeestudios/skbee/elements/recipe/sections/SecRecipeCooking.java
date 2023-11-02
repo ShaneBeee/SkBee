@@ -77,7 +77,7 @@ import java.util.Map;
         "\tid: \"firery_sword\"",
         "\tresult: diamond sword of fire aspect named \"Flaming Sword\"",
         "\tinput: diamond sword"})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class SecRecipeCooking extends Section {
 
     private static final EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();

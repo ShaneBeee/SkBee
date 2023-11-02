@@ -29,7 +29,7 @@ import java.util.Arrays;
         "\n`set ingredient` is used for shaped recipes.",
         "\n`add ingredient` is used for shapeless recipes."})
 @Examples("see shaped/shapeless recipe sections.")
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class EffRecipeSetIngredient extends Effect {
 
     static {

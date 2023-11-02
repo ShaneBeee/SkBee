@@ -69,7 +69,7 @@ import java.util.Map;
         "\t\tingredients:",
         "\t\t\tadd diamond block to ingredients",
         "\t\t\tadd emerald block to ingredients"})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class SecRecipeShapeless extends Section {
 
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;

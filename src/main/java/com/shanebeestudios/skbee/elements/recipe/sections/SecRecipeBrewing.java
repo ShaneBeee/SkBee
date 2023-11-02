@@ -47,7 +47,7 @@ import java.util.List;
         "\t\tresult: mushroom stew named \"&bYummy Soup\"",
         "\t\tingredient: glowstone dust",
         "\t\tinput: water bottle"})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class SecRecipeBrewing extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();

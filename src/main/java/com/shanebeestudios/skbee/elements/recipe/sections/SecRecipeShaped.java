@@ -81,7 +81,7 @@ import java.util.Map;
         "\t\tingredients:",
         "\t\t\tset ingredient of \"x\" to honeycomb",
         "\t\t\tset ingredient of \"z\" to honey bottle"})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class SecRecipeShaped extends Section {
 
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;

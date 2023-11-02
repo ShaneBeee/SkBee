@@ -22,7 +22,7 @@ import java.time.Duration;
         "Requires Paper 1.20.2+"})
 @Examples({"if idle time of player > 1 minute:",
         "\tkick player due to \"hanging out too long\""})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class ExprPlayerIdleTime extends SimplePropertyExpression<Player, Timespan> {
 
     static {

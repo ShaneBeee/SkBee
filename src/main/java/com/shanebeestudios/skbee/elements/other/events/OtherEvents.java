@@ -440,7 +440,7 @@ public class OtherEvents {
                 .examples("on moisture change:",
                         "\tcancel event",
                         "\tset event-block to farmland[moisture=7]")
-                .since("INSERT VERSION");
+                .since("3.0.0");
 
         EventValues.registerEventValue(MoistureChangeEvent.class, Block.class, new Getter<>() {
             @Override

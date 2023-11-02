@@ -44,7 +44,7 @@ import java.util.List;
         "\t\ttemplate: paper named \"&cFire Paper\"",
         "\t\tbase: diamond",
         "\t\taddition: blaze powder"})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class SecRecipeSmithing extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();

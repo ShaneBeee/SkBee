@@ -34,7 +34,7 @@ import java.util.List;
         "\t\tset {_data} to block data of loop-block",
         "\t\trun 2 seconds later:",
         "\t\t\tset block at {_loc} to {_data}\n"})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class SecRunTaskLater extends Section {
 
     private static final Plugin PLUGIN = SkBee.getPlugin();

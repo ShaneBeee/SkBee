@@ -27,7 +27,7 @@ import java.util.List;
         "set {_sort::*} to all mobs sorted by distance from {_loc}",
         "set {_p::*} to all players sorted by distance from {spawn}",
         "loop all mobs sorted by distance from player:"})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class ExprSortedEntities extends SimpleExpression<Entity> {
 
     static {
