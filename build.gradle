@@ -117,5 +117,5 @@ javadoc {
     }
     options.addStringOption('Xdoclint:none', '-quiet')
     exclude("com/shanebeestudios/skbee/config", "com/shanebeestudios/skbee/api/listener", "com/shanebeestudios/skbee/elements",
-            "com/shanebeestudios/skbee/api/command", "com/shanebeestudios/skbee/AddonLoader.java")
+            "com/shanebeestudios/skbee/api/command", "com/shanebeestudios/skbee/AddonLoader.java", "com/shanebeestudios/skbee/pong")
 }
