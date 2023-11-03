@@ -42,8 +42,8 @@ import java.util.Map;
 @Name("Recipe - Register Cooking Recipe")
 @Description({"This section allows you to register any cooking recipe and define special properties.",
         "\n`id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
-        "\n`result` = The resulting item of this recipe.",
-        "\n`input` = The item the recipe requires as an input to output the result (Required).",
+        "\n`result` = The resulting ItemStack of this recipe.",
+        "\n`input` = The item the recipe requires as an input to output the result (Accepts an ItemStack or RecipeChoice) (Required).",
         "\n`cooktime` = How long the recipe will take to finish cooking before result is given (Optional).",
         "\n`experience` = The amount of experience gained when the recipe is finished cooking (Optional).",
         "Default cook times are, furnace = 10 seconds, smoking/blasting = 5 seconds and campfire = 30 seconds.",
@@ -88,7 +88,7 @@ public class SecRecipeCooking extends Section {
         Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe");
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, Object.class));
+        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, RecipeChoice.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("cooktime", null, true, Timespan.class));
         ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("experience", null, true, Number.class));
@@ -103,7 +103,7 @@ public class SecRecipeCooking extends Section {
     private CookingRecipeType recipeType;
     private Expression<String> id;
     private Expression<ItemStack> result;
-    private Expression<?> input;
+    private Expression<RecipeChoice> input;
     private Expression<String> category;
     private Expression<String> group;
     private Expression<Timespan> cookTime;
@@ -120,7 +120,8 @@ public class SecRecipeCooking extends Section {
         if (this.id == null) return false;
         this.result = (Expression<ItemStack>) container.getOptional("result", false);
         if (this.result == null) return false;
-        this.input = ((Expression<?>) container.get("input", false)).getConvertedExpression(Object.class);
+        this.input = (Expression<RecipeChoice>) container.getOptional("input", false);
+        if (this.input == null) return false;
         this.category = (Expression<String>) container.getOptional("category", false);
         this.group = (Expression<String>) container.getOptional("group", false);
         this.cookTime = (Expression<Timespan>) container.getOptional("cooktime", false);
@@ -144,7 +145,7 @@ public class SecRecipeCooking extends Section {
         NamespacedKey namespacedKey = Util.getNamespacedKey(recipeId, false);
         ItemStack result = this.result.getSingle(event);
         // #getConvertedExpression() is used to prevent the famous 'UnparsedLiterals must be converted before use'
-        RecipeChoice input = this.input != null ? RecipeUtil.getRecipeChoice(this.input.getSingle(event)) : null;
+        RecipeChoice input = this.input.getSingle(event);
         int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : this.recipeType.getCookTime();
         float experience = this.experience != null ? this.experience.getSingle(event).floatValue() : 0;
 

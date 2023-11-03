@@ -33,9 +33,9 @@ import java.util.List;
 @Description({"This section allows you to register a smithing transform recipe, define the output as well as the template, ",
         "base and addition items. Requires MC 1.20+",
         "\n`id` = The ID for your recipe.",
-        "\n`result` = The resulting item of this recipe.",
-        "\n`template` = Represents the first slot in the smithing inventory.",
-        "\n`base` = Represents the second slot in the smithing inventory.",
+        "\n`result` = The resulting ItemStack of this recipe.",
+        "\n`template` = Represents the first slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
+        "\n`base` = Represents the second slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
         "\n`addition` = Represents the third slot in the smithing inventory (Optional)."})
 @Examples({"on load:",
         "\tregister smithing transform recipe:",
@@ -56,17 +56,17 @@ public class SecRecipeSmithing extends Section {
                     "register [a] [new] smithing [transform] recipe");
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("template", null, false, Object.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("base", null, false, Object.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("addition", null, true, Object.class));
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("template", null, false, RecipeChoice.class));
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("base", null, false, RecipeChoice.class));
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("addition", null, true, RecipeChoice.class));
         }
     }
 
     private Expression<String> id;
     private Expression<ItemStack> result;
-    private Expression<?> template;
-    private Expression<?> base;
-    private Expression<?> addition;
+    private Expression<RecipeChoice> template;
+    private Expression<RecipeChoice> base;
+    private Expression<RecipeChoice> addition;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
@@ -78,10 +78,12 @@ public class SecRecipeSmithing extends Section {
         if (this.id == null) return false;
         this.result = (Expression<ItemStack>) container.getOptional("result", false);
         if (this.result == null) return false;
-        this.template = ((Expression<?>) container.get("template", false)).getConvertedExpression(Object.class);
-        this.base = ((Expression<?>) container.get("base", false)).getConvertedExpression(Object.class);
-        this.addition = ((Expression<?>) container.getOptional("addition", false));
-        if (this.addition != null) this.addition = this.addition.getConvertedExpression(Object.class);
+        this.template = (Expression<RecipeChoice>) container.getOptional("template", false);
+        if (this.template == null) return false;
+        this.base = (Expression<RecipeChoice>) container.getOptional("base", false);
+        if (this.base == null) return false;
+        this.addition = (Expression<RecipeChoice>) container.getOptional("addition", false);
+        if (this.addition == null) return false;
         return true;
     }
 

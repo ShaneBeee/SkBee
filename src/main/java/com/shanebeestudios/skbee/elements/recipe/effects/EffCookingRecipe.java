@@ -50,7 +50,7 @@ public class EffCookingRecipe extends Effect {
     static {
         Skript.registerEffect(EffCookingRecipe.class,
                 "register [new] (0¦furnace|1¦(blast furnace|blasting)|2¦smok(er|ing)|3¦campfire) recipe for %itemtype% " +
-                        "(using|with ingredient) %itemtype/materialchoice% with id %string% [[and ]with exp[erience] %-number%] " +
+                        "(using|with ingredient) %itemtype/recipechoice% with id %string% [[and ]with exp[erience] %-number%] " +
                         "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
     }
 
@@ -103,8 +103,8 @@ public class EffCookingRecipe extends Effect {
             } else {
                 ingredient = new ExactChoice(itemStack);
             }
-        } else if (ing instanceof MaterialChoice) {
-            ingredient = ((MaterialChoice) ing);
+        } else if (ing instanceof RecipeChoice recipeChoice) {
+            ingredient = recipeChoice;
         } else {
             return;
         }

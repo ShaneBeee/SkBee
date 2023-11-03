@@ -34,8 +34,8 @@ public class EffRecipeSetIngredient extends Effect {
 
     static {
         Skript.registerEffect(EffRecipeSetIngredient.class,
-                "set ingredient (of|for) %string% to %itemstack/materialchoice%",
-                "add %itemstack/materialchoice% to ingredients");
+                "set ingredient (of|for) %string% to %itemstack/recipechoice%",
+                "add %itemstack/recipechoice% to ingredients");
     }
 
     private int pattern;
@@ -49,8 +49,10 @@ public class EffRecipeSetIngredient extends Effect {
 
         if (this.pattern == 0 && !ParserInstance.get().isCurrentEvent(ShapedRecipeCreateEvent.class)) {
             Skript.error("`set ingredient` effect can only be used in an `ingredients` section of a shaped recipe section.");
+            return false;
         } else if (this.pattern == 1 && !ParserInstance.get().isCurrentEvent(ShapelessRecipeCreateEvent.class)) {
             Skript.error("`add ingredients` effect can only be used in an `ingredients` section of a shapeless recipe section.");
+            return false;
         }
         this.key = this.pattern == 0 ? (Expression<String>) exprs[0] : null;
         this.ingredient = exprs[this.pattern == 0 ? 1 : 0];

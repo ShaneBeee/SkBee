@@ -32,9 +32,9 @@ import java.util.List;
 @Name("Recipe - Register Brewing Recipe")
 @Description({"This section allows you to register a brewing recipe, define the ingredient and input. Requires a PaperMC server.",
         "\n`id` = The ID of this recipe.",
-        "\n`result` = The resulting outpout of this recipe.",
-        "\n`ingredient` = Represents the item put in the top of the brewer.",
-        "\n`input` = Represents the item put in the 3 bottle slots."})
+        "\n`result` = The resulting output ItemStack of this recipe (What the 3 bottle slots turn into).",
+        "\n`ingredient` = Represents the ItemStack put in the top of the brewer (Accepts an ItemStack or RecipeChoice).",
+        "\n`input` = Represents the ItemStack put in the 3 bottle slots (Accepts an ItemStack or RecipeChoice)."})
 @Examples({"on load:",
         "\tregister brewing recipe:",
         "\t\tid: \"custom:brew_glow_diamond\"",
@@ -60,15 +60,15 @@ public class SecRecipeBrewing extends Section {
                     "register [a] [new] (brewing recipe|potion mix)");
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("ingredient", null, false, Object.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, Object.class));
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("ingredient", null, false, RecipeChoice.class));
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, RecipeChoice.class));
         }
     }
 
     private Expression<String> id;
     private Expression<ItemStack> result;
-    private Expression<?> ingredient;
-    private Expression<?> input;
+    private Expression<RecipeChoice> ingredient;
+    private Expression<RecipeChoice> input;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
@@ -80,8 +80,10 @@ public class SecRecipeBrewing extends Section {
         if (this.id == null) return false;
         this.result = (Expression<ItemStack>) container.getOptional("result", false);
         if (this.result == null) return false;
-        this.ingredient = ((Expression<?>) container.get("ingredient", false)).getConvertedExpression(Object.class);
-        this.input = ((Expression<?>) container.get("input", false)).getConvertedExpression(Object.class);
+        this.ingredient = (Expression<RecipeChoice>) container.getOptional("ingredient", false);
+        if (this.ingredient == null) return false;
+        this.input = (Expression<RecipeChoice>) container.getOptional("input", false);
+        if (this.ingredient == null) return false;
         return true;
     }
 
@@ -100,8 +102,8 @@ public class SecRecipeBrewing extends Section {
         }
         NamespacedKey namespacedKey = Util.getNamespacedKey(recipeId, false);
         ItemStack result = this.result.getSingle(event);
-        RecipeChoice input = this.input != null ? RecipeUtil.getRecipeChoice(this.input.getSingle(event)) : null;
-        RecipeChoice ingredient = this.ingredient != null ? RecipeUtil.getRecipeChoice(this.ingredient.getSingle(event)) : null;
+        RecipeChoice input = this.input.getSingle(event);
+        RecipeChoice ingredient = this.ingredient.getSingle(event);
 
         if (namespacedKey == null) {
             RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));

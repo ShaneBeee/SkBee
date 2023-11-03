@@ -19,8 +19,8 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.RecipeChoice.ExactChoice;
-import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 
@@ -54,7 +54,7 @@ public class EffCraftingRecipe extends Effect {
     static {
         Skript.registerEffect(EffCraftingRecipe.class,
                 "register [new] (shaped|1¦shapeless) recipe for %itemtype% (using|with ingredients) " +
-                        "%itemtypes/materialchoices% with id %string% [in group %-string%]");
+                        "%itemtypes/recipechoices% with id %string% [in group %-string%]");
     }
 
     @SuppressWarnings("null")
@@ -171,8 +171,8 @@ public class EffCraftingRecipe extends Effect {
                         recipe.setIngredient(keyChar[i], new ExactChoice(itemStack));
                     }
                 }
-            } else if (object instanceof MaterialChoice) {
-                recipe.setIngredient(keyChar[i], ((MaterialChoice) object));
+            } else if (object instanceof RecipeChoice recipeChoice) {
+                recipe.setIngredient(keyChar[i], recipeChoice);
             }
         }
         if (config.SETTINGS_DEBUG) {
@@ -205,8 +205,8 @@ public class EffCraftingRecipe extends Effect {
                         RecipeUtil.warn("Non item &b" + ((ItemType) ingredient).toString(0) + "&e found, this item will be removed from the recipe.");
                     }
                 }
-            } else if (ingredient instanceof MaterialChoice) {
-                recipe.addIngredient(((MaterialChoice) ingredient));
+            } else if (ingredient instanceof RecipeChoice recipeChoice) {
+                recipe.addIngredient(recipeChoice);
             }
         }
         Bukkit.addRecipe(recipe);

@@ -41,7 +41,7 @@ public class EffStonecuttingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffStonecuttingRecipe.class,
-                "register [new] stone[ ]cutt(ing|er) recipe for %itemtype% (using|with ingredient) %itemtype/materialchoice% with id %string% [in group %-string%]");
+                "register [new] stone[ ]cutt(ing|er) recipe for %itemtype% (using|with ingredient) %itemtype/recipechoice% with id %string% [in group %-string%]");
     }
 
     @SuppressWarnings("null")
@@ -97,7 +97,7 @@ public class EffStonecuttingRecipe extends Effect {
                 choice = new ExactChoice(itemStack);
             }
         } else {
-            choice = ((MaterialChoice) ingredient);
+            choice = (RecipeChoice) ingredient;
         }
         StonecuttingRecipe recipe = new StonecuttingRecipe(key, item.getRandom(), choice);
         recipe.setGroup(group);
