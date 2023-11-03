@@ -117,15 +117,9 @@ public class SecRecipeCooking extends Section {
 
         this.recipeType = CookingRecipeType.values()[parseResult.mark];
         this.id = (Expression<String>) container.getOptional("id", false);
-        if (this.id == null) {
-            Skript.error("Invalid/Empty 'id' entry");
-            return false;
-        }
+        if (this.id == null) return false;
         this.result = (Expression<ItemStack>) container.getOptional("result", false);
-        if (this.result == null) {
-            Skript.error("Invalid/Empty 'result' entry");
-            return false;
-        }
+        if (this.result == null) return false;
         this.input = ((Expression<?>) container.get("input", false)).getConvertedExpression(Object.class);
         this.category = (Expression<String>) container.getOptional("category", false);
         this.group = (Expression<String>) container.getOptional("group", false);

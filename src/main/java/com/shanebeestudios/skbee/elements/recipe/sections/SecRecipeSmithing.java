@@ -75,15 +75,9 @@ public class SecRecipeSmithing extends Section {
         if (container == null) return false;
 
         this.id = (Expression<String>) container.getOptional("id", false);
-        if (this.id == null) {
-            Skript.error("Invalid/Empty 'id' entry");
-            return false;
-        }
+        if (this.id == null) return false;
         this.result = (Expression<ItemStack>) container.getOptional("result", false);
-        if (this.result == null) {
-            Skript.error("Invalid/Empty 'result' entry");
-            return false;
-        }
+        if (this.result == null) return false;
         this.template = ((Expression<?>) container.get("template", false)).getConvertedExpression(Object.class);
         this.base = ((Expression<?>) container.get("base", false)).getConvertedExpression(Object.class);
         this.addition = ((Expression<?>) container.getOptional("addition", false));

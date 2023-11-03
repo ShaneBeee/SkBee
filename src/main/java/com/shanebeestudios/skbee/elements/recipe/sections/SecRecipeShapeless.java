@@ -105,7 +105,9 @@ public class SecRecipeShapeless extends Section {
         if (container == null) return false;
 
         this.id = (Expression<String>) container.getOptional("id", false);
+        if (this.id == null) return false;
         this.result = (Expression<ItemStack>) container.getOptional("result", false);
+        if (this.result == null) return false;
         this.group = (Expression<String>) container.getOptional("group", false);
         this.category = HAS_CATEGORY ? (Expression<String>) container.getOptional("category", false) : null;
 

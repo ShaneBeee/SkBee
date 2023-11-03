@@ -118,20 +118,11 @@ public class SecRecipeShaped extends Section {
         if (container == null) return false;
 
         this.id = (Expression<String>) container.getOptional("id", false);
-        if (this.id == null) {
-            Skript.error("Invalid/Empty 'id' entry");
-            return false;
-        }
+        if (this.id == null) return false;
         this.result = (Expression<ItemStack>) container.getOptional("result", false);
-        if (this.result == null) {
-            Skript.error("Invalid/Empty 'result' entry");
-            return false;
-        }
+        if (this.result == null) return false;
         this.shape = (Expression<String>) container.getOptional("shape", false);
-        if (this.shape == null) {
-            Skript.error("Invalid/Empty 'shape' entry");
-            return false;
-        }
+        if (this.shape == null) return false;
         this.group = (Expression<String>) container.getOptional("group", false);
         this.category = RecipeUtil.HAS_CATEGORY ? (Expression<String>) container.getOptional("category", false) : null;
 
