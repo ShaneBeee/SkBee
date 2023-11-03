@@ -28,20 +28,23 @@ import java.util.List;
 @Description({"RayTrace from an entity.",
         "\nDefault max distance = 'maximum target block distance' in Skript's config.",
         "\nRaySize = entity bounding boxes will be uniformly expanded (or shrunk)",
-        "by this value before doing collision checks (default = 0.0)."})
+        "by this value before doing collision checks (default = 0.0).",
+        "\nIngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..)"})
 @Examples({"set {_ray} to ray trace from player with max distance 25",
+        "set {_ray} to ray trace from player with max distance 25 while ignoring passable blocks",
         "set {_rays::*} to raytrace from all players with ray size 0.1"})
 @Since("2.6.0")
 public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
 
     static {
         Skript.registerExpression(ExprRayTraceFromEntity.class, RayTraceResult.class, ExpressionType.COMBINED,
-                "ray[ ]trace from %livingentities% [with max distance %-number%] [with ray size %-number%]");
+                "ray[ ]trace from %livingentities% [with max distance %-number%] [with ray size %-number%] [ignore:while ignoring passable blocks]");
     }
 
     private Expression<LivingEntity> entities;
     private Expression<Number> maxDistance;
     private Expression<Number> raySize;
+    private boolean ignore;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
@@ -49,6 +52,7 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
         this.entities = (Expression<LivingEntity>) exprs[0];
         this.maxDistance = (Expression<Number>) exprs[1];
         this.raySize = (Expression<Number>) exprs[2];
+        this.ignore = parseResult.hasTag("ignore");
         return true;
     }
 
@@ -76,7 +80,7 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
             Vector direction = location.getDirection();
 
             RayTraceResult rayTraceResult = world.rayTrace(location, direction, maxDistance,
-                    FluidCollisionMode.NEVER, false, raySize,
+                    FluidCollisionMode.NEVER, this.ignore, raySize,
                     entity -> entity != livingEntity);
 
             results.add(rayTraceResult);
@@ -99,7 +103,8 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String max = this.maxDistance != null ? " with max distance " + this.maxDistance.toString(e, d) : "";
         String size = this.raySize != null ? " with ray size " + this.raySize.toString(e,d) : "";
-        return "ray trace from " + this.entities.toString(e, d) + max + size;
+        String ignore = this.ignore ? " while ignoring passable blocks" : "";
+        return "ray trace from " + this.entities.toString(e, d) + max + size + ignore;
     }
 
 }
