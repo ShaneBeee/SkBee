@@ -33,9 +33,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Team;
@@ -490,25 +488,15 @@ public class ComponentWrapper {
 
     /**
      * Set the name of the inventory
-     * <p>NOTE: This is not permanent, this will just open a new inventory with the new name</p>
+     * <p>NOTE: This is not permanent, this will just rename the open inventory view</p>
      *
      * @param inventory Inventory to change name
      */
     public void setInventoryName(Inventory inventory) {
-        if (inventory.getViewers().isEmpty()) return;
+        List<HumanEntity> viewers = inventory.getViewers();
+        if (viewers.isEmpty()) return;
 
-        List<HumanEntity> viewers = new ArrayList<>(inventory.getViewers());
-
-        InventoryHolder holder = inventory.getHolder();
-        InventoryType type = inventory.getType();
-        Inventory copy;
-        if (type == InventoryType.CHEST) {
-            copy = Bukkit.createInventory(holder, inventory.getSize(), this.component);
-        } else {
-            copy = Bukkit.createInventory(holder, type, this.component);
-        }
-        copy.setContents(inventory.getContents());
-        viewers.forEach(viewer -> viewer.openInventory(copy));
+        viewers.forEach(player -> player.getOpenInventory().setTitle(toString()));
     }
 
     public void setTeamPrefix(Team team) {
