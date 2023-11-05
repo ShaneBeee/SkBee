@@ -34,6 +34,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Team;
@@ -496,7 +497,12 @@ public class ComponentWrapper {
         List<HumanEntity> viewers = inventory.getViewers();
         if (viewers.isEmpty()) return;
 
-        viewers.forEach(player -> player.getOpenInventory().setTitle(toString()));
+        viewers.forEach(player -> {
+            InventoryView view = player.getOpenInventory();
+            if (view.getTopInventory().getType().isCreatable()) {
+                view.setTitle(toString());
+            }
+        });
     }
 
     public void setTeamPrefix(Team team) {
