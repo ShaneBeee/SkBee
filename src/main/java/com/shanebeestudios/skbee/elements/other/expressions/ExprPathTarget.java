@@ -13,14 +13,12 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.entity.Pathfinder;
 import com.destroystokyo.paper.entity.Pathfinder.PathResult;
-import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Pathfinding - Path Target")
 @Description({"Set the path of an entity to target a specific location, with an optional speed",
@@ -47,7 +45,6 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
             Skript.error("This expression requires a PaperMC server or a fork of.");
             return false;
         }
-        Util.skript27Warning("pathfind", "effect");
         setExpr((Expression<LivingEntity>) exprs[1]);
         speed = (Expression<Number>) exprs[0];
         return true;
@@ -68,15 +65,16 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {
             case SET, DELETE -> CollectionUtils.array(Location.class);
             default -> null;
         };
     }
 
+    @SuppressWarnings("ConstantValue")
     @Override
-    public void change(@NotNull Event e, @Nullable Object[] delta, @NotNull ChangeMode mode) {
+    public void change(@NotNull Event e, Object @NotNull [] delta, @NotNull ChangeMode mode) {
         Location location = delta != null ? (Location) delta[0] : null;
         Number number = this.speed != null ? this.speed.getSingle(e) : 0;
         for (LivingEntity entity : getExpr().getArray(e)) {
@@ -111,4 +109,5 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
         String speed = this.speed != null ? " with speed " + this.speed.toString(e, d) : "";
         return "path target" + speed + " of " + getExpr().toString(e, d);
     }
+
 }
