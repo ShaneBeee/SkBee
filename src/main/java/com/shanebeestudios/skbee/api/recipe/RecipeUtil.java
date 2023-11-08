@@ -256,8 +256,8 @@ public class RecipeUtil {
      * @param log Message to log
      */
     public static void log(String log) {
-        String prefix = "&7[&bRecipe&7] ";
-        Util.log(prefix + log);
+        String prefix = "&7[&bRecipe&7] %s";
+        Util.log(prefix, log);
     }
 
     public static void log(String format, Object... objects) {
