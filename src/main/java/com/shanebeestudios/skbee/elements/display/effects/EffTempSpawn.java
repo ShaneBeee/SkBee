@@ -40,6 +40,8 @@ public class EffTempSpawn extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = parseResult.mark;
         locations = Direction.combine((Expression<? extends Direction>) exprs[0], (Expression<? extends Location>) exprs[1]);
+        String e = parseResult.expr.split(" ")[0];
+        Skript.warning("Skript now has this EntityType, use Skript's spawn effect/section instead. Just remove '" + e + "'.");
         return true;
     }
 
