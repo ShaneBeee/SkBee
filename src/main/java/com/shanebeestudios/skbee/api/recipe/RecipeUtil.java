@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.elements.recipe.sections.SecRecipeSmithing;
 import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -205,6 +206,10 @@ public class RecipeUtil {
         log(" - &7Template: %s", getFancy(recipe.getTemplate()));
         log(" - &7Base: %s", getFancy(recipe.getBase()));
         log(" - &7Addition: %s", getFancy(recipe.getAddition()));
+        if (SecRecipeSmithing.HAS_NBT_METHOD) {
+            String copyNbt = recipe.willCopyNbt() ? "&atrue" : "&cfalse";
+            log(" - &7CopyNbt: &e%s", copyNbt);
+        }
     }
 
     private static String getFancy(RecipeChoice matChoice) {

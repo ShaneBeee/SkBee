@@ -20,6 +20,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
+import org.bukkit.inventory.SmithingRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -36,7 +37,8 @@ import java.util.List;
         "\n`result` = The resulting ItemStack of this recipe.",
         "\n`template` = Represents the first slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
         "\n`base` = Represents the second slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
-        "\n`addition` = Represents the third slot in the smithing inventory (Optional)."})
+        "\n`addition` = Represents the third slot in the smithing inventory (Optional).",
+        "\n`copynbt` = Represents whether to copy the nbt from the input base item to the output, default = true (Requires PaperMC) (Optional)."})
 @Examples({"on load:",
         "\tregister smithing transform recipe:",
         "\t\tid: \"test:smithing\"",
@@ -47,6 +49,7 @@ import java.util.List;
 @Since("3.0.0")
 public class SecRecipeSmithing extends Section {
 
+    public static final boolean HAS_NBT_METHOD = Skript.methodExists(SmithingRecipe.class, "willCopyNbt");
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
@@ -59,6 +62,7 @@ public class SecRecipeSmithing extends Section {
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("template", null, false, RecipeChoice.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("base", null, false, RecipeChoice.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("addition", null, true, RecipeChoice.class));
+            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("copynbt", null, true, Boolean.class));
         }
     }
 
@@ -67,6 +71,7 @@ public class SecRecipeSmithing extends Section {
     private Expression<RecipeChoice> template;
     private Expression<RecipeChoice> base;
     private Expression<RecipeChoice> addition;
+    private Expression<Boolean> copyNbt;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
@@ -84,6 +89,7 @@ public class SecRecipeSmithing extends Section {
         if (this.base == null) return false;
         this.addition = (Expression<RecipeChoice>) container.getOptional("addition", false);
         if (this.addition == null) return false;
+        this.copyNbt = (Expression<Boolean>) container.getOptional("copynbt", false);
         return true;
     }
 
@@ -122,7 +128,14 @@ public class SecRecipeSmithing extends Section {
             addition = new RecipeChoice.MaterialChoice(Material.AIR);
         }
 
-        SmithingTransformRecipe recipe = new SmithingTransformRecipe(key, result, template, base, addition);
+        SmithingTransformRecipe recipe;
+        if (HAS_NBT_METHOD) {
+            boolean copynbt = true;
+            if (this.copyNbt != null) copynbt = Boolean.TRUE.equals(this.copyNbt.getSingle(event));
+            recipe = new SmithingTransformRecipe(key, result, template, base, addition, copynbt);
+        } else {
+            recipe = new SmithingTransformRecipe(key, result, template, base, addition);
+        }
 
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);
