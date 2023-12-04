@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on right click:",
         "\tif clicked block can random tick:",
         "\t\trandom tick clicked block"})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class CondBlockCanRandomTick extends Condition {
 
     static {

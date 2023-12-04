@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
         "This will tick the block the same way Minecraft randomly ticks according to the randomTickSpeed gamerule.",
         "Requires Paper 1.19+"})
 @Examples("random tick blocks in radius 3 around target block")
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class EffBlockRandomlyTick extends Effect {
 
     static {

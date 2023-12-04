@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
         "\nNote: Some effects will only play on certain entities, ex: `wolf_shake` will only play on a wolf."})
 @Examples({"play entity effect break_equipment_main_hand on player",
         "play entity effect death on all mobs"})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class EffEntityEffect extends Effect {
 
     static {

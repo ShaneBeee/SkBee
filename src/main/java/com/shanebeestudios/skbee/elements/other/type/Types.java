@@ -300,7 +300,7 @@ public class Types {
                 .user("entit(y|ies) ?effects?")
                 .name("Entity Effect")
                 .description("Represents an effect that can be played on an entity.")
-                .since("INSERT VERSION"));
+                .since("3.0.0"));
     }
 
 }

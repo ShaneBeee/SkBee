@@ -29,7 +29,7 @@ import java.util.List;
         "set {_i::*} to add or return (a diamond and an emerald) to inventory of target block",
         "if {_i::*} is set:",
         "\tdrop {_i::*} above target block without velocity"})
-@Since("INSERT VERSION")
+@Since("3.0.0")
 public class ExprGiveOrReturn extends SimpleExpression<ItemStack> {
 
     static {
