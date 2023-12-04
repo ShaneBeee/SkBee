@@ -13,7 +13,7 @@ compileJava {
 }
 
 // SkBee version
-version = '3.0.0-beta2'
+version = '2.18.4'
 
 repositories {
     mavenCentral()
