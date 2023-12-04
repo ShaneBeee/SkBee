@@ -11,9 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import com.shanebeestudios.skbee.api.util.ChatUtil;
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -68,7 +67,7 @@ public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
 
         for (Object object : this.translation.getArray(e)) {
             if (pattern == 0) {
-                components.add(ComponentWrapper.fromText(Util.getColString(((String) object))));
+                components.add(ComponentWrapper.fromText((String) object));
             } else if (pattern == 1) {
                 components.add(ComponentWrapper.fromKeybind((String) object));
             } else if (pattern == 2) {

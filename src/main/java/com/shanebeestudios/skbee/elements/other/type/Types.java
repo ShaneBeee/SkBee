@@ -14,6 +14,7 @@ import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import org.bukkit.Chunk.LoadLevel;
+import org.bukkit.EntityEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -293,6 +294,13 @@ public class Types {
                             "\n`unloaded_level` = This chunk is not loaded.")
                     .since("2.17.0"));
         }
+
+        EnumWrapper<EntityEffect> ENTITY_EFFECT_ENUM = new EnumWrapper<>(EntityEffect.class);
+        Classes.registerClass(ENTITY_EFFECT_ENUM.getClassInfo("entityeffect")
+                .user("entit(y|ies) ?effects?")
+                .name("Entity Effect")
+                .description("Represents an effect that can be played on an entity.")
+                .since("INSERT VERSION"));
     }
 
 }

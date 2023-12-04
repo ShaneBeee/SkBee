@@ -42,7 +42,7 @@ public class EffSpawnFallingBlockData extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "deprecation"})
     @Override
     protected void execute(Event event) {
         BlockData blockData = this.blockData.getSingle(event);

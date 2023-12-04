@@ -1,13 +1,13 @@
 package com.shanebeestudios.skbee.api.wrapper;
 
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.classes.Comparator;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.registrations.Comparators;
 import ch.njol.util.StringUtils;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.comparator.Comparators;
+import org.skriptlang.skript.lang.comparator.Relation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,19 +30,6 @@ public final class EnumWrapper<E extends Enum<E>> {
     private final String[] names;
     private final HashMap<String, E> parseMap = new HashMap<>();
 
-    public EnumWrapper(@NotNull Class<E> c) {
-        assert c.isEnum();
-        this.enumClass = c;
-        this.names = new String[c.getEnumConstants().length];
-
-        for (E enumConstant : c.getEnumConstants()) {
-            String name = enumConstant.name().toLowerCase(Locale.ROOT);
-            parseMap.put(name, enumConstant);
-            names[enumConstant.ordinal()] = name;
-        }
-        registerComparator(c);
-    }
-
     public EnumWrapper(@NotNull Class<E> c, @Nullable String prefix, @Nullable String suffix) {
         assert c.isEnum();
         this.enumClass = c;
@@ -58,6 +45,10 @@ public final class EnumWrapper<E extends Enum<E>> {
             names[enumConstant.ordinal()] = name;
         }
         registerComparator(c);
+    }
+
+    public EnumWrapper(@NotNull Class<E> c) {
+        this(c, null, null);
     }
 
     @Nullable
@@ -131,17 +122,7 @@ public final class EnumWrapper<E extends Enum<E>> {
     }
 
     private void registerComparator(Class<E> c) {
-        Comparators.registerComparator(c, c, new Comparator<>() {
-            @Override
-            public @NotNull Relation compare(E o1, E o2) {
-                return Relation.get(o1.equals(o2));
-            }
-
-            @Override
-            public boolean supportsOrdering() {
-                return false;
-            }
-        });
+        Comparators.registerComparator(c, c, (o1, o2) -> Relation.get(o1.equals(o2)));
     }
 
 }

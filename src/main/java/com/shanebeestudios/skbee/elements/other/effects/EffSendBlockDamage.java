@@ -15,25 +15,29 @@ import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Send Block Damage")
 @Description({"Send fake block damage to a player.",
-        "\nEntity = the entity who is damaging the block. Only 1 entity can damage a block at a time."})
-@Examples("make player see damage of target block as 0.5")
+        "\nNumber = The amount of damage (a number between 0 and 1) to be applied to the block.",
+        "\nEntity = the entity who is damaging the block. An entity can only damage 1 block at a time.",
+        "\nBy Entity/Number = The entity/entityID which damaged the block."})
+@Examples({"make player see damage of target block as 0.5",
+        "make player see damage of target block as 0.5 by random element of all entities",
+        "make player see damage of target block as 0.5 from random integer between 1 and 10000"})
 @Since("2.6.0")
 public class EffSendBlockDamage extends Effect {
 
     static {
         Skript.registerEffect(EffSendBlockDamage.class,
-                "make %players% see damage of %block% as %number% [(by|from) %-entity%]");
+                "make %players% see damage of %block% as %number% [(by|from) %-entity/number%]");
     }
 
     private Expression<Player> players;
     private Expression<Block> block;
     private Expression<Number> damage;
-    private Expression<Entity> damager;
+    private Expression<?> damager;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
@@ -45,7 +49,7 @@ public class EffSendBlockDamage extends Effect {
         this.players = (Expression<Player>) exprs[0];
         this.block = (Expression<Block>) exprs[1];
         this.damage = (Expression<Number>) exprs[2];
-        this.damager = (Expression<Entity>) exprs[3];
+        this.damager = exprs[3];
         return true;
     }
 
@@ -58,9 +62,13 @@ public class EffSendBlockDamage extends Effect {
 
         damage = MathUtil.clamp(damage, 0.0f, 1.0f);
 
-        Entity entity = this.damager != null ? this.damager.getSingle(event) : null;
         int entityID = -1;
-        if (entity != null) entityID = entity.getEntityId();
+
+        if (this.damager != null) {
+            Object damagerObj = this.damager.getSingle(event);
+            if (damagerObj instanceof Entity entity) entityID = entity.getEntityId();
+            else if (damagerObj instanceof Number number) entityID = number.intValue();
+        }
 
         Block block = this.block.getSingle(event);
         if (block == null) return;

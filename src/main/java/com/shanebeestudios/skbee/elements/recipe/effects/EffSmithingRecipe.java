@@ -43,7 +43,7 @@ public class EffSmithingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffSmithingRecipe.class,
-                "register [new] smithing recipe for %itemtype% using %itemtype/materialchoice% and %itemtype/materialchoice% with id %string%");
+                "register [new] smithing recipe for %itemtype% using %itemtype/recipechoice% and %itemtype/recipechoice% with id %string%");
     }
 
     @SuppressWarnings("null")

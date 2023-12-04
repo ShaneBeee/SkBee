@@ -1,9 +1,7 @@
 package com.shanebeestudios.skbee.api.wrapper;
 
-import ch.njol.skript.classes.Comparator;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.registrations.Comparators;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
@@ -12,6 +10,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.comparator.Comparators;
+import org.skriptlang.skript.lang.comparator.Relation;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -55,17 +55,7 @@ public class RegistryWrapper<T extends Keyed> {
         this.registry = Bukkit.getRegistry(registryClass);
         this.prefix = prefix;
         this.suffix = suffix;
-        Comparators.registerComparator(registryClass, registryClass, new Comparator<>() {
-            @Override
-            public @NotNull Relation compare(T o1, T o2) {
-                return Relation.get(o1.equals(o2));
-            }
-
-            @Override
-            public boolean supportsOrdering() {
-                return false;
-            }
-        });
+        Comparators.registerComparator(registryClass, registryClass, (o1, o2) -> Relation.get(o1.equals(o2)));
     }
 
     /**
@@ -88,8 +78,8 @@ public class RegistryWrapper<T extends Keyed> {
      */
     public String toString(T object) {
         String key = object.getKey().getKey();
-        if (this.prefix != null && this.prefix.length() > 0) key = prefix + "_" + key;
-        if (this.suffix != null && this.suffix.length() > 0) key = key + "_" + suffix;
+        if (this.prefix != null && !this.prefix.isEmpty()) key = prefix + "_" + key;
+        if (this.suffix != null && !this.suffix.isEmpty()) key = key + "_" + suffix;
         return key;
     }
 
@@ -99,6 +89,7 @@ public class RegistryWrapper<T extends Keyed> {
      * @param string String to parse
      * @return Item from registry
      */
+    @Nullable
     private T parse(String string) {
         string = string.replace(" ", "_");
         if (this.prefix != null) {

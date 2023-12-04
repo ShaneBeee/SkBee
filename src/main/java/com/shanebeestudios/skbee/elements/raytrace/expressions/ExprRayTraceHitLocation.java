@@ -8,6 +8,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.util.RayTraceResult;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -26,9 +27,13 @@ public class ExprRayTraceHitLocation extends SimplePropertyExpression<RayTraceRe
     @Override
     public @Nullable Location convert(RayTraceResult rayTraceResult) {
         Block hitBlock = rayTraceResult.getHitBlock();
-        if (hitBlock == null) return null;
+        Entity hitEntity = rayTraceResult.getHitEntity();
 
-        World world = hitBlock.getWorld();
+        World world;
+        if (hitBlock != null) world = hitBlock.getWorld();
+        else if (hitEntity != null) world = hitEntity.getWorld();
+        else return null;
+
         return rayTraceResult.getHitPosition().toLocation(world);
     }
 

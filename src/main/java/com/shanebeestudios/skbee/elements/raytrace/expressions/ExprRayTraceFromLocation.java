@@ -18,8 +18,8 @@ import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.util.Vector;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,20 +28,22 @@ import java.util.List;
 @Description({"RayTrace from a location along a vector.",
         "\nDefault max distance = 'maximum target block distance' in Skript's config.",
         "\nRaySize = entity bounding boxes will be uniformly expanded (or shrunk)",
-        "by this value before doing collision checks (default = 0.0)."})
+        "by this value before doing collision checks (default = 0.0).",
+        "\nIngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..)"})
 @Examples("set {_ray} to ray trace from location of target block along vector(0.25,0.3,0) with max distance 50")
 @Since("2.6.0")
 public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {
 
     static {
         Skript.registerExpression(ExprRayTraceFromLocation.class, RayTraceResult.class, ExpressionType.COMBINED,
-                "ray[ ]trace from %location% along %vectors% [with max distance %-number%] [with ray size %-number%]");
+                "ray[ ]trace from %location% along %vectors% [with max distance %-number%] [with ray size %-number%]  [ignore:while ignoring passable blocks]");
     }
 
     private Expression<Location> location;
     private Expression<Vector> vectors;
     private Expression<Number> maxDistance;
     private Expression<Number> raySize;
+    private boolean ignore;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
@@ -50,6 +52,7 @@ public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {
         this.vectors = (Expression<Vector>) exprs[1];
         this.maxDistance = (Expression<Number>) exprs[2];
         this.raySize = (Expression<Number>) exprs[3];
+        this.ignore = parseResult.hasTag("ignore");
         return true;
     }
 
@@ -77,7 +80,7 @@ public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {
         List<RayTraceResult> results = new ArrayList<>();
         for (Vector vector : this.vectors.getArray(event)) {
             RayTraceResult rayTraceResult = world.rayTrace(location, vector, maxDistance,
-                    FluidCollisionMode.NEVER, false, raySize, null);
+                    FluidCollisionMode.NEVER, this.ignore, raySize, null);
             results.add(rayTraceResult);
         }
 
@@ -98,8 +101,9 @@ public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String max = this.maxDistance != null ? " with max distance " + this.maxDistance.toString(e, d) : "";
         String size = this.raySize != null ? " with ray size " + this.raySize.toString(e, d) : "";
+        String ignore = this.ignore ? " while ignoring passable blocks" : "";
         return "ray trace from " + this.location.toString(e, d) +
-                " along " + this.vectors.toString(e, d) + max + size;
+                " along " + this.vectors.toString(e, d) + max + size + ignore;
     }
 
 }

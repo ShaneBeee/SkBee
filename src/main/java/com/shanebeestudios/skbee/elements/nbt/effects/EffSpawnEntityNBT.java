@@ -67,6 +67,7 @@ public class EffSpawnEntityNBT extends Effect {
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public void execute(final @NotNull Event event) {
         NBTCompound compound = this.nbt.getSingle(event);

@@ -15,6 +15,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomBlock;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomEntity;
+import com.shanebeestudios.skbee.api.nbt.NBTCustomItemStack;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomItemType;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomSlot;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomTileEntity;
@@ -43,12 +44,17 @@ import org.jetbrains.annotations.Nullable;
         "\n'nbt compound' from an item will be the original. This will return the 'tag' portion of an items full NBT.",
         "Modifying this will modify the original item.",
         "\nNBT from a file will need to be saved manually using",
-        "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created."})
+        "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created.",
+        "\nNBT Compounds can be added to each other, thus merging them. See Examples."})
 @Examples({"set {_n} to nbt compound of player's tool",
         "set {_nbt} to nbt compound of target entity",
         "set {_n} to nbt compound of \"{id:\"\"minecraft:diamond_sword\"\",tag:{Damage:0,Enchantments:[{id:\"\"minecraft:sharpness\"\",lvl:3s}]},Count:1b}\"",
         "set {_nbt} to nbt compound of file \"world/playerdata/some-uuid.dat\"",
-        "set {_n} to nbt compound of chunk at player"})
+        "set {_n} to nbt compound of chunk at player",
+        "",
+        "add nbt from \"{NoAI:1}\" to nbt of last spawned entity",
+        "add nbt from \"{NoGravity:1}\" to nbt of {_entity}",
+        "add nbt from \"{custom:{points:1}}\" to nbt of player"})
 @Since("1.6.0")
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
@@ -99,7 +105,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                     return NBTItem.convertItemtoNBT(itemStack);
                 } else {
                     if (itemStack.getType() == Material.AIR) return null;
-                    compound = new NBTItem(itemStack, true);
+                    compound = new NBTCustomItemStack(itemStack);
                 }
             } else if (object instanceof Slot slot) {
                 ItemStack stack = slot.getItem();

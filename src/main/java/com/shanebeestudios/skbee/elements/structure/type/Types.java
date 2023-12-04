@@ -44,7 +44,7 @@ public class Types {
                 .user("mirrors?")
                 .name("Structure - Mirror")
                 .description("Represents the different states of mirroring for a structure. Requires MC 1.17.1+")
-                .examples("set mirror of structure {_s} to front back")
+                .examples("set structure mirror of structure {_s} to front back")
                 .since("1.12.0"));
 
         EnumWrapper<StructureRotation> ROTATION_ENUM = new EnumWrapper<>(StructureRotation.class);
@@ -52,7 +52,7 @@ public class Types {
                 .user("structure ?rotations?")
                 .name("Structure - Rotation")
                 .description("Represents the different states of rotation for a structure. Requires MC 1.17.1+")
-                .examples("set rotation of structure {_s} to clockwise 90")
+                .examples("set structure rotation of structure {_s} to clockwise 90")
                 .since("1.12.0"));
     }
 

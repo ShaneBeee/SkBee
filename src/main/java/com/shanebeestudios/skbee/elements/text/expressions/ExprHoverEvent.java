@@ -25,6 +25,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 @SuppressWarnings("rawtypes")
 @Name("Text Component - Hover Event")
@@ -35,6 +36,8 @@ import java.util.List;
         "send component {_t} to player"})
 @Since("1.5.0")
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
+
+    private static final boolean HAS_SHOW_ENITY = Skript.methodExists(ShowEntity.class, "showEntity", Key.class, UUID.class);
 
     static {
         Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
@@ -59,7 +62,10 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     protected HoverEvent[] get(Event event) {
         if (this.object.isSingle() && this.object.getSingle(event) instanceof Entity entity) {
             Key key = entity.getType().key();
-            ShowEntity showEntity = ShowEntity.showEntity(key, entity.getUniqueId());
+            UUID uuid = entity.getUniqueId();
+            ShowEntity showEntity;
+            if (HAS_SHOW_ENITY) showEntity = ShowEntity.showEntity(key, uuid);
+            else showEntity = ShowEntity.of(key, uuid);
             return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_ENTITY, showEntity)};
         } else if (this.object.isSingle() && this.object.getSingle(event) instanceof ItemType itemType) {
             Key key = itemType.getMaterial().key();

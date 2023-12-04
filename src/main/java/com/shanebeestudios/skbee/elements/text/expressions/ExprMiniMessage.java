@@ -14,14 +14,17 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Text Component - MiniMessage")
 @Description({"Get a mini message from a string.",
         "These messages are still components, which you can still apply hover/click events to.",
         "For more info check out the mini message page <link>https://docs.adventure.kyori.net/minimessage/format.html</link>"})
-@Examples("set {_m} to mini message from \"<rainbow>this is a rainbow message\"")
+@Examples({"set {_m} to mini message from \"<rainbow>this is a rainbow message\"",
+        "set {_m} to mini message from \"<gradient:##F30A0A:##0A2AF3>PRETTY MESSAGE FROM RED TO BLUE\"",
+        "set {_m} to mini message from \"<red>This is a <green>test!\"",
+        "send component mini message from \"<red>This is a <green>test!\" to all players"})
 @Since("2.4.0")
 public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
 
@@ -45,7 +48,7 @@ public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable ComponentWrapper[] get(Event event) {
+    protected @Nullable ComponentWrapper @Nullable [] get(Event event) {
         String string = this.string.getSingle(event);
         if (this.string instanceof VariableString variableString) {
             string = variableString.toUnformattedString(event);

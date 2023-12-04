@@ -6,12 +6,12 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 /**
  * Wrapper class for {@link NBTItem} using a Skript {@link ItemType}
  */
-public class NBTCustomItemType extends NBTItem {
+public class NBTCustomItemType extends NBTCustomItemStack {
 
     private final ItemType itemType;
 
     public NBTCustomItemType(ItemType itemType) {
-        super(itemType.getRandom(), true);
+        super(itemType.getRandom());
         this.itemType = itemType;
     }
 

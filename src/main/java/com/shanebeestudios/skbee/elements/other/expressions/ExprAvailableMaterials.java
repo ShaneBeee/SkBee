@@ -16,6 +16,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.other.type.Types;
+import org.bukkit.EntityEffect;
 import org.bukkit.GameEvent;
 import org.bukkit.GameRule;
 import org.bukkit.Keyed;
@@ -46,7 +47,7 @@ import java.util.stream.Collectors;
 @Description({"Get a list of all available materials (will return as an itemtype, but it's a mix of blocks and items),",
         "itemtypes, block types (will return as an item type, but only materials which can be placed as a block), block datas,",
         "entity types, enchantments, potion effect types, biomes, game rules, particles (SkBee particles), sounds (as string),",
-        "game events, statistics, trim materials, and trim patterns."})
+        "game events, statistics, entity effects, trim materials, and trim patterns."})
 @Examples({"give player random element of all available itemtypes",
         "set {_blocks::*} to all available blocktypes",
         "set target block to random element of all available blockdatas"})
@@ -111,6 +112,10 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         List<PotionEffectType> potions = Arrays.asList(PotionEffectType.values());
         potions = potions.stream().sorted(Comparator.comparing(potionEffectType -> potionEffectType.getKey().getKey())).collect(Collectors.toList());
         Registration.registerList("potion effect types", PotionEffectType.class, potions);
+
+        List<EntityEffect> entityEffects = Arrays.asList(EntityEffect.values());
+        entityEffects = entityEffects.stream().sorted(Comparator.comparing(Enum::name)).collect(Collectors.toList());
+        Registration.registerList("entity effects", EntityEffect.class, entityEffects);
 
         // Register registries
         Registration.registerRegistry("enchantments", Enchantment.class, Registry.ENCHANTMENT);
