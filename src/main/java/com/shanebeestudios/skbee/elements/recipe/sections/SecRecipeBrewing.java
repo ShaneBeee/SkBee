@@ -52,7 +52,7 @@ public class SecRecipeBrewing extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
-    private static final PotionBrewer POTION_BREWER = Bukkit.getPotionBrewer();
+    private static PotionBrewer POTION_BREWER = null;
 
     static {
         if (Skript.classExists("io.papermc.paper.potion.PotionMix")) {
@@ -62,6 +62,7 @@ public class SecRecipeBrewing extends Section {
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("ingredient", null, false, RecipeChoice.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, RecipeChoice.class));
+            POTION_BREWER = Bukkit.getPotionBrewer();
         }
     }
 
