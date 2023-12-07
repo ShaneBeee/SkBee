@@ -46,7 +46,7 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.12.1") {
+    implementation("de.tr7zw:item-nbt-api:2.12.2-SNAPSHOT") { // TODO temporary nbt for 1.20.3
         transitive = false
     }
 
@@ -94,7 +94,7 @@ shadowJar {
 tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
-    into '/Users/ShaneBee/Desktop/Server/Skript/1-20-2/plugins'
+    into '/Users/ShaneBee/Desktop/Server/Skript/1-20-3/plugins'
 }
 
 publishing {
