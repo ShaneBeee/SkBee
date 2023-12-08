@@ -10,17 +10,17 @@ import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.Location;
 import org.bukkit.WorldBorder;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("WorldBorder - Center")
 @Description("Get/set the center location of a world border.")
-@Examples("set center of world border of player to location(1,1,1)")
+@Examples("set border center of world border of player to location(1,1,1)")
 @Since("1.17.0")
 public class ExprWorldBorderCenter extends SimplePropertyExpression<WorldBorder, Location> {
 
     static {
-        register(ExprWorldBorderCenter.class, Location.class, "[border] center", "worldborders");
+        register(ExprWorldBorderCenter.class, Location.class, "[world] border center", "worldborders");
     }
 
     @Override
@@ -30,7 +30,7 @@ public class ExprWorldBorderCenter extends SimplePropertyExpression<WorldBorder,
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(Location.class);
         return null;
     }
