@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
         "else:",
         "\tset {_m} to \"&bOH HI THERE\"",
         "send {_m} to player"})
-@Since("INSERT VERSION")
+@Since("3.0.1")
 public class ExprServerPlatform extends SimpleLiteral<String> {
 
     private static final String name = Skript.getServerPlatform().name;
