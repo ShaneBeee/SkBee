@@ -295,12 +295,17 @@ public class Types {
                     .since("2.17.0"));
         }
 
-        EnumWrapper<EntityEffect> ENTITY_EFFECT_ENUM = new EnumWrapper<>(EntityEffect.class);
-        Classes.registerClass(ENTITY_EFFECT_ENUM.getClassInfo("entityeffect")
-                .user("entit(y|ies) ?effects?")
-                .name("Entity Effect")
-                .description("Represents an effect that can be played on an entity.")
-                .since("3.0.0"));
+        if (Classes.getExactClassInfo(EntityEffect.class) == null) {
+            EnumWrapper<EntityEffect> ENTITY_EFFECT_ENUM = new EnumWrapper<>(EntityEffect.class);
+            Classes.registerClass(ENTITY_EFFECT_ENUM.getClassInfo("entityeffect")
+                    .user("entit(y|ies) ?effects?")
+                    .name("Entity Effect")
+                    .description("Represents an effect that can be played on an entity.")
+                    .since("3.0.0"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'EntityEffect' already.");
+            Util.logLoading("You may have to use their EntityEffects in SkBee's 'play entity effect' effect.");
+        }
     }
 
 }
