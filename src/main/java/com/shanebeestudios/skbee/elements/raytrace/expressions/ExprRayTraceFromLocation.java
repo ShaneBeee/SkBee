@@ -29,7 +29,8 @@ import java.util.List;
         "\nDefault max distance = 'maximum target block distance' in Skript's config.",
         "\nRaySize = entity bounding boxes will be uniformly expanded (or shrunk)",
         "by this value before doing collision checks (default = 0.0).",
-        "\nIngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..)"})
+        "\nIngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..)",
+        "[Added in SkBee 3.0.0]"})
 @Examples("set {_ray} to ray trace from location of target block along vector(0.25,0.3,0) with max distance 50")
 @Since("2.6.0")
 public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {

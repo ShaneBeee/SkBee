@@ -29,7 +29,8 @@ import java.util.List;
         "\nDefault max distance = 'maximum target block distance' in Skript's config.",
         "\nRaySize = entity bounding boxes will be uniformly expanded (or shrunk)",
         "by this value before doing collision checks (default = 0.0).",
-        "\nIngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..)"})
+        "\nIngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..)",
+        "[Added in SkBee 3.0.0]"})
 @Examples({"set {_ray} to ray trace from player with max distance 25",
         "set {_ray} to ray trace from player with max distance 25 while ignoring passable blocks",
         "set {_rays::*} to raytrace from all players with ray size 0.1"})
