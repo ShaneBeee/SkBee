@@ -50,8 +50,8 @@ public class OtherEvents {
                         "block (interact|trample)")
                 .description("Called when an entity physically interacts with a block, for example,",
                         " entities trampling farmland and villagers opening doors.")
-                .examples("on block interact:",
-                        "\tif event-entity is a villager:",
+                .examples("on block trample:",
+                        "\tif type of event-block is farmland:",
                         "\t\tcancel event")
                 .since("1.5.0");
 
