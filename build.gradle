@@ -103,6 +103,7 @@ publishing {
             groupId 'com.shanebeestudios'
             artifactId 'SkBee'
             version project.version
+            artifact shadowJar
         }
     }
 }
