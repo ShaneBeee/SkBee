@@ -43,8 +43,7 @@ public class ExprObjCreate extends SimpleExpression<Objective> {
     }
 
     private Expression<String> id;
-    private Expression<Criteria> criteria;
-    private Expression<String> stringCriteria;
+    private Expression<?> criteria;
     private Expression<String> displayName;
     private Expression<RenderType> renderType;
     private Expression<DisplaySlot> displaySlot;
@@ -53,13 +52,7 @@ public class ExprObjCreate extends SimpleExpression<Objective> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
         this.id = (Expression<String>) exprs[0];
-        if (HAS_CRITERIA_CLASS) {
-            this.criteria = (Expression<Criteria>) exprs[1];
-            this.stringCriteria = null;
-        } else {
-            this.criteria = null;
-            this.stringCriteria = (Expression<String>) exprs[1];
-        }
+        this.criteria = exprs[1];
         this.displayName = (Expression<String>) exprs[2];
         this.renderType = (Expression<RenderType>) exprs[3];
         this.displaySlot = (Expression<DisplaySlot>) exprs[4];
@@ -68,7 +61,7 @@ public class ExprObjCreate extends SimpleExpression<Objective> {
 
     @SuppressWarnings({"NullableProblems", "deprecation"})
     @Override
-    protected @Nullable Objective[] get(Event event) {
+    protected Objective @Nullable [] get(Event event) {
         Scoreboard mainScoreboard = Bukkit.getScoreboardManager().getMainScoreboard();
         String id = this.id.getSingle(event);
         String displayName = this.displayName.getSingle(event);
@@ -84,12 +77,17 @@ public class ExprObjCreate extends SimpleExpression<Objective> {
         objective = mainScoreboard.getObjective(id);
         if (objective == null) {
             if (HAS_CRITERIA_CLASS) {
-                Criteria criteria = this.criteria.getSingle(event);
-                if (displayName != null && criteria != null) {
+                Criteria criteria;
+                Object object = this.criteria.getSingle(event);
+                if (object instanceof Criteria c) criteria = c;
+                else if (object instanceof String string) criteria = Criteria.create(string);
+                else return null;
+
+                if (displayName != null) {
                     objective = mainScoreboard.registerNewObjective(id, criteria, displayName, Objects.requireNonNullElseGet(renderType, criteria::getDefaultRenderType));
                 }
             } else {
-                String criteria = this.stringCriteria.getSingle(event);
+                String criteria = (String) this.criteria.getSingle(event);
                 if (displayName != null && criteria != null) {
                     if (renderType != null) {
                         objective = mainScoreboard.registerNewObjective(id, criteria, displayName, renderType);
@@ -120,9 +118,11 @@ public class ExprObjCreate extends SimpleExpression<Objective> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String criteria = HAS_CRITERIA_CLASS ? this.criteria.toString(e,d) : this.stringCriteria.toString(e,d);
+        String render = this.renderType != null ? (" with render type " + this.renderType.toString(e,d)) : "";
+        String display = this.displaySlot != null ? (" in display slot " + this.displaySlot.toString(e,d)) : "";
         return "objective with id " + this.id.toString(e, d) + " with criteria " +
-                criteria + " named " + this.displayName.toString(e, d);
+                this.criteria.toString(e,d) + " named " + this.displayName.toString(e, d) +
+                render + display;
     }
 
 }
