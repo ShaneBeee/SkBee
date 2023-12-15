@@ -73,7 +73,7 @@ public class EffSendComponentTitle extends Effect {
         if (this.fadeOut != null) {
             Timespan fadeOutSingle = this.fadeOut.getSingle(event);
             if (fadeOutSingle != null) {
-                fadeIn = fadeOutSingle.getTicks_i();
+                fadeOut = fadeOutSingle.getTicks_i();
             }
         }
         ComponentWrapper.sendTitle(players, title, subtitle, stay, fadeIn, fadeOut);
