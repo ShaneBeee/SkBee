@@ -23,24 +23,26 @@ import org.jetbrains.annotations.Nullable;
 public class CondServerTickFrozen extends Condition {
 
     static {
-        Skript.registerCondition(CondServerTickFrozen.class, "(server|game) is frozen");
+        Skript.registerCondition(CondServerTickFrozen.class, "(server|game) (is|neg:(isn't|is not)) frozen");
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        setNegated(parseResult.hasTag("neg"));
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
-        return Bukkit.getServerTickManager().isFrozen();
+        return !isNegated() == Bukkit.getServerTickManager().isFrozen();
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean debug) {
-        return "server is frozen";
+        String is = isNegated() ? "is not" : "is";
+        return "server " + is + " frozen";
     }
 
 }
