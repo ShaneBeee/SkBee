@@ -21,11 +21,12 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Server Tick - Tick Rate")
 @Description({"Represents the tick rate of the server. Can be a value from `1.0` to `10000.0`.",
-        "Default = 20.", Util.MCWIKI_TICK_COMMAND, "Requires Minecraft 1.20.4+"})
+        "Supports fractional numbers, see examples.", "Default = 20.", Util.MCWIKI_TICK_COMMAND,
+        "Requires Minecraft 1.20.4+"})
 @Examples({"set {_rate} to server tick rate",
         "set server tick rate to 100",
-        "add 10 to server tick rate",
-        "remove 5 from server tick rate",
+        "add 1.5 to server tick rate",
+        "remove 3.75 from server tick rate",
         "reset server tick rate"})
 @Since("INSERT VERSION")
 public class ExprServerTickRate extends SimpleExpression<Number> {
