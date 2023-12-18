@@ -16,7 +16,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Server Tick - Is Frozen/Running Normally")
+@Name("Server Tick - Is Server Frozen/Running Normally")
 @Description({"Checks if the server is currently frozen/running normally.",
         "When the server is running normally it indicates that the server is not currently frozen.",
         Util.MCWIKI_TICK_COMMAND, "Requires Minecraft 1.20.4+"})
@@ -25,10 +25,10 @@ import org.jetbrains.annotations.Nullable;
         "if server is running normally:",
         "\tkill all sheep"})
 @Since("INSERT VERSION")
-public class CondServerTickFrozen extends Condition {
+public class CondServerTickServerFrozen extends Condition {
 
     static {
-        Skript.registerCondition(CondServerTickFrozen.class,
+        Skript.registerCondition(CondServerTickServerFrozen.class,
                 "(server|game) (is|neg:(isn't|is not)) [currently] (frozen|normal:running normally)");
     }
 
