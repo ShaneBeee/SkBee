@@ -27,7 +27,7 @@ public class CondServerTickSprintStep extends Condition {
     static {
         if (Skript.classExists("org.bukkit.ServerTickManager")) {
             Skript.registerCondition(CondServerTickSprintStep.class,
-                    "(server|game) is sprinting", "(server|game) is stepping");
+                    "(server|game) (is|neg:(isn't|is not)) [currently] (:sprinting|stepping)");
         }
     }
 
@@ -36,7 +36,8 @@ public class CondServerTickSprintStep extends Condition {
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.sprint = matchedPattern == 0;
+        this.sprint = parseResult.hasTag("sprinting");
+        setNegated(parseResult.hasTag("neg"));
         return true;
     }
 
@@ -44,12 +45,13 @@ public class CondServerTickSprintStep extends Condition {
     @Override
     public boolean check(Event event) {
         ServerTickManager tickManager = Bukkit.getServerTickManager();
-        return this.sprint ? tickManager.isSprinting() : tickManager.isStepping();
+        return !isNegated() == (this.sprint ? tickManager.isSprinting() : tickManager.isStepping());
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "server is " + (this.sprint ? "sprinting" : "stepping");
+        String is = isNegated() ? "is not " : "is ";
+        return "server " + is + (this.sprint ? "sprinting" : "stepping");
     }
 
 }
