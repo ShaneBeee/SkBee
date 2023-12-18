@@ -27,6 +27,9 @@ public class Util {
     private static final boolean SKRIPT_IS_THERE = Bukkit.getPluginManager().getPlugin("Skript") != null;
     private static final String SETTINGS_NAMESPACE = SkBee.getPlugin().getPluginConfig().SETTINGS_NAMESPACE;
 
+    // QuickLinks
+    public static final String MCWIKI_TICK_COMMAND = "See <link>https://minecraft.wiki/w/Commands/tick</link> for more details.";
+
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
         Matcher matcher = HEX_PATTERN.matcher(string);
