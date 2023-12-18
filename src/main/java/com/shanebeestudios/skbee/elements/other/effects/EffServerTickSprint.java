@@ -34,15 +34,11 @@ public class EffServerTickSprint extends Effect {
     }
 
     private Expression<Timespan> ticks;
-    private boolean stop;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.stop = matchedPattern == 1;
-        if (!this.stop) {
-            this.ticks = (Expression<Timespan>) exprs[0];
-        }
+        this.ticks = matchedPattern == 0 ? (Expression<Timespan>) exprs[0] : null;
         return true;
     }
 
@@ -50,7 +46,7 @@ public class EffServerTickSprint extends Effect {
     @Override
     protected void execute(Event event) {
         ServerTickManager tickManager = Bukkit.getServerTickManager();
-        if (this.stop) {
+        if (this.ticks == null) {
             tickManager.stopSprinting();
         } else {
             Timespan timespan = this.ticks.getSingle(event);
@@ -62,7 +58,7 @@ public class EffServerTickSprint extends Effect {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        if (this.stop) return "stop stepping server";
+        if (this.ticks == null) return "stop stepping server";
         return "request game to sprint by " + this.ticks.toString(e, d);
     }
 
