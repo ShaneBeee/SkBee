@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.other.effects;
+package com.shanebeestudios.skbee.elements.tickmanager.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -26,11 +26,10 @@ import org.jetbrains.annotations.Nullable;
 public class EffServerTickSprint extends Effect {
 
     static {
-        if (Skript.classExists("org.bukkit.ServerTickManager")) {
-            Skript.registerEffect(EffServerTickSprint.class,
-                    "request (game|server) to sprint %timespan%",
-                    "stop sprinting (game|server)");
-        }
+        Skript.registerEffect(EffServerTickSprint.class,
+                "request (game|server) to sprint %timespan%",
+                "stop sprinting (game|server)");
+
     }
 
     private Expression<Timespan> ticks;

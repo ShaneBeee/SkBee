@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.other.expressions;
+package com.shanebeestudios.skbee.elements.tickmanager.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -32,10 +32,8 @@ import org.jetbrains.annotations.Nullable;
 public class ExprServerTickRate extends SimpleExpression<Number> {
 
     static {
-        if (Skript.classExists("org.bukkit.ServerTickManager")) {
-            Skript.registerExpression(ExprServerTickRate.class, Number.class, ExpressionType.SIMPLE,
-                    "server tick rate");
-        }
+        Skript.registerExpression(ExprServerTickRate.class, Number.class, ExpressionType.SIMPLE,
+                "server tick rate");
     }
 
     @SuppressWarnings("NullableProblems")

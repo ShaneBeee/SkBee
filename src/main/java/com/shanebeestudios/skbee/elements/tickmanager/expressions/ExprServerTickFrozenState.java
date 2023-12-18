@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.other.expressions;
+package com.shanebeestudios.skbee.elements.tickmanager.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -26,10 +26,8 @@ import org.jetbrains.annotations.Nullable;
 public class ExprServerTickFrozenState extends SimpleExpression<Boolean> {
 
     static {
-        if (Skript.classExists("org.bukkit.ServerTickManager")) {
-            Skript.registerExpression(ExprServerTickFrozenState.class, Boolean.class, ExpressionType.SIMPLE,
-                    "server (frozen|freeze) state");
-        }
+        Skript.registerExpression(ExprServerTickFrozenState.class, Boolean.class, ExpressionType.SIMPLE,
+                "server (frozen|freeze) state");
     }
 
     @SuppressWarnings("NullableProblems")

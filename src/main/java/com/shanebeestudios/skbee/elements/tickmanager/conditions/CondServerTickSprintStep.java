@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.other.conditions;
+package com.shanebeestudios.skbee.elements.tickmanager.conditions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -25,10 +25,9 @@ import org.jetbrains.annotations.Nullable;
 public class CondServerTickSprintStep extends Condition {
 
     static {
-        if (Skript.classExists("org.bukkit.ServerTickManager")) {
-            Skript.registerCondition(CondServerTickSprintStep.class,
-                    "(server|game) (is|neg:(isn't|is not)) [currently] (:sprinting|stepping)");
-        }
+        Skript.registerCondition(CondServerTickSprintStep.class,
+                "(server|game) (is|neg:(isn't|is not)) [currently] (:sprinting|stepping)");
+
     }
 
     private boolean sprint;

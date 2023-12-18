@@ -115,6 +115,7 @@ public class AddonLoader {
         loadStructureElements();
         loadTagElements();
         loadTeamElements();
+        loadTickManagerElements();
         loadVillagerElements();
         loadVirtualFurnaceElements();
         loadWorldBorderElements();
@@ -224,6 +225,24 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.team");
             Util.logLoading("&5Team Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadTickManagerElements() {
+        if (!this.config.ELEMENTS_TICK_MANAGER) {
+            Util.logLoading("&5Tick Manager elements &cdisabled via config");
+            return;
+        }
+        if (!Skript.classExists("org.bukkit.ServerTickManager")) {
+            Util.logLoading("&5Tick Manager elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.tickmanager");
+            Util.logLoading("&5Tick Manager elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);

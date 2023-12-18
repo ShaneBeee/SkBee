@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.other.effects;
+package com.shanebeestudios.skbee.elements.tickmanager.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -28,11 +28,9 @@ import org.jetbrains.annotations.Nullable;
 public class EffServerTickStep extends Effect {
 
     static {
-        if (Skript.classExists("org.bukkit.ServerTickManager")) {
-            Skript.registerEffect(EffServerTickStep.class,
-                    "step (game|server) [if frozen] [by] %timespan%",
-                    "stop stepping (game|server)");
-        }
+        Skript.registerEffect(EffServerTickStep.class,
+                "step (game|server) [if frozen] [by] %timespan%",
+                "stop stepping (game|server)");
     }
 
     private Expression<Timespan> ticks;

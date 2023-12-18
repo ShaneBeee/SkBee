@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.other.conditions;
+package com.shanebeestudios.skbee.elements.tickmanager.conditions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -23,9 +23,7 @@ import org.jetbrains.annotations.Nullable;
 public class CondServerTickFrozen extends Condition {
 
     static {
-        if (Skript.classExists("org.bukkit.ServerTickManager")) {
-            Skript.registerCondition(CondServerTickFrozen.class, "(server|game) is frozen");
-        }
+        Skript.registerCondition(CondServerTickFrozen.class, "(server|game) is frozen");
     }
 
     @SuppressWarnings("NullableProblems")
