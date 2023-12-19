@@ -859,6 +859,8 @@ public class NBTApi {
      * @param compound Compound to merge
      */
     public static void addNBTToBlock(Block block, NBTCompound compound) {
+        // We shouldn't be adding NBT to air
+        if (block.getType().isAir()) return;
         BlockState blockState = block.getState();
         if (blockState instanceof TileState tileState) {
             NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity(tileState);

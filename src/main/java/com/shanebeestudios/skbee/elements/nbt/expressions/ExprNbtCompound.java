@@ -82,6 +82,8 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
         return get(source, object -> {
             NBTCompound compound = null;
             if (object instanceof Block block) {
+                // We shouldn't be adding NBT to air
+                if (block.getType().isAir()) return null;
                 if (block.getState() instanceof TileState tileState) {
                     compound = new NBTCustomTileEntity(tileState);
                 } else if (NBTApi.supportsBlockNBT()) {
