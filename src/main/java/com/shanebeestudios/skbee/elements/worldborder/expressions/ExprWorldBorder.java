@@ -34,7 +34,7 @@ import java.util.List;
         "NOTE: Virtual world borders do not seem to be persistent (ie: restarts, quitting, death, world change).",
         "NOTE: Virtual world borders were added in MC 1.18.x+"})
 @Examples({"set world border of player to virtual world border",
-        "set center of world border of player to location of player",
+        "set border center of world border of player to location of player",
         "set size of world border of player to 100",
         "reset world border of player #will remove the player's virtual border",
         "set {_w} to world border of player",
