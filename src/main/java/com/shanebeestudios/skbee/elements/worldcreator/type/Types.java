@@ -20,19 +20,6 @@ public class Types {
                 .since("1.8.0")
                 .parser(SkriptUtils.getDefaultParser()));
 
-        if (Classes.getExactClassInfo(Environment.class) == null) {
-            EnumWrapper<Environment> ENVIRONMENT_ENUM = new EnumWrapper<>(Environment.class);
-            Classes.registerClass(ENVIRONMENT_ENUM.getClassInfo("environment")
-                    .user("environments?")
-                    .name("Environment")
-                    .description("The environment of a world.")
-                    .examples("set environment of {_creator} to nether")
-                    .since("1.8.0"));
-        } else {
-            Util.log("It looks like another addon registered 'environment' already.");
-            Util.log("You may have to use their environment options in SkBee's 'world creator' system.");
-        }
-
         if (Classes.getExactClassInfo(WorldType.class) == null) {
             EnumWrapper<WorldType> WORLD_TYPE_ENUM = new EnumWrapper<>(WorldType.class);
             Classes.registerClass(WORLD_TYPE_ENUM.getClassInfo("worldtype")
