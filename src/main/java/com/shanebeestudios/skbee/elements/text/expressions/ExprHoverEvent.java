@@ -82,7 +82,8 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
                     components.add(component);
                 }
             }
-            ComponentWrapper hover = ComponentWrapper.fromComponents(components.toArray(new ComponentWrapper[0]), "\n");
+            ComponentWrapper newLine = ComponentWrapper.fromText("\n");
+            ComponentWrapper hover = ComponentWrapper.fromComponents(components.toArray(new ComponentWrapper[0]), newLine);
             return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_TEXT, hover.getComponent())};
         }
     }

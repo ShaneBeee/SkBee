@@ -12,8 +12,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Text Component - Merge Components")
 @Description("Merge multiple components into one. If adding strings/texts, they will be converted into components.")
@@ -24,34 +24,38 @@ public class ExprMergeComponents extends SimpleExpression<ComponentWrapper> {
 
     static {
         Skript.registerExpression(ExprMergeComponents.class, ComponentWrapper.class, ExpressionType.SIMPLE,
-                "merge components %textcomponents/strings% [[join[ed]] with %-string%]");
+                "merge components %textcomponents/strings% [[join[ed]] (with|using) %-textcomponent/string%]");
     }
 
     private Expression<?> components;
-    private Expression<String> delimiter;
+    private Expression<?> delimiter;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.components = exprs[0];
-        this.delimiter = (Expression<String>) exprs[1];
+        this.delimiter = exprs[1];
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable ComponentWrapper[] get(Event event) {
-        if (this.components == null)
-            return null;
+    protected ComponentWrapper @Nullable [] get(Event event) {
+        if (this.components == null) return null;
         Object[] array = this.components.getArray(event);
         ComponentWrapper[] components = new ComponentWrapper[array.length];
         for (int i = 0; i < array.length; i++) {
             if (array[i] instanceof ComponentWrapper componentWrapper) components[i] = componentWrapper;
             else if (array[i] instanceof String string) components[i] = ComponentWrapper.fromText(string);
-            else ComponentWrapper.empty();
+            else components[i] = ComponentWrapper.empty();
         }
-        if (this.delimiter != null)
-            return new ComponentWrapper[]{ComponentWrapper.fromComponents(components, this.delimiter.getSingle(event))};
+        if (this.delimiter != null) {
+            Object delimiter = this.delimiter.getSingle(event);
+            if (delimiter instanceof String string)
+                return new ComponentWrapper[]{ComponentWrapper.fromComponents(components, ComponentWrapper.fromText(string))};
+            else if (delimiter instanceof ComponentWrapper componentWrapper)
+                return new ComponentWrapper[]{ComponentWrapper.fromComponents(components, componentWrapper)};
+        }
         return new ComponentWrapper[]{ComponentWrapper.fromComponents(components)};
     }
 
@@ -67,7 +71,7 @@ public class ExprMergeComponents extends SimpleExpression<ComponentWrapper> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "merge components " + this.components.toString(e,d);
+        return "merge components " + this.components.toString(e, d);
     }
 
 }

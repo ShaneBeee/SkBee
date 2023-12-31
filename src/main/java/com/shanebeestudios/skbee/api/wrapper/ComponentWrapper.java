@@ -194,10 +194,10 @@ public class ComponentWrapper {
      * @param delimiter  Delimiter between components
      * @return Merged components
      */
-    public static ComponentWrapper fromComponents(@Nullable ComponentWrapper[] components, @Nullable String delimiter) {
+    public static ComponentWrapper fromComponents(@Nullable ComponentWrapper[] components, @Nullable ComponentWrapper delimiter) {
         Component component = Component.empty();
         if (components != null && components.length > 0) {
-            Component delimiterComp = delimiter != null ? Component.text(delimiter) : null;
+            Component delimiterComp = delimiter != null ? delimiter.component : null;
             assert components[0] != null;
             component = component.append(components[0].component);
             int end = components.length;
@@ -206,6 +206,7 @@ public class ComponentWrapper {
                 if (delimiterComp != null) {
                     component = component.append(delimiterComp);
                 }
+                //noinspection DataFlowIssue
                 component = component.append(components[i].component);
             }
         }
