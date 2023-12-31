@@ -309,16 +309,6 @@ public class OtherEvents {
             }
         }, EventValues.TIME_NOW);
 
-        // Spawner Spawn Event
-        Skript.registerEvent("Spawner Spawn", SimpleEvent.class, SpawnerSpawnEvent.class,
-                        "spawner spawn")
-                .description("Called when an entity is spawned into a world by a spawner.",
-                        "\n`event-block` = the spawner the entity spawned from")
-                .examples("on spawner spawn:",
-                        "\tif event-entity is a skeleton:",
-                        "\t\tcancel event")
-                .since("2.8.4");
-
         EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, new Getter<>() {
             @Override
             public Block get(SpawnerSpawnEvent event) {
