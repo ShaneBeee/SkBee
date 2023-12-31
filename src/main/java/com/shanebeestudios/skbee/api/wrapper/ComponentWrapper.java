@@ -147,6 +147,7 @@ public class ComponentWrapper {
         return new ComponentWrapper(Component.translatable(translate, comps));
     }
 
+    @Nullable
     private static Component getItem(Object object) {
         ItemStack itemStack = null;
         if (object instanceof ItemStack is) {
@@ -299,6 +300,7 @@ public class ComponentWrapper {
      *
      * @return Color of this component
      */
+    @Nullable
     public Color getColor() {
         TextColor textColor = this.component.color();
         if (textColor == null) {
@@ -355,6 +357,7 @@ public class ComponentWrapper {
         this.component = this.component.font(Key.key(font));
     }
 
+    @Nullable
     public String getFont() {
         Key font = this.component.font();
         if (font != null) {
