@@ -13,6 +13,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.elements.tag.type.Types;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.event.Event;
@@ -35,7 +36,7 @@ import java.util.List;
 @Since("1.10.0")
 public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
 
-    private static final boolean HAS_TAGS = SkBee.getPlugin().getPluginConfig().ELEMENTS_MINECRAFT_TAG;
+    private static final boolean HAS_TAGS = SkBee.getPlugin().getPluginConfig().ELEMENTS_MINECRAFT_TAG && Types.HAS_TAG;
 
     static {
         Skript.registerExpression(ExprMaterialChoice.class, MaterialChoice.class, ExpressionType.COMBINED,
