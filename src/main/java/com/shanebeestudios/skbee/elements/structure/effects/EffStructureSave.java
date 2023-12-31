@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffStructureSave extends Effect {
 
     static {
-        Skript.registerEffect(EffStructureSave.class, "(save|1¦delete) [s:structure[s]] %structures%");
+        Skript.registerEffect(EffStructureSave.class, "(save|1¦delete) [structure[s] %structures%");
     }
 
     private Expression<StructureWrapper> structures;
@@ -31,10 +31,6 @@ public class EffStructureSave extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         this.structures = (Expression<StructureWrapper>) exprs[0];
         this.save = parseResult.mark == 0;
-        if (!parseResult.hasTag("s")) {
-            Skript.warning("While \"structure\" may be optional, in the future it will be required (to prevent conflict)."
-                    + "Please make sure to include it!");
-        }
         return true;
     }
 
