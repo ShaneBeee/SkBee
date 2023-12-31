@@ -100,6 +100,7 @@ public abstract class ObjectConverter<T> {
             }
         });
         register(PotionEffectType.class, new ObjectConverter<>() {
+            @SuppressWarnings("deprecation")
             @Override
             public PotionEffectType get(NamespacedKey key) {
                 return PotionEffectType.getByKey(key);
