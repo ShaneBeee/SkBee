@@ -31,7 +31,7 @@ public class EvtDamageByBlock extends SkriptEvent {
                         "",
                         "on damage by block:",
                         "\tbroadcast \"%victim% was damaged by %type of event-block%\"")
-                .since("INSERT VERSION");
+                .since("3.0.2");
 
         EventValues.registerEventValue(EntityDamageByBlockEvent.class, Block.class, new Getter<>() {
             @Override

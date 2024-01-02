@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set {_regen} to saturated regen rate of player",
         "set unsaturated regen rate of player to 10 ticks",
         "add 1 second to unsaturated regen rate of player"})
-@Since("INSERT VERSION")
+@Since("3.0.2")
 public class ExprRegenRate extends SimplePropertyExpression<Player, Timespan> {
 
     static {
