@@ -17,15 +17,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Chunk at Coords")
-@Description("Get a chunk using chunk coords.")
-@Examples({"set {_chunk} to chunk at 1,1",
-        "set {_chunk} to chunk at 1,1 in world \"world\""})
+@Description({"Get a chunk using chunk coords.",
+        "\nNOTE: Chunk coords are different than location coords.",
+        "Chunk coords are basically location coords divided by 16."})
+@Examples({"set {_chunk} to chunk at coords 1,1",
+        "set {_chunk} to chunk at coords 1,1 in world \"world\""})
 @Since("2.14.0")
 public class ExprChunkAt extends SimpleExpression<Chunk> {
 
     static {
         Skript.registerExpression(ExprChunkAt.class, Chunk.class, ExpressionType.COMBINED,
-                "chunk at %number%,[ ]%number% [(in|of) %world%]");
+                "chunk at [coord[inate]s] %number%,[ ]%number% [(in|of) %world%]");
     }
 
     private Expression<Number> chunkX, chunkZ;
@@ -42,7 +44,7 @@ public class ExprChunkAt extends SimpleExpression<Chunk> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable Chunk[] get(Event event) {
+    protected Chunk @Nullable [] get(Event event) {
         World world = this.world.getSingle(event);
         Number chunkXNum = this.chunkX.getSingle(event);
         Number chunkZNum = this.chunkZ.getSingle(event);
@@ -68,8 +70,8 @@ public class ExprChunkAt extends SimpleExpression<Chunk> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String world = this.world != null ? ("in " + this.world.toString(e,d)) : "";
-        return "chunk at " + this.chunkX.toString(e,d) + "," + this.chunkZ.toString(e,d) + world;
+        String world = this.world != null ? ("in " + this.world.toString(e, d)) : "";
+        return "chunk at coords " + this.chunkX.toString(e, d) + "," + this.chunkZ.toString(e, d) + world;
     }
 
 }
