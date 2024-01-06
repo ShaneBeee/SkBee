@@ -55,6 +55,7 @@ public class Config {
     public boolean ELEMENTS_RAYTRACE;
     public boolean ELEMENTS_FISHING;
     public boolean ELEMENTS_DISPLAY;
+    public boolean ELEMENTS_TICK_MANAGER;
     public boolean AUTO_LOAD_WORLDS;
 
     public Config(SkBee plugin) {
@@ -163,6 +164,7 @@ public class Config {
         this.ELEMENTS_RAYTRACE = getElement("raytrace");
         this.ELEMENTS_FISHING = getElement("fishing");
         this.ELEMENTS_DISPLAY = getElement("display-entity");
+        this.ELEMENTS_TICK_MANAGER = getElement("tick-manager");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
     }
 

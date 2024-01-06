@@ -86,6 +86,11 @@ elements:
   # This is specifically for Minecraft 1.19.4+
   display-entity: true
 
+  # Enable Server Tick Manager elements
+  # These elements are based around Minecraft's tick command
+  # This is specifically for Minecraft 1.20.4+
+  tick-manager: true
+
 # Enable different event listeners for NBT
 nbt-events:
   # Whether breaking a block should remove NBT
