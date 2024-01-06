@@ -65,6 +65,7 @@ public class ComponentWrapper {
 
     /**
      * Create a component from text
+     * <p>Will convert '&' and '§' as color codes.</p>
      *
      * @param text Text to add to component
      * @return Component from text
@@ -79,6 +80,17 @@ public class ComponentWrapper {
             component = Component.text(text);
         }
         return new ComponentWrapper(component);
+    }
+
+    /**
+     * Create a component from text
+     * <p>This will not convert any colors</p>
+     *
+     * @param text Text to add to component
+     * @return Component from text
+     */
+    public static ComponentWrapper fromRawText(String text) {
+        return new ComponentWrapper(Component.text(text));
     }
 
     /**

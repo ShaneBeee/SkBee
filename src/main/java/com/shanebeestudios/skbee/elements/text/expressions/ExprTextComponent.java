@@ -40,7 +40,7 @@ import java.util.List;
 public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
     static {
         Skript.registerExpression(ExprTextComponent.class, ComponentWrapper.class, ExpressionType.COMBINED,
-                "[a] [new] text component[s] (from|of) %strings%",
+                "[a] [new] (text|:rawtext) component[s] (from|of) %strings%",
                 "[a] [new] key[ ]bind component[s] (from|of) %strings%",
                 "[a] [new] translate component[s] (from|of) %objects% [(with|using) %-objects%]");
     }
@@ -48,12 +48,14 @@ public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
     private int pattern;
     private Expression<Object> translation;
     private Expression<Object> objects;
+    private boolean raw;
 
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         pattern = matchedPattern;
         translation = LiteralUtils.defendExpression(exprs[0]);
         objects = pattern == 2 ? LiteralUtils.defendExpression(exprs[1]) : null;
+        raw = parseResult.hasTag("rawtext");
         if (objects != null) {
             return LiteralUtils.canInitSafely(translation, objects);
         }
@@ -67,7 +69,8 @@ public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
 
         for (Object object : this.translation.getArray(e)) {
             if (pattern == 0) {
-                components.add(ComponentWrapper.fromText((String) object));
+                if (raw) components.add(ComponentWrapper.fromRawText((String) object));
+                else components.add(ComponentWrapper.fromText((String) object));
             } else if (pattern == 1) {
                 components.add(ComponentWrapper.fromKeybind((String) object));
             } else if (pattern == 2) {
