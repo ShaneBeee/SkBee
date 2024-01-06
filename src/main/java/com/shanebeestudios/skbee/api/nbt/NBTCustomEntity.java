@@ -13,7 +13,6 @@ import org.bukkit.persistence.PersistentDataType;
 public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 
     private final Entity entity;
-    private final String KEY = "skbee-custom";
 
     /**
      * @param entity Any valid Bukkit Entity
@@ -77,18 +76,25 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     @SuppressWarnings("DuplicatedCode")
     @Override
     public String toString() {
+        return getCopy().toString();
+    }
+
+    @Override
+    public NBTCompound getCopy() {
         try {
             String bukkit = "BukkitValues";
-            NBTCompound compound = new NBTContainer(super.toString());
+            NBTCompound compound = new NBTContainer();
+            compound.mergeCompound(this); // create a copy
             NBTCompound custom = null;
             if (compound.hasTag(bukkit)) {
                 NBTCompound persist = compound.getCompound(bukkit);
+                assert persist != null;
                 persist.removeKey("__nbtapi"); // this is just a placeholder one, so we don't need it
                 if (persist.hasTag(KEY)) {
                     custom = getPersistentDataContainer().getCompound(KEY);
                     persist.removeKey(KEY);
                 }
-                if (persist.getKeys().size() == 0) {
+                if (persist.getKeys().isEmpty()) {
                     compound.removeKey(bukkit);
                 }
             }
@@ -96,7 +102,7 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
             if (custom != null) {
                 customCompound.mergeCompound(custom);
             }
-            return compound.toString();
+            return compound;
         } catch (NbtApiException ex) {
             if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
                 ex.printStackTrace();

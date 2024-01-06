@@ -13,7 +13,6 @@ import org.bukkit.persistence.PersistentDataType;
 public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
 
     private final BlockState blockState;
-    private final String KEY = "skbee-custom";
 
     /**
      * @param tile BlockState from any TileEntity
@@ -78,18 +77,24 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     @SuppressWarnings("DuplicatedCode")
     @Override
     public String toString() {
+        return getCopy().toString();
+    }
+
+    @Override
+    public NBTCompound getCopy() {
         try {
             String bukkit = "PublicBukkitValues";
             NBTCompound compound = new NBTContainer(new NBTTileEntity(blockState).toString());
             NBTCompound custom = null;
             if (compound.hasTag(bukkit)) {
                 NBTCompound persist = compound.getCompound(bukkit);
-                persist.removeKey("__nbtapi"); // this is just a placeholder one, so we dont need it
+                assert persist != null;
+                persist.removeKey("__nbtapi"); // this is just a placeholder one, so we don't need it
                 if (persist.hasTag(KEY)) {
                     custom = getPersistentDataContainer().getCompound(KEY);
                     persist.removeKey(KEY);
                 }
-                if (persist.getKeys().size() == 0) {
+                if (persist.getKeys().isEmpty()) {
                     compound.removeKey(bukkit);
                 }
             }
@@ -101,9 +106,9 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
             compound.setInteger("x", blockState.getX());
             compound.setInteger("y", blockState.getY());
             compound.setInteger("z", blockState.getZ());
-            return compound.toString();
+            return compound;
         } catch (NbtApiException ignore) {
-            return null;
+            return new NBTContainer();
         }
     }
 

@@ -15,7 +15,6 @@ import java.io.IOException;
 public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
 
     private static final String PLAYER_FOLDER;
-    private final String KEY = "skbee-custom";
 
     static {
         String worldFolder = Bukkit.getWorlds().get(0).getWorldFolder().getPath();
@@ -85,31 +84,38 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
 
     @Override
     public String toString() {
+        return getCopy().toString();
+    }
+
+    @Override
+    public NBTCompound getCopy() {
         try {
-            String bukkitValues = "BukkitValues";
-            NBTCompound compound = new NBTContainer(super.toString());
+            String bukkit = "BukkitValues";
+            NBTCompound compound = new NBTContainer();
+            compound.mergeCompound(this); // create a copy
             NBTCompound custom = null;
-            if (compound.hasTag(bukkitValues)) {
-                NBTCompound persist = compound.getCompound(bukkitValues);
+            if (compound.hasTag(bukkit)) {
+                NBTCompound persist = compound.getCompound(bukkit);
+                assert persist != null;
                 persist.removeKey("__nbtapi"); // this is just a placeholder one, so we don't need it
                 if (persist.hasTag(KEY)) {
-                    custom = getPersistentDataContainer();
+                    custom = getPersistentDataContainer().getCompound(KEY);
                     persist.removeKey(KEY);
                 }
-                if (persist.getKeys().size() == 0) {
-                    compound.removeKey(bukkitValues);
+                if (persist.getKeys().isEmpty()) {
+                    compound.removeKey(bukkit);
                 }
             }
             NBTCompound customCompound = compound.getOrCreateCompound("custom");
             if (custom != null) {
                 customCompound.mergeCompound(custom);
             }
-            return compound.toString();
+            return compound;
         } catch (NbtApiException ex) {
             if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
                 ex.printStackTrace();
             }
-            return null;
+            return new NBTContainer();
         }
     }
 

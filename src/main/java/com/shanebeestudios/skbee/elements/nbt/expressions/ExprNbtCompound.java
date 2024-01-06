@@ -13,6 +13,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.api.nbt.NBTCustom;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomBlock;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomEntity;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomItemStack;
@@ -130,6 +131,9 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             }
             if (compound != null) {
                 if (isCopy) {
+                    if (compound instanceof NBTCustom nbtCustom) {
+                        return nbtCustom.getCopy();
+                    }
                     NBTContainer emptyContainer = new NBTContainer();
                     emptyContainer.mergeCompound(compound);
                     compound = emptyContainer;
