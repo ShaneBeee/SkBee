@@ -61,7 +61,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-                "[:full] nbt [compound] [:copy] (of|from) %blocks/offlineplayers/entities/itemtypes/itemstacks/slots/strings/chunks%",
+                "[:full] nbt [compound] [:copy] (of|from) %objects%",
                 "nbt [compound] [:copy] (of|from) file[s] %strings%");
     }
 
