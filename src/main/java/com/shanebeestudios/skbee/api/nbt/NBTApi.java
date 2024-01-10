@@ -771,12 +771,11 @@ public class NBTApi {
         tag = nestedCompound.first();
         compound = nestedCompound.second();
 
+        // If the tag is empty, return null, unless it's a compound then we create an empty compound
+        if (type != NBTCustomType.NBTTagCompound && !compound.hasTag(tag)) return null;
         switch (type) {
             case NBTTagString -> {
-                String string = compound.getString(tag);
-                // Non-existent tags appear to return an empty string
-                if (string.isEmpty()) return null;
-                return string;
+                return compound.getString(tag);
             }
             case NBTTagByteArray -> {
                 List<Byte> byteArray = new ArrayList<>();
