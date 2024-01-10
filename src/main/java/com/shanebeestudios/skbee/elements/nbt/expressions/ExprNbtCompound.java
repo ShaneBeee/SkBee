@@ -40,18 +40,20 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Get the NBT compound of a block/entity/item/file/chunk. Optionally you can return a copy of the compound. This way you can modify it without",
         "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to",
         "other entities.",
-        "\n'full nbt compound' from an item will return a copy of the FULL NBT of an item (this includes id, count and 'tag' compound).",
+        "\n'full nbt of %item%' will return a copy of the FULL NBT of an item (this includes id, count and 'tag' compound).",
         "Modifying this will have no effect on the original item. This is useful for serializing items.",
-        "\n'nbt compound' from an item will be the original. This will return the 'tag' portion of an items full NBT.",
+        "\n'nbt of %item%' will return the original. This will return the 'tag' portion of an items full NBT.",
         "Modifying this will modify the original item.",
         "\nNBT from a file will need to be saved manually using",
         "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created.",
         "\nNBT Compounds can be added to each other, thus merging them. See Examples."})
-@Examples({"set {_n} to nbt compound of player's tool",
-        "set {_nbt} to nbt compound of target entity",
-        "set {_n} to nbt compound of \"{id:\"\"minecraft:diamond_sword\"\",tag:{Damage:0,Enchantments:[{id:\"\"minecraft:sharpness\"\",lvl:3s}]},Count:1b}\"",
-        "set {_nbt} to nbt compound of file \"world/playerdata/some-uuid.dat\"",
-        "set {_n} to nbt compound of chunk at player",
+@Examples({"set {_n} to nbt of player's tool",
+        "set {_n} to full nbt of player's tool",
+        "set {_nbt} to nbt of target entity",
+        "set {_n} to nbt of chunk at player",
+        "set {_n} to nbt copy of player",
+        "set {_n} to nbt of \"{id:\"\"minecraft:diamond_sword\"\",tag:{Damage:0,Enchantments:[{id:\"\"minecraft:sharpness\"\",lvl:3s}]},Count:1b}\"",
+        "set {_nbt} to nbt of file \"world/playerdata/some-uuid.dat\"",
         "",
         "add nbt from \"{NoAI:1}\" to nbt of last spawned entity",
         "add nbt from \"{NoGravity:1}\" to nbt of {_entity}",
@@ -153,7 +155,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String full = this.isFullItem ? "full " : "";
         String copy = this.isCopy ? "copy " : "";
-        return full + "nbt compound " + copy + "from " + getExpr().toString(e, d);
+        return full + "nbt " + copy + "from " + getExpr().toString(e, d);
     }
 
 }
