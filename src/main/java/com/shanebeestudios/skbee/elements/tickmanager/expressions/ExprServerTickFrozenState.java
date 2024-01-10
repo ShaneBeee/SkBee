@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Get/set the frozen tick state of the server.", Util.MCWIKI_TICK_COMMAND, "Requires Minecraft 1.20.4+"})
 @Examples({"set server frozen state to true",
         "if server frozen state = false:"})
-@Since("INSERT VERSION")
+@Since("3.1.0")
 public class ExprServerTickFrozenState extends SimpleExpression<Boolean> {
 
     static {

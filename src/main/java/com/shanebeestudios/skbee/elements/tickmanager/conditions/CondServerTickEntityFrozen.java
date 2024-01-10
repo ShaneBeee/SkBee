@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"if target entity is tick frozen:",
         "if loop-entity is tick frozen:",
         "if all entities are tick frozen:"})
-@Since("INSERT VERSION")
+@Since("3.1.0")
 public class CondServerTickEntityFrozen extends PropertyCondition<Entity> {
 
     static {

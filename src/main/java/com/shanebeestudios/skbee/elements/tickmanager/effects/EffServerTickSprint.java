@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
         Util.MCWIKI_TICK_COMMAND, "Requires Minecraft 1.20.4+"})
 @Examples({"request game to sprint 10 ticks",
         "stop sprinting game"})
-@Since("INSERT VERSION")
+@Since("3.1.0")
 public class EffServerTickSprint extends Effect {
 
     static {

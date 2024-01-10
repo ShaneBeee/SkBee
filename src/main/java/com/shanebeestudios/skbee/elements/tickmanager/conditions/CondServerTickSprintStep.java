@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
         Util.MCWIKI_TICK_COMMAND, "Requires Minecraft 1.20.4+"})
 @Examples({"if server is sprinting:",
         "\tkill all players"})
-@Since("INSERT VERSION")
+@Since("3.1.0")
 public class CondServerTickSprintStep extends Condition {
 
     static {

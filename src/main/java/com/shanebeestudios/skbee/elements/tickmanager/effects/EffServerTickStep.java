@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
         Util.MCWIKI_TICK_COMMAND, "Requires Minecraft 1.20.4+"})
 @Examples({"step game if frozen 10 ticks",
         "stop stepping game"})
-@Since("INSERT VERSION")
+@Since("3.1.0")
 public class EffServerTickStep extends Effect {
 
     static {

@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
         "add 1.5 to server tick rate",
         "remove 3.75 from server tick rate",
         "reset server tick rate"})
-@Since("INSERT VERSION")
+@Since("3.1.0")
 public class ExprServerTickRate extends SimpleExpression<Number> {
 
     static {

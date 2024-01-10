@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
         "\tteleport all players to spawn of world \"world\"",
         "if server is running normally:",
         "\tkill all sheep"})
-@Since("INSERT VERSION")
+@Since("3.1.0")
 public class CondServerTickServerFrozen extends Condition {
 
     static {
