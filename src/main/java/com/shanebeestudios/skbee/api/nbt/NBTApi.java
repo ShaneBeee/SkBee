@@ -88,7 +88,7 @@ public class NBTApi {
      * @return NBTCompound if NBT string is valid, otherwise null
      */
     @SuppressWarnings("CallToPrintStackTrace")
-    public static NBTCompound validateNBT(String nbtString) {
+    public static @Nullable NBTCompound validateNBT(String nbtString) {
         if (nbtString == null) return null;
         NBTCompound compound;
         try {
@@ -144,7 +144,7 @@ public class NBTApi {
      * @param fileName Name of file
      * @return new NBTFile
      */
-    public static NBTFile getNBTFile(String fileName) {
+    public static @Nullable NBTFile getNBTFile(String fileName) {
         fileName = !fileName.endsWith(".dat") && !fileName.endsWith(".nbt") ? fileName + ".nbt" : fileName;
         try {
             return new NBTFile(new File(fileName));
@@ -160,7 +160,7 @@ public class NBTApi {
      * @param offlinePlayer OfflinePlayer to grab nbt for
      * @return NBTCustomOfflinePlayer
      */
-    public static NBTCustomOfflinePlayer getNBTOfflinePlayer(OfflinePlayer offlinePlayer) {
+    public static @Nullable NBTCustomOfflinePlayer getNBTOfflinePlayer(OfflinePlayer offlinePlayer) {
         // Only return if player data file exists
         if (!offlinePlayer.hasPlayedBefore()) return null;
         try {
@@ -189,7 +189,7 @@ public class NBTApi {
      * @param nbtCompound NBT to add to ItemType
      * @return ItemType with NBT merged into
      */
-    public static ItemType getItemTypeWithNBT(ItemType itemType, NBTCompound nbtCompound) {
+    public static @Nullable ItemType getItemTypeWithNBT(ItemType itemType, NBTCompound nbtCompound) {
         NBTContainer itemNBT = NBTItem.convertItemtoNBT(itemType.getRandom());
 
         // Full NBT
@@ -204,6 +204,7 @@ public class NBTApi {
             itemNBT.getOrCreateCompound("tag").mergeCompound(nbtCompound);
         }
         ItemStack newItemStack = NBTItem.convertNBTtoItem(itemNBT);
+        if (newItemStack == null) return null;
         return new ItemType(newItemStack);
     }
 
@@ -652,6 +653,7 @@ public class NBTApi {
             case NBTTagByteArray -> {
                 if (singleObject instanceof Number) {
                     byte[] byteArray = compound.getByteArray(tag);
+                    if (byteArray == null) return;
 
                     for (Object o : object) {
                         if (o instanceof Number number) {
@@ -665,6 +667,7 @@ public class NBTApi {
             case NBTTagIntArray -> {
                 if (singleObject instanceof Number) {
                     int[] intArray = compound.getIntArray(tag);
+                    if (intArray == null) return;
 
                     for (Object o : object) {
                         if (o instanceof Number number) {
@@ -732,7 +735,7 @@ public class NBTApi {
      * @param compound NBT to grab tag from
      * @return Object from the NBT string
      */
-    public static Object getTag(String tag, NBTCompound compound) {
+    public static @Nullable Object getTag(String tag, NBTCompound compound) {
         Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
         if (nestedCompound == null) return null;
 
