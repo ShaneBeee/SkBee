@@ -760,7 +760,8 @@ public class NBTApi {
      * @param type     Type of NBT tag
      * @return Object from the NBT string
      */
-    public static Object getTag(String tag, NBTCompound compound, NBTCustomType type) {
+    @SuppressWarnings("DataFlowIssue")
+    public static @Nullable Object getTag(String tag, NBTCompound compound, NBTCustomType type) {
         Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
         if (nestedCompound == null) return null;
 
@@ -769,7 +770,10 @@ public class NBTApi {
 
         switch (type) {
             case NBTTagString -> {
-                return compound.getString(tag);
+                String string = compound.getString(tag);
+                // Non-existent tags appear to return an empty string
+                if (string.isEmpty()) return null;
+                return string;
             }
             case NBTTagByteArray -> {
                 List<Byte> byteArray = new ArrayList<>();
