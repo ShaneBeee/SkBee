@@ -10,6 +10,7 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
@@ -63,8 +64,9 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-                "nbt [compound] [:copy] (of|from) file[s] %strings%",
-                "[:full] nbt [compound] [:copy] (of|from) %objects%"
+                "[:full] nbt [compound] [:copy] (of|from) %objects%",
+                "nbt [compound] [:copy] (of|from) file[s] %strings%"
+
         );
     }
 
@@ -74,11 +76,12 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
-        setExpr(exprs[0]);
+        Expression<?> expr = LiteralUtils.defendExpression(exprs[0]);
+        setExpr(expr);
         isFullItem = parseResult.hasTag("full");
         isCopy = parseResult.hasTag("copy");
-        isFile = matchedPattern == 0;
-        return true;
+        isFile = matchedPattern == 1;
+        return LiteralUtils.canInitSafely(expr);
     }
 
     @Override
