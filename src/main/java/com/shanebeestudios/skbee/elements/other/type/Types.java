@@ -250,6 +250,7 @@ public class Types {
                         }
 
                         @Override
+                        @SuppressWarnings("removal")
                         public @NotNull String toString(ArmorTrim o, int flags) {
                             String material = o.getMaterial().getKey().getKey();
                             String pattern = o.getPattern().getKey().getKey();

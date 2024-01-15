@@ -127,6 +127,7 @@ public class BoundBorderListener implements Listener {
         }, 1);
     }
 
+    @SuppressWarnings("deprecation") // Event was deprecated jan 2024
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onMount(EntityMountEvent event) {
         if (!this.ENTITY_MOUNT) return;
@@ -139,6 +140,7 @@ public class BoundBorderListener implements Listener {
         }
     }
 
+    @SuppressWarnings("deprecation") // Event was deprecated jan 2024
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onDismount(EntityDismountEvent event) {
         if (!this.ENTITY_DISMOUNT) return;
