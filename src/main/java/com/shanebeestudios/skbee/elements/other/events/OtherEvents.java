@@ -11,6 +11,7 @@ import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -20,6 +21,7 @@ import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.block.BellRingEvent;
 import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
+import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.MoistureChangeEvent;
 import org.bukkit.event.entity.EntityAirChangeEvent;
@@ -438,6 +440,49 @@ public class OtherEvents {
                 return new BlockStateBlock(event.getNewState());
             }
         }, EventValues.TIME_FUTURE);
+
+        // Block Explode Event
+        Skript.registerEvent("Block Explode", SimpleEvent.class, BlockExplodeEvent.class, "block explode")
+                .description("Called when a block explodes interacting with blocks.",
+                        "The event isn't called if the gamerule MOB_GRIEFING is disabled as no block interaction will occur.",
+                        "The Block returned by this event is not necessarily the block that caused the explosion,",
+                        "just the block at the location where the explosion originated.",
+                        "\n`past event-itemtype` will return the type of the block which exploded.",
+                        "\n`past event-blockdata` will return the blockdata of the block which exploded.")
+                .examples("")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, new Getter<>() {
+            @Override
+            public BlockData get(BlockExplodeEvent event) {
+                return event.getBlock().getBlockData();
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, new Getter<>() {
+            @Override
+            public @Nullable BlockData get(BlockExplodeEvent event) {
+                BlockState explodedBlockState = event.getExplodedBlockState();
+                if (explodedBlockState == null) return null;
+                return explodedBlockState.getBlockData();
+            }
+        }, EventValues.TIME_PAST);
+
+        EventValues.registerEventValue(BlockExplodeEvent.class, ItemType.class, new Getter<>() {
+            @Override
+            public ItemType get(BlockExplodeEvent event) {
+                return new ItemType(event.getBlock().getType());
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(BlockExplodeEvent.class, ItemType.class, new Getter<>() {
+            @Override
+            public @Nullable ItemType get(BlockExplodeEvent event) {
+                BlockState explodedBlockState = event.getExplodedBlockState();
+                if (explodedBlockState == null) return null;
+                return new ItemType(explodedBlockState.getType());
+            }
+        }, EventValues.TIME_PAST);
     }
 
 }
