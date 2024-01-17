@@ -134,6 +134,8 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 }
             } else if (object instanceof Chunk chunk) {
                 compound = new NBTChunk(chunk).getPersistentDataContainer();
+            } else if (object instanceof NBTCompound comp) {
+                compound = comp;
             }
             if (compound != null) {
                 if (isCopy) {
