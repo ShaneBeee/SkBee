@@ -32,6 +32,8 @@ import org.bukkit.event.entity.EntitySpellCastEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.EntityTransformEvent;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
+import org.bukkit.event.entity.EntityUnleashEvent;
+import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.inventory.InventoryMoveItemEvent;
@@ -43,6 +45,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Locale;
 
 @SuppressWarnings("unused")
 public class OtherEvents {
@@ -483,6 +487,58 @@ public class OtherEvents {
                 return new ItemType(explodedBlockState.getType());
             }
         }, EventValues.TIME_PAST);
+
+        // Leash Events
+        Skript.registerEvent("Player Leash", SimpleEvent.class, PlayerLeashEntityEvent.class, "player leash entity")
+                .description("Called immediately prior to a creature being leashed by a player.",
+                        "\n`event-entity` = Entity which got leashed.",
+                        "\n`future event-entity` = The entity the leashed entity is leashed to (could be a player or leash hitch on a fence).",
+                        "\n`event-player` = Player whom leashed the entity.")
+                .examples("on player leash entity:",
+                        "\tkill event-entity")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, new Getter<>() {
+            @Override
+            public Entity get(PlayerLeashEntityEvent event) {
+                return event.getEntity();
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, new Getter<>() {
+            @Override
+            public Entity get(PlayerLeashEntityEvent event) {
+                return event.getLeashHolder();
+            }
+        }, EventValues.TIME_FUTURE);
+
+        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Player.class, new Getter<>() {
+            @Override
+            public Player get(PlayerLeashEntityEvent event) {
+                return event.getPlayer();
+            }
+        }, EventValues.TIME_NOW);
+
+        Skript.registerEvent("Entity Unleash", SimpleEvent.class, EntityUnleashEvent.class, "entity unleash")
+                .description("Called immediately prior to an entity being unleashed.",
+                        "Cancelling this event when either the leashed entity dies, the entity changes dimension, or",
+                        "the client has disconnected the leash will have no effect.",
+                        "\n`event-string` = The reason for unleashing.",
+                        "Options are \"distance\" (When the entity's leashholder is more than 10 blocks away),",
+                        "\"holder_gone\" (When the entity's leashholder has died or logged out, and so is unleashed),",
+                        "\"player_unleash\" (When the entity's leashholder attempts to unleash it), \"unknown\"")
+                .examples("on entity unleash:",
+                        "\tif event-entity is a cow:",
+                        "\t\tif event-string = \"distance\":",
+                        "\t\t\tcancel event")
+                .since("INSERT VERSION");
+
+        EventValues.registerEventValue(EntityUnleashEvent.class, String.class, new Getter<>() {
+            @Override
+            public String get(EntityUnleashEvent event) {
+                return event.getReason().name().toLowerCase(Locale.ROOT);
+            }
+        }, EventValues.TIME_NOW);
     }
 
 }
