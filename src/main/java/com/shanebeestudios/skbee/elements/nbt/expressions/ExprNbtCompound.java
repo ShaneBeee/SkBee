@@ -35,7 +35,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Name("NBT - Compound Of")
 @Description({"Get the NBT compound of a block/entity/item/file/chunk. Optionally you can return a copy of the compound. This way you can modify it without",
@@ -47,7 +46,11 @@ import org.jetbrains.annotations.Nullable;
         "Modifying this will modify the original item.",
         "\nNBT from a file will need to be saved manually using",
         "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created.",
-        "\nNBT Compounds can be added to each other, thus merging them. See Examples."})
+        "",
+        "CHANGERS:",
+        "\t`add` = Adding a compound to another compound will merge them. (This is controlled by Minecraft, results may vary.)",
+        "\t`delete` = Only used on NBT Files, will delete the file.",
+        "\t`reset` = Will clear the NBT compound. (This can break entities/players, be careful!)"})
 @Examples({"set {_n} to nbt of player's tool",
         "set {_n} to full nbt of player's tool",
         "set {_nbt} to nbt of target entity",
@@ -58,7 +61,11 @@ import org.jetbrains.annotations.Nullable;
         "",
         "add nbt from \"{NoAI:1}\" to nbt of last spawned entity",
         "add nbt from \"{NoGravity:1}\" to nbt of {_entity}",
-        "add nbt from \"{custom:{points:1}}\" to nbt of player"})
+        "add nbt from \"{custom:{points:1}}\" to nbt of player",
+        "",
+        "delete nbt from file \"plugins/some/file.nbt\"",
+        "reset {_n}",
+        "reset nbt of player's tool"})
 @Since("1.6.0")
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
@@ -158,7 +165,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String full = this.isFullItem ? "full " : "";
         String copy = this.isCopy ? "copy " : "";
         return full + "nbt " + copy + "from " + getExpr().toString(e, d);

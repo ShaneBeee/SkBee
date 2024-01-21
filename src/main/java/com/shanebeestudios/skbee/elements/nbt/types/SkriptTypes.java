@@ -24,9 +24,10 @@ public class SkriptTypes {
     public static final Changer<NBTCompound> NBT_COMPOUND_CHANGER = new Changer<>() {
         @Nullable
         @Override
-        public Class<?>[] acceptChange(ChangeMode mode) {
+        public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
             return switch (mode) {
-                case ADD, DELETE -> CollectionUtils.array(NBTCompound.class);
+                case ADD -> CollectionUtils.array(NBTCompound.class);
+                case DELETE, RESET -> CollectionUtils.array();
                 default -> null;
             };
         }
@@ -43,6 +44,10 @@ public class SkriptTypes {
                     if (nbtCompound instanceof NBTFile nbtFile) {
                         nbtFile.getFile().delete();
                     }
+                }
+            } else if (mode == ChangeMode.RESET) {
+                for (NBTCompound nbtCompound : what) {
+                    nbtCompound.clearNBT();
                 }
             }
         }
