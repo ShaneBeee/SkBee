@@ -7,6 +7,7 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.Timespan;
+import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -18,6 +19,7 @@ import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Spellcaster;
+import org.bukkit.event.Event;
 import org.bukkit.event.block.BellRingEvent;
 import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
@@ -68,6 +70,8 @@ public class OtherEvents {
                 return event.getBlock();
             }
         }, 0);
+
+        // Prepare Anvil Event
         Skript.registerEvent("Anvil Prepare Event", SimpleEvent.class, PrepareAnvilEvent.class, "[skbee] anvil prepare")
                 .description("Called when a player attempts to combine 2 items in an anvil.",
                         "'event-slot' represents the result slot, can be used to get or set.")
@@ -81,6 +85,48 @@ public class OtherEvents {
                         "\t\t\t\tset event-slot to {_i}",
                         "\t\t\t\tset repair cost of event-inventory to 30")
                 .since("1.11.0");
+
+        EventValues.registerEventValue(PrepareAnvilEvent.class, Slot.class, new Getter<>() {
+            @Override
+            public Slot get(PrepareAnvilEvent event) {
+                return new Slot() {
+                    final ItemStack result = event.getResult();
+
+                    @Nullable
+                    @Override
+                    public ItemStack getItem() {
+                        return result;
+                    }
+
+                    @Override
+                    public void setItem(@Nullable ItemStack item) {
+                        event.setResult(item);
+                    }
+
+                    @Override
+                    public int getAmount() {
+                        if (result != null) return result.getAmount();
+                        return 0;
+                    }
+
+                    @Override
+                    public void setAmount(int amount) {
+                        if (result != null) result.setAmount(amount);
+                    }
+
+                    @Override
+                    public boolean isSameSlot(@NotNull Slot o) {
+                        ItemStack item = o.getItem();
+                        return item != null && item.isSimilar(result);
+                    }
+
+                    @Override
+                    public @NotNull String toString(@Nullable Event e, boolean debug) {
+                        return "anvil inventory result slot";
+                    }
+                };
+            }
+        }, 0);
 
         EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
             @Override
