@@ -500,7 +500,7 @@ public class OtherEvents {
                         "\n`past event-itemtype` will return the type of the block which exploded.",
                         "\n`past event-blockdata` will return the blockdata of the block which exploded.")
                 .examples("")
-                .since("INSERT VERSION");
+                .since("3.2.0");
 
         EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, new Getter<>() {
             @Override
@@ -542,7 +542,7 @@ public class OtherEvents {
                         "\n`event-player` = Player whom leashed the entity.")
                 .examples("on player leash entity:",
                         "\tkill event-entity")
-                .since("INSERT VERSION");
+                .since("3.2.0");
 
         EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, new Getter<>() {
             @Override
@@ -577,7 +577,7 @@ public class OtherEvents {
                         "\tif event-entity is a cow:",
                         "\t\tif event-string = \"distance\":",
                         "\t\t\tcancel event")
-                .since("INSERT VERSION");
+                .since("3.2.0");
 
         EventValues.registerEventValue(EntityUnleashEvent.class, String.class, new Getter<>() {
             @Override

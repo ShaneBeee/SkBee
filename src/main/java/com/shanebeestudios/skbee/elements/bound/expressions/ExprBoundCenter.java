@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Bound - Center Location")
 @Description("Get the center location of a bound.")
 @Examples("set {_center} to bound center of bound with id \"spawn-bound\"")
-@Since("INSERT VERSION")
+@Since("3.2.0")
 public class ExprBoundCenter extends SimplePropertyExpression<Bound, Location> {
 
     static {

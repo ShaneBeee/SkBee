@@ -21,7 +21,7 @@ import org.joml.Quaternionf;
         "The XYZ of the vector will represents the degrees the display entity will rotate on the XYZ axis."})
 @Examples({"set {_q} to quaternion from vector(0,45,0)",
         "set display right rotation of {_e} to {_q}"})
-@Since("INSERT VERSION")
+@Since("3.2.0")
 public class ExprQuaternionFromVector extends SimpleExpression<Quaternionf> {
 
     static {

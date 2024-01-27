@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.listener;
 
 import com.shanebeestudios.vf.api.util.Util;
+import org.bukkit.entity.Item;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.ItemDespawnEvent;

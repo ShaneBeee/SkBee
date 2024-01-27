@@ -24,7 +24,7 @@ import org.joml.Quaternionf;
         "\tset display right rotation of {_e} to {_q}",
         "",
         "rotateDisplay({_entity}, vector(45,0,0))"})
-@Since("INSERT VERSION")
+@Since("3.2.0")
 public class ExprQuaternionRotated extends SimpleExpression<Quaternionf> {
 
     static {
