@@ -33,6 +33,7 @@ public class Types {
                 .examples("set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
                         "set {_a} to material choice of every sword",
                         "set {_a} to material choice of minecraft tag \"doors\"")
+                .after("itemtype", "itemstack")
                 .since("1.10.0")
                 .parser(new Parser<>() {
 
