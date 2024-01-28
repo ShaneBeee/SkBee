@@ -78,7 +78,7 @@ public class ExprItemLore extends SimpleExpression<ComponentWrapper> {
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET || mode == ChangeMode.ADD) {
-            return CollectionUtils.array(ComponentWrapper[].class);
+            return CollectionUtils.array(ComponentWrapper[].class, String[].class);
         }
         return null;
     }
@@ -110,6 +110,8 @@ public class ExprItemLore extends SimpleExpression<ComponentWrapper> {
         for (Object object : delta) {
             if (object instanceof ComponentWrapper component) {
                 lores.add(component.getComponent());
+            } else if (object instanceof String string) {
+                lores.add(ComponentWrapper.fromText(string).getComponent());
             }
         }
         itemMeta.lore(lores);
