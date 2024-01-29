@@ -18,8 +18,8 @@ import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Chunk - Load/Unload")
 @Description({"Load or unload a chunk. When loading you have an option to add a ticket.",
@@ -46,7 +46,7 @@ public class EffLoadChunk extends Effect {
     static {
         Skript.registerEffect(EffLoadChunk.class,
                 "([:async ]load|:unload) chunk at %number%,[ ]%number% (in|of) [world] %world% [ticket:with ticket]",
-                "([:async ]load|unload) chunk at %location% [ticket:with ticket]",
+                "([:async ]load|:unload) chunk at %location% [ticket:with ticket]",
                 "unload %chunks%");
     }
 
@@ -158,9 +158,9 @@ public class EffLoadChunk extends Effect {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String load = this.unload ? "unload" : ((this.isAsync ? "async " : "") + "load");
         String chunk = switch (pattern) {
-            case 1 -> "at " + this.location.toString(e,d);
-            case 2 -> this.chunks.toString(e,d);
-            default -> "at " + this.x.toString(e,d) + "," + this.z.toString(e,d);
+            case 1 -> "at " + this.location.toString(e, d);
+            case 2 -> this.chunks.toString(e, d);
+            default -> "at " + this.x.toString(e, d) + "," + this.z.toString(e, d);
         };
         String ticket = this.ticket ? " with ticket" : "";
         return String.format("%s chunk %s %s", load, chunk, ticket);
