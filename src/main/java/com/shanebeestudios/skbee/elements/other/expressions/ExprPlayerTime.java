@@ -1,15 +1,13 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
@@ -18,9 +16,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Name("Player Time")
 @Description({"Represents the current time on the player's client.",
@@ -42,36 +37,28 @@ import java.util.List;
         "reset player time of player",
         "reset player time of all players"})
 @Since("INSERT VERSION")
-public class ExprPlayerTime extends SimpleExpression<Object> {
+public class ExprPlayerTime extends SimplePropertyExpression<Player, Object> {
 
     static {
-        Skript.registerExpression(ExprPlayerTime.class, Object.class, ExpressionType.SIMPLE,
-                "[:relative] (player|client) time of %players%");
+        register(ExprPlayerTime.class, Object.class, "[:relative] (player|client) time", "players");
     }
 
     private boolean relative;
-    private Expression<Player> players;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.relative = parseResult.hasTag("relative");
-        this.players = (Expression<Player>) exprs[0];
+        setExpr((Expression<? extends Player>) exprs[0]);
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable Object[] get(Event event) {
-        List<Object> times = new ArrayList<>();
-        for (Player player : this.players.getArray(event)) {
-            if (this.relative) {
-                times.add(Timespan.fromTicks_i(player.getPlayerTimeOffset()));
-            } else {
-                times.add(new Time((int) player.getPlayerTime()));
-            }
+    public @Nullable Object convert(Player player) {
+        if (this.relative) {
+            return Timespan.fromTicks_i(player.getPlayerTimeOffset());
         }
-        return times.toArray(new Object[0]);
+        return new Time((int) player.getPlayerTime());
     }
 
     @SuppressWarnings("NullableProblems")
@@ -89,7 +76,7 @@ public class ExprPlayerTime extends SimpleExpression<Object> {
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (mode == ChangeMode.RESET) {
-            for (Player player : this.players.getArray(event)) {
+            for (Player player : this.getExpr().getArray(event)) {
                 player.resetPlayerTime();
             }
         } else if (delta != null) {
@@ -99,7 +86,7 @@ public class ExprPlayerTime extends SimpleExpression<Object> {
             } else if (delta[0] instanceof Time time) {
                 ticks = time.getTicks();
             }
-            for (Player player : this.players.getArray(event)) {
+            for (Player player : this.getExpr().getArray(event)) {
                 int value = getValue(mode, player, ticks);
                 player.setPlayerTime(value, this.relative);
             }
@@ -121,21 +108,15 @@ public class ExprPlayerTime extends SimpleExpression<Object> {
     }
 
     @Override
-    public boolean isSingle() {
-        return this.players.isSingle();
-    }
-
-    @Override
     public @NotNull Class<?> getReturnType() {
         if (this.relative) return Timespan.class;
         return Time.class;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    protected @NotNull String getPropertyName() {
         String relative = this.relative ? "relative " : "";
-        return relative + "player time of " + this.players.toString(e, d);
+        return relative + "player time";
     }
 
 }
