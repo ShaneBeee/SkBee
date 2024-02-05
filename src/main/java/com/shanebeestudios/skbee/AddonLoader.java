@@ -311,6 +311,12 @@ public class AddonLoader {
             Util.logLoading("&5Virtual Furnace Elements &cdisabled via config");
             return;
         }
+        // PaperMC check
+        if (!Skript.classExists("net.kyori.adventure.text.Component")) {
+            Util.logLoading("&5Virtual Furnace Elements &cdisabled");
+            Util.logLoading("&7- Virtual Furnace require a PaperMC server.");
+            return;
+        }
         try {
             this.plugin.virtualFurnaceAPI = new VirtualFurnaceAPI(this.plugin, true);
             pluginManager.registerEvents(new VirtualFurnaceListener(), this.plugin);
