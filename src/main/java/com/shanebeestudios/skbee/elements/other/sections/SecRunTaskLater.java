@@ -30,7 +30,7 @@ import java.util.List;
         "section is run later. All code after your section will keep running as normal without a delay.",
         "This can be very useful in loops, to prevent halting the loop.",
         "You can optionally run your code async/on another thread.",
-        "\nNOTE: A good chunk of Bukkit/Minecraft stuff can NOT be run async. It map throw console errors.",
+        "\nNOTE: A good chunk of Bukkit/Minecraft stuff can NOT be run async. It may throw console errors.",
         "Please be careful when running async, this is generally reserved for heavy math/functions that could cause lag.",
         "Simply waiting a tick, or running a new non-async section will put your code back on the main thread."})
 @Examples({"on explode:",
