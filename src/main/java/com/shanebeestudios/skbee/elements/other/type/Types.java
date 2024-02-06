@@ -21,8 +21,6 @@ import org.bukkit.block.BlockState;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.event.player.PlayerQuitEvent.QuitReason;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.bukkit.inventory.ItemFlag;
@@ -130,17 +128,6 @@ public class Types {
                     .name("Transform Reason")
                     .description("Represents the different reasons for transforming in the entity transform event.")
                     .since("2.5.3"));
-        }
-
-        if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
-            if (Classes.getExactClassInfo(QuitReason.class) == null) {
-                EnumWrapper<QuitReason> QUIT_REASON = new EnumWrapper<>(QuitReason.class);
-                Classes.registerClass(QUIT_REASON.getClassInfo("quitreason")
-                        .user("quit ?reasons?")
-                        .name("Quit Reason")
-                        .description("Represents the different reasons for calling the player quit event (Requires Paper).")
-                        .since("2.6.0"));
-            }
         }
 
         if (Classes.getExactClassInfo(NamespacedKey.class) == null) {
