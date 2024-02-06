@@ -14,4 +14,4 @@ test "SkBee - virtual furnace elements":
     assert machine name of {_furnace} = "&bFurny" with "Name of furnace should have been Furny"
 
     set machine name of {_furnace} to "&bSlow Furny"
-    assert machine name of {_furnace} = "&bSlow Furny" wiht "Name of furnace should have been Slow Furny"
+    assert machine name of {_furnace} = "&bSlow Furny" with "Name of furnace should have been Slow Furny"
