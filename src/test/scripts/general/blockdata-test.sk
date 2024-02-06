@@ -13,5 +13,5 @@ test "SkBee - blockdata":
     assert blockdata tag "waterlogged" of {_data} = false with "BlockData tag ""waterlogged"" should be false"
 
     # NOTE: Minecraft MAY change these at any time but I feel like we're safe for a while
-    assert blockdata tags of oak_stairs[] = 4 with "There should be 4 blockdata tags for oak_stairs"
-    assert blockdata tags of stone = 0 with "There should be 0 blockdata tags for stone"
+    assert size of blockdata tags of oak_stairs[] = 4 with "There should be 4 blockdata tags for oak_stairs"
+    assert size of blockdata tags of stone = 0 with "There should be 0 blockdata tags for stone"
