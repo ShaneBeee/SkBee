@@ -1,0 +1,16 @@
+test "SkBee - virtual furnace elements":
+    register all vanilla fuels
+    register all virtual furnace recipes
+
+    set {_prop} to furnace properties with cook speed multiplier 1 and fuel speed multiplier 1
+    set {_furnace} to virtual furnace named "&bFurny" with furnace properties {_prop}
+    set {_id} to machine id of {_furnace}
+    set {_inv} to machine inventory of {_furnace}
+
+    assert {_id} is set with "The ID of the furnace should have been set"
+    assert size of all virtual machines = 1 with "There should only be one registered machine"
+    assert {_inv} is set with "Inventory of furnace should have been set"
+    assert machine name of {_furnace} = "&bFurny" with "Name of furnace should have been Furny"
+
+    set machine name of {_furnace} to "&bSlow Furny"
+    assert machine name of {_furnace} = "&bSlow Furny" wiht "Name of furnace should have been Slow Furny"
