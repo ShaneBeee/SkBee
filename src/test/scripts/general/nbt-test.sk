@@ -28,3 +28,7 @@ test "SkBee - simple nbt compound":
     # Test that tag of item nbt is set
     assert tag "CustomModelData" of {_n} is set with "tag ""CustomModelData"" of an item should be set"
     assert int tag "CustomModelData" of {_n} = 1 with "tag ""CustomModelData"" of an item should be 1"
+
+    # Test that Pretty nbt works
+    set {_pretty} to pretty nbt of {_n}
+    assert {_pretty} is set with "Pretty NBT should have worked"
