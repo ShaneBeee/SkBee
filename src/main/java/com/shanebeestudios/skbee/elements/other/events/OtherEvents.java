@@ -178,51 +178,6 @@ public class OtherEvents {
             }
         }, 0);
 
-        // Inventory Move Item Event
-        Skript.registerEvent("Inventory Move Item", SimpleEvent.class, InventoryMoveItemEvent.class,
-                        "inventory move item")
-                .description("Called when some entity or block (e.g. hopper) tries to move items directly from one inventory to another.",
-                        "\nNOTE: This has nothing to do with a player's inventory!!!",
-                        "\nWhen this event is called, the initiator may already have removed the item from the source inventory and is ready to move it into the destination inventory.",
-                        "\nIf this event is cancelled, the items will be returned to the source inventory, if needed.",
-                        "\nIf this event is not cancelled, the initiator will try to put the ItemStack into the destination inventory.",
-                        "If this is not possible and the ItemStack has not been modified, the source inventory slot will be restored to its former state. Otherwise any additional items will be discarded.",
-                        "\nevent-inventory = Inventory that initiated the transfer.",
-                        "\npast event-inventory = Inventory that the ItemStack is being taken from.",
-                        "\nfuture event-inventory = Inventory that the ItemStack is being put into.")
-                .examples("on inventory move item:",
-                        "\tif type of past event-inventory = hopper inventory:",
-                        "\t\tcancel event")
-                .since("2.5.2");
-
-        EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
-            @Override
-            public @NotNull Inventory get(InventoryMoveItemEvent event) {
-                return event.getInitiator();
-            }
-        }, 0);
-
-        EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
-            @Override
-            public @NotNull Inventory get(InventoryMoveItemEvent event) {
-                return event.getSource();
-            }
-        }, -1);
-
-        EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
-            @Override
-            public @NotNull Inventory get(InventoryMoveItemEvent event) {
-                return event.getDestination();
-            }
-        }, 1);
-
-        EventValues.registerEventValue(InventoryMoveItemEvent.class, ItemStack.class, new Getter<>() {
-            @Override
-            public @NotNull ItemStack get(InventoryMoveItemEvent event) {
-                return event.getItem();
-            }
-        }, 0);
-
         // Entity Transform Event
         Skript.registerEvent("Entity Transform", SimpleEvent.class, EntityTransformEvent.class,
                         "entity transform")
