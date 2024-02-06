@@ -14,7 +14,7 @@ public class Types {
 
     static {
         EnumWrapper<Statistic> STATISTICS_ENUM = new EnumWrapper<>(Statistic.class);
-        Classes.registerClass(STATISTICS_ENUM.getClassInfo("statistic")
+        Classes.registerClass(STATISTICS_ENUM.getClassInfoWithoutUsage("statistic")
                 .user("statistics?")
                 .name("Statistic")
                 .description("Represents the different statistics for a player.",
