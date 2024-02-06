@@ -39,3 +39,14 @@ jobs:
                   name: SkBee-Artifact
                   # A file, directory or wildcard pattern that describes what to upload
                   path: build/libs/SkBee*.jar
+
+            - name: Run tests
+              uses: SkriptLang/skript-test-action@v1.0
+              with:
+                  # the directory where your test scripts are located relative to the repo root
+                  test_script_directory: src/test/scripts
+                  # you can test against a specific skript version by specifying this tag
+                  # you can also not define it to use the latest master branch commit
+                  skript_repo_ref: 2.8.2
+                  # this should be where your addon jar is located relative to the repo root
+                  extra_plugins_directory: build/libs

@@ -1,0 +1,13 @@
+test "simple nbt compound":
+    set {_n} to nbt from "{test:123}"
+
+    # Test that a tag is set
+    assert tag "test" of {_n} is set with "tag ""test"" should be set"
+
+    # Test that the tag has a value of 123
+    assert int tag "test" of {_n} = 123 with "tag ""test"" should have a value of 123"
+
+    set string tag "string-test" of {_n} to "complete"
+
+    # Test that the tag has a value of "complete"
+    assert string tag "string-test" of {_n} = "complete" with "tag ""string-test"" should have a value of ""complete"""
