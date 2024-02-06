@@ -17,7 +17,7 @@ test "SkBee - simple nbt compound":
     set {_n} to nbt of {_e}
 
     # Test a generic tag on an Entity
-    assert byte tag "Glowing" of {_n} is 0 with "tag ""Glowing"" of nbt of entity should be 0"
+    assert byte tag "Bukkit.Aware" of {_n} is 1 with "tag ""Bukkit.Aware"" of nbt of entity should be 1"
 
     delete random entity of {_e}
     delete {_n}
