@@ -7,6 +7,7 @@ test "SkBee - virtual furnace elements":
     set {_id} to machine id of {_furnace}
     set {_inv} to machine inventory of {_furnace}
 
+    assert {_furnace} is set with "Furnace should have been set"
     assert {_id} is set with "The ID of the furnace should have been set"
     assert size of all virtual machines = 1 with "There should only be one registered machine"
     assert {_inv} is set with "Inventory of furnace should have been set"
