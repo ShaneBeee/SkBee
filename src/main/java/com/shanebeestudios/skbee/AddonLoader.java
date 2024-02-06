@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
@@ -307,7 +308,8 @@ public class AddonLoader {
     }
 
     private void loadVirtualFurnaceElements() {
-        if (!this.config.ELEMENTS_VIRTUAL_FURNACE) {
+        // Force load if running tests as this is defaulted to false in the config
+        if (!this.config.ELEMENTS_VIRTUAL_FURNACE || TestMode.ENABLED) {
             Util.logLoading("&5Virtual Furnace Elements &cdisabled via config");
             return;
         }
