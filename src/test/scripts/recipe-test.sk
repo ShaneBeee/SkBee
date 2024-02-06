@@ -84,7 +84,7 @@ test "SkBee - cooking recipe section":
         input: rotten flesh
         category: "food"
 
-    register a new blasting recipe
+    register a new blasting recipe:
         id: "firery_sword"
         result: diamond sword of fire aspect named "Flaming Sword"
         input: diamond sword
