@@ -1,0 +1,10 @@
+test "SkBee - text component test":
+
+    # These tests are more so to check if anything fails
+    # They can't really do anything
+
+    set {_m} to mini message from "well who cares what is here"
+    assert {_m} is set with "Welp, i guess the mini message didnt work"
+
+    set {_t} to text component from "test"
+    assert {_t} is set with "Welp, i guess the text component didnt work"

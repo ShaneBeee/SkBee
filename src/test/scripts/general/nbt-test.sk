@@ -1,0 +1,30 @@
+test "SkBee - simple nbt compound":
+    set {_n} to nbt from "{test:123}"
+
+    # Test that a tag is set
+    assert tag "test" of {_n} is set with "tag ""test"" should be set"
+
+    # Test that the tag has a value of 123
+    assert int tag "test" of {_n} = 123 with "tag ""test"" should have a value of 123"
+
+    set string tag "string-test" of {_n} to "complete"
+
+    # Test that the tag has a value of "complete"
+    assert string tag "string-test" of {_n} = "complete" with "tag ""string-test"" should have a value of ""complete"""
+
+    spawn a sheep at location(1, 100, 1)
+    set {_e} to last spawned entity
+    set {_n} to nbt of {_e}
+
+    # Test a generic tag on an Entity
+    assert byte tag "Bukkit.Aware" of {_n} is 1 with "tag ""Bukkit.Aware"" of nbt of entity should be 1"
+
+    delete random entity of {_e}
+    delete {_n}
+
+    set {_i} to diamond sword with custom model data 1
+    set {_n} to nbt of {_i}
+
+    # Test that tag of item nbt is set
+    assert tag "CustomModelData" of {_n} is set with "tag ""CustomModelData"" of an item should be set"
+    assert int tag "CustomModelData" of {_n} = 1 with "tag ""CustomModelData"" of an item should be 1"
