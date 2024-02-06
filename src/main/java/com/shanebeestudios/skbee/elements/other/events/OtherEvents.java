@@ -37,7 +37,6 @@ import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
-import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -194,17 +193,6 @@ public class OtherEvents {
                 return event.getBlockData();
             }
         }, 0);
-
-        // Player Command Send Event
-        Skript.registerEvent("Player Command Send", SimpleEvent.class, PlayerCommandSendEvent.class,
-                        "player command send")
-                .description("This event is called when the list of available server commands is sent to the player.",
-                        "Commands may be removed from display using this event, but implementations are not required to securely",
-                        "remove all traces of the command. If secure removal of commands is required,",
-                        "then the command should be assigned a permission which is not granted to the player.")
-                .examples("on player command send:",
-                        "\tremove \"ver\" and \"version\" from player command map")
-                .since("2.5.3");
 
         // Block Drop Item Event
         Skript.registerEvent("Block Drop Item", SimpleEvent.class, BlockDropItemEvent.class,
