@@ -73,7 +73,7 @@ import java.util.Map;
         "\tinput: rotten flesh",
         "\tcategory: \"food\"",
         "",
-        "register a new blasting recipe",
+        "register a new blasting recipe:",
         "\tid: \"firery_sword\"",
         "\tresult: diamond sword of fire aspect named \"Flaming Sword\"",
         "\tinput: diamond sword"})
