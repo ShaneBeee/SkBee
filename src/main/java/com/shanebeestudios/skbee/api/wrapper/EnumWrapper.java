@@ -121,6 +121,10 @@ public final class EnumWrapper<E extends Enum<E>> {
         return new ClassInfo<>(this.enumClass, codeName).usage(getAllNames()).parser(new EnumParser<>(this));
     }
 
+    public ClassInfo<E> getClassInfoWithoutUsage(String codeName) {
+        return new ClassInfo<>(this.enumClass, codeName).parser(new EnumParser<>(this));
+    }
+
     private void registerComparator(Class<E> c) {
         Comparators.registerComparator(c, c, (o1, o2) -> Relation.get(o1.equals(o2)));
     }
