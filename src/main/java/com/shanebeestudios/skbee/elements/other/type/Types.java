@@ -20,7 +20,6 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
-import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.bukkit.inventory.ItemFlag;
@@ -119,15 +118,6 @@ public class Types {
         } else {
             Util.logLoading("It looks like another addon registered 'potioneffectcause' already.");
             Util.logLoading("You may have to use their potion effect causes in SkBee's 'Entity Potion Effect' event.");
-        }
-
-        if (Classes.getExactClassInfo(TransformReason.class) == null) {
-            EnumWrapper<TransformReason> TRANSOFORM_REASON = new EnumWrapper<>(TransformReason.class);
-            Classes.registerClass(TRANSOFORM_REASON.getClassInfo("transformreason")
-                    .user("transform ?reasons?")
-                    .name("Transform Reason")
-                    .description("Represents the different reasons for transforming in the entity transform event.")
-                    .since("2.5.3"));
         }
 
         if (Classes.getExactClassInfo(NamespacedKey.class) == null) {

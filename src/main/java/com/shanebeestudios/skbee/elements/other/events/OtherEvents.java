@@ -32,18 +32,14 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntitySpellCastEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
-import org.bukkit.event.entity.EntityTransformEvent;
-import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.SpawnerSpawnEvent;
-import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -175,36 +171,6 @@ public class OtherEvents {
                     return new ItemType(bredWith);
                 }
                 return null;
-            }
-        }, 0);
-
-        // Entity Transform Event
-        Skript.registerEvent("Entity Transform", SimpleEvent.class, EntityTransformEvent.class,
-                        "entity transform")
-                .description("Called when an entity is about to be replaced by another entity.",
-                        "Examples include a villager struck by lightning turning into a witch,",
-                        "zombie drowning and becoming a drowned,",
-                        "slime splitting into other slimes.",
-                        "\nevent-entity = entity that is going to transform",
-                        "\nfuture event-entity = entity after transformation (only returns one entity)",
-                        "\nevent-transformreason = reason for the transformation",
-                        "\ntransformed entit(y|ies) = entity or entities after transformation (can be multiple entities)")
-                .examples("on entity transform:",
-                        "\tif event-entity is a villager:",
-                        "\t\tcancel event")
-                .since("2.5.3");
-
-        EventValues.registerEventValue(EntityTransformEvent.class, Entity.class, new Getter<>() {
-            @Override
-            public Entity get(EntityTransformEvent event) {
-                return event.getTransformedEntity();
-            }
-        }, 1);
-
-        EventValues.registerEventValue(EntityTransformEvent.class, TransformReason.class, new Getter<>() {
-            @Override
-            public TransformReason get(EntityTransformEvent event) {
-                return event.getTransformReason();
             }
         }, 0);
 
