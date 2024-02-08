@@ -244,6 +244,7 @@ public class RecipeUtil {
      */
     public static void error(String error) {
         log("&c" + error);
+        Util.errorForAdmins("Recipe error, see console for more details.");
     }
 
     /**
