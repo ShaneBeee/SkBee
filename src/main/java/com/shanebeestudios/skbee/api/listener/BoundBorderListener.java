@@ -87,6 +87,7 @@ public class BoundBorderListener implements Listener {
         }
     }
 
+    @SuppressWarnings("deprecation")
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onRespawn(PlayerRespawnEvent event) {
         if (!this.PLAYER_RESPAWN) return;
