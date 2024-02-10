@@ -13,8 +13,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
 import java.util.ArrayList;
@@ -55,7 +55,11 @@ public class Types {
                     @Override
                     public @NotNull Fields serialize(Team team) {
                         Fields fields = new Fields();
-                        fields.putObject("name", team.getName());
+                        try {
+                            // If the team was unregistered, this will throw IllegalStateException
+                            fields.putObject("name", team.getName());
+                        } catch (IllegalStateException ignore) {
+                        }
                         return fields;
                     }
 
