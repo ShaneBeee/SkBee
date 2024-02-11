@@ -163,6 +163,20 @@ public class Property<P, T> {
     }
 
     public boolean canBeUsedOn(Class<?> objectClass) {
+        // Due to expressions like `last spawned entity` returning Entity.class,
+        // we want to make sure the property will still parse for subclasses
+        // #checkUsable() will actually ignore other classes at runtime
+        if (this.propertyClasses.isEmpty()) {
+            return objectClass == Entity.class || this.propertyClass.isAssignableFrom(objectClass);
+        }
+        for (Class<?> aClass : this.propertyClasses) {
+            if (objectClass == Entity.class) return true;
+            if (aClass.isAssignableFrom(objectClass)) return true;
+        }
+        return false;
+    }
+
+    private boolean checkUsable(Class<?> objectClass) {
         if (this.propertyClasses.isEmpty()) {
             return this.propertyClass.isAssignableFrom(objectClass);
         }
@@ -255,7 +269,7 @@ public class Property<P, T> {
 
     @SuppressWarnings("unchecked")
     public @Nullable T get(Object object) {
-        if (canBeUsedOn(object.getClass())) {
+        if (checkUsable(object.getClass())) {
             return this.getter.get((P) object);
         }
         return null;
@@ -263,35 +277,35 @@ public class Property<P, T> {
 
     @SuppressWarnings("unchecked")
     public void set(Object object, Object value) {
-        if (canBeUsedOn(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
+        if (checkUsable(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
             this.setter.set((P) object, (T) value);
         }
     }
 
     @SuppressWarnings("unchecked")
     public void delete(Object object) {
-        if (canBeUsedOn(object.getClass())) {
+        if (checkUsable(object.getClass())) {
             this.deleter.delete((P) object);
         }
     }
 
     @SuppressWarnings("unchecked")
     public void add(Object object, Object value) {
-        if (canBeUsedOn(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
+        if (checkUsable(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
             this.adder.add((P) object, (T) value);
         }
     }
 
     @SuppressWarnings("unchecked")
     public void remove(Object object, Object value) {
-        if (canBeUsedOn(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
+        if (checkUsable(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
             this.remover.remove((P) object, (T) value);
         }
     }
 
     @SuppressWarnings("unchecked")
     public void reset(Object object) {
-        if (canBeUsedOn(object.getClass())) {
+        if (checkUsable(object.getClass())) {
             this.resetter.reset((P) object);
         }
     }

@@ -6,15 +6,16 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Variable;
-import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.property.Property;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -51,8 +52,8 @@ public class ExprObjectProperty extends SimplePropertyExpression<Object, Object>
         if (!(exprs[1] instanceof Variable<?>)) {
             Property<?, ?> property = this.property.getSingle();
             Class<?> objectClass = getExpr().getReturnType();
-            Noun objectClassName = Classes.getSuperClassInfo(objectClass).getName();
             if (!property.canBeUsedOn(objectClass)) {
+                String objectClassName = getObjectName(objectClass);
                 String usedOn = property.getUsedOn();
                 Skript.error("Property '" + property.getPropertyName() + "' cannot be used on '" +
                         objectClassName + "', may only be used on '" + usedOn + "'");
@@ -60,6 +61,15 @@ public class ExprObjectProperty extends SimplePropertyExpression<Object, Object>
             }
         }
         return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String getObjectName(Class<?> objectClass) {
+        if (Entity.class.isAssignableFrom(objectClass)) {
+            EntityData<?> entityData = EntityData.fromClass(((Class<? extends Entity>) objectClass));
+            return entityData.toString();
+        }
+        return Classes.getSuperClassInfo(objectClass).getName().toString();
     }
 
     @Override
