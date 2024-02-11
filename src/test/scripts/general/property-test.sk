@@ -1,0 +1,10 @@
+test "properties":
+    set {_l} to location(1,100,1)
+    spawn an armor stand at {_l}
+
+    set arms property of last spawned entity to true
+    assert arms property of last spawned entity = true with "arms property of last spawned armorstand should have been set to true"
+
+
+
+    delete last spawned entity
