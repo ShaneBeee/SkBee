@@ -16,6 +16,7 @@ import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
+import com.shanebeestudios.skbee.api.property.Properties;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Bukkit;
@@ -93,6 +94,9 @@ public class AddonLoader {
         this.addon.setLanguageFileDirectory("lang");
 
         int[] elementCountBefore = SkriptUtils.getElementCount();
+        // Load properties
+        Properties.initializeProperties();
+
         // Load first as it's the base for many things
         loadOtherElements();
         // Load next as both are used in other places

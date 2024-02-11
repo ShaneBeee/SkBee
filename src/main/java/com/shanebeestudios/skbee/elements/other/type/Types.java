@@ -13,6 +13,8 @@ import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
+import com.shanebeestudios.skbee.api.property.Properties;
+import com.shanebeestudios.skbee.api.property.Property;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.EntityEffect;
 import org.bukkit.NamespacedKey;
@@ -40,11 +42,13 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+@SuppressWarnings("rawtypes")
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
     public static boolean HAS_CHUNK_LOAD_LEVEL = Skript.classExists("org.bukkit.Chunk$LoadLevel");
     private static final Map<String, ItemFlag> ITEM_FLAG_MAP = new HashMap<>();
+    public static ClassInfo<Property> PROPERTY_CLASS_INFO;
 
     private static String getItemFlagNames() {
         List<String> flags = new ArrayList<>(ITEM_FLAG_MAP.keySet());
@@ -307,6 +311,41 @@ public class Types {
             Util.logLoading("It looks like another addon registered 'EntityEffect' already.");
             Util.logLoading("You may have to use their EntityEffects in SkBee's 'play entity effect' effect.");
         }
+
+        PROPERTY_CLASS_INFO = new ClassInfo<>(Property.class, "property")
+                .user("property")
+                .name("Object Property")
+                .description("Represents the property of an object.",
+                        "Below are all the available properties along with the objects they work on and return type.",
+                        "Type Usage format:",
+                        "`property [usable on] (return type) # description`")
+                .examples("set aware property of last spawned armor stand to true")
+                .since("INSERT VERSION")
+                .parser(new Parser<>() {
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return context == ParseContext.DEFAULT;
+                    }
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public @Nullable Property<?, ?> parse(String string, ParseContext context) {
+                        return Properties.getProperty(string);
+                    }
+
+                    @Override
+                    public @NotNull String toString(Property property, int flags) {
+                        return property.getPropertyName();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(Property property) {
+                        return property.getPropertyName();
+                    }
+                });
+        Classes.registerClass(PROPERTY_CLASS_INFO);
     }
 
 }
