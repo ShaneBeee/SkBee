@@ -37,7 +37,7 @@ public class ExprObjectProperty extends SimplePropertyExpression<Object, Object>
 
     private Literal<Property<?, ?>> property;
 
-    @SuppressWarnings({"unchecked", "NullableProblems", "DataFlowIssue"})
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!(exprs[0] instanceof Literal<?>)) {
@@ -50,10 +50,12 @@ public class ExprObjectProperty extends SimplePropertyExpression<Object, Object>
         // If the object is not a variable, make sure it can be used with the property
         if (!(exprs[1] instanceof Variable<?>)) {
             Property<?, ?> property = this.property.getSingle();
-            Class<?> returnType = getExpr().getReturnType();
-            Noun returnTypeName = Classes.getExactClassInfo(returnType).getName();
-            if (!returnType.isAssignableFrom(property.getPropertyClass())) {
-                Skript.error("Property '" + property.getPropertyName() + "' cannot be used with '" + returnTypeName + "'");
+            Class<?> objectClass = getExpr().getReturnType();
+            Noun objectClassName = Classes.getSuperClassInfo(objectClass).getName();
+            if (!property.canBeUsedOn(objectClass)) {
+                String usedOn = property.getUsedOn();
+                Skript.error("Property '" + property.getPropertyName() + "' cannot be used on '" +
+                        objectClassName + "', may only be used on '" + usedOn + "'");
                 return false;
             }
         }

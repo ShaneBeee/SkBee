@@ -3,14 +3,19 @@ package com.shanebeestudios.skbee.api.property;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @SuppressWarnings({"ClassEscapesDefinedScope", "UnusedReturnValue"})
 public class Property<P, T> {
 
     static abstract class Getter<O, R> {
+        @Nullable
         public abstract R get(O object);
     }
 
@@ -35,6 +40,7 @@ public class Property<P, T> {
     }
 
     private final Class<P> propertyClass;
+    private final List<Class<?>> propertyClasses = new ArrayList<>();
     private final Class<T> returnType;
     private final String propertyName;
     private String description;
@@ -52,6 +58,10 @@ public class Property<P, T> {
         this.propertyClass = propertyClass;
         this.returnType = returnType;
         this.propertyName = propertyName;
+    }
+
+    void addPorperties(List<Class<?>> classes) {
+        this.propertyClasses.addAll(classes);
     }
 
     /**
@@ -152,6 +162,16 @@ public class Property<P, T> {
         return propertyClass;
     }
 
+    public boolean canBeUsedOn(Class<?> objectClass) {
+        if (this.propertyClasses.isEmpty()) {
+            return this.propertyClass.isAssignableFrom(objectClass);
+        }
+        for (Class<?> aClass : this.propertyClasses) {
+            if (aClass.isAssignableFrom(objectClass)) return true;
+        }
+        return false;
+    }
+
     /**
      * Get the class this property returns
      *
@@ -170,17 +190,33 @@ public class Property<P, T> {
         return propertyName;
     }
 
-    @SuppressWarnings("unchecked")
-    String getUsedOn() {
+    /**
+     * Stringified version of objects this property may be used on
+     * <p>Used for docs and error messages</p>
+     *
+     * @return Objects this property may be used on
+     */
+    public String getUsedOn() {
         String usedOn;
         if (this.usableOn != null) {
             usedOn = this.usableOn;
-        } else if (Entity.class.isAssignableFrom(propertyClass)) {
-            usedOn = EntityData.toString((Class<? extends Entity>) propertyClass);
+        } else if (this.propertyClasses.isEmpty()) {
+            usedOn = getClassInfoName(this.propertyClass);
         } else {
-            usedOn = Classes.getSuperClassInfo(propertyClass).getName().toString();
+            List<String> names = new ArrayList<>();
+            this.propertyClasses.forEach(pClass -> names.add(getClassInfoName(pClass)));
+            usedOn = StringUtils.join(names, "/");
         }
         return usedOn;
+    }
+
+    @SuppressWarnings("unchecked")
+    private String getClassInfoName(Class<?> clazz) {
+        if (Entity.class.isAssignableFrom(clazz)) {
+            return EntityData.toString((Class<? extends Entity>) clazz);
+        } else {
+            return Classes.getSuperClassInfo(clazz).getName().toString();
+        }
     }
 
     public boolean isSingle() {
@@ -219,7 +255,7 @@ public class Property<P, T> {
 
     @SuppressWarnings("unchecked")
     public @Nullable T get(Object object) {
-        if (propertyClass.isAssignableFrom(object.getClass())) {
+        if (canBeUsedOn(object.getClass())) {
             return this.getter.get((P) object);
         }
         return null;
@@ -227,35 +263,35 @@ public class Property<P, T> {
 
     @SuppressWarnings("unchecked")
     public void set(Object object, Object value) {
-        if (propertyClass.isAssignableFrom(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
+        if (canBeUsedOn(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
             this.setter.set((P) object, (T) value);
         }
     }
 
     @SuppressWarnings("unchecked")
     public void delete(Object object) {
-        if (propertyClass.isAssignableFrom(object.getClass())) {
+        if (canBeUsedOn(object.getClass())) {
             this.deleter.delete((P) object);
         }
     }
 
     @SuppressWarnings("unchecked")
     public void add(Object object, Object value) {
-        if (propertyClass.isAssignableFrom(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
+        if (canBeUsedOn(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
             this.adder.add((P) object, (T) value);
         }
     }
 
     @SuppressWarnings("unchecked")
     public void remove(Object object, Object value) {
-        if (propertyClass.isAssignableFrom(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
+        if (canBeUsedOn(object.getClass()) && returnType.isAssignableFrom(value.getClass())) {
             this.remover.remove((P) object, (T) value);
         }
     }
 
     @SuppressWarnings("unchecked")
     public void reset(Object object) {
-        if (propertyClass.isAssignableFrom(object.getClass())) {
+        if (canBeUsedOn(object.getClass())) {
             this.resetter.reset((P) object);
         }
     }

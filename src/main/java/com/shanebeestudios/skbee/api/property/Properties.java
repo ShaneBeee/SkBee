@@ -23,14 +23,43 @@ public class Properties {
         return null;
     }
 
+    /**
+     * Register a property for a single class
+     *
+     * @param propertyClass Class to register property for
+     * @param returnType    Type of property to return
+     * @param propertyName  Name of property
+     * @return Newly registered property used as a builder
+     */
     public static <P, T> Property<P, T> registerProperty(Class<P> propertyClass, Class<T> returnType, String propertyName) {
         Property<P, T> property = new Property<>(propertyClass, returnType, propertyName);
         PROPERTY_MAP.put(propertyName, property);
         return property;
     }
 
+    /**
+     * Register a property for a list of classes
+     *
+     * @param propertyClasses Classes to register property for
+     * @param returnType      Type of property to return
+     * @param propertyName    Name of property
+     * @return Newly registered property used as a builder
+     */
+    public static <T> Property<Object, T> registerProperty(List<Class<?>> propertyClasses, Class<T> returnType, String propertyName) {
+        Property<Object, T> property = new Property<>(Object.class, returnType, propertyName);
+        property.addPorperties(propertyClasses);
+        PROPERTY_MAP.put(propertyName, property);
+        return property;
+    }
+
     private static boolean init = false;
 
+    /**
+     * Initialize all properties
+     * <p>This should only be used by SkBee</p>
+     *
+     * @throws IllegalStateException if already initialized
+     */
     public static void initializeProperties() {
         if (init) {
             throw new IllegalStateException("Properties have already been initialized");
@@ -55,7 +84,6 @@ public class Properties {
             List<String> names = new ArrayList<>();
 
             PROPERTY_MAP.forEach((name, property) -> {
-                Class<?> propertyClass = property.getPropertyClass();
                 String usedOn = property.getUsedOn();
                 String returnType = Classes.getExactClassInfo(property.getReturnType()).getName().getSingular();
                 returnType = returnType.split(" \\(")[0]; // Boolean comes out as "boolean (yes/no)"
