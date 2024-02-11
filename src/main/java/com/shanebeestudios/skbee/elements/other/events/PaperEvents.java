@@ -38,14 +38,14 @@ import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings("unused")
-public class PaperEvents {
+public class PaperEvents extends SimpleEvent {
 
     static {
         // == PLAYER EVENTS == //
 
         // Player Recipe Book Click Event
         if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent")) {
-            Skript.registerEvent("Recipe Book Click Event", SimpleEvent.class, PlayerRecipeBookClickEvent.class, "[player] recipe book click")
+            Skript.registerEvent("Recipe Book Click Event", PaperEvents.class, PlayerRecipeBookClickEvent.class, "[player] recipe book click")
                     .description("Called when the player clicks on a recipe in their recipe book. Requires Paper 1.15+")
                     .examples("on recipe book click:",
                             "\tif event-string = \"minecraft:diamond_sword\":",
@@ -62,7 +62,7 @@ public class PaperEvents {
 
         // Player Pickup XP Event
         if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent")) {
-            Skript.registerEvent("Player Pickup Experience Orb", SimpleEvent.class, PlayerPickupExperienceEvent.class,
+            Skript.registerEvent("Player Pickup Experience Orb", PaperEvents.class, PlayerPickupExperienceEvent.class,
                             "player pickup (experience|xp) [orb]")
                     .description("Fired when a player is attempting to pick up an experience orb. Requires Paper 1.12.2+",
                             "\n`event-experience` represents the experience picked up (This is Skript's version of XP).",
@@ -96,7 +96,7 @@ public class PaperEvents {
 
         // Player Elytra Boost Event
         if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerElytraBoostEvent")) {
-            Skript.registerEvent("Player Elytra Boost", SimpleEvent.class, PlayerElytraBoostEvent.class, "[player] elytra boost")
+            Skript.registerEvent("Player Elytra Boost", PaperEvents.class, PlayerElytraBoostEvent.class, "[player] elytra boost")
                     .description("Fired when a player boosts elytra flight with a firework. Requires Paper 1.13.2+")
                     .examples("on elytra boost:",
                             "\tpush player forward at speed 50")
@@ -111,7 +111,7 @@ public class PaperEvents {
 
         // Player Stop Using Item Event
         if (Skript.classExists("io.papermc.paper.event.player.PlayerStopUsingItemEvent")) {
-            Skript.registerEvent("Player Stop Using Item", SimpleEvent.class, PlayerStopUsingItemEvent.class, "[player] stop using item")
+            Skript.registerEvent("Player Stop Using Item", PaperEvents.class, PlayerStopUsingItemEvent.class, "[player] stop using item")
                     .description("Called when the server detects a player stopping using an item.",
                             "Examples of this are letting go of the interact button when holding a bow, an edible item, or a spyglass.",
                             "event-number is the number of ticks the item was held for. Requires Paper 1.18+.")
@@ -135,7 +135,7 @@ public class PaperEvents {
 
         // Player Change Beacon Effect Event
         if (Skript.classExists("io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent")) {
-            Skript.registerEvent("Beacon - Player Change Effect", SimpleEvent.class, PlayerChangeBeaconEffectEvent.class, "[player] change beacon [potion] effect[s]", "beacon [potion] effect change")
+            Skript.registerEvent("Beacon - Player Change Effect", PaperEvents.class, PlayerChangeBeaconEffectEvent.class, "[player] change beacon [potion] effect[s]", "beacon [potion] effect change")
                     .description("Called when a player changes the current potion effects of a beacon.")
                     .examples("on beacon potion effect change:",
                             "\tprimary beacon effect of event-block is jump boost",
@@ -163,7 +163,7 @@ public class PaperEvents {
 
         // Player Chunk Load Event
         if (Skript.classExists("io.papermc.paper.event.packet.PlayerChunkLoadEvent")) {
-            Skript.registerEvent("Player Chunk Load", SimpleEvent.class, PlayerChunkLoadEvent.class,
+            Skript.registerEvent("Player Chunk Load", PaperEvents.class, PlayerChunkLoadEvent.class,
                             "player chunk (send|load)")
                     .description("Is called when a Player receives a Chunk.",
                             "Can for example be used for spawning a fake entity when the player receives a chunk. ",
@@ -185,7 +185,7 @@ public class PaperEvents {
 
         // Player Chunk Unload Event
         if (Skript.classExists("io.papermc.paper.event.packet.PlayerChunkUnloadEvent")) {
-            Skript.registerEvent("Player Chunk Unload", SimpleEvent.class, PlayerChunkUnloadEvent.class,
+            Skript.registerEvent("Player Chunk Unload", PaperEvents.class, PlayerChunkUnloadEvent.class,
                             "player chunk unload")
                     .description("Is called when a Player receives a chunk unload packet.",
                             "Should only be used for packet/clientside related stuff. Not intended for modifying server side.",
@@ -206,7 +206,7 @@ public class PaperEvents {
 
         // Entity Pathfind Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityPathfindEvent")) {
-            Skript.registerEvent("Entity Pathfind Event", SimpleEvent.class, EntityPathfindEvent.class, "entity start[s] pathfinding")
+            Skript.registerEvent("Entity Pathfind Event", PaperEvents.class, EntityPathfindEvent.class, "entity start[s] pathfinding")
                     .description("Called when an Entity decides to start moving towards a location. This event does not fire for the entities " +
                             "actual movement. Only when it is choosing to start moving to a location. Requires Paper.")
                     .examples("on entity starts pathfinding:",
@@ -224,7 +224,7 @@ public class PaperEvents {
 
         // Skeleton Horse Trap Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent")) {
-            Skript.registerEvent("Skeleton Horse Trap Event", SimpleEvent.class, SkeletonHorseTrapEvent.class, "skeleton horse trap")
+            Skript.registerEvent("Skeleton Horse Trap Event", PaperEvents.class, SkeletonHorseTrapEvent.class, "skeleton horse trap")
                     .description("Called when a player gets close to a skeleton horse and triggers the lightning trap. Requires Paper 1.13+")
                     .examples("on skeleton horse trap:",
                             "\tloop all players in radius 10 around event-entity:",
@@ -235,7 +235,7 @@ public class PaperEvents {
 
         // Entity Zap Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityZapEvent")) {
-            Skript.registerEvent("Entity Zap", SimpleEvent.class, EntityZapEvent.class, "entity (zap|struck by lightning)")
+            Skript.registerEvent("Entity Zap", PaperEvents.class, EntityZapEvent.class, "entity (zap|struck by lightning)")
                     .description("Fired when lightning strikes an entity. Requires Paper 1.10.2+")
                     .examples("on entity zap:",
                             "\tif event-entity is a pig:",
@@ -251,7 +251,7 @@ public class PaperEvents {
 
         // Entity Knockback Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent")) {
-            Skript.registerEvent("Entity Knockback", SimpleEvent.class, EntityKnockbackByEntityEvent.class, "entity knockback")
+            Skript.registerEvent("Entity Knockback", PaperEvents.class, EntityKnockbackByEntityEvent.class, "entity knockback")
                     .description("Fired when an Entity is knocked back by the hit of another Entity. " +
                             "If this event is cancelled, the entity is not knocked back. Requires Paper 1.12.2+")
                     .examples("on entity knockback:", "\tif event-entity is a cow:", "\t\tcancel event")
@@ -260,7 +260,7 @@ public class PaperEvents {
 
         // Experience Orb Merge Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent")) {
-            Skript.registerEvent("Experience Orb Merge", SimpleEvent.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")
+            Skript.registerEvent("Experience Orb Merge", PaperEvents.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")
                     .description("Fired anytime the server is about to merge 2 experience orbs into one. Requires Paper 1.12.2+")
                     .examples("on xp merge:",
                             "\tcancel event")
@@ -269,7 +269,7 @@ public class PaperEvents {
 
         // Entity Add To World Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityAddToWorldEvent")) {
-            Skript.registerEvent("Entity Add to World", SimpleEvent.class, EntityAddToWorldEvent.class,
+            Skript.registerEvent("Entity Add to World", PaperEvents.class, EntityAddToWorldEvent.class,
                             "entity add[ed] to world")
                     .description("Fired any time an entity is being added to the world for any reason.",
                             "Not to be confused with entity spawn event. This will fire anytime a chunk is reloaded too. Requires a PaperMC server.")
@@ -280,7 +280,7 @@ public class PaperEvents {
 
         // Entity Removed from World Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent")) {
-            Skript.registerEvent("Entity Remove from World", SimpleEvent.class, EntityRemoveFromWorldEvent.class,
+            Skript.registerEvent("Entity Remove from World", PaperEvents.class, EntityRemoveFromWorldEvent.class,
                             "entity remove[d] from world")
                     .description("Fired any time an entity is being removed from a world for any reason. Requires a PaperMC server.")
                     .examples("on entity removed from world:",
@@ -292,7 +292,7 @@ public class PaperEvents {
 
         // Beacon Effect Event
         if (Skript.classExists("com.destroystokyo.paper.event.block.BeaconEffectEvent")) {
-            Skript.registerEvent("Beacon Effect", SimpleEvent.class, BeaconEffectEvent.class, "beacon effect")
+            Skript.registerEvent("Beacon Effect", PaperEvents.class, BeaconEffectEvent.class, "beacon effect")
                     .description("Called when a beacon effect is being applied to a player. Requires Paper 1.9+")
                     .examples("on beacon effect:",
                             "\tif event-player does not have permission \"my.server.beacons\":",
@@ -321,7 +321,7 @@ public class PaperEvents {
 
         // Beacon Deactivated Event
         if (Skript.classExists("io.papermc.paper.event.block.BeaconDeactivatedEvent")) {
-            Skript.registerEvent("Beacon Deactivation", SimpleEvent.class, BeaconDeactivatedEvent.class, "beacon (deactivate|deactivation)")
+            Skript.registerEvent("Beacon Deactivation", PaperEvents.class, BeaconDeactivatedEvent.class, "beacon (deactivate|deactivation)")
                     .description("Called when a beacon is deactivated from breaking or losing required amount blocks.")
                     .examples("on beacon deactivation:",
                             "\tbroadcast \"%event-block% is no longer activated, :cry:\"");
@@ -330,7 +330,7 @@ public class PaperEvents {
 
         // Beacon Activated Event
         if (Skript.classExists("io.papermc.paper.event.block.BeaconActivatedEvent")) {
-            Skript.registerEvent("Beacon Activation", SimpleEvent.class, BeaconActivatedEvent.class, "beacon (activate|activation)")
+            Skript.registerEvent("Beacon Activation", PaperEvents.class, BeaconActivatedEvent.class, "beacon (activate|activation)")
                     .description("Called when a beacon is successfully activated by having correct amount of blocks.")
                     .examples("on beacon activation",
                             "\tset primary effect of event-block to strength")

@@ -15,10 +15,10 @@ import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.MerchantRecipe;
 import org.jetbrains.annotations.Nullable;
 
-public class SimpleEvents {
+public class SimpleEvents extends SimpleEvent {
 
     static {
-        Skript.registerEvent("Trade Select", SimpleEvent.class, TradeSelectEvent.class, "trade select")
+        Skript.registerEvent("Trade Select", SimpleEvents.class, TradeSelectEvent.class, "trade select")
                 .description("This event is called whenever a player clicks a new trade on the trades sidebar.",
                         "This event allows the user to get the index of the trade, letting them get the MerchantRecipe via the Merchant.",
                         "`event-number` = Used to get the index of the trade the player clicked on.",
@@ -66,7 +66,7 @@ public class SimpleEvents {
         }, 0);
 
         if (Skript.classExists("io.papermc.paper.event.player.PlayerPurchaseEvent")) {
-            Skript.registerEvent("Player Purchase", SimpleEvent.class, PlayerPurchaseEvent.class,
+            Skript.registerEvent("Player Purchase", SimpleEvents.class, PlayerPurchaseEvent.class,
                             "player (purchase|trade)")
                     .description("Called when a player trades with a standalone merchant/villager GUI.")
                     .examples("on player purchase:",

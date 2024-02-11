@@ -42,6 +42,9 @@ public class EffEntityDamageEntity extends Effect {
         this.victims = (Expression<LivingEntity>) exprs[1];
         this.damageAmount = (Expression<Number>) exprs[2];
         this.damageCause = (Expression<DamageCause>) exprs[3];
+        if (this.damageCause != null) {
+            Skript.warning("fake damage cause temporarily removed due to Bukkit bug.");
+        }
         return true;
     }
 
@@ -59,9 +62,10 @@ public class EffEntityDamageEntity extends Effect {
             damageCause = this.damageCause.getSingle(event);
         }
         for (LivingEntity victim : this.victims.getArray(event)) {
-            if (damageCause != null) {
-                victim.setLastDamageCause(new EntityDamageEvent(attacker, damageCause, damageAmount));
-            }
+            // TODO temporarily remove til Bukkit fixes their mistake here
+//            if (damageCause != null) {
+//                victim.setLastDamageCause(new EntityDamageEvent(attacker, damageCause, damageAmount));
+//            }
             victim.damage(damageAmount, attacker);
         }
     }
