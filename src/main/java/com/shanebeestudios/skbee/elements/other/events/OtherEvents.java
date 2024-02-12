@@ -39,6 +39,7 @@ import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -492,6 +493,15 @@ public class OtherEvents extends SimpleEvent {
             @Override
             public String get(EntityUnleashEvent event) {
                 return event.getReason().name().toLowerCase(Locale.ROOT);
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(EntityUnleashEvent.class, Player.class, new Getter<>() {
+            @Override
+            public @Nullable Player get(EntityUnleashEvent event) {
+                if (event instanceof PlayerUnleashEntityEvent playerUnleashEntityEvent)
+                    return playerUnleashEntityEvent.getPlayer();
+                return null;
             }
         }, EventValues.TIME_NOW);
     }
