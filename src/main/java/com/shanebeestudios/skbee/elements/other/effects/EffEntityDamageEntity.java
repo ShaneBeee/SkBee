@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.EntityUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
@@ -42,9 +43,6 @@ public class EffEntityDamageEntity extends Effect {
         this.victims = (Expression<LivingEntity>) exprs[1];
         this.damageAmount = (Expression<Number>) exprs[2];
         this.damageCause = (Expression<DamageCause>) exprs[3];
-        if (this.damageCause != null) {
-            Skript.warning("fake damage cause temporarily removed due to Bukkit bug.");
-        }
         return true;
     }
 
@@ -62,20 +60,21 @@ public class EffEntityDamageEntity extends Effect {
             damageCause = this.damageCause.getSingle(event);
         }
         for (LivingEntity victim : this.victims.getArray(event)) {
-            // TODO temporarily remove til Bukkit fixes their mistake here
-//            if (damageCause != null) {
-//                victim.setLastDamageCause(new EntityDamageEvent(attacker, damageCause, damageAmount));
-//            }
+            if (damageCause != null) {
+                EntityDamageEvent entityDamageEvent = EntityUtils.createEntityDamageEvent(attacker, damageCause, damageAmount);
+                victim.setLastDamageCause(entityDamageEvent);
+            }
             victim.damage(damageAmount, attacker);
         }
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String attacker = this.attacker.toString(e,d);
-        String victim = this.victims.toString(e,d);
-        String amount = this.damageAmount.toString(e,d);
-        String fake = this.damageCause != null ? ("with fake damage cause " + this.damageCause.toString(e,d)) : "";
+        String attacker = this.attacker.toString(e, d);
+        String victim = this.victims.toString(e, d);
+        String amount = this.damageAmount.toString(e, d);
+        String fake = this.damageCause != null ? ("with fake damage cause " + this.damageCause.toString(e, d)) : "";
         return String.format("make %s damage %s by %s %s", attacker, victim, amount, fake);
     }
 
