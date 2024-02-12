@@ -104,6 +104,7 @@ public class AddonLoader {
         loadAdvancementElements();
         loadBossBarElements();
         loadBoundElements();
+        loadDamageSourceElements();
         loadDisplayEntityElements();
         loadFishingElements();
         loadGameEventElements();
@@ -526,6 +527,24 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.display");
             Util.logLoading("&5Display Entity elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadDamageSourceElements() {
+        if (!this.config.ELEMENTS_DAMAGE_SOURCE) {
+            Util.logLoading("&5Damage Source elements &cdisabled via config");
+            return;
+        }
+        if (!Skript.classExists("org.bukkit.damage.DamageSource")) {
+            Util.logLoading("&5Damage Source elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.damagesource");
+            Util.logLoading("&5Damage Source elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);
