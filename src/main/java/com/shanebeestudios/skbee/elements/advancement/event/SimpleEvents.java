@@ -9,11 +9,11 @@ import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("unused")
-public class SimpleEvents {
+public class SimpleEvents extends SimpleEvent {
 
     static {
         // Player Advancement Event
-        Skript.registerEvent("Player Advancement", SimpleEvent.class, PlayerAdvancementDoneEvent.class,
+        Skript.registerEvent("Player Advancement", SimpleEvents.class, PlayerAdvancementDoneEvent.class,
                         "[player] advancement done")
                 .description("Called when a player has completed all criteria in an advancement.")
                 .examples("")

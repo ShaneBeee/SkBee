@@ -6,10 +6,10 @@ import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Getter;
 import org.bukkit.event.player.PlayerRecipeDiscoverEvent;
 
-public class EvtRecipe {
+public class EvtRecipe extends SimpleEvent {
 
     static {
-        Skript.registerEvent("Recipe - Discover Event", SimpleEvent.class, PlayerRecipeDiscoverEvent.class,
+        Skript.registerEvent("Recipe - Discover Event", EvtRecipe.class, PlayerRecipeDiscoverEvent.class,
                         "recipe discover[y]")
                 .description("Called when a player unlocks a recipe. ",
                         "`event-string` = the recipe namespace (this will also include either \"minecraft:\" or \"mykeyhere:\")",

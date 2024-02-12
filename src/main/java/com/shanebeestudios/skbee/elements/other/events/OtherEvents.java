@@ -32,13 +32,18 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntitySpellCastEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
+import org.bukkit.event.entity.EntityTransformEvent;
+import org.bukkit.event.entity.EntityTransformEvent.TransformReason;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.entity.SpawnerSpawnEvent;
+import org.bukkit.event.inventory.InventoryMoveItemEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
+import org.bukkit.event.player.PlayerCommandSendEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -46,10 +51,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Locale;
 
 @SuppressWarnings("unused")
-public class OtherEvents {
+public class OtherEvents extends SimpleEvent {
 
     static {
-        Skript.registerEvent("Block Physical Interact Event", SimpleEvent.class, EntityBlockInteractEvent.class,
+        Skript.registerEvent("Block Physical Interact Event", OtherEvents.class, EntityBlockInteractEvent.class,
                         "block (interact|trample)")
                 .description("Called when an entity physically interacts with a block, for example,",
                         " entities trampling farmland and villagers opening doors.")
@@ -67,7 +72,7 @@ public class OtherEvents {
         }, 0);
 
         // Prepare Anvil Event
-        Skript.registerEvent("Anvil Prepare Event", SimpleEvent.class, PrepareAnvilEvent.class, "[skbee] anvil prepare")
+        Skript.registerEvent("Anvil Prepare Event", OtherEvents.class, PrepareAnvilEvent.class, "[skbee] anvil prepare")
                 .description("Called when a player attempts to combine 2 items in an anvil.",
                         "'event-slot' represents the result slot, can be used to get or set.")
                 .examples("on anvil prepare:",
@@ -131,13 +136,13 @@ public class OtherEvents {
         }, 0);
 
         // Player shear entity event
-        Skript.registerEvent("Shear Entity", SimpleEvent.class, PlayerShearEntityEvent.class, "[player] shear entity")
+        Skript.registerEvent("Shear Entity", OtherEvents.class, PlayerShearEntityEvent.class, "[player] shear entity")
                 .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")
                 .examples("on player shear entity:")
                 .since("1.8.0");
 
         // Entity Breed Event
-        Skript.registerEvent("Entity Breed", SimpleEvent.class, EntityBreedEvent.class,
+        Skript.registerEvent("Entity Breed", OtherEvents.class, EntityBreedEvent.class,
                         "entity breed")
                 .description("Called when one Entity breeds with another Entity.")
                 .examples("on entity breed:", "\nif breeding mother is a sheep:",
@@ -173,8 +178,83 @@ public class OtherEvents {
             }
         }, 0);
 
+        // Inventory Move Item Event
+        Skript.registerEvent("Inventory Move Item", OtherEvents.class, InventoryMoveItemEvent.class,
+                        "inventory move item")
+                .description("Called when some entity or block (e.g. hopper) tries to move items directly from one inventory to another.",
+                        "\nNOTE: This has nothing to do with a player's inventory!!!",
+                        "\nWhen this event is called, the initiator may already have removed the item from the source inventory and is ready to move it into the destination inventory.",
+                        "\nIf this event is cancelled, the items will be returned to the source inventory, if needed.",
+                        "\nIf this event is not cancelled, the initiator will try to put the ItemStack into the destination inventory.",
+                        "If this is not possible and the ItemStack has not been modified, the source inventory slot will be restored to its former state. Otherwise any additional items will be discarded.",
+                        "\nevent-inventory = Inventory that initiated the transfer.",
+                        "\npast event-inventory = Inventory that the ItemStack is being taken from.",
+                        "\nfuture event-inventory = Inventory that the ItemStack is being put into.")
+                .examples("on inventory move item:",
+                        "\tif type of past event-inventory = hopper inventory:",
+                        "\t\tcancel event")
+                .since("2.5.2");
+
+        EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
+            @Override
+            public @NotNull Inventory get(InventoryMoveItemEvent event) {
+                return event.getInitiator();
+            }
+        }, 0);
+
+        EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
+            @Override
+            public @NotNull Inventory get(InventoryMoveItemEvent event) {
+                return event.getSource();
+            }
+        }, -1);
+
+        EventValues.registerEventValue(InventoryMoveItemEvent.class, Inventory.class, new Getter<>() {
+            @Override
+            public @NotNull Inventory get(InventoryMoveItemEvent event) {
+                return event.getDestination();
+            }
+        }, 1);
+
+        EventValues.registerEventValue(InventoryMoveItemEvent.class, ItemStack.class, new Getter<>() {
+            @Override
+            public @NotNull ItemStack get(InventoryMoveItemEvent event) {
+                return event.getItem();
+            }
+        }, 0);
+
+        // Entity Transform Event
+        Skript.registerEvent("Entity Transform", OtherEvents.class, EntityTransformEvent.class,
+                        "entity transform")
+                .description("Called when an entity is about to be replaced by another entity.",
+                        "Examples include a villager struck by lightning turning into a witch,",
+                        "zombie drowning and becoming a drowned,",
+                        "slime splitting into other slimes.",
+                        "\nevent-entity = entity that is going to transform",
+                        "\nfuture event-entity = entity after transformation (only returns one entity)",
+                        "\nevent-transformreason = reason for the transformation",
+                        "\ntransformed entit(y|ies) = entity or entities after transformation (can be multiple entities)")
+                .examples("on entity transform:",
+                        "\tif event-entity is a villager:",
+                        "\t\tcancel event")
+                .since("2.5.3");
+
+        EventValues.registerEventValue(EntityTransformEvent.class, Entity.class, new Getter<>() {
+            @Override
+            public Entity get(EntityTransformEvent event) {
+                return event.getTransformedEntity();
+            }
+        }, 1);
+
+        EventValues.registerEventValue(EntityTransformEvent.class, TransformReason.class, new Getter<>() {
+            @Override
+            public TransformReason get(EntityTransformEvent event) {
+                return event.getTransformReason();
+            }
+        }, 0);
+
         // Entity Change Block Event
-        Skript.registerEvent("Entity Change Block", SimpleEvent.class, EntityChangeBlockEvent.class,
+        Skript.registerEvent("Entity Change Block", OtherEvents.class, EntityChangeBlockEvent.class,
                         "entity change block")
                 .description("Called when any Entity changes a block and a more specific event is not available.",
                         "Skript does partially have this event, but this version of it opens up ALL possibilities with this event.",
@@ -194,8 +274,19 @@ public class OtherEvents {
             }
         }, 0);
 
+        // Player Command Send Event
+        Skript.registerEvent("Player Command Send", OtherEvents.class, PlayerCommandSendEvent.class,
+                        "player command send")
+                .description("This event is called when the list of available server commands is sent to the player.",
+                        "Commands may be removed from display using this event, but implementations are not required to securely",
+                        "remove all traces of the command. If secure removal of commands is required,",
+                        "then the command should be assigned a permission which is not granted to the player.")
+                .examples("on player command send:",
+                        "\tremove \"ver\" and \"version\" from player command map")
+                .since("2.5.3");
+
         // Block Drop Item Event
-        Skript.registerEvent("Block Drop Item", SimpleEvent.class, BlockDropItemEvent.class,
+        Skript.registerEvent("Block Drop Item", OtherEvents.class, BlockDropItemEvent.class,
                         "block drop item")
                 .description("This event is called if a block broken by a player drops an item. ")
                 .examples("")
@@ -210,7 +301,7 @@ public class OtherEvents {
 
         // Block Damage Abort Event
         if (Skript.classExists("org.bukkit.event.block.BlockDamageAbortEvent")) {
-            Skript.registerEvent("Block Damage Abort", SimpleEvent.class, BlockDamageAbortEvent.class,
+            Skript.registerEvent("Block Damage Abort", OtherEvents.class, BlockDamageAbortEvent.class,
                             "block damage abort")
                     .description("Called when a player stops damaging a Block. Requires MC 1.18.x+")
                     .examples("on block damage abort:",
@@ -225,7 +316,7 @@ public class OtherEvents {
             }, EventValues.TIME_NOW);
         }
 
-        Skript.registerEvent("Entity Air Change", SimpleEvent.class, EntityAirChangeEvent.class,
+        Skript.registerEvent("Entity Air Change", OtherEvents.class, EntityAirChangeEvent.class,
                         "[entity] air change")
                 .description("Called when the amount of air an entity has remaining changes.",
                         "\n`event-number` = The amount of air the entity will have left (measured in ticks).",
@@ -304,7 +395,7 @@ public class OtherEvents {
         }, 0);
 
         // Entity Spell Cast Event
-        Skript.registerEvent("Spell Cast", SimpleEvent.class, EntitySpellCastEvent.class,
+        Skript.registerEvent("Spell Cast", OtherEvents.class, EntitySpellCastEvent.class,
                         "[entity] spell cast")
                 .description("Called when a Spellcaster casts a spell.")
                 .examples("on spell cast:",
@@ -321,7 +412,7 @@ public class OtherEvents {
         }, 0);
 
         // Entity Shoot Bow Event
-        Skript.registerEvent("Entity Shoot Bow", SimpleEvent.class, EntityShootBowEvent.class,
+        Skript.registerEvent("Entity Shoot Bow", OtherEvents.class, EntityShootBowEvent.class,
                         "entity shoot bow")
                 .description("Called when a LivingEntity shoots a bow firing an arrow.")
                 .examples("on entity shoot bow:",
@@ -339,7 +430,7 @@ public class OtherEvents {
 
         // Bell Ring Event
         if (Skript.classExists("org.bukkit.event.block.BellRingEvent")) {
-            Skript.registerEvent("Bell Ring", SimpleEvent.class, BellRingEvent.class, "bell ring")
+            Skript.registerEvent("Bell Ring", OtherEvents.class, BellRingEvent.class, "bell ring")
                     .description("Called when a bell is being rung. Requires Minecraft 1.19.4+")
                     .examples("on bell ring:",
                             "\tkill all mobs in radius 5 of event-block")
@@ -361,7 +452,7 @@ public class OtherEvents {
         }
 
         // Entity Teleport Event
-        Skript.registerEvent("Entity Teleport", SimpleEvent.class, EntityTeleportEvent.class, "entity teleport")
+        Skript.registerEvent("Entity Teleport", OtherEvents.class, EntityTeleportEvent.class, "entity teleport")
                 .description("Thrown when a non-player entity is teleported from one location to another.",
                         "This may be as a result of natural causes (Enderman, Shulker), pathfinding (Wolf), or commands (/teleport).",
                         "\n`past event-location` = Location teleported from.",
@@ -386,7 +477,7 @@ public class OtherEvents {
         }, EventValues.TIME_NOW);
 
         // Moisture Change Event
-        Skript.registerEvent("Moisture Change", SimpleEvent.class, MoistureChangeEvent.class, "moisture change")
+        Skript.registerEvent("Moisture Change", OtherEvents.class, MoistureChangeEvent.class, "moisture change")
                 .description("Called when the moisture level of a farmland block changes.")
                 .examples("on moisture change:",
                         "\tcancel event",
@@ -401,7 +492,7 @@ public class OtherEvents {
         }, EventValues.TIME_FUTURE);
 
         // Block Explode Event
-        Skript.registerEvent("Block Explode", SimpleEvent.class, BlockExplodeEvent.class, "block explode")
+        Skript.registerEvent("Block Explode", OtherEvents.class, BlockExplodeEvent.class, "block explode")
                 .description("Called when a block explodes interacting with blocks.",
                         "The event isn't called if the gamerule MOB_GRIEFING is disabled as no block interaction will occur.",
                         "The Block returned by this event is not necessarily the block that caused the explosion,",
@@ -444,7 +535,7 @@ public class OtherEvents {
         }, EventValues.TIME_PAST);
 
         // Leash Events
-        Skript.registerEvent("Player Leash", SimpleEvent.class, PlayerLeashEntityEvent.class, "player leash entity")
+        Skript.registerEvent("Player Leash", OtherEvents.class, PlayerLeashEntityEvent.class, "player leash entity")
                 .description("Called immediately prior to a creature being leashed by a player.",
                         "\n`event-entity` = Entity which got leashed.",
                         "\n`future event-entity` = The entity the leashed entity is leashed to (could be a player or leash hitch on a fence).",
@@ -474,7 +565,7 @@ public class OtherEvents {
             }
         }, EventValues.TIME_NOW);
 
-        Skript.registerEvent("Entity Unleash", SimpleEvent.class, EntityUnleashEvent.class, "entity unleash")
+        Skript.registerEvent("Entity Unleash", OtherEvents.class, EntityUnleashEvent.class, "entity unleash")
                 .description("Called immediately prior to an entity being unleashed.",
                         "Cancelling this event when either the leashed entity dies, the entity changes dimension, or",
                         "the client has disconnected the leash will have no effect.",
