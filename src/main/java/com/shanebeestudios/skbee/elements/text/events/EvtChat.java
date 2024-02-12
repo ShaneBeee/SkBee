@@ -5,10 +5,10 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import io.papermc.paper.event.player.AsyncChatEvent;
 
 @SuppressWarnings("unused")
-public class EvtChat {
+public class EvtChat extends SimpleEvent {
 
     static {
-        Skript.registerEvent("Async Chat", SimpleEvent.class, AsyncChatEvent.class, "async chat")
+        Skript.registerEvent("Async Chat", EvtChat.class, AsyncChatEvent.class, "async chat")
                 .description("An event fired when a Player sends a chat message to the server",
                         "for use with text components.",
                         "\nNOTE: Due to being async, some Skript things won't work and will fire errors (ex: setting a block).",
