@@ -1,10 +1,12 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.bukkitutil.EntityUtils;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -16,6 +18,8 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
@@ -41,25 +45,27 @@ public class ExprNamespacedKeyObject extends SimplePropertyExpression<Object, Na
         return LiteralUtils.canInitSafely(objects);
     }
 
+    @SuppressWarnings("ConstantValue")
     @Override
     public @Nullable NamespacedKey convert(Object object) {
         if (object instanceof Keyed keyed) {
             return keyed.getKey();
-        } else if (object instanceof ItemType itemType) {
-            return itemType.getMaterial().getKey();
-        } else if (object instanceof ItemStack itemStack) {
-            return itemStack.getType().getKey();
-        } else if (object instanceof Slot slot) {
-            ItemStack item = slot.getItem();
-            if (item != null) {
-                return item.getType().getKey();
-            }
         } else if (object instanceof Block block) {
             return block.getBlockData().getMaterial().getKey();
         } else if (object instanceof BlockData blockData) {
             return blockData.getMaterial().getKey();
         } else if (object instanceof Entity entity) {
             return entity.getType().getKey();
+        } else if (object instanceof EntityData<?> entityData) {
+            EntityType entityType = EntityUtils.toBukkitEntityType(entityData);
+            if (entityType != null) return entityType.getKey();
+        } else if (object instanceof ItemType itemType) {
+            return itemType.getMaterial().getKey();
+        } else if (object instanceof ItemStack itemStack) {
+            return itemStack.getType().getKey();
+        } else if (object instanceof Slot slot) {
+            ItemStack item = slot.getItem();
+            if (item != null) return item.getType().getKey();
         }
         return null;
     }
