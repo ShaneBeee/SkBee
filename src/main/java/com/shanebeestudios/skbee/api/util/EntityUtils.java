@@ -16,7 +16,7 @@ import java.lang.reflect.InvocationTargetException;
  */
 public class EntityUtils {
 
-    private static final Class<?> ENTITY_NMS_CLASS = ReflectionUtils.getNMSClass("Entity", "net.minecraft.world.entity");
+    private static final Class<?> ENTITY_NMS_CLASS = ReflectionUtils.getNMSClass("net.minecraft.world.entity.Entity");
     private static final boolean HAS_DAMAGE_SOURCE = Skript.classExists("org.bukkit.damage.DamageSource");
     private static final Constructor<EntityDamageEvent> DAMAGE_EVENT_CONSTRUCTOR;
 
