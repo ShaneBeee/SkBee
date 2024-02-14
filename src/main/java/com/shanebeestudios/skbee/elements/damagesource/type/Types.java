@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.damagesource.type;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.registrations.Classes;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
@@ -29,7 +30,8 @@ public class Types {
                         .user("damage ?sources?")
                         .name("Damage Source")
                         .description("Represents a source of damage. Requires MC 1.20.4+")
-                        .since("INSERT VERSION"));
+                        .since("INSERT VERSION")
+                        .parser(SkriptUtils.getDefaultParser()));
             }
         }
     }
