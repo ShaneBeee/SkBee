@@ -151,16 +151,6 @@ public class PaperEvents extends SimpleEvent {
 
         }
 
-        // Player Quit Event
-        if (Skript.methodExists(PlayerQuitEvent.class, "getReason")) {
-            EventValues.registerEventValue(PlayerQuitEvent.class, PlayerQuitEvent.QuitReason.class, new Getter<>() {
-                @Override
-                public @NotNull PlayerQuitEvent.QuitReason get(PlayerQuitEvent event) {
-                    return event.getReason();
-                }
-            }, 0);
-        }
-
         // Player Chunk Load Event
         if (Skript.classExists("io.papermc.paper.event.packet.PlayerChunkLoadEvent")) {
             Skript.registerEvent("Player Chunk Load", PaperEvents.class, PlayerChunkLoadEvent.class,

@@ -91,6 +91,10 @@ elements:
   # This is specifically for Minecraft 1.20.4+
   tick-manager: true
 
+  # Enable Damage Source elements
+  # This is specifically for Minecraft 1.20.4+
+  damage-source: true
+
 # Enable different event listeners for NBT
 nbt-events:
   # Whether breaking a block should remove NBT

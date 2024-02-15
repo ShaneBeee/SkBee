@@ -65,3 +65,6 @@ types:
 	armortrim: armor trim¦s
 	trimpattern: trim pattern¦s
 	trimmaterial: trim material¦s
+	machine: machine¦s
+	machineproperty: machine propert(y|ies)
+	damagesource: damage source¦s

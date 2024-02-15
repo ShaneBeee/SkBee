@@ -104,6 +104,7 @@ public class NBTApi {
                 cause = cause.replace("com.mojang.brigadier.exceptions.CommandSyntaxException", "MalformedNBT");
                 Util.skriptError("&cMessage: &e%s", cause);
             }
+            Util.errorForAdmins("Invalid NBT, please check console for more details.");
             return null;
         }
         return compound;

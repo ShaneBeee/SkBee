@@ -56,6 +56,7 @@ public class Config {
     public boolean ELEMENTS_FISHING;
     public boolean ELEMENTS_DISPLAY;
     public boolean ELEMENTS_TICK_MANAGER;
+    public boolean ELEMENTS_DAMAGE_SOURCE;
     public boolean AUTO_LOAD_WORLDS;
 
     public Config(SkBee plugin) {
@@ -165,6 +166,7 @@ public class Config {
         this.ELEMENTS_FISHING = getElement("fishing");
         this.ELEMENTS_DISPLAY = getElement("display-entity");
         this.ELEMENTS_TICK_MANAGER = getElement("tick-manager");
+        this.ELEMENTS_DAMAGE_SOURCE = getElement("damage-source");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
     }
 

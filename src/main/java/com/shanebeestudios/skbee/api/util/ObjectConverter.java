@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.util;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.BukkitUnsafe;
 import ch.njol.skript.bukkitutil.EntityUtils;
@@ -8,16 +9,21 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.SkBee;
+import org.bukkit.Bukkit;
+import org.bukkit.GameEvent;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Particle;
 import org.bukkit.Registry;
 import org.bukkit.Statistic;
+import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -91,6 +97,7 @@ public abstract class ObjectConverter<T> {
                 return null;
             }
         });
+        register(GameEvent.class, Registry.GAME_EVENT);
         register(ItemType.class, new ObjectConverter<>() {
             @Override
             public ItemType get(NamespacedKey key) {
@@ -99,6 +106,10 @@ public abstract class ObjectConverter<T> {
                 return null;
             }
         });
+        // Added in Spigot 1.20.2 (oct 20/2023)
+        if (Skript.methodExists(Particle.class, "getKey")) {
+            register(Particle.class, Registry.PARTICLE_TYPE);
+        }
         register(PotionEffectType.class, new ObjectConverter<>() {
             @SuppressWarnings("deprecation")
             @Override
@@ -106,6 +117,15 @@ public abstract class ObjectConverter<T> {
                 return PotionEffectType.getByKey(key);
             }
         });
+        // Paper method
+        if (Skript.methodExists(Bukkit.class, "getWorld", NamespacedKey.class)) {
+            register(World.class, new ObjectConverter<>() {
+                @Override
+                public World get(NamespacedKey key) {
+                    return Bukkit.getWorld(key);
+                }
+            });
+        }
         if (SkBee.getPlugin().getPluginConfig().ELEMENTS_STATISTIC)
             register(Statistic.class, Registry.STATISTIC);
     }
@@ -116,5 +136,6 @@ public abstract class ObjectConverter<T> {
      * @param key Key to get object from
      * @return Object from key
      */
+    @Nullable
     public abstract T get(NamespacedKey key);
 }

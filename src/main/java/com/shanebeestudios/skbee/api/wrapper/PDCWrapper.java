@@ -49,9 +49,9 @@ public class PDCWrapper {
         this.container.set(namespacedKey, type, value);
     }
 
-    private <T> T getValue(String key, PersistentDataType<T, T> type) {
+    private <T> @Nullable T getValue(String key, PersistentDataType<T, T> type) {
         NamespacedKey namespacedKey = getKey(key);
-        if (this.container.has(namespacedKey)) return this.container.get(namespacedKey, type);
+        if (this.container.has(namespacedKey, type)) return this.container.get(namespacedKey, type);
         return null;
     }
 
@@ -91,12 +91,8 @@ public class PDCWrapper {
      * @return Boolean from PDC (false if not set)
      */
     public boolean getBoolean(String key) {
-        NamespacedKey namespacedKey = getKey(key);
-        if (this.container.has(namespacedKey)) {
-            Byte aByte = this.container.get(namespacedKey, BYTE);
-            if (aByte != null) return aByte != 0;
-        }
-        return false;
+        Byte value = this.getValue(key, BYTE);
+        return value != null && value == 1;
     }
 
     /**

@@ -15,15 +15,15 @@ import java.lang.reflect.Method;
 public class ChatReflection {
 
     // Cache these classes/methods to prevent retrieving them too often
-    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("IChatBaseComponent", "net.minecraft.network.chat");
+    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("net.minecraft.network.chat.IChatBaseComponent");
     private static final Class<?> CRAFT_CHAT_MESSAGE_CLASS = ReflectionUtils.getOBCClass("util.CraftChatMessage");
     private static final Class<?> TEXT_TAG_VISITOR_CLASS;
-    private static final Class<?> NBT_BASE_CLASS = ReflectionUtils.getNMSClass("NBTBase", "net.minecraft.nbt");
+    private static final Class<?> NBT_BASE_CLASS = ReflectionUtils.getNMSClass("net.minecraft.nbt.NBTBase");
     private static final Method FROM_COMPONENT;
     private static final Method VISIT_METHOD;
 
     static {
-        TEXT_TAG_VISITOR_CLASS = ReflectionUtils.getNMSClass("TextComponentTagVisitor", "net.minecraft.nbt");
+        TEXT_TAG_VISITOR_CLASS = ReflectionUtils.getNMSClass("net.minecraft.nbt.TextComponentTagVisitor");
         Method from_comp = null;
         Method visit = null;
         try {
@@ -65,7 +65,7 @@ public class ChatReflection {
     // Cache these classes/methods to prevent retrieving them too often
     private static final Class<?> CRAFT_CHAT_MESSAGE = ReflectionUtils.getOBCClass("util.CraftChatMessage");
     private static final Class<?> CRAFT_TEAM = ReflectionUtils.getOBCClass("scoreboard.CraftTeam");
-    private static final Class<?> NMS_TEAM = ReflectionUtils.getNMSClass("ScoreboardTeam", "net.minecraft.world.scores");
+    private static final Class<?> NMS_TEAM = ReflectionUtils.getNMSClass("net.minecraft.world.scores.ScoreboardTeam");
     private static final Method SET_PREFIX;
     private static final Method SET_SUFFIX;
     private static final Method PREFIX_COMP_METHOD;
