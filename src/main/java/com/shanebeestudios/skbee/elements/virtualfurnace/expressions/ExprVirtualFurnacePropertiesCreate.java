@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("VirtualFurnace - Furnace Properties Create")
 @Description("Create furnace properties to be used in a virtual furnace.")
 @Examples("set {_prop} to furnace properties with cook speed multiplier 1.5 and fuel speed multiplier 0.5")
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprVirtualFurnacePropertiesCreate extends SimpleExpression<Properties> {
 
     static {

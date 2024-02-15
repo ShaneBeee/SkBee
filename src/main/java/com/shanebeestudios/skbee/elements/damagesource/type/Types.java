@@ -21,7 +21,7 @@ public class Types {
                                 "See <link>https://minecraft.wiki/w/Damage_type</link> for more details.",
                                 "Requires MC 1.20.4+")
                         .usage(DAMAGE_TYPE_REGISTRY.getNames())
-                        .since("INSERT VERSION")
+                        .since("3.3.0")
                         .parser(DAMAGE_TYPE_REGISTRY.getParser()));
             }
 
@@ -30,7 +30,7 @@ public class Types {
                         .user("damage ?sources?")
                         .name("Damage Source")
                         .description("Represents a source of damage. Requires MC 1.20.4+")
-                        .since("INSERT VERSION")
+                        .since("3.3.0")
                         .parser(SkriptUtils.getDefaultParser()));
             }
         }

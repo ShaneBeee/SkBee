@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
         "remove 1 minute from relative player time of player",
         "reset player time of player",
         "reset player time of all players"})
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprPlayerTime extends SimplePropertyExpression<Player, Object> {
 
     static {

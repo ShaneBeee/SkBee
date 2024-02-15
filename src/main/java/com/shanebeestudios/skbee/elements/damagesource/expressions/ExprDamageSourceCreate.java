@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
         "set {_source} to damage source of magic",
         "set {_source} to damage source of mob_attack_no_aggro caused by target entity of player",
         "damage player by 100 with {_source}"})
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprDamageSourceCreate extends SimpleExpression<DamageSource> {
 
     static {

@@ -12,7 +12,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("VirtualFurnace - UUID")
 @Description("Get the id/uuid of a virtual furnace.")
 @Examples("set {_uuid} to machine uuid of {_furnace}")
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprVirtualFurnaceMachineID extends SimplePropertyExpression<Machine, String> {
 
     static {

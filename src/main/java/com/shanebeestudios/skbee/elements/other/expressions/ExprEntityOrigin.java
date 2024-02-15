@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set {_loc} to origin of last spawned entity",
         "set {_loc} origin location of {_entity}",
         "if distance between {_entity} and origin of {_entity} > 10:"})
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprEntityOrigin extends SimplePropertyExpression<Entity, Location> {
 
     private static final boolean HAS_ORIGIN = Skript.methodExists(Entity.class, "getOrigin");

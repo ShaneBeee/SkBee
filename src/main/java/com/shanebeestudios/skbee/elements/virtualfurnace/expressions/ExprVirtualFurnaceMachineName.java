@@ -16,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Get/set the name of a virtual furnace.")
 @Examples({"set {_name} to machine name of {_furnace}",
         "set machine name of {_furnace} to \"Super Fast Furnace\""})
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprVirtualFurnaceMachineName extends SimplePropertyExpression<Machine, String> {
 
     static {

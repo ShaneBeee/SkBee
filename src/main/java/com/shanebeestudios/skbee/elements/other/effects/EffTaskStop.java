@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
         "",
         "on break:",
         "\tstop task with id {-id}"})
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class EffTaskStop extends Effect {
 
     private static final BukkitScheduler SCHEDULER = Bukkit.getScheduler();

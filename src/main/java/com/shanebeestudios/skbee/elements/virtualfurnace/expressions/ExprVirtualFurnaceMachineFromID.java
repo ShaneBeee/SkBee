@@ -24,7 +24,7 @@ import java.util.UUID;
 @Name("VirtualFurnace - Machine from ID")
 @Description("Get a virtual furnace from a uuid.")
 @Examples("set {_furnace} to virtual furnace from id {_uuid}")
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprVirtualFurnaceMachineFromID extends SimpleExpression<Machine> {
 
     static {

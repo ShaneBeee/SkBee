@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Represents furnace properties that mimic vanilla Minecraft properties.")
 @Examples({"set {_prop} to default furnace properties",
         "set {_furnace} to virtual furnace named \"Potato\" with properties {_prop}"})
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprVirtualFurnacePropertiesDefault extends SimpleExpression<Properties> {
 
     static {

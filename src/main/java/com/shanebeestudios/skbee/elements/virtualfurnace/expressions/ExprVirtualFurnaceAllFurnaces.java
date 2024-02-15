@@ -22,7 +22,7 @@ import java.util.List;
 @Name("VirtualFurnace - All Machines")
 @Description("Get all registered machines.")
 @Examples("set {_machines::*} to all virtual furnaces")
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprVirtualFurnaceAllFurnaces extends SimpleExpression<Machine> {
 
     static {

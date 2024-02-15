@@ -25,7 +25,7 @@ public class Types {
                 .name("VirtualFurnace - Machine")
                 .description("Represents a virtual machine. These machines tick on their own like a regular",
                         "vanilla Minecraft furnace except they can be loaded from anywhere and don't rely on chunks.")
-                .since("INSERT VERSION")
+                .since("3.3.0")
                 .parser(SkriptUtils.getDefaultParser())
                 .serializer(new Serializer<>() {
                     @Override
@@ -75,7 +75,7 @@ public class Types {
                 .user("machine ?propert(y|ies)")
                 .name("VirtualFurnace - Machine Properties")
                 .description("Represents the machine properties of a virtual machine.")
-                .since("INSERT VERSION")
+                .since("3.3.0")
                 .parser(SkriptUtils.getDefaultParser())
         );
     }

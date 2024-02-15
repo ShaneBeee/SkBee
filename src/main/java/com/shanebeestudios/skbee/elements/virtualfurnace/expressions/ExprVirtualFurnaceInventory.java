@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Get the inventory of a virtual furnace. Can be used to open for a player.")
 @Examples({"set {_inv} to virtual furnace inventory of {_furnace}",
         "open {_inv} to player"})
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprVirtualFurnaceInventory extends SimplePropertyExpression<Machine, Inventory> {
 
     static {

@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
         "\t\tbroadcast \"OUCHIE\"",
         "\tif causing entity of damage source is a chicken:",
         "\t\tbroadcast \"YOU JERK\""})
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprDamageSourceEvent extends SimpleExpression<DamageSource> {
 
     static {

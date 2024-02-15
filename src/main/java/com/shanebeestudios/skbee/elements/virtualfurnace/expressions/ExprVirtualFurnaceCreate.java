@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
         "",
         "set {_prop} to default furnace properties",
         "set {_furnace} to virtual furnace named \"Potato\" with properties {_prop}"})
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class ExprVirtualFurnaceCreate extends SimpleExpression<Furnace> {
 
     static {

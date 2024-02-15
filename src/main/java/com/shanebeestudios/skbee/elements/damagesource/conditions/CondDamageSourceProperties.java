@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("Represents some conditions of a damage source.")
 @Examples({"if damage source is indirect:",
         "if damage source is scaled with difficulty:"})
-@Since("INSERT VERSION")
+@Since("3.3.0")
 public class CondDamageSourceProperties extends PropertyCondition<DamageSource> {
 
     static {
