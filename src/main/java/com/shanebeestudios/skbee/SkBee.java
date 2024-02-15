@@ -8,6 +8,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bstats.bukkit.Metrics;
@@ -99,6 +100,8 @@ public class SkBee extends JavaPlugin {
 
     @Override
     public void onDisable() {
+        // Cancel tasks on stop to prevent async issues
+        SecRunTaskLater.cancelTasks();
         if (this.virtualFurnaceAPI != null) {
             this.virtualFurnaceAPI.disableAPI();
         }

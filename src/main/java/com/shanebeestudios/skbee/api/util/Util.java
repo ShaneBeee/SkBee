@@ -7,6 +7,7 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,6 +60,22 @@ public class Util {
     public static void skriptError(String format, Object... objects) {
         String error = String.format(format, objects);
         Skript.error(getColString(PREFIX_ERROR + error), ErrorQuality.SEMANTIC_ERROR);
+    }
+
+    /**
+     * Send an error to admins
+     * <p>Permission required: `skbee.admin`</p>
+     *
+     * @param format  Format of the message
+     * @param objects Objects to fill format
+     */
+    public static void errorForAdmins(String format, Object... objects) {
+        String error = PREFIX_ERROR + "&c" + format;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.hasPermission("skbee.admin")) {
+                sendColMsg(player, error, objects);
+            }
+        }
     }
 
     public static void debug(String format, Object... objects) {

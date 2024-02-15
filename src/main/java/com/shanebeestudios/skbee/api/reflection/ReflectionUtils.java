@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
@@ -12,21 +13,20 @@ import java.lang.reflect.Method;
 /**
  * Utility methods for reflection
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "CallToPrintStackTrace"})
 public class ReflectionUtils {
 
-    private static final String VERSION = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3] + ".";
-    private static final boolean NEW_NMS = Skript.isRunningMinecraft(1, 17);
+    private static final String CRAFTBUKKIT_PACKAGE = Bukkit.getServer().getClass().getPackage().getName();
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     /**
      * Get a CraftBukkit class
      *
-     * @param obcClassString String of craftbukkit class (everthing after revision number)
+     * @param obcClassString String of craftbukkit class (everything after "org.bukkit.craftbukkit")
      * @return CraftBukkit class
      */
-    public static Class<?> getOBCClass(String obcClassString) {
-        String name = "org.bukkit.craftbukkit." + VERSION + obcClassString;
+    public static @Nullable Class<?> getOBCClass(String obcClassString) {
+        String name = CRAFTBUKKIT_PACKAGE + "." + obcClassString;
         try {
             return Class.forName(name);
         } catch (ClassNotFoundException e) {
@@ -39,19 +39,13 @@ public class ReflectionUtils {
 
     /**
      * Get a Minecraft class
-     * <p>This supports both old Bukkit mappings as well as new Mojang mappings (as of MC 1.17)</p>
      *
-     * @param nmsClass   Name of class to get (ex: "Entity")
-     * @param nmsPackage Mapped Minecraft package (ex: "net.minecraft.world.entity")
+     * @param nmsClass Path of class to get (ex: "net.minecraft.world.entity.Entity")
      * @return Minecraft class
      */
-    public static Class<?> getNMSClass(String nmsClass, String nmsPackage) {
+    public static @Nullable Class<?> getNMSClass(String nmsClass) {
         try {
-            if (NEW_NMS) {
-                return Class.forName(nmsPackage + "." + nmsClass);
-            } else {
-                return Class.forName("net.minecraft.server." + VERSION + nmsClass);
-            }
+            return Class.forName(nmsClass);
         } catch (ClassNotFoundException e) {
             if (DEBUG) {
                 e.printStackTrace();
@@ -66,7 +60,7 @@ public class ReflectionUtils {
      * @param entity Bukkit entity to convert
      * @return Minecraft entity
      */
-    public static Object getNMSEntity(Entity entity) {
+    public static @Nullable Object getNMSEntity(Entity entity) {
         try {
             Method getHandle = entity.getClass().getMethod("getHandle");
             return getHandle.invoke(entity);
@@ -86,7 +80,7 @@ public class ReflectionUtils {
      * @param object Object which contains field
      * @return Object from field
      */
-    public static Object getField(String field, Class<?> clazz, Object object) {
+    public static @Nullable Object getField(String field, Class<?> clazz, Object object) {
         try {
             Field f = clazz.getDeclaredField(field);
             f.setAccessible(true);
