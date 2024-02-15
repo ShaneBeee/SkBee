@@ -21,7 +21,7 @@ public class Types {
 
     static {
         Classes.registerClass(new ClassInfo<>(Machine.class, "machine")
-                .user("")
+                .user("machines?")
                 .name("VirtualFurnace - Machine")
                 .description("Represents a virtual machine. These machines tick on their own like a regular",
                         "vanilla Minecraft furnace except they can be loaded from anywhere and don't rely on chunks.")
