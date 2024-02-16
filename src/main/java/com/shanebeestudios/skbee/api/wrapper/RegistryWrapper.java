@@ -95,9 +95,16 @@ public class RegistryWrapper<T extends Keyed> {
      */
     public String getNames() {
         List<String> keys = new ArrayList<>();
-        this.registry.iterator().forEachRemaining(object -> keys.add(toString(object)));
+        this.registry.iterator().forEachRemaining(object -> keys.add(getName(object)));
         Collections.sort(keys);
         return StringUtils.join(keys, ", ");
+    }
+
+    private String getName(T object) {
+        String key = object.getKey().getKey();
+        if (this.prefix != null && !this.prefix.isEmpty()) key = prefix + "_" + key;
+        if (this.suffix != null && !this.suffix.isEmpty()) key = key + "_" + suffix;
+        return key;
     }
 
     /**
