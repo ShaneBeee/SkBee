@@ -110,7 +110,7 @@ public class RegistryWrapper<T extends Keyed> {
         String key = object.getKey().getKey();
         if (this.prefix != null && !this.prefix.isEmpty()) key = prefix + "_" + key;
         if (this.suffix != null && !this.suffix.isEmpty()) key = key + "_" + suffix;
-        return key;
+        return object.getKey().getNamespace() + ":" + key;
     }
 
     /**
