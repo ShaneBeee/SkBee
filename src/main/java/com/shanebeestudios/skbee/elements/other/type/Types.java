@@ -16,9 +16,11 @@ import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.EntityEffect;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Spellcaster;
+import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
@@ -37,6 +39,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+@SuppressWarnings("rawtypes")
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
@@ -284,6 +287,15 @@ public class Types {
             Util.logLoading("It looks like another addon registered 'EntityEffect' already.");
             Util.logLoading("You may have to use their EntityEffects in SkBee's 'play entity effect' effect.");
         }
+
+        RegistryWrapper<MemoryKey> MEMORY_REGISTRY = RegistryWrapper.wrap(Registry.MEMORY_MODULE_TYPE);
+        Classes.registerClass(new ClassInfo<>(MemoryKey.class, "memory")
+                .user("memor(y|ies)")
+                .name("Memory")
+                .description("Represents the different memories of an entity.")
+                .usage(MEMORY_REGISTRY.getNames())
+                .parser(MEMORY_REGISTRY.getParser()));
+
     }
 
 }
