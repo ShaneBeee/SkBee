@@ -92,6 +92,11 @@ public class ExprItemFlags extends PropertyExpression<ItemType, ItemFlag> {
     }
 
     @Override
+    public boolean isSingle() {
+        return false;
+    }
+
+    @Override
     public @NotNull Class<? extends ItemFlag> getReturnType() {
         return ItemFlag.class;
     }
