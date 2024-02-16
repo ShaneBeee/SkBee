@@ -26,13 +26,23 @@ import java.util.List;
 public class RegistryWrapper<T extends Keyed> {
 
     /**
-     * Wrap a registry with optional prefix and suffix
+     * Wrap a registry
      *
      * @param registryClass Class of registry to wrap
      * @return Wrapped registry
      */
     public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Class<T> registryClass) {
         return wrap(registryClass, null, null);
+    }
+
+    /**
+     * Wrap a registry
+     *
+     * @param registry Registry to wrap
+     * @return Wrapped registry
+     */
+    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Registry<T> registry) {
+        return wrap(registry, null, null);
     }
 
     /**
@@ -47,6 +57,19 @@ public class RegistryWrapper<T extends Keyed> {
         return new RegistryWrapper<>(registryClass, prefix, suffix);
     }
 
+    /**
+     * Wrap a registry with optional prefix and suffix
+     *
+     * @param registry Registry to wrap
+     * @param prefix        Optional prefix to prepend to items in registry
+     * @param suffix        Optional suffix to append to items in registry
+     * @return Wrapped registry
+     */
+    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Registry<T> registry, @Nullable String prefix, @Nullable String suffix) {
+        return new RegistryWrapper<>(registry, prefix, suffix);
+    }
+
+
     private final Registry<T> registry;
     @Nullable
     private final String prefix, suffix;
@@ -56,6 +79,13 @@ public class RegistryWrapper<T extends Keyed> {
         this.prefix = prefix;
         this.suffix = suffix;
         Comparators.registerComparator(registryClass, registryClass, (o1, o2) -> Relation.get(o1.equals(o2)));
+    }
+
+    private RegistryWrapper(Registry<T> registry, @Nullable String prefix, @Nullable String suffix) {
+        this.registry = registry;
+        this.prefix = prefix;
+        this.suffix = suffix;
+        Comparators.registerComparator(registry.getClass(), registry.getClass(), (o1, o2) -> Relation.get(o1.equals(o2)));
     }
 
     /**
