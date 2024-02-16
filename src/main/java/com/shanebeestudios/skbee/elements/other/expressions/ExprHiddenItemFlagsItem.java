@@ -5,42 +5,35 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.elements.other.type.OldItemFlag;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Item with Hidden Item Flags")
-@Description("Hides the item flags on items, allowing you to make super duper custom items.")
-@Examples({"set player's tool to player's tool with attributes flag hidden",
-        "give player 1 of diamond sword of sharpness 5 with hidden enchants flag",
-        "set {_tool} to player's tool with all flags hidden",
-        "give player potion of harming with hidden potion effects flag",
-        "set {_b} to leather boots with dye flag hidden",
-        "set {_i} to diamond sword of unbreaking 3 with all flags hidden",
-        "set {_i} to unbreakable netherite pickaxe with hidden unbreakable flag",
-        "set {_i} to unbreakable diamond sword of sharpness 3 with unbreakable flag and enchants flag hidden"})
-@Since("1.0.0")
+@NoDoc
+@Deprecated // deprecated on Feb 16/2024
 public class ExprHiddenItemFlagsItem extends SimpleExpression<ItemType> {
 
     static {
         Skript.registerExpression(ExprHiddenItemFlagsItem.class, ItemType.class, ExpressionType.PROPERTY,
                 "%itemtype% with all flag[s] hidden",
-                "%itemtype% with %itemflags% hidden",
-                "%itemtype% with hidden %itemflags%");
+                "%itemtype% with %olditemflags% hidden",
+                "%itemtype% with hidden %olditemflags%");
     }
 
     @SuppressWarnings("null")
     private boolean flagType;
     private Expression<ItemType> itemType;
-    private Expression<ItemFlag> itemFlag;
+    private Expression<OldItemFlag> itemFlag;
 
     @SuppressWarnings({"unchecked", "null", "NullableProblems"})
     @Override
@@ -48,22 +41,29 @@ public class ExprHiddenItemFlagsItem extends SimpleExpression<ItemType> {
         this.itemType = (Expression<ItemType>) exprs[0];
         this.flagType = matchedPattern > 0;
         if (this.flagType) {
-            this.itemFlag = (Expression<ItemFlag>) exprs[1];
+            this.itemFlag = (Expression<OldItemFlag>) exprs[1];
+        }
+        if (matchedPattern == 0) {
+            Skript.warning("'" + parseResult.expr + "' is deprecated, please use new expression: '" +
+                    "%itemtype% with all item[ ]flags'");
+        } else {
+            Skript.warning("'" + parseResult.expr + "' is deprecated, please use new expression: '" +
+                    "%itemtype% with item[ ]flag[s] %itemflags%'");
         }
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable ItemType[] get(Event event) {
+    protected ItemType @Nullable [] get(Event event) {
         ItemType item = this.itemType.getSingle(event);
         if (item == null) return null;
 
         item = item.clone();
         ItemMeta meta = item.getItemMeta();
         if (flagType) {
-            for (ItemFlag flag : this.itemFlag.getArray(event)) {
-                meta.addItemFlags(flag);
+            for (OldItemFlag flag : this.itemFlag.getArray(event)) {
+                meta.addItemFlags(flag.getBukkitItemFlag());
             }
         } else {
             meta.addItemFlags(ItemFlag.values());

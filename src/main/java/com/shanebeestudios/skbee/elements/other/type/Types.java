@@ -7,7 +7,6 @@ import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
@@ -32,68 +31,55 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
-@SuppressWarnings("rawtypes")
+@SuppressWarnings({"rawtypes", "deprecation"})
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
     public static boolean HAS_CHUNK_LOAD_LEVEL = Skript.classExists("org.bukkit.Chunk$LoadLevel");
-    private static final Map<String, ItemFlag> ITEM_FLAG_MAP = new HashMap<>();
-
-    private static String getItemFlagNames() {
-        List<String> flags = new ArrayList<>(ITEM_FLAG_MAP.keySet());
-        Collections.sort(flags);
-        return StringUtils.join(flags, ", ");
-    }
 
     static {
+        // TODO marked for removal on Feb 16/2024
+        Classes.registerClass(new ClassInfo<>(OldItemFlag.class, "olditemflag")
+                .user("old ?item ?flags?")
+                .name(ClassInfo.NO_DOC)
+                .parser(new Parser<>() {
+                    @Override
+                    public boolean canParse(@NotNull ParseContext context) {
+                        return context == ParseContext.DEFAULT;
+                    }
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public @Nullable OldItemFlag parse(String string, ParseContext context) {
+                        OldItemFlag parse = OldItemFlag.parse(string);
+                        if (parse == null) return null;
+                        Skript.warning("Old item flags are deprecated and scheduled for removal!");
+                        return parse;
+                    }
+
+                    @Override
+                    public @NotNull String toString(OldItemFlag itemFlag, int flags) {
+                        return itemFlag.getName();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(OldItemFlag itemFlag) {
+                        return toString(itemFlag, 0);
+                    }
+                }));
+
         if (Classes.getExactClassInfo(ItemFlag.class) == null) {
-            for (ItemFlag itemFlag : ItemFlag.values()) {
-                String name = itemFlag.name().replace("HIDE_", "").toLowerCase(Locale.ROOT) + "_flag";
-                ITEM_FLAG_MAP.put(name, itemFlag);
-            }
-            Classes.registerClass(new ClassInfo<>(ItemFlag.class, "itemflag")
+            EnumWrapper<ItemFlag> ITEM_FLAGS = new EnumWrapper<>(ItemFlag.class);
+            Classes.registerClass(ITEM_FLAGS.getClassInfo("itemflag")
                     .user("item ?flags?")
-                    .name("Item Flag")
-                    .description("Represents the different Item Flags that can be applied to an item.",
+                    .name("ItemFlag")
+                    .description("Represents the different ItemFlags that can be applied to an item.",
                             "NOTE: Underscores aren't required, you CAN use spaces.")
-                    .usage(getItemFlagNames())
-                    .since("2.1.0")
-                    .parser(new Parser<>() {
-
-                        @Override
-                        public boolean canParse(@NotNull ParseContext context) {
-                            return true;
-                        }
-
-                        @SuppressWarnings("NullableProblems")
-                        @Override
-                        public @Nullable ItemFlag parse(String string, ParseContext context) {
-                            String flag = string.replace(" ", "_");
-                            if (ITEM_FLAG_MAP.containsKey(flag)) return ITEM_FLAG_MAP.get(flag);
-                            return null;
-                        }
-
-                        @Override
-                        public @NotNull String toString(ItemFlag itemFlag, int flags) {
-                            String flag = itemFlag.name().replace("HIDE_", "") + "_FLAG";
-                            return flag.toLowerCase(Locale.ROOT);
-                        }
-
-                        @Override
-                        public @NotNull String toVariableNameString(ItemFlag itemFlag) {
-                            return toString(itemFlag, 0);
-                        }
-                    }));
+                    .since("INSERT VERSION"));
         } else {
             Util.logLoading("It looks like another addon registered 'itemflag' already.");
-            Util.logLoading("You may have to use their Item Flags in SkBee's 'Hidden Item Flags' expression.");
+            Util.logLoading("You may have to use their ItemFlags in SkBee's 'Item Flags' expressions.");
         }
 
         // Only register if no other addons have registered this class
