@@ -20,9 +20,11 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.entity.memory.MemoryKey;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
@@ -281,6 +283,24 @@ public class Types {
                 .description("Represents the different memories of an entity.")
                 .usage(MEMORY_REGISTRY.getNames())
                 .parser(MEMORY_REGISTRY.getParser()));
+
+        if (Classes.getExactClassInfo(EquipmentSlot.class) == null) {
+            EnumWrapper<EquipmentSlot> SLOT_ENUM = new EnumWrapper<>(EquipmentSlot.class, null, "slot");
+            Classes.registerClass(SLOT_ENUM.getClassInfo("equipmenslot")
+                    .user("equipment ?slots?")
+                    .name("Equipment Slot")
+                    .description("")
+                    .since("INSERT VERSION"));
+        }
+
+        if (Classes.getExactClassInfo(Action.class) == null) {
+            EnumWrapper<Action> ACTION_ENUM = new EnumWrapper<>(Action.class);
+            Classes.registerClass(ACTION_ENUM.getClassInfo("blockaction")
+                    .user("block ?actions?")
+                    .name("Block Action")
+                    .description("")
+                    .since("INSERT VERSION"));
+        }
 
     }
 
