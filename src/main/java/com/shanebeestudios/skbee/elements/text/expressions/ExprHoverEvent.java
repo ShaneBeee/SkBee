@@ -32,7 +32,7 @@ import java.util.UUID;
 @Description({"Create a new hover event. Can show texts, text components, an item or an entity to a player.",
         "'showing %itemtype%' requires Minecraft 1.18.2+"})
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
-        "set hover event of {_t} to a new hover event showing player's tool",
+        "add hover event showing player's tool to {_t}",
         "send component {_t} to player"})
 @Since("1.5.0")
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
@@ -41,18 +41,15 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
     static {
         Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
-                // TODO scheduled for removal of "item" (july 8/2023)
-                "[a] [new] hover event showing [item] %strings/textcomponents/itemtypes/entities%");
+                "[a] [new] hover event showing %strings/textcomponents/itemtypes/entities%");
     }
 
     private Expression<?> object;
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.object = exprs[0];
-        if (parseResult.expr.contains("showing item")) {
-            Skript.warning("'item' is no longer required and subject for removal.");
-        }
         return true;
     }
 
@@ -98,6 +95,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
         return HoverEvent.class;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "hover event showing " + this.object.toString(e, d);

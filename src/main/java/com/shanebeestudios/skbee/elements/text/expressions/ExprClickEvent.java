@@ -7,7 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
@@ -15,15 +15,15 @@ import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.ClickEvent.Action;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.Objects;
 
 @Name("Text Component - Click Event")
 @Description("Create a new click event. Supports run command, suggest command, open link and copy to clipboard.")
 @Examples({"set {_t} to text component from \"Check out my cool website\"",
-        "set hover event of {_t} to a new hover event showing \"Clicky clicky to go to spawn!\"",
-        "set click event of {_t} to a new click event to open url \"https://my.cool.website\"",
+        "add hover event showing \"Clicky clicky to go to spawn!\" to {_t}",
+        "add click event to open url \"https://my.cool.website\" to {_t}",
         "send component {_t} to player"})
 @Since("1.5.0")
 public class ExprClickEvent extends SimpleExpression<ClickEvent> {
@@ -45,7 +45,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = matchedPattern;
         if (pattern == 3 && !SUPPORTS_CLIPBOARD) {
             Skript.error("'click event to copy %string% to clipboard' is not supported on your server version", ErrorQuality.SEMANTIC_ERROR);
@@ -57,7 +57,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected ClickEvent[] get(Event event) {
+    protected ClickEvent @Nullable [] get(Event event) {
         if (object == null) return null;
 
         Object value = object.getSingle(event);
@@ -89,6 +89,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
         return ClickEvent.class;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String[] actions = new String[]{"run command", "suggest command", "open url", "copy to clipboard", "change to page"};
