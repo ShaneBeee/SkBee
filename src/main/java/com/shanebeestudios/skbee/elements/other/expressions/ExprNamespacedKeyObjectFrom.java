@@ -37,26 +37,28 @@ public class ExprNamespacedKeyObjectFrom extends SimpleExpression<Object> {
 
     private Literal<ClassInfo<?>> classInfo;
     private Expression<NamespacedKey> namespacedKey;
+    private ObjectConverter<?> objectConverter;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.classInfo = (Literal<ClassInfo<?>>) exprs[0];
         this.namespacedKey = (Expression<NamespacedKey>) exprs[1];
+        this.objectConverter = ObjectConverter.getFromClass(this.classInfo.getSingle().getC());
+        if (this.objectConverter == null) {
+            Skript.error("SkBee does not have a NamespacedKey converter for '" + this.classInfo.toString() + "'");
+            return false;
+        }
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable Object[] get(Event event) {
-        ClassInfo<?> classInfo = this.classInfo.getSingle();
-        if (classInfo == null) return null;
-
+    protected Object @Nullable [] get(Event event) {
         List<Object> objects = new ArrayList<>();
 
         for (NamespacedKey key : this.namespacedKey.getArray(event)) {
-            ObjectConverter<?> converter = ObjectConverter.getFromClass(classInfo.getC());
-            if (converter != null) objects.add(converter.get(key));
+            objects.add(this.objectConverter.get(key));
         }
 
         return objects.toArray(new Object[0]);
@@ -72,6 +74,7 @@ public class ExprNamespacedKeyObjectFrom extends SimpleExpression<Object> {
         return this.classInfo.getSingle().getC();
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return this.classInfo.toString(e, d) + " from key " + this.namespacedKey.toString(e, d);
