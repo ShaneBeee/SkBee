@@ -24,7 +24,8 @@ import java.util.List;
 @Name("Object from NamespacedKey")
 @Description({"Get an object from a namespaced key.",
         "This may come in handy in an instance you have a string version that doesn't match Skript and can't be parsed.",
-        "\nCurrently supported types: attribute type, biome, enchantment, entity type, item type, potion effect type, statistic."})
+        "\nCurrently supported types: attribute, biome, damage type, enchantment, entity type, game event, item type, " +
+                "particle, potion effect type, statistic, world."})
 @Examples({"set {_n} to mc key from \"minecraft:zombie\"",
         "set {_e} to entity type from key {_n}"})
 @Since("2.17.0")
