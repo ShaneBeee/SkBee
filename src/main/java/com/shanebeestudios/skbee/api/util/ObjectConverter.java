@@ -23,6 +23,7 @@ import org.bukkit.block.Biome;
 import org.bukkit.damage.DamageType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.loot.LootTable;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
@@ -108,6 +109,12 @@ public abstract class ObjectConverter<T> {
                 Material mat = BukkitUnsafe.getMaterialFromMinecraftId(key.toString());
                 if (mat != null) return new ItemType(mat);
                 return null;
+            }
+        });
+        register(LootTable.class, new ObjectConverter<>() {
+            @Override
+            public @Nullable LootTable get(NamespacedKey key) {
+                return Bukkit.getLootTable(key);
             }
         });
         // Added in Spigot 1.20.2 (oct 20/2023)

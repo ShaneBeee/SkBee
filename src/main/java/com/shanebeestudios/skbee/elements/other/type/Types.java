@@ -29,6 +29,7 @@ import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.loot.LootTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -302,6 +303,31 @@ public class Types {
                     .since("INSERT VERSION"));
         }
 
+        if (Classes.getExactClassInfo(LootTable.class) == null) {
+            Classes.registerClass(new ClassInfo<>(LootTable.class, "loottable")
+                    .user("loot ?tables?")
+                    .name("LootTable")
+                    .description("Represents a LootTable.")
+                    .examples("set {_table} to loottable from key \"minecraft:chests/ancient_city\"")
+                    .since("INSERT VERSION")
+                    .parser(new Parser<>() {
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public @Nullable LootTable parse(String string, ParseContext context) {
+                            return null;
+                        }
+
+                        @Override
+                        public @NotNull String toString(LootTable lootTable, int flags) {
+                            return "LootTable{" + lootTable.getKey() + "}";
+                        }
+
+                        @Override
+                        public @NotNull String toVariableNameString(LootTable lootTable) {
+                            return "loottable:" + lootTable.getKey();
+                        }
+                    }));
+        }
     }
 
 }
