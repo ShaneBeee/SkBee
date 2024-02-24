@@ -268,16 +268,6 @@ public class PaperEvents extends SimpleEvent {
                     .since("2.7.2");
         }
 
-        // Entity Removed from World Event
-        if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent")) {
-            Skript.registerEvent("Entity Remove from World", PaperEvents.class, EntityRemoveFromWorldEvent.class,
-                            "entity remove[d] from world")
-                    .description("Fired any time an entity is being removed from a world for any reason. Requires a PaperMC server.")
-                    .examples("on entity removed from world:",
-                            "\tbroadcast \"a lonely %event-entity% left the world.\"")
-                    .since("2.7.2");
-        }
-
         // == BLOCK EVENTS == //
 
         // Beacon Effect Event

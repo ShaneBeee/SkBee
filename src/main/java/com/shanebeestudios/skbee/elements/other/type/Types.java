@@ -22,6 +22,7 @@ import org.bukkit.entity.Spellcaster;
 import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
+import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.bukkit.inventory.EquipmentSlot;
@@ -327,6 +328,16 @@ public class Types {
                             return "loottable:" + lootTable.getKey();
                         }
                     }));
+        }
+
+        if (Skript.classExists("org.bukkit.event.entity.EntityRemoveEvent") && Classes.getExactClassInfo(EntityRemoveEvent.Cause.class) == null) {
+            EnumWrapper<EntityRemoveEvent.Cause> CAUSE_ENUM = new EnumWrapper<>(EntityRemoveEvent.Cause.class);
+            Classes.registerClass(CAUSE_ENUM.getClassInfo("removecause")
+                    .user("remove ?causes?")
+                    .name("Remove Cause")
+                    .description("Represents the reasons an entity was removed from the world.")
+                    .after("damagecause", "damagetype")
+                    .since("INSERT VERSION"));
         }
     }
 

@@ -8,6 +8,7 @@ import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
+import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -29,6 +30,7 @@ import org.bukkit.event.block.MoistureChangeEvent;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntitySpellCastEvent;
 import org.bukkit.event.entity.EntityTeleportEvent;
@@ -504,6 +506,35 @@ public class OtherEvents extends SimpleEvent {
                 return null;
             }
         }, EventValues.TIME_NOW);
+
+        // Entity Remove Event
+        Class<? extends Event> eventClass = null;
+        boolean bukkitRemoveEvent = false;
+        if (Skript.classExists("org.bukkit.event.entity.EntityRemoveEvent")) {
+            eventClass = EntityRemoveEvent.class;
+            bukkitRemoveEvent = true;
+        } else if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent")) {
+            eventClass = EntityRemoveFromWorldEvent.class;
+        }
+        if (eventClass != null) {
+            Skript.registerEvent("Entity Remove from World", OtherEvents.class, eventClass,
+                            "entity remove[d] [from world]")
+                    .description("Fired any time an entity is being removed from a world for any reason.",
+                            "Requires a PaperMC server or Spigot 1.20.4+ server.",
+                            "`event-removecause` = The reason the entity was removed (requires MC 1.20.4+).")
+                    .examples("on entity removed from world:",
+                            "\tbroadcast \"a lonely %event-entity% left the world.\"")
+                    .since("2.7.2");
+
+            if (bukkitRemoveEvent) {
+                EventValues.registerEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class, new Getter<>() {
+                    @Override
+                    public EntityRemoveEvent.Cause get(EntityRemoveEvent event) {
+                        return event.getCause();
+                    }
+                }, EventValues.TIME_NOW);
+            }
+        }
     }
 
 }
