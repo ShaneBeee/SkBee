@@ -51,7 +51,7 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable String[] get(Event event) {
+    protected String @Nullable [] get(Event event) {
         Number lineNumber = this.line.getSingle(event);
         if (lineNumber == null) return null;
         int line = lineNumber.intValue();
@@ -61,14 +61,15 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
         for (Player player : this.player.getArray(event)) {
             FastBoardWrapper board = BoardManager.getBoard(player);
             if (board != null) {
-                lines.add(board.getLine(line));
+                String boardLine = board.getLine(line);
+                if (boardLine != null) lines.add(boardLine);
             }
         }
         return lines.toArray(new String[0]);
     }
 
     @Override
-    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {
             case SET, DELETE -> CollectionUtils.array(String.class);
             default -> null;
@@ -108,6 +109,7 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
         return String.class;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "line " + this.line.toString(e, d) + " of scoreboard[s] of " + this.player.toString(e, d);

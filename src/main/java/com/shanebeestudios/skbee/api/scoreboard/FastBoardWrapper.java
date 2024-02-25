@@ -1,12 +1,16 @@
 package com.shanebeestudios.skbee.api.scoreboard;
 
+import com.shanebeestudios.skbee.SkBee;
 import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class FastBoardWrapper {
+
+    private static final boolean REVERSE = SkBee.getPlugin().getPluginConfig().SETTINGS_SCOREBOARD_LINES;
 
     private final Player player;
     private FastBoard fastBoard;
@@ -33,20 +37,21 @@ public class FastBoardWrapper {
         return this.title;
     }
 
-    public void setLine(int line, String value) {
-        if (line > 15 || line < 1) return;
+    public void setLine(int lineNumber, String value) {
+        if (lineNumber > 15 || lineNumber < 1) return;
 
         // Only update if line changes
-        String l = this.lines[15 - line];
-        if (l != null && l.equals(value)) return;
+        String line = this.lines[REVERSE ? 15 - lineNumber : lineNumber - 1];
+        if (line != null && line.equals(value)) return;
 
-        this.lines[15 - line] = value;
+        this.lines[REVERSE ? 15 - lineNumber : lineNumber - 1] = value;
         if (!visible) return;
         updateLines();
     }
 
-    public String getLine(int line) {
-        return this.lines[15 - line];
+    public @Nullable String getLine(int lineNumber) {
+        if (lineNumber > 15 || lineNumber < 1) return null;
+        return this.lines[REVERSE ? 15 - lineNumber : lineNumber - 1];
     }
 
     public void deleteLine(int line) {
