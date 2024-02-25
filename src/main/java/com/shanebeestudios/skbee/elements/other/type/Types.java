@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
 
-@SuppressWarnings({"rawtypes", "deprecation"})
+@SuppressWarnings({"rawtypes", "deprecation", "removal"})
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");

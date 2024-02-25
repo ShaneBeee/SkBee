@@ -48,7 +48,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Locale;
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "removal"})
 public class OtherEvents extends SimpleEvent {
 
     static {
