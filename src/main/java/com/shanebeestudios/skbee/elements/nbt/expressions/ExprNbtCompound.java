@@ -48,9 +48,9 @@ import org.jetbrains.annotations.NotNull;
         "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created.",
         "",
         "CHANGERS:",
-        "\t`add` = Adding a compound to another compound will merge them. (This is controlled by Minecraft, results may vary.)",
-        "\t`delete` = Only used on NBT Files, will delete the file.",
-        "\t`reset` = Will clear the NBT compound. (This can break entities/players, be careful!)"})
+        "\t`add` = Adding a compound to another compound will merge them (This is controlled by Minecraft, results may vary).",
+        "\t`delete` = Will delete NBT files, or clear the NBT compound (This can break entities/players, be careful!).",
+        "\t`reset` = Will clear the NBT compound (This can break entities/players, be careful!)"})
 @Examples({"set {_n} to nbt of player's tool",
         "set {_n} to full nbt of player's tool",
         "set {_nbt} to nbt of target entity",
@@ -103,7 +103,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 if (block.getState() instanceof TileState tileState) {
                     compound = new NBTCustomTileEntity(tileState);
                 } else if (NBTApi.supportsBlockNBT()) {
-                    compound = new NBTCustomBlock(block).getData();
+                    compound = new NBTCustomBlock(block);
                 }
             } else if (object instanceof Player player) {
                 compound = new NBTCustomEntity(player);

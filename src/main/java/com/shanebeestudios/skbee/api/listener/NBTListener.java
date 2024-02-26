@@ -100,7 +100,7 @@ public class NBTListener implements Listener {
         NBTCompound chunkContainer = new NBTChunk(block.getChunk()).getPersistentDataContainer();
 
         if (chunkContainer.hasTag("blocks")) {
-            NBTCompound blocksContainer = chunkContainer.getCompound("blocks");
+            NBTCompound blocksContainer = chunkContainer.getOrCreateCompound("blocks");
             removeNBT(blocksContainer, block);
 
             // Process joined blocks (ie: doors)
@@ -108,6 +108,7 @@ public class NBTListener implements Listener {
                 BlockFace face = bisected.getHalf() == Bisected.Half.BOTTOM ? BlockFace.UP : BlockFace.DOWN;
                 removeNBT(blocksContainer, block.getRelative(face));
             }
+            if (blocksContainer.getKeys().isEmpty()) chunkContainer.removeKey("blocks");
         }
     }
 
