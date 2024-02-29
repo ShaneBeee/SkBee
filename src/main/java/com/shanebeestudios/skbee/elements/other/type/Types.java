@@ -288,7 +288,7 @@ public class Types {
 
         if (Classes.getExactClassInfo(EquipmentSlot.class) == null) {
             EnumWrapper<EquipmentSlot> SLOT_ENUM = new EnumWrapper<>(EquipmentSlot.class, null, "slot");
-            Classes.registerClass(SLOT_ENUM.getClassInfo("equipmenslot")
+            Classes.registerClass(SLOT_ENUM.getClassInfo("equipmentslot")
                     .user("equipment ?slots?")
                     .name("Equipment Slot")
                     .description("")
