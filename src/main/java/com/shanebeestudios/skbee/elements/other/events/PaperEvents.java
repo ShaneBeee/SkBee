@@ -6,21 +6,19 @@ import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Experience;
 import ch.njol.skript.util.Getter;
-import com.destroystokyo.paper.event.block.AnvilDamagedEvent;
 import com.destroystokyo.paper.event.block.BeaconEffectEvent;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
-import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
-import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.event.block.BeaconActivatedEvent;
 import io.papermc.paper.event.block.BeaconDeactivatedEvent;
+import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
@@ -29,8 +27,6 @@ import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.event.player.PlayerQuitEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
@@ -315,6 +311,27 @@ public class PaperEvents extends SimpleEvent {
                     .examples("on beacon activation",
                             "\tset primary effect of event-block to strength")
                     .since("2.16.0");
+        }
+
+        if (Skript.classExists("io.papermc.paper.event.entity.EntityInsideBlockEvent")) {
+            Skript.registerEvent("Entity Inside Block", PaperEvents.class, EntityInsideBlockEvent.class, "entity inside block")
+                    .description("Called when an entity enters the hitbox of a block.",
+                            "Only called for blocks that react when an entity is inside.",
+                            "If cancelled, any action that would have resulted from that entity being in the block will not happen (such as extinguishing an entity in a cauldron).",
+                            "Currently called for: Big dripleaf, Bubble column, Buttons, Cactus, Campfire, Cauldron, Crops, Ender Portal, Fires, Frogspawn, Honey, Hopper, Detector rails,",
+                            "Nether portals, Pitcher crop, Powdered snow, Pressure plates, Sweet berry bush, Tripwire, Waterlily, Web, Wither rose")
+                    .examples("on entity inside block:",
+                            "\tif event-block is a cactus:",
+                            "\t\tcancel event",
+                            "\t\tbroadcast \"OUCHIE\"")
+                    .since("INSERT VERSION");
+
+            EventValues.registerEventValue(EntityInsideBlockEvent.class, Block.class, new Getter<>() {
+                @Override
+                public Block get(EntityInsideBlockEvent event) {
+                    return event.getBlock();
+                }
+            }, EventValues.TIME_NOW);
         }
 
     }
