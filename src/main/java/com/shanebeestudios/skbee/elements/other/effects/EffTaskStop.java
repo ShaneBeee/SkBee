@@ -51,6 +51,13 @@ public class EffTaskStop extends Effect {
         if (matchedPattern == 2) {
             this.ids = (Expression<Number>) exprs[0];
         }
+        if (matchedPattern == 1) {
+            for (TriggerSection currentSection : ParserInstance.get().getCurrentSections()) {
+                if (currentSection instanceof SecRunTaskLater) return true;
+            }
+            Skript.error("'stop current task' can only be used in a run task section.");
+            return false;
+        }
         return true;
     }
 
@@ -60,8 +67,13 @@ public class EffTaskStop extends Effect {
         switch (this.pattern) {
             case 0 -> SecRunTaskLater.cancelTasks();
             case 1 -> {
-                for (TriggerSection currentSection : ParserInstance.get().getCurrentSections()) {
-                    if (currentSection instanceof SecRunTaskLater runTaskLater) runTaskLater.stopCurrentTask();
+                TriggerSection parent = getParent();
+                while (parent != null) {
+                    if (parent instanceof SecRunTaskLater runTaskLater) {
+                        runTaskLater.stopCurrentTask();
+                        return;
+                    }
+                    parent = parent.getParent();
                 }
             }
             case 2 -> {
