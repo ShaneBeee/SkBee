@@ -333,9 +333,9 @@ public class Types {
 
         if (Skript.classExists("org.bukkit.event.entity.EntityRemoveEvent") && Classes.getExactClassInfo(EntityRemoveEvent.Cause.class) == null) {
             EnumWrapper<EntityRemoveEvent.Cause> CAUSE_ENUM = new EnumWrapper<>(EntityRemoveEvent.Cause.class);
-            Classes.registerClass(CAUSE_ENUM.getClassInfo("removecause")
-                    .user("remove ?causes?")
-                    .name("Remove Cause")
+            Classes.registerClass(CAUSE_ENUM.getClassInfo("entityremovecause")
+                    .user("entity ?remove ?causes?")
+                    .name("Entity Remove Cause")
                     .description("Represents the reasons an entity was removed from the world.")
                     .after("damagecause", "damagetype")
                     .since("INSERT VERSION"));

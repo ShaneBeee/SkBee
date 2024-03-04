@@ -522,7 +522,7 @@ public class OtherEvents extends SimpleEvent {
                             "entity remove[d] [from world]")
                     .description("Fired any time an entity is being removed from a world for any reason.",
                             "Requires a PaperMC server or Spigot 1.20.4+ server.",
-                            "`event-removecause` = The reason the entity was removed (requires MC 1.20.4+).")
+                            "`event-entityremovecause` = The reason the entity was removed (requires MC 1.20.4+).")
                     .examples("on entity removed from world:",
                             "\tbroadcast \"a lonely %event-entity% left the world.\"")
                     .since("2.7.2");
