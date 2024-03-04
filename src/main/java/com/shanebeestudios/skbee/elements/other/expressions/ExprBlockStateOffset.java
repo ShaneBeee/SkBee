@@ -10,7 +10,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
+import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
@@ -30,12 +30,12 @@ public class ExprBlockStateOffset extends SimpleExpression<Vector> {
                 "block[ ]state offset[s] of %blockstates%");
     }
 
-    private Expression<BlockStateWrapper> blockstate;
+    private Expression<BlockState> blockstate;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        blockstate = (Expression<BlockStateWrapper>) exprs[0];
+        blockstate = (Expression<BlockState>) exprs[0];
         return true;
     }
 
@@ -44,8 +44,8 @@ public class ExprBlockStateOffset extends SimpleExpression<Vector> {
     @Override
     protected Vector[] get(Event event) {
         List<Vector> offsets = new ArrayList<>();
-        for (BlockStateWrapper blockState : blockstate.getAll(event)) {
-            offsets.add(blockState.getOffset());
+        for (BlockState blockState : blockstate.getAll(event)) {
+            offsets.add(blockState.getLocation().toVector());
         }
         return offsets.toArray(new Vector[0]);
     }
@@ -61,7 +61,7 @@ public class ExprBlockStateOffset extends SimpleExpression<Vector> {
         return Vector.class;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
     @Override
     public String toString(@Nullable Event e, boolean d) {
         return "blockstate offset of " + blockstate.toString(e, d);

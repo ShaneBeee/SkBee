@@ -9,7 +9,6 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import org.bukkit.Chunk.LoadLevel;
@@ -179,32 +178,34 @@ public class Types {
                     .since("2.8.4"));
         }
 
-        Classes.registerClass(new ClassInfo<>(BlockStateWrapper.class, "blockstate")
-                .user("blockstates?")
-                .name("BlockState")
-                .description("Represents a captured state of a block, which will not change automatically.",
-                        "Unlike Block, which only one object can exist per coordinate, BlockState can exist multiple times for any given Block.",
-                        "In a structure, this represents how the block is saved to the structure.",
-                        "Requires MC 1.17.1+")
-                .since("1.12.3")
-                .parser(new Parser<>() {
-                    @SuppressWarnings("NullableProblems")
-                    @Override
-                    public boolean canParse(ParseContext context) {
-                        return false;
-                    }
+        if (Classes.getExactClassInfo(BlockState.class) == null) {
+            Classes.registerClass(new ClassInfo<>(BlockState.class, "blockstate")
+                    .user("blockstates?")
+                    .name("BlockState")
+                    .description("Represents a captured state of a block, which will not change automatically.",
+                            "Unlike Block, which only one object can exist per coordinate, BlockState can exist multiple times for any given Block.",
+                            "In a structure, this represents how the block is saved to the structure.",
+                            "Requires MC 1.17.1+")
+                    .since("1.12.3")
+                    .parser(new Parser<>() {
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public boolean canParse(ParseContext context) {
+                            return false;
+                        }
 
-                    @Override
-                    public @NotNull String toString(BlockStateWrapper blockState, int flags) {
-                        BlockState bs = blockState.getBukkitBlockState();
-                        return String.format("BlockState{type=%s,location=%s}", bs.getType(), bs.getLocation());
-                    }
+                        @Override
+                        public @NotNull String toString(BlockState blockState, int flags) {
+                            return String.format("BlockState{type=%s,location=%s}",
+                                    blockState.getType(), blockState.getLocation());
+                        }
 
-                    @Override
-                    public @NotNull String toVariableNameString(BlockStateWrapper blockStateWrapper) {
-                        return toString(blockStateWrapper, 0);
-                    }
-                }));
+                        @Override
+                        public @NotNull String toVariableNameString(BlockState blockState) {
+                            return toString(blockState, 0);
+                        }
+                    }));
+        }
 
         if (HAS_ARMOR_TRIM) {
             Classes.registerClass(new ClassInfo<>(ArmorTrim.class, "armortrim")

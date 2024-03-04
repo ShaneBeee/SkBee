@@ -10,7 +10,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
+import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set {_type} to blockstate itemtype of {_blockstate}",
         "set blockstate itemtype of {_blockstate} to stone"})
 @Since("2.13.0")
-public class ExprBlockStateItemType extends SimplePropertyExpression<BlockStateWrapper, ItemType> {
+public class ExprBlockStateItemType extends SimplePropertyExpression<BlockState, ItemType> {
 
     static {
         Skript.registerExpression(ExprBlockStateItemType.class, ItemType.class, ExpressionType.PROPERTY,
@@ -28,13 +28,14 @@ public class ExprBlockStateItemType extends SimplePropertyExpression<BlockStateW
     }
 
     @Override
-    public @Nullable ItemType convert(BlockStateWrapper blockStateWrapper) {
-        return blockStateWrapper.getItemType();
+    public @Nullable ItemType convert(BlockState blockState) {
+        // TODO use blockdata when Skript updates to 2.8.4 (See my PR)
+        return new ItemType(blockState.getType());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(ItemType.class);
         return null;
     }
@@ -43,8 +44,8 @@ public class ExprBlockStateItemType extends SimplePropertyExpression<BlockStateW
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof ItemType itemType) {
-            for (BlockStateWrapper blockStateWrapper : getExpr().getArray(event)) {
-                blockStateWrapper.setItemType(itemType);
+            for (BlockState blockState : getExpr().getArray(event)) {
+                blockState.setType(itemType.getMaterial());
             }
         }
     }

@@ -9,7 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
+import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,25 +34,26 @@ public class EffBlockstateUpdate extends Effect {
 
     private boolean force;
     private boolean physics;
-    private Expression<BlockStateWrapper> blockStates;
+    private Expression<BlockState> blockStates;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.force = parseResult.hasTag("force");
         this.physics = !parseResult.hasTag("physics");
-        this.blockStates = (Expression<BlockStateWrapper>) exprs[0];
+        this.blockStates = (Expression<BlockState>) exprs[0];
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        for (BlockStateWrapper blockStateWrapper : this.blockStates.getArray(event)) {
-            blockStateWrapper.update(this.force, this.physics);
+        for (BlockState blockState : this.blockStates.getArray(event)) {
+            blockState.update(this.force, this.physics);
         }
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String force = this.force ? "force " : "";

@@ -3,27 +3,26 @@ package com.shanebeestudios.skbee.api.structure;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import com.shanebeestudios.skbee.api.wrapper.PDCWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
-import org.bukkit.structure.Palette;
 import org.bukkit.structure.Structure;
 import org.bukkit.structure.StructureManager;
 import org.bukkit.util.BlockVector;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 /**
  * Wrapper class for {@link Structure} that includes more information used for saving/placing
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "CallToPrintStackTrace"})
 public class StructureWrapper {
 
     private static final StructureManager STRUCTURE_MANAGER = Bukkit.getStructureManager();
@@ -131,23 +130,17 @@ public class StructureWrapper {
     }
 
     /**
-     * Get a list of available {@link BlockStateWrapper BlockStates} of this {@link Structure}
+     * Get a list of available {@link BlockState BlockStates} of this {@link Structure}
      * <br>
      * Will return an empty list of no blocks have been filled
      *
      * @return List of available BlockStates
      */
-    public List<BlockStateWrapper> getBlockStates() {
-        List<BlockStateWrapper> blocks = new ArrayList<>();
-        if (structure.getPaletteCount() > 0) {
-            Palette palette = structure.getPalettes().get(0);
-            try {
-                palette.getBlocks().forEach(blockState -> blocks.add(new BlockStateWrapper(blockState, true)));
-            } catch (IllegalStateException ignore) {
-                Util.log("Illegal block in palette of structure &r'&b" + this.key + "&r'");
-            }
+    public @Nullable List<BlockState> getBlockStates() {
+        if (this.structure.getPaletteCount() > 0) {
+            return this.structure.getPalettes().get(0).getBlocks();
         }
-        return blocks;
+        return null;
     }
 
     /**

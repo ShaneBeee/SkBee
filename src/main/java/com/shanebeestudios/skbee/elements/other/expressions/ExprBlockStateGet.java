@@ -5,8 +5,8 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,21 +19,21 @@ import org.jetbrains.annotations.Nullable;
         "wait 1 minute",
         "force update {_state} without physics updates"})
 @Since("2.13.0")
-public class ExprBlockStateGet extends SimplePropertyExpression<Block, BlockStateWrapper> {
+public class ExprBlockStateGet extends SimplePropertyExpression<Block, BlockState> {
 
     static {
-        register(ExprBlockStateGet.class, BlockStateWrapper.class,
+        register(ExprBlockStateGet.class, BlockState.class,
                 "(captured|block)[ ]state[s]", "blocks");
     }
 
     @Override
-    public @Nullable BlockStateWrapper convert(Block block) {
-        return new BlockStateWrapper(block.getState());
+    public @Nullable BlockState convert(Block block) {
+        return block.getState();
     }
 
     @Override
-    public @NotNull Class<? extends BlockStateWrapper> getReturnType() {
-        return BlockStateWrapper.class;
+    public @NotNull Class<? extends BlockState> getReturnType() {
+        return BlockState.class;
     }
 
     @Override
