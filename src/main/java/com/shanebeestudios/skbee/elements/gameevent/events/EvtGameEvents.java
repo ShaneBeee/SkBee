@@ -32,7 +32,8 @@ public class EvtGameEvents extends SkriptEvent {
                 .since("1.14.0");
         Skript.registerEvent("Block Receive Game Event", EvtGameEvents.class, BlockReceiveGameEvent.class,
                         "block receive game[ ]event [%-gameevent%]")
-                .description("Called when a block receives a Minecraft game event. As of now the only block that receives these are Skulk sensors.",
+                .description("Called when a block receives a Minecraft game event.",
+                        "As of now the only block that receives game events are sculk shrieker, sculk sensor, and calibrated sculk sensor.",
                         "Requires MC 1.17+")
                 .examples("on block receive game event:",
                         "\tset {_e} to event-entity",
