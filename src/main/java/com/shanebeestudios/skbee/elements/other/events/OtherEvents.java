@@ -41,6 +41,7 @@ import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.player.PlayerSpawnChangeEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -534,6 +535,39 @@ public class OtherEvents extends SimpleEvent {
                     }
                 }, EventValues.TIME_NOW);
             }
+        }
+
+        // Player Spawn Change Event
+        if (Skript.classExists("org.bukkit.event.player.PlayerSpawnChangeEvent")) {
+            Skript.registerEvent("Player Spawn Change", OtherEvents.class, PlayerSpawnChangeEvent.class, "player spawn change")
+                    .description("This event is fired when the spawn point of the player is changed.")
+                    .examples("on player spawn change:",
+                            "\tif event-playerspawnchangereason = bed or respawn_anchor:",
+                            "\t\tcancel event",
+                            "\t\tsend \"Nope... sorry!\"")
+                    .since("INSERT VERSION");
+
+            EventValues.registerEventValue(PlayerSpawnChangeEvent.class, PlayerSpawnChangeEvent.Cause.class, new Getter<>() {
+                @Override
+                public PlayerSpawnChangeEvent.Cause get(PlayerSpawnChangeEvent event) {
+                    return event.getCause();
+                }
+            }, EventValues.TIME_NOW);
+
+            EventValues.registerEventValue(PlayerSpawnChangeEvent.class, Location.class, new Getter<>() {
+                @SuppressWarnings("deprecation")
+                @Override
+                public @Nullable Location get(PlayerSpawnChangeEvent event) {
+                    return event.getPlayer().getBedSpawnLocation();
+                }
+            }, EventValues.TIME_NOW);
+
+            EventValues.registerEventValue(PlayerSpawnChangeEvent.class, Location.class, new Getter<>() {
+                @Override
+                public @Nullable Location get(PlayerSpawnChangeEvent event) {
+                    return event.getNewSpawn();
+                }
+            }, EventValues.TIME_FUTURE);
         }
     }
 

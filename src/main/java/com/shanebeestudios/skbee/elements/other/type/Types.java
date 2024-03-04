@@ -25,6 +25,7 @@ import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
+import org.bukkit.event.player.PlayerSpawnChangeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
@@ -337,6 +338,16 @@ public class Types {
                     .name("Remove Cause")
                     .description("Represents the reasons an entity was removed from the world.")
                     .after("damagecause", "damagetype")
+                    .since("INSERT VERSION"));
+        }
+
+        if (Skript.classExists("org.bukkit.event.player.PlayerSpawnChangeEvent") && Classes.getExactClassInfo(PlayerSpawnChangeEvent.Cause.class) == null) {
+            EnumWrapper<PlayerSpawnChangeEvent.Cause> CAUSE_ENUM = new EnumWrapper<>(PlayerSpawnChangeEvent.Cause.class);
+            Classes.registerClass(CAUSE_ENUM.getClassInfo("playerspawnchangereason")
+                    .user("player ?spawn ?change ?reasons?")
+                    .name("Player Spawn Change Reason")
+                    .description("Represents the reasons why a player changed their spawn location.")
+                    .after("damagecause", "damagetype", "itemtype")
                     .since("INSERT VERSION"));
         }
     }
