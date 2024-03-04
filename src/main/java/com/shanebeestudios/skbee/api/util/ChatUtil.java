@@ -1,14 +1,17 @@
 package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.expressions.ExprTool;
+import ch.njol.skript.bukkitutil.EntityUtils;
+import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.slot.Slot;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.translation.Translatable;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.event.Event;
+import org.bukkit.Bukkit;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,8 +66,14 @@ public enum ChatUtil {
         return SkriptColor.fromBukkitColor(org.bukkit.Color.fromRGB(intValue));
     }
 
-    public static String getTranslation(Object object) {
-        if (object instanceof ItemStack itemStack) {
+    public static @Nullable String getTranslation(Object object) {
+        if (object instanceof Entity entity) {
+            EntityType type = entity.getType();
+            return Bukkit.getUnsafe().getTranslationKey(type);
+        } else if (object instanceof EntityData<?> entityData) {
+            EntityType type = EntityUtils.toBukkitEntityType(entityData);
+            return Bukkit.getUnsafe().getTranslationKey(type);
+        } else if (object instanceof ItemStack itemStack) {
             return itemStack.translationKey();
         } else if (object instanceof ItemType itemType) {
             ItemStack itemStack = itemType.getRandom();
