@@ -62,6 +62,7 @@ public class Types {
                     .description("Represents a merchant.",
                             "A merchant is a special type of inventory which can facilitate custom trades between items.")
                     .since("1.17.0")
+                    .after("entitydata")
                     .parser(new Parser<>() {
 
                         @SuppressWarnings("NullableProblems")
