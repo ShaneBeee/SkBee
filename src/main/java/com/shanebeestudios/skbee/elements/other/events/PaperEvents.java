@@ -324,7 +324,7 @@ public class PaperEvents extends SimpleEvent {
                             "\tif event-block is a cactus:",
                             "\t\tcancel event",
                             "\t\tbroadcast \"OUCHIE\"")
-                    .since("INSERT VERSION");
+                    .since("3.4.0");
 
             EventValues.registerEventValue(EntityInsideBlockEvent.class, Block.class, new Getter<>() {
                 @Override

@@ -23,7 +23,7 @@ import java.util.UUID;
 @Description("Get/set memories of entities.")
 @Examples({"set {_home} to home memory of {_villager}",
         "set home memory of last spawned villager to location of player"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class ExprMemoryValue extends SimplePropertyExpression<LivingEntity, Object> {
 
     static {

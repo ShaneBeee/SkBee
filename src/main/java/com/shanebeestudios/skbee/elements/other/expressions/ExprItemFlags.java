@@ -31,7 +31,7 @@ import java.util.Set;
         "remove hide attributes from item flags of player's tool",
         "delete item flags of player's tool",
         "reset item flags of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class ExprItemFlags extends PropertyExpression<ItemType, ItemFlag> {
 
     static {

@@ -38,7 +38,7 @@ import java.util.Random;
 @Examples({"set {_loottable} to loottable from key \"minecraft:chests/ancient_city\"",
         "set {_items::*} to looted items from {_loottable}",
         "give player looted items from (loottable from key \"minecraft:gameplay/fishing\")"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class ExprLootTableItems extends SimpleExpression<ItemStack> {
 
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;

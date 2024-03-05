@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Get/set the BlockData that is attached to an item.")
 @Examples({"set {_item} to a campfire",
         "set item blockdata of {_item} to campfire[lit=false]"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class ExprBlockDataItem extends SimplePropertyExpression<ItemType, BlockData> {
 
     static {

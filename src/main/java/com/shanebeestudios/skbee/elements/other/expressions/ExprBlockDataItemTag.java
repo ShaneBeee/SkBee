@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("BlockData - Item BlockData Tag")
 @Description("Get/set the value of a tag in the BlockData of an item.")
 @Examples("")
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class ExprBlockDataItemTag extends PropertyExpression<ItemType, Object> {
 
     static {

@@ -37,7 +37,7 @@ import org.jetbrains.annotations.Nullable;
         "\t\tset {_t} to translate component of attacker's tool",
         "\t\tset {_m} to mini message from \"<##FA1F01>%victim% <##FAD401>was slain by <##72FA01>%attacker% <##FAD401>using <grey>[<##03FCEA><lang:%{_t}%><grey>]\"",
         "\t\tset component death message to {_m}"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class ExprMessageComponent extends SimpleExpression<ComponentWrapper> {
 
     private static final String[] PATTERNS = new String[]{"component join message", "component (quit|kick) message", "component death message"};

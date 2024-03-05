@@ -80,7 +80,7 @@ public class Types {
                     .name("ItemFlag")
                     .description("Represents the different ItemFlags that can be applied to an item.",
                             "NOTE: Underscores aren't required, you CAN use spaces.")
-                    .since("INSERT VERSION"));
+                    .since("3.4.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'itemflag' already.");
             Util.logLoading("You may have to use their ItemFlags in SkBee's 'Item Flags' expressions.");
@@ -294,7 +294,7 @@ public class Types {
                     .user("equipment ?slots?")
                     .name("Equipment Slot")
                     .description("")
-                    .since("INSERT VERSION"));
+                    .since("3.4.0"));
         }
 
         if (Classes.getExactClassInfo(Action.class) == null) {
@@ -303,7 +303,7 @@ public class Types {
                     .user("block ?actions?")
                     .name("Block Action")
                     .description("")
-                    .since("INSERT VERSION"));
+                    .since("3.4.0"));
         }
 
         if (Classes.getExactClassInfo(LootTable.class) == null) {
@@ -312,7 +312,7 @@ public class Types {
                     .name("LootTable")
                     .description("Represents a LootTable.")
                     .examples("set {_table} to loottable from key \"minecraft:chests/ancient_city\"")
-                    .since("INSERT VERSION")
+                    .since("3.4.0")
                     .parser(new Parser<>() {
                         @SuppressWarnings("NullableProblems")
                         @Override
@@ -339,7 +339,7 @@ public class Types {
                     .name("Entity Remove Cause")
                     .description("Represents the reasons an entity was removed from the world.")
                     .after("damagecause", "damagetype")
-                    .since("INSERT VERSION"));
+                    .since("3.4.0"));
         }
 
         if (Skript.classExists("org.bukkit.event.player.PlayerSpawnChangeEvent") && Classes.getExactClassInfo(PlayerSpawnChangeEvent.Cause.class) == null) {
@@ -349,7 +349,7 @@ public class Types {
                     .name("Player Spawn Change Reason")
                     .description("Represents the reasons why a player changed their spawn location.")
                     .after("damagecause", "damagetype", "itemtype")
-                    .since("INSERT VERSION"));
+                    .since("3.4.0"));
         }
     }
 

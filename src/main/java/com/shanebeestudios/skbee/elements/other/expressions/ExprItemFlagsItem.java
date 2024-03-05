@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
         "give player fishing rod of lure 10 with item flag hide enchants",
         "give player potion of extended regeneration with hide enchants itemflag",
         "give player netherite leggings with itemflag hide attributes"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class ExprItemFlagsItem extends SimpleExpression<ItemType> {
 
     static {

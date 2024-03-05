@@ -50,7 +50,7 @@ public class EvtPlayerInteract extends SkriptEvent {
                         "\tthen:",
                         "\t\tcancel event",
                         "\t\tkill clicked entity")
-                .since("INSERT VERSION");
+                .since("3.4.0");
 
         EventValues.registerEventValue(PlayerInteractEvent.class, EquipmentSlot.class, new Getter<>() {
             @Override

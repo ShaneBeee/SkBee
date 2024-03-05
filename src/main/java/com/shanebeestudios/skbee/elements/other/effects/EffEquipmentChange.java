@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Send an equipment change for an entity. This will not actually change the entity's equipment in any way.")
 @Examples({"make player see hand slot of target entity as diamond sword",
         "make all players see off hand slot of player as shield"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class EffEquipmentChange extends Effect {
 
     static {

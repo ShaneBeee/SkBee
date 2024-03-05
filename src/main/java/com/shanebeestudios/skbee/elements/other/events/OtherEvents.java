@@ -545,7 +545,7 @@ public class OtherEvents extends SimpleEvent {
                             "\tif event-playerspawnchangereason = bed or respawn_anchor:",
                             "\t\tcancel event",
                             "\t\tsend \"Nope... sorry!\"")
-                    .since("INSERT VERSION");
+                    .since("3.4.0");
 
             EventValues.registerEventValue(PlayerSpawnChangeEvent.class, PlayerSpawnChangeEvent.Cause.class, new Getter<>() {
                 @Override

@@ -25,7 +25,7 @@ import java.util.List;
 @Name("BlockData - Item BlockData Tags")
 @Description("Get all the tags from the BlockData of an item.")
 @Examples("set {_tags::} to item blockdata tags of player's tool")
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class ExprBlockDataItemTags extends SimpleExpression<String> {
 
     static {

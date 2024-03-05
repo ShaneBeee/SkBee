@@ -37,7 +37,7 @@ import java.util.Random;
 @Examples({"set {_loottable} to loottable from key \"minecraft:chests/ancient_city\"",
         "fill inventory of target block from {_loottable}",
         "fill inventory of player from (loottable from key \"minecraft:gameplay/fishing\")"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class EffLootTableFillInv extends Effect {
 
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;

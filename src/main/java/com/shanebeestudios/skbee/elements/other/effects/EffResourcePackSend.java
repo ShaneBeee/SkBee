@@ -24,7 +24,7 @@ import java.util.UUID;
         "send resource pack from url \"some.url\" with uuid {pack::1} to all players",
         "send resource pack from url \"some.url\" with uuid {pack::1} to all players with force",
         "send resource pack from url \"some.url\" with uuid {pack::1} with prompt \"This Adds Cool Stuff!!!\" to player with force"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class EffResourcePackSend extends Effect {
 
     static {

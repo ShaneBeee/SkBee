@@ -51,7 +51,7 @@ import java.util.List;
         "# Reset formatting",
         "reset number format of {-obj}",
         "reset number format of {-obj} for player"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class ExprObjNumberFormat extends SimpleExpression<String> {
 
     private static final boolean HAS_NUMBER_FORMAT = Skript.methodExists(Objective.class, "numberFormat");

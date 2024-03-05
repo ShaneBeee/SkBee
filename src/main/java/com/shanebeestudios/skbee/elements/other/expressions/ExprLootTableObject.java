@@ -28,7 +28,7 @@ import java.util.List;
         "`with seed` = Provide an optional seed for loot generation otherwise will randomly generate."})
 @Examples({"set {_lootTable} to loottable of target block",
         "set loottable of target block to loottable from key \"minecraft:chests/ancient_city\""})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class ExprLootTableObject extends SimpleExpression<LootTable> {
 
     static {

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set biome of block at player to plains",
         "refresh chunk at player",
         "refresh chunk at 1,1 in world \"world\""})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class EffChunkRefresh extends Effect {
 
     static {

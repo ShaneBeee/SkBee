@@ -23,7 +23,7 @@ import java.util.UUID;
 @Examples({"remove all resource packs from player",
         "remove resource pack with uuid {pack::1} from player",
         "remove resource packs with uuids {pack::*} from player"})
-@Since("INSERT VERSION")
+@Since("3.4.0")
 public class EffResourcePackRemove extends Effect {
 
     static {
