@@ -19,7 +19,7 @@ import java.util.Locale;
  * Wrapper class for wrapping Enums to be used in Skript
  * <p>
  * This class is copied from Skript, with the language node stripped out and other changes
- * <a href="https://github.com/SkriptDev/Skript/blob/master/src/main/java/ch/njol/skript/util/EnumUtils.java">EnumUtils</a>
+ * <a href="https://github.com/SkriptLang/Skript/blob/master/src/main/java/ch/njol/skript/util/EnumUtils.java">EnumUtils</a>
  * </p>
  *
  * @author Peter Güttinger (original)

@@ -28,3 +28,16 @@ test "SkBee - simple nbt compound":
     # Test that tag of item nbt is set
     assert tag "CustomModelData" of {_n} is set with "tag ""CustomModelData"" of an item should be set"
     assert int tag "CustomModelData" of {_n} = 1 with "tag ""CustomModelData"" of an item should be 1"
+
+test "SkBee - NBTCustomBlock":
+    set {_l} to location(1,1,1)
+    set block at {_l} to stone
+
+    set tag "test" of nbt of block at {_l} to "this is a test"
+    assert size of nbt tags of nbt of block at {_l} = 1 with "size of nbt tags of block should be 1"
+
+    delete tag "test" of nbt of block at {_l}
+
+    assert size of nbt tags of nbt of block at {_l} = 0 with "size of nbt tags of block should be 0"
+
+    assert size of nbt tags of nbt of chunk at {_l} = 0 with "size of nbt tags of chunk should be 0"

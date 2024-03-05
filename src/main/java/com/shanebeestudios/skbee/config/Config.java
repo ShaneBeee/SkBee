@@ -18,6 +18,7 @@ public class Config {
     public boolean SETTINGS_DEBUG;
     public boolean SETTINGS_UPDATE_CHECKER;
     public String SETTINGS_NAMESPACE;
+    public boolean SETTINGS_SCOREBOARD_LINES;
     public boolean ELEMENTS_NBT;
     public boolean NBT_EVENTS_BREAK_BLOCK;
     public boolean NBT_EVENTS_PISTON_EXTEND;
@@ -125,6 +126,7 @@ public class Config {
         this.SETTINGS_UPDATE_CHECKER = getSetting("update-checker");
         String namespace = this.config.getString("settings.namespace");
         this.SETTINGS_NAMESPACE = namespace != null ? namespace.toLowerCase() : "skbee";
+        this.SETTINGS_SCOREBOARD_LINES = getSetting("scoreboard-reverse-lines");
 
         this.ELEMENTS_NBT = getElement("nbt");
         this.NBT_EVENTS_BREAK_BLOCK = getNBTEvent("block-break");

@@ -20,8 +20,10 @@ import org.bukkit.Statistic;
 import org.bukkit.World;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
+import org.bukkit.damage.DamageType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
+import org.bukkit.loot.LootTable;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
@@ -86,6 +88,9 @@ public abstract class ObjectConverter<T> {
     static {
         register(Attribute.class, Registry.ATTRIBUTE);
         register(Biome.class, Registry.BIOME);
+        if (Skript.classExists("org.bukkit.damage.DamageType")) {
+            register(DamageType.class, Registry.DAMAGE_TYPE);
+        }
         register(Enchantment.class, Registry.ENCHANTMENT);
         register(EntityData.class, new ObjectConverter<>() {
             @Override
@@ -106,6 +111,12 @@ public abstract class ObjectConverter<T> {
                 return null;
             }
         });
+        register(LootTable.class, new ObjectConverter<>() {
+            @Override
+            public @Nullable LootTable get(NamespacedKey key) {
+                return Bukkit.getLootTable(key);
+            }
+        });
         // Added in Spigot 1.20.2 (oct 20/2023)
         if (Skript.methodExists(Particle.class, "getKey")) {
             register(Particle.class, Registry.PARTICLE_TYPE);
@@ -117,6 +128,8 @@ public abstract class ObjectConverter<T> {
                 return PotionEffectType.getByKey(key);
             }
         });
+        if (SkBee.getPlugin().getPluginConfig().ELEMENTS_STATISTIC)
+            register(Statistic.class, Registry.STATISTIC);
         // Paper method
         if (Skript.methodExists(Bukkit.class, "getWorld", NamespacedKey.class)) {
             register(World.class, new ObjectConverter<>() {
@@ -126,8 +139,6 @@ public abstract class ObjectConverter<T> {
                 }
             });
         }
-        if (SkBee.getPlugin().getPluginConfig().ELEMENTS_STATISTIC)
-            register(Statistic.class, Registry.STATISTIC);
     }
 
     /**

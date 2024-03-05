@@ -7,90 +7,83 @@ import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.EntityEffect;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Registry;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.Spellcaster;
+import org.bukkit.entity.memory.MemoryKey;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
+import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
+import org.bukkit.event.player.PlayerSpawnChangeEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.loot.LootTable;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 
+@SuppressWarnings({"rawtypes", "deprecation", "removal"})
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
     public static boolean HAS_CHUNK_LOAD_LEVEL = Skript.classExists("org.bukkit.Chunk$LoadLevel");
-    private static final Map<String, ItemFlag> ITEM_FLAG_MAP = new HashMap<>();
-
-    private static String getItemFlagNames() {
-        List<String> flags = new ArrayList<>(ITEM_FLAG_MAP.keySet());
-        Collections.sort(flags);
-        return StringUtils.join(flags, ", ");
-    }
 
     static {
+        // TODO marked for removal on Feb 16/2024
+        Classes.registerClass(new ClassInfo<>(OldItemFlag.class, "olditemflag")
+                .user("old ?item ?flags?")
+                .name(ClassInfo.NO_DOC)
+                .parser(new Parser<>() {
+                    @Override
+                    public boolean canParse(@NotNull ParseContext context) {
+                        return context == ParseContext.DEFAULT;
+                    }
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public @Nullable OldItemFlag parse(String string, ParseContext context) {
+                        OldItemFlag parse = OldItemFlag.parse(string);
+                        if (parse == null) return null;
+                        Skript.warning("Old item flags are deprecated and scheduled for removal!");
+                        return parse;
+                    }
+
+                    @Override
+                    public @NotNull String toString(OldItemFlag itemFlag, int flags) {
+                        return itemFlag.getName();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(OldItemFlag itemFlag) {
+                        return toString(itemFlag, 0);
+                    }
+                }));
+
         if (Classes.getExactClassInfo(ItemFlag.class) == null) {
-            for (ItemFlag itemFlag : ItemFlag.values()) {
-                String name = itemFlag.name().replace("HIDE_", "").toLowerCase(Locale.ROOT) + "_flag";
-                ITEM_FLAG_MAP.put(name, itemFlag);
-            }
-            Classes.registerClass(new ClassInfo<>(ItemFlag.class, "itemflag")
+            EnumWrapper<ItemFlag> ITEM_FLAGS = new EnumWrapper<>(ItemFlag.class);
+            Classes.registerClass(ITEM_FLAGS.getClassInfo("itemflag")
                     .user("item ?flags?")
-                    .name("Item Flag")
-                    .description("Represents the different Item Flags that can be applied to an item.",
+                    .name("ItemFlag")
+                    .description("Represents the different ItemFlags that can be applied to an item.",
                             "NOTE: Underscores aren't required, you CAN use spaces.")
-                    .usage(getItemFlagNames())
-                    .since("2.1.0")
-                    .parser(new Parser<>() {
-
-                        @Override
-                        public boolean canParse(@NotNull ParseContext context) {
-                            return true;
-                        }
-
-                        @SuppressWarnings("NullableProblems")
-                        @Override
-                        public @Nullable ItemFlag parse(String string, ParseContext context) {
-                            String flag = string.replace(" ", "_");
-                            if (ITEM_FLAG_MAP.containsKey(flag)) return ITEM_FLAG_MAP.get(flag);
-                            return null;
-                        }
-
-                        @Override
-                        public @NotNull String toString(ItemFlag itemFlag, int flags) {
-                            String flag = itemFlag.name().replace("HIDE_", "") + "_FLAG";
-                            return flag.toLowerCase(Locale.ROOT);
-                        }
-
-                        @Override
-                        public @NotNull String toVariableNameString(ItemFlag itemFlag) {
-                            return toString(itemFlag, 0);
-                        }
-                    }));
+                    .since("INSERT VERSION"));
         } else {
             Util.logLoading("It looks like another addon registered 'itemflag' already.");
-            Util.logLoading("You may have to use their Item Flags in SkBee's 'Hidden Item Flags' expression.");
+            Util.logLoading("You may have to use their ItemFlags in SkBee's 'Item Flags' expressions.");
         }
 
         // Only register if no other addons have registered this class
@@ -185,32 +178,34 @@ public class Types {
                     .since("2.8.4"));
         }
 
-        Classes.registerClass(new ClassInfo<>(BlockStateWrapper.class, "blockstate")
-                .user("blockstates?")
-                .name("BlockState")
-                .description("Represents a captured state of a block, which will not change automatically.",
-                        "Unlike Block, which only one object can exist per coordinate, BlockState can exist multiple times for any given Block.",
-                        "In a structure, this represents how the block is saved to the structure.",
-                        "Requires MC 1.17.1+")
-                .since("1.12.3")
-                .parser(new Parser<>() {
-                    @SuppressWarnings("NullableProblems")
-                    @Override
-                    public boolean canParse(ParseContext context) {
-                        return false;
-                    }
+        if (Classes.getExactClassInfo(BlockState.class) == null) {
+            Classes.registerClass(new ClassInfo<>(BlockState.class, "blockstate")
+                    .user("blockstates?")
+                    .name("BlockState")
+                    .description("Represents a captured state of a block, which will not change automatically.",
+                            "Unlike Block, which only one object can exist per coordinate, BlockState can exist multiple times for any given Block.",
+                            "In a structure, this represents how the block is saved to the structure.",
+                            "Requires MC 1.17.1+")
+                    .since("1.12.3")
+                    .parser(new Parser<>() {
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public boolean canParse(ParseContext context) {
+                            return false;
+                        }
 
-                    @Override
-                    public @NotNull String toString(BlockStateWrapper blockState, int flags) {
-                        BlockState bs = blockState.getBukkitBlockState();
-                        return String.format("BlockState{type=%s,location=%s}", bs.getType(), bs.getLocation());
-                    }
+                        @Override
+                        public @NotNull String toString(BlockState blockState, int flags) {
+                            return String.format("BlockState{type=%s,location=%s}",
+                                    blockState.getType(), blockState.getLocation());
+                        }
 
-                    @Override
-                    public @NotNull String toVariableNameString(BlockStateWrapper blockStateWrapper) {
-                        return toString(blockStateWrapper, 0);
-                    }
-                }));
+                        @Override
+                        public @NotNull String toVariableNameString(BlockState blockState) {
+                            return toString(blockState, 0);
+                        }
+                    }));
+        }
 
         if (HAS_ARMOR_TRIM) {
             Classes.registerClass(new ClassInfo<>(ArmorTrim.class, "armortrim")
@@ -283,6 +278,78 @@ public class Types {
         } else {
             Util.logLoading("It looks like another addon registered 'EntityEffect' already.");
             Util.logLoading("You may have to use their EntityEffects in SkBee's 'play entity effect' effect.");
+        }
+
+        RegistryWrapper<MemoryKey> MEMORY_REGISTRY = RegistryWrapper.wrap(Registry.MEMORY_MODULE_TYPE);
+        Classes.registerClass(new ClassInfo<>(MemoryKey.class, "memory")
+                .user("memor(y|ies)")
+                .name("Memory")
+                .description("Represents the different memories of an entity.")
+                .usage(MEMORY_REGISTRY.getNames())
+                .parser(MEMORY_REGISTRY.getParser()));
+
+        if (Classes.getExactClassInfo(EquipmentSlot.class) == null) {
+            EnumWrapper<EquipmentSlot> SLOT_ENUM = new EnumWrapper<>(EquipmentSlot.class, null, "slot");
+            Classes.registerClass(SLOT_ENUM.getClassInfo("equipmentslot")
+                    .user("equipment ?slots?")
+                    .name("Equipment Slot")
+                    .description("")
+                    .since("INSERT VERSION"));
+        }
+
+        if (Classes.getExactClassInfo(Action.class) == null) {
+            EnumWrapper<Action> ACTION_ENUM = new EnumWrapper<>(Action.class);
+            Classes.registerClass(ACTION_ENUM.getClassInfo("blockaction")
+                    .user("block ?actions?")
+                    .name("Block Action")
+                    .description("")
+                    .since("INSERT VERSION"));
+        }
+
+        if (Classes.getExactClassInfo(LootTable.class) == null) {
+            Classes.registerClass(new ClassInfo<>(LootTable.class, "loottable")
+                    .user("loot ?tables?")
+                    .name("LootTable")
+                    .description("Represents a LootTable.")
+                    .examples("set {_table} to loottable from key \"minecraft:chests/ancient_city\"")
+                    .since("INSERT VERSION")
+                    .parser(new Parser<>() {
+                        @SuppressWarnings("NullableProblems")
+                        @Override
+                        public @Nullable LootTable parse(String string, ParseContext context) {
+                            return null;
+                        }
+
+                        @Override
+                        public @NotNull String toString(LootTable lootTable, int flags) {
+                            return "LootTable{" + lootTable.getKey() + "}";
+                        }
+
+                        @Override
+                        public @NotNull String toVariableNameString(LootTable lootTable) {
+                            return "loottable:" + lootTable.getKey();
+                        }
+                    }));
+        }
+
+        if (Skript.classExists("org.bukkit.event.entity.EntityRemoveEvent") && Classes.getExactClassInfo(EntityRemoveEvent.Cause.class) == null) {
+            EnumWrapper<EntityRemoveEvent.Cause> CAUSE_ENUM = new EnumWrapper<>(EntityRemoveEvent.Cause.class);
+            Classes.registerClass(CAUSE_ENUM.getClassInfo("entityremovecause")
+                    .user("entity ?remove ?causes?")
+                    .name("Entity Remove Cause")
+                    .description("Represents the reasons an entity was removed from the world.")
+                    .after("damagecause", "damagetype")
+                    .since("INSERT VERSION"));
+        }
+
+        if (Skript.classExists("org.bukkit.event.player.PlayerSpawnChangeEvent") && Classes.getExactClassInfo(PlayerSpawnChangeEvent.Cause.class) == null) {
+            EnumWrapper<PlayerSpawnChangeEvent.Cause> CAUSE_ENUM = new EnumWrapper<>(PlayerSpawnChangeEvent.Cause.class);
+            Classes.registerClass(CAUSE_ENUM.getClassInfo("playerspawnchangereason")
+                    .user("player ?spawn ?change ?reasons?")
+                    .name("Player Spawn Change Reason")
+                    .description("Represents the reasons why a player changed their spawn location.")
+                    .after("damagecause", "damagetype", "itemtype")
+                    .since("INSERT VERSION"));
         }
     }
 

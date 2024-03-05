@@ -11,19 +11,21 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
-import com.shanebeestudios.skbee.api.wrapper.BlockStateWrapper;
+import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 @Name("Structure - BlockStates")
 @Description({"Get a list of the blockstates in a structure. This represents the palette of blocks a structure holds.",
         "Requires MC 1.17.1+"})
 @Examples("set {_list::*} to blockstates of structure {_structure}")
 @Since("1.12.3")
-public class ExprStructureBlockStates extends SimpleExpression<BlockStateWrapper> {
+public class ExprStructureBlockStates extends SimpleExpression<BlockState> {
 
     static {
-        Skript.registerExpression(ExprStructureBlockStates.class, BlockStateWrapper.class, ExpressionType.PROPERTY,
+        Skript.registerExpression(ExprStructureBlockStates.class, BlockState.class, ExpressionType.PROPERTY,
                 "blockstates of [structure] %structure%");
     }
 
@@ -39,10 +41,13 @@ public class ExprStructureBlockStates extends SimpleExpression<BlockStateWrapper
     @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
-    protected BlockStateWrapper[] get(Event event) {
+    protected BlockState @Nullable [] get(Event event) {
         StructureWrapper structure = this.structure.getSingle(event);
         if (structure != null) {
-            return structure.getBlockStates().toArray(new BlockStateWrapper[0]);
+            List<BlockState> blockStates = structure.getBlockStates();
+            if (blockStates != null) {
+                return blockStates.toArray(new BlockState[0]);
+            }
         }
         return null;
     }
@@ -54,11 +59,11 @@ public class ExprStructureBlockStates extends SimpleExpression<BlockStateWrapper
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public Class<? extends BlockStateWrapper> getReturnType() {
-        return BlockStateWrapper.class;
+    public Class<? extends BlockState> getReturnType() {
+        return BlockState.class;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
     @Override
     public String toString(@Nullable Event e, boolean d) {
         return "blockstates of structure " + structure.toString(e, d);

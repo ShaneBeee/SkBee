@@ -15,6 +15,11 @@ settings:
   # Example, when using the namespaced key expression `namespaced key from "some_cool_namespace"` (`skbee:some_cool_namespace`)
   namespace: "skbee"
 
+  # Whether scoreboard lines should be in normal order or reversed
+  # True = Line 15 at the top, line 1 at the bottom (default)
+  # False = Line 1 at the top, line 15 at the bottom
+  scoreboard-reverse-lines: true
+
 # Disable elements you do not plan to use.
 elements:
   # Enable NBT elements

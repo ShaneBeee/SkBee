@@ -874,7 +874,7 @@ public class NBTApi {
             nbtBlock.mergeCompound(compound);
         } else if (SUPPORTS_BLOCK_NBT) {
             NBTCustomBlock nbtCustomBlock = new NBTCustomBlock(block);
-            nbtCustomBlock.getData().mergeCompound(compound);
+            nbtCustomBlock.mergeCompound(compound);
         }
     }
 

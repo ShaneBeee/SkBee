@@ -24,7 +24,6 @@ import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Name("Task - Run Task Later")
@@ -51,17 +50,9 @@ import java.util.List;
 public class SecRunTaskLater extends Section {
 
     private static final Plugin PLUGIN = SkBee.getPlugin();
-    private static final List<BukkitTask> TASKS = new ArrayList<>();
 
     public static void cancelTasks() {
-        TASKS.forEach(BukkitTask::cancel);
-        TASKS.clear();
-    }
-
-    public static List<Integer> getTaskIDs() {
-        List<Integer> taskIDs = new ArrayList<>();
-        TASKS.forEach(task -> taskIDs.add(task.getTaskId()));
-        return taskIDs;
+        Bukkit.getScheduler().cancelTasks(PLUGIN);
     }
 
     static {
@@ -73,19 +64,23 @@ public class SecRunTaskLater extends Section {
     private Expression<Timespan> timespan;
     private Expression<Timespan> repeating;
     private Trigger trigger;
-    private BukkitTask currentTask;
+    private int currentTaskId;
 
-    @SuppressWarnings({"NullableProblems", "unchecked", "DataFlowIssue"})
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.async = parseResult.hasTag("async");
         this.timespan = (Expression<Timespan>) exprs[0];
         this.repeating = (Expression<Timespan>) exprs[1];
-        this.trigger = loadCode(sectionNode, "run later", ParserInstance.get().getCurrentEvents());
+        ParserInstance parserInstance = ParserInstance.get();
+        Kleenean hasDelayBefore = parserInstance.getHasDelayBefore();
+        parserInstance.setHasDelayBefore(Kleenean.TRUE);
+        loadCode(sectionNode);
+        parserInstance.setHasDelayBefore(hasDelayBefore);
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Object localVars = Variables.copyLocalVariables(event);
@@ -100,34 +95,30 @@ public class SecRunTaskLater extends Section {
 
         BukkitScheduler scheduler = Bukkit.getScheduler();
         Runnable runnable = () -> {
-            ParserInstance.get().getCurrentSections().add(this);
             Variables.setLocalVariables(event, localVars);
-            TriggerItem.walk(trigger, event);
+            assert first != null;
+            TriggerItem.walk(first, event);
             Variables.setLocalVariables(event, Variables.copyLocalVariables(event));
             Variables.removeLocals(event);
-            ParserInstance.get().getCurrentSections().remove(this);
         };
 
+        BukkitTask task;
         if (repeat > 0 && async) {
-            this.currentTask = scheduler.runTaskTimerAsynchronously(PLUGIN, runnable, delay, repeat);
+            task = scheduler.runTaskTimerAsynchronously(PLUGIN, runnable, delay, repeat);
         } else if (repeat > 0) {
-            this.currentTask = scheduler.runTaskTimer(PLUGIN, runnable, delay, repeat);
+            task = scheduler.runTaskTimer(PLUGIN, runnable, delay, repeat);
         } else if (async) {
-            this.currentTask = scheduler.runTaskLaterAsynchronously(PLUGIN, runnable, delay);
+            task = scheduler.runTaskLaterAsynchronously(PLUGIN, runnable, delay);
         } else {
-            this.currentTask = scheduler.runTaskLater(PLUGIN, runnable, delay);
+            task = scheduler.runTaskLater(PLUGIN, runnable, delay);
         }
-        TASKS.add(this.currentTask);
+        this.currentTaskId = task.getTaskId();
+        if (last != null) last.setNext(null);
         return super.walk(event, false);
     }
 
-    public int getCurrentTaskID() {
-        return this.currentTask.getTaskId();
-    }
-
     public void stopCurrentTask() {
-        this.currentTask.cancel();
-        TASKS.remove(this.currentTask);
+        Bukkit.getScheduler().cancelTask(this.currentTaskId);
     }
 
     @SuppressWarnings("DataFlowIssue")

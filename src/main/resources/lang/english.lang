@@ -38,7 +38,7 @@ types:
 	potioneffectcause: potion effect cause¦s
 	merchant: merchant¦s
 	merchantrecipe: merchant recipe¦s
-	merchantinventory: merchant inventor(y|ies)
+	merchantinventory: merchant inventor¦y¦ies
 	advancement: advancement¦s
 	advancementpro: advancement progress¦es
 	worldborder: world border¦s
@@ -66,6 +66,10 @@ types:
 	trimpattern: trim pattern¦s
 	trimmaterial: trim material¦s
 	machine: machine¦s
-	machineproperty: machine propert(y|ies)
+	machineproperty: machine propert¦y¦ies
 	damagesource: damage source¦s
 	damagetype: damage type¦s
+	memory: memor¦y¦ies
+	loottable: loot table¦s
+	entityremovecause: entity remove cause¦s
+	playerspawnchangereason: player spawn change reason¦s

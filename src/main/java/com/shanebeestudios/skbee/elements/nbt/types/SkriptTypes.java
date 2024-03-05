@@ -39,15 +39,13 @@ public class SkriptTypes {
                 for (NBTCompound nbtCompound : what) {
                     nbtCompound.mergeCompound(changer);
                 }
-            } else if (mode == ChangeMode.DELETE) {
+            } else if (mode == ChangeMode.DELETE || mode == ChangeMode.RESET) {
                 for (NBTCompound nbtCompound : what) {
-                    if (nbtCompound instanceof NBTFile nbtFile) {
+                    if (nbtCompound instanceof NBTFile nbtFile && mode == ChangeMode.DELETE) {
                         nbtFile.getFile().delete();
+                    } else {
+                        nbtCompound.clearNBT();
                     }
-                }
-            } else if (mode == ChangeMode.RESET) {
-                for (NBTCompound nbtCompound : what) {
-                    nbtCompound.clearNBT();
                 }
             }
         }

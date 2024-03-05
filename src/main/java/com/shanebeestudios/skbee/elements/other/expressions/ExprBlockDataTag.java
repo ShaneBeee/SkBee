@@ -12,8 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.Util;
-import org.bukkit.Bukkit;
+import com.shanebeestudios.skbee.api.util.BlockDataUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
@@ -22,7 +21,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 @Name("BlockData - Tag")
 @Description("Get/set a block data tag of BlockData or a Block.")
@@ -53,7 +51,7 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable Object[] get(Event event) {
+    protected Object @Nullable [] get(Event event) {
         String tagString = this.tag.getSingle(event);
         if (tagString == null) return null;
         List<Object> list = new ArrayList<>();
@@ -64,16 +62,9 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
             else if (object instanceof BlockData bd) blockData = bd;
             else continue;
 
-            String tag = getTag(blockData.getAsString(), tagString);
-            if (tag == null) continue;
-
-            if (isBoolean(tag)) {
-                list.add(Boolean.valueOf(tag));
-            } else if (isNumber(tag)) {
-                list.add(Integer.parseInt(tag));
-            } else {
-                list.add(tag);
-            }
+            Object value = BlockDataUtils.getBlockDataValueFromTag(blockData, tagString);
+            if (value == null) continue;
+            list.add(value);
         }
 
         return list.toArray(new Object[0]);
@@ -81,7 +72,7 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(Object.class);
         return null;
     }
@@ -95,12 +86,11 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
 
         for (Object object : this.object.getArray(event)) {
             if (object instanceof BlockData oldblockData) {
-                BlockData newBlockData = changeBlockData(oldblockData, tag, delta[0]);
+                BlockData newBlockData = BlockDataUtils.setBlockDataTag(oldblockData, tag, delta[0]);
                 blockDataList.add(newBlockData);
             } else if (object instanceof Block block) {
                 update = false;
-                BlockData newBlockData = changeBlockData(block.getBlockData(), tag, delta[0]);
-                if (newBlockData == null) continue;
+                BlockData newBlockData = BlockDataUtils.setBlockDataTag(block.getBlockData(), tag, delta[0]);
                 block.setBlockData(newBlockData, this.applyPhysics);
             }
         }
@@ -109,7 +99,6 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
         if (!update) return;
         this.object.change(event, blockDataList.toArray(new BlockData[0]), ChangeMode.SET);
     }
-
 
     @Override
     public boolean isSingle() {
@@ -121,56 +110,11 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
         return Object.class;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String updates = !this.applyPhysics ? " without updates" : "";
         return "block data tag " + this.tag.toString(e, d) + " of " + this.object.toString(e, d) + updates;
-    }
-
-    // Utils
-    private boolean isNumber(String string) {
-        return string.matches("\\d+");
-    }
-
-    private boolean isBoolean(String string) {
-        return string.equalsIgnoreCase("true") || string.equalsIgnoreCase("false");
-    }
-
-    @Nullable
-    private String getTag(String data, String tag) {
-        String[] sp = getData(data);
-        if (sp != null) {
-            for (String string : sp) {
-                String[] s = string.split("=");
-                if (s[0].equals(tag)) {
-                    return s[1];
-                }
-            }
-        }
-        return null;
-    }
-
-    private String[] getData(String data) {
-        String[] splits1 = data.split("\\[");
-        if (splits1.length >= 2) {
-            String[] splits2 = splits1[1].split("]");
-
-            return splits2[0].split(",");
-        }
-        return null;
-    }
-
-    private BlockData changeBlockData(BlockData oldBlockData, String tag, Object value) {
-        if (oldBlockData.getAsString().contains("[")) {
-            String newData = oldBlockData.getMaterial().getKey() + "[" + tag.toLowerCase(Locale.ROOT) + "=" + value + "]";
-            try {
-                BlockData blockData = Bukkit.createBlockData(newData);
-                return oldBlockData.merge(blockData);
-            } catch (IllegalArgumentException ex) {
-                Util.debug("Could not parse block data: %s", newData);
-            }
-        }
-        return null;
     }
 
 }
