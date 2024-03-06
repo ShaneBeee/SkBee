@@ -13,6 +13,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.google.gson.JsonParseException;
+import com.shanebeestudios.skbee.api.util.ScoreboardUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import net.kyori.adventure.text.Component;
@@ -177,7 +178,7 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         if (score == null) {
             numberFormat = null;
         } else if (score.equalsIgnoreCase("$blank")) {
-            numberFormat = NumberFormat.blank();
+            numberFormat = ScoreboardUtils.getNumberFormatBlank();
         } else {
             if (score.startsWith("{") && score.endsWith("}")) {
                 try {
@@ -185,13 +186,13 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
                     // It needs to have some sort of text to be able to deserialize
                     score = score.replace("}", "") + ",\"text\":\"\"}";
                     Component deserialize = JSONComponentSerializer.json().deserialize(score);
-                    numberFormat = NumberFormat.styled(deserialize.style());
+                    numberFormat = ScoreboardUtils.getNumberFormatStyled(deserialize.style());
                 } catch (JsonParseException ignore) {
                     numberFormat = null;
                 }
             } else {
                 ComponentWrapper comp = ComponentWrapper.fromText(score);
-                numberFormat = NumberFormat.fixed(comp.getComponent());
+                numberFormat = ScoreboardUtils.getNumberFormatFixed(comp.getComponent());
             }
         }
 
