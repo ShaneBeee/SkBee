@@ -80,6 +80,9 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
             }
             this.nbtType = (Expression<NBTCustomType>) expr;
         }
+        if (matchedPattern <= 1) {
+            Skript.warning("Using tag without an %nbttype% is now deprecated and will be removed in the future.");
+        }
         return true;
     }
 
