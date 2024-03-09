@@ -9,8 +9,9 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.util.slot.InventorySlot;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -19,8 +20,8 @@ import net.kyori.adventure.text.Component;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,14 +42,14 @@ public class ExprItemLore extends SimpleExpression<ComponentWrapper> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.item = exprs[0];
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable ComponentWrapper[] get(Event event) {
+    protected ComponentWrapper @Nullable [] get(Event event) {
         ItemMeta meta;
         Object item = this.item.getSingle(event);
         if (item instanceof ItemType itemType) {
@@ -76,7 +77,7 @@ public class ExprItemLore extends SimpleExpression<ComponentWrapper> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET || mode == ChangeMode.ADD) {
             return CollectionUtils.array(ComponentWrapper[].class, String[].class);
         }
@@ -118,7 +119,11 @@ public class ExprItemLore extends SimpleExpression<ComponentWrapper> {
         if (item instanceof ItemType itemType) {
             itemType.setItemMeta(itemMeta);
         } else if (item instanceof Slot slot) {
-            slot.getItem().setItemMeta(itemMeta);
+            ItemStack slotItem = slot.getItem();
+            slotItem.setItemMeta(itemMeta);
+            if (slot instanceof InventorySlot invSlot) {
+                invSlot.setItem(slotItem);
+            }
         } else {
             ItemStack itemStack = (ItemStack) item;
             itemStack.setItemMeta(itemMeta);
@@ -135,6 +140,7 @@ public class ExprItemLore extends SimpleExpression<ComponentWrapper> {
         return ComponentWrapper.class;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "component item lore of " + this.item.toString(e, d);
