@@ -89,13 +89,11 @@ public class NBTListener implements Listener {
 
         if (event.isSticky()) return;
         if (blockState instanceof TileState) return;
-        if (!NBTApi.supportsBlockNBT()) return;
         event.getBlocks().forEach(this::breakBlock);
     }
 
     private void breakBlock(Block block) {
         if (block.getState() instanceof TileState) return;
-        if (!NBTApi.supportsBlockNBT()) return;
 
         NBTCompound chunkContainer = new NBTChunk(block.getChunk()).getPersistentDataContainer();
 

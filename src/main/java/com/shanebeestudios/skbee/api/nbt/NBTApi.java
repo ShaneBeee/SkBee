@@ -15,14 +15,12 @@ import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,7 +36,6 @@ import java.util.UUID;
 public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")
-    private static final boolean SUPPORTS_BLOCK_NBT = PersistentDataHolder.class.isAssignableFrom(Chunk.class);
     private static boolean ENABLED;
     private static boolean DEBUG;
 
@@ -73,10 +70,6 @@ public class NBTApi {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isEnabled() {
         return ENABLED;
-    }
-
-    public static boolean supportsBlockNBT() {
-        return SUPPORTS_BLOCK_NBT;
     }
 
     /**
@@ -817,7 +810,7 @@ public class NBTApi {
         if (blockState instanceof TileState tileState) {
             NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity(tileState);
             nbtBlock.mergeCompound(compound);
-        } else if (SUPPORTS_BLOCK_NBT) {
+        } else {
             NBTCustomBlock nbtCustomBlock = new NBTCustomBlock(block);
             nbtCustomBlock.mergeCompound(compound);
         }

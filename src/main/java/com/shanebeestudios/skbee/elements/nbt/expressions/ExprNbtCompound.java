@@ -102,7 +102,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 if (block.getType().isAir()) return null;
                 if (block.getState() instanceof TileState tileState) {
                     compound = new NBTCustomTileEntity(tileState);
-                } else if (NBTApi.supportsBlockNBT()) {
+                } else {
                     compound = new NBTCustomBlock(block);
                 }
             } else if (object instanceof Player player) {
