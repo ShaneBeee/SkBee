@@ -2,7 +2,7 @@ test "SkBee - simple nbt compound":
     set {_n} to nbt from "{test:123}"
 
     # Test that a tag is set
-    assert tag "test" of {_n} is set with "tag ""test"" should be set"
+    assert int tag "test" of {_n} is set with "int tag ""test"" should be set"
 
     # Test that the tag has a value of 123
     assert int tag "test" of {_n} = 123 with "tag ""test"" should have a value of 123"
@@ -33,7 +33,7 @@ test "SkBee - NBTCustomBlock":
     set {_l} to location(1,1,1)
     set block at {_l} to stone
 
-    set tag "test" of nbt of block at {_l} to "this is a test"
+    set string tag "test" of nbt of block at {_l} to "this is a test"
     assert size of nbt tags of nbt of block at {_l} = 1 with "size of nbt tags of block should be 1"
 
     delete tag "test" of nbt of block at {_l}
