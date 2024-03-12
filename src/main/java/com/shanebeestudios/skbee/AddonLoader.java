@@ -154,7 +154,7 @@ public class AddonLoader {
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.nbt");
-            pluginManager.registerEvents(new NBTListener(this.plugin.getPluginConfig()), this.plugin);
+            new NBTListener(this.plugin);
             Util.logLoading("&5NBT Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
