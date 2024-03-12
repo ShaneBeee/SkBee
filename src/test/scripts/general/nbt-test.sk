@@ -26,7 +26,7 @@ test "SkBee - simple nbt compound":
     set {_n} to nbt of {_i}
 
     # Test that tag of item nbt is set
-    assert tag "CustomModelData" of {_n} is set with "tag ""CustomModelData"" of an item should be set"
+    assert int tag "CustomModelData" of {_n} is set with "tag ""CustomModelData"" of an item should be set"
     assert int tag "CustomModelData" of {_n} = 1 with "tag ""CustomModelData"" of an item should be 1"
 
 test "SkBee - NBTCustomBlock":
