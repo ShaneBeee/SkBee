@@ -18,8 +18,8 @@ import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 @Name("NBT - Tag")
@@ -56,47 +56,37 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
 
     static {
         Skript.registerExpression(ExprTagOfNBT.class, Object.class, ExpressionType.COMBINED,
-                "tag %string% of %nbtcompound%",
-                "%string% tag of %nbtcompound%",
-                "%nbttype% %string% of %nbtcompound%",
-                "%string% %nbttype% of %nbtcompound%");
+                "%nbttype% %string% of %nbtcompound%");
     }
 
-    private Expression<String> tag;
-    private Expression<NBTCompound> nbt;
     @Nullable
     private Literal<NBTCustomType> nbtTypeLit;
-    @Nullable
     private Expression<NBTCustomType> nbtType;
+    private Expression<String> tag;
+    private Expression<NBTCompound> nbt;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parser) {
-        this.tag = (Expression<String>) exprs[matchedPattern == 2 ? 1 : 0];
-        this.nbt = (Expression<NBTCompound>) exprs[matchedPattern < 2 ? 1 : 2];
-        if (matchedPattern > 1) {
-            Expression<?> expr = exprs[matchedPattern == 2 ? 0 : 1];
-            if (expr instanceof Literal<?>) {
-                this.nbtTypeLit = (Literal<NBTCustomType>) expr;
-            }
-            this.nbtType = (Expression<NBTCustomType>) expr;
+        if (exprs[0] instanceof Literal<?>) {
+            this.nbtTypeLit = (Literal<NBTCustomType>) exprs[0];
         }
-        if (matchedPattern <= 1) {
-            Skript.warning("Using tag without an %nbttype% is now deprecated and will be removed in the future.");
-        }
+        this.nbtType = (Expression<NBTCustomType>) exprs[0];
+        this.tag = (Expression<String>) exprs[1];
+        this.nbt = (Expression<NBTCompound>) exprs[2];
         return true;
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected Object[] get(@NotNull Event event) {
+    protected Object @Nullable [] get(@NotNull Event event) {
+        NBTCustomType type = this.nbtType.getSingle(event);
         String tag = this.tag.getSingle(event);
         NBTCompound nbt = this.nbt.getSingle(event);
 
-        NBTCustomType type = this.nbtType != null ? this.nbtType.getSingle(event) : null;
-        assert tag != null;
+        if (type == null || tag == null || nbt == null) return null;
 
-        Object object = type != null ? NBTApi.getTag(tag, nbt, type) : NBTApi.getTag(tag, nbt);
+        Object object = NBTApi.getTag(tag, nbt, type);
         if (object instanceof ArrayList<?> arrayList) {
             return arrayList.toArray();
         }
@@ -105,12 +95,9 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
-            if (this.nbtType == null) {
-                Skript.error("add/remove is only supported when using '%nbttype% tag'!");
-                return null;
-            } else if (this.nbtTypeLit == null) {
+            if (this.nbtTypeLit == null) {
                 Skript.error("NBT TYPE must be a literal, variables are not accepted!");
                 return null;
             } else {
@@ -137,33 +124,27 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         return null;
     }
 
+    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(@NotNull Event event, @Nullable Object[] delta, @NotNull ChangeMode mode) {
-        NBTCompound compound = this.nbt.getSingle(event);
+        NBTCustomType type = this.nbtType.getSingle(event);
         String tag = this.tag.getSingle(event);
-        if (compound == null || tag == null) return;
+        NBTCompound nbt = this.nbt.getSingle(event);
+
+        if (type == null || tag == null || nbt == null) return;
 
         if (mode == ChangeMode.DELETE) {
-            NBTApi.deleteTag(tag, compound);
+            NBTApi.deleteTag(tag, nbt);
             return;
         }
         if (delta == null) return;
 
         if (mode == ChangeMode.SET) {
-            if (this.nbtType != null) {
-                NBTCustomType type = this.nbtType.getSingle(event);
-                NBTApi.setTag(tag, compound, delta, type);
-            } else {
-                NBTApi.setTag(tag, compound, delta);
-            }
-        } else if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
-            if (this.nbtType == null) return;
-            NBTCustomType type = this.nbtType.getSingle(event);
-            if (mode == ChangeMode.ADD) {
-                NBTApi.addToTag(tag, compound, delta, type);
-            } else {
-                NBTApi.removeFromTag(tag, compound, delta, type);
-            }
+            NBTApi.setTag(tag, nbt, delta, type);
+        } else if (mode == ChangeMode.ADD) {
+            NBTApi.addToTag(tag, nbt, delta, type);
+        } else if (mode == ChangeMode.REMOVE) {
+            NBTApi.removeFromTag(tag, nbt, delta, type);
         }
     }
 
@@ -176,16 +157,17 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
     @Override
     public @NotNull Class<?> getReturnType() {
         if (this.nbtTypeLit != null) {
-            Class<?> typeClass = this.nbtTypeLit.getSingle().getTypeClass();
-            if (typeClass.getComponentType() != null) return typeClass.getComponentType();
-            return typeClass;
+            Class<?> nbtTypeClass = this.nbtTypeLit.getSingle().getTypeClass();
+            if (nbtTypeClass.getComponentType() != null) return nbtTypeClass.getComponentType();
+            return nbtTypeClass;
         }
         return Object.class;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String type = this.nbtType != null ? this.nbtType.toString(e, d) : "tag";
+        String type = this.nbtType.toString(e, d);
         String tag = this.tag.toString(e, d);
         String nbt = this.nbt.toString(e, d);
         return String.format("%s %s of %s", type, tag, nbt);

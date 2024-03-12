@@ -318,11 +318,8 @@ public class NBTApi {
                     }
                 }
                 if (uuid != null) {
-                    //ints = Util.uuidToIntArray(uuid);
                     compound.setUUID(tag, uuid);
-                    break;
-                }
-                if (ints.length > 0) {
+                } else if (ints.length == 4) { // Only allows 4 ints
                     compound.setIntArray(tag, ints);
                 }
                 break;
@@ -425,53 +422,6 @@ public class NBTApi {
                 }
                 break;
         }
-    }
-
-    /**
-     * Set a specific tag of an {@link NBTCompound}
-     *
-     * @param tag      Tag that will be set
-     * @param compound Compound to change
-     * @param object   Value of tag to set to
-     */
-    public static void setTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull Object[] object) {
-        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
-        if (nestedCompound == null) return;
-
-        tag = nestedCompound.first();
-        compound = nestedCompound.second();
-
-        Object singleObject = object[0];
-        NBTCustomType customType = NBTCustomType.NBTTagEnd;
-
-        if (!compound.hasTag(tag)) {
-            if (object.length == 1) {
-                if (singleObject instanceof Boolean) customType = NBTCustomType.NBTTagByte;
-                else if (singleObject instanceof String) customType = NBTCustomType.NBTTagString;
-                else if (singleObject instanceof Long l) {
-                    if (l < Integer.MAX_VALUE && l > Integer.MIN_VALUE) customType = NBTCustomType.NBTTagInt;
-                    else customType = NBTCustomType.NBTTagLong;
-                } else if (singleObject instanceof Double d) {
-                    if (d < Float.MAX_VALUE && d > Float.MIN_VALUE) customType = NBTCustomType.NBTTagFloat;
-                    else customType = NBTCustomType.NBTTagDouble;
-                } else if (singleObject instanceof NBTCompound) customType = NBTCustomType.NBTTagCompound;
-                else if (singleObject instanceof OfflinePlayer || singleObject instanceof Entity)
-                    customType = NBTCustomType.NBTTagUUID;
-                else customType = NBTCustomType.NBTTagString;
-            } else {
-                if (singleObject instanceof String) customType = NBTCustomType.NBTTagStringList;
-                else if (singleObject instanceof Long l) {
-                    if (l < Integer.MAX_VALUE && l > Integer.MIN_VALUE) customType = NBTCustomType.NBTTagIntList;
-                    else customType = NBTCustomType.NBTTagLongList;
-                } else if (singleObject instanceof Double d) {
-                    if (d < Float.MAX_VALUE && d > Float.MIN_VALUE) customType = NBTCustomType.NBTTagFloatList;
-                    else customType = NBTCustomType.NBTTagDoubleList;
-                } else if (singleObject instanceof NBTCompound) customType = NBTCustomType.NBTTagCompoundList;
-            }
-        } else {
-            customType = NBTCustomType.getByTag(compound, tag);
-        }
-        setTag(tag, compound, object, customType);
     }
 
     /**
@@ -726,34 +676,6 @@ public class NBTApi {
         }
     }
 
-
-    /**
-     * Get a specific tag from an NBT string
-     * <p>Sub-compounds can be split using ';',
-     * example tag: "custom;sub"</p>
-     *
-     * @param tag      Tag to check for
-     * @param compound NBT to grab tag from
-     * @return Object from the NBT string
-     */
-    public static @Nullable Object getTag(String tag, NBTCompound compound) {
-        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
-        if (nestedCompound == null) return null;
-
-        tag = nestedCompound.first();
-        compound = nestedCompound.second();
-
-        NBTCustomType type = NBTCustomType.getByTag(compound, tag);
-        if (type == null) {
-            return null;
-        }
-        // Small fix for "custom" tags not being real tags in an NBT compound and showing as NBTTagEnd
-        if (type == NBTCustomType.NBTTagEnd && compound instanceof NBTCustom && tag.equalsIgnoreCase("custom")) {
-            type = NBTCustomType.NBTTagCompound;
-        }
-        return getTag(tag, compound, type);
-    }
-
     /**
      * Get a specific tag from an NBT string
      * <p>Sub-compounds can be split using ';',
@@ -765,7 +687,7 @@ public class NBTApi {
      * @return Object from the NBT string
      */
     @SuppressWarnings("DataFlowIssue")
-    public static @Nullable Object getTag(String tag, NBTCompound compound, NBTCustomType type) {
+    public static @Nullable Object getTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull NBTCustomType type) {
         Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
         if (nestedCompound == null) return null;
 
