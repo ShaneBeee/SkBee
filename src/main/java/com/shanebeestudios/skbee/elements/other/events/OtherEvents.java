@@ -16,6 +16,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
@@ -201,8 +202,18 @@ public class OtherEvents extends SimpleEvent {
         // Block Drop Item Event
         Skript.registerEvent("Block Drop Item", OtherEvents.class, BlockDropItemEvent.class,
                         "block drop item")
-                .description("This event is called if a block broken by a player drops an item. ")
-                .examples("")
+                .description("This event is called if a block broken by a player drops an item.",
+                        "`event-player` = Player who broke the block.",
+                        "`event-entities` = Item entities which were dropped (may include drops of attached blocks, like a torch).",
+                        "`past event-block` = The block that was broken (This event is called after the block actually breaks).",
+                        "`event-block` = Current state of block after broken (Probably will just be air).")
+                .examples("on block drop item:",
+                        "\tif past event-block is any ore:",
+                        "\t\tteleport event-entities to player",
+                        "\t\tset {_data} to blockdata of past event-block",
+                        "\t\tset event-block to bedrock",
+                        "\t\twait 2 seconds",
+                        "\t\tset event-block to {_data}")
                 .since("2.6.0");
 
         EventValues.registerEventValue(BlockDropItemEvent.class, Player.class, new Getter<>() {
@@ -211,6 +222,27 @@ public class OtherEvents extends SimpleEvent {
                 return event.getPlayer();
             }
         }, 0);
+
+        EventValues.registerEventValue(BlockDropItemEvent.class, Block.class, new Getter<>() {
+            @Override
+            public Block get(BlockDropItemEvent event) {
+                return event.getBlock();
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(BlockDropItemEvent.class, Block.class, new Getter<>() {
+            @Override
+            public Block get(BlockDropItemEvent event) {
+                return new BlockStateBlock(event.getBlockState());
+            }
+        }, EventValues.TIME_PAST);
+
+        EventValues.registerEventValue(BlockDropItemEvent.class, Item[].class, new Getter<>() {
+            @Override
+            public Item @Nullable [] get(BlockDropItemEvent event) {
+                return event.getItems().toArray(new Item[0]);
+            }
+        }, EventValues.TIME_NOW);
 
         // Block Damage Abort Event
         if (Skript.classExists("org.bukkit.event.block.BlockDamageAbortEvent")) {
