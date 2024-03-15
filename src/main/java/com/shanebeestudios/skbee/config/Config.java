@@ -16,7 +16,8 @@ public class Config {
 
     // Config stuff
     public boolean SETTINGS_DEBUG;
-    public boolean SETTINGS_UPDATE_CHECKER;
+    public boolean SETTINGS_UPDATE_CHECKER_ENABLED;
+    public boolean SETTINGS_UPDATE_CHECKER_ASYNC;
     public String SETTINGS_NAMESPACE;
     public boolean SETTINGS_SCOREBOARD_LINES;
     public boolean ELEMENTS_NBT;
@@ -123,7 +124,9 @@ public class Config {
 
     private void loadConfigs() {
         this.SETTINGS_DEBUG = getSetting("debug");
-        this.SETTINGS_UPDATE_CHECKER = getSetting("update-checker");
+        this.SETTINGS_UPDATE_CHECKER_ENABLED = getSetting("update-checker.enabled");
+        this.SETTINGS_UPDATE_CHECKER_ASYNC = getSetting("update-checker.async");
+
         String namespace = this.config.getString("settings.namespace");
         this.SETTINGS_NAMESPACE = namespace != null ? namespace.toLowerCase() : "skbee";
         this.SETTINGS_SCOREBOARD_LINES = getSetting("scoreboard-reverse-lines");
