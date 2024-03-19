@@ -89,7 +89,7 @@ public class ExprHiddenItemFlagsItem extends SimpleExpression<ItemType> {
         if (this.flagType) {
             return itemString + " with " + this.itemFlag.toString(e, d) + " hidden";
         }
-        return itemString + " with all flags hidden";
+        return itemString + " with all item flags";
     }
 
 }
