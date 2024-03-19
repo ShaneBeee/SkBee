@@ -18,6 +18,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
@@ -597,6 +598,15 @@ public class ComponentWrapper {
 
     public String toString() {
         return LegacyComponentSerializer.legacySection().serialize(this.component);
+    }
+
+    /**
+     * Convert to a serialized json string
+     *
+     * @return Serialized json string
+     */
+    public String toJsonString() {
+        return JSONComponentSerializer.json().serialize(this.component);
     }
 
 }
