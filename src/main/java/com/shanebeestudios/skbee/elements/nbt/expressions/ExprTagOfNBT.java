@@ -31,7 +31,9 @@ import java.util.ArrayList;
         "That said, this system is a tad convoluted, see the SkBee WIKI for more details.",
         "\nADD: You can add numbers to number type tags, you can also add numbers/strings/compounds to lists type tags.",
         "\nREMOVE: You can remove numbers from number type tags, you can also remove numbers/strings from lists type tags.",
-        "(You can NOT remove compounds from lists type tags)"})
+        "(You can NOT remove compounds from lists type tags)",
+        "\nGET FROM LIST BY POSITION: You can get the element of a list by adding `[%number%]` to the end of a tag",
+        "(This only works for getters, not set/add/remove/delete) see examples."})
 @Examples({"# Getting the value of a simple tag",
         "set {_damage} to int tag \"Damage\" of nbt of player's tool",
         "set {_sheared} to byte tag \"Sheared\" of nbt of target entity",
@@ -66,7 +68,16 @@ import java.util.ArrayList;
         "",
         "# Removeing from a value of a tag",
         "remove 10 from int tag \"Score\" of nbt of player",
-        "remove 25 from int tag \"custom;points\" of nbt of player"})
+        "remove 25 from int tag \"custom;points\" of nbt of player",
+        "",
+        "# Getting elements from lists",
+        "set {_c} to compound tag \"Inventory[0]\" of nbt of player",
+        "set {_x} to double tag \"Pos[0]\" of nbt of player",
+        "set {_y} to double tag \"Pos[1]\" of nbt of player",
+        "set {_z} to double tag \"Pos[2]\" of nbt of player",
+        "set {_s} to string tag \"some_strings[5]\" of {_nbt}",
+        "set {_i} to int tag \"intlist[1]\" of {_nbt}",
+        "set {_b} to byte tag \"someBytes[10]\" of {_nbt}"})
 @Since("1.0.0")
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 

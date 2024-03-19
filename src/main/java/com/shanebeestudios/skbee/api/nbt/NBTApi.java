@@ -692,6 +692,23 @@ public class NBTApi {
         }
     }
 
+    @Nullable
+    private static Object resolveFromList(NBTCompound compound, String tag, NBTCustomType type) {
+        Class<?> typeClass = type.getTypeClass();
+        String tagWithoutBracket = tag.split("\\[")[0];
+        if (!typeClass.isArray() && compound.hasTag(tagWithoutBracket)) {
+            try {
+                if (type == NBTCustomType.NBTTagCompound) {
+                    return compound.resolveCompound(tag);
+                }
+                return compound.resolveOrNull(tag, typeClass);
+            } catch (NbtApiException ignore) {
+                // Errors if the list is the wrong type
+            }
+        }
+        return null;
+    }
+
     /**
      * Get a specific tag from an NBT string
      * <p>Sub-compounds can be split using ';',
@@ -709,6 +726,11 @@ public class NBTApi {
 
         tag = nestedCompound.first();
         compound = nestedCompound.second();
+
+        // If the tag has [number] we grab from the list/array
+        if (tag.contains("[") && tag.contains("]")) {
+            return resolveFromList(compound, tag, type);
+        }
 
         // If the tag is empty, return null, unless it's a compound then we create an empty compound
         if (type != NBTCustomType.NBTTagCompound && !compound.hasTag(tag)) return null;
