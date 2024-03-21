@@ -13,13 +13,13 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.config.BoundConfig;
-import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 @Name("Bound - All Bounds")
@@ -59,20 +59,28 @@ public class ExprBoundsAll extends SimpleExpression<Object> {
     protected @Nullable Object[] get(Event event) {
         List<Bound> bounds = new ArrayList<>();
         List<String> ids = new ArrayList<>();
-        List<World> worlds = this.worlds != null ? List.of(this.worlds.getArray(event)) : Bukkit.getWorlds();
-        for (World world : worlds) {
-            for (Bound bound : BOUND_CONFIG.getBoundsIn(world)) {
-                if (bounds.contains(bound) || ids.contains(bound.getId())) continue;
-                if (this.pattern == 1 && !bound.isTemporary()) continue;
-                if (this.pattern == 2 && bound.isTemporary()) continue;
-                if (this.ids) {
-                    ids.add(bound.getId());
-                } else {
-                    bounds.add(bound);
-                }
+
+        if (this.worlds == null) {
+            loopAllBounds(bounds, ids, BOUND_CONFIG.getBounds());
+        } else {
+            for (World world : this.worlds.getArray(event)) {
+                loopAllBounds(bounds, ids, BOUND_CONFIG.getBoundsIn(world));
             }
         }
         return this.ids ? ids.toArray(new String[0]) : bounds.toArray(new Bound[0]);
+    }
+
+    private void loopAllBounds(List<Bound> boundList, List<String> idList, Collection<Bound> bounds) {
+        for (Bound bound : bounds) {
+            if (boundList.contains(bound) || idList.contains(bound.getId())) continue;
+            if (this.pattern == 1 && !bound.isTemporary()) continue;
+            if (this.pattern == 2 && bound.isTemporary()) continue;
+            if (this.ids) {
+                idList.add(bound.getId());
+            } else {
+                boundList.add(bound);
+            }
+        }
     }
 
     @Override
