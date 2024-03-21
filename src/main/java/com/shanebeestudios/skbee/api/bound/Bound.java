@@ -202,7 +202,7 @@ public class Bound implements ConfigurationSerializable {
      * @return Location of lesser corner
      */
     public Location getLesserCorner() {
-        Vector min = this.boundingBox.getMax();
+        Vector min = this.boundingBox.getMin();
         return new Location(getWorld(), min.getX(), min.getY(), min.getZ());
     }
 
