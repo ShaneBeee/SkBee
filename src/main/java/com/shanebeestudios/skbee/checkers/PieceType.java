@@ -5,12 +5,12 @@ import java.awt.*;
 
 public enum PieceType {
     WORKER_BEE(
-            new ImageIcon(Checkers.class.getResource("/assets/workerbeeRED.png")).getImage(),
-            new ImageIcon(Checkers.class.getResource("/assets/workerbeeBLUE.png")).getImage()
+            new ImageIcon(Game.class.getResource("/assets/workerbeeRED.png")).getImage(),
+            new ImageIcon(Game.class.getResource("/assets/workerbeeBLUE.png")).getImage()
     ),
     QUEEN_BEE(
-            new ImageIcon(Checkers.class.getResource("/assets/queenbeeRED.png")).getImage(),
-            new ImageIcon(Checkers.class.getResource("/assets/queenbeeBLUE.png")).getImage()
+            new ImageIcon(Game.class.getResource("/assets/queenbeeRED.png")).getImage(),
+            new ImageIcon(Game.class.getResource("/assets/queenbeeBLUE.png")).getImage()
     );
 
     public Image red;
