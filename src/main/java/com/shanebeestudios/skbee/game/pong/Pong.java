@@ -18,6 +18,13 @@ public class Pong {
         frame = new JFrame("SkBee Pong!");
         frame.setSize(640, 640);
         frame.setResizable(false);
+
+        // Center on screen
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
+
         rootPane = new JPanel();
         rootPane.setLayout(null);
 

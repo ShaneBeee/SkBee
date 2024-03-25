@@ -10,6 +10,12 @@ public class Checkers {
         frame.getContentPane().setPreferredSize(new Dimension(512, 512));
         frame.pack();
 
+        // Center on screen
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
+
         var panel = new Game(frame.getHeight());
         frame.add(panel);
         frame.addMouseListener(panel);
