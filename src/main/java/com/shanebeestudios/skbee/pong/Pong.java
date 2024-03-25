@@ -9,19 +9,16 @@ import java.util.concurrent.ThreadLocalRandom;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class Pong {
+    private final JFrame frame;
+    private final JPanel rootPane;
 
-    public static void main(String[] args) {
-        JFrame frame = new JFrame("SkBee Pong!");
+    private float velX, velY;
+
+    public Pong() {
+        frame = new JFrame("SkBee Pong!");
         frame.setSize(640, 640);
         frame.setResizable(false);
-
-        // Center on screen
-        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
-        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
-        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
-        frame.setLocation(x, y);
-
-        JPanel rootPane = new JPanel();
+        rootPane = new JPanel();
         rootPane.setLayout(null);
 
         rootPane.setBackground(Color.BLACK);
@@ -89,15 +86,14 @@ public class Pong {
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_UP) fuckYouJava[0] = false;
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) fuckYouJava[1] = false;
-                if (!(fuckYouJava[0] || fuckYouJava[1]) && (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN))
-                    addPlayerVel[0] = 0;
+                if (!(fuckYouJava[0] || fuckYouJava[1]) && (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)) addPlayerVel[0] = 0;
             }
         });
         rootPane.requestFocus();
 
         var random = ThreadLocalRandom.current();
-        float velX = 2.0f;
-        float velY = random.nextInt(5) * 2 - 5;
+        velX = 2.0f;
+        velY = random.nextInt(5) * 2 - 5;
 
         //noinspection InfiniteLoopStatement
         while (true) {
@@ -141,4 +137,8 @@ public class Pong {
         }
     }
 
+
+    public static void main(String[] args) {
+        new Pong();
+    }
 }
