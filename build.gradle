@@ -73,12 +73,14 @@ build {
 }
 
 processResources {
-    filter ReplaceTokens, tokens: ["version": project.version]
+    filesNotMatching("**/*.png") {
+        filter ReplaceTokens, tokens: ["version": project.version]
+    }
 }
 
 shadowJar {
     manifest {
-        attributes "Main-Class" : "com.shanebeestudios.skbee.pong.Pong"
+        attributes "Main-Class" : "com.shanebeestudios.skbee.Main"
     }
 
     archiveClassifier = null

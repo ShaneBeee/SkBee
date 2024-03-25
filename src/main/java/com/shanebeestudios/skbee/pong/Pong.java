@@ -136,9 +136,4 @@ public class Pong {
             while (System.nanoTime() < time + 16667000L) Thread.onSpinWait();
         }
     }
-
-
-    public static void main(String[] args) {
-        new Pong();
-    }
 }
