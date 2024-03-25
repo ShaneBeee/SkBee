@@ -10,8 +10,8 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.config.BoundConfig;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,7 +39,7 @@ public class SkriptTypes {
                     public @NotNull String toString(Bound bound, int flags) {
                         String greater = getLoc(bound.getGreaterCorner());
                         String lesser = getLoc(bound.getLesserCorner());
-                        String world = bound.getWorld().getName();
+                        String world = bound.getWorldName();
                         return String.format((bound.isTemporary() ? "temporary bound" : "bound") + " '%s' between %s and %s in world \"%s\"",
                                 bound.getId(), lesser, greater, world);
                     }
@@ -69,7 +69,7 @@ public class SkriptTypes {
 
                     @SuppressWarnings("NullableProblems")
                     @Override
-                    public Bound deserialize(String s) {
+                    public @Nullable Bound deserialize(String s) {
                         return null;
                     }
 
@@ -99,7 +99,7 @@ public class SkriptTypes {
                     @SuppressWarnings("NullableProblems")
                     @Nullable
                     @Override
-                    public Class<?>[] acceptChange(ChangeMode mode) {
+                    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
                         if (mode == ChangeMode.DELETE) {
                             return CollectionUtils.array();
                         }
