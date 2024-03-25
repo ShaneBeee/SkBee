@@ -12,6 +12,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.profiler.Profilers;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.Bukkit;
@@ -74,6 +75,7 @@ public class EffLoadWorld extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
+        Profilers.EFFECT.start("load-world");
         TriggerItem next = getNext();
 
         if (pattern == 0) {
@@ -85,6 +87,9 @@ public class EffLoadWorld extends Effect {
                 worldCreator.loadWorld().thenAccept(world1 -> {
                     // re-set local variables
                     if (localVars != null) Variables.setLocalVariables(event, localVars);
+
+                    // Stop the profiler before we continue onto the next trigger
+                    Profilers.EFFECT.stop();
 
                     // walk next trigger
                     if (next != null) TriggerItem.walk(next, event);
@@ -106,11 +111,12 @@ public class EffLoadWorld extends Effect {
                 }
             }
         } else if (pattern == 2) {
-            if (this.world == null) return next;
-            World world = this.world.getSingle(event);
-            if (world == null) return next;
-
-            unloadWorld(world);
+            if (this.world != null) {
+                World world = this.world.getSingle(event);
+                if (world != null) {
+                    unloadWorld(world);
+                }
+            }
         } else if (pattern == 3) {
             if (this.worldName == null) return next;
             String worldName = this.worldName.getSingle(event);
@@ -120,12 +126,14 @@ public class EffLoadWorld extends Effect {
             if (world != null) {
                 // Kick players and unload the world before deleting
                 if (!unloadWorld(world)) {
+                    Profilers.EFFECT.stop();
                     // if world could not unload, we don't want to delete it
                     return next;
                 }
             }
             BEE_WORLD_CONFIG.deleteWorld(this.worldName.getSingle(event));
         }
+        Profilers.EFFECT.stop();
         return next;
     }
 

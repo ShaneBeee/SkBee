@@ -13,6 +13,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.profiler.Profilers;
 import com.shanebeestudios.skbee.api.recipe.CookingRecipeType;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -132,7 +133,9 @@ public class SecRecipeCooking extends Section {
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
+        Profilers.SECTION.start("recipe-cooking");
         execute(event);
+        Profilers.SECTION.stop();
         return super.walk(event, false);
     }
 
