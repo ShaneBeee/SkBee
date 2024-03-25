@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.checkers;
+package com.shanebeestudios.skbee.game.checkers;
 
 import javax.swing.*;
 import java.awt.*;

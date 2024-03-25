@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.pong;
+package com.shanebeestudios.skbee.game.pong;
 
 import javax.swing.*;
 import java.awt.*;

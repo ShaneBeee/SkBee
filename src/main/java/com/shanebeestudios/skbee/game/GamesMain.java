@@ -1,9 +1,9 @@
-package com.shanebeestudios.skbee;
+package com.shanebeestudios.skbee.game;
 
-import com.shanebeestudios.skbee.checkers.Checkers;
-import com.shanebeestudios.skbee.pong.Pong;
+import com.shanebeestudios.skbee.game.checkers.Checkers;
+import com.shanebeestudios.skbee.game.pong.Pong;
 
-public class Main {
+public class GamesMain {
     public static void main(String[] args) {
         var games = new Class<?>[] {
                 Pong.class,
