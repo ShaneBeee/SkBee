@@ -105,7 +105,7 @@ tasks.register('server', Copy) {
 
 publishing {
     publications {
-        publishShadowPublicationToMavenLocal(MavenPublication) {
+        maven(MavenPublication) {
             groupId 'com.github.ShaneBeee'
             artifactId 'SkBee'
             version project.version
