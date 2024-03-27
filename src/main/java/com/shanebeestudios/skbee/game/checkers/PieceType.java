@@ -6,17 +6,17 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 
 public enum PieceType {
-    WORKER_BEE("/assets/workerbee.png", "/assets/workerbee.png"),
-    QUEEN_BEE("/assets/queenbee.png", "/assets/queenbee.png");
+    WORKER_BEE("/assets/workerbee.png"),
+    QUEEN_BEE("/assets/queenbee.png");
 
     public final Image red;
     public final Image blue;
 
-    PieceType(String red, String blue) {
-        BufferedImage buffRed = tint(loadImage(red), new Color(248, 57, 57));
+    PieceType(String location) {
+        BufferedImage buffRed = tint(loadImage(location), new Color(248, 57, 57));
         this.red = new ImageIcon(buffRed).getImage();
 
-        BufferedImage buffBlue = tint(loadImage(blue), new Color(54, 54, 246));
+        BufferedImage buffBlue = tint(loadImage(location), new Color(54, 54, 246));
         this.blue = new ImageIcon(buffBlue).getImage();
     }
 
