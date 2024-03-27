@@ -193,6 +193,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
                 }
 
                 newProgress = MathUtil.clamp((float) newProgress, 0, 1);
+                if (Double.isNaN(newProgress)) newProgress = 0;
                 bossBar.setProgress(newProgress);
             }
         } else if (pattern == BAR_FLAG) {
