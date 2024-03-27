@@ -65,8 +65,8 @@ public class Types {
                     .changer(new Changer<>() {
                         @SuppressWarnings("NullableProblems")
                         @Override
-                        public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-                            if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)
+                        public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
+                            if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL)
                                 return CollectionUtils.array(Player[].class);
                             if (mode == ChangeMode.DELETE) return CollectionUtils.array();
                             return null;
@@ -75,7 +75,7 @@ public class Types {
                         @SuppressWarnings({"NullableProblems", "ConstantValue"})
                         @Override
                         public void change(BossBar[] bossBars, @Nullable Object[] delta, ChangeMode mode) {
-                            if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
+                            if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL) {
                                 if (delta == null) return;
 
                                 for (BossBar bossBar : bossBars) {
