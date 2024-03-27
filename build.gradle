@@ -106,7 +106,7 @@ publishing {
             artifactId 'SkBee'
             version project.version
             from components.java
-            artifact sourceJar {
+            artifact shadowJar {
                 classifier "sources"
             }
             artifact shadowJar
