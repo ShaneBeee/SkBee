@@ -27,6 +27,8 @@ import org.jetbrains.annotations.NotNull;
 import org.spigotmc.event.entity.EntityDismountEvent;
 import org.spigotmc.event.entity.EntityMountEvent;
 
+import java.util.Collection;
+
 public class BoundBorderListener implements Listener {
 
     private final SkBee plugin;
@@ -82,7 +84,7 @@ public class BoundBorderListener implements Listener {
         Player player = event.getPlayer();
         Location from = event.getFrom();
         Location to = event.getTo();
-        if (preventBoundMovement(player, from, to)) {
+        if (preventBoundMovement(player, from, to, false)) {
             event.setCancelled(true);
         }
     }
@@ -224,6 +226,10 @@ public class BoundBorderListener implements Listener {
     }
 
     private boolean preventBoundMovement(@NotNull Player player, @NotNull Location from, @NotNull Location to) {
+        return preventBoundMovement(player, from, to, true);
+    }
+
+    private boolean preventBoundMovement(@NotNull Player player, @NotNull Location from, @NotNull Location to, boolean ignoreWorldChange) {
         // Clone to prevent changing event values
         from = from.clone();
         // Only detect body movement not head movement
@@ -231,19 +237,21 @@ public class BoundBorderListener implements Listener {
         from.setYaw(to.getYaw());
         // Skip same location and different worlds
         if (to.equals(from)) return false;
-        if (!to.getWorld().equals(from.getWorld())) return false;
-        for (Bound bound : boundConfig.getBoundsIn(from.getWorld())) {
-            if (bound.isInRegion(to) && !bound.isInRegion(from)) {
-                BoundEnterEvent enterEvent = new BoundEnterEvent(bound, player);
-                Bukkit.getPluginManager().callEvent(enterEvent);
-                if (enterEvent.isCancelled()) {
-                    return true;
-                }
-            }
+        if (ignoreWorldChange && !to.getWorld().equals(from.getWorld())) return false;
+        Collection<Bound> bounds = ignoreWorldChange ? boundConfig.getBoundsIn(from.getWorld()) : boundConfig.getBounds();
+        for (Bound bound : bounds) {
+            // Exit called first, as we'd probably leave one before entering another
             if (!bound.isInRegion(to) && bound.isInRegion(from)) {
                 BoundExitEvent exitEvent = new BoundExitEvent(bound, player);
                 Bukkit.getPluginManager().callEvent(exitEvent);
                 if (exitEvent.isCancelled()) {
+                    return true;
+                }
+            }
+            if (bound.isInRegion(to) && !bound.isInRegion(from)) {
+                BoundEnterEvent enterEvent = new BoundEnterEvent(bound, player);
+                Bukkit.getPluginManager().callEvent(enterEvent);
+                if (enterEvent.isCancelled()) {
                     return true;
                 }
             }

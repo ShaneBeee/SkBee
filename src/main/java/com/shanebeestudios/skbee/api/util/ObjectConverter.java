@@ -18,6 +18,7 @@ import org.bukkit.Particle;
 import org.bukkit.Registry;
 import org.bukkit.Statistic;
 import org.bukkit.World;
+import org.bukkit.advancement.Advancement;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.damage.DamageType;
@@ -86,6 +87,7 @@ public abstract class ObjectConverter<T> {
     }
 
     static {
+        register(Advancement.class, Registry.ADVANCEMENT);
         register(Attribute.class, Registry.ATTRIBUTE);
         register(Biome.class, Registry.BIOME);
         if (Skript.classExists("org.bukkit.damage.DamageType")) {

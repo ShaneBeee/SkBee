@@ -12,7 +12,6 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
-import com.shanebeestudios.skbee.api.util.Pair;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -43,21 +42,15 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
     @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
-    protected NBTCustomType[] get(Event e) {
+    protected NBTCustomType @Nullable [] get(Event e) {
         if (this.tag == null || this.compound == null) {
             return null;
         }
         String tag = this.tag.getSingle(e);
         NBTCompound compound = this.compound.getSingle(e);
-        if (tag == null || compound == null) {
-            return null;
-        }
-        Pair<String, NBTCompound> nestedCompound = NBTApi.getNestedCompound(tag, compound);
-        if (nestedCompound == null) return null;
+        if (tag == null || compound == null) return null;
 
-        tag = nestedCompound.first();
-        compound = nestedCompound.second();
-        return new NBTCustomType[]{NBTCustomType.getByTag(compound, tag)};
+        return new NBTCustomType[]{NBTApi.getTagType(compound, tag)};
     }
 
     @Override
@@ -70,6 +63,7 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
         return NBTCustomType.class;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "nbt tag type of tag " + this.tag.toString(e, d) + " of nbt compound " + this.compound.toString(e, d);

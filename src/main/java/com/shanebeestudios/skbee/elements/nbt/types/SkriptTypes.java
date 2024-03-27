@@ -55,7 +55,10 @@ public class SkriptTypes {
         Classes.registerClass(new ClassInfo<>(NBTCustomType.class, "nbttype")
                 .user("nbt ?types?")
                 .name("NBT - Tag Type")
-                .description("Represents a type of NBT tag.")
+                .description("Represents a type of NBT tag.",
+                        "You can read more about NBT types:",
+                        "\nMcWiki <link>https://minecraft.wiki/w/NBT_format#Data_types</link>",
+                        "\nSkBee Wiki <link>https://github.com/ShaneBeee/SkBee/wiki/NBT-Intro#datatypes-in-nbt</link>")
                 .usage(NBTCustomType.getNames())
                 .examples("set byte tag \"points\" of {_nbt} to 1",
                         "set compound tag \"tool\" of {_nbt} to nbt compound of player's tool")

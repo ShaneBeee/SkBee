@@ -38,7 +38,7 @@ import java.util.List;
 @Examples({"on load:",
         "\tregister brewing recipe:",
         "\t\tid: \"custom:brew_glow_diamond\"",
-        "\t\tresult: diamond of unbreaking with all flags hidden",
+        "\t\tresult: diamond of unbreaking with all item flags",
         "\t\tingredient: glowstone dust",
         "\t\tinput: potato",
         "\t\t",
