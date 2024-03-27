@@ -92,6 +92,10 @@ shadowJar {
     exclude('META-INF/**', 'LICENSE')
 }
 
+tasks.named("jar") {
+    dependsOn(shadowJar)
+}
+
 // Run task to build jar to another spot
 tasks.register('server', Copy) {
     from shadowJar
@@ -105,7 +109,7 @@ publishing {
             groupId 'com.github.ShaneBeee'
             artifactId 'SkBee'
             version project.version
-            artifact tasks.shadowJar
+            artifact jar
         }
     }
 }
