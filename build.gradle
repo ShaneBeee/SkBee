@@ -105,7 +105,7 @@ publishing {
             groupId 'com.github.ShaneBeee'
             artifactId 'SkBee'
             version project.version
-            artifact shadowJar
+            artifact tasks.shadowJar
         }
     }
 }
