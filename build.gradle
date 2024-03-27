@@ -102,7 +102,7 @@ tasks.register('server', Copy) {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId 'com.shanebeestudios'
+            groupId 'com.github.ShaneBeee'
             artifactId 'SkBee'
             version project.version
             artifact shadowJar
