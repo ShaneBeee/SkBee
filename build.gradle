@@ -83,7 +83,7 @@ shadowJar {
         attributes "Main-Class" : "com.shanebeestudios.skbee.game.GamesMain"
     }
 
-    archiveClassifier = null
+    archiveFileName = project.name + "-" + project.version + ".jar"
     relocate("de.tr7zw.changeme.nbtapi", "com.shanebeestudios.skbee.api.nbt")
     relocate("de.tr7zw.annotations", "com.shanebeestudios.skbee.api.nbt.annotations")
     relocate("fr.mrmicky.fastboard", "com.shanebeestudios.skbee.api.fastboard")
@@ -102,10 +102,11 @@ tasks.register('server', Copy) {
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId 'com.shanebeestudios'
+            groupId 'com.github.ShaneBeee'
             artifactId 'SkBee'
             version project.version
             artifact shadowJar
+            artifact tasks.jar
         }
     }
 }
