@@ -101,14 +101,10 @@ tasks.register('server', Copy) {
 
 publishing {
     publications {
-        maven(MavenPublication) {
+        shadow(MavenPublication) {
             groupId 'com.github.ShaneBeee'
             artifactId 'SkBee'
             version project.version
-            from components.java
-            artifact shadowJar {
-                classifier "sources"
-            }
             artifact shadowJar
         }
     }
