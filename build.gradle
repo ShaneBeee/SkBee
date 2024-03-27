@@ -105,6 +105,10 @@ publishing {
             groupId 'com.github.ShaneBeee'
             artifactId 'SkBee'
             version project.version
+            from components.java
+            artifact sourceJar {
+                classifier "sources"
+            }
             artifact shadowJar
         }
     }
