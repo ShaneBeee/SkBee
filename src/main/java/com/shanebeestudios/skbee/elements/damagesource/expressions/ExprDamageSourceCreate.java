@@ -64,8 +64,11 @@ public class ExprDamageSourceCreate extends SimpleExpression<DamageSource> {
         Location damageLocation = this.damageLocation != null ? this.damageLocation.getSingle(event) : null;
 
         DamageSource.Builder builder = DamageSource.builder(damageType);
-        if (causing != null) builder.withCausingEntity(causing);
         if (direct != null) builder.withDirectEntity(direct);
+        if (causing != null) {
+            builder.withCausingEntity(causing);
+            if (direct == null) builder.withDirectEntity(causing);
+        }
         if (damageLocation != null) builder.withDamageLocation(damageLocation);
 
         return new DamageSource[]{builder.build()};
@@ -81,7 +84,6 @@ public class ExprDamageSourceCreate extends SimpleExpression<DamageSource> {
         return DamageSource.class;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String type = this.damageType.toString(e, d);

@@ -2,11 +2,7 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.NoDoc;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -44,10 +40,10 @@ public class ExprHiddenItemFlagsItem extends SimpleExpression<ItemType> {
             this.itemFlag = (Expression<OldItemFlag>) exprs[1];
         }
         if (matchedPattern == 0) {
-            Skript.warning("'" + parseResult.expr + "' is deprecated, please use new expression: '" +
+            Skript.warning("'%itemtype% with all flags hidden' is deprecated, please use new expression: '" +
                     "%itemtype% with all item[ ]flags'");
         } else {
-            Skript.warning("'" + parseResult.expr + "' is deprecated, please use new expression: '" +
+            Skript.warning("'%itemtype% with %flag% hidden' is deprecated, please use new expression: '" +
                     "%itemtype% with item[ ]flag[s] %itemflags%'");
         }
         return true;

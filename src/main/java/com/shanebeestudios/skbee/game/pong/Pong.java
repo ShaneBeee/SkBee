@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.pong;
+package com.shanebeestudios.skbee.game.pong;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,6 +18,13 @@ public class Pong {
         frame = new JFrame("SkBee Pong!");
         frame.setSize(640, 640);
         frame.setResizable(false);
+
+        // Center on screen
+        Dimension dimension = Toolkit.getDefaultToolkit().getScreenSize();
+        int x = (int) ((dimension.getWidth() - frame.getWidth()) / 2);
+        int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
+        frame.setLocation(x, y);
+
         rootPane = new JPanel();
         rootPane.setLayout(null);
 
@@ -135,10 +142,5 @@ public class Pong {
 
             while (System.nanoTime() < time + 16667000L) Thread.onSpinWait();
         }
-    }
-
-
-    public static void main(String[] args) {
-        new Pong();
     }
 }
