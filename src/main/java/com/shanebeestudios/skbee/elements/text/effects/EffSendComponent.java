@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.profiler.Profilers;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -59,6 +60,7 @@ public class EffSendComponent extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
+        Profilers.EFFECT.start("send-component");
         if (components == null) return;
 
         Player sender = this.sender != null ? this.sender.getSingle(event) : null;
@@ -85,6 +87,7 @@ public class EffSendComponent extends Effect {
                 }
             }
         }
+        Profilers.EFFECT.stop();
     }
 
     @Override

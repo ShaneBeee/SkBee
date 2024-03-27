@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.profiler.Profilers;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.potion.PotionMix;
@@ -91,7 +92,9 @@ public class SecRecipeBrewing extends Section {
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
+        Profilers.SECTION.start("recipe-brewing");
         execute(event);
+        Profilers.SECTION.stop();
         return super.walk(event, false);
     }
 

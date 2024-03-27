@@ -13,6 +13,7 @@ import ch.njol.skript.paperlib.PaperLib;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.profiler.Profilers;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -88,6 +89,7 @@ public class EffLoadChunk extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
+        Profilers.EFFECT.start("load-chunk");
         TriggerItem next = getNext();
 
         if (pattern < 2) {
@@ -138,6 +140,7 @@ public class EffLoadChunk extends Effect {
                             // remove local vars as we're now done
                             Variables.removeLocals(event);
                         });
+                        Profilers.EFFECT.stop();
                         return null;
                     } else {
                         world.loadChunk(x, z);
@@ -151,6 +154,7 @@ public class EffLoadChunk extends Effect {
                 chunk.unload();
             }
         }
+        Profilers.EFFECT.stop();
         return next;
     }
 

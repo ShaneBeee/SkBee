@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.profiler.Profilers;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
@@ -96,7 +97,9 @@ public class SecRecipeSmithing extends Section {
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
+        Profilers.SECTION.start("recipe-smithing");
         execute(event);
+        Profilers.SECTION.stop();
         return super.walk(event, false);
     }
 

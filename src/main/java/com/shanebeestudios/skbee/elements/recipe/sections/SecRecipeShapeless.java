@@ -15,6 +15,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
+import com.shanebeestudios.skbee.api.profiler.Profilers;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -120,7 +121,9 @@ public class SecRecipeShapeless extends Section {
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
+        Profilers.SECTION.start("recipe-shapeless");
         execute(event);
+        Profilers.SECTION.stop();
         return super.walk(event, false);
     }
 
