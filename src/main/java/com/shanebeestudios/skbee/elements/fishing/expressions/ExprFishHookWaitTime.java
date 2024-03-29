@@ -74,14 +74,13 @@ public class ExprFishHookWaitTime extends SimplePropertyExpression<Entity, Times
                     case RESET -> value = this.max ? 600 : 100;
                     case REMOVE -> value -= changeValue;
                 }
+                if (value < 0) return;
                 if (this.max) {
-                    if (value >= 0 && value >= fishHook.getMinWaitTime()) {
-                        fishHook.setMaxWaitTime(value);
-                    }
+                    if (value < fishHook.getMinWaitTime()) fishHook.setMinWaitTime(value);
+                    fishHook.setMaxWaitTime(value);
                 } else {
-                    if (value >= 0 && value <= fishHook.getMaxWaitTime()) {
-                        fishHook.setMinWaitTime(value);
-                    }
+                    if (value > fishHook.getMaxWaitTime()) fishHook.setMaxWaitTime(value);
+                    fishHook.setMinWaitTime(value);
                 }
             }
         }
