@@ -1,13 +1,14 @@
 package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
-import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
+import com.shanebeestudios.skbee.api.listener.PlayerListener;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.config.Config;
+import com.shanebeestudios.skbee.config.BoundConfig;
+import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
@@ -31,6 +32,7 @@ public class SkBee extends JavaPlugin {
     static final int[] EARLIEST_VERSION = new int[]{1, 18, 2};
 
     private static SkBee instance;
+    private PluginManager pm;
     private Config config;
     BoundConfig boundConfig = null;
     VirtualFurnaceAPI virtualFurnaceAPI;
@@ -45,7 +47,7 @@ public class SkBee extends JavaPlugin {
         long start = System.currentTimeMillis();
         instance = this;
         this.config = new Config(this);
-        PluginManager pm = Bukkit.getPluginManager();
+        this.pm = Bukkit.getPluginManager();
 
         this.addonLoader = new AddonLoader(this);
         // Check if SkriptAddon can actually load
@@ -63,7 +65,7 @@ public class SkBee extends JavaPlugin {
             Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
         }
 
-        UpdateChecker updateChecker = new UpdateChecker(this);
+        checkUpdate(version);
         Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", version, (float) (System.currentTimeMillis() - start) / 1000);
 
         // Load custom worlds if enabled in config
@@ -77,7 +79,19 @@ public class SkBee extends JavaPlugin {
     private void loadCommands() {
         //noinspection ConstantConditions
         getCommand("skbee").setExecutor(new SkBeeInfo(this));
+        if (config.SETTINGS_UPDATE_CHECKER) {
+            pm.registerEvents(new UpdateChecker(this), this);
+        }
+        pm.registerEvents(new PlayerListener(this), this);
         //pm.registerEvents(new ScriptListener(), this); // Temp removed
+    }
+
+    private void checkUpdate(String version) {
+        if (config.SETTINGS_UPDATE_CHECKER) {
+            UpdateChecker.checkForUpdate(version);
+        } else {
+            Util.log("Update checker disabled... will not check for update!");
+        }
     }
 
     private void loadMetrics() { //6719
