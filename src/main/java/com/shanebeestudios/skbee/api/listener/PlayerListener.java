@@ -84,28 +84,32 @@ public class PlayerListener implements Listener {
     }
 
     private void addMessage(String message) {
-        messages.add( message);
+        messages.add(message);
     }
 
     private void startTimer() {
         LocalDate date = LocalDate.now();
-        // If it's after April and we're still running this, get out
-        if (date.getMonthValue() > 4) return;
-        // If it's April, but after the 1st, get out
-        if (date.getMonth() == Month.APRIL && date.getDayOfMonth() > 1) return;
+        // If it's after April fools and we're still running this build, get out
+        if (isAfterAprilFools()) return;
 
-        Util.log("Timer starting...");
-        this.bukkitTask = Bukkit.getScheduler().runTaskTimer(this.plugin, () ->
+        // If it's April fools or before, we start our timer
+        // This is incase someone starts their server before the first
+        // and lets it run for a few days
+        this.bukkitTask = Bukkit.getScheduler().runTaskTimer(this.plugin, () -> {
+            // If April fools has passed while the timer is running, let's exit
+            if (isAfterAprilFools()) {
+                PlayerListener.this.bukkitTask.cancel();
+            }
+            // If it's April fools let's send our messages
+            else if (isAprilFools()) {
                 Bukkit.getOnlinePlayers().forEach(player -> {
-                    if (isAprilFools()) {
-                        if (player.hasPermission("skbee.april.fools")) {
-                            sendRandomMessage(player);
-                        }
-                    } else {
-                        // If april fools is over, let's cancel this
-                        this.bukkitTask.cancel();
+                    if (player.hasPermission("skbee.april.fools")) {
+                        sendRandomMessage(player);
                     }
-                }), messagePeriod, messagePeriod);
+
+                });
+            }
+        }, messagePeriod, messagePeriod);
     }
 
     private void sendRandomMessage(Player player) {
@@ -118,6 +122,15 @@ public class PlayerListener implements Listener {
     private boolean isAprilFools() {
         LocalDate date = LocalDate.now();
         return date.getMonth() == Month.APRIL && date.getDayOfMonth() == 1;
+    }
+
+    private boolean isAfterAprilFools() {
+        LocalDate date = LocalDate.now();
+        // It's april, but after the first
+        if (date.getMonthValue() == 4 && date.getDayOfMonth() > 1) return true;
+        // It's after april
+        return date.getMonthValue() > 4;
+
     }
 
 }
