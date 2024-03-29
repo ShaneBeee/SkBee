@@ -36,6 +36,8 @@ public class UpdateChecker implements Listener {
         if (config.SETTINGS_UPDATE_CHECKER_ENABLED) {
             setupJoinListener();
             checkUpdate(config.SETTINGS_UPDATE_CHECKER_ASYNC);
+        } else {
+            Util.log("&3Update checker disabled!");
         }
     }
 
