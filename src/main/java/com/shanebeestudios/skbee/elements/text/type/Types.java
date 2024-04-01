@@ -86,12 +86,13 @@ public class Types {
                 .description("Represents a signed chat message.")
                 .examples("remove all players from signed chat message # will remove the message from the client")
                 .parser(SkriptUtils.getDefaultParser())
+                .since("INSERT VERSION")
                 .changer(new Changer<>() {
                     @SuppressWarnings("NullableProblems")
                     @Override
                     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
                         if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL)
-                            return CollectionUtils.array(Player.class);
+                            return CollectionUtils.array(Player[].class);
                         return null;
                     }
 
