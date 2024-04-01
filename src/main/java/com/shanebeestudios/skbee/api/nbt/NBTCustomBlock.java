@@ -47,6 +47,7 @@ public class NBTCustomBlock extends NBTContainer {
             return;
         }
         NBTCompound blockCompound = this.chunkData.getOrCreateCompound("blocks").getOrCreateCompound(this.blockTag);
+        blockCompound.clearNBT();
         blockCompound.mergeCompound(this);
     }
 
