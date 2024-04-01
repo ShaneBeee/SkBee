@@ -4,13 +4,19 @@ import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.function.Functions;
+import ch.njol.skript.lang.function.Parameter;
+import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -104,6 +110,57 @@ public class Types {
                         }
                     }
                 }));
+
+        Classes.registerClass(new ClassInfo<>(TagResolver.class, "tagresolver")
+                .user("tag ?resolvers?")
+                .description("Represents an object to replace text in a mini message.")
+                .examples("# Create a component",
+                        "set {_i} to translate component of player's tool",
+                        "# Use this comonent in the resolver to replace \"<item>\" in the mini message",
+                        "set {_r::1} to resolver(\"item\", {_i})",
+                        "# setup the mini message with the replacement placeholder",
+                        "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r::*}",
+                        "send component {_m}")
+                .since("INSERT VERSION"));
+
+        // Functions
+        //noinspection DataFlowIssue
+        Functions.registerFunction(new SimpleJavaFunction<>("resolver", new Parameter[]{
+                new Parameter<>("placeholder", DefaultClasses.STRING, true, null),
+                new Parameter<>("replacement", DefaultClasses.OBJECT, true, null)
+        }, Classes.getExactClassInfo(TagResolver.class), true) {
+            @SuppressWarnings({"NullableProblems", "PatternValidation"})
+            @Override
+            public TagResolver @Nullable [] executeSimple(Object[][] params) {
+                if (params[0].length == 0 || params[1].length == 0) return null;
+
+                String string = (String) params[0][0];
+                if (string == null) return null;
+
+                Object object = params[1][0];
+                ComponentWrapper component;
+                if (object instanceof String s) {
+                    component = ComponentWrapper.fromText(s);
+                } else if (object instanceof ComponentWrapper c) {
+                    component = c;
+                } else {
+                    component = ComponentWrapper.fromText(Classes.toString(object));
+                }
+                return new TagResolver[]{Placeholder.component(string, component.getComponent())};
+            }
+        }
+                .description("Creates a tag resolver for replacements in mini message.",
+                        "`placeholder` = The string that will be replaced in the mini message.",
+                        "In the mini message itself this part needs to be surrounded by <>. See examples!",
+                        "`replacement` = A string/text component that will replace the first string.")
+                .examples("# Create a component",
+                        "set {_i} to translate component of player's tool",
+                        "# Use this comonent in the resolver to replace \"<item>\" in the mini message",
+                        "set {_r::1} to resolver(\"item\", {_i})",
+                        "# setup the mini message with the replacement placeholder",
+                        "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r::*}",
+                        "send component {_m}")
+                .since("INSERT VERSION"));
     }
 
 }

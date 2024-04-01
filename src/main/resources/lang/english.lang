@@ -74,3 +74,4 @@ types:
 	entityremovecause: entity remove cause¦s
 	playerspawnchangereason: player spawn change reason¦s
 	signedmessage: signed message¦s
+	tagresolver: tag resolver¦s

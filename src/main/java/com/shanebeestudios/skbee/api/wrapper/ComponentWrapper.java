@@ -18,6 +18,7 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -97,10 +98,12 @@ public class ComponentWrapper {
     /**
      * Create a {@link MiniMessage mini message} from text
      *
-     * @param text Mini message formatted text
+     * @param text      Mini message formatted text
+     * @param resolvers TagResolver replacements
      * @return Component from text
      */
-    public static ComponentWrapper fromMiniMessage(String text) {
+    @SuppressWarnings("NullableProblems")
+    public static ComponentWrapper fromMiniMessage(@NotNull String text, @Nullable TagResolver... resolvers) {
         String string = text;
         // MiniMessage doesn't like these
         if (text.contains("&")) {
@@ -111,7 +114,10 @@ public class ComponentWrapper {
             TextComponent deserialize = LegacyComponentSerializer.legacySection().deserialize(string);
             string = PlainTextComponentSerializer.plainText().serialize(deserialize);
         }
-        return new ComponentWrapper(MiniMessage.miniMessage().deserialize(string));
+        if (resolvers == null) {
+            return new ComponentWrapper(MiniMessage.miniMessage().deserialize(string));
+        }
+        return new ComponentWrapper(MiniMessage.miniMessage().deserialize(string, resolvers));
     }
 
     /**
