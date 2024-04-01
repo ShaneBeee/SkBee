@@ -6,9 +6,12 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
@@ -70,6 +73,37 @@ public class Types {
                     }
                 }).changer(COMP_CHANGER)
         );
+
+        Classes.registerClass(new ClassInfo<>(SignedMessage.class, "signedmessage")
+                .user("signed ?messages?")
+                .name("Signed Chat Message")
+                .description("Represents a signed chat message.")
+                .examples("remove all players from signed chat message # will remove the message from the client")
+                .parser(SkriptUtils.getDefaultParser())
+                .changer(new Changer<>() {
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
+                        if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL)
+                            return CollectionUtils.array(Player.class);
+                        return null;
+                    }
+
+                    @SuppressWarnings({"NullableProblems", "ConstantValue"})
+                    @Override
+                    public void change(SignedMessage[] what, @Nullable Object[] delta, ChangeMode mode) {
+                        if (delta == null) return;
+                        for (SignedMessage signedMessage : what) {
+                            if (!signedMessage.canDelete()) continue;
+
+                            for (Object object : delta) {
+                                if (object instanceof Player player) {
+                                    player.deleteMessage(signedMessage);
+                                }
+                            }
+                        }
+                    }
+                }));
     }
 
 }
