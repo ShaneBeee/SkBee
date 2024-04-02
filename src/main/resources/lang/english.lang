@@ -75,3 +75,4 @@ types:
 	playerspawnchangereason: player spawn change reason¦s
 	signedmessage: signed message¦s
 	tagresolver: tag resolver¦s
+	minecraftentitytype: minecraft entity type¦s

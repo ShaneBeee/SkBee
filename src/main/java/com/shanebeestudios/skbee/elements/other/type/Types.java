@@ -17,6 +17,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.event.block.Action;
@@ -350,6 +351,23 @@ public class Types {
                     .description("Represents the reasons why a player changed their spawn location.")
                     .after("damagecause", "damagetype", "itemtype")
                     .since("3.4.0"));
+        }
+
+        if (Classes.getExactClassInfo(EntityType.class) == null) {
+            RegistryWrapper<EntityType> ENTITY_TYPE = RegistryWrapper.wrap(Registry.ENTITY_TYPE);
+            Classes.registerClass(new ClassInfo<>(EntityType.class, "minecraftentitytype")
+                    .user("minecraft ?entity ?types?")
+                    .name("Minecraft - EntityType")
+                    .description("Represents a Minecraft entity.",
+                            "These differ slightly from Skript's EntityType as the names match Minecraft namespaces.",
+                            "These also support the use of the Minecraft namespace as well as underscores.")
+                    .examples("mc spawn sheep at player",
+                            "mc spawn minecraft:sheep at player",
+                            "mc spawn minecraft:armor_stand at player")
+                    .usage(ENTITY_TYPE.getNames())
+                    .after("entitydata", "entitydata")
+                    .since("INSERT VERSION")
+                    .parser(ENTITY_TYPE.getParser()));
         }
     }
 

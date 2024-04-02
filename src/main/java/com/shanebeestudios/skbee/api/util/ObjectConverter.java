@@ -104,6 +104,7 @@ public abstract class ObjectConverter<T> {
                 return null;
             }
         });
+        register(EntityType.class, Registry.ENTITY_TYPE);
         register(GameEvent.class, Registry.GAME_EVENT);
         register(ItemType.class, new ObjectConverter<>() {
             @Override

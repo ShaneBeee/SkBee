@@ -99,6 +99,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         }
         List<EntityData> entityDatas = entityDataMap.values().stream().sorted(Comparator.comparing(Object::toString)).collect(Collectors.toList());
         Registration.registerList("entity[ ]types", EntityData.class, entityDatas);
+        Registration.registerRegistry("minecraft[ ]entity[ ]types", EntityType.class, Registry.ENTITY_TYPE);
 
         // Register enums (which don't have a registry)
         List<GameRule> gameRules = Arrays.asList(GameRule.values());
