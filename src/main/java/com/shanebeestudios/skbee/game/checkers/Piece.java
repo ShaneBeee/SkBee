@@ -50,7 +50,7 @@ public class Piece {
             if (x < 7) piece = game.getPiece(x + 1, y - direction);
             if (x < 7 && piece.isNull())
                 moves.add(new int[] {x + 1, y - direction});
-            else if (x < 6 && y < 6 && ((-direction == -1 && y > 1) || (-direction == 1 && y < 6)) && game.getPiece(x + 2, y - direction * 2).isNull() && piece.color != color)
+            else if (x < 6 && ((-direction == -1 && y > 1) || (-direction == 1 && y < 6)) && game.getPiece(x + 2, y - direction * 2).isNull() && piece.color != color)
                 moves.add(new int[] {x + 2, y - direction * 2});
         }
 
