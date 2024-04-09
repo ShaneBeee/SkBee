@@ -59,6 +59,7 @@ public class Config {
     public boolean ELEMENTS_DISPLAY;
     public boolean ELEMENTS_TICK_MANAGER;
     public boolean ELEMENTS_DAMAGE_SOURCE;
+    public boolean ELEMENTS_CHUNK_GEN;
     public boolean AUTO_LOAD_WORLDS;
 
     public Config(SkBee plugin) {
@@ -172,6 +173,7 @@ public class Config {
         this.ELEMENTS_DISPLAY = getElement("display-entity");
         this.ELEMENTS_TICK_MANAGER = getElement("tick-manager");
         this.ELEMENTS_DAMAGE_SOURCE = getElement("damage-source");
+        this.ELEMENTS_CHUNK_GEN = getElement("chunk-generator");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
     }
 

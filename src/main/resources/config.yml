@@ -61,6 +61,10 @@ elements:
     # If disabled, you will need to load worlds with the load world effect
     auto-load-custom-worlds: true
 
+    # Enable Chunk Generator elements
+    # Due to the complexity of this, it is disabled by default
+    chunk-generator: false
+
     # Enable Minecraft GameEvent elements
     game-event: true
 

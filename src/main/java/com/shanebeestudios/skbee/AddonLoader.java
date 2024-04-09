@@ -122,6 +122,7 @@ public class AddonLoader {
         loadVirtualFurnaceElements();
         loadWorldBorderElements();
         loadWorldCreatorElements();
+        loadChunkGenElements();
 
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
@@ -348,6 +349,24 @@ public class AddonLoader {
             this.plugin.beeWorldConfig = new BeeWorldConfig(this.plugin);
             addon.loadClasses("com.shanebeestudios.skbee.elements.worldcreator");
             Util.logLoading("&5World Creator Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadChunkGenElements() {
+        if (!this.config.ELEMENTS_CHUNK_GEN) {
+            Util.logLoading("&5Chunk Generator Elements &cdisabled via config");
+            return;
+        }
+        if (!this.config.ELEMENTS_WORLD_CREATOR) {
+            Util.logLoading("&5Chunk Generator &cdisabled via World Creator config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.generator");
+            Util.logLoading("&5Chunk Generator Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);

@@ -7,6 +7,8 @@ import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.generator.BiomeProvider;
+import org.bukkit.generator.ChunkGenerator;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -23,6 +25,8 @@ public class BeeWorldCreator {
     private Environment environment;
     private String generatorSettings;
     private String generator;
+    private ChunkGenerator chunkGenerator;
+    private BiomeProvider biomeProvider;
     Optional<Boolean> genStructures;
     Optional<Boolean> hardcore;
     Optional<Boolean> keepSpawnLoaded;
@@ -98,6 +102,14 @@ public class BeeWorldCreator {
         this.generator = generator;
     }
 
+    public void setChunkGenerator(ChunkGenerator chunkGenerator) {
+        this.chunkGenerator = chunkGenerator;
+    }
+
+    public void setBiomeProvider(BiomeProvider biomeProvider) {
+        this.biomeProvider = biomeProvider;
+    }
+
     public void setGenStructures(boolean genStructures) {
         this.genStructures = Optional.of(genStructures);
     }
@@ -168,6 +180,12 @@ public class BeeWorldCreator {
             }
             if (generator != null) {
                 worldCreator.generator(generator);
+            }
+            if (chunkGenerator != null) {
+                worldCreator.generator(chunkGenerator);
+            }
+            if (biomeProvider != null) {
+                worldCreator.biomeProvider(biomeProvider);
             }
 
             genStructures.ifPresent(worldCreator::generateStructures);
