@@ -55,7 +55,7 @@ public class Game extends JPanel implements MouseInputListener {
             var hasPiece = false;
 
             for (var piece : pieces) {
-                if (piece.color == PieceColor.BLUE) {
+                if (piece.color == PieceColor.BLUE && !piece.getMoves(this).isEmpty()) {
                     hasPiece = true;
                     break;
                 }
