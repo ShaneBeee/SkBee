@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -150,7 +151,7 @@ public class BeeWorldCreator {
         this.saveClone = saveClone;
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "CallToPrintStackTrace"})
     public CompletableFuture<World> loadWorld() {
         CompletableFuture<WorldCreator> worldCreatorCompletableFuture = new CompletableFuture<>();
         CompletableFuture<World> worldCompletableFuture = new CompletableFuture<>();
@@ -163,7 +164,7 @@ public class BeeWorldCreator {
             worldCreatorCompletableFuture.complete(new WorldCreator(this.worldName));
         }
         worldCreatorCompletableFuture.thenAccept(worldCreator -> {
-            World world;
+            World world = null;
 
             if (worldType != null) {
                 worldCreator.type(worldType);
@@ -191,7 +192,13 @@ public class BeeWorldCreator {
             genStructures.ifPresent(worldCreator::generateStructures);
             hardcore.ifPresent(worldCreator::hardcore);
 
-            world = worldCreator.createWorld();
+            try {
+                world = worldCreator.createWorld();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Util.errorForAdmins("Failed to load world '%s' see console for more details.", worldName);
+            }
+
             if (world != null) {
                 // Let's pull some values from the world and update our creator if need be
                 if (worldType == null) {
