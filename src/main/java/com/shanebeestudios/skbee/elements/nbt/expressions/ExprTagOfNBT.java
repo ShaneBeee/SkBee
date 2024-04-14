@@ -133,7 +133,7 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
                     Skript.error("NBT compounds cannot be removed from an NBT compound list!");
                     return null;
                 }
-                if (nbtType.getTypeClass().isArray() || nbtType.getTypeClass() == Number.class) {
+                if (nbtType.getTypeClass().isArray() || Number.class.isAssignableFrom(nbtType.getTypeClass())) {
                     return CollectionUtils.array(nbtType.getTypeClass());
                 }
             }
