@@ -30,98 +30,109 @@ import java.util.List;
 public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
 
     static {
-        Skript.registerExpression(ExprMerchantRecipes.class, MerchantRecipe.class, ExpressionType.COMBINED,
-                "[all] merchant recipes of %merchant/entity%",
-                "merchant recipe %number% of %merchant/entity%");
+        Skript.registerExpression(ExprMerchantRecipes.class, MerchantRecipe.class, ExpressionType.COMBINED, "[all] merchant recipes of %merchants/entities%", "merchant recipe %number% of %merchants/entities%");
     }
 
-    private Expression<Object> merchant;
+    private Expression<?> merchants;
     private Expression<Number> recipe;
-    private boolean all;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
-        this.merchant = (Expression<Object>) exprs[i];
-        this.recipe = i == 1 ? (Expression<Number>) exprs[0] : null;
-        this.all = i == 0;
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        this.merchants = exprs[matchedPattern];
+        this.recipe = matchedPattern == 1 ? (Expression<Number>) exprs[0] : null;
         return true;
     }
 
     @SuppressWarnings({"NullableProblems", "PatternVariableHidesField"})
     @Override
     protected MerchantRecipe @Nullable [] get(Event event) {
-        if (this.merchant.getSingle(event) instanceof Merchant merchant) {
-            if (this.all) {
-                return merchant.getRecipes().toArray(new MerchantRecipe[0]);
-            } else {
-                int recipe = 0;
-                if (this.recipe != null) {
-                    Number number = this.recipe.getSingle(event);
-                    if (number != null) recipe = number.intValue();
-                }
-                int count = merchant.getRecipeCount();
-                if (count == 0) return null;
-
-                recipe -= 1;
-                if (recipe < 0) recipe = 0;
-                if (recipe > (count - 1)) return null;
-
-                return new MerchantRecipe[]{merchant.getRecipe(recipe)};
+        List<MerchantRecipe> recipes = new ArrayList<>();
+        if (this.recipe != null) {
+            Number number = this.recipe.getSingle(event);
+            if (number == null) return null;
+            int recipe = number.intValue() - 1; // 1 = 0, 0 = -1
+            if (recipe < 0) return null;
+            for (Object obj : this.merchants.getArray(event)) {
+                if (!(obj instanceof Merchant merchant)) continue;
+                int recipeCount = merchant.getRecipeCount();
+                if (recipeCount == 0 || recipe > recipeCount - 1) continue;
+                recipes.add(merchant.getRecipe(recipe));
             }
+        } else {
+            this.merchants.stream(event).filter(merchant -> merchant instanceof Merchant).map(merchant -> ((Merchant) merchant)).forEach(merchant -> recipes.addAll(merchant.getRecipes()));
         }
-        return null;
+        return recipes.toArray(MerchantRecipe[]::new);
     }
+
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET || mode == ChangeMode.DELETE || (mode == ChangeMode.ADD && all)) {
-            return CollectionUtils.array(MerchantRecipe[].class);
+    public Class<?>[] acceptChange(ChangeMode mode) {
+        if (this.recipe == null) {
+            return switch (mode) {
+                case ADD, SET, DELETE -> CollectionUtils.array(MerchantRecipe[].class);
+                default -> null;
+            };
         }
-        return null;
+        switch (mode) {
+            case SET, DELETE:
+                return CollectionUtils.array(MerchantRecipe.class);
+            case ADD:
+                Skript.error("You can only add a merchant recipe if you're using the 'all merchant recipes' syntax.");
+            default:
+                return null;
+        }
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantConditions", "PatternVariableHidesField"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (this.merchant.getSingle(event) instanceof Merchant merchant) {
-            if (this.all) {
-                List<MerchantRecipe> newRecipes = new ArrayList<>();
-                if (delta != null) {
-                    for (Object object : delta) {
-                        if (object instanceof MerchantRecipe merchantRecipe) {
-                            if (!merchantRecipe.getIngredients().isEmpty()) newRecipes.add(merchantRecipe);
-                        }
-                    }
+        if (this.recipe == null) {
+            List<MerchantRecipe> recipes = new ArrayList<>();
+            if (delta != null) {
+                for (Object object : delta) {
+                    if (object instanceof MerchantRecipe merchantRecipe) recipes.add(merchantRecipe);
                 }
-                if (mode == ChangeMode.SET) {
-                    merchant.setRecipes(newRecipes);
-                } else if (mode == ChangeMode.DELETE) {
-                    merchant.setRecipes(new ArrayList<>());
-                } else if (mode == ChangeMode.ADD) {
-                    List<MerchantRecipe> merchantRecipes = new ArrayList<>(merchant.getRecipes());
-                    merchantRecipes.addAll(newRecipes);
-                    merchant.setRecipes(merchantRecipes);
+            }
+            for (Object obj : this.merchants.getArray(event)) {
+                if (!(obj instanceof Merchant merchant)) continue;
+                List<MerchantRecipe> recipeCopy = new ArrayList<>(recipes);
+                switch (mode) {
+                    case ADD:
+                        recipeCopy.addAll(0, merchant.getRecipes());
+                    case DELETE, SET:
+                        merchant.setRecipes(recipeCopy);
+                        break;
                 }
-            } else if (delta[0] instanceof MerchantRecipe merchantRecipe) {
-                if (merchantRecipe.getIngredients().isEmpty()) return;
-                int recipe = this.recipe.getSingle(event).intValue() - 1;
-                if (recipe < 0) recipe = 0;
-                if (recipe >= merchant.getRecipeCount()) {
-                    List<MerchantRecipe> recipes = new ArrayList<>(merchant.getRecipes());
-                    recipes.add(merchantRecipe);
-                    merchant.setRecipes(recipes);
-                } else {
-                    merchant.setRecipe(recipe, merchantRecipe);
-                }
+            }
+            return;
+        }
+        if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) return;
+
+        Number num = this.recipe.getSingle(event);
+        if (num == null) return;
+        int recipeSlot = num.intValue() - 1; // 1 = 0 | 0 = -1
+        if (recipeSlot < 0) return;
+        for (Object obj : this.merchants.getArray(event)) {
+            if (!(obj instanceof Merchant merchant)) continue;
+            int recipeCount = merchant.getRecipeCount();
+            if (recipeCount == 0 || recipeCount - 1 < recipeSlot) continue;
+            switch (mode) {
+                case SET:
+                    merchant.setRecipe(recipeSlot, (MerchantRecipe) delta[0]);
+                    break;
+                case DELETE:
+                    List<MerchantRecipe> updatedRecipes = new ArrayList<>(merchant.getRecipes());
+                    updatedRecipes.remove(merchant.getRecipe(recipeSlot));
+                    merchant.setRecipes(updatedRecipes);
+                    break;
             }
         }
     }
 
     @Override
     public boolean isSingle() {
-        return !this.all;
+        return this.recipe != null && this.merchants.isSingle();
     }
 
     @Override
@@ -132,10 +143,10 @@ public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
     @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        if (this.all) {
-            return "all merchant recipes of " + this.merchant.toString(e, d);
+        if (this.recipe == null) {
+            return "all merchant recipes of " + this.merchants.toString(e, d);
         }
-        return "merchant recipe " + this.recipe.toString(e, d) + " of " + this.merchant.toString(e, d);
+        return "merchant recipe " + this.recipe.toString(e, d) + " of " + this.merchants.toString(e, d);
     }
 
 }
