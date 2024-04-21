@@ -114,7 +114,7 @@ public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
             }
             return;
         }
-        if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) return;
+        if (mode == ChangeMode.ADD) return;
 
         Number num = this.recipe.getSingle(event);
         if (num == null) return;
