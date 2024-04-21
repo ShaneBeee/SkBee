@@ -130,8 +130,10 @@ public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
                     break;
                 case DELETE:
                     List<MerchantRecipe> updatedRecipes = new ArrayList<>(merchant.getRecipes());
-                    updatedRecipes.remove(merchant.getRecipe(recipeSlot));
-                    merchant.setRecipes(updatedRecipes);
+                    if (updatedRecipes.size() >= recipeSlot) {
+                        updatedRecipes.remove(recipeSlot);
+                        merchant.setRecipes(updatedRecipes);
+                    }
                     break;
             }
         }
