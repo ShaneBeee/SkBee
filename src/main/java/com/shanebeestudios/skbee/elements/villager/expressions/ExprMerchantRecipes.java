@@ -22,8 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Merchant - Recipes")
-@Description({"Represents the recipes of a merchant. All recipes returns a list of all the recipes this merchant offers.",
-        "You can also set/delete them or add to them. You can also get/set/delete a specific recipe."})
+@Description({"Represents the recipes of a merchant. All recipes returns a list of all the recipes this merchant offers.", "You can also set/delete them or add to them. You can also get/set/delete a specific recipe.", "<b>note: when setting/deleting a specific merchant recipe the merchant MUST have a recipe in that slot</b>"})
 @Examples({"add {_recipe} to merchant recipes of {_merchant}",
         "set merchant recipe 1 of {_merchant} to {_recipe}"})
 @Since("1.17.0")
@@ -96,6 +95,7 @@ public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
             }
             for (Object obj : this.merchants.getArray(event)) {
                 if (!(obj instanceof Merchant merchant)) continue;
+                // create a copy of the recipes to update/modify existing recipes
                 List<MerchantRecipe> recipeCopy = new ArrayList<>(recipes);
                 switch (mode) {
                     case ADD:
