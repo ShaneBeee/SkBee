@@ -22,14 +22,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Merchant - Recipes")
-@Description({"Represents the recipes of a merchant. All recipes returns a list of all the recipes this merchant offers.", "You can also set/delete them or add to them. You can also get/set/delete a specific recipe.", "<b>note: when setting/deleting a specific merchant recipe the merchant MUST have a recipe in that slot</b>"})
+@Description({"Represents the recipes of a merchant. All recipes returns a list of all the recipes this merchant offers.",
+        "You can also set/delete them or add to them. You can also get/set/delete a specific recipe.",
+        "<b>note: when setting/deleting a specific merchant recipe the merchant MUST have a recipe in that slot</b>"})
 @Examples({"add {_recipe} to merchant recipes of {_merchant}",
         "set merchant recipe 1 of {_merchant} to {_recipe}"})
 @Since("1.17.0")
 public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
 
     static {
-        Skript.registerExpression(ExprMerchantRecipes.class, MerchantRecipe.class, ExpressionType.COMBINED, "[all] merchant recipes of %merchants/entities%", "merchant recipe %number% of %merchants/entities%");
+        Skript.registerExpression(ExprMerchantRecipes.class, MerchantRecipe.class, ExpressionType.COMBINED,
+                "[all] merchant recipes of %merchants/entities%",
+                "merchant recipe %number% of %merchants/entities%");
     }
 
     private Expression<?> merchants;
@@ -59,7 +63,10 @@ public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
                 recipes.add(merchant.getRecipe(recipe));
             }
         } else {
-            this.merchants.stream(event).filter(merchant -> merchant instanceof Merchant).map(merchant -> ((Merchant) merchant)).forEach(merchant -> recipes.addAll(merchant.getRecipes()));
+            for (Object obj : this.merchants.getArray(event)) {
+                if (!(obj instanceof Merchant merchant)) continue;
+                recipes.addAll(merchant.getRecipes());
+            }
         }
         return recipes.toArray(MerchantRecipe[]::new);
     }
