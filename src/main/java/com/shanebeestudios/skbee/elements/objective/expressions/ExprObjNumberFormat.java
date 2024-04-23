@@ -12,12 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.google.gson.JsonParseException;
 import com.shanebeestudios.skbee.api.util.ScoreboardUtils;
-import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -30,28 +26,28 @@ import java.util.List;
 
 @Name("Scoreboard - Objective Number Format")
 @Description({"Represents the way an objective score can be formatted.",
-        "There are three format types: Blank (nothing there), Fixed (a string of your choosing) and Styled (colored numbers).",
-        "NOTES:",
-        "`set` = You can set the format to any string you'd like (fixed) or a json component (styled number).",
-        "`delete` = Will leave it blank (nothing will be there, just nothing).",
-        "`reset` = Will reset back to its original format.",
-        "Json Formatting: <link>https://minecraft.wiki/w/Raw_JSON_text_format</link>",
-        "Requires Paper 1.20.4+"})
+    "There are three format types: Blank (nothing there), Fixed (a string of your choosing) and Styled (colored numbers).",
+    "NOTES:",
+    "`set` = You can set the format to any string you'd like (fixed) or a json component (styled number).",
+    "`delete` = Will leave it blank (nothing will be there, just nothing).",
+    "`reset` = Will reset back to its original format.",
+    "Json Formatting: <link>https://minecraft.wiki/w/Raw_JSON_text_format</link>",
+    "Requires Paper 1.20.4+"})
 @Examples({"# Format to a string",
-        "set number format of {-obj} to \"Look Im Fancy!!\"",
-        "set number format of {-obj} for player to \"Im a lil less fancy!\"",
-        "",
-        "# Format the number with color/style",
-        "set number format of {-obj} for player to \"{color:red,bold:true}\"",
-        "set number format of {-obj} to \"{color:\"\"##0DEAE3\"\",bold:true}\"",
-        "",
-        "# Format to blank",
-        "delete number format of {-obj}",
-        "delete number format of {-obj} for player",
-        "",
-        "# Reset formatting",
-        "reset number format of {-obj}",
-        "reset number format of {-obj} for player"})
+    "set number format of {-obj} to \"Look Im Fancy!!\"",
+    "set number format of {-obj} for player to \"Im a lil less fancy!\"",
+    "",
+    "# Format the number with color/style",
+    "set number format of {-obj} for player to \"{color:red,bold:true}\"",
+    "set number format of {-obj} to \"{color:\"\"##0DEAE3\"\",bold:true}\"",
+    "",
+    "# Format to blank",
+    "delete number format of {-obj}",
+    "delete number format of {-obj} for player",
+    "",
+    "# Reset formatting",
+    "reset number format of {-obj}",
+    "reset number format of {-obj} for player"})
 @Since("3.4.0")
 public class ExprObjNumberFormat extends SimpleExpression<String> {
 
@@ -59,7 +55,7 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
 
     static {
         Skript.registerExpression(ExprObjNumberFormat.class, String.class, ExpressionType.COMBINED,
-                "number format of %objective% [for %-entities/strings%]");
+            "number format of %objective% [for %-entities/strings%]");
     }
 
     private Expression<Objective> objectives;
@@ -181,18 +177,10 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
             numberFormat = ScoreboardUtils.getNumberFormatBlank();
         } else {
             if (score.startsWith("{") && score.endsWith("}")) {
-                try {
-                    // I don't like this, but it's the only way to get a Style from json
-                    // It needs to have some sort of text to be able to deserialize
-                    score = score.replace("}", "") + ",\"text\":\"\"}";
-                    Component deserialize = JSONComponentSerializer.json().deserialize(score);
-                    numberFormat = ScoreboardUtils.getNumberFormatStyled(deserialize.style());
-                } catch (JsonParseException ignore) {
-                    numberFormat = null;
-                }
+                score = score.replace("}", "") + ",\"text\":\"\"}";
+                numberFormat = ScoreboardUtils.getJsonFormat(score);
             } else {
-                ComponentWrapper comp = ComponentWrapper.fromText(score);
-                numberFormat = ScoreboardUtils.getNumberFormatFixed(comp.getComponent());
+                numberFormat = ScoreboardUtils.getNumberFormatFixed(score);
             }
         }
 
