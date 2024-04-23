@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.reflection;
 
+import ch.njol.skript.Skript;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.scoreboard.Team;
@@ -21,6 +22,7 @@ public class ChatReflection {
     private static final Class<?> NBT_BASE_CLASS = ReflectionUtils.getNMSClass("net.minecraft.nbt.NBTBase");
     private static final Method FROM_COMPONENT;
     private static final Method VISIT_METHOD;
+    private static final boolean IS_RUNNING_1_20_5 = Skript.isRunningMinecraft(1, 20, 5);
 
     static {
         TEXT_TAG_VISITOR_CLASS = ReflectionUtils.getNMSClass("net.minecraft.nbt.TextComponentTagVisitor");
@@ -52,7 +54,12 @@ public class ChatReflection {
         Object nmsNBT = new NBTContainer(compound.toString()).getCompound();
         String s = split != null ? split : "";
         try {
-            Object tagVisitorInstance = TEXT_TAG_VISITOR_CLASS.getConstructor(String.class, int.class).newInstance(s, 0);
+            Object tagVisitorInstance;
+            if (IS_RUNNING_1_20_5) {
+                tagVisitorInstance = TEXT_TAG_VISITOR_CLASS.getConstructor(String.class).newInstance(s);
+            } else {
+                tagVisitorInstance = TEXT_TAG_VISITOR_CLASS.getConstructor(String.class, int.class).newInstance(s, 0);
+            }
             Object prettyComponent = VISIT_METHOD.invoke(tagVisitorInstance, nmsNBT);
             return ((String) FROM_COMPONENT.invoke(CRAFT_CHAT_MESSAGE_CLASS, prettyComponent));
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
