@@ -92,12 +92,14 @@ public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
     }
 
     @Override
-    public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+    public void change(Event event, Object@Nullable [] delta, ChangeMode mode) {
         if (this.recipe == null) {
             List<MerchantRecipe> recipes = new ArrayList<>();
             if (delta != null) {
                 for (Object object : delta) {
-                    if (object instanceof MerchantRecipe merchantRecipe) recipes.add(merchantRecipe);
+                    if (!(object instanceof MerchantRecipe merchantRecipe)) continue;
+                    if (merchantRecipe.getIngredients().isEmpty()) continue;
+                    recipes.add(merchantRecipe);
                 }
             }
             for (Object obj : this.merchants.getArray(event)) {
@@ -120,13 +122,16 @@ public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
         if (num == null) return;
         int recipeSlot = num.intValue() - 1; // 1 = 0 | 0 = -1
         if (recipeSlot < 0) return;
+        MerchantRecipe merchantRecipe = delta != null ? (MerchantRecipe) delta[0] : null;
+        if (merchantRecipe != null && merchantRecipe.getIngredients().isEmpty()) return;
         for (Object obj : this.merchants.getArray(event)) {
             if (!(obj instanceof Merchant merchant)) continue;
             int recipeCount = merchant.getRecipeCount();
             if (recipeCount == 0 || recipeCount - 1 < recipeSlot) continue;
             switch (mode) {
                 case SET:
-                    merchant.setRecipe(recipeSlot, (MerchantRecipe) delta[0]);
+                    assert merchantRecipe != null;
+                    merchant.setRecipe(recipeSlot, merchantRecipe);
                     break;
                 case DELETE:
                     List<MerchantRecipe> updatedRecipes = new ArrayList<>(merchant.getRecipes());
