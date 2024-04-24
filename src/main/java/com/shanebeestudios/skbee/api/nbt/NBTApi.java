@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.nbt;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.SkBee;
@@ -38,6 +39,7 @@ public class NBTApi {
     @SuppressWarnings("ConstantConditions")
     private static boolean ENABLED;
     private static boolean DEBUG;
+    private static final String TAG_NAME = Skript.isRunningMinecraft(1,20,5) ? "components" : "tag";
 
     /**
      * Initialize this NBT API
@@ -210,15 +212,15 @@ public class NBTApi {
         NBTContainer itemNBT = NBTItem.convertItemtoNBT(itemType.getRandom());
 
         // Full NBT
-        if (nbtCompound.hasTag("tag")) {
+        if (nbtCompound.hasTag(TAG_NAME)) {
             if (nbtCompound.hasTag("id") && !itemNBT.getString("id").equalsIgnoreCase(nbtCompound.getString("id"))) {
                 // NBT compounds not the same item
                 return itemType;
             }
             itemNBT.mergeCompound(nbtCompound);
         } else {
-            // Tag portion of NBT
-            itemNBT.getOrCreateCompound("tag").mergeCompound(nbtCompound);
+            // Components/Tag portion of NBT
+            itemNBT.getOrCreateCompound(TAG_NAME).mergeCompound(nbtCompound);
         }
         ItemStack newItemStack = NBTItem.convertNBTtoItem(itemNBT);
         if (newItemStack == null) return null;
