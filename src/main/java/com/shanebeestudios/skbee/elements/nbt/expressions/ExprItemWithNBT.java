@@ -9,41 +9,42 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 
-import javax.annotation.Nullable;
-
-@SuppressWarnings("NullableProblems")
 @Name("NBT - Item with NBT")
-@Description("Get an item with nbt.")
-@Examples({"give player diamond sword with nbt compound from \"{Unbreakable:1}\"",
-        "set {_n} to nbt compound from \"{Points:10}\"",
-        "set {_i} to netherite axe with nbt {_n}",
-        "give player diamond sword with nbt from \"{points:1}\"",
-        "give player diamond pickaxe with nbt from \"{Damage:100}\""})
+@Description({"Get an item with nbt.",
+    "NOTE: The NBT in the examples represents NBT for Minecraft 1.20.5+"})
+@Examples({"give player diamond sword with nbt from \"{\"\"minecraft:food\"\":{nutrition:10,saturation:2.0f}}\"",
+    "set {_n} to nbt from \"{custom_data:{points:10}}\"",
+    "set {_i} to netherite axe with nbt {_n}",
+    "give player diamond sword with nbt from \"{custom_data:{points:10}}\"",
+    "give player diamond pickaxe with nbt from \"{damage:500}\"",
+    "give player 30 apples with nbt from \"{\"\"minecraft:max_stack_size\"\":10}\""})
 @Since("1.0.0")
 public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
 
     static {
         Skript.registerExpression(ExprItemWithNBT.class, ItemType.class, ExpressionType.PROPERTY,
-                "%itemtype% with [[item( |-)]nbt] %nbtcompound%");
+            "%itemtype% with [[item( |-)]nbt] %nbtcompound%");
     }
 
     @SuppressWarnings("null")
     private Expression<Object> nbt;
 
-    @SuppressWarnings({"unchecked", "null"})
+    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setExpr((Expression<ItemType>) exprs[0]);
-        nbt = (Expression<Object>) exprs[1];
+        this.nbt = (Expression<Object>) exprs[1];
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected ItemType[] get(Event event, ItemType[] source) {
         if (this.nbt.getSingle(event) instanceof NBTCompound nbtCompound) {
@@ -53,13 +54,13 @@ public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
     }
 
     @Override
-    public Class<? extends ItemType> getReturnType() {
+    public @NotNull Class<? extends ItemType> getReturnType() {
         return ItemType.class;
     }
 
     @Override
-    public String toString(@Nullable Event e, boolean d) {
-        return getExpr().toString(e, d) + " with nbt " + nbt.toString(e, d);
+    public @NotNull String toString(Event e, boolean d) {
+        return getExpr().toString(e, d) + " with nbt " + this.nbt.toString(e, d);
     }
 
 }

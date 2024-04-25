@@ -17,8 +17,8 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("NBT - Tag Delete")
 @Description("Delete an NBT tag without having to specify a tag type.")
-@Examples({"delete tag \"points\" of nbt of player's tool",
-        "delete tag \"custom;level\" of nbt of player"})
+@Examples({"delete tag \"minecraft:enchantments\" of nbt of player's tool",
+    "delete tag \"custom;level\" of nbt of player"})
 @Since("INSERT VERSION")
 public class EffTagDelete extends Effect {
 
@@ -47,10 +47,9 @@ public class EffTagDelete extends Effect {
         NBTApi.deleteTag(tag, nbt);
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "delete tag " + this.tag.toString(e,d) + " of " + this.nbt.toString(e,d);
+    public @NotNull String toString(Event e, boolean d) {
+        return "delete tag " + this.tag.toString(e, d) + " of " + this.nbt.toString(e, d);
     }
 
 }

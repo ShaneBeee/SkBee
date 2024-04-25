@@ -38,41 +38,41 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("NBT - Compound Of")
 @Description({"Get the NBT compound of a block/entity/item/file/chunk. Optionally you can return a copy of the compound. This way you can modify it without",
-        "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to",
-        "other entities.",
-        "\n'full nbt of %item%' will return a copy of the FULL NBT of an item (this includes id, count and 'tag' compound).",
-        "Modifying this will have no effect on the original item. This is useful for serializing items.",
-        "\n'nbt of %item%' will return the original. This will return the 'tag' portion of an items full NBT.",
-        "Modifying this will modify the original item.",
-        "\nNBT from a file will need to be saved manually using",
-        "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created.",
-        "",
-        "CHANGERS:",
-        "\t`add` = Adding a compound to another compound will merge them (This is controlled by Minecraft, results may vary).",
-        "\t`delete` = Will delete NBT files, or clear the NBT compound (This can break entities/players, be careful!).",
-        "\t`reset` = Will clear the NBT compound (This can break entities/players, be careful!)"})
+    "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to",
+    "other entities.",
+    "\n'full nbt of %item%' will return a copy of the FULL NBT of an item (this includes id, count and 'tag' compound).",
+    "Modifying this will have no effect on the original item. This is useful for serializing items.",
+    "\n'nbt of %item%' will return the original. This will return the 'tag' portion of an items full NBT.",
+    "Modifying this will modify the original item.",
+    "\nNBT from a file will need to be saved manually using",
+    "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created.",
+    "",
+    "CHANGERS:",
+    "\t`add` = Adding a compound to another compound will merge them (This is controlled by Minecraft, results may vary).",
+    "\t`delete` = Will delete NBT files, or clear the NBT compound (This can break entities/players, be careful!).",
+    "\t`reset` = Will clear the NBT compound (This can break entities/players, be careful!)"})
 @Examples({"set {_n} to nbt of player's tool",
-        "set {_n} to full nbt of player's tool",
-        "set {_nbt} to nbt of target entity",
-        "set {_n} to nbt of chunk at player",
-        "set {_n} to nbt copy of player",
-        "set {_n} to nbt of \"{id:\"\"minecraft:diamond_sword\"\",tag:{Damage:0,Enchantments:[{id:\"\"minecraft:sharpness\"\",lvl:3s}]},Count:1b}\"",
-        "set {_nbt} to nbt of file \"world/playerdata/some-uuid.dat\"",
-        "",
-        "add nbt from \"{NoAI:1}\" to nbt of last spawned entity",
-        "add nbt from \"{NoGravity:1}\" to nbt of {_entity}",
-        "add nbt from \"{custom:{points:1}}\" to nbt of player",
-        "",
-        "delete nbt from file \"plugins/some/file.nbt\"",
-        "reset {_n}",
-        "reset nbt of player's tool"})
+    "set {_n} to full nbt of player's tool",
+    "set {_nbt} to nbt of target entity",
+    "set {_n} to nbt of chunk at player",
+    "set {_n} to nbt copy of player",
+    "set {_n} to nbt from \"{components:{\"minecraft:enchantments\":{levels:{\"minecraft:sharpness\":3}}},count:1,id:\"minecraft:diamond_sword\"}\n\"",
+    "set {_nbt} to nbt of file \"world/playerdata/some-uuid.dat\"",
+    "",
+    "add nbt from \"{NoAI:1}\" to nbt of last spawned entity",
+    "add nbt from \"{NoGravity:1}\" to nbt of {_entity}",
+    "add nbt from \"{custom:{points:1}}\" to nbt of player",
+    "",
+    "delete nbt from file \"plugins/some/file.nbt\"",
+    "reset {_n}",
+    "reset nbt of player's tool"})
 @Since("1.6.0")
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-                "[:full] nbt [compound] [:copy] (of|from) %objects%",
-                "nbt [compound] [:copy] (of|from) file[s] %strings%"
+            "[:full] nbt [compound] [:copy] (of|from) %objects%",
+            "nbt [compound] [:copy] (of|from) file[s] %strings%"
 
         );
     }
