@@ -36,15 +36,20 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-@Name("NBT - Compound Of")
+@Name("NBT - Compound of Object")
 @Description({"Get the NBT compound of a block/entity/item/file/chunk. Optionally you can return a copy of the compound. This way you can modify it without",
-    "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to",
-    "other entities.",
-    "\n'full nbt of %item%' will return a copy of the FULL NBT of an item (this includes id, count and 'tag' compound).",
+    "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to other entities.",
+    "",
+    "SPECIAL CASES:",
+    "`full nbt of %item%` will return a copy of the FULL NBT of an item (this includes id, count and 'tag/components' compound).",
     "Modifying this will have no effect on the original item. This is useful for serializing items.",
-    "\n'nbt of %item%' will return the original. This will return the 'tag' portion of an items full NBT.",
-    "Modifying this will modify the original item.",
-    "\nNBT from a file will need to be saved manually using",
+    "`nbt of %item%` will return the original. Modifying this will modify the original item.",
+    "- (1.20.4-) This will return the 'tag' portion of an items full NBT.",
+    "- (1.20.5+) This will return the 'minecraft:custom_data' component container of an item's NBT.",
+    "`components nbt of %item%` will return the components container of an item's NBT. Modifying this will modify the original item. (This is an MC 1.20.5+ feature).",
+    "Please see <link>https://minecraft.wiki/w/Data_component_format</link> for more information on item NBT components.",
+    "",
+    "NBT from a file will need to be saved manually using",
     "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created.",
     "",
     "CHANGERS:",
@@ -71,13 +76,13 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-            "[:full] nbt [compound] [:copy] (of|from) %objects%",
+            "[(:full|:components)] nbt [compound] [:copy] (of|from) %objects%",
             "nbt [compound] [:copy] (of|from) file[s] %strings%"
-
         );
     }
 
     private boolean isFullItem;
+    private boolean isComponents;
     private boolean isCopy;
     private boolean isFile;
 
@@ -85,9 +90,10 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         Expression<?> expr = LiteralUtils.defendExpression(exprs[0]);
         setExpr(expr);
-        isFullItem = parseResult.hasTag("full");
-        isCopy = parseResult.hasTag("copy");
-        isFile = matchedPattern == 1;
+        this.isFullItem = parseResult.hasTag("full");
+        this.isComponents = parseResult.hasTag("components") || !NBTApi.HAS_ITEM_COMPONENTS;
+        this.isCopy = parseResult.hasTag("copy");
+        this.isFile = matchedPattern == 1;
         return LiteralUtils.canInitSafely(expr);
     }
 
@@ -112,31 +118,31 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             } else if (object instanceof Entity entity) {
                 compound = new NBTCustomEntity(entity);
             } else if (object instanceof ItemType itemType) {
-                if (isFullItem) {
+                if (this.isFullItem) {
                     compound = NBTItem.convertItemtoNBT(itemType.getRandom());
                 } else {
                     if (itemType.getMaterial() == Material.AIR) return null;
-                    compound = new NBTCustomItemType(itemType);
+                    compound = new NBTCustomItemType(itemType, this.isComponents);
                 }
             } else if (object instanceof ItemStack itemStack) {
-                if (isFullItem) {
+                if (this.isFullItem) {
                     return NBTItem.convertItemtoNBT(itemStack);
                 } else {
                     if (itemStack.getType() == Material.AIR) return null;
-                    compound = new NBTCustomItemStack(itemStack);
+                    compound = new NBTCustomItemStack(itemStack, this.isComponents);
                 }
             } else if (object instanceof Slot slot) {
                 ItemStack stack = slot.getItem();
                 if (stack == null) return null;
 
-                if (isFullItem) {
+                if (this.isFullItem) {
                     compound = NBTItem.convertItemtoNBT(stack);
                 } else {
                     if (stack.getType() == Material.AIR) return null;
-                    compound = new NBTCustomSlot(slot);
+                    compound = new NBTCustomSlot(slot, this.isComponents);
                 }
             } else if (object instanceof String nbtString) {
-                if (isFile) {
+                if (this.isFile) {
                     compound = NBTApi.getNBTFile(nbtString);
                 } else {
                     compound = NBTApi.validateNBT(nbtString);
@@ -147,7 +153,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 compound = comp;
             }
             if (compound != null) {
-                if (isCopy) {
+                if (this.isCopy) {
                     if (compound instanceof NBTCustom nbtCustom) {
                         return nbtCustom.getCopy();
                     }
@@ -168,7 +174,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
-        String full = this.isFullItem ? "full " : "";
+        String full = this.isFullItem ? "full " : (this.isComponents && NBTApi.HAS_ITEM_COMPONENTS) ? "components " : "";
         String copy = this.isCopy ? "copy " : "";
         return full + "nbt " + copy + "from " + getExpr().toString(e, d);
     }

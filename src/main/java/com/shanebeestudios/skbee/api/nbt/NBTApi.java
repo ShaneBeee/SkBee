@@ -39,7 +39,8 @@ public class NBTApi {
     @SuppressWarnings("ConstantConditions")
     private static boolean ENABLED;
     private static boolean DEBUG;
-    static final String TAG_NAME = Skript.isRunningMinecraft(1,20,5) ? "components" : "tag";
+    public static final boolean HAS_ITEM_COMPONENTS = Skript.isRunningMinecraft(1,20,5);
+    static final String TAG_NAME = HAS_ITEM_COMPONENTS ? "components" : "tag";
 
     /**
      * Initialize this NBT API

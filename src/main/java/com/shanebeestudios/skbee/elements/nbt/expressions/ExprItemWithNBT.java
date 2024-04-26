@@ -22,8 +22,8 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"give player diamond sword with nbt from \"{\"\"minecraft:food\"\":{nutrition:10,saturation:2.0f}}\"",
     "set {_n} to nbt from \"{custom_data:{points:10}}\"",
     "set {_i} to netherite axe with nbt {_n}",
-    "give player diamond sword with nbt from \"{custom_data:{points:10}}\"",
-    "give player diamond pickaxe with nbt from \"{damage:500}\"",
+    "give player diamond sword with nbt from \"{\"\"minecraft:custom_data\"\":{points:10}}\"",
+    "give player diamond pickaxe with nbt from \"{\"\"minecraft:damage\"\":500}\"",
     "give player 30 apples with nbt from \"{\"\"minecraft:max_stack_size\"\":10}\""})
 @Since("1.0.0")
 public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
