@@ -76,7 +76,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-            "[(:full|:components)] nbt [compound] [:copy] (of|from) %objects%",
+            "[(:full|components:component[s])] nbt [compound] [:copy] (of|from) %objects%",
             "nbt [compound] [:copy] (of|from) file[s] %strings%"
         );
     }
