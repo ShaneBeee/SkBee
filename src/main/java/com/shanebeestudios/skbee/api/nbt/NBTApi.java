@@ -39,7 +39,7 @@ public class NBTApi {
     @SuppressWarnings("ConstantConditions")
     private static boolean ENABLED;
     private static boolean DEBUG;
-    public static final boolean HAS_ITEM_COMPONENTS = Skript.isRunningMinecraft(1,20,5);
+    public static final boolean HAS_ITEM_COMPONENTS = Skript.isRunningMinecraft(1, 20, 5);
     static final String TAG_NAME = HAS_ITEM_COMPONENTS ? "components" : "tag";
 
     /**
@@ -735,8 +735,9 @@ public class NBTApi {
             return resolveFromList(compound, tag, type);
         }
 
-        // If the tag is empty, return null, unless it's a compound then we create an empty compound
-        if (type != NBTCustomType.NBTTagCompound && !compound.hasTag(tag)) return null;
+        // If the tag is empty/wrongtype, return null, unless it's a compound then we create an empty compound
+        if (type != NBTCustomType.NBTTagCompound && (!compound.hasTag(tag) || compound.getType(tag) != type.getNbtType()))
+            return null;
         switch (type) {
             case NBTTagString -> {
                 return compound.getString(tag);

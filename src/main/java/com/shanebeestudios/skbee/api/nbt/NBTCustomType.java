@@ -59,6 +59,10 @@ public enum NBTCustomType {
         return this.typeClass;
     }
 
+    public NBTType getNbtType() {
+        return this.nbtType;
+    }
+
     private static final Map<String, NBTCustomType> BY_NAME = new HashMap<>();
     private static final Map<NBTType, NBTCustomType> BY_TYPE = new HashMap<>();
 
