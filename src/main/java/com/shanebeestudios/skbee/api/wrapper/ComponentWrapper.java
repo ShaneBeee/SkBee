@@ -28,6 +28,7 @@ import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
@@ -169,10 +170,12 @@ public class ComponentWrapper {
     @Nullable
     private static Component getItem(Object object) {
         ItemStack itemStack = null;
+        Material material = null;
         if (object instanceof ItemStack is) {
             itemStack = is;
         } else if (object instanceof ItemType itemType) {
             itemStack = itemType.getRandom();
+            material = itemStack.getType();
         } else if (object instanceof Slot slot) {
             itemStack = slot.getItem();
         }
@@ -183,7 +186,8 @@ public class ComponentWrapper {
         if (itemMeta.hasDisplayName()) {
             return itemMeta.displayName();
         } else {
-            return Component.translatable(itemStack);
+            if (material == null) material = itemStack.getType();
+            return Component.translatable(material);
         }
     }
 
@@ -566,7 +570,7 @@ public class ComponentWrapper {
         }
 
         Times times = Times.times(Duration.ofMillis(fadeIn * 50), Duration.ofMillis(stay * 50),
-                Duration.ofMillis(fadeOut * 50));
+            Duration.ofMillis(fadeOut * 50));
 
         Title titleTitle = Title.title(titleComponent, subtitleComponent, times);
 
