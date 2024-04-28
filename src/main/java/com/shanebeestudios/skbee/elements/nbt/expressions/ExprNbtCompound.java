@@ -76,7 +76,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-            "[(:full|components:component[s])] nbt [compound] [:copy] (of|from) %objects%",
+            "[(:full|:component[s])] nbt [compound] [:copy] (of|from) %objects%",
             "nbt [compound] [:copy] (of|from) file[s] %strings%"
         );
     }
@@ -91,7 +91,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
         Expression<?> expr = LiteralUtils.defendExpression(exprs[0]);
         setExpr(expr);
         this.isFullItem = parseResult.hasTag("full");
-        this.isComponents = parseResult.hasTag("components") || !NBTApi.HAS_ITEM_COMPONENTS;
+        this.isComponents = parseResult.hasTag("component") || !NBTApi.HAS_ITEM_COMPONENTS;
         this.isCopy = parseResult.hasTag("copy");
         this.isFile = matchedPattern == 1;
         return LiteralUtils.canInitSafely(expr);
