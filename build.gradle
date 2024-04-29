@@ -13,7 +13,7 @@ compileJava {
 }
 
 // SkBee version
-version = '3.4.3'
+version = '3.5.0-beta1'
 
 repositories {
     mavenCentral()
@@ -51,7 +51,7 @@ dependencies {
     }
 
     // FastBoard
-    implementation("fr.mrmicky:fastboard:2.1.0")
+    implementation("fr.mrmicky:fastboard:2.2.0") // temporary version (waiting for official)
 
     // Virtual Furnace
     implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.0.0") {
