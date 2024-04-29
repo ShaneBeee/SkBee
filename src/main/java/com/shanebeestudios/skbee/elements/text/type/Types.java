@@ -86,7 +86,7 @@ public class Types {
                 .description("Represents a signed chat message.")
                 .examples("remove all players from signed chat message # will remove the message from the client")
                 .parser(SkriptUtils.getDefaultParser())
-                .since("INSERT VERSION")
+                .since("3.5.0")
                 .changer(new Changer<>() {
                     @SuppressWarnings("NullableProblems")
                     @Override
@@ -122,7 +122,7 @@ public class Types {
                         "# setup the mini message with the replacement placeholder",
                         "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r::*}",
                         "send component {_m}")
-                .since("INSERT VERSION"));
+                .since("3.5.0"));
 
         // Functions
         //noinspection DataFlowIssue
@@ -161,7 +161,7 @@ public class Types {
                         "# setup the mini message with the replacement placeholder",
                         "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r::*}",
                         "send component {_m}")
-                .since("INSERT VERSION"));
+                .since("3.5.0"));
     }
 
 }

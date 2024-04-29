@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 @Description("Delete an NBT tag without having to specify a tag type.")
 @Examples({"delete tag \"minecraft:enchantments\" of nbt of player's tool",
     "delete tag \"custom;level\" of nbt of player"})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class EffTagDelete extends Effect {
 
     static {

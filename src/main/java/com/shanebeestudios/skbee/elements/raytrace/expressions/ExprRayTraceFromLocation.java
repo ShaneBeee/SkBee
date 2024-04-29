@@ -33,7 +33,7 @@ import java.util.List;
         "\nIngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..). " +
                 "[Added in SkBee 3.0.0]",
         "\nIgnoring Entities/EntityTypes = Will ignore the entities/entitytypes from the final ray. " +
-                "[Added in SkBee INSERT VERSION]"})
+                "[Added in SkBee 3.5.0]"})
 @Examples("set {_ray} to ray trace from location of target block along vector(0.25,0.3,0) with max distance 50")
 @Since("2.6.0")
 public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {

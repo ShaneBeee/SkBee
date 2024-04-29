@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
         "\t\t\tset {_x} to (loop-number-1) - 1",
         "\t\t\tset {_z} to (loop-number-2) - 1",
         "\t\t\tset {_noise} to getNoise({_x} + (16 * chunkdata chunk x), {_z} + (16 * chunkdata chunk z))"})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class ExprChunkDataXZ extends SimpleExpression<Number> {
 
     static {

@@ -348,7 +348,7 @@ public class PaperEvents extends SimpleEvent {
                             "\t\twait 1 tick",
                             "\t\tadd (item of event-dropped item) to enderchest of player",
                             "\t\tkill event-dropped item")
-                    .since("INSERT VERSION");
+                    .since("3.5.0");
 
             EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, new Getter<>() {
                 @Override

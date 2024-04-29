@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"chunk gen:",
         "\tset chunkdata blocks within vector({_x}, 0, {_z}) and vector({_x}, {_y}, {_z}) to red_concrete[]",
         "\tset chunkdata block at vector({_x}, {_y}, {_z}) to red_concrete_powder[]"})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
 
     static {

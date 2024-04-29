@@ -58,7 +58,7 @@ import java.util.function.Consumer;
         "mc spawn \"minecraft:breeze\" at player:",
         "\tset max health of entity to 100",
         "\tset health of entity to 100"})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class SecSpawnMinecraftEntity extends EffectSection {
 
     static {

@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
         "\t\tset {_w} to world creator named \"mars\"",
         "\t\tset chunk generator of {_w} to chunk generator with id \"mars\"",
         "\t\tload world from creator {_w}"})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class EffWorldCreatorSetGenerator extends Effect {
 
     static {

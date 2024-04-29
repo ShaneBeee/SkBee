@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
         "Since the chunk isn't finalized yet, we use a vector instead of a location,",
         "but it's treated the same as a location."})
 @Examples("place chunkdata structure {-s} at vector({_x}, {_y}, {_z})")
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class EffChunkDataStructurePlace extends Effect {
 
     static {

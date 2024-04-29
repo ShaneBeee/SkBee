@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
         "\tset {_z} to z coord of event-location",
         "\tset {_n} to getNoise({_x}, {_z}) # This is just an example of a function you could do to get noise)",
         "\tset chunkdata height to {_n} + 1"})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class ExprChunkGenHeight extends SimpleExpression<Number> {
 
     static {

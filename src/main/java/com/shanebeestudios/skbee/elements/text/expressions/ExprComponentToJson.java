@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Get the serialized json string of a text component. Useful in NBT.")
 @Examples({"set {_m} to mini message from \"<rainbow>HI MOM, I MADE IT ON THE DOCS\"",
         "set {_j} to serialized json string of {_m}"})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class ExprComponentToJson extends SimplePropertyExpression<ComponentWrapper,String> {
 
     static {

@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
         "\tset {_biome} to chunkdata biome at vector(0,0,0)",
         "\tif {_biome} is plains:",
         "\t\tset chunkdata block at vector(0,0,0) to grass[]"})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class ExprChunkDataBiome extends SimpleExpression<Biome> {
 
     static {

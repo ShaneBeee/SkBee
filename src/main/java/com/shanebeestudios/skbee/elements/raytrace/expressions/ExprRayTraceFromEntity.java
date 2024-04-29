@@ -33,7 +33,7 @@ import java.util.List;
         "\nIngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..). " +
                 "[Added in SkBee 3.0.0]",
         "\nIgnoring Entities/EntityTypes = Will ignore the entities/entitytypes from the final ray. " +
-                "[Added in SkBee INSERT VERSION]"})
+                "[Added in SkBee 3.5.0]"})
 @Examples({"set {_ray} to ray trace from player with max distance 25",
         "set {_ray} to ray trace from player with max distance 25 while ignoring passable blocks",
         "set {_rays::*} to raytrace from all players with ray size 0.1"})

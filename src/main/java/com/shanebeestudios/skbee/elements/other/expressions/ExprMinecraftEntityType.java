@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Minecraft - EntityType")
 @Description("Get the Minecraft EntityType from an entity.")
 @Examples("set {_type} to minecraft entity type of target entity")
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class ExprMinecraftEntityType extends SimplePropertyExpression<Entity, EntityType> {
 
     static {

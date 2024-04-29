@@ -371,7 +371,7 @@ public class Types {
                     "mc spawn minecraft:armor_stand at player")
                 .usage(ENTITY_TYPE.getNames())
                 .after("entitydata", "entitydata")
-                .since("INSERT VERSION")
+                .since("3.5.0")
                 .parser(ENTITY_TYPE.getParser()));
         }
     }

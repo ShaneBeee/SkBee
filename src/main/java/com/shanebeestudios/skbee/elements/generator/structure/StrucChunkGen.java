@@ -66,7 +66,7 @@ import org.skriptlang.skript.lang.structure.Structure;
         "\tbiome gen:",
         "\t\t# Set our biome to something mars like",
         "\t\tset chunkdata biome to crimson forest"})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class StrucChunkGen extends Structure {
 
     static {

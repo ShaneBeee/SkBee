@@ -27,7 +27,7 @@ public class EvtEntitiesLoad extends SkriptEvent {
                 "\tif event-entities is set:",
                 "\t\tdelete event-entities",
                 "\t\tbroadcast \"REMOVED ENTITIES!\"")
-            .since("INSERT VERSION");
+            .since("3.5.0");
 
         EventValues.registerEventValue(EntitiesLoadEvent.class, Entity[].class, new Getter<>() {
             @Override
