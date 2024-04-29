@@ -33,36 +33,37 @@ public class Types {
         String namesString = StringUtils.join(names, ", ");
 
         Classes.registerClass(new ClassInfo<>(GameEvent.class, "gameevent")
-                .name("Game Event")
-                .user("game ?events?")
-                .description("Represents a Minecraft 'GameEvent', mainly used by Skulk Sensors. Requires MC 1.17+.",
-                        "See McWiki for more details -> https://minecraft.wiki/w/Sculk_Sensor#Vibration_amplitudes")
-                .usage(namesString)
-                .after("itemtype")
-                .examples("")
-                .since("1.14.0")
-                .parser(new Parser<>() {
+            .name("Game Event")
+            .user("game ?events?")
+            .description("Represents a Minecraft 'GameEvent', mainly used by Skulk Sensors. Requires MC 1.17+.",
+                "See McWiki for more details -> https://minecraft.wiki/w/Sculk_Sensor#Vibration_amplitudes",
+                "NOTE: These are auto-generated and may differ between server versions.")
+            .usage(namesString)
+            .after("itemtype")
+            .examples("")
+            .since("1.14.0")
+            .parser(new Parser<>() {
 
-                    @SuppressWarnings("NullableProblems")
-                    @Nullable
-                    @Override
-                    public GameEvent parse(String string, ParseContext context) {
-                        if (string.contains(" "))
-                            string = string.replace(" ", "_");
-                        if (GAME_EVENT_MAP.containsKey(string)) return GAME_EVENT_MAP.get(string);
-                        return null;
-                    }
+                @SuppressWarnings("NullableProblems")
+                @Nullable
+                @Override
+                public GameEvent parse(String string, ParseContext context) {
+                    if (string.contains(" "))
+                        string = string.replace(" ", "_");
+                    if (GAME_EVENT_MAP.containsKey(string)) return GAME_EVENT_MAP.get(string);
+                    return null;
+                }
 
-                    @Override
-                    public @NotNull String toString(GameEvent gameEvent, int flags) {
-                        return gameEvent.getKey().getKey();
-                    }
+                @Override
+                public @NotNull String toString(GameEvent gameEvent, int flags) {
+                    return gameEvent.getKey().getKey();
+                }
 
-                    @Override
-                    public @NotNull String toVariableNameString(GameEvent gameEvent) {
-                        return "gameevent:" + gameEvent.getKey().getKey();
-                    }
-                }));
+                @Override
+                public @NotNull String toVariableNameString(GameEvent gameEvent) {
+                    return "gameevent:" + gameEvent.getKey().getKey();
+                }
+            }));
     }
 
 }
