@@ -112,7 +112,7 @@ publishing {
 }
 
 javadoc {
-    destinationDir = file("${buildDir}/javadoc")
+    destinationDir = file("${projectDir}/build/javadoc")
     options {
         links('https://hub.spigotmc.org/javadocs/spigot/')
         links('https://docs.skriptlang.org/javadocs/')
