@@ -44,36 +44,6 @@ public class Types {
     public static boolean HAS_CHUNK_LOAD_LEVEL = Skript.classExists("org.bukkit.Chunk$LoadLevel");
 
     static {
-        // TODO marked for removal on Feb 16/2024
-        Classes.registerClass(new ClassInfo<>(OldItemFlag.class, "olditemflag")
-            .user("old ?item ?flags?")
-            .name(ClassInfo.NO_DOC)
-            .parser(new Parser<>() {
-                @Override
-                public boolean canParse(@NotNull ParseContext context) {
-                    return context == ParseContext.DEFAULT;
-                }
-
-                @SuppressWarnings("NullableProblems")
-                @Override
-                public @Nullable OldItemFlag parse(String string, ParseContext context) {
-                    OldItemFlag parse = OldItemFlag.parse(string);
-                    if (parse == null) return null;
-                    Skript.warning("Old item flags are deprecated and scheduled for removal!");
-                    return parse;
-                }
-
-                @Override
-                public @NotNull String toString(OldItemFlag itemFlag, int flags) {
-                    return itemFlag.getName();
-                }
-
-                @Override
-                public @NotNull String toVariableNameString(OldItemFlag itemFlag) {
-                    return toString(itemFlag, 0);
-                }
-            }));
-
         if (Classes.getExactClassInfo(ItemFlag.class) == null) {
             EnumWrapper<ItemFlag> ITEM_FLAGS = new EnumWrapper<>(ItemFlag.class);
             Classes.registerClass(ITEM_FLAGS.getClassInfo("itemflag")
