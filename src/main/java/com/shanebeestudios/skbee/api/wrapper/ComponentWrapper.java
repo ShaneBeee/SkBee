@@ -68,7 +68,7 @@ public class ComponentWrapper {
 
     /**
      * Create a component from text
-     * <p>Will convert '&' and '§' as color codes.</p>
+     * <p>Will convert '&amp;' and '§' as color codes.</p>
      *
      * @param text Text to add to component
      * @return Component from text
