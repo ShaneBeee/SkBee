@@ -14,6 +14,8 @@ import org.bukkit.entity.Vehicle;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDismountEvent;
+import org.bukkit.event.entity.EntityMountEvent;
 import org.bukkit.event.player.PlayerBedEnterEvent;
 import org.bukkit.event.player.PlayerBedLeaveEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
@@ -24,8 +26,6 @@ import org.bukkit.event.vehicle.VehicleEnterEvent;
 import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.jetbrains.annotations.NotNull;
-import org.spigotmc.event.entity.EntityDismountEvent;
-import org.spigotmc.event.entity.EntityMountEvent;
 
 import java.util.Collection;
 
@@ -130,7 +130,6 @@ public class BoundBorderListener implements Listener {
         }, 1);
     }
 
-    @SuppressWarnings("deprecation") // Event was deprecated jan 2024
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onMount(EntityMountEvent event) {
         if (!this.ENTITY_MOUNT) return;
@@ -143,7 +142,6 @@ public class BoundBorderListener implements Listener {
         }
     }
 
-    @SuppressWarnings("deprecation") // Event was deprecated jan 2024
     @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
     private void onDismount(EntityDismountEvent event) {
         if (!this.ENTITY_DISMOUNT) return;
