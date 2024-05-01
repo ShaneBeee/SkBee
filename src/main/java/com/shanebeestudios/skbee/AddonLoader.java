@@ -29,6 +29,9 @@ import org.bukkit.scoreboard.Team;
 
 import java.io.IOException;
 
+/**
+ * @hidden
+ */
 @SuppressWarnings("CallToPrintStackTrace")
 public class AddonLoader {
 

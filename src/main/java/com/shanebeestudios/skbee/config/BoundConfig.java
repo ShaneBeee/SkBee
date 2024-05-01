@@ -26,6 +26,9 @@ public class BoundConfig {
     private FileConfiguration boundConfig;
     private final Map<String, Bound> boundsMap = new HashMap<>();
 
+    /**
+     * @hidden
+     */
     public BoundConfig(SkBee plugin) {
         this.plugin = plugin;
         loadBoundConfig();

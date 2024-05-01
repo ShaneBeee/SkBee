@@ -62,6 +62,9 @@ public class Config {
     public boolean ELEMENTS_CHUNK_GEN;
     public boolean AUTO_LOAD_WORLDS;
 
+    /**
+     * @hidden
+     */
     public Config(SkBee plugin) {
         this.plugin = plugin;
         loadConfigFile();

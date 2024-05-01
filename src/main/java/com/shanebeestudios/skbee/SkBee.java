@@ -1,13 +1,13 @@
 package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
+import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.config.BoundConfig;
-import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
@@ -31,7 +31,6 @@ public class SkBee extends JavaPlugin {
     static final int[] EARLIEST_VERSION = new int[]{1, 18, 2};
 
     private static SkBee instance;
-    private PluginManager pm;
     private Config config;
     BoundConfig boundConfig = null;
     VirtualFurnaceAPI virtualFurnaceAPI;
@@ -39,6 +38,15 @@ public class SkBee extends JavaPlugin {
     StructureManager structureManager = null;
     private AddonLoader addonLoader = null;
 
+    /**
+     * @hidden must be public for Bukkit but let's hide from docs
+     */
+    public SkBee() {
+    }
+
+    /**
+     * @hidden
+     */
     @SuppressWarnings("deprecation")
     @Override
     public void onEnable() {
@@ -46,7 +54,7 @@ public class SkBee extends JavaPlugin {
         long start = System.currentTimeMillis();
         instance = this;
         this.config = new Config(this);
-        this.pm = Bukkit.getPluginManager();
+        PluginManager pm = Bukkit.getPluginManager();
 
         this.addonLoader = new AddonLoader(this);
         // Check if SkriptAddon can actually load
@@ -87,6 +95,9 @@ public class SkBee extends JavaPlugin {
         metrics.addCustomChart(new SimplePie("virtual_furnace", () -> String.valueOf(config.ELEMENTS_VIRTUAL_FURNACE)));
     }
 
+    /**
+     * @hidden
+     */
     @Override
     public void onDisable() {
         // Cancel tasks on stop to prevent async issues
@@ -130,6 +141,7 @@ public class SkBee extends JavaPlugin {
      * Get an instance of the {@link BeeWorldConfig}
      *
      * @return Instance of BeeWorld config
+     * @hidden
      */
     public BeeWorldConfig getBeeWorldConfig() {
         return beeWorldConfig;
@@ -153,6 +165,9 @@ public class SkBee extends JavaPlugin {
         return structureManager;
     }
 
+    /**
+     * @hidden
+     */
     public AddonLoader getAddonLoader() {
         return addonLoader;
     }
