@@ -61,10 +61,6 @@ dependencies {
     implementation(group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.2')
 }
 
-java {
-    toolchain.languageVersion.set(JavaLanguageVersion.of(latestJava))
-}
-
 tasks.withType(JavaCompile).configureEach {
     options.compilerArgs += ['-source', '' + oldestJava, '-target', '' + oldestJava]
 }
