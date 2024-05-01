@@ -207,9 +207,10 @@ public class NBTApi {
      *
      * @param itemType    ItemType to add NBT to
      * @param nbtCompound NBT to add to ItemType
+     * @param custom      Should be stored within the "minecraft:custom_data" component (1.20.5+)
      * @return ItemType with NBT merged into
      */
-    public static @Nullable ItemType getItemTypeWithNBT(ItemType itemType, NBTCompound nbtCompound) {
+    public static @Nullable ItemType getItemTypeWithNBT(ItemType itemType, NBTCompound nbtCompound, boolean custom) {
         NBTContainer itemNBT = NBTItem.convertItemtoNBT(itemType.getRandom());
 
         // Full NBT
@@ -221,7 +222,9 @@ public class NBTApi {
             itemNBT.mergeCompound(nbtCompound);
         } else {
             // Components/Tag portion of NBT
-            itemNBT.getOrCreateCompound(TAG_NAME).mergeCompound(nbtCompound);
+            NBTCompound components = itemNBT.getOrCreateCompound(TAG_NAME);
+            if (custom && HAS_ITEM_COMPONENTS) components = components.getOrCreateCompound("minecraft:custom_data");
+            components.mergeCompound(nbtCompound);
         }
         ItemStack newItemStack = NBTItem.convertNBTtoItem(itemNBT);
         if (newItemStack == null) return null;
