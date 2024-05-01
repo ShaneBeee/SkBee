@@ -50,7 +50,7 @@ dependencies {
     }
 
     // FastBoard
-    implementation("fr.mrmicky:fastboard:2.2.0") // temporary version (waiting for official)
+    implementation("fr.mrmicky:fastboard:2.1.2")
 
     // Virtual Furnace
     implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.0.0") {
