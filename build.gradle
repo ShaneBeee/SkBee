@@ -7,9 +7,9 @@ plugins {
 }
 
 // SkBee version
-version = '3.5.0-beta1'
-def latestJava = 21;
-def oldestJava = 17;
+version = '3.5.0'
+def latestJava = 21
+def oldestJava = 17
 
 repositories {
     mavenCentral()

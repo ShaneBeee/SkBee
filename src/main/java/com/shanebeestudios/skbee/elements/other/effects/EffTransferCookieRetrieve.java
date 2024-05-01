@@ -5,6 +5,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.Nullable;
     "NOTE: Cookies are stored across server transfers."})
 @Examples({"retrieve cookie with key \"my_id:super_mom_cookie\" from player and store in {_cookie}",
     "broadcast {_cookie}"})
+@Since("3.5.0")
 public class EffTransferCookieRetrieve extends Effect {
 
     static {

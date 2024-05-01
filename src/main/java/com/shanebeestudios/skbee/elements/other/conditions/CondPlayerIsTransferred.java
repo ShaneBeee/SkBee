@@ -14,7 +14,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"on join:",
     "\tif player is transferred:",
     "\t\tkick player due to \"No Transfers Bruh!\""})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class CondPlayerIsTransferred extends PropertyCondition<Player> {
 
     static {

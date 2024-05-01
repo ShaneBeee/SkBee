@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"transfer all players to \"my.server.com\" on port 25566",
     "transfer player to \"1.1.1.1\" on port 25567",
     "transfer player to \"localhost\""})
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class EffTransferPlayer extends Effect {
 
     static {

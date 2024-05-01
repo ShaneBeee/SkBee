@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
     "NOTE: Only a string less than 5120 characters is accepted.",
     "NOTE: Cookies are stored on players across server transfers."})
 @Examples("store cookie \"look mah imma cookie\" with key \"my_id:super_mom_cookie\" on player")
-@Since("INSERT VERSION")
+@Since("3.5.0")
 public class EffTransferCookieStore extends Effect {
 
     static {
