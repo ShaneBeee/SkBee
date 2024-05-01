@@ -15,7 +15,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("DisplayEntity - View Range")
-@Description({"Represents the view range of a Display Entity.", Types.McWIKI})
+@Description({"Represents the view range of a Display Entity. This is a client setting and has nothing to do with the server.",
+        "As per McWiki:",
+        "Maximum view range of the entity. When the distance is more than [view_range] x [entityDistanceScaling (client setting)] x 64,",
+        "the entity is not rendered. Defaults to 1.0.",
+        Types.McWIKI})
 @Examples("set display view range of {_display} to 500")
 @Since("2.8.0")
 public class ExprDisplayViewRange extends SimplePropertyExpression<Entity, Number> {

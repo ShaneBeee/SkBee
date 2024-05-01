@@ -10,9 +10,11 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
+import org.bukkit.generator.LimitedRegion;
 import org.bukkit.structure.Structure;
 import org.bukkit.structure.StructureManager;
 import org.bukkit.util.BlockVector;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
@@ -89,6 +91,11 @@ public class StructureWrapper {
         this.pdcWrapper.setLocation(LAST_SAVED_LOCATION_KEY, location);
         palette = MathUtil.clamp(palette, -1, this.structure.getPaletteCount() - 1);
         structure.place(location, includeEntities, rotation, mirror, palette, integrity, new Random());
+    }
+
+    public void place(LimitedRegion region, Vector vector) {
+        structure.place(region, new BlockVector(vector),
+                this.includeEntities, this.rotation, this.mirror, -1, this.integrity, new Random());
     }
 
     /**

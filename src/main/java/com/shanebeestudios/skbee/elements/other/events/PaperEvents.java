@@ -26,7 +26,9 @@ import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
+import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.NotNull;
@@ -330,6 +332,42 @@ public class PaperEvents extends SimpleEvent {
                 @Override
                 public Block get(EntityInsideBlockEvent event) {
                     return event.getBlock();
+                }
+            }, EventValues.TIME_NOW);
+        }
+
+        // PlayerAttemptPickupItemEvent
+        if (Skript.classExists("org.bukkit.event.player.PlayerAttemptPickupItemEvent")) {
+            Skript.registerEvent("Player Attempt Item Pickup", PaperEvents.class, PlayerAttemptPickupItemEvent.class, "player attempt item pickup")
+                    .description("Called when a player attempts to pick an item up from the ground. Requires PaperMC.",
+                            "`event-number` = Represents the amount that will remain on the ground, if any.",
+                            "`past event-number` = Represents the item amount of the dropped item before pickup.",
+                            "`event-dropped item` = Represents the dropped item entity that is attempting to pickup.")
+                    .examples("on player attempt item pickup:",
+                            "\tif event-number > 0:",
+                            "\t\twait 1 tick",
+                            "\t\tadd (item of event-dropped item) to enderchest of player",
+                            "\t\tkill event-dropped item")
+                    .since("3.5.0");
+
+            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, new Getter<>() {
+                @Override
+                public Number get(PlayerAttemptPickupItemEvent event) {
+                    return event.getRemaining();
+                }
+            }, EventValues.TIME_NOW);
+
+            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, new Getter<>() {
+                @Override
+                public Number get(PlayerAttemptPickupItemEvent event) {
+                    return event.getItem().getItemStack().getAmount();
+                }
+            }, EventValues.TIME_PAST);
+
+            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Item.class, new Getter<>() {
+                @Override
+                public Item get(PlayerAttemptPickupItemEvent event) {
+                    return event.getItem();
                 }
             }, EventValues.TIME_NOW);
         }

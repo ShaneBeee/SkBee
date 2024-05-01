@@ -6,6 +6,7 @@ import java.awt.*;
 public class Checkers {
     public Checkers() {
         var frame = new JFrame("Checkers \uD83D\uDE0E");
+        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         frame.getContentPane().setPreferredSize(new Dimension(512, 512));
         frame.pack();

@@ -16,19 +16,24 @@ import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
 import com.shanebeestudios.skbee.api.scoreboard.FastBoardWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("NullableProblems")
 @Name("Scoreboard - Line")
-@Description({"Get/set/delete lines of a player's scoreboard. Lines are valid from 1 to 15. 1 being the line at the top",
-        "and 15 being the bottom. Line length is unlimited."})
+@Description({"Get/set/delete lines of a player's scoreboard.",
+        "Lines are valid from 1 to 15. 1 being the line at the top and 15 being the bottom (This can be changed in the config).",
+        "Line length is unlimited.",
+        "Supports number format on Minecraft 1.20.4+ by providing 2 strings (see examples)."})
 @Examples({"set line 1 of player's scoreboard to \"Look mah I'm on Minecraft\"",
         "set line 15 of all players' scoreboards to \"I CAN SEE YOU\"",
-        "set {_line} to line 10 of player's scoreboard"})
+        "set {_line} to line 10 of player's scoreboard",
+        "",
+        "#NumberFormat on Minecraft 1.20.4+",
+        "set line 1 of scoreboard of player to \"Player:\" and \"&b%name of player%\""})
 @Since("1.16.0")
 public class ExprScoreboardLine extends SimpleExpression<String> {
 
@@ -71,7 +76,7 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {
-            case SET, DELETE -> CollectionUtils.array(String.class);
+            case SET, DELETE -> CollectionUtils.array(String[].class);
             default -> null;
         };
     }
@@ -80,6 +85,7 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         String lineString = delta != null ? (String) delta[0] : null;
+        String score = delta != null && delta.length > 1 ? (String) delta[1] : null;
 
         Number lineSingle = this.line.getSingle(event);
         if (lineSingle == null) return;
@@ -91,7 +97,7 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
             FastBoardWrapper board = BoardManager.getBoard(player);
             if (board != null) {
                 if (mode == ChangeMode.SET) {
-                    board.setLine(line, lineString);
+                    board.setLine(line, lineString, score);
                 } else if (mode == ChangeMode.DELETE) {
                     board.deleteLine(line);
                 }
@@ -109,7 +115,6 @@ public class ExprScoreboardLine extends SimpleExpression<String> {
         return String.class;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "line " + this.line.toString(e, d) + " of scoreboard[s] of " + this.player.toString(e, d);

@@ -16,12 +16,12 @@ public enum NBTCustomType {
 
     NBTTagEnd("tag end", NBTType.NBTTagEnd),
     // Numbers
-    NBTTagByte("byte", NBTType.NBTTagByte, Number.class),
-    NBTTagShort("short", NBTType.NBTTagShort, Number.class),
-    NBTTagInt("int", NBTType.NBTTagInt, Number.class),
-    NBTTagLong("long", NBTType.NBTTagLong, Number.class),
-    NBTTagFloat("float", NBTType.NBTTagFloat, Number.class),
-    NBTTagDouble("double", NBTType.NBTTagDouble, Number.class),
+    NBTTagByte("byte", NBTType.NBTTagByte, Byte.class),
+    NBTTagShort("short", NBTType.NBTTagShort, Short.class),
+    NBTTagInt("int", NBTType.NBTTagInt, Integer.class),
+    NBTTagLong("long", NBTType.NBTTagLong, Long.class),
+    NBTTagFloat("float", NBTType.NBTTagFloat, Float.class),
+    NBTTagDouble("double", NBTType.NBTTagDouble, Double.class),
     // Other
     NBTTagString("string", NBTType.NBTTagString, String.class),
     NBTTagCompound("compound", NBTType.NBTTagCompound, NBTCompound.class),
@@ -57,6 +57,10 @@ public enum NBTCustomType {
 
     public Class<?> getTypeClass() {
         return this.typeClass;
+    }
+
+    public NBTType getNbtType() {
+        return this.nbtType;
     }
 
     private static final Map<String, NBTCustomType> BY_NAME = new HashMap<>();

@@ -6,14 +6,10 @@ plugins {
     id 'maven-publish'
 }
 
-compileJava {
-    sourceCompatibility = '17'
-    targetCompatibility = '17'
-    options.encoding = 'UTF-8'
-}
-
 // SkBee version
-version = '3.4.3'
+version = '3.5.0'
+def latestJava = 21
+def oldestJava = 17
 
 repositories {
     mavenCentral()
@@ -30,11 +26,14 @@ repositories {
 
     // CodeMC (NBT-API)
     maven { url 'https://repo.codemc.io/repository/maven-public/' }
+
+    // Adventure - Paper isn't including this?!?!
+    maven { url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
 
     // Skript
     compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.7.1') {
@@ -46,12 +45,12 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.12.2") {
+    implementation("de.tr7zw:item-nbt-api:2.12.4") {
         transitive = false
     }
 
     // FastBoard
-    implementation("fr.mrmicky:fastboard:2.0.2")
+    implementation("fr.mrmicky:fastboard:2.1.2")
 
     // Virtual Furnace
     implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.0.0") {
@@ -60,6 +59,14 @@ dependencies {
 
     // bStats
     implementation(group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.2')
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(latestJava))
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['-source', '' + oldestJava, '-target', '' + oldestJava]
 }
 
 build {
@@ -96,7 +103,7 @@ shadowJar {
 tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
-    into '/Users/ShaneBee/Desktop/Server/Skript/1-20-4/plugins'
+    into '/Users/ShaneBee/Desktop/Server/Skript/1-20-6/plugins'
 }
 
 publishing {
@@ -112,7 +119,7 @@ publishing {
 }
 
 javadoc {
-    destinationDir = file("${buildDir}/javadoc")
+    destinationDir = file("${projectDir}/build/javadoc")
     options {
         links('https://hub.spigotmc.org/javadocs/spigot/')
         links('https://docs.skriptlang.org/javadocs/')

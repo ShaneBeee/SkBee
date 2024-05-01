@@ -46,6 +46,7 @@ public enum ChatUtil {
         this.bungeeChatColor = bungee;
     }
 
+    @Nullable
     public static SkriptColor getSkriptColorByBungee(ChatColor chatColor) {
         for (ChatUtil value : ChatUtil.values()) {
             if (chatColor == value.bungeeChatColor) {
@@ -74,13 +75,12 @@ public enum ChatUtil {
             EntityType type = EntityUtils.toBukkitEntityType(entityData);
             return Bukkit.getUnsafe().getTranslationKey(type);
         } else if (object instanceof ItemStack itemStack) {
-            return itemStack.translationKey();
+            return itemStack.getType().translationKey();
         } else if (object instanceof ItemType itemType) {
-            ItemStack itemStack = itemType.getRandom();
-            return itemStack.translationKey();
+            return itemType.getMaterial().translationKey();
         } else if (object instanceof Slot slot) {
-            ItemStack itemStack = slot.getItem();
-            return getTranslation(itemStack);
+            if (slot.getItem() == null) return null;
+            return slot.getItem().translationKey();
         } else if (object instanceof String string) {
             return string;
         } else if (object instanceof Translatable translatable) {
