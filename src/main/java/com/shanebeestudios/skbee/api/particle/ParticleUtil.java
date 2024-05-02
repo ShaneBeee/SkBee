@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
+import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
@@ -141,6 +142,8 @@ public class ParticleUtil {
             return "number(int)";
         } else if (dataType == Float.class) {
             return "number(float)";
+        } else if (dataType == Color.class) {
+            return "color";
         }
         // For future particle data additions that haven't been added here yet
         return "UNKNOWN";
@@ -182,6 +185,8 @@ public class ParticleUtil {
             return data;
         } else if (dataType == Vibration.class && data instanceof Vibration) {
             return data;
+        } else if (dataType == Color.class && data instanceof ch.njol.skript.util.Color skriptColor) {
+            return skriptColor.asBukkitColor();
         } else if (dataType == BlockData.class) {
             if (data instanceof BlockData) {
                 return data;
