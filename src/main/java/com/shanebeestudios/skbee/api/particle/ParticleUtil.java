@@ -144,7 +144,7 @@ public class ParticleUtil {
         } else if (dataType == Float.class) {
             return "number(float)";
         } else if (dataType == Color.class) {
-            return "color";
+            return "color/bukkitcolor";
         }
         // For future particle data additions that haven't been added here yet
         Util.debug("Missing particle data type: '&e" + dataType.getName() + "&7'");
@@ -189,6 +189,8 @@ public class ParticleUtil {
             return data;
         } else if (dataType == Color.class && data instanceof ch.njol.skript.util.Color skriptColor) {
             return skriptColor.asBukkitColor();
+        } else if (dataType == Color.class && data instanceof Color) {
+            return data;
         } else if (dataType == BlockData.class) {
             if (data instanceof BlockData) {
                 return data;
