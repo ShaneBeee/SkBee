@@ -37,17 +37,18 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 @Name("NBT - Compound of Object")
-@Description({"Get the NBT compound of a block/entity/item/file/chunk. Optionally you can return a copy of the compound. This way you can modify it without",
-    "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to other entities.",
+@Description({"Get the NBT compound of a block/entity/item/file/chunk.",
     "",
     "SPECIAL CASES:",
-    "`full nbt of %item%` will return a copy of the FULL NBT of an item (this includes id, count and 'tag/components' compound).",
+    "`full nbt of %item%` = Returns a copy of the FULL NBT of an item (this includes id, count and 'tag/components' compound).",
     "Modifying this will have no effect on the original item. This is useful for serializing items.",
-    "`nbt of %item%` will return the original. Modifying this will modify the original item.",
+    "`nbt of %item%` = Returns the original. Modifying this will modify the original item.",
     "\\- (1.20.4-) This will return the 'tag' portion of an items full NBT.",
     "\\- (1.20.5+) This will return the 'minecraft:custom_data' component container of an item's NBT.",
-    "`components nbt of %item%` will return the components container of an item's NBT. Modifying this will modify the original item. (This is an MC 1.20.5+ feature).",
+    "`components nbt of %item%` = Returns the components container of an item's NBT. Modifying this will modify the original item. (This is an MC 1.20.5+ feature).",
     "Please see <link>https://minecraft.wiki/w/Data_component_format</link> for more information on item NBT components.",
+    "`nbt copy of %objects%` = Returns a copy of the original NBT compound. This way you can modify it without",
+    "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to other entities.",
     "",
     "NBT from a file will need to be saved manually using",
     "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created.",
