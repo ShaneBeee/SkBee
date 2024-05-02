@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -146,6 +147,7 @@ public class ParticleUtil {
             return "color";
         }
         // For future particle data additions that haven't been added here yet
+        Util.debug("Missing particle data type: '&e" + dataType.getName() + "&7'");
         return "UNKNOWN";
     }
 
