@@ -404,7 +404,7 @@ public class Types {
                 return new Color[]{Color.fromARGB(alpha, red, green, blue)};
             }
         }
-            .description("Creates a new Bukkit Color using alpha, red, green and blue channels.",
+            .description("Creates a new Bukkit Color using alpha (transparency), red, green and blue channels.",
                 "Number values must be between 0 and 255.")
             .examples("set {_color} to bukkitColor(50,155,100,10)")
             .since("2.8.0"));
