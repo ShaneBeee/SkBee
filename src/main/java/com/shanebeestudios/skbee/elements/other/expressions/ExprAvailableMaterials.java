@@ -26,6 +26,7 @@ import org.bukkit.Registry;
 import org.bukkit.Statistic;
 import org.bukkit.block.Biome;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.damage.DamageType;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -45,12 +46,12 @@ import java.util.stream.Collectors;
 
 @Name("Available Objects")
 @Description({"Get a list of all available materials (will return as an itemtype, but it's a mix of blocks and items),",
-        "itemtypes, block types (will return as an item type, but only materials which can be placed as a block), block datas,",
-        "entity types, enchantments, potion effect types, biomes, game rules, particles (SkBee particles), sounds (as string),",
-        "game events, statistics, entity effects, trim materials, and trim patterns."})
+    "itemtypes, block types (will return as an item type, but only materials which can be placed as a block), block datas,",
+    "entity types, enchantments, potion effect types, biomes, game rules, particles (SkBee particles), sounds (as string),",
+    "game events, statistics, entity effects, trim materials, trim patterns, damage types."})
 @Examples({"give player random element of all available itemtypes",
-        "set {_blocks::*} to all available blocktypes",
-        "set target block to random element of all available blockdatas"})
+    "set {_blocks::*} to all available blocktypes",
+    "set target block to random element of all available blockdatas"})
 @Since("1.15.0")
 @SuppressWarnings({"NullableProblems", "rawtypes"})
 public class ExprAvailableMaterials extends SimpleExpression<Object> {
@@ -63,7 +64,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         List<ItemType> blockTypes = new ArrayList<>();
         List<BlockData> blockDatas = new ArrayList<>();
 
-        bukkitMaterials = bukkitMaterials.stream().sorted(Comparator.comparing(Enum::toString)).collect(Collectors.toList());
+        bukkitMaterials = bukkitMaterials.stream().sorted(Comparator.comparing(Enum::toString)).toList();
         for (Material material : bukkitMaterials) {
             ItemType itemType = new ItemType(material);
             materials.add(itemType);
@@ -120,10 +121,13 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         Registration.registerList("entity effects", EntityEffect.class, entityEffects);
 
         // Register registries
-        Registration.registerRegistry("enchantments", Enchantment.class, Registry.ENCHANTMENT);
         Registration.registerRegistry("biomes", Biome.class, Registry.BIOME);
-        Registration.registerRegistry("statistics", Statistic.class, Registry.STATISTIC);
+        if (Skript.fieldExists(Registry.class, "DAMAGE_TYPE")) {
+            Registration.registerRegistry("damage types", DamageType.class, Registry.DAMAGE_TYPE);
+        }
+        Registration.registerRegistry("enchantments", Enchantment.class, Registry.ENCHANTMENT);
         Registration.registerRegistry("game events", GameEvent.class, Registry.GAME_EVENT);
+        Registration.registerRegistry("statistics", Statistic.class, Registry.STATISTIC);
 
         if (Types.HAS_ARMOR_TRIM) {
             Registration.registerRegistry("trim materials", TrimMaterial.class, Registry.TRIM_MATERIAL);
@@ -134,7 +138,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         Registration.registerStrings("sounds", Registry.SOUNDS);
 
         Skript.registerExpression(ExprAvailableMaterials.class, Object.class, ExpressionType.SIMPLE,
-                Registration.getPatterns());
+            Registration.getPatterns());
     }
 
     private Registration registration;
