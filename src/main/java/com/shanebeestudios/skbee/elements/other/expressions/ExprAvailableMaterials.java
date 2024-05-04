@@ -24,6 +24,7 @@ import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Registry;
 import org.bukkit.Statistic;
+import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.damage.DamageType;
@@ -33,6 +34,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
+import org.bukkit.loot.LootTable;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
 
@@ -45,10 +47,11 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Name("Available Objects")
-@Description({"Get a list of all available materials (will return as an itemtype, but it's a mix of blocks and items),",
-    "itemtypes, block types (will return as an item type, but only materials which can be placed as a block), block datas,",
-    "entity types, enchantments, potion effect types, biomes, game rules, particles (SkBee particles), sounds (as string),",
-    "game events, statistics, entity effects, trim materials, trim patterns, damage types."})
+@Description({"Get a list of all available objects of a specific type.",
+    "SPECIAL TYPES:",
+    "`materials` = All materials as ItemTypes (will be a list of blocks and items).",
+    "`itemtypes` = All item materials as ItemTypes.",
+    "`blocktypes` = All block materials as ItemTypes."})
 @Examples({"give player random element of all available itemtypes",
     "set {_blocks::*} to all available blocktypes",
     "set target block to random element of all available blockdatas"})
@@ -100,12 +103,15 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         }
         List<EntityData> entityDatas = entityDataMap.values().stream().sorted(Comparator.comparing(Object::toString)).collect(Collectors.toList());
         Registration.registerList("entity[ ]types", EntityData.class, entityDatas);
-        Registration.registerRegistry("minecraft[ ]entity[ ]types", EntityType.class, Registry.ENTITY_TYPE);
 
         // Register enums (which don't have a registry)
         List<GameRule> gameRules = Arrays.asList(GameRule.values());
         gameRules = gameRules.stream().sorted(Comparator.comparing(GameRule::getName)).collect(Collectors.toList());
         Registration.registerList("game[ ]rules", GameRule.class, gameRules);
+
+        List<LootTable> lootTables = new ArrayList<>();
+        Registry.LOOT_TABLES.forEach(lt -> lootTables.add(lt.getLootTable()));
+        Registration.registerList("loot tables", LootTable.class, lootTables.stream().sorted(Comparator.comparing(Keyed::getKey)).toList());
 
         List<Particle> particles = ParticleUtil.getAvailableParticles();
         particles = particles.stream().sorted(Comparator.comparing(ParticleUtil::getName)).collect(Collectors.toList());
@@ -121,12 +127,14 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         Registration.registerList("entity effects", EntityEffect.class, entityEffects);
 
         // Register registries
+        Registration.registerRegistry("attributes", Attribute.class, Registry.ATTRIBUTE);
         Registration.registerRegistry("biomes", Biome.class, Registry.BIOME);
         if (Skript.fieldExists(Registry.class, "DAMAGE_TYPE")) {
             Registration.registerRegistry("damage types", DamageType.class, Registry.DAMAGE_TYPE);
         }
         Registration.registerRegistry("enchantments", Enchantment.class, Registry.ENCHANTMENT);
         Registration.registerRegistry("game events", GameEvent.class, Registry.GAME_EVENT);
+        Registration.registerRegistry("minecraft entity[ ]types", EntityType.class, Registry.ENTITY_TYPE);
         Registration.registerRegistry("statistics", Statistic.class, Registry.STATISTIC);
 
         if (Types.HAS_ARMOR_TRIM) {
@@ -151,7 +159,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
     @Override
     protected @Nullable Object[] get(Event event) {
-        return this.registration.getItems();
+        return this.registration.getObjects();
     }
 
     @Override
@@ -196,20 +204,18 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         }
 
         static String[] getPatterns() {
-            List<String> patterns = new ArrayList<>();
-            REGISTRATIONS.forEach(registration -> patterns.add(registration.getPattern()));
-            return patterns.toArray(new String[0]);
+            return REGISTRATIONS.stream().map(Registration::getPattern).toList().toArray(new String[0]);
         }
 
         String pattern;
         Class<T> type;
-        List<T> items;
+        List<T> objects;
         String name;
 
-        public Registration(String pattern, Class<T> type, List<T> items) {
+        public Registration(String pattern, Class<T> type, List<T> objects) {
             this.pattern = pattern;
             this.type = type;
-            this.items = items;
+            this.objects = objects;
             this.name = pattern.replace("[ ]", " ");
         }
 
@@ -221,8 +227,8 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
             return "all available " + this.name;
         }
 
-        Object[] getItems() {
-            return items.toArray(new Object[0]);
+        Object[] getObjects() {
+            return this.objects.toArray(new Object[0]);
         }
 
     }
