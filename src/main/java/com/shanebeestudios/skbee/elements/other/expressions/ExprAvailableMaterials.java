@@ -56,7 +56,7 @@ import java.util.stream.Collectors;
     "set {_blocks::*} to all available blocktypes",
     "set target block to random element of all available blockdatas"})
 @Since("1.15.0")
-@SuppressWarnings({"NullableProblems", "rawtypes"})
+@SuppressWarnings({"NullableProblems", "rawtypes", "deprecation"})
 public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
     static {

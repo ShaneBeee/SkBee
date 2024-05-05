@@ -39,6 +39,7 @@ import java.util.Map;
  *
  * @param <T> {@link ClassInfo} class for conversion type
  */
+@SuppressWarnings("deprecation")
 public abstract class ObjectConverter<T> {
 
     private static final Map<Class<?>, ObjectConverter<?>> CONVERTERS = new HashMap<>();
