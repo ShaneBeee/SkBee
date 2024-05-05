@@ -13,8 +13,8 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.reflection.ChatReflection;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("NullableProblems")
 @Name("Team - Prefix/Suffix")
@@ -28,7 +28,7 @@ public class ExprTeamPrefix extends SimplePropertyExpression<Team, String> {
 
     static {
         register(ExprTeamPrefix.class, String.class,
-                "team (0¦prefix|1¦suffix)", "team");
+                "team (0:prefix|1:suffix)", "team");
     }
 
     private int pattern;

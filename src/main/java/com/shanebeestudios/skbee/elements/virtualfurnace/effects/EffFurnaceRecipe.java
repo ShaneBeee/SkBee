@@ -11,13 +11,13 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.vf.api.RecipeManager;
 import com.shanebeestudios.vf.api.recipe.FurnaceRecipe;
 import com.shanebeestudios.vf.api.util.Util;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
-import com.shanebeestudios.skbee.SkBee;
 
 import java.util.List;
 
@@ -37,7 +37,7 @@ public class EffFurnaceRecipe extends Effect {
     static {
         Skript.registerEffect(EffFurnaceRecipe.class,
                 "register virtual furnace recipe for %itemtype% using %itemtype% [with cooktime %-timespan%]",
-                "register all virtual (0¦furnace|1¦smoker|2¦blast furnace) recipes");
+                "register all virtual (furnace|1:smoker|2:blast furnace) recipes");
     }
 
     private Expression<ItemType> ingredient;

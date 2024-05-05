@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Advancement - Progress Criteria")
 @Description("Award or revoke criteria of an advancement progress.")
@@ -22,7 +22,7 @@ public class EffAdvancementCriteriaAward extends Effect {
 
     static {
         Skript.registerEffect(EffAdvancementCriteriaAward.class,
-                "(award|1¦revoke) criteria %string% of %advancementpros%");
+                "(award|1:revoke) criteria %string% of %advancementpros%");
     }
 
     private boolean award;

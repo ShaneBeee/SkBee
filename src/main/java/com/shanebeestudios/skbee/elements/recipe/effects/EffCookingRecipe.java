@@ -13,8 +13,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -49,7 +49,7 @@ public class EffCookingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffCookingRecipe.class,
-                "register [new] (0¦furnace|1¦(blast furnace|blasting)|2¦smok(er|ing)|3¦campfire) recipe for %itemtype% " +
+                "register [new] (furnace|1:(blast furnace|blasting)|2:smok(er|ing)|3:campfire) recipe for %itemtype% " +
                         "(using|with ingredient) %itemtype/recipechoice% with id %string% [[and ]with exp[erience] %-number%] " +
                         "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
     }

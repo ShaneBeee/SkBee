@@ -14,8 +14,8 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Text Component - Team Prefix/Suffix")
 @Description("Get/set prefix/suffix of teams using components.")
@@ -25,7 +25,7 @@ public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, Component
 
     static {
         if (SkBee.getPlugin().getPluginConfig().ELEMENTS_TEAM) {
-            register(ExprTeamPrefixComp.class, ComponentWrapper.class, "component team (prefix|1¦suffix)", "teams");
+            register(ExprTeamPrefixComp.class, ComponentWrapper.class, "component team (prefix|1:suffix)", "teams");
         }
     }
 

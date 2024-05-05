@@ -35,8 +35,8 @@ public class EffKnowledgeBook extends Effect {
 
     static {
         Skript.registerEffect(EffKnowledgeBook.class,
-                "add [(custom|1¦(mc|minecraft))] recipe[s] [with id[s]] %strings% [from plugin %-string%] to %itemtype%",
-                "remove [(custom|1¦(mc|minecraft))] recipe[s] [with id[s]] %strings% [from plugin %-string%] from %itemtype%");
+                "add [(custom|1:(mc|minecraft))] recipe[s] [with id[s]] %strings% [from plugin %-string%] to %itemtype%",
+                "remove [(custom|1:(mc|minecraft))] recipe[s] [with id[s]] %strings% [from plugin %-string%] from %itemtype%");
     }
 
     private Expression<String> recipes;

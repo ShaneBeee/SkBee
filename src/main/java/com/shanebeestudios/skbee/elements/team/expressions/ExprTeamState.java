@@ -12,8 +12,8 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Team - State")
 @Description("Represents the friendly fire and can see friendly invisibles states of a team.")
@@ -24,7 +24,7 @@ public class ExprTeamState extends SimplePropertyExpression<Team, Boolean> {
 
     static {
         register(ExprTeamState.class, Boolean.class,
-                "(0¦allow friendly fire|1¦can see friendly invisibles) team state", "teams");
+                "(allow friendly fire|1:can see friendly invisibles) team state", "teams");
     }
 
     private int pattern;

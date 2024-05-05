@@ -10,8 +10,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
@@ -38,8 +38,8 @@ public class EffRemoveRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffRemoveRecipe.class,
-                "remove [(custom|1¦(mc|minecraft))] recipe[s] %strings%",
-                "remove all [(1¦(mc|minecraft))] recipe[s]");
+                "remove [(custom|1:(mc|minecraft))] recipe[s] %strings%",
+                "remove all [(1:(mc|minecraft))] recipe[s]");
     }
 
     @SuppressWarnings("null")
