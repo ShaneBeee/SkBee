@@ -83,15 +83,18 @@ import java.util.ArrayList;
     "set {_b} to byte tag \"someBytes[10]\" of {_nbt}",
     "",
     "# Minecraft 1.20.5+ item component stuff",
-    "set int tag \"minecraft:max_damage\" of nbt of player's tool to 500",
-    "set int tag \"minecraft:max_stack_size\" of nbt of player's tool to 25",
-    "set byte tag \"minecraft:enchantment_glint_override\" of nbt of player's tool to 1",
-    "set compound tag \"minecraft:fire_resistant\" of nbt of player's tool to nbt from \"{}\"",
-    "set string tag \"minecraft:rarity\" of nbt of player's tool to \"epic\"",
+    "set int tag \"minecraft:max_damage\" of component nbt of player's tool to 500",
+    "set int tag \"minecraft:max_stack_size\" of component nbt of player's tool to 25",
+    "set byte tag \"minecraft:enchantment_glint_override\" of component nbt of player's tool to 1",
+    "set compound tag \"minecraft:fire_resistant\" of component nbt of player's tool to nbt from \"{}\"",
+    "set string tag \"minecraft:rarity\" of component nbt of player's tool to \"epic\"",
     "",
     "# All custom data must be within the \"minecraft:custom_data\" compound",
-    "set byte tag \"minecraft:custom_data;Points\" of nbt of player's tool to 10",
-    "set int tag \"minecraft:custom_data;MyBloop\" of nbt of player's tool to 152"})
+    "# See NBT Compound expression for futher details on the `component nbt` expression",
+    "set byte tag \"Points\" of nbt of player's tool to 10",
+    "set int tag \"MyBloop\" of nbt of player's tool to 152",
+    "set byte tag \"minecraft:custom_data;Points\" of component nbt of player's tool to 10",
+    "set int tag \"minecraft:custom_data;MyBloop\" of component nbt of player's tool to 152"})
 @Since("1.0.0")
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 
