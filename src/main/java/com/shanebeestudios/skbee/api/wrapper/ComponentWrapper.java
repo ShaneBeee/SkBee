@@ -499,8 +499,12 @@ public class ComponentWrapper {
      * @param alwaysVisible Whether or not always visible
      */
     public void setEntityName(Entity entity, boolean alwaysVisible) {
-        entity.customName(this.component);
-        entity.setCustomNameVisible(alwaysVisible);
+        if (entity instanceof Player player && alwaysVisible) {
+            player.displayName(this.component);
+        } else {
+            entity.customName(this.component);
+            entity.setCustomNameVisible(alwaysVisible);
+        }
     }
 
     /**
