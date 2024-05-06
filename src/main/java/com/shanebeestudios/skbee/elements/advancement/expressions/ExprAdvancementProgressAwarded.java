@@ -12,8 +12,8 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Advancement - Progress Criteria")
 @Description("Get the awarded/remaining criteria of an advancement progress.")
@@ -23,7 +23,7 @@ public class ExprAdvancementProgressAwarded extends SimpleExpression<String> {
 
     static {
         Skript.registerExpression(ExprAdvancementProgressAwarded.class, String.class, ExpressionType.SIMPLE,
-                "(awarded|1¦remaining) criteria of %advancementpro%");
+                "(awarded|1:remaining) criteria of %advancementpro%");
     }
 
     private boolean awarded;

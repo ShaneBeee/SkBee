@@ -44,7 +44,7 @@ public class EffLoadWorld extends Effect {
         Skript.registerEffect(EffLoadWorld.class,
                 "load world from [[world] creator] %worldcreator%",
                 "load world %string%",
-                "unload [world] %world% [and (0¦save|1¦(do not|don't) save)]",
+                "unload [world] %world% [and (save|1:(do not|don't) save)]",
                 "delete world file for [world] %string%");
     }
 

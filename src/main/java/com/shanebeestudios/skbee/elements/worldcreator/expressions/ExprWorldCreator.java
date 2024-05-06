@@ -37,7 +37,7 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
     static {
         Skript.registerExpression(ExprWorldCreator.class, BeeWorldCreator.class, ExpressionType.SIMPLE,
                 "[a] [new] world creator (with name|named) %string%",
-                "[a] [new] world creator (with name|named) %string% to (0¦copy|1¦clone) %world% [save:without saving]");
+                "[a] [new] world creator (with name|named) %string% to (copy|1:clone) %world% [save:without saving]");
     }
 
     private int pattern;

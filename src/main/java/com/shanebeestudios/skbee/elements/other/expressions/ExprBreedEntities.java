@@ -15,8 +15,8 @@ import ch.njol.util.Kleenean;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityBreedEvent;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Breed Event Entities")
 @Description("Get the entities involved in a breed event.")
@@ -29,7 +29,7 @@ public class ExprBreedEntities extends SimpleExpression<Entity> {
     static {
         Skript.registerExpression(ExprBreedEntities.class, Entity.class, ExpressionType.SIMPLE,
                 "[the] breed[ing] parents",
-                "[the] breed[ing] (mother|1¦father|2¦baby|3¦player)");
+                "[the] breed[ing] (mother|1:father|2:baby|3:player)");
     }
 
     private int pattern;

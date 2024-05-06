@@ -9,12 +9,12 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.scoreboard.FastBoardWrapper;
 import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
+import com.shanebeestudios.skbee.api.scoreboard.FastBoardWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Scoreboard - Toggle")
 @Description("Toggle a scoreboard on or off.")
@@ -25,8 +25,8 @@ public class EffScoreboardToggle extends Effect {
 
     static {
         Skript.registerEffect(EffScoreboardToggle.class,
-                "toggle [score]board[s] of %players% [[to ](1¦(on|true)|2¦(off|false))]",
-                "toggle %players%'[s] [score]board[s] [[to ](1¦(on|true)|2¦(off|false))]");
+                "toggle [score]board[s] of %players% [[to ](1:(on|true)|2:(off|false))]",
+                "toggle %players%'[s] [score]board[s] [[to ](1:(on|true)|2:(off|false))]");
     }
 
     private Expression<Player> player;

@@ -13,8 +13,8 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Text Component - Entity Name")
 @Description({"Get/set the component name of an entity.",
@@ -26,7 +26,7 @@ public class ExprNameEntity extends SimplePropertyExpression<Entity, ComponentWr
 
     static {
         register(ExprNameEntity.class, ComponentWrapper.class,
-                "component entity (name|1¦display name)", "entities");
+                "component entity (name|1:display name)", "entities");
     }
 
     private boolean alwaysOn;

@@ -33,7 +33,7 @@ public class ExprAllRecipes extends SimpleExpression<String> {
     static {
         if (Skript.classExists("org.bukkit.Keyed")) {
             Skript.registerExpression(ExprAllRecipes.class, String.class, ExpressionType.COMBINED,
-                    "[(all [[of] the]|the)] [(1¦(mc|minecraft)|2¦custom)] recipe[s] [(for|of) %-itemtypes%]");
+                    "[(all [[of] the]|the)] [(1:(mc|minecraft)|2:custom)] recipe[s] [(for|of) %-itemtypes%]");
         }
     }
 

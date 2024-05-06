@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -32,7 +31,7 @@ public class ExprTabCompletionArgs extends SimpleExpression<String> {
 
     static {
         Skript.registerExpression(ExprTabCompletionArgs.class, String.class, ExpressionType.SIMPLE,
-                "tab [complete] arg[ument](0¦s|1¦[(-| )]%number%)");
+                "tab [complete] arg[ument](s|1:[(-| )]%number%)");
     }
 
     private int pattern;

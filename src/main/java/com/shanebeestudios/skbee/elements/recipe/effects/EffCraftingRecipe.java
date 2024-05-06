@@ -53,7 +53,7 @@ public class EffCraftingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffCraftingRecipe.class,
-                "register [new] (shaped|1¦shapeless) recipe for %itemtype% (using|with ingredients) " +
+                "register [new] (shaped|1:shapeless) recipe for %itemtype% (using|with ingredients) " +
                         "%itemtypes/recipechoices% with id %string% [in group %-string%]");
     }
 

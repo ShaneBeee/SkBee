@@ -13,8 +13,8 @@ import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Villager - Level/Experience")
 @Description({"Represents the level/experience of a villager.",
@@ -28,7 +28,7 @@ import org.jetbrains.annotations.NotNull;
 public class ExprVillagerLevel extends SimplePropertyExpression<LivingEntity, Number> {
 
     static {
-        register(ExprVillagerLevel.class, Number.class, "villager (level|1¦experience)", "livingentities");
+        register(ExprVillagerLevel.class, Number.class, "villager (level|1:experience)", "livingentities");
     }
 
     private int pattern;
