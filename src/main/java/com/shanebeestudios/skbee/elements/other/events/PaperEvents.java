@@ -23,6 +23,7 @@ import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
+import io.papermc.paper.event.player.PlayerTrackEntityEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -368,6 +369,27 @@ public class PaperEvents extends SimpleEvent {
                 @Override
                 public Item get(PlayerAttemptPickupItemEvent event) {
                     return event.getItem();
+                }
+            }, EventValues.TIME_NOW);
+        }
+
+        // PlayerTrackEntityEvent
+        if (Skript.classExists("io.papermc.paper.event.player.PlayerTrackEntityEvent")) {
+            Skript.registerEvent("Player Track Entity", PaperEvents.class, PlayerTrackEntityEvent.class, "player track entity")
+                .description("Called when a Player tracks an Entity (This means the entity is sent to the client).",
+                    "If cancelled entity is not shown to the player and interaction in both directions is not possible.",
+                    "(This is copied from Paper javadocs and does not seem true. When testing on a zombie, the zombie still attacked me)",
+                    "Adding or removing entities from the world at the point in time this event is called is completely unsupported and should be avoided.",
+                    "Requires PaperMC 1.19+.")
+                .examples("on player track entity:",
+                    "\tif event-entity is a zombie:",
+                    "\t\tcancel event")
+                .since("INSERT VERSION");
+
+            EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, new Getter<>() {
+                @Override
+                public Entity get(PlayerTrackEntityEvent event) {
+                    return event.getEntity();
                 }
             }, EventValues.TIME_NOW);
         }
