@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,8 +20,10 @@ import org.jetbrains.annotations.Nullable;
 public class ExprTimeSpanNumbers extends SimplePropertyExpression<Timespan, Number> {
 
     static {
-        register(ExprTimeSpanNumbers.class, Number.class,
+        if (!Util.IS_RUNNING_SKRIPT_2_9) {
+            register(ExprTimeSpanNumbers.class, Number.class,
                 "(ticks|1:seconds|2:minutes|3:hours)", "timespan");
+        }
     }
 
     private int pattern;

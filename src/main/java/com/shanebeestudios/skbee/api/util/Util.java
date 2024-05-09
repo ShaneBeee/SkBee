@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.SkBee;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -30,6 +31,9 @@ public class Util {
 
     // QuickLinks
     public static final String MCWIKI_TICK_COMMAND = "See [**Tick Command**](https://minecraft.wiki/w/Commands/tick) on McWiki for more details.";
+
+    // Shortcut for finding stuff to remove later
+    public static final boolean IS_RUNNING_SKRIPT_2_9 = Skript.getVersion().compareTo(new Version(2,9)) <= 0;
 
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
