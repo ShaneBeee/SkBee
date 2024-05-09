@@ -46,7 +46,7 @@ import org.jetbrains.annotations.NotNull;
     "\\- (1.20.4-) This will return the 'tag' portion of an items full NBT.",
     "\\- (1.20.5+) This will return the 'minecraft:custom_data' component container of an item's NBT.",
     "`components nbt of %item%` = Returns the components container of an item's NBT. Modifying this will modify the original item. (This is an MC 1.20.5+ feature).",
-    "Please see <link>https://minecraft.wiki/w/Data_component_format</link> for more information on item NBT components.",
+    "Please see [**Data Component Format**](https://minecraft.wiki/w/Data_component_format) on McWiki for more information on item NBT components.",
     "`nbt copy of %objects%` = Returns a copy of the original NBT compound. This way you can modify it without",
     "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to other entities.",
     "",

@@ -44,7 +44,7 @@ import org.skriptlang.skript.lang.structure.Structure;
         "NOTES:",
         "- `chunk-generator` needs to be enabled in the config (disabled by default)",
         "- `world-creator` needs to be enabled in the config",
-        "- Please see the Chunk Generator wiki for further details <link>https://github.com/ShaneBeee/SkBee/wiki/Chunk-Generator</link>"})
+        "- Please see the [**Chunk Generator**](https://github.com/ShaneBeee/SkBee/wiki/Chunk-Generator) wiki for further details."})
 @Examples({"register chunk generator with id \"mars\":",
         "\tvanilla decor: false",
         "\tvanilla caves: false",

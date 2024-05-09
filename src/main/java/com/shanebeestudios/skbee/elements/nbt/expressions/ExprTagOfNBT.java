@@ -29,9 +29,9 @@ import java.util.ArrayList;
     "\nNOTE: Entities/blocks can not natively hold custom NBT tags. SkBee allows you to put custom nbt",
     "data in the \"custom\" compound tag of a block/entity's NBT compound. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen.",
     "That said, this system is a tad convoluted, see the SkBee WIKI for more details.",
-    "\nNOTE 1.20.5+: All custom data on items must be stored in the \"minecraft:custom_data\" compound ",
-    "(see examples and McWiki <link>https://minecraft.wiki/w/Data_component_format#custom_data</link>).",
-    "For more info regarding 1.20.5+ components please see McWiki <link>https://minecraft.wiki/w/Data_component_format</link>.",
+    "\nNOTE 1.20.5+: All custom data on items must be stored in the \"minecraft:custom_data\" compound " +
+    "(see examples and [**McWiki**](https://minecraft.wiki/w/Data_component_format#custom_data)).",
+    "For more info regarding 1.20.5+ components please see [**Data Component Format**](https://minecraft.wiki/w/Data_component_format) on McWiki.",
     "\nADD: You can add numbers to number type tags, you can also add numbers/strings/compounds to lists type tags.",
     "\nREMOVE: You can remove numbers from number type tags, you can also remove numbers/strings from lists type tags.",
     "(You can NOT remove compounds from lists type tags)",

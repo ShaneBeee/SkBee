@@ -18,7 +18,7 @@ public class Types {
                     .user("damage ?types?")
                     .name("Damage Type")
                     .description("Represents a type of damage.",
-                        "See <link>https://minecraft.wiki/w/Damage_type</link> for more details.",
+                        "See [**DamageType**](https://minecraft.wiki/w/Damage_type) on McWiki for more details.",
                         "Requires MC 1.20.4+",
                         "NOTE: These are auto-generated and may differ between server versions.")
                     .usage(DAMAGE_TYPE_REGISTRY.getNames())

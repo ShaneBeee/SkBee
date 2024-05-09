@@ -29,7 +29,7 @@ public class Util {
     private static final String SETTINGS_NAMESPACE = SkBee.getPlugin().getPluginConfig().SETTINGS_NAMESPACE;
 
     // QuickLinks
-    public static final String MCWIKI_TICK_COMMAND = "See <link>https://minecraft.wiki/w/Commands/tick</link> for more details.";
+    public static final String MCWIKI_TICK_COMMAND = "See [**Tick Command**](https://minecraft.wiki/w/Commands/tick) on McWiki for more details.";
 
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
