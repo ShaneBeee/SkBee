@@ -274,10 +274,13 @@ public class NBTApi {
 
         Object singleObject = object[0];
         switch (type) {
-            case NBTTagByte:
+            case NBTTagBoolean:
                 if (singleObject instanceof Boolean bool) {
-                    compound.setByte(tag, (byte) (bool ? 1 : 0));
-                } else if (singleObject instanceof Number number) {
+                    compound.setBoolean(tag, bool);
+                }
+                break;
+            case NBTTagByte:
+                if (singleObject instanceof Number number) {
                     compound.setByte(tag, number.byteValue());
                 }
                 break;
@@ -773,6 +776,9 @@ public class NBTApi {
                     }
                 } catch (NbtApiException ignore) {
                 }
+            }
+            case NBTTagBoolean -> {
+                return compound.getBoolean(tag);
             }
             case NBTTagByte -> {
                 return compound.getByte(tag);
