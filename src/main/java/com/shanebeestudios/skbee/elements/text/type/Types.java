@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.text.type;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
@@ -53,34 +54,35 @@ public class Types {
         };
 
         Classes.registerClass(new ClassInfo<>(ComponentWrapper.class, "textcomponent")
-                .user("text ?components?")
-                .name("Text Component - Text Component")
-                .description("Text components used for hover/click events. Due to the complexity of these, ",
-                        "they can NOT be long term stored in variables. \n\bRequires a PaperMC server.")
-                .examples("set {_t} to text component from \"CLICK FOR OUR DISCORD\"",
-                        "add hover event showing \"Clicky Clicky!\" to {_t}",
-                        "add click event to open url \"https://OurDiscord.com\" to {_t}",
-                        "send component {_t} to player")
-                .since("1.5.0")
-                .parser(new Parser<>() {
-                    @Override
-                    public @NotNull String toString(@NotNull ComponentWrapper o, int flags) {
-                        return o.toString();
-                    }
+            .user("text ?components?")
+            .name("Text Component - Text Component")
+            .description("Text components used for hover/click events. Due to the complexity of these, ",
+                "they can NOT be long term stored in variables. \n\bRequires a PaperMC server.")
+            .examples("set {_t} to text component from \"CLICK FOR OUR DISCORD\"",
+                "add hover event showing \"Clicky Clicky!\" to {_t}",
+                "add click event to open url \"https://OurDiscord.com\" to {_t}",
+                "send component {_t} to player")
+            .since("1.5.0")
+            .parser(new Parser<>() {
+                @Override
+                public @NotNull String toString(@NotNull ComponentWrapper o, int flags) {
+                    return o.toString();
+                }
 
-                    @Override
-                    public boolean canParse(@NotNull ParseContext context) {
-                        return false;
-                    }
+                @Override
+                public boolean canParse(@NotNull ParseContext context) {
+                    return false;
+                }
 
-                    @Override
-                    public @NotNull String toVariableNameString(@NotNull ComponentWrapper o) {
-                        return o.toString();
-                    }
-                }).changer(COMP_CHANGER)
+                @Override
+                public @NotNull String toVariableNameString(@NotNull ComponentWrapper o) {
+                    return o.toString();
+                }
+            }).changer(COMP_CHANGER)
         );
 
-        Classes.registerClass(new ClassInfo<>(SignedMessage.class, "signedmessage")
+        if (Skript.classExists("net.kyori.adventure.chat.SignedMessage")) {
+            Classes.registerClass(new ClassInfo<>(SignedMessage.class, "signedmessage")
                 .user("signed ?messages?")
                 .name("Signed Chat Message")
                 .description("Represents a signed chat message.")
@@ -111,24 +113,25 @@ public class Types {
                         }
                     }
                 }));
+        }
 
         Classes.registerClass(new ClassInfo<>(TagResolver.class, "tagresolver")
-                .user("tag ?resolvers?")
-                .description("Represents an object to replace text in a mini message.")
-                .examples("# Create a component",
-                        "set {_i} to translate component of player's tool",
-                        "# Use this comonent in the resolver to replace \"<item>\" in the mini message",
-                        "set {_r::1} to resolver(\"item\", {_i})",
-                        "# setup the mini message with the replacement placeholder",
-                        "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r::*}",
-                        "send component {_m}")
-                .since("3.5.0"));
+            .user("tag ?resolvers?")
+            .description("Represents an object to replace text in a mini message.")
+            .examples("# Create a component",
+                "set {_i} to translate component of player's tool",
+                "# Use this comonent in the resolver to replace \"<item>\" in the mini message",
+                "set {_r::1} to resolver(\"item\", {_i})",
+                "# setup the mini message with the replacement placeholder",
+                "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r::*}",
+                "send component {_m}")
+            .since("3.5.0"));
 
         // Functions
         //noinspection DataFlowIssue
         Functions.registerFunction(new SimpleJavaFunction<>("resolver", new Parameter[]{
-                new Parameter<>("placeholder", DefaultClasses.STRING, true, null),
-                new Parameter<>("replacement", DefaultClasses.OBJECT, true, null)
+            new Parameter<>("placeholder", DefaultClasses.STRING, true, null),
+            new Parameter<>("replacement", DefaultClasses.OBJECT, true, null)
         }, Classes.getExactClassInfo(TagResolver.class), true) {
             @SuppressWarnings({"NullableProblems", "PatternValidation"})
             @Override
@@ -150,18 +153,18 @@ public class Types {
                 return new TagResolver[]{Placeholder.component(string, component.getComponent())};
             }
         }
-                .description("Creates a tag resolver for replacements in mini message.",
-                        "`placeholder` = The string that will be replaced in the mini message.",
-                        "In the mini message itself this part needs to be surrounded by <>. See examples!",
-                        "`replacement` = A string/text component that will replace the first string.")
-                .examples("# Create a component",
-                        "set {_i} to translate component of player's tool",
-                        "# Use this comonent in the resolver to replace \"<item>\" in the mini message",
-                        "set {_r::1} to resolver(\"item\", {_i})",
-                        "# setup the mini message with the replacement placeholder",
-                        "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r::*}",
-                        "send component {_m}")
-                .since("3.5.0"));
+            .description("Creates a tag resolver for replacements in mini message.",
+                "`placeholder` = The string that will be replaced in the mini message.",
+                "In the mini message itself this part needs to be surrounded by <>. See examples!",
+                "`replacement` = A string/text component that will replace the first string.")
+            .examples("# Create a component",
+                "set {_i} to translate component of player's tool",
+                "# Use this comonent in the resolver to replace \"<item>\" in the mini message",
+                "set {_r::1} to resolver(\"item\", {_i})",
+                "# setup the mini message with the replacement placeholder",
+                "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r::*}",
+                "send component {_m}")
+            .since("3.5.0"));
     }
 
 }
