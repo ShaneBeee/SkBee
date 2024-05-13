@@ -6,6 +6,10 @@ plugins {
     id 'maven-publish'
 }
 
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
 // SkBee version
 version = '3.5.0'
 def latestJava = 21
