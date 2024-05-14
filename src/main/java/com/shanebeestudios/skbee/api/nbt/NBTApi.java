@@ -40,7 +40,6 @@ public class NBTApi {
     @SuppressWarnings("ConstantConditions")
     private static boolean ENABLED;
     private static boolean DEBUG;
-    private static boolean ADMIN_ERROR;
     public static final boolean HAS_ITEM_COMPONENTS = Skript.isRunningMinecraft(1, 20, 5);
     static final String TAG_NAME = HAS_ITEM_COMPONENTS ? "components" : "tag";
 
@@ -65,7 +64,6 @@ public class NBTApi {
         }
         Config pluginConfig = SkBee.getPlugin().getPluginConfig();
         DEBUG = pluginConfig.SETTINGS_DEBUG;
-        ADMIN_ERROR = pluginConfig.NBT_ADMIN_ERRORS;
     }
 
     /**
@@ -104,9 +102,7 @@ public class NBTApi {
                 cause = cause.replace("com.mojang.brigadier.exceptions.CommandSyntaxException", "MalformedNBT");
                 Util.skriptError("&cMessage: &e%s", cause);
             }
-            if (ADMIN_ERROR) {
-                Util.errorForAdmins("Invalid NBT, please check console for more details.");
-            }
+            Util.errorForAdmins("Invalid NBT, please check console for more details.");
             return null;
         }
         return compound;

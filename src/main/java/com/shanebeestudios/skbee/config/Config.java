@@ -21,7 +21,6 @@ public class Config {
     public String SETTINGS_NAMESPACE;
     public boolean SETTINGS_SCOREBOARD_LINES;
     public boolean ELEMENTS_NBT;
-    public boolean NBT_ADMIN_ERRORS;
     public boolean NBT_EVENTS_BREAK_BLOCK;
     public boolean NBT_EVENTS_PISTON_EXTEND;
     public boolean NBT_EVENTS_ENTITY_CHANGE_BLOCK;
@@ -137,7 +136,6 @@ public class Config {
         this.SETTINGS_SCOREBOARD_LINES = getSetting("scoreboard-reverse-lines");
 
         this.ELEMENTS_NBT = getElement("nbt");
-        this.NBT_ADMIN_ERRORS = getElement("nbt-admin-errors");
         this.NBT_EVENTS_BREAK_BLOCK = getNBTEvent("block-break");
         this.NBT_EVENTS_PISTON_EXTEND = getNBTEvent("piston-extend");
         this.NBT_EVENTS_ENTITY_CHANGE_BLOCK = getNBTEvent("entity-change-block");

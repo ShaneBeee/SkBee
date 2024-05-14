@@ -28,9 +28,6 @@ settings:
 elements:
     # Enable NBT elements
     nbt: true
-    # Whether to send errors to admins if NBT fails to parse at runtime
-    # Errors will still be provided in console if disabled
-    nbt-admin-errors: true
 
     # Enable Scoreboard elements
     scoreboard: true
