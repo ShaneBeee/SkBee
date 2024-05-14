@@ -23,11 +23,11 @@ test "SkBee - simple nbt compound":
     delete {_n}
 
     set {_i} to diamond sword with custom model data 1
-    set {_n} to nbt of {_i}
+    set {_n} to component nbt of {_i}
 
     # Test that tag of item nbt is set
-    assert int tag "CustomModelData" of {_n} is set with "tag ""CustomModelData"" of an item should be set"
-    assert int tag "CustomModelData" of {_n} = 1 with "tag ""CustomModelData"" of an item should be 1"
+    assert int tag "minecraft:custom_model_data" of {_n} is set with "tag ""minecraft:custom_model_data"" of an item should be set"
+    assert int tag "minecraft:custom_model_data" of {_n} = 1 with "tag ""minecraft:custom_model_data"" of an item should be 1"
 
 test "SkBee - NBTCustomBlock":
     set {_l} to location(1,1,1)
