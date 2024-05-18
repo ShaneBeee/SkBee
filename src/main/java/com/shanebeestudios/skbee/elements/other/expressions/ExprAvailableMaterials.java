@@ -111,7 +111,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
         List<LootTable> lootTables = new ArrayList<>();
         Registry.LOOT_TABLES.forEach(lt -> lootTables.add(lt.getLootTable()));
-        Registration.registerList("loot tables", LootTable.class, lootTables.stream().sorted(Comparator.comparing(Keyed::getKey)).toList());
+        Registration.registerList("loot tables", LootTable.class, lootTables.stream().sorted(Comparator.comparing(lootTable -> lootTable.getKey().getKey())).toList());
 
         List<Particle> particles = ParticleUtil.getAvailableParticles();
         particles = particles.stream().sorted(Comparator.comparing(ParticleUtil::getName)).collect(Collectors.toList());
