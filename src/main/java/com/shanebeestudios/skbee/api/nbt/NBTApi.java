@@ -6,6 +6,7 @@ import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Pair;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.Config;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -61,7 +62,8 @@ public class NBTApi {
             new NBTContainer("{a:1}").toString();
             ENABLED = true;
         }
-        DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
+        Config pluginConfig = SkBee.getPlugin().getPluginConfig();
+        DEBUG = pluginConfig.SETTINGS_DEBUG;
     }
 
     /**
@@ -268,10 +270,13 @@ public class NBTApi {
 
         Object singleObject = object[0];
         switch (type) {
-            case NBTTagByte:
+            case NBTTagBoolean:
                 if (singleObject instanceof Boolean bool) {
-                    compound.setByte(tag, (byte) (bool ? 1 : 0));
-                } else if (singleObject instanceof Number number) {
+                    compound.setBoolean(tag, bool);
+                }
+                break;
+            case NBTTagByte:
+                if (singleObject instanceof Number number) {
                     compound.setByte(tag, number.byteValue());
                 }
                 break;
@@ -767,6 +772,9 @@ public class NBTApi {
                     }
                 } catch (NbtApiException ignore) {
                 }
+            }
+            case NBTTagBoolean -> {
+                return compound.getBoolean(tag);
             }
             case NBTTagByte -> {
                 return compound.getByte(tag);

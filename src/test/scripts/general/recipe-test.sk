@@ -92,7 +92,7 @@ test "SkBee - cooking recipe section":
 test "SkBee - brewer recipe section":
     register brewing recipe:
         id: "custom:brew_glow_diamond"
-        result: diamond of unbreaking with all flags hidden
+        result: diamond of unbreaking with all item flags
         ingredient: glowstone dust
         input: potato
 

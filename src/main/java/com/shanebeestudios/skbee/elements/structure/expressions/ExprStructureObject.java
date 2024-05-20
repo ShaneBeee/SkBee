@@ -37,7 +37,7 @@ public class ExprStructureObject extends SimpleExpression<StructureWrapper> {
     static {
         STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
         Skript.registerExpression(ExprStructureObject.class, StructureWrapper.class, ExpressionType.SIMPLE,
-                "structure[s] (named|with id) %strings%");
+                "structure[s] (named|with id|with key) %strings%");
     }
 
     @SuppressWarnings("null")

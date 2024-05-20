@@ -20,16 +20,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("BossBar - From ID")
-@Description("Get a BossBar from ID.")
+@Description("Get an already created BossBar from ID (this will NOT create a new one).")
 @Examples({"delete boss bar with id \"le-bar\"",
-        "set {_bar} to boss bar with id \"le-bar\"",
-        "add all players to {_bar}"})
+    "set {_bar} to boss bar with id \"le-bar\"",
+    "add all players to {_bar}"})
 @Since("2.14.1")
 public class ExprBossBarByID extends SimpleExpression<BossBar> {
 
     static {
         Skript.registerExpression(ExprBossBarByID.class, BossBar.class, ExpressionType.COMBINED,
-                "boss[ ]bar (named|with id|from id) %string%");
+            "boss[ ]bar (named|with id|from id) %string%");
     }
 
     private Expression<String> key;
@@ -43,7 +43,7 @@ public class ExprBossBarByID extends SimpleExpression<BossBar> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable BossBar[] get(Event event) {
+    protected BossBar @Nullable [] get(Event event) {
         String name = this.key.getSingle(event);
         if (name == null) return null;
         NamespacedKey key = Util.getNamespacedKey(name, true);
@@ -65,7 +65,7 @@ public class ExprBossBarByID extends SimpleExpression<BossBar> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "bossbar with id " + this.key.toString(e, d);
     }
 

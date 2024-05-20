@@ -5,13 +5,19 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
+import ch.njol.skript.lang.function.Functions;
+import ch.njol.skript.lang.function.Parameter;
+import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.yggdrasil.Fields;
+import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
 import org.bukkit.Chunk.LoadLevel;
+import org.bukkit.Color;
 import org.bukkit.EntityEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -91,7 +97,7 @@ public class Types {
                 .name("NamespacedKey")
                 .description("NamespacedKeys are a way to declare and specify game objects in Minecraft,",
                     "which can identify built-in and user-defined objects without potential ambiguity or conflicts.",
-                    "For more information see Resource Location on McWiki <link>https://minecraft.wiki/w/Resource_location</link>")
+                    "For more information see [**Resource Location**](https://minecraft.wiki/w/Resource_location) on McWiki.")
                 .since("2.6.0")
                 .serializer(new Serializer<>() {
                     @Override
@@ -344,6 +350,64 @@ public class Types {
                 .since("3.5.0")
                 .parser(ENTITY_TYPE.getParser()));
         }
+
+        Classes.registerClass(new ClassInfo<>(Color.class, "bukkitcolor")
+            .user("bukkit ?colors?")
+            .name("Bukkit Color")
+            .description("Represents a Bukkit color. This is different than a Skript color",
+                "as it adds an alpha channel.")
+            .since("2.8.0")
+            .parser(new Parser<>() {
+
+                @SuppressWarnings("NullableProblems")
+                @Override
+                public boolean canParse(ParseContext context) {
+                    return false;
+                }
+
+                @Override
+                public @NotNull String toString(Color bukkitColor, int flags) {
+                    int alpha = bukkitColor.getAlpha();
+                    int red = bukkitColor.getRed();
+                    int green = bukkitColor.getGreen();
+                    int blue = bukkitColor.getBlue();
+                    return String.format("BukkitColor(a=%s,r=%s,g=%s,b=%s)", alpha, red, green, blue);
+                }
+
+                @Override
+                public @NotNull String toVariableNameString(Color bukkitColor) {
+                    return toString(bukkitColor, 0);
+                }
+            }));
+    }
+
+    // FUNCTIONS
+    static {
+        //noinspection DataFlowIssue
+        Functions.registerFunction(new SimpleJavaFunction<>("bukkitColor", new Parameter[]{
+            new Parameter<>("alpha", DefaultClasses.NUMBER, true, null),
+            new Parameter<>("red", DefaultClasses.NUMBER, true, null),
+            new Parameter<>("green", DefaultClasses.NUMBER, true, null),
+            new Parameter<>("blue", DefaultClasses.NUMBER, true, null)
+        }, Classes.getExactClassInfo(Color.class), true) {
+            @SuppressWarnings("NullableProblems")
+            @Override
+            public @Nullable Color[] executeSimple(Object[][] params) {
+                int alpha = ((Number) params[0][0]).intValue();
+                int red = ((Number) params[1][0]).intValue();
+                int green = ((Number) params[2][0]).intValue();
+                int blue = ((Number) params[3][0]).intValue();
+                alpha = MathUtil.clamp(alpha, 0, 255);
+                red = MathUtil.clamp(red, 0, 255);
+                green = MathUtil.clamp(green, 0, 255);
+                blue = MathUtil.clamp(blue, 0, 255);
+                return new Color[]{Color.fromARGB(alpha, red, green, blue)};
+            }
+        }
+            .description("Creates a new Bukkit Color using alpha (transparency), red, green and blue channels.",
+                "Number values must be between 0 and 255.")
+            .examples("set {_color} to bukkitColor(50,155,100,10)")
+            .since("2.8.0"));
     }
 
 }

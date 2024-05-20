@@ -6,6 +6,10 @@ plugins {
     id 'maven-publish'
 }
 
+compileJava {
+    options.encoding = 'UTF-8'
+}
+
 // SkBee version
 version = '3.5.0'
 def latestJava = 21
@@ -26,9 +30,6 @@ repositories {
 
     // CodeMC (NBT-API)
     maven { url 'https://repo.codemc.io/repository/maven-public/' }
-
-    // Adventure - Paper isn't including this?!?!
-    maven { url = 'https://s01.oss.sonatype.org/content/repositories/snapshots/' }
 }
 
 dependencies {

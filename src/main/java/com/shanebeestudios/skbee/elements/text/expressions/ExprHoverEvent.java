@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -13,13 +12,13 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.key.Key;
-import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.event.HoverEvent.Action;
 import net.kyori.adventure.text.event.HoverEvent.ShowEntity;
-import net.kyori.adventure.text.event.HoverEvent.ShowItem;
+import org.bukkit.Material;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
@@ -30,10 +29,10 @@ import java.util.UUID;
 @SuppressWarnings("rawtypes")
 @Name("Text Component - Hover Event")
 @Description({"Create a new hover event. Can show texts, text components, an item or an entity to a player.",
-        "'showing %itemtype%' requires Minecraft 1.18.2+"})
+    "'showing %itemtype%' requires Minecraft 1.18.2+"})
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
-        "add hover event showing player's tool to {_t}",
-        "send component {_t} to player"})
+    "add hover event showing player's tool to {_t}",
+    "send component {_t} to player"})
 @Since("1.5.0")
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
@@ -41,7 +40,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
     static {
         Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
-                "[a] [new] hover event showing %strings/textcomponents/itemtypes/entities%");
+            "[a] [new] hover event showing %strings/textcomponents/itemstacks/entities%");
     }
 
     private Expression<?> object;
@@ -64,12 +63,11 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
             if (HAS_SHOW_ENITY) showEntity = ShowEntity.showEntity(key, uuid);
             else showEntity = ShowEntity.of(key, uuid);
             return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_ENTITY, showEntity)};
-        } else if (this.object.isSingle() && this.object.getSingle(event) instanceof ItemType itemType) {
-            Key key = itemType.getMaterial().key();
-            int amount = itemType.getAmount();
-            BinaryTagHolder nbt = BinaryTagHolder.binaryTagHolder(itemType.getItemMeta().getAsString());
-            ShowItem showItem = ShowItem.of(key, amount, nbt);
-            return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_ITEM, showItem)};
+        } else if (this.object.isSingle() && this.object.getSingle(event) instanceof ItemStack itemStack) {
+            if (itemStack.getType().isAir() || !itemStack.getType().isItem()) {
+                itemStack = new ItemStack(Material.STONE);
+            }
+            return new HoverEvent[]{itemStack.asHoverEvent()};
         } else {
             List<ComponentWrapper> components = new ArrayList<>();
             for (Object object : this.object.getArray(event)) {

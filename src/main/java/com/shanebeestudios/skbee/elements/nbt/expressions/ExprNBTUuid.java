@@ -10,11 +10,11 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import com.shanebeestudios.skbee.api.util.Util;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class ExprNBTUuid extends SimpleExpression<Object> {
 
     static {
         Skript.registerExpression(ExprNBTUuid.class, Object.class, ExpressionType.SIMPLE,
-                "uuid (int array[(1¦ as string)]|2¦most[ bits]|3¦least[ bits]) [(from|of) %-offlineplayer/entity%]");
+                "uuid (int array[(1: as string)]|2:most[ bits]|3:least[ bits]) [(from|of) %-offlineplayer/entity%]");
     }
 
     private int pattern;

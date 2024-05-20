@@ -29,9 +29,9 @@ import java.util.ArrayList;
     "\nNOTE: Entities/blocks can not natively hold custom NBT tags. SkBee allows you to put custom nbt",
     "data in the \"custom\" compound tag of a block/entity's NBT compound. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen.",
     "That said, this system is a tad convoluted, see the SkBee WIKI for more details.",
-    "\nNOTE 1.20.5+: All custom data on items must be stored in the \"minecraft:custom_data\" compound ",
-    "(see examples and McWiki <link>https://minecraft.wiki/w/Data_component_format#custom_data</link>).",
-    "For more info regarding 1.20.5+ components please see McWiki <link>https://minecraft.wiki/w/Data_component_format</link>.",
+    "\nNOTE 1.20.5+: All custom data on items must be stored in the \"minecraft:custom_data\" compound " +
+    "(see examples and [**McWiki**](https://minecraft.wiki/w/Data_component_format#custom_data)).",
+    "For more info regarding 1.20.5+ components please see [**Data Component Format**](https://minecraft.wiki/w/Data_component_format) on McWiki.",
     "\nADD: You can add numbers to number type tags, you can also add numbers/strings/compounds to lists type tags.",
     "\nREMOVE: You can remove numbers from number type tags, you can also remove numbers/strings from lists type tags.",
     "(You can NOT remove compounds from lists type tags)",
@@ -83,15 +83,18 @@ import java.util.ArrayList;
     "set {_b} to byte tag \"someBytes[10]\" of {_nbt}",
     "",
     "# Minecraft 1.20.5+ item component stuff",
-    "set int tag \"minecraft:max_damage\" of nbt of player's tool to 500",
-    "set int tag \"minecraft:max_stack_size\" of nbt of player's tool to 25",
-    "set byte tag \"minecraft:enchantment_glint_override\" of nbt of player's tool to 1",
-    "set compound tag \"minecraft:fire_resistant\" of nbt of player's tool to nbt from \"{}\"",
-    "set string tag \"minecraft:rarity\" of nbt of player's tool to \"epic\"",
+    "set int tag \"minecraft:max_damage\" of component nbt of player's tool to 500",
+    "set int tag \"minecraft:max_stack_size\" of component nbt of player's tool to 25",
+    "set byte tag \"minecraft:enchantment_glint_override\" of component nbt of player's tool to 1",
+    "set compound tag \"minecraft:fire_resistant\" of component nbt of player's tool to nbt from \"{}\"",
+    "set string tag \"minecraft:rarity\" of component nbt of player's tool to \"epic\"",
     "",
     "# All custom data must be within the \"minecraft:custom_data\" compound",
-    "set byte tag \"minecraft:custom_data;Points\" of nbt of player's tool to 10",
-    "set int tag \"minecraft:custom_data;MyBloop\" of nbt of player's tool to 152"})
+    "# See NBT Compound expression for futher details on the `component nbt` expression",
+    "set byte tag \"Points\" of nbt of player's tool to 10",
+    "set int tag \"MyBloop\" of nbt of player's tool to 152",
+    "set byte tag \"minecraft:custom_data;Points\" of component nbt of player's tool to 10",
+    "set int tag \"minecraft:custom_data;MyBloop\" of component nbt of player's tool to 152"})
 @Since("1.0.0")
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 

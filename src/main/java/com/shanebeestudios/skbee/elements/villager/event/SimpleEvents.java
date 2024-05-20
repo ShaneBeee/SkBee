@@ -67,8 +67,8 @@ public class SimpleEvents extends SimpleEvent {
 
         if (Skript.classExists("io.papermc.paper.event.player.PlayerPurchaseEvent")) {
             Skript.registerEvent("Player Purchase", SimpleEvents.class, PlayerPurchaseEvent.class,
-                            "player (purchase|trade)")
-                    .description("Called when a player trades with a standalone merchant/villager GUI.")
+                            "player purchase")
+                    .description("Called when a player trades with a standalone merchant/villager GUI. Requires PaperMC.")
                     .examples("on player purchase:",
                             "\tignite event-entity for 1 minute")
                     .since("1.17.1");

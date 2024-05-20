@@ -31,7 +31,7 @@ import java.util.List;
     "`set` = You can set the format to any string you'd like (fixed) or a json component (styled number).",
     "`delete` = Will leave it blank (nothing will be there, just nothing).",
     "`reset` = Will reset back to its original format.",
-    "Json Formatting: <link>https://minecraft.wiki/w/Raw_JSON_text_format</link>",
+    "See [**Json Formatting**](https://minecraft.wiki/w/Raw_JSON_text_format) on McWiki for more details.",
     "Requires Paper 1.20.4+"})
 @Examples({"# Format to a string",
     "set number format of {-obj} to \"Look Im Fancy!!\"",

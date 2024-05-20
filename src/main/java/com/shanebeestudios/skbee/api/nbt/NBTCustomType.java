@@ -27,6 +27,7 @@ public enum NBTCustomType {
     NBTTagCompound("compound", NBTType.NBTTagCompound, NBTCompound.class),
     // Custom
     NBTTagUUID("uuid", NBTType.NBTTagIntArray, String.class),
+    NBTTagBoolean("boolean", NBTType.NBTTagByte, Boolean.class),
     // Lists and Arrays
     NBTTagByteArray("byte array", NBTType.NBTTagByteArray, Number[].class),
     NBTTagIntArray("int array", NBTType.NBTTagIntArray, Number[].class),

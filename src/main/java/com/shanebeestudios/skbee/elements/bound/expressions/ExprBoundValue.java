@@ -20,8 +20,8 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Bound - Values")
 @Description({"Get/set/delete custom values for bounds.",
@@ -43,7 +43,7 @@ public class ExprBoundValue extends SimpleExpression<Object> {
     static {
         Skript.registerExpression(ExprBoundValue.class, Object.class, ExpressionType.COMBINED,
                 "bound value %string% (of|from) %bound%",
-                "all [[of] the] bound (values|1¦keys) (of|from) %bound%");
+                "all [[of] the] bound (values|1:keys) (of|from) %bound%");
     }
 
     private int pattern;

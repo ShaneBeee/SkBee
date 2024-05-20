@@ -12,8 +12,8 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.WorldBorder;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("WorldBorder - Stats")
 @Description({"Get/set different stats of a world border.",
@@ -28,7 +28,7 @@ public class ExprWorldBorderNumbers extends SimplePropertyExpression<WorldBorder
 
     static {
         register(ExprWorldBorderNumbers.class, Number.class,
-                "[border] (damage amount|1¦damage buffer|2¦size|3¦warning distance)",
+                "[border] (damage amount|1:damage buffer|2:size|3:warning distance)",
                 "worldborders");
     }
 

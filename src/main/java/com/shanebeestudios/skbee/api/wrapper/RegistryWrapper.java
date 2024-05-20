@@ -22,7 +22,7 @@ import java.util.List;
  *
  * @param <T> Type of item in the registry
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "deprecation"})
 public class RegistryWrapper<T extends Keyed> {
 
     /**

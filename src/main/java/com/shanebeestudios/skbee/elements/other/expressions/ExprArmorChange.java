@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.ScriptLoader;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
@@ -37,7 +36,7 @@ public class ExprArmorChange extends SimpleExpression<ItemType> {
     static {
         if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerArmorChangeEvent")) {
             Skript.registerExpression(ExprArmorChange.class, ItemType.class, ExpressionType.SIMPLE,
-                    "[(0¦new|1¦old)] armor item");
+                    "[(new|1:old)] armor item");
         }
     }
 

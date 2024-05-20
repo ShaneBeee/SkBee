@@ -76,3 +76,6 @@ types:
 	signedmessage: signed message¦s
 	tagresolver: tag resolver¦s
 	minecraftentitytype: minecraft entity type¦s
+	chunkloadlevel: chunk load level¦s
+	entityeffect: entity effect¦s
+	blockaction: block action¦s

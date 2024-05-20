@@ -35,11 +35,11 @@ public class ExprComponentFormat extends PropertyExpression<ComponentWrapper, Ob
     static {
         if (Skript.methodExists(ComponentWrapper.class, "setInsertion", String.class)) {
             register(ExprComponentFormat.class, Object.class,
-                    "(color|1¦bold|2¦italic|3¦(obfuscate[d]|magic)|4¦strikethrough|5¦underline[d]|6¦font|7¦insert[ion]) format",
+                    "(color|1:bold|2:italic|3:(obfuscate[d]|magic)|4:strikethrough|5:underline[d]|6:font|7:insert[ion]) format",
                     "textcomponents");
         } else {
             register(ExprComponentFormat.class, Object.class,
-                    "(color|1¦bold|2¦italic|3¦(obfuscate[d]|magic)|4¦strikethrough|5¦underline[d]|6¦font) format",
+                    "(color|1:bold|2:italic|3:(obfuscate[d]|magic)|4:strikethrough|5:underline[d]|6:font) format",
                     "textcomponents");
         }
     }

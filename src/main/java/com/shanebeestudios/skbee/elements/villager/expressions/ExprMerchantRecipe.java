@@ -14,8 +14,8 @@ import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Merchant Recipe - Create")
 @Description({"Create a merchant recipe.",
@@ -39,7 +39,7 @@ public class ExprMerchantRecipe extends SimpleExpression<MerchantRecipe> {
     private static final boolean SUPPORTS_SPECIAL_PRICE = Skript.methodExists(MerchantRecipe.class, "getDemand");
     static {
         String pattern = "[new] merchant recipe with result %itemtype% with max uses %number% [with uses %-number%] " +
-                "[(|1¦with experience reward)] [with villager experience %-number%] [with price multiplier %-number%]";
+                "[(|1:with experience reward)] [with villager experience %-number%] [with price multiplier %-number%]";
         if (SUPPORTS_SPECIAL_PRICE) {
             Skript.registerExpression(ExprMerchantRecipe.class, MerchantRecipe.class, ExpressionType.SIMPLE,
                     pattern + " [with demand %-number%] [with special price %-number%]");

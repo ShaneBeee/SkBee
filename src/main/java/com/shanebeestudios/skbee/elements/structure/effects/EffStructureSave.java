@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffStructureSave extends Effect {
 
     static {
-        Skript.registerEffect(EffStructureSave.class, "(save|1¦delete) structure[s] %structures%");
+        Skript.registerEffect(EffStructureSave.class, "(save|1:delete) structure[s] %structures%");
     }
 
     private Expression<StructureWrapper> structures;

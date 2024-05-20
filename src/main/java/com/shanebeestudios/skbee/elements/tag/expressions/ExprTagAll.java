@@ -15,8 +15,8 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -34,7 +34,7 @@ public class ExprTagAll extends SimpleExpression<Tag> {
 
     static {
         Skript.registerExpression(ExprTagAll.class, Tag.class, ExpressionType.SIMPLE,
-                "[all] minecraft [(item|1¦block|2¦entity)] tags");
+                "[all] minecraft [(item|1:block|2:entity)] tags");
     }
 
     private int parse;

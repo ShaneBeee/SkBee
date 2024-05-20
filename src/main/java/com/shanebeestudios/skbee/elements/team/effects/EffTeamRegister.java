@@ -24,7 +24,7 @@ public class EffTeamRegister extends Effect {
 
     static {
         // TODO DEPRECATED in 2.11.0
-        Skript.registerEffect(EffTeamRegister.class, "(|1¦un)register [new] team %string%");
+        Skript.registerEffect(EffTeamRegister.class, "[1:un]register [new] team %string%");
     }
 
     private Expression<String> name;
