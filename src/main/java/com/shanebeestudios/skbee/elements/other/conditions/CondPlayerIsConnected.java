@@ -6,6 +6,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.OfflinePlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -22,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
 public class CondPlayerIsConnected extends PropertyCondition<OfflinePlayer> {
 
     static {
-       if (Skript.methodExists(OfflinePlayer.class, "isConnected")) {
+       if (Skript.methodExists(OfflinePlayer.class, "isConnected") && !Util.IS_RUNNING_SKRIPT_2_9) {
            register(CondPlayerIsConnected.class, PropertyType.BE, "connected", "offlineplayers");
        }
     }

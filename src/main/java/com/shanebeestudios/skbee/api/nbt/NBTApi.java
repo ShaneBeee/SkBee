@@ -1,10 +1,12 @@
 package com.shanebeestudios.skbee.api.nbt;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Pair;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.Config;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -15,14 +17,12 @@ import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.Chunk;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.persistence.PersistentDataHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -38,9 +38,10 @@ import java.util.UUID;
 public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")
-    private static final boolean SUPPORTS_BLOCK_NBT = PersistentDataHolder.class.isAssignableFrom(Chunk.class);
     private static boolean ENABLED;
     private static boolean DEBUG;
+    public static final boolean HAS_ITEM_COMPONENTS = Skript.isRunningMinecraft(1, 20, 5);
+    static final String TAG_NAME = HAS_ITEM_COMPONENTS ? "components" : "tag";
 
     /**
      * Initialize this NBT API
@@ -61,7 +62,8 @@ public class NBTApi {
             new NBTContainer("{a:1}").toString();
             ENABLED = true;
         }
-        DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
+        Config pluginConfig = SkBee.getPlugin().getPluginConfig();
+        DEBUG = pluginConfig.SETTINGS_DEBUG;
     }
 
     /**
@@ -73,10 +75,6 @@ public class NBTApi {
     @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static boolean isEnabled() {
         return ENABLED;
-    }
-
-    public static boolean supportsBlockNBT() {
-        return SUPPORTS_BLOCK_NBT;
     }
 
     /**
@@ -104,17 +102,23 @@ public class NBTApi {
                 cause = cause.replace("com.mojang.brigadier.exceptions.CommandSyntaxException", "MalformedNBT");
                 Util.skriptError("&cMessage: &e%s", cause);
             }
+            Util.errorForAdmins("Invalid NBT, please check console for more details.");
             return null;
         }
         return compound;
     }
 
     @Nullable
-    public static Pair<String, NBTCompound> getNestedCompound(String tag, NBTCompound compound) {
+    public static Pair<String, NBTCompound> getNestedCompound(String tag, NBTCompound compound, boolean requiresNested) {
         if (compound == null || tag == null) return null;
         if (tag.contains(";")) {
             String subTag = tag.substring(0, tag.lastIndexOf(";")).replace(".", "\\.").replace(";", ".");
-            compound = (NBTCompound) compound.resolveOrCreateCompound(subTag);
+            if (requiresNested) {
+                compound = (NBTCompound) compound.resolveCompound(subTag);
+            } else {
+                compound = (NBTCompound) compound.resolveOrCreateCompound(subTag);
+            }
+
             tag = getNestedTag(tag);
         }
         if (compound == null || tag == null) return null;
@@ -133,9 +137,27 @@ public class NBTApi {
         if (!tag.contains(";")) {
             return compound.hasTag(tag);
         }
-        String subTag = tag.substring(0, tag.lastIndexOf(";")).replace(".", "\\.").replace(";", ".");
-        NBTCompound subCompound = (NBTCompound) compound.resolveCompound(subTag);
-        return subCompound != null && subCompound.hasTag(getNestedTag(tag));
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound, true);
+        if (nestedCompound != null) return nestedCompound.second().hasTag(nestedCompound.first());
+        return false;
+    }
+
+    /**
+     * Get the {@link NBTCustomType type} of a tag from a compound
+     *
+     * @param compound Compound to grab tag from
+     * @param tag      Tag to check
+     * @return Type of tag
+     */
+    @Nullable
+    public static NBTCustomType getTagType(NBTCompound compound, String tag) {
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound, true);
+        if (nestedCompound != null) {
+            tag = nestedCompound.first();
+            compound = nestedCompound.second();
+            return NBTCustomType.getByTag(compound, tag);
+        }
+        return null;
     }
 
     /**
@@ -187,21 +209,24 @@ public class NBTApi {
      *
      * @param itemType    ItemType to add NBT to
      * @param nbtCompound NBT to add to ItemType
+     * @param custom      Should be stored within the "minecraft:custom_data" component (1.20.5+)
      * @return ItemType with NBT merged into
      */
-    public static @Nullable ItemType getItemTypeWithNBT(ItemType itemType, NBTCompound nbtCompound) {
+    public static @Nullable ItemType getItemTypeWithNBT(ItemType itemType, NBTCompound nbtCompound, boolean custom) {
         NBTContainer itemNBT = NBTItem.convertItemtoNBT(itemType.getRandom());
 
         // Full NBT
-        if (nbtCompound.hasTag("tag")) {
+        if (nbtCompound.hasTag(TAG_NAME)) {
             if (nbtCompound.hasTag("id") && !itemNBT.getString("id").equalsIgnoreCase(nbtCompound.getString("id"))) {
                 // NBT compounds not the same item
                 return itemType;
             }
             itemNBT.mergeCompound(nbtCompound);
         } else {
-            // Tag portion of NBT
-            itemNBT.getOrCreateCompound("tag").mergeCompound(nbtCompound);
+            // Components/Tag portion of NBT
+            NBTCompound components = itemNBT.getOrCreateCompound(TAG_NAME);
+            if (custom && HAS_ITEM_COMPONENTS) components = components.getOrCreateCompound("minecraft:custom_data");
+            components.mergeCompound(nbtCompound);
         }
         ItemStack newItemStack = NBTItem.convertNBTtoItem(itemNBT);
         if (newItemStack == null) return null;
@@ -219,7 +244,7 @@ public class NBTApi {
             nbtCustom.deleteCustomNBT();
             return;
         }
-        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound, true);
         if (nestedCompound == null) return;
 
         tag = nestedCompound.first();
@@ -237,7 +262,7 @@ public class NBTApi {
      */
     @SuppressWarnings({"RegExpRedundantEscape", "ListRemoveInLoop"})
     public static void setTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull Object[] object, NBTCustomType type) {
-        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound, false);
         if (nestedCompound == null) return;
 
         compound = nestedCompound.second();
@@ -245,10 +270,13 @@ public class NBTApi {
 
         Object singleObject = object[0];
         switch (type) {
-            case NBTTagByte:
+            case NBTTagBoolean:
                 if (singleObject instanceof Boolean bool) {
-                    compound.setByte(tag, (byte) (bool ? 1 : 0));
-                } else if (singleObject instanceof Number number) {
+                    compound.setBoolean(tag, bool);
+                }
+                break;
+            case NBTTagByte:
+                if (singleObject instanceof Number number) {
                     compound.setByte(tag, number.byteValue());
                 }
                 break;
@@ -317,11 +345,8 @@ public class NBTApi {
                     }
                 }
                 if (uuid != null) {
-                    //ints = Util.uuidToIntArray(uuid);
                     compound.setUUID(tag, uuid);
-                    break;
-                }
-                if (ints.length > 0) {
+                } else if (ints.length == 4) { // Only allows 4 ints
                     compound.setIntArray(tag, ints);
                 }
                 break;
@@ -427,53 +452,6 @@ public class NBTApi {
     }
 
     /**
-     * Set a specific tag of an {@link NBTCompound}
-     *
-     * @param tag      Tag that will be set
-     * @param compound Compound to change
-     * @param object   Value of tag to set to
-     */
-    public static void setTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull Object[] object) {
-        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
-        if (nestedCompound == null) return;
-
-        tag = nestedCompound.first();
-        compound = nestedCompound.second();
-
-        Object singleObject = object[0];
-        NBTCustomType customType = NBTCustomType.NBTTagEnd;
-
-        if (!compound.hasTag(tag)) {
-            if (object.length == 1) {
-                if (singleObject instanceof Boolean) customType = NBTCustomType.NBTTagByte;
-                else if (singleObject instanceof String) customType = NBTCustomType.NBTTagString;
-                else if (singleObject instanceof Long l) {
-                    if (l < Integer.MAX_VALUE && l > Integer.MIN_VALUE) customType = NBTCustomType.NBTTagInt;
-                    else customType = NBTCustomType.NBTTagLong;
-                } else if (singleObject instanceof Double d) {
-                    if (d < Float.MAX_VALUE && d > Float.MIN_VALUE) customType = NBTCustomType.NBTTagFloat;
-                    else customType = NBTCustomType.NBTTagDouble;
-                } else if (singleObject instanceof NBTCompound) customType = NBTCustomType.NBTTagCompound;
-                else if (singleObject instanceof OfflinePlayer || singleObject instanceof Entity)
-                    customType = NBTCustomType.NBTTagUUID;
-                else customType = NBTCustomType.NBTTagString;
-            } else {
-                if (singleObject instanceof String) customType = NBTCustomType.NBTTagStringList;
-                else if (singleObject instanceof Long l) {
-                    if (l < Integer.MAX_VALUE && l > Integer.MIN_VALUE) customType = NBTCustomType.NBTTagIntList;
-                    else customType = NBTCustomType.NBTTagLongList;
-                } else if (singleObject instanceof Double d) {
-                    if (d < Float.MAX_VALUE && d > Float.MIN_VALUE) customType = NBTCustomType.NBTTagFloatList;
-                    else customType = NBTCustomType.NBTTagDoubleList;
-                } else if (singleObject instanceof NBTCompound) customType = NBTCustomType.NBTTagCompoundList;
-            }
-        } else {
-            customType = NBTCustomType.getByTag(compound, tag);
-        }
-        setTag(tag, compound, object, customType);
-    }
-
-    /**
      * Add a value to a tag
      *
      * @param tag      Tag to modify
@@ -483,7 +461,7 @@ public class NBTApi {
      */
     @SuppressWarnings("RegExpRedundantEscape")
     public static void addToTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull Object[] object, NBTCustomType type) {
-        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound, false);
         if (nestedCompound == null) return;
 
         tag = nestedCompound.first();
@@ -609,7 +587,7 @@ public class NBTApi {
      */
     @SuppressWarnings("RegExpRedundantEscape")
     public static void removeFromTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull Object[] object, NBTCustomType type) {
-        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound, false);
         if (nestedCompound == null) return;
 
         tag = nestedCompound.first();
@@ -725,32 +703,21 @@ public class NBTApi {
         }
     }
 
-
-    /**
-     * Get a specific tag from an NBT string
-     * <p>Sub-compounds can be split using ';',
-     * example tag: "custom;sub"</p>
-     *
-     * @param tag      Tag to check for
-     * @param compound NBT to grab tag from
-     * @return Object from the NBT string
-     */
-    public static @Nullable Object getTag(String tag, NBTCompound compound) {
-        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
-        if (nestedCompound == null) return null;
-
-        tag = nestedCompound.first();
-        compound = nestedCompound.second();
-
-        NBTCustomType type = NBTCustomType.getByTag(compound, tag);
-        if (type == null) {
-            return null;
+    @Nullable
+    private static Object resolveFromList(NBTCompound compound, String tag, NBTCustomType type) {
+        Class<?> typeClass = type.getTypeClass();
+        String tagWithoutBracket = tag.split("\\[")[0];
+        if (!typeClass.isArray() && compound.hasTag(tagWithoutBracket)) {
+            try {
+                if (type == NBTCustomType.NBTTagCompound) {
+                    return compound.resolveCompound(tag);
+                }
+                return compound.resolveOrNull(tag, typeClass);
+            } catch (NbtApiException ignore) {
+                // Errors if the list is the wrong type
+            }
         }
-        // Small fix for "custom" tags not being real tags in an NBT compound and showing as NBTTagEnd
-        if (type == NBTCustomType.NBTTagEnd && compound instanceof NBTCustom && tag.equalsIgnoreCase("custom")) {
-            type = NBTCustomType.NBTTagCompound;
-        }
-        return getTag(tag, compound, type);
+        return null;
     }
 
     /**
@@ -764,15 +731,21 @@ public class NBTApi {
      * @return Object from the NBT string
      */
     @SuppressWarnings("DataFlowIssue")
-    public static @Nullable Object getTag(String tag, NBTCompound compound, NBTCustomType type) {
-        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound);
+    public static @Nullable Object getTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull NBTCustomType type) {
+        Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound, type != NBTCustomType.NBTTagCompound);
         if (nestedCompound == null) return null;
 
         tag = nestedCompound.first();
         compound = nestedCompound.second();
 
-        // If the tag is empty, return null, unless it's a compound then we create an empty compound
-        if (type != NBTCustomType.NBTTagCompound && !compound.hasTag(tag)) return null;
+        // If the tag has [number] we grab from the list/array
+        if (tag.contains("[") && tag.contains("]")) {
+            return resolveFromList(compound, tag, type);
+        }
+
+        // If the tag is empty/wrongtype, return null, unless it's a compound then we create an empty compound
+        if (type != NBTCustomType.NBTTagCompound && (!compound.hasTag(tag) || compound.getType(tag) != type.getNbtType()))
+            return null;
         switch (type) {
             case NBTTagString -> {
                 return compound.getString(tag);
@@ -799,6 +772,9 @@ public class NBTApi {
                     }
                 } catch (NbtApiException ignore) {
                 }
+            }
+            case NBTTagBoolean -> {
+                return compound.getBoolean(tag);
             }
             case NBTTagByte -> {
                 return compound.getByte(tag);
@@ -871,9 +847,9 @@ public class NBTApi {
         if (blockState instanceof TileState tileState) {
             NBTCustomTileEntity nbtBlock = new NBTCustomTileEntity(tileState);
             nbtBlock.mergeCompound(compound);
-        } else if (SUPPORTS_BLOCK_NBT) {
+        } else {
             NBTCustomBlock nbtCustomBlock = new NBTCustomBlock(block);
-            nbtCustomBlock.getData().mergeCompound(compound);
+            nbtCustomBlock.mergeCompound(compound);
         }
     }
 

@@ -47,7 +47,7 @@ public class EffParticle extends Effect {
     static {
         Skript.registerEffect(EffParticle.class,
                 "(lerp|draw|make) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption/dusttransition/vibration" +
-                        "/number%] %directions% %locations% [with offset %-vector%] [with extra %-number%] [(1¦with force)] [(for|to) %-players%]");
+                        "/number/color/bukkitcolor%] %directions% %locations% [with offset %-vector%] [with extra %-number%] [(1:with force)] [(for|to) %-players%]");
     }
 
     private Expression<Number> count;

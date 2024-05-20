@@ -19,61 +19,114 @@ import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.scheduler.BukkitScheduler;
+import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Name("Run Task Later")
+@Name("Task - Run Task Later")
 @Description({"Run a task later. Similar to Skript's delay effect, with the difference being everything in the",
         "section is run later. All code after your section will keep running as normal without a delay.",
-        "This can be very useful in loops, to prevent halting the loop."})
+        "This can be very useful in loops, to prevent halting the loop.",
+        "You can optionally have your task repeat until cancelled.",
+        "You can optionally run your code async/on another thread.",
+        "\nNOTE: A good chunk of Bukkit/Minecraft stuff can NOT be run async. It may throw console errors.",
+        "Please be careful when running async, this is generally reserved for heavy math/functions that could cause lag.",
+        "Simply waiting a tick, or running a new non-async section will put your code back on the main thread."})
 @Examples({"on explode:",
         "\tloop exploded blocks:",
         "\t\tset {_loc} to location of loop-block",
         "\t\tset {_data} to block data of loop-block",
         "\t\trun 2 seconds later:",
-        "\t\t\tset block at {_loc} to {_data}\n"})
+        "\t\t\tset block at {_loc} to {_data}\n",
+        "",
+        "run 0 ticks later repeating every second:",
+        "\tadd 1 to {_a}",
+        "\tif {_a} > 10:",
+        "\t\tstop current task"})
 @Since("3.0.0")
 public class SecRunTaskLater extends Section {
 
     private static final Plugin PLUGIN = SkBee.getPlugin();
 
-    static {
-        Skript.registerSection(SecRunTaskLater.class, "(run|execute) %timespan% later");
+    public static void cancelTasks() {
+        Bukkit.getScheduler().cancelTasks(PLUGIN);
     }
 
-    private Expression<Timespan> timespan;
-    private Trigger trigger;
+    static {
+        Skript.registerSection(SecRunTaskLater.class,
+                "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%]");
+    }
 
-    @SuppressWarnings({"NullableProblems", "unchecked", "DataFlowIssue"})
+    private boolean async;
+    private Expression<Timespan> timespan;
+    private Expression<Timespan> repeating;
+    private Trigger trigger;
+    private int currentTaskId;
+
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        this.async = parseResult.hasTag("async");
         this.timespan = (Expression<Timespan>) exprs[0];
-        this.trigger = loadCode(sectionNode, "run later", ParserInstance.get().getCurrentEvents());
+        this.repeating = (Expression<Timespan>) exprs[1];
+        ParserInstance parserInstance = ParserInstance.get();
+        Kleenean hasDelayBefore = parserInstance.getHasDelayBefore();
+        parserInstance.setHasDelayBefore(Kleenean.TRUE);
+        loadCode(sectionNode);
+        parserInstance.setHasDelayBefore(hasDelayBefore);
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Object localVars = Variables.copyLocalVariables(event);
         Timespan timespan = this.timespan.getSingle(event);
-        if (timespan == null) timespan = Timespan.fromTicks_i(0);
+        long delay = timespan != null ? timespan.getTicks_i() : 0;
 
-        Bukkit.getScheduler().runTaskLater(PLUGIN, () -> {
+        long repeat = 0;
+        if (this.repeating != null) {
+            Timespan repeatingTimespan = this.repeating.getSingle(event);
+            if (repeatingTimespan != null) repeat = repeatingTimespan.getTicks_i();
+        }
+
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+        Runnable runnable = () -> {
             Variables.setLocalVariables(event, localVars);
-            TriggerItem.walk(trigger, event);
+            assert first != null;
+            TriggerItem.walk(first, event);
             Variables.setLocalVariables(event, Variables.copyLocalVariables(event));
             Variables.removeLocals(event);
-        }, timespan.getTicks_i());
+        };
 
+        BukkitTask task;
+        if (repeat > 0 && async) {
+            task = scheduler.runTaskTimerAsynchronously(PLUGIN, runnable, delay, repeat);
+        } else if (repeat > 0) {
+            task = scheduler.runTaskTimer(PLUGIN, runnable, delay, repeat);
+        } else if (async) {
+            task = scheduler.runTaskLaterAsynchronously(PLUGIN, runnable, delay);
+        } else {
+            task = scheduler.runTaskLater(PLUGIN, runnable, delay);
+        }
+        this.currentTaskId = task.getTaskId();
+        if (last != null) last.setNext(null);
         return super.walk(event, false);
     }
 
+    public void stopCurrentTask() {
+        Bukkit.getScheduler().cancelTask(this.currentTaskId);
+    }
+
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "run " + this.timespan.toString(e, d) + " later";
+        String async = this.async ? "async " : "";
+        String repeat = this.repeating != null ? (" repeating every " + this.repeating.toString(e, d)) : "";
+        return async + "run task " + this.timespan.toString(e, d) + " later" + repeat;
     }
 
 }

@@ -12,21 +12,22 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Text Component - Entity Name")
 @Description({"Get/set the component name of an entity.",
-        "\nNAME = the name will only show when crosshair is on entity.",
-        "\nDISPLAY NAME = the name will always show."})
+    "\nNAME = the name will only show when crosshair is on entity.",
+    "\nDISPLAY NAME = the name will always show (for a player, this will get/set their display name)."})
 @Examples("set component entity name of target entity to translate component from \"entity.minecraft.llama\"")
 @Since("2.4.0")
 public class ExprNameEntity extends SimplePropertyExpression<Entity, ComponentWrapper> {
 
     static {
         register(ExprNameEntity.class, ComponentWrapper.class,
-                "component entity (name|1¦display name)", "entities");
+            "component entity (name|1:display name)", "entities");
     }
 
     private boolean alwaysOn;
@@ -40,12 +41,14 @@ public class ExprNameEntity extends SimplePropertyExpression<Entity, ComponentWr
 
     @Override
     public @Nullable ComponentWrapper convert(Entity entity) {
+        if (entity instanceof Player player && this.alwaysOn)
+            return ComponentWrapper.fromComponent(player.displayName());
         return ComponentWrapper.fromComponent(entity.name());
     }
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
             return CollectionUtils.array(ComponentWrapper.class);
         }
@@ -58,7 +61,7 @@ public class ExprNameEntity extends SimplePropertyExpression<Entity, ComponentWr
         if (mode == ChangeMode.SET) {
             if (delta[0] instanceof ComponentWrapper component) {
                 for (Entity entity : getExpr().getArray(event)) {
-                    component.setEntityName(entity, alwaysOn);
+                    component.setEntityName(entity, this.alwaysOn);
                 }
             }
         }

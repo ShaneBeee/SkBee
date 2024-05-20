@@ -18,6 +18,8 @@ import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import net.kyori.adventure.text.serializer.json.JSONComponentSerializer;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
 import net.kyori.adventure.title.Title;
@@ -26,6 +28,7 @@ import net.kyori.adventure.translation.Translatable;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
@@ -65,7 +68,7 @@ public class ComponentWrapper {
 
     /**
      * Create a component from text
-     * <p>Will convert '&' and '§' as color codes.</p>
+     * <p>Will convert '&amp;' and '§' as color codes.</p>
      *
      * @param text Text to add to component
      * @return Component from text
@@ -96,10 +99,12 @@ public class ComponentWrapper {
     /**
      * Create a {@link MiniMessage mini message} from text
      *
-     * @param text Mini message formatted text
+     * @param text      Mini message formatted text
+     * @param resolvers TagResolver replacements
      * @return Component from text
      */
-    public static ComponentWrapper fromMiniMessage(String text) {
+    @SuppressWarnings("NullableProblems")
+    public static ComponentWrapper fromMiniMessage(@NotNull String text, @Nullable TagResolver... resolvers) {
         String string = text;
         // MiniMessage doesn't like these
         if (text.contains("&")) {
@@ -110,7 +115,10 @@ public class ComponentWrapper {
             TextComponent deserialize = LegacyComponentSerializer.legacySection().deserialize(string);
             string = PlainTextComponentSerializer.plainText().serialize(deserialize);
         }
-        return new ComponentWrapper(MiniMessage.miniMessage().deserialize(string));
+        if (resolvers == null) {
+            return new ComponentWrapper(MiniMessage.miniMessage().deserialize(string));
+        }
+        return new ComponentWrapper(MiniMessage.miniMessage().deserialize(string, resolvers));
     }
 
     /**
@@ -162,10 +170,12 @@ public class ComponentWrapper {
     @Nullable
     private static Component getItem(Object object) {
         ItemStack itemStack = null;
+        Material material = null;
         if (object instanceof ItemStack is) {
             itemStack = is;
         } else if (object instanceof ItemType itemType) {
             itemStack = itemType.getRandom();
+            material = itemStack.getType();
         } else if (object instanceof Slot slot) {
             itemStack = slot.getItem();
         }
@@ -176,7 +186,8 @@ public class ComponentWrapper {
         if (itemMeta.hasDisplayName()) {
             return itemMeta.displayName();
         } else {
-            return Component.translatable(itemStack);
+            if (material == null) material = itemStack.getType();
+            return Component.translatable(material);
         }
     }
 
@@ -488,8 +499,12 @@ public class ComponentWrapper {
      * @param alwaysVisible Whether or not always visible
      */
     public void setEntityName(Entity entity, boolean alwaysVisible) {
-        entity.customName(this.component);
-        entity.setCustomNameVisible(alwaysVisible);
+        if (entity instanceof Player player && alwaysVisible) {
+            player.displayName(this.component);
+        } else {
+            entity.customName(this.component);
+            entity.setCustomNameVisible(alwaysVisible);
+        }
     }
 
     /**
@@ -559,7 +574,7 @@ public class ComponentWrapper {
         }
 
         Times times = Times.times(Duration.ofMillis(fadeIn * 50), Duration.ofMillis(stay * 50),
-                Duration.ofMillis(fadeOut * 50));
+            Duration.ofMillis(fadeOut * 50));
 
         Title titleTitle = Title.title(titleComponent, subtitleComponent, times);
 
@@ -597,6 +612,15 @@ public class ComponentWrapper {
 
     public String toString() {
         return LegacyComponentSerializer.legacySection().serialize(this.component);
+    }
+
+    /**
+     * Convert to a serialized json string
+     *
+     * @return Serialized json string
+     */
+    public String toJsonString() {
+        return JSONComponentSerializer.json().serialize(this.component);
     }
 
 }

@@ -11,7 +11,6 @@ import ch.njol.skript.registrations.DefaultClasses;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
-import org.bukkit.Color;
 import org.bukkit.entity.Display.Billboard;
 import org.bukkit.entity.Display.Brightness;
 import org.bukkit.entity.ItemDisplay.ItemDisplayTransform;
@@ -27,8 +26,8 @@ import org.joml.Vector3f;
 
 public class Types {
 
-    public static final String McWIKI = "See <link>https://minecraft.wiki/w/Display#Entity_data</link> for more details.";
-    public static final String McWiki_INTERACTION = "See <link>https://minecraft.wiki/w/Interaction#Entity_data</link> for more details.";
+    public static final String McWIKI = "See [**Display Entity Data**](https://minecraft.wiki/w/Display#Entity_data) on McWiki for more details.";
+    public static final String McWiki_INTERACTION = "See [**Interaction Entity Data**](https://minecraft.wiki/w/Interaction#Entity_data) on McWiki for more details.";
     public static ClassInfo<Transformation> TRANSFORMATION;
     public static ClassInfo<Quaternionf> QUATERNION;
 
@@ -72,35 +71,6 @@ public class Types {
                 .since("2.8.0")
                 .parser(SkriptUtils.getDefaultParser());
         Classes.registerClass(TRANSFORMATION);
-
-        Classes.registerClass(new ClassInfo<>(Color.class, "bukkitcolor")
-                .user("bukkit ?colors?")
-                .name("Bukkit Color")
-                .description("Represents a Bukkit color. This is different than a Skript color",
-                        "as it adds an alpha channel.")
-                .since("2.8.0")
-                .parser(new Parser<>() {
-
-                    @SuppressWarnings("NullableProblems")
-                    @Override
-                    public boolean canParse(ParseContext context) {
-                        return false;
-                    }
-
-                    @Override
-                    public @NotNull String toString(Color bukkitColor, int flags) {
-                        int alpha = bukkitColor.getAlpha();
-                        int red = bukkitColor.getRed();
-                        int green = bukkitColor.getGreen();
-                        int blue = bukkitColor.getBlue();
-                        return String.format("BukkitColor(a=%s,r=%s,g=%s,b=%s)", alpha, red, green, blue);
-                    }
-
-                    @Override
-                    public @NotNull String toVariableNameString(Color bukkitColor) {
-                        return toString(bukkitColor, 0);
-                    }
-                }));
 
         QUATERNION = new ClassInfo<>(Quaternionf.class, "quaternion")
                 .user("quaternions?")
@@ -156,32 +126,6 @@ public class Types {
                 .description("Creates a new display brightness object for use on a Display Entity.",
                         "Number values must be between 0 and 15.", McWIKI)
                 .examples("set {_db} to displayBrightness(10,10)")
-                .since("2.8.0"));
-
-        //noinspection DataFlowIssue
-        Functions.registerFunction(new SimpleJavaFunction<>("bukkitColor", new Parameter[]{
-                new Parameter<>("alpha", DefaultClasses.NUMBER, true, null),
-                new Parameter<>("red", DefaultClasses.NUMBER, true, null),
-                new Parameter<>("green", DefaultClasses.NUMBER, true, null),
-                new Parameter<>("blue", DefaultClasses.NUMBER, true, null)
-        }, Classes.getExactClassInfo(Color.class), true) {
-            @SuppressWarnings("NullableProblems")
-            @Override
-            public @Nullable Color[] executeSimple(Object[][] params) {
-                int alpha = ((Number) params[0][0]).intValue();
-                int red = ((Number) params[1][0]).intValue();
-                int green = ((Number) params[2][0]).intValue();
-                int blue = ((Number) params[3][0]).intValue();
-                alpha = MathUtil.clamp(alpha, 0, 255);
-                red = MathUtil.clamp(red, 0, 255);
-                green = MathUtil.clamp(green, 0, 255);
-                blue = MathUtil.clamp(blue, 0, 255);
-                return new Color[]{Color.fromARGB(alpha, red, green, blue)};
-            }
-        }
-                .description("Creates a new Bukkit Color using alpha, red, green and blue channels.",
-                        "Number values must be between 0 and 255.")
-                .examples("set {_color} to bukkitColor(50,155,100,10)")
                 .since("2.8.0"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("vector4", new Parameter[]{

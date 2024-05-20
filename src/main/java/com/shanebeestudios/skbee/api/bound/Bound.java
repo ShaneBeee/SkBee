@@ -179,7 +179,11 @@ public class Bound implements ConfigurationSerializable {
      * @return World of this bound
      */
     public World getWorld() {
-        return Bukkit.getWorld(world);
+        return Bukkit.getWorld(this.world);
+    }
+
+    public String getWorldName() {
+        return this.world;
     }
 
     /**
@@ -188,9 +192,8 @@ public class Bound implements ConfigurationSerializable {
      * @return Location of greater corner
      */
     public Location getGreaterCorner() {
-        World world = getWorld();
-        if (world == null) return null;
-        return boundingBox.getMax().toLocation(world);
+        Vector max = this.boundingBox.getMax();
+        return new Location(getWorld(), max.getX(), max.getY(), max.getZ());
     }
 
     /**
@@ -199,9 +202,8 @@ public class Bound implements ConfigurationSerializable {
      * @return Location of lesser corner
      */
     public Location getLesserCorner() {
-        World world = getWorld();
-        if (world == null) return null;
-        return boundingBox.getMin().toLocation(world);
+        Vector min = this.boundingBox.getMin();
+        return new Location(getWorld(), min.getX(), min.getY(), min.getZ());
     }
 
     /**
@@ -210,9 +212,8 @@ public class Bound implements ConfigurationSerializable {
      * @return The center location
      */
     public Location getCenter() {
-        World world = getWorld();
-        if (world == null) return null;
-        return boundingBox.getCenter().toLocation(world);
+        Vector center = this.boundingBox.getCenter();
+        return new Location(getWorld(), center.getX(), center.getY(), center.getZ());
     }
 
     public int getLesserX() {

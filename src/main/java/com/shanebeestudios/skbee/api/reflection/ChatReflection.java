@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.reflection;
 
+import ch.njol.skript.Skript;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import org.bukkit.scoreboard.Team;
@@ -15,15 +16,16 @@ import java.lang.reflect.Method;
 public class ChatReflection {
 
     // Cache these classes/methods to prevent retrieving them too often
-    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("IChatBaseComponent", "net.minecraft.network.chat");
+    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("net.minecraft.network.chat.IChatBaseComponent");
     private static final Class<?> CRAFT_CHAT_MESSAGE_CLASS = ReflectionUtils.getOBCClass("util.CraftChatMessage");
     private static final Class<?> TEXT_TAG_VISITOR_CLASS;
-    private static final Class<?> NBT_BASE_CLASS = ReflectionUtils.getNMSClass("NBTBase", "net.minecraft.nbt");
+    private static final Class<?> NBT_BASE_CLASS = ReflectionUtils.getNMSClass("net.minecraft.nbt.NBTBase");
     private static final Method FROM_COMPONENT;
     private static final Method VISIT_METHOD;
+    private static final boolean IS_RUNNING_1_20_5 = Skript.isRunningMinecraft(1, 20, 5);
 
     static {
-        TEXT_TAG_VISITOR_CLASS = ReflectionUtils.getNMSClass("TextComponentTagVisitor", "net.minecraft.nbt");
+        TEXT_TAG_VISITOR_CLASS = ReflectionUtils.getNMSClass("net.minecraft.nbt.TextComponentTagVisitor");
         Method from_comp = null;
         Method visit = null;
         try {
@@ -52,7 +54,12 @@ public class ChatReflection {
         Object nmsNBT = new NBTContainer(compound.toString()).getCompound();
         String s = split != null ? split : "";
         try {
-            Object tagVisitorInstance = TEXT_TAG_VISITOR_CLASS.getConstructor(String.class, int.class).newInstance(s, 0);
+            Object tagVisitorInstance;
+            if (IS_RUNNING_1_20_5) {
+                tagVisitorInstance = TEXT_TAG_VISITOR_CLASS.getConstructor(String.class).newInstance(s);
+            } else {
+                tagVisitorInstance = TEXT_TAG_VISITOR_CLASS.getConstructor(String.class, int.class).newInstance(s, 0);
+            }
             Object prettyComponent = VISIT_METHOD.invoke(tagVisitorInstance, nmsNBT);
             return ((String) FROM_COMPONENT.invoke(CRAFT_CHAT_MESSAGE_CLASS, prettyComponent));
         } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
@@ -65,7 +72,7 @@ public class ChatReflection {
     // Cache these classes/methods to prevent retrieving them too often
     private static final Class<?> CRAFT_CHAT_MESSAGE = ReflectionUtils.getOBCClass("util.CraftChatMessage");
     private static final Class<?> CRAFT_TEAM = ReflectionUtils.getOBCClass("scoreboard.CraftTeam");
-    private static final Class<?> NMS_TEAM = ReflectionUtils.getNMSClass("ScoreboardTeam", "net.minecraft.world.scores");
+    private static final Class<?> NMS_TEAM = ReflectionUtils.getNMSClass("net.minecraft.world.scores.ScoreboardTeam");
     private static final Method SET_PREFIX;
     private static final Method SET_SUFFIX;
     private static final Method PREFIX_COMP_METHOD;

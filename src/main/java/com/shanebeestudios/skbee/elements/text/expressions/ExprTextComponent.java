@@ -29,7 +29,7 @@ import java.util.List;
         "Some components have extra objects, you can use strings or other text components here."})
 @Examples({"set {_comp::1} to text component from \"hi player \"",
         "set {_comp::2} to text component of \"hover over me for a special message!\"",
-        "set hover event of {_comp::2} to hover event showing \"OoO look ma I'm hovering!\"",
+        "add hover event showing \"OoO look ma I'm hovering!\" to {_comp::2}",
         "send component {_comp::*} to player", "",
         "set {_t} to translate component from player's tool",
         "set {_t} to translate component from \"item.minecraft.milk_bucket\"",
@@ -98,6 +98,7 @@ public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
         return ComponentWrapper.class;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String comp = pattern == 0 ? "text" : pattern == 1 ? "keybind" : "translate";

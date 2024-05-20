@@ -6,10 +6,17 @@ api-version: '1.13'
 author: ShaneBee
 website: https://github.com/ShaneBeee/SkBee
 depend:
-  - Skript
+    - Skript
 loadbefore:
-  - SkQuery
+    - SkQuery
 commands:
-  skbee:
-    description: Main SkBee command
-    permission: skbee.command
+    skbee:
+        description: Main SkBee command
+        permission: skbee.command
+permissions:
+    skbee.admin:
+        default: op
+        description: Permission to receive error messages
+    skbee.command:
+        default: op
+        description: Permission to use SkBee's main command

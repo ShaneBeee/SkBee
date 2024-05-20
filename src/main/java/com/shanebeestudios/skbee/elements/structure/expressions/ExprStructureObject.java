@@ -11,8 +11,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
+import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -37,7 +37,7 @@ public class ExprStructureObject extends SimpleExpression<StructureWrapper> {
     static {
         STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
         Skript.registerExpression(ExprStructureObject.class, StructureWrapper.class, ExpressionType.SIMPLE,
-                "structure[s] named %strings%");
+                "structure[s] (named|with id|with key) %strings%");
     }
 
     @SuppressWarnings("null")
@@ -76,10 +76,10 @@ public class ExprStructureObject extends SimpleExpression<StructureWrapper> {
         return StructureWrapper.class;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return "structure[s] named " + fileString.toString(e, d);
+        return "structure[s] with id " + fileString.toString(e, d);
     }
 
 }

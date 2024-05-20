@@ -56,7 +56,7 @@ public class ExprShootBowShouldConsume extends SimpleExpression<Boolean> {
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue", "UnstableApiUsage"})
+    @SuppressWarnings({"NullableProblems", "ConstantValue", "UnstableApiUsage", "deprecation"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (!(event instanceof EntityShootBowEvent shootBowEvent)) return;

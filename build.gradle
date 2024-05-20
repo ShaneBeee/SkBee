@@ -7,13 +7,13 @@ plugins {
 }
 
 compileJava {
-    sourceCompatibility = '17'
-    targetCompatibility = '17'
     options.encoding = 'UTF-8'
 }
 
 // SkBee version
-version = '3.2.1'
+version = '3.5.1'
+def latestJava = 21
+def oldestJava = 17
 
 repositories {
     mavenCentral()
@@ -34,7 +34,7 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.20.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.20.6-R0.1-SNAPSHOT")
 
     // Skript
     compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.7.1') {
@@ -46,20 +46,24 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.12.2") {
+    implementation("de.tr7zw:item-nbt-api:2.12.4") {
         transitive = false
     }
 
     // FastBoard
-    implementation("fr.mrmicky:fastboard:2.0.2")
+    implementation("fr.mrmicky:fastboard:2.1.2")
 
     // Virtual Furnace
-    implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.0.0-Beta12") {
+    implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.0.0") {
         transitive = false
     }
 
     // bStats
     implementation(group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.2')
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.compilerArgs += ['-source', '' + oldestJava, '-target', '' + oldestJava]
 }
 
 build {
@@ -73,15 +77,17 @@ build {
 }
 
 processResources {
-    filter ReplaceTokens, tokens: ["version": project.version]
+    filesNotMatching("**/*.png") {
+        filter ReplaceTokens, tokens: ["version": project.version]
+    }
 }
 
 shadowJar {
     manifest {
-        attributes "Main-Class" : "com.shanebeestudios.skbee.pong.Pong"
+        attributes "Main-Class" : "com.shanebeestudios.skbee.game.GamesMain"
     }
 
-    archiveClassifier = null
+    archiveFileName = project.name + "-" + project.version + ".jar"
     relocate("de.tr7zw.changeme.nbtapi", "com.shanebeestudios.skbee.api.nbt")
     relocate("de.tr7zw.annotations", "com.shanebeestudios.skbee.api.nbt.annotations")
     relocate("fr.mrmicky.fastboard", "com.shanebeestudios.skbee.api.fastboard")
@@ -94,22 +100,23 @@ shadowJar {
 tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
-    into '/Users/ShaneBee/Desktop/Server/Skript/1-20-4/plugins'
+    into '/Users/ShaneBee/Desktop/Server/Skript/1-20-6/plugins'
 }
 
 publishing {
     publications {
         maven(MavenPublication) {
-            groupId 'com.shanebeestudios'
+            groupId 'com.github.ShaneBeee'
             artifactId 'SkBee'
             version project.version
             artifact shadowJar
+            artifact tasks.jar
         }
     }
 }
 
 javadoc {
-    destinationDir = file("${buildDir}/javadoc")
+    destinationDir = file("${projectDir}/build/javadoc")
     options {
         links('https://hub.spigotmc.org/javadocs/spigot/')
         links('https://docs.skriptlang.org/javadocs/')
@@ -117,6 +124,6 @@ javadoc {
         links('https://jd.advntr.dev/api/4.14.0/')
     }
     options.addStringOption('Xdoclint:none', '-quiet')
-    exclude("com/shanebeestudios/skbee/config", "com/shanebeestudios/skbee/api/listener", "com/shanebeestudios/skbee/elements",
-            "com/shanebeestudios/skbee/api/command", "com/shanebeestudios/skbee/AddonLoader.java", "com/shanebeestudios/skbee/pong")
+    exclude("com/shanebeestudios/skbee/api/listener", "com/shanebeestudios/skbee/elements",
+            "com/shanebeestudios/skbee/api/command", "com/shanebeestudios/skbee/game")
 }

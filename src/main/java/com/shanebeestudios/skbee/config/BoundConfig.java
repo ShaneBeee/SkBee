@@ -26,6 +26,9 @@ public class BoundConfig {
     private FileConfiguration boundConfig;
     private final Map<String, Bound> boundsMap = new HashMap<>();
 
+    /**
+     * @hidden
+     */
     public BoundConfig(SkBee plugin) {
         this.plugin = plugin;
         loadBoundConfig();
@@ -126,7 +129,10 @@ public class BoundConfig {
     }
 
     public Collection<Bound> getBoundsIn(World world) {
-        return boundsMap.values().stream().filter(bound -> bound.getWorld().equals(world)).toList();
+        return boundsMap.values().stream().filter(bound -> {
+            World boundWorld = bound.getWorld();
+            return boundWorld != null && boundWorld.equals(world);
+        }).toList();
     }
 
     public Collection<Bound> getBoundsAt(Location location) {

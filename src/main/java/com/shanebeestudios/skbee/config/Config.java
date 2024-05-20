@@ -16,8 +16,10 @@ public class Config {
 
     // Config stuff
     public boolean SETTINGS_DEBUG;
-    public boolean SETTINGS_UPDATE_CHECKER;
+    public boolean SETTINGS_UPDATE_CHECKER_ENABLED;
+    public boolean SETTINGS_UPDATE_CHECKER_ASYNC;
     public String SETTINGS_NAMESPACE;
+    public boolean SETTINGS_SCOREBOARD_LINES;
     public boolean ELEMENTS_NBT;
     public boolean NBT_EVENTS_BREAK_BLOCK;
     public boolean NBT_EVENTS_PISTON_EXTEND;
@@ -56,8 +58,13 @@ public class Config {
     public boolean ELEMENTS_FISHING;
     public boolean ELEMENTS_DISPLAY;
     public boolean ELEMENTS_TICK_MANAGER;
+    public boolean ELEMENTS_DAMAGE_SOURCE;
+    public boolean ELEMENTS_CHUNK_GEN;
     public boolean AUTO_LOAD_WORLDS;
 
+    /**
+     * @hidden
+     */
     public Config(SkBee plugin) {
         this.plugin = plugin;
         loadConfigFile();
@@ -121,9 +128,12 @@ public class Config {
 
     private void loadConfigs() {
         this.SETTINGS_DEBUG = getSetting("debug");
-        this.SETTINGS_UPDATE_CHECKER = getSetting("update-checker");
+        this.SETTINGS_UPDATE_CHECKER_ENABLED = getSetting("update-checker.enabled");
+        this.SETTINGS_UPDATE_CHECKER_ASYNC = getSetting("update-checker.async");
+
         String namespace = this.config.getString("settings.namespace");
         this.SETTINGS_NAMESPACE = namespace != null ? namespace.toLowerCase() : "skbee";
+        this.SETTINGS_SCOREBOARD_LINES = getSetting("scoreboard-reverse-lines");
 
         this.ELEMENTS_NBT = getElement("nbt");
         this.NBT_EVENTS_BREAK_BLOCK = getNBTEvent("block-break");
@@ -165,6 +175,8 @@ public class Config {
         this.ELEMENTS_FISHING = getElement("fishing");
         this.ELEMENTS_DISPLAY = getElement("display-entity");
         this.ELEMENTS_TICK_MANAGER = getElement("tick-manager");
+        this.ELEMENTS_DAMAGE_SOURCE = getElement("damage-source");
+        this.ELEMENTS_CHUNK_GEN = getElement("chunk-generator");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
     }
 

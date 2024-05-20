@@ -28,8 +28,8 @@ public class EffRecipeDiscovery extends Effect {
 
     static {
         Skript.registerEffect(EffRecipeDiscovery.class,
-                "(discover|unlock) [(custom|1¦(mc|minecraft))] recipe[s] [with id[s]] %strings% for %players%",
-                "(undiscover|lock) [(custom|1¦(mc|minecraft))] recipe[s] [with id[s]] %strings% for %players%");
+                "(discover|unlock) [(custom|1:(mc|minecraft))] recipe[s] [with id[s]] %strings% for %players%",
+                "(undiscover|lock) [(custom|1:(mc|minecraft))] recipe[s] [with id[s]] %strings% for %players%");
     }
 
     @SuppressWarnings("null")

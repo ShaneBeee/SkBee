@@ -52,15 +52,15 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
 
     @Nullable
     @Override
-    public Location convert(@NotNull LivingEntity mob) {
-        if (mob instanceof Mob) {
-            Pathfinder pathfinder = ((Mob) mob).getPathfinder();
+    public Location convert(@NotNull LivingEntity livingEntity) {
+        if (livingEntity instanceof Mob mob) {
+            Pathfinder pathfinder = mob.getPathfinder();
             if (pathfinder.hasPath()) {
                 PathResult result = pathfinder.getCurrentPath();
-                return result != null ? result.getFinalPoint() : mob.getLocation();
+                return result != null ? result.getFinalPoint() : null;
             }
         }
-        return mob.getLocation();
+        return null;
     }
 
     @SuppressWarnings("NullableProblems")
@@ -104,6 +104,7 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
         return "path target";
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String speed = this.speed != null ? " with speed " + this.speed.toString(e, d) : "";

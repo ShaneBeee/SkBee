@@ -13,6 +13,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -20,20 +21,31 @@ import org.jetbrains.annotations.Nullable;
 @Name("Text Component - MiniMessage")
 @Description({"Get a mini message from a string.",
         "These messages are still components, which you can still apply hover/click events to.",
-        "For more info check out the mini message page <link>https://docs.adventure.kyori.net/minimessage/format.html</link>"})
+        "You can also add optional tag resolvers. Essential you create a resolver to replace `<someString>` ",
+        "in mini message with something else (See examples for more details).",
+        "For more info check out the [**Mini Message Format**](https://docs.adventure.kyori.net/minimessage/format.html) page."})
 @Examples({"set {_m} to mini message from \"<rainbow>this is a rainbow message\"",
         "set {_m} to mini message from \"<gradient:##F30A0A:##0A2AF3>PRETTY MESSAGE FROM RED TO BLUE\"",
         "set {_m} to mini message from \"<red>This is a <green>test!\"",
-        "send component mini message from \"<red>This is a <green>test!\" to all players"})
+        "send component mini message from \"<red>This is a <green>test!\" to all players",
+        "",
+        "# Create a component",
+        "set {_i} to translate component of player's tool",
+        "# Use this comonent in the resolver to replace \"<item>\" in the mini message",
+        "set {_r::1} to resolver(\"item\", {_i})",
+        "# setup the mini message with the replacement placeholder",
+        "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r::*}",
+        "send component {_m}"})
 @Since("2.4.0")
 public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
 
     static {
         Skript.registerExpression(ExprMiniMessage.class, ComponentWrapper.class, ExpressionType.SIMPLE,
-                "mini[ ]message from %string%");
+                "mini[ ]message from %string% [with [resolver[s]] %-tagresolvers%]");
     }
 
     private Expression<String> string;
+    private Expression<TagResolver> resolvers;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
@@ -43,6 +55,7 @@ public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
             return false;
         }
         this.string = (Expression<String>) exprs[0];
+        this.resolvers = (Expression<TagResolver>) exprs[1];
         return true;
     }
 
@@ -54,7 +67,8 @@ public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
             string = variableString.toUnformattedString(event);
         }
         if (string == null) return null;
-        return new ComponentWrapper[]{ComponentWrapper.fromMiniMessage(string)};
+        TagResolver[] resolvers = this.resolvers != null ? this.resolvers.getArray(event) : null;
+        return new ComponentWrapper[]{ComponentWrapper.fromMiniMessage(string, resolvers)};
     }
 
     @Override
@@ -68,8 +82,9 @@ public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "mini message from " + this.string.toString(e, d);
+    public @NotNull String toString(Event e, boolean d) {
+        String resolvers = this.resolvers != null ? (" with resolvers " + this.resolvers.toString(e, d)) : "";
+        return "mini message from " + this.string.toString(e, d) + resolvers;
     }
 
 }

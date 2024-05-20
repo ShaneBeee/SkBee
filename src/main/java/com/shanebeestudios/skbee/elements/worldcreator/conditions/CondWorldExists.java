@@ -23,7 +23,7 @@ import java.io.File;
 public class CondWorldExists extends Condition {
 
     static {
-        Skript.registerCondition(CondWorldExists.class, "world file %string% (0¦exists|1¦(does not|doesn't) exist)");
+        Skript.registerCondition(CondWorldExists.class, "world file %string% (exists|1:(does not|doesn't) exist)");
     }
 
     private Expression<String> world;

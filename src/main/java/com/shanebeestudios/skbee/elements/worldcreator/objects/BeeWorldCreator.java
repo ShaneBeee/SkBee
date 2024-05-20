@@ -1,12 +1,15 @@
 package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
 import org.bukkit.WorldType;
+import org.bukkit.generator.BiomeProvider;
+import org.bukkit.generator.ChunkGenerator;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -23,6 +26,8 @@ public class BeeWorldCreator {
     private Environment environment;
     private String generatorSettings;
     private String generator;
+    private ChunkGenerator chunkGenerator;
+    private BiomeProvider biomeProvider;
     Optional<Boolean> genStructures;
     Optional<Boolean> hardcore;
     Optional<Boolean> keepSpawnLoaded;
@@ -98,6 +103,14 @@ public class BeeWorldCreator {
         this.generator = generator;
     }
 
+    public void setChunkGenerator(ChunkGenerator chunkGenerator) {
+        this.chunkGenerator = chunkGenerator;
+    }
+
+    public void setBiomeProvider(BiomeProvider biomeProvider) {
+        this.biomeProvider = biomeProvider;
+    }
+
     public void setGenStructures(boolean genStructures) {
         this.genStructures = Optional.of(genStructures);
     }
@@ -138,7 +151,7 @@ public class BeeWorldCreator {
         this.saveClone = saveClone;
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "CallToPrintStackTrace"})
     public CompletableFuture<World> loadWorld() {
         CompletableFuture<WorldCreator> worldCreatorCompletableFuture = new CompletableFuture<>();
         CompletableFuture<World> worldCompletableFuture = new CompletableFuture<>();
@@ -151,7 +164,7 @@ public class BeeWorldCreator {
             worldCreatorCompletableFuture.complete(new WorldCreator(this.worldName));
         }
         worldCreatorCompletableFuture.thenAccept(worldCreator -> {
-            World world;
+            World world = null;
 
             if (worldType != null) {
                 worldCreator.type(worldType);
@@ -169,11 +182,23 @@ public class BeeWorldCreator {
             if (generator != null) {
                 worldCreator.generator(generator);
             }
+            if (chunkGenerator != null) {
+                worldCreator.generator(chunkGenerator);
+            }
+            if (biomeProvider != null) {
+                worldCreator.biomeProvider(biomeProvider);
+            }
 
             genStructures.ifPresent(worldCreator::generateStructures);
             hardcore.ifPresent(worldCreator::hardcore);
 
-            world = worldCreator.createWorld();
+            try {
+                world = worldCreator.createWorld();
+            } catch (Exception ex) {
+                ex.printStackTrace();
+                Util.errorForAdmins("Failed to load world '%s' see console for more details.", worldName);
+            }
+
             if (world != null) {
                 // Let's pull some values from the world and update our creator if need be
                 if (worldType == null) {

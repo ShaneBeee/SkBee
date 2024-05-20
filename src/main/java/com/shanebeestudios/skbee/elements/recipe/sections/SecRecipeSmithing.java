@@ -42,7 +42,7 @@ import java.util.List;
 @Examples({"on load:",
         "\tregister smithing transform recipe:",
         "\t\tid: \"test:smithing\"",
-        "\t\tresult: emerald of unbreaking named \"&cFire Stone\" with all flags hidden",
+        "\t\tresult: emerald of unbreaking named \"&cFire Stone\" with all item flags",
         "\t\ttemplate: paper named \"&cFire Paper\"",
         "\t\tbase: diamond",
         "\t\taddition: blaze powder"})

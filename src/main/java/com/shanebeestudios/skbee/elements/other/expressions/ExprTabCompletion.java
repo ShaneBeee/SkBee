@@ -19,30 +19,30 @@ import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 @Name("Tab Completions")
-@Description({"Set the tab completions used in a tab complete event. ",
-        "You can specify which position in the command arguments also (will default to position 1). ",
-        "You can also remove texts from tab completions."})
+@Description({"Set the tab completions used in a tab complete event.",
+    "You can specify which position in the command arguments also.",
+    "You can also remove texts from tab completions."})
 @Examples({"on tab complete of \"/mycommand\":",
-        "\tset tab completions for position 1 to \"one\", \"two\" and \"three\"",
-        "\tset tab completions for position 2 to 1, 2 and 3",
-        "\tset tab completions for position 3 to all players",
-        "\tset tab completions for position 4 to (indexes of {blocks::*})", "",
-        "on tab complete:",
-        "\tif event-string contains \"/ver\":",
-        "\t\tremove \"PermissionsEx\" from tab completions"})
+    "\tset tab completions for position 1 to \"one\", \"two\" and \"three\"",
+    "\tset tab completions for position 2 to 1, 2 and 3",
+    "\tset tab completions for position 3 to all players",
+    "\tset tab completions for position 4 to (indexes of {blocks::*})", "",
+    "on tab complete:",
+    "\tif event-string contains \"/ver\":",
+    "\t\tremove \"PermissionsEx\" from tab completions"})
 @Since("1.7.0")
 public class ExprTabCompletion extends SimpleExpression<String> {
 
     static {
         Skript.registerExpression(ExprTabCompletion.class, String.class, ExpressionType.SIMPLE,
-                "[skbee] tab completion[s] [(of|for) (last:last position|position %number%)]");
+            "[skbee] tab completion[s] [(of|for) (last:last position|position %-number%)]");
     }
 
     private Expression<Number> position;
@@ -67,31 +67,33 @@ public class ExprTabCompletion extends SimpleExpression<String> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(@NotNull ChangeMode mode) {
         return switch (mode) {
-            case SET, REMOVE, DELETE, ADD, REMOVE_ALL -> CollectionUtils.array(Object[].class);
+            case DELETE -> CollectionUtils.array();
+            case SET, REMOVE, ADD, REMOVE_ALL -> CollectionUtils.array(Object[].class);
             default -> null;
         };
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
-    public void change(@NotNull Event e, @Nullable Object[] objects, @NotNull ChangeMode mode) {
-        TabCompleteEvent event = ((TabCompleteEvent) e);
+    public void change(@NotNull Event event, @Nullable Object[] objects, @NotNull ChangeMode mode) {
+        if (!(event instanceof TabCompleteEvent tabCompleteEvent)) return;
 
-        Number number = this.position.getSingle(e);
+        Number number = this.position != null ? this.position.getSingle(event) : -1;
         int position = 1;
         if (number != null) {
             position = number.intValue();
         }
 
-        switch (mode) {
-            case SET, ADD -> {
-                String buff = event.getBuffer();
-                String[] buffers = buff.split(" ");
-                if (this.last) position = buffers.length;
-                String last = buff.substring(buff.length() - 1);
-                if ((position == buffers.length && last.equalsIgnoreCase(" ")) ||
-                        (position + 1 == buffers.length && !last.equalsIgnoreCase(" "))) {
+        String buff = tabCompleteEvent.getBuffer();
+        String[] buffers = buff.split(" ");
+        if (this.last) position = buffers.length;
+        String last = buff.substring(buff.length() - 1);
+
+        if (position == -1 || (position == buffers.length && last.equalsIgnoreCase(" ")) || (position + 1 == buffers.length && !last.equalsIgnoreCase(" "))) {
+            switch (mode) {
+                case SET, ADD -> {
                     String arg;
                     if (position == buffers.length) {
                         arg = "";
@@ -99,32 +101,27 @@ public class ExprTabCompletion extends SimpleExpression<String> {
                         arg = buffers[position];
                     }
 
-                    List<String> completions = mode == ChangeMode.SET ? new ArrayList<>() : new ArrayList<>(event.getCompletions());
-                    if (objects == null) {
-                        if (mode == ChangeMode.SET) {
-                            event.setCompletions(Collections.singletonList(""));
-                        }
-                        return;
-                    }
+                    List<String> completions = mode == ChangeMode.SET ? new ArrayList<>() : new ArrayList<>(tabCompleteEvent.getCompletions());
                     for (Object o : objects) {
                         String object = Classes.toString(o);
                         if (StringUtils.contains(object, arg, false)) {
                             completions.add(object);
                         }
                     }
-                    event.setCompletions(completions);
+                    tabCompleteEvent.setCompletions(completions);
+
                 }
-            }
-            case REMOVE -> {
-                assert objects != null;
-                for (Object object : objects) {
-                    try {
-                        event.getCompletions().remove(object.toString());
-                    } catch (Exception ignore) {
-                    } // Had a little issue when removing from a blank list
+                case REMOVE -> {
+                    for (Object object : objects) {
+                        try {
+                            assert object != null;
+                            tabCompleteEvent.getCompletions().remove(object.toString());
+                        } catch (Exception ignore) {
+                        } // Had a little issue when removing from a blank list
+                    }
                 }
+                case DELETE -> tabCompleteEvent.setCompletions(Collections.singletonList(""));
             }
-            case DELETE -> event.setCompletions(Collections.singletonList(""));
         }
     }
 
@@ -139,7 +136,7 @@ public class ExprTabCompletion extends SimpleExpression<String> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String pos = this.last ? " for last position" : this.position != null ? " for position " + this.position.toString(e, d) : "";
         return "tab completions" + pos;
     }

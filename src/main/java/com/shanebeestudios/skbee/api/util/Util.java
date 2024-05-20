@@ -2,11 +2,13 @@ package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.log.ErrorQuality;
+import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.SkBee;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -28,7 +30,10 @@ public class Util {
     private static final String SETTINGS_NAMESPACE = SkBee.getPlugin().getPluginConfig().SETTINGS_NAMESPACE;
 
     // QuickLinks
-    public static final String MCWIKI_TICK_COMMAND = "See <link>https://minecraft.wiki/w/Commands/tick</link> for more details.";
+    public static final String MCWIKI_TICK_COMMAND = "See [**Tick Command**](https://minecraft.wiki/w/Commands/tick) on McWiki for more details.";
+
+    // Shortcut for finding stuff to remove later
+    public static final boolean IS_RUNNING_SKRIPT_2_9 = Skript.getVersion().compareTo(new Version(2,9)) <= 0;
 
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
@@ -59,6 +64,22 @@ public class Util {
     public static void skriptError(String format, Object... objects) {
         String error = String.format(format, objects);
         Skript.error(getColString(PREFIX_ERROR + error), ErrorQuality.SEMANTIC_ERROR);
+    }
+
+    /**
+     * Send an error to admins
+     * <p>Permission required: `skbee.admin`</p>
+     *
+     * @param format  Format of the message
+     * @param objects Objects to fill format
+     */
+    public static void errorForAdmins(String format, Object... objects) {
+        String error = PREFIX_ERROR + "&c" + format;
+        for (Player player : Bukkit.getOnlinePlayers()) {
+            if (player.hasPermission("skbee.admin")) {
+                sendColMsg(player, error, objects);
+            }
+        }
     }
 
     public static void debug(String format, Object... objects) {

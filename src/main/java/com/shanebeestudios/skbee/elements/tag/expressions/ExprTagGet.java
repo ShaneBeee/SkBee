@@ -39,7 +39,7 @@ public class ExprTagGet extends SimpleExpression<Tag> {
 
     static {
         Skript.registerExpression(ExprTagGet.class, Tag.class, ExpressionType.COMBINED,
-                "minecraft [(item|1¦block|2¦entity[[ ]type])] tag[s] %strings/namespacedkeys%");
+                "minecraft [(item|1:block|2:entity[[ ]type])] tag[s] %strings/namespacedkeys%");
     }
 
     private int parse;

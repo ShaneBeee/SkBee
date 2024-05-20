@@ -36,7 +36,7 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
 
     static {
         Skript.registerExpression(ExprBoundOwnerMember.class, OfflinePlayer.class, ExpressionType.PROPERTY,
-                "bound (owner[s]|1¦member[s]) of %bound%");
+                "bound (owner[s]|1:member[s]) of %bound%");
     }
 
     private Expression<Bound> bound;

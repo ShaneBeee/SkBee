@@ -14,12 +14,12 @@ import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.config.BoundConfig;
-import org.bukkit.World;
-import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.Bound.Axis;
 import com.shanebeestudios.skbee.api.bound.Bound.Corner;
+import com.shanebeestudios.skbee.config.BoundConfig;
+import org.bukkit.World;
+import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Bound - Coords")
@@ -32,8 +32,8 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
 
     static {
         Skript.registerExpression(ExprBoundCoords.class, Object.class, ExpressionType.PROPERTY,
-                "lesser (0¦x|1¦y|2¦z) coord[inate] of [bound] %bound%",
-                "greater (0¦x|1¦y|2¦z) coord[inate] of [bound] %bound%",
+                "lesser (x|1:y|2:z) coord[inate] of [bound] %bound%",
+                "greater (x|1:y|2:z) coord[inate] of [bound] %bound%",
                 "world of bound %bound%");
     }
 

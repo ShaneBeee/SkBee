@@ -6,20 +6,19 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
+import com.shanebeestudios.skbee.elements.virtualfurnace.type.Types;
 import com.shanebeestudios.vf.api.property.FurnaceProperties;
+import com.shanebeestudios.vf.api.property.Properties;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings({"ConstantConditions", "NullableProblems"})
 @Name("VirtualFurnace - Furnace Item")
 @Description("Get a virtual furnace item. This will be any item with a linked virtual furnace, allowing players " +
         "to access a portable furnace wherever they go. The speed multipliers will allow your furnace item to cook faster " +
@@ -29,50 +28,70 @@ import org.jetbrains.annotations.NotNull;
 @Examples("give player a virtual furnace item as diamond named \"MyFurnace\" with gui name \"PORTABLE FURNACE\" with " +
         "cook speed multiplier 1.5")
 @Since("1.3.0")
-public class ExprVirtualFurnaceItem extends PropertyExpression<ItemType, ItemType> {
-
-    private static final VirtualFurnaceAPI API = SkBee.getPlugin().getVirtualFurnaceAPI();
+public class ExprVirtualFurnaceItem extends SimpleExpression<ItemType> {
 
     static {
-        Skript.registerExpression(ExprVirtualFurnaceItem.class, ItemType.class, ExpressionType.PROPERTY,
-                "[a] [(1¦glowing)] virtual furnace item as %itemtype% with (inventory|gui) name %string%" +
-                        " [[and ]with cook speed multiplier %number%] [[and ]with fuel speed multiplier %number%]");
+        Skript.registerExpression(ExprVirtualFurnaceItem.class, ItemType.class, ExpressionType.COMBINED,
+                "[a] [(:glowing)] virtual furnace item as %itemtype% with (inventory|gui) name %string%" +
+                        " [[and ]with cook speed multiplier %number%] [[and ]with fuel speed multiplier %number%]",
+                "[a] [(:glowing)] virtual furnace item as %itemtype% with (inventory|gui) name %string% ",
+                "with [[furnace ]properties] %-machineproperty%");
     }
 
-    @SuppressWarnings("null")
+    private int pattern;
+    private Expression<ItemType> itemType;
     private Expression<String> name;
     private Expression<Number> cookSpeed;
     private Expression<Number> fuelSpeed;
+    private Expression<Properties> properties;
     private boolean glowing;
 
-    @SuppressWarnings({"unchecked", "null"})
+    @SuppressWarnings({"unchecked", "NullableProblems"})
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean k, SkriptParser.ParseResult parse) {
-        setExpr((Expression<ItemType>) exprs[0]);
-        name = (Expression<String>) exprs[1];
-        cookSpeed = (Expression<Number>) exprs[2];
-        fuelSpeed = (Expression<Number>) exprs[3];
-        glowing = parse.mark == 1;
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parse) {
+        this.pattern = matchedPattern;
+        this.itemType = (Expression<ItemType>) exprs[0];
+        this.name = (Expression<String>) exprs[1];
+        if (matchedPattern == 0) {
+            this.cookSpeed = (Expression<Number>) exprs[2];
+            this.fuelSpeed = (Expression<Number>) exprs[3];
+        } else {
+            this.properties = (Expression<Properties>) exprs[2];
+        }
+        this.glowing = parse.hasTag("glowing");
         return true;
     }
 
+    @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
     @Override
-    protected ItemType[] get(Event event, ItemType[] itemTypes) {
-        double cookspeed = this.cookSpeed != null ? this.cookSpeed.getSingle(event).doubleValue() : 1.0;
-        double fuelSpeed = this.fuelSpeed != null ? this.fuelSpeed.getSingle(event).doubleValue() : 1.0;
+    protected ItemType @Nullable [] get(Event event) {
+        ItemType itemType = this.itemType.getSingle(event);
+        if (itemType == null) return null;
+        ItemStack itemStack = itemType.getRandom();
+
+        FurnaceProperties furnaceProperties;
+        if (this.pattern == 0) {
+            double cookspeed = this.cookSpeed != null ? this.cookSpeed.getSingle(event).doubleValue() : 1.0;
+            double fuelSpeed = this.fuelSpeed != null ? this.fuelSpeed.getSingle(event).doubleValue() : 1.0;
+            String key = "key_" + itemStack.getType() + "_" + cookspeed + "_" + fuelSpeed;
+            furnaceProperties = new FurnaceProperties(key).cookMultiplier(cookspeed).fuelMultiplier(fuelSpeed);
+        } else if (this.properties.getSingle(event) instanceof FurnaceProperties p) {
+            furnaceProperties = p;
+        } else {
+            furnaceProperties = FurnaceProperties.FURNACE;
+        }
         String name = this.name != null ? this.name.getSingle(event) : "uh-oh";
-        String key = "key_" + itemTypes[0].getRandom().getType().toString() + "_" + cookspeed + "_" + fuelSpeed;
-        FurnaceProperties prop = new FurnaceProperties(key).cookMultiplier(cookspeed).fuelMultiplier(fuelSpeed);
-        return get(itemTypes, itemData -> {
-            ItemStack stack = itemData.getRandom();
-            if (stack == null || name == null) return null;
-            ItemStack i = API.getFurnaceManager().createItemWithFurnace(
-                    name,
-                    prop,
-                    stack,
-                    glowing);
-            return new ItemType(i);
-        });
+        ItemStack furnaceItem = Types.FURNACE_MANAGER.createItemWithFurnace(
+                name,
+                furnaceProperties,
+                itemStack,
+                glowing);
+        return new ItemType[]{new ItemType(furnaceItem)};
+    }
+
+    @Override
+    public boolean isSingle() {
+        return true;
     }
 
     @Override
@@ -80,12 +99,19 @@ public class ExprVirtualFurnaceItem extends PropertyExpression<ItemType, ItemTyp
         return ItemType.class;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Override
-    public String toString(@Nullable Event e, boolean d) {
-        return (glowing ? "glowing " : "") + "virtual furnace item as " + getExpr().toString(e, d)
+    public @NotNull String toString(@Nullable Event e, boolean d) {
+        String properties;
+        if (this.pattern == 0) {
+            properties = (this.cookSpeed != null ? " with cook speed " + this.cookSpeed.toString(e, d) : "")
+                    + (this.fuelSpeed != null ? " with fuel speed " + this.fuelSpeed.toString(e, d) : "");
+        } else {
+            properties = " with properties " + this.properties.toString(e, d);
+        }
+        return (glowing ? "glowing " : "") + "virtual furnace item as " + this.itemType.toString(e, d)
                 + " with inventory name " + this.name.toString(e, d)
-                + (this.cookSpeed != null ? " with cook speed " + this.cookSpeed.toString(e, d) : "")
-                + (this.fuelSpeed != null ? " with fuel speed " + this.fuelSpeed.toString(e, d) : "");
+                + properties;
     }
 
 }

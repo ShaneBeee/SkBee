@@ -16,8 +16,8 @@ import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,7 +35,7 @@ public class ExprMerchantRecipeIngredients extends SimpleExpression<ItemType> {
 
     static {
         Skript.registerExpression(ExprMerchantRecipeIngredients.class, ItemType.class, ExpressionType.SIMPLE,
-                "(ingredients|1¦result [item]) of merchant recipe %merchantrecipe%");
+                "(ingredients|1:result [item]) of merchant recipe %merchantrecipe%");
     }
 
     private int pattern;

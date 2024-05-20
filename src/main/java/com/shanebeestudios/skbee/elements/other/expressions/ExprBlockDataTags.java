@@ -10,11 +10,11 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.BlockDataUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -50,7 +50,7 @@ public class ExprBlockDataTags extends SimpleExpression<String> {
             else if (object instanceof BlockData bd) blockData = bd;
             else continue;
 
-            String[] tags = getTags(blockData.getAsString());
+            String[] tags = BlockDataUtils.getBlockDataTags(blockData);
             if (tags != null) {
                 list.addAll(Arrays.asList(tags));
             }
@@ -71,29 +71,6 @@ public class ExprBlockDataTags extends SimpleExpression<String> {
     @Override
     public @NotNull String toString(Event e, boolean d) {
         return "block data tags of " + this.objects.toString(e, d);
-    }
-
-    // Utils
-    @Nullable
-    private String[] getTags(String data) {
-        String[] splitData = getData(data);
-        List<String> tags = new ArrayList<>();
-        if (splitData == null) return null;
-
-        for (String splitDatum : splitData) {
-            tags.add(splitDatum.split("=")[0]);
-        }
-        return tags.toArray(new String[0]);
-    }
-
-    private String[] getData(String data) {
-        String[] splits1 = data.split("\\[");
-        if (splits1.length >= 2) {
-            String[] splits2 = splits1[1].split("]");
-
-            return splits2[0].split(",");
-        }
-        return null;
     }
 
 }

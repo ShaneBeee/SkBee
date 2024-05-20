@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
@@ -28,6 +29,9 @@ import org.bukkit.scoreboard.Team;
 
 import java.io.IOException;
 
+/**
+ * @hidden
+ */
 @SuppressWarnings("CallToPrintStackTrace")
 public class AddonLoader {
 
@@ -103,6 +107,7 @@ public class AddonLoader {
         loadAdvancementElements();
         loadBossBarElements();
         loadBoundElements();
+        loadDamageSourceElements();
         loadDisplayEntityElements();
         loadFishingElements();
         loadGameEventElements();
@@ -120,6 +125,7 @@ public class AddonLoader {
         loadVirtualFurnaceElements();
         loadWorldBorderElements();
         loadWorldCreatorElements();
+        loadChunkGenElements();
 
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
@@ -137,11 +143,11 @@ public class AddonLoader {
     }
 
     private void loadNBTElements() {
-        NBTApi.initializeAPI();
         if (!this.config.ELEMENTS_NBT) {
             Util.logLoading("&5NBT Elements &cdisabled via config");
             return;
         }
+        NBTApi.initializeAPI();
         if (!NBTApi.isEnabled()) {
             String ver = Skript.getMinecraftVersion().toString();
             Util.logLoading("&5NBT Elements &cDISABLED!");
@@ -152,9 +158,7 @@ public class AddonLoader {
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.nbt");
-            if (NBTApi.supportsBlockNBT()) {
-                pluginManager.registerEvents(new NBTListener(this.plugin.getPluginConfig()), this.plugin);
-            }
+            new NBTListener(this.plugin);
             Util.logLoading("&5NBT Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
@@ -307,8 +311,15 @@ public class AddonLoader {
     }
 
     private void loadVirtualFurnaceElements() {
-        if (!this.config.ELEMENTS_VIRTUAL_FURNACE) {
+        // Force load if running tests as this is defaulted to false in the config
+        if (!this.config.ELEMENTS_VIRTUAL_FURNACE && !TestMode.ENABLED) {
             Util.logLoading("&5Virtual Furnace Elements &cdisabled via config");
+            return;
+        }
+        // PaperMC check
+        if (!Skript.classExists("net.kyori.adventure.text.Component")) {
+            Util.logLoading("&5Virtual Furnace Elements &cdisabled");
+            Util.logLoading("&7- Virtual Furnace require a PaperMC server.");
             return;
         }
         try {
@@ -341,6 +352,24 @@ public class AddonLoader {
             this.plugin.beeWorldConfig = new BeeWorldConfig(this.plugin);
             addon.loadClasses("com.shanebeestudios.skbee.elements.worldcreator");
             Util.logLoading("&5World Creator Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadChunkGenElements() {
+        if (!this.config.ELEMENTS_CHUNK_GEN) {
+            Util.logLoading("&5Chunk Generator Elements &cdisabled via config");
+            return;
+        }
+        if (!this.config.ELEMENTS_WORLD_CREATOR) {
+            Util.logLoading("&5Chunk Generator &cdisabled via World Creator config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.generator");
+            Util.logLoading("&5Chunk Generator Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);
@@ -518,6 +547,24 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.display");
             Util.logLoading("&5Display Entity elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadDamageSourceElements() {
+        if (!this.config.ELEMENTS_DAMAGE_SOURCE) {
+            Util.logLoading("&5Damage Source elements &cdisabled via config");
+            return;
+        }
+        if (!Skript.classExists("org.bukkit.damage.DamageSource")) {
+            Util.logLoading("&5Damage Source elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.damagesource");
+            Util.logLoading("&5Damage Source elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);

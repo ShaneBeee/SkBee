@@ -46,6 +46,26 @@ public class MathUtil {
         return false;
     }
 
+    /**
+     * Check if a String is a Number
+     *
+     * @param string String to check
+     * @return true if Number else false
+     */
+    public static boolean isNumber(String string) {
+        return string.matches("\\d+");
+    }
+
+    /**
+     * Check if a String is a boolean
+     *
+     * @param string String to check
+     * @return true if Boolean else false
+     */
+    public static boolean isBoolean(String string) {
+        return string.equalsIgnoreCase("true") || string.equalsIgnoreCase("false");
+    }
+
     public static boolean isWithin(Location loc, Location one, Location two) {
         double xLow = Math.min(one.getX(), two.getX());
         double yLow = Math.min(one.getY(), two.getY());

@@ -22,17 +22,27 @@ import java.util.List;
  *
  * @param <T> Type of item in the registry
  */
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "deprecation"})
 public class RegistryWrapper<T extends Keyed> {
 
     /**
-     * Wrap a registry with optional prefix and suffix
+     * Wrap a registry
      *
      * @param registryClass Class of registry to wrap
      * @return Wrapped registry
      */
     public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Class<T> registryClass) {
         return wrap(registryClass, null, null);
+    }
+
+    /**
+     * Wrap a registry
+     *
+     * @param registry Registry to wrap
+     * @return Wrapped registry
+     */
+    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Registry<T> registry) {
+        return wrap(registry, null, null);
     }
 
     /**
@@ -47,6 +57,19 @@ public class RegistryWrapper<T extends Keyed> {
         return new RegistryWrapper<>(registryClass, prefix, suffix);
     }
 
+    /**
+     * Wrap a registry with optional prefix and suffix
+     *
+     * @param registry Registry to wrap
+     * @param prefix        Optional prefix to prepend to items in registry
+     * @param suffix        Optional suffix to append to items in registry
+     * @return Wrapped registry
+     */
+    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Registry<T> registry, @Nullable String prefix, @Nullable String suffix) {
+        return new RegistryWrapper<>(registry, prefix, suffix);
+    }
+
+
     private final Registry<T> registry;
     @Nullable
     private final String prefix, suffix;
@@ -58,6 +81,13 @@ public class RegistryWrapper<T extends Keyed> {
         Comparators.registerComparator(registryClass, registryClass, (o1, o2) -> Relation.get(o1.equals(o2)));
     }
 
+    private RegistryWrapper(Registry<T> registry, @Nullable String prefix, @Nullable String suffix) {
+        this.registry = registry;
+        this.prefix = prefix;
+        this.suffix = suffix;
+        Comparators.registerComparator(registry.getClass(), registry.getClass(), (o1, o2) -> Relation.get(o1.equals(o2)));
+    }
+
     /**
      * Get names of all items in registry
      *
@@ -65,9 +95,16 @@ public class RegistryWrapper<T extends Keyed> {
      */
     public String getNames() {
         List<String> keys = new ArrayList<>();
-        this.registry.iterator().forEachRemaining(object -> keys.add(toString(object)));
+        this.registry.iterator().forEachRemaining(object -> keys.add(getName(object)));
         Collections.sort(keys);
         return StringUtils.join(keys, ", ");
+    }
+
+    private String getName(T object) {
+        String key = object.getKey().getKey();
+        if (this.prefix != null && !this.prefix.isEmpty()) key = prefix + "_" + key;
+        if (this.suffix != null && !this.suffix.isEmpty()) key = key + "_" + suffix;
+        return key;
     }
 
     /**
@@ -80,7 +117,7 @@ public class RegistryWrapper<T extends Keyed> {
         String key = object.getKey().getKey();
         if (this.prefix != null && !this.prefix.isEmpty()) key = prefix + "_" + key;
         if (this.suffix != null && !this.suffix.isEmpty()) key = key + "_" + suffix;
-        return key;
+        return object.getKey().getNamespace() + ":" + key;
     }
 
     /**
