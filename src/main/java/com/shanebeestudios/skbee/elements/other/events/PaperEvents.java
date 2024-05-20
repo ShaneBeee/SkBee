@@ -384,7 +384,7 @@ public class PaperEvents extends SimpleEvent {
                 .examples("on player track entity:",
                     "\tif event-entity is a zombie:",
                     "\t\tcancel event")
-                .since("INSERT VERSION");
+                .since("3.5.1");
 
             EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, new Getter<>() {
                 @Override
