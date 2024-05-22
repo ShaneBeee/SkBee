@@ -33,7 +33,7 @@ public class Util {
     public static final String MCWIKI_TICK_COMMAND = "See [**Tick Command**](https://minecraft.wiki/w/Commands/tick) on McWiki for more details.";
 
     // Shortcut for finding stuff to remove later
-    public static final boolean IS_RUNNING_SKRIPT_2_9 = Skript.getVersion().compareTo(new Version(2,9)) <= 0;
+    public static final boolean IS_RUNNING_SKRIPT_2_9 = Skript.getVersion().isLargerThan(new Version(2,8,999));
 
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
