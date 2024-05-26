@@ -3,7 +3,6 @@ package com.shanebeestudios.skbee.elements.other.effects;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
@@ -20,13 +19,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Transfer - Retrieve Cookie")
-@Description({"Retrieve a cookie from a player and store it in a variable. Requires Minecraft 1.20.5+",
-    "Due to the retrieval process happening async, this needs to be stored in a variable.",
-    "While the cookie is being retrieved, your proceeding code will wait.",
-    "NOTE: Cookies are stored across server transfers."})
-@Examples({"retrieve cookie with key \"my_id:super_mom_cookie\" from player and store in {_cookie}",
-    "broadcast {_cookie}"})
+@Description({"DEPRECATED - Use retrieve cookie section."})
 @Since("3.5.0")
+@Deprecated(forRemoval = true, since = "May 25/2024")
 public class EffTransferCookieRetrieve extends Effect {
 
     static {
@@ -46,6 +41,7 @@ public class EffTransferCookieRetrieve extends Effect {
         this.key = exprs[0];
         this.player = (Expression<Player>) exprs[1];
         this.object = exprs[2];
+        Skript.warning("DEPRECATED - Use retrieve cookie section.");
         return true;
     }
 
