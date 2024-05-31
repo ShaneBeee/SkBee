@@ -113,11 +113,17 @@ public class RegistryWrapper<T extends Keyed> {
      * @param object Item to put into string
      * @return String form of item
      */
-    public String toString(T object) {
-        String key = object.getKey().getKey();
+    public @NotNull String toString(T object) {
+        NamespacedKey namespacedKey;
+        try {
+            namespacedKey = object.getKey();
+        } catch (IllegalArgumentException ignore) {
+            return "invalid key for: " + object;
+        }
+        String key = namespacedKey.getKey();
         if (this.prefix != null && !this.prefix.isEmpty()) key = prefix + "_" + key;
         if (this.suffix != null && !this.suffix.isEmpty()) key = key + "_" + suffix;
-        return object.getKey().getNamespace() + ":" + key;
+        return namespacedKey.getNamespace() + ":" + key;
     }
 
     /**
