@@ -13,14 +13,14 @@ import com.shanebeestudios.skbee.api.util.ChatUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
 @Name("Team - Color")
 @Description("Get/set the color of a team.")
 @Examples({"set team color of {_team} to blue",
-        "set team color of team of player to red"})
+    "set team color of team of player to red"})
 @Since("1.16.0")
 public class ExprTeamColor extends SimplePropertyExpression<Team, SkriptColor> {
 
@@ -35,21 +35,20 @@ public class ExprTeamColor extends SimplePropertyExpression<Team, SkriptColor> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {
             case SET, RESET -> CollectionUtils.array(Color.class);
             default -> null;
         };
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        Object object = delta[0];
-        SkriptColor color = object instanceof SkriptColor ? (SkriptColor) object : null;
+        SkriptColor color = delta != null && delta[0] instanceof SkriptColor skriptColor ? skriptColor : null;
 
         for (Team team : getExpr().getArray(event)) {
-            if (mode == ChangeMode.SET && color != null) {
+            if (color != null) {
                 team.setColor(color.asChatColor());
             } else {
                 team.setColor(ChatColor.WHITE);
