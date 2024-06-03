@@ -21,6 +21,7 @@ import org.bukkit.Color;
 import org.bukkit.EntityEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
+import org.bukkit.TreeType;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
@@ -43,7 +44,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
 
-@SuppressWarnings({"rawtypes", "deprecation", "removal"})
+@SuppressWarnings({"rawtypes", "removal"})
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
@@ -379,6 +380,14 @@ public class Types {
                     return toString(bukkitColor, 0);
                 }
             }));
+
+        EnumWrapper<TreeType> TREE_TYPE = new EnumWrapper<>(TreeType.class, "", "tree");
+        Classes.registerClass(TREE_TYPE.getClassInfo("bukkittreetype")
+            .user("bukkit ?tree ?types?")
+            .name("Bukkit Tree Type")
+            .description("Represents the different types of trees.")
+            .after("structuretype")
+            .since("INSERT VERSION"));
     }
 
     // FUNCTIONS
