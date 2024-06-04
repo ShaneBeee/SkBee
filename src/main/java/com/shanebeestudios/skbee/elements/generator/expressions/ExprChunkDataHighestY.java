@@ -45,7 +45,7 @@ public class ExprChunkDataHighestY extends SimpleExpression<Number> {
         if (event instanceof BlockPopulateEvent popEvent) {
             int x = (popEvent.getChunkX() << 4) + vector.getBlockX();
             int z = (popEvent.getChunkZ() << 4) + vector.getBlockZ();
-            int highest = popEvent.getLimitedRegion().getHighestBlockYAt(x, z, HeightMap.WORLD_SURFACE_WG);
+            int highest = popEvent.getLimitedRegion().getHighestBlockYAt(x, z, HeightMap.WORLD_SURFACE_WG) - 1;
             return new Number[]{highest};
         }
         return null;
