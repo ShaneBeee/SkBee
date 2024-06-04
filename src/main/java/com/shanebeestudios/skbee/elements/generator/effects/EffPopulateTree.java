@@ -26,12 +26,12 @@ import java.util.Random;
     "The vector represents chunk position not world position."})
 @Examples("populate cherry tree at vector(0, 64, 15)")
 @Since("INSERT VERSION")
-public class EffTreeGenerate extends Effect {
+public class EffPopulateTree extends Effect {
 
     private static final Random RANDOM = new Random();
 
     static {
-        Skript.registerEffect(EffTreeGenerate.class,
+        Skript.registerEffect(EffPopulateTree.class,
             "populate %bukkittreetype% at %vectors%");
     }
 
@@ -64,9 +64,7 @@ public class EffTreeGenerate extends Effect {
             int z = (popEvent.getChunkZ() << 4) + MathUtil.clamp(vector.getBlockZ(), 0, 15);
             Location location = new Location(null, x, vector.getBlockY(), z);
             region.generateTree(location, RANDOM, treeType);
-
         }
-
     }
 
     @Override
