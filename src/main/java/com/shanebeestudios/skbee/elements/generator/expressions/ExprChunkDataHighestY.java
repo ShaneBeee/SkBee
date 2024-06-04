@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
+import org.bukkit.HeightMap;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +45,7 @@ public class ExprChunkDataHighestY extends SimpleExpression<Number> {
         if (event instanceof BlockPopulateEvent popEvent) {
             int x = (popEvent.getChunkX() << 4) + vector.getBlockX();
             int z = (popEvent.getChunkZ() << 4) + vector.getBlockZ();
-            int highest = popEvent.getLimitedRegion().getHighestBlockYAt(x, z);
+            int highest = popEvent.getLimitedRegion().getHighestBlockYAt(x, z, HeightMap.WORLD_SURFACE_WG);
             return new Number[]{highest};
         }
         return null;
