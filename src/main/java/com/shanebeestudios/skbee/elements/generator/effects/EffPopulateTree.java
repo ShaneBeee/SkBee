@@ -25,7 +25,7 @@ import java.util.Random;
 @Description({"Grow a tree in a ChunkGenerator `block pop` section.",
     "The vector represents chunk position not world position."})
 @Examples("populate cherry tree at vector(0, 64, 15)")
-@Since("INSERT VERSION")
+@Since("3.5.3")
 public class EffPopulateTree extends Effect {
 
     private static final Random RANDOM = new Random();

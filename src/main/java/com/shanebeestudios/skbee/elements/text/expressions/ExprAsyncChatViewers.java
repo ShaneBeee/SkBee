@@ -35,7 +35,7 @@ import java.util.List;
     "",
     "on async chat:",
     "\tremove (all players where [input doesn't have permission \"staff.chat\"]) from chat viewers"})
-@Since("INSERT VERSION")
+@Since("3.5.3")
 public class ExprAsyncChatViewers extends SimpleExpression<CommandSender> {
 
     static {

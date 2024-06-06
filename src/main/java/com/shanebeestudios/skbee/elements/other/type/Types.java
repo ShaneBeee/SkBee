@@ -387,7 +387,7 @@ public class Types {
             .name("Bukkit Tree Type")
             .description("Represents the different types of trees.")
             .after("structuretype")
-            .since("INSERT VERSION"));
+            .since("3.5.3"));
     }
 
     // FUNCTIONS

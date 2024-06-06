@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("ChunkGenerator - Highest Block Y")
 @Description("Get the highest block y at a position in a chunk in a `block pop` section.")
 @Examples("set {_y} to chunkdata highest y at vector(1,0,1)")
-@Since("INSERT VERSION")
+@Since("3.5.3")
 public class ExprChunkDataHighestY extends SimpleExpression<Number> {
 
     static {

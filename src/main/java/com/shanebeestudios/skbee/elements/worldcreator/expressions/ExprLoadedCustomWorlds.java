@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents all loaded custom worlds created using SkBee.",
     "This will not include worlds created by other plugins, such as MultiVerse."})
 @Examples("loop all loaded custom worlds:")
-@Since("INSERT VERSION")
+@Since("3.5.3")
 public class ExprLoadedCustomWorlds extends SimpleExpression<World> {
 
     static {

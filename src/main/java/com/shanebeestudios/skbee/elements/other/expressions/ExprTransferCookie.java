@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
     "\t\t\t\tstop",
     "\t\t# kick player if cookie is missing or incorrect",
     "\t\tkick player due to \"&cIllegal Transfer\""})
-@Since("INSERT VERSION")
+@Since("3.5.3")
 public class ExprTransferCookie extends SimpleExpression<String> {
 
     static {
