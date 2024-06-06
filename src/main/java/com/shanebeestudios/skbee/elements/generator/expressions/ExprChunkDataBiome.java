@@ -13,10 +13,10 @@ import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.generator.event.BiomeGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
+import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.event.Event;
@@ -28,23 +28,23 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("ChunkGenerator - ChunkData Biome")
 @Description({"Represents the biome in ChunkData.",
-        "The first pattern is used to set the biome in the `biome gen` section.",
-        "The second pattern is used to retrieve biomes in the `chunk gen` and `block pop` sections.",
-        "NOTE: The vector represents the position of the biome in the chunk, not the world."})
+    "The first pattern is used to set the biome in the `biome gen` section.",
+    "The second pattern is used to retrieve biomes in the `chunk gen` and `block pop` sections.",
+    "NOTE: The vector represents the position of the biome in the chunk, not the world."})
 @Examples({"biome gen:",
-        "\tset chunkdata biome to plains",
-        "",
-        "chunk gen:",
-        "\tset {_biome} to chunkdata biome at vector(0,0,0)",
-        "\tif {_biome} is plains:",
-        "\t\tset chunkdata block at vector(0,0,0) to grass[]"})
+    "\tset chunkdata biome to plains",
+    "",
+    "chunk gen:",
+    "\tset {_biome} to chunkdata biome at vector(0,0,0)",
+    "\tif {_biome} is plains:",
+    "\t\tset chunkdata block at vector(0,0,0) to grass[]"})
 @Since("3.5.0")
 public class ExprChunkDataBiome extends SimpleExpression<Biome> {
 
     static {
         Skript.registerExpression(ExprChunkDataBiome.class, Biome.class, ExpressionType.COMBINED,
-                "chunk[ ]data biome",
-                "chunk[ ]data biome at %vector%");
+            "chunk[ ]data biome",
+            "chunk[ ]data biome at %vector%");
     }
 
     private Expression<Vector> vector;
@@ -70,17 +70,19 @@ public class ExprChunkDataBiome extends SimpleExpression<Biome> {
         if (this.vector != null) {
             Vector vector = this.vector.getSingle(event);
             if (vector != null) {
-                int x = vector.getBlockX();
+                int x = MathUtil.clamp(vector.getBlockX(), 0, 15);
                 int y = vector.getBlockY();
-                int z = vector.getBlockZ();
+                int z = MathUtil.clamp(vector.getBlockZ(), 0, 15);
                 if (event instanceof ChunkGenEvent chunkGenEvent) {
                     ChunkData chunkData = chunkGenEvent.getChunkData();
                     Biome biome = chunkData.getBiome(x, y, z);
                     return new Biome[]{biome};
                 } else if (event instanceof BlockPopulateEvent populateEvent) {
+                    int chunkX = populateEvent.getChunkX();
+                    int chunkZ = populateEvent.getChunkZ();
                     LimitedRegion limitedRegion = populateEvent.getLimitedRegion();
                     y = clamp(limitedRegion, y);
-                    Biome biome = limitedRegion.getBiome(x, y, z);
+                    Biome biome = limitedRegion.getBiome((chunkX << 4) + x, y, (chunkZ << 4) + z);
                     return new Biome[]{biome};
                 }
             }

@@ -15,6 +15,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
+import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
 import org.bukkit.generator.ChunkGenerator;
@@ -24,20 +25,19 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("ChunkGenerator - ChunkData Block")
 @Description({"Represents blocks in a ChunkData.",
-        "The first pattern is used to set a block in a `chunk gen` or `block pop` section.",
-        "The second pattern is used to fill blocks between 2 points in a `chunk gen` section.",
-        "NOTE: In the `chunk gen` section, the vector represents the position in a chunk, not a world.",
-        "In the `block pop` section, the vector represents world position."})
+    "The first pattern is used to set a block in a `chunk gen` or `block pop` section.",
+    "The second pattern is used to fill blocks between 2 points in a `chunk gen` section.",
+    "NOTE: The vector represents the position in a chunk, not a world."})
 @Examples({"chunk gen:",
-        "\tset chunkdata blocks within vector({_x}, 0, {_z}) and vector({_x}, {_y}, {_z}) to red_concrete[]",
-        "\tset chunkdata block at vector({_x}, {_y}, {_z}) to red_concrete_powder[]"})
+    "\tset chunkdata blocks within vector({_x}, 0, {_z}) and vector({_x}, {_y}, {_z}) to red_concrete[]",
+    "\tset chunkdata block at vector({_x}, {_y}, {_z}) to red_concrete_powder[]"})
 @Since("3.5.0")
 public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
 
     static {
         Skript.registerExpression(ExprChunkDataBlock.class, BlockData.class, ExpressionType.COMBINED,
-                "chunk[ ]data block[data] at %vector%",
-                "chunk[ ]data block[data]s (between|within) %vector% (and|to) %vector%");
+            "chunk[ ]data block[data] at %vector%",
+            "chunk[ ]data block[data]s (between|within) %vector% (and|to) %vector%");
     }
 
     private Expression<Vector> vector;
@@ -71,8 +71,11 @@ public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
             int y = vec.getBlockY();
             int z = vec.getBlockZ();
             return new BlockData[]{chunkGenEvent.getChunkData().getBlockData(x, y, z)};
-        } else if (event instanceof BlockPopulateEvent populateEvent) {
-            return new BlockData[]{populateEvent.getLimitedRegion().getBlockData(vec)};
+        } else if (event instanceof BlockPopulateEvent popEvent) {
+            int x = (popEvent.getChunkX() << 4) + MathUtil.clamp(vec.getBlockX(), 0, 15);
+            int y = vec.getBlockY();
+            int z = (popEvent.getChunkZ() << 4) + MathUtil.clamp(vec.getBlockZ(), 0, 15);
+            return new BlockData[]{popEvent.getLimitedRegion().getBlockData(x, y, z)};
         }
         return null;
     }
@@ -108,8 +111,11 @@ public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
                     } else {
                         chunkGenEvent.getChunkData().setBlock(x, y, z, blockData);
                     }
-                } else if (event instanceof BlockPopulateEvent populateEvent) {
-                    populateEvent.getLimitedRegion().setBlockData(vec, blockData);
+                } else if (event instanceof BlockPopulateEvent popEvent) {
+                    int x = (popEvent.getChunkX() << 4) + MathUtil.clamp(vec.getBlockX(), 0, 15);
+                    int y = vec.getBlockY();
+                    int z = (popEvent.getChunkZ() << 4) + MathUtil.clamp(vec.getBlockZ(), 0, 15);
+                    popEvent.getLimitedRegion().setBlockData(x, y, z, blockData);
                 }
             }
         }

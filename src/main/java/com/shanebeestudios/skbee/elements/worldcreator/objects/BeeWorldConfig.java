@@ -1,18 +1,22 @@
 package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.util.Util;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
@@ -22,7 +26,7 @@ public class BeeWorldConfig {
     private final SkBee plugin;
     private FileConfiguration worldConfig;
     private File worldConfigFile;
-    private boolean autoLoadWorlds;
+    private final boolean autoLoadWorlds;
 
     private final Map<String, BeeWorldCreator> WORLDS = new HashMap<>();
 
@@ -46,7 +50,7 @@ public class BeeWorldConfig {
         ConfigurationSection section = worldConfig.getConfigurationSection("worlds");
         if (section != null) {
             Set<String> keys = section.getKeys(false);
-            if (keys.size() == 0) {
+            if (keys.isEmpty()) {
                 return;
             }
             Util.log("&6Loading custom worlds...");
@@ -62,7 +66,7 @@ public class BeeWorldConfig {
         }
     }
 
-    public BeeWorldCreator loadWorld(String name) {
+    public @Nullable BeeWorldCreator loadWorld(String name) {
         String path = "worlds." + name + ".";
         BeeWorldCreator worldCreator = new BeeWorldCreator(name);
 
@@ -186,6 +190,20 @@ public class BeeWorldConfig {
             Util.skriptError(" - &7Default to NORMAL");
             return Environment.NORMAL;
         }
+    }
+
+    /**
+     * Get all loaded custom worlds
+     *
+     * @return All loaded custom worlds
+     */
+    public List<World> getLoadedCustomWorlds() {
+        List<World> worlds = new ArrayList<>();
+        WORLDS.forEach((string, beeWorldCreator) -> {
+            World world = Bukkit.getWorld(beeWorldCreator.getWorldName());
+            if (world != null) worlds.add(world);
+        });
+        return worlds;
     }
 
 }

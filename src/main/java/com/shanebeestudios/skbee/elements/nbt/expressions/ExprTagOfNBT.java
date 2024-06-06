@@ -30,7 +30,7 @@ import java.util.ArrayList;
     "data in the \"custom\" compound tag of a block/entity's NBT compound. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen.",
     "That said, this system is a tad convoluted, see the SkBee WIKI for more details.",
     "\nNOTE 1.20.5+: All custom data on items must be stored in the \"minecraft:custom_data\" compound " +
-    "(see examples and [**McWiki**](https://minecraft.wiki/w/Data_component_format#custom_data)).",
+        "(see examples and [**McWiki**](https://minecraft.wiki/w/Data_component_format#custom_data)).",
     "For more info regarding 1.20.5+ components please see [**Data Component Format**](https://minecraft.wiki/w/Data_component_format) on McWiki.",
     "\nADD: You can add numbers to number type tags, you can also add numbers/strings/compounds to lists type tags.",
     "\nREMOVE: You can remove numbers from number type tags, you can also remove numbers/strings from lists type tags.",
@@ -134,6 +134,10 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         if (object instanceof ArrayList<?> arrayList) {
             return arrayList.toArray();
         }
+        if (object instanceof NBTCompound compound) return new NBTCompound[]{compound};
+        else if (object instanceof String string) return new String[]{string};
+        else if (object instanceof Number number) return new Number[]{number};
+        else if (object instanceof Boolean bool) return new Boolean[]{bool};
         return new Object[]{object};
     }
 
@@ -208,9 +212,8 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         return Object.class;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String type = this.nbtType.toString(e, d);
         String tag = this.tag.toString(e, d);
         String nbt = this.nbt.toString(e, d);
