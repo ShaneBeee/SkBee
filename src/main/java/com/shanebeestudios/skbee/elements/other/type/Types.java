@@ -136,7 +136,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(BlockFace.class) == null) {
-            EnumWrapper<BlockFace> BLOCK_FACE_ENUM = new EnumWrapper<>(BlockFace.class);
+            EnumWrapper<BlockFace> BLOCK_FACE_ENUM = new EnumWrapper<>(BlockFace.class, "", "face");
             Classes.registerClass(BLOCK_FACE_ENUM.getClassInfo("blockface")
                 .user("blockfaces?")
                 .name("BlockFace")
