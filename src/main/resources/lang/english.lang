@@ -79,3 +79,4 @@ types:
 	chunkloadlevel: chunk load level¦s
 	entityeffect: entity effect¦s
 	blockaction: block action¦s
+	pose: pose¦s
