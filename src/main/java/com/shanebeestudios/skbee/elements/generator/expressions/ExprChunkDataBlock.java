@@ -18,6 +18,7 @@ import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
 import org.bukkit.generator.ChunkGenerator;
+import org.bukkit.generator.LimitedRegion;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -115,7 +116,11 @@ public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
                     int x = (popEvent.getChunkX() << 4) + vec.getBlockX();
                     int y = vec.getBlockY();
                     int z = (popEvent.getChunkZ() << 4) + vec.getBlockZ();
-                    popEvent.getLimitedRegion().setBlockData(x, y, z, blockData);
+                    LimitedRegion region = popEvent.getLimitedRegion();
+                    if (region.isInRegion(x,y,z)) {
+                        // Make sure we are setting within the available region
+                        region.setBlockData(x, y, z, blockData);
+                    }
                 }
             }
         }
