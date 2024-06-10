@@ -15,7 +15,6 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
 import org.bukkit.generator.ChunkGenerator;
@@ -27,7 +26,8 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Represents blocks in a ChunkData.",
     "The first pattern is used to set a block in a `chunk gen` or `block pop` section.",
     "The second pattern is used to fill blocks between 2 points in a `chunk gen` section.",
-    "NOTE: The vector represents the position in a chunk, not a world."})
+    "NOTE: The vector represents the position in a chunk, not a world.",
+    "NOTE: You CAN reach into neighbouring chunks going below 0/above 15 in the vector. I don't know how far you can safely reach though."})
 @Examples({"chunk gen:",
     "\tset chunkdata blocks within vector({_x}, 0, {_z}) and vector({_x}, {_y}, {_z}) to red_concrete[]",
     "\tset chunkdata block at vector({_x}, {_y}, {_z}) to red_concrete_powder[]"})
@@ -72,9 +72,9 @@ public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
             int z = vec.getBlockZ();
             return new BlockData[]{chunkGenEvent.getChunkData().getBlockData(x, y, z)};
         } else if (event instanceof BlockPopulateEvent popEvent) {
-            int x = (popEvent.getChunkX() << 4) + MathUtil.clamp(vec.getBlockX(), 0, 15);
+            int x = (popEvent.getChunkX() << 4) + vec.getBlockX();
             int y = vec.getBlockY();
-            int z = (popEvent.getChunkZ() << 4) + MathUtil.clamp(vec.getBlockZ(), 0, 15);
+            int z = (popEvent.getChunkZ() << 4) + vec.getBlockZ();
             return new BlockData[]{popEvent.getLimitedRegion().getBlockData(x, y, z)};
         }
         return null;
@@ -112,9 +112,9 @@ public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
                         chunkGenEvent.getChunkData().setBlock(x, y, z, blockData);
                     }
                 } else if (event instanceof BlockPopulateEvent popEvent) {
-                    int x = (popEvent.getChunkX() << 4) + MathUtil.clamp(vec.getBlockX(), 0, 15);
+                    int x = (popEvent.getChunkX() << 4) + vec.getBlockX();
                     int y = vec.getBlockY();
-                    int z = (popEvent.getChunkZ() << 4) + MathUtil.clamp(vec.getBlockZ(), 0, 15);
+                    int z = (popEvent.getChunkZ() << 4) + vec.getBlockZ();
                     popEvent.getLimitedRegion().setBlockData(x, y, z, blockData);
                 }
             }
