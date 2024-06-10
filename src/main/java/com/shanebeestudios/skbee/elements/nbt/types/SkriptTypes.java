@@ -41,10 +41,9 @@ public class SkriptTypes {
                 }
             } else if (mode == ChangeMode.DELETE || mode == ChangeMode.RESET) {
                 for (NBTCompound nbtCompound : what) {
+                    nbtCompound.clearNBT();
                     if (nbtCompound instanceof NBTFile nbtFile && mode == ChangeMode.DELETE) {
                         nbtFile.getFile().delete();
-                    } else {
-                        nbtCompound.clearNBT();
                     }
                 }
             }
