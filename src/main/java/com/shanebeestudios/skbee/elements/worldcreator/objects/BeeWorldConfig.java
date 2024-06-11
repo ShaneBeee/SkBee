@@ -4,6 +4,7 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
@@ -21,6 +22,7 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+@SuppressWarnings("CallToPrintStackTrace")
 public class BeeWorldConfig {
 
     private final SkBee plugin;
@@ -68,7 +70,9 @@ public class BeeWorldConfig {
 
     public @Nullable BeeWorldCreator loadWorld(String name) {
         String path = "worlds." + name + ".";
-        BeeWorldCreator worldCreator = new BeeWorldCreator(name);
+        String keyString = worldConfig.getString(path + "key");
+        NamespacedKey key = keyString != null ? Util.getMCNamespacedKey(keyString, false) : null;
+        BeeWorldCreator worldCreator = new BeeWorldCreator(name, key);
 
         String type = worldConfig.getString(path + "type");
         if (type != null) {
@@ -128,6 +132,7 @@ public class BeeWorldConfig {
             WORLDS.put(worldCreator.getWorldName(), worldCreator);
         }
         String path = "worlds." + worldCreator.getWorldName() + ".";
+        worldConfig.set(path + "key", worldCreator.getKey().toString());
         worldConfig.set(path + "type", worldCreator.getWorldType().toString());
         worldConfig.set(path + "environment", worldCreator.getEnvironment().toString());
         worldConfig.set(path + "seed", worldCreator.seed);
