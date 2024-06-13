@@ -35,6 +35,7 @@ import java.util.UUID;
 /**
  * Main NBT api for SkBee
  */
+@SuppressWarnings("deprecation")
 public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")

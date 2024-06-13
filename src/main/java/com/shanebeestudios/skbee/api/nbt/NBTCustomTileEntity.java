@@ -10,6 +10,7 @@ import org.bukkit.block.TileState;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+@SuppressWarnings("deprecation")
 public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
 
     private final BlockState blockState;

@@ -10,6 +10,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 
+@SuppressWarnings("deprecation")
 public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 
     private final Entity entity;
