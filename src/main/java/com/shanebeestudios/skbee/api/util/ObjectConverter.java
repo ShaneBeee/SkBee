@@ -48,11 +48,11 @@ public abstract class ObjectConverter<T> {
         CONVERTERS.put(c, converter);
     }
 
-    private static <E extends Keyed> void register(Class<E> c, Registry<E> registery) {
+    private static <E extends Keyed> void register(Class<E> c, Registry<E> registry) {
         ObjectConverter<E> objectConverter = new ObjectConverter<>() {
             @Override
             public E get(NamespacedKey key) {
-                return registery.get(key);
+                return registry.get(key);
             }
         };
         CONVERTERS.put(c, objectConverter);
