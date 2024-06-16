@@ -25,6 +25,7 @@ import org.bukkit.TreeType;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Pose;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.event.block.Action;
@@ -136,7 +137,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(BlockFace.class) == null) {
-            EnumWrapper<BlockFace> BLOCK_FACE_ENUM = new EnumWrapper<>(BlockFace.class);
+            EnumWrapper<BlockFace> BLOCK_FACE_ENUM = new EnumWrapper<>(BlockFace.class, "", "face");
             Classes.registerClass(BLOCK_FACE_ENUM.getClassInfo("blockface")
                 .user("blockfaces?")
                 .name("BlockFace")
@@ -388,6 +389,14 @@ public class Types {
             .description("Represents the different types of trees.")
             .after("structuretype")
             .since("3.5.3"));
+
+        EnumWrapper<Pose> POSE = new EnumWrapper<>(Pose.class, "", "pose");
+        Classes.registerClass(POSE.getClassInfo("pose")
+            .user("poses?")
+            .name("Entity Pose")
+            .description("Represents the pose of an entity.",
+                "NOTE: These are auto-generated and may differ between server versions.")
+            .since("INSERT VERSION"));
     }
 
     // FUNCTIONS

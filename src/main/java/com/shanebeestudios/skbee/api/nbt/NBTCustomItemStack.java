@@ -10,6 +10,7 @@ import org.bukkit.inventory.ItemStack;
  * <p>This is used due to a deprecation in NBTItem, as well as a protected constructor,
  * as well as funny changes in NBT-API due to MC 1.20.5</p>
  */
+@SuppressWarnings("deprecation")
 public class NBTCustomItemStack extends NBTContainer {
 
     private final ItemStack originalItemStack;

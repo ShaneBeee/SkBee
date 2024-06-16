@@ -17,6 +17,7 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 @Name("NBT - Item from NBT")
 @Description({"This expression allows you to grab an item from NBT compounds.",
     "This can be useful when wanting to grab items from file nbt, or nbt of an entity or an inventory holding block (like a chest or furnace).",

@@ -1,9 +1,12 @@
 package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
+import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldCreator;
@@ -11,6 +14,7 @@ import org.bukkit.WorldType;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.ChunkGenerator;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
@@ -18,10 +22,11 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-@SuppressWarnings("OptionalUsedAsFieldOrParameterType")
-public class BeeWorldCreator {
+@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "CallToPrintStackTrace"})
+public class BeeWorldCreator implements Keyed {
 
     private final String worldName;
+    private final NamespacedKey key;
     private WorldType worldType;
     private Environment environment;
     private String generatorSettings;
@@ -39,16 +44,18 @@ public class BeeWorldCreator {
     private boolean clone;
     private boolean saveClone;
 
-    public BeeWorldCreator(String worldName) {
+    public BeeWorldCreator(@NotNull String worldName, @Nullable NamespacedKey key) {
         this.worldName = worldName;
+        this.key = key;
         this.genStructures = Optional.empty();
         this.hardcore = Optional.empty();
         this.keepSpawnLoaded = Optional.empty();
     }
 
     @SuppressWarnings("deprecation")
-    public BeeWorldCreator(@NotNull World world, String name, boolean clone) {
+    public BeeWorldCreator(@NotNull World world, @NotNull String name, @Nullable NamespacedKey key, boolean clone) {
         this.worldName = name;
+        this.key = key;
         this.worldType = world.getWorldType();
         this.environment = world.getEnvironment();
         this.genStructures = Optional.of(world.canGenerateStructures());
@@ -59,8 +66,12 @@ public class BeeWorldCreator {
         this.clone = clone;
     }
 
-    public String getWorldName() {
+    public @NotNull String getWorldName() {
         return worldName;
+    }
+
+    public @NotNull NamespacedKey getKey() {
+        return this.key != null ? this.key : NamespacedKey.minecraft(this.worldName);
     }
 
     public void setWorldType(WorldType worldType) {
@@ -161,7 +172,7 @@ public class BeeWorldCreator {
         }
         // Create new world
         else {
-            worldCreatorCompletableFuture.complete(new WorldCreator(this.worldName));
+            worldCreatorCompletableFuture.complete(getWorldCreator(this.worldName, this.key));
         }
         worldCreatorCompletableFuture.thenAccept(worldCreator -> {
             World world = null;
@@ -229,7 +240,7 @@ public class BeeWorldCreator {
 
     private CompletableFuture<WorldCreator> copyWorld() {
         CompletableFuture<WorldCreator> worldCreatorCompletableFuture = new CompletableFuture<>();
-        WorldCreator worldCreator = new WorldCreator(this.worldName);
+        WorldCreator worldCreator = getWorldCreator(this.worldName, this.key);
         worldCreator.copy(this.world);
         worldCreatorCompletableFuture.complete(worldCreator);
         return worldCreatorCompletableFuture;
@@ -257,7 +268,7 @@ public class BeeWorldCreator {
                             FileUtils.copyFile(file, new File(cloneDirectory, fileName));
                         }
                     }
-                    WorldCreator creator = new WorldCreator(cloneName);
+                    WorldCreator creator = new WorldCreator(cloneName, this.key);
                     Bukkit.getScheduler().runTaskLater(SkBee.getPlugin(), () -> {
                         // Let's head back to the main thread
                         worldCompletableFuture.complete(creator);
@@ -271,11 +282,18 @@ public class BeeWorldCreator {
         return worldCompletableFuture;
     }
 
-    @SuppressWarnings("StringBufferReplaceableByString")
+    private static final boolean HAS_KEY = Skript.methodExists(WorldCreator.class, "ofNameAndKey", String.class, NamespacedKey.class);
+
+    private static WorldCreator getWorldCreator(@NotNull String name, @Nullable NamespacedKey key) {
+        if (HAS_KEY && key != null) return new WorldCreator(name, key);
+        return new WorldCreator(name);
+    }
+
     @Override
     public String toString() {
         final StringBuilder sb = new StringBuilder("WorldCreator{");
         sb.append("worldName='").append(worldName).append('\'');
+        if (this.key != null) sb.append(", key='").append(key).append('\'');
         sb.append(", worldType=").append(worldType);
         sb.append(", environment=").append(environment);
         sb.append(", generatorSettings='").append(generatorSettings).append('\'');

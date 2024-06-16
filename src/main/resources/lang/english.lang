@@ -79,3 +79,5 @@ types:
 	chunkloadlevel: chunk load level¦s
 	entityeffect: entity effect¦s
 	blockaction: block action¦s
+	bukkittreetype: bukkit tree type¦s
+	pose: pose¦s

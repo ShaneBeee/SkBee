@@ -21,17 +21,17 @@ import org.jetbrains.annotations.Nullable;
 @Name("Send Equipment Change")
 @Description("Send an equipment change for an entity. This will not actually change the entity's equipment in any way.")
 @Examples({"make player see hand slot of target entity as diamond sword",
-        "make all players see off hand slot of player as shield"})
+    "make all players see off hand slot of player as shield"})
 @Since("3.4.0")
 public class EffEquipmentChange extends Effect {
 
     static {
         Skript.registerEffect(EffEquipmentChange.class,
-                "make %players% see %equipmentslot% of %livingentities% as %itemtype%");
+            "make %players% see %equipmentslots% of %livingentities% as %itemtype%");
     }
 
     private Expression<Player> players;
-    private Expression<EquipmentSlot> slot;
+    private Expression<EquipmentSlot> slots;
     private Expression<LivingEntity> entities;
     private Expression<ItemType> itemtype;
 
@@ -39,7 +39,7 @@ public class EffEquipmentChange extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.players = (Expression<Player>) exprs[0];
-        this.slot = (Expression<EquipmentSlot>) exprs[1];
+        this.slots = (Expression<EquipmentSlot>) exprs[1];
         this.entities = (Expression<LivingEntity>) exprs[2];
         this.itemtype = (Expression<ItemType>) exprs[3];
         return true;
@@ -49,13 +49,14 @@ public class EffEquipmentChange extends Effect {
     @Override
     protected void execute(Event event) {
         ItemType itemType = this.itemtype.getSingle(event);
-        EquipmentSlot slot = this.slot.getSingle(event);
-        if (itemType == null || slot == null) return;
+        if (itemType == null) return;
         ItemStack itemStack = itemType.getRandom();
 
         for (Player player : this.players.getArray(event)) {
             for (LivingEntity livingEntity : this.entities.getArray(event)) {
-                player.sendEquipmentChange(livingEntity, slot, itemStack);
+                for (EquipmentSlot slot : this.slots.getArray(event)) {
+                    player.sendEquipmentChange(livingEntity, slot, itemStack);
+                }
             }
         }
     }
@@ -64,7 +65,7 @@ public class EffEquipmentChange extends Effect {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String players = this.players.toString(e, d);
-        String slot = this.slot.toString(e, d);
+        String slot = this.slots.toString(e, d);
         String entities = this.entities.toString(e, d);
         String item = this.itemtype.toString(e, d);
         return String.format("make %s see %s of %s as %s", players, slot, entities, item);

@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -27,17 +28,17 @@ import java.util.Random;
 
 @Name("LootTable - Items")
 @Description({"Get the items from a predefined LootTable.",
-        "Optionals:",
-        "Some loot tables will require some of these values whereas others may not.",
-        "`seed` = Represents the random seed used to generate loot (if not provided will generate randomly).",
-        "`looting modifier` = Set the looting enchant level equivalent to use when generating loot.",
-        "Values less than or equal to 0 will force the LootTable to only return a single Item per pool.",
-        "`luck` = How much luck to have when generating loot.",
-        "`killer/looter` = The Player that killed/looted. This Player will be used to get the looting level if looting modifier is not set.",
-        "`looted entity` = The Entity that was killed/looted."})
+    "Optionals:",
+    "Some loot tables will require some of these values whereas others may not.",
+    "`seed` = Represents the random seed used to generate loot (if not provided will generate randomly).",
+    "`looting modifier` = Set the looting enchant level equivalent to use when generating loot.",
+    "Values less than or equal to 0 will force the LootTable to only return a single Item per pool.",
+    "`luck` = How much luck to have when generating loot.",
+    "`killer/looter` = The Player that killed/looted. This Player will be used to get the looting level if looting modifier is not set.",
+    "`looted entity` = The Entity that was killed/looted."})
 @Examples({"set {_loottable} to loottable from key \"minecraft:chests/ancient_city\"",
-        "set {_items::*} to looted items from {_loottable}",
-        "give player looted items from (loottable from key \"minecraft:gameplay/fishing\")"})
+    "set {_items::*} to looted items from {_loottable}",
+    "give player looted items from (loottable from key \"minecraft:gameplay/fishing\")"})
 @Since("3.4.0")
 public class ExprLootTableItems extends SimpleExpression<ItemStack> {
 
@@ -46,8 +47,8 @@ public class ExprLootTableItems extends SimpleExpression<ItemStack> {
 
     static {
         Skript.registerExpression(ExprLootTableItems.class, ItemStack.class, ExpressionType.COMBINED,
-                "(looted|lootable) items from %loottable% [with seed %-number%] [with looting modifier %-number%] " +
-                        "[with luck %-number%] [with (killer|looter) %-player%] [with looted entity %-entity%]");
+            "(looted|lootable) items from %loottable% [with seed %-number%] [with looting modifier %-number%] " +
+                "[with luck %-number%] [with (killer|looter) %-player%] [with looted entity %-entity%]");
     }
 
     private Expression<LootTable> lootTable;
@@ -63,13 +64,17 @@ public class ExprLootTableItems extends SimpleExpression<ItemStack> {
         this.lootTable = (Expression<LootTable>) exprs[0];
         this.seed = (Expression<Number>) exprs[1];
         this.lootingModifier = (Expression<Number>) exprs[2];
+        if (Util.IS_RUNNING_MC_1_21 && this.lootingModifier != null) {
+            Skript.error("'with looting modifier' is no longer functional!");
+            return false;
+        }
         this.luck = (Expression<Number>) exprs[3];
         this.killer = (Expression<Player>) exprs[4];
         this.lootedEntity = (Expression<Entity>) exprs[5];
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "CallToPrintStackTrace"})
+    @SuppressWarnings({"NullableProblems", "CallToPrintStackTrace", "deprecation"})
     @Override
     protected ItemStack @Nullable [] get(Event event) {
         LootTable lootTable = this.lootTable.getSingle(event);

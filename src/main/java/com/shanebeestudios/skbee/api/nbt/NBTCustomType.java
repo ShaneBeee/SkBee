@@ -25,9 +25,6 @@ public enum NBTCustomType {
     // Other
     NBTTagString("string", NBTType.NBTTagString, String.class),
     NBTTagCompound("compound", NBTType.NBTTagCompound, NBTCompound.class),
-    // Custom
-    NBTTagUUID("uuid", NBTType.NBTTagIntArray, String.class),
-    NBTTagBoolean("boolean", NBTType.NBTTagByte, Boolean.class),
     // Lists and Arrays
     NBTTagByteArray("byte array", NBTType.NBTTagByteArray, Number[].class),
     NBTTagIntArray("int array", NBTType.NBTTagIntArray, Number[].class),
@@ -36,7 +33,10 @@ public enum NBTCustomType {
     NBTTagLongList("long list", NBTType.NBTTagList, Number[].class),
     NBTTagIntList("int list", NBTType.NBTTagList, Number[].class),
     NBTTagCompoundList("compound list", NBTType.NBTTagList, NBTCompound[].class),
-    NBTTagStringList("string list", NBTType.NBTTagList, String[].class);
+    NBTTagStringList("string list", NBTType.NBTTagList, String[].class),
+    // Custom
+    NBTTagUUID("uuid", NBTType.NBTTagIntArray, String.class),
+    NBTTagBoolean("boolean", NBTType.NBTTagByte, Boolean.class);
 
     final String name;
     final NBTType nbtType;
@@ -69,9 +69,11 @@ public enum NBTCustomType {
 
     static {
         for (NBTCustomType type : NBTCustomType.values()) {
-            if (type != NBTTagEnd)
+            if (type != NBTTagEnd) {
                 BY_NAME.put(type.name, type);
-            BY_TYPE.put(type.nbtType, type);
+                // Only register if type isn't registered yet
+                if (!BY_TYPE.containsKey(type.nbtType)) BY_TYPE.put(type.nbtType, type);
+            }
         }
     }
 

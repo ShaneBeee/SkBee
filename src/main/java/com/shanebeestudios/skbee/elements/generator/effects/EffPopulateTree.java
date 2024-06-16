@@ -28,8 +28,6 @@ import java.util.Random;
 @Since("3.5.3")
 public class EffPopulateTree extends Effect {
 
-    private static final Random RANDOM = new Random();
-
     static {
         Skript.registerEffect(EffPopulateTree.class,
             "populate %bukkittreetype% at %vectors%");
@@ -59,11 +57,12 @@ public class EffPopulateTree extends Effect {
         if (treeType == null) return;
 
         LimitedRegion region = popEvent.getLimitedRegion();
+        Random random = popEvent.getRandom();
         for (Vector vector : this.vector.getArray(event)) {
             int x = (popEvent.getChunkX() << 4) + MathUtil.clamp(vector.getBlockX(), 0, 15);
             int z = (popEvent.getChunkZ() << 4) + MathUtil.clamp(vector.getBlockZ(), 0, 15);
             Location location = new Location(null, x, vector.getBlockY(), z);
-            region.generateTree(location, RANDOM, treeType);
+            region.generateTree(location, random, treeType);
         }
     }
 

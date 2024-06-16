@@ -13,6 +13,7 @@ import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
 import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
+import com.destroystokyo.paper.event.entity.SlimePathfindEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 
-@SuppressWarnings("unused")
+@SuppressWarnings({"unused", "unchecked"})
 public class PaperEvents extends SimpleEvent {
 
     static {
@@ -195,7 +196,7 @@ public class PaperEvents extends SimpleEvent {
 
         // Entity Pathfind Event
         if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityPathfindEvent")) {
-            Skript.registerEvent("Entity Pathfind Event", PaperEvents.class, EntityPathfindEvent.class, "entity start[s] pathfinding")
+            Skript.registerEvent("Entity Pathfind Event", PaperEvents.class, new Class[]{EntityPathfindEvent.class, SlimePathfindEvent.class}, "entity start[s] pathfinding")
                     .description("Called when an Entity decides to start moving towards a location. This event does not fire for the entities " +
                             "actual movement. Only when it is choosing to start moving to a location. Requires Paper.")
                     .examples("on entity starts pathfinding:",

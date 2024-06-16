@@ -110,7 +110,12 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         Registration.registerList("game[ ]rules", GameRule.class, gameRules);
 
         List<LootTable> lootTables = new ArrayList<>();
-        Registry.LOOT_TABLES.forEach(lt -> lootTables.add(lt.getLootTable()));
+        Registry.LOOT_TABLES.forEach(lt -> {
+            LootTable lootTable = lt.getLootTable();
+            // Bukkit claims this is NotNull but the method it grabs from is indeed Nullable
+            //noinspection ConstantValue
+            if (lootTable != null) lootTables.add(lootTable);
+        });
         Registration.registerList("loot tables", LootTable.class, lootTables.stream().sorted(Comparator.comparing(lootTable -> lootTable.getKey().getKey())).toList());
 
         List<Particle> particles = ParticleUtil.getAvailableParticles();

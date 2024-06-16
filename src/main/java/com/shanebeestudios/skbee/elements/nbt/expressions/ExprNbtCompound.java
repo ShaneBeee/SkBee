@@ -36,6 +36,7 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+@SuppressWarnings("deprecation")
 @Name("NBT - Compound of Object")
 @Description({"Get the NBT compound of a block/entity/item/file/chunk.",
     "",

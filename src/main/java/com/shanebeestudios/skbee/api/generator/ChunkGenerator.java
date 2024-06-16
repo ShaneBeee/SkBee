@@ -112,7 +112,7 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
             @Override
             public void populate(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull LimitedRegion limitedRegion) {
                 if (ChunkGenerator.this.blockPopTrigger != null) {
-                    BlockPopulateEvent populateEvent = new BlockPopulateEvent(limitedRegion, chunkX, chunkZ);
+                    BlockPopulateEvent populateEvent = new BlockPopulateEvent(limitedRegion, chunkX, chunkZ, random);
                     ChunkGenerator.this.blockPopTrigger.execute(populateEvent);
                 }
             }

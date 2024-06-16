@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -25,18 +26,18 @@ import java.util.Random;
 
 @Name("LootTable - Fill Inventory")
 @Description({"Fill an inventory with a predefined LootTable.",
-        "This inventory must belong to a block or entity (custom inventories will not work).",
-        "Optionals:",
-        "Some loot tables will require some of these values whereas others may not.",
-        "`seed` = Represents the random seed used to generate loot (if not provided will generate randomly).",
-        "`looting modifier` = Set the looting enchant level equivalent to use when generating loot.",
-        "Values less than or equal to 0 will force the LootTable to only return a single Item per pool.",
-        "`luck` = How much luck to have when generating loot.",
-        "`killer/looter` = The Player that killed/looted. This Player will be used to get the looting level if looting modifier is not set.",
-        "`looted entity` = The Entity that was killed/looted."})
+    "This inventory must belong to a block or entity (custom inventories will not work).",
+    "Optionals:",
+    "Some loot tables will require some of these values whereas others may not.",
+    "`seed` = Represents the random seed used to generate loot (if not provided will generate randomly).",
+    "`looting modifier` = Set the looting enchant level equivalent to use when generating loot.",
+    "Values less than or equal to 0 will force the LootTable to only return a single Item per pool.",
+    "`luck` = How much luck to have when generating loot.",
+    "`killer/looter` = The Player that killed/looted. This Player will be used to get the looting level if looting modifier is not set.",
+    "`looted entity` = The Entity that was killed/looted."})
 @Examples({"set {_loottable} to loottable from key \"minecraft:chests/ancient_city\"",
-        "fill inventory of target block from {_loottable}",
-        "fill inventory of player from (loottable from key \"minecraft:gameplay/fishing\")"})
+    "fill inventory of target block from {_loottable}",
+    "fill inventory of player from (loottable from key \"minecraft:gameplay/fishing\")"})
 @Since("3.4.0")
 public class EffLootTableFillInv extends Effect {
 
@@ -44,8 +45,8 @@ public class EffLootTableFillInv extends Effect {
 
     static {
         Skript.registerEffect(EffLootTableFillInv.class,
-                "fill %inventories% from %loottable% [with seed %-number%] [with looting modifier %-number%] " +
-                        "[with luck %-number%] [with (killer|looter) %-player%] [with looted entity %-entity%]");
+            "fill %inventories% from %loottable% [with seed %-number%] [with looting modifier %-number%] " +
+                "[with luck %-number%] [with (killer|looter) %-player%] [with looted entity %-entity%]");
     }
 
     private Expression<Inventory> inventories;
@@ -63,13 +64,17 @@ public class EffLootTableFillInv extends Effect {
         this.lootTable = (Expression<LootTable>) exprs[1];
         this.seed = (Expression<Number>) exprs[2];
         this.lootingModifier = (Expression<Number>) exprs[3];
+        if (Util.IS_RUNNING_MC_1_21 && this.lootingModifier != null) {
+            Skript.error("'with looting modifier' is no longer functional!");
+            return false;
+        }
         this.luck = (Expression<Number>) exprs[4];
         this.killer = (Expression<Player>) exprs[5];
         this.lootedEntity = (Expression<Entity>) exprs[6];
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "CallToPrintStackTrace"})
+    @SuppressWarnings({"NullableProblems", "CallToPrintStackTrace", "deprecation"})
     @Override
     protected void execute(Event event) {
         LootTable lootTable = this.lootTable.getSingle(event);
