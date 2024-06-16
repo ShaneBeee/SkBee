@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
     "(e.g. having sneaking pose does not guarantee `is sneaking` being true). Set requires PaperMC."})
 @Examples({"set {_pose} to pose of player",
     "set pose of target entity to sleeping pose"})
-@Since("INSERT VERSION")
+@Since("3.5.4")
 public class ExprEntityPose extends SimplePropertyExpression<Entity, Pose> {
 
     static {

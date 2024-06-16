@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Represents the average amount of time (in milliseconds) it takes for the server to finish a tick. Requires PaperMC.")
 @Examples({"set {_avg} to average tick time",
     "if average tick time > 40:"})
-@Since("INSERT VERSION")
+@Since("3.5.4")
 public class ExprAverageTickTime extends SimpleExpression<Number> {
 
     static {

@@ -396,7 +396,7 @@ public class Types {
             .name("Entity Pose")
             .description("Represents the pose of an entity.",
                 "NOTE: These are auto-generated and may differ between server versions.")
-            .since("INSERT VERSION"));
+            .since("3.5.4"));
     }
 
     // FUNCTIONS
