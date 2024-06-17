@@ -261,7 +261,7 @@ public class NBTApi {
      * @param object   Value of tag to set to
      * @param type     Type of tag to set
      */
-    @SuppressWarnings({"RegExpRedundantEscape", "ListRemoveInLoop"})
+    @SuppressWarnings({"RegExpRedundantEscape", "IfCanBeSwitch"})
     public static void setTag(@NotNull String tag, @NotNull NBTCompound compound, @NotNull Object[] object, NBTCustomType type) {
         Pair<String, NBTCompound> nestedCompound = getNestedCompound(tag, compound, false);
         if (nestedCompound == null) return;
@@ -374,78 +374,55 @@ public class NBTApi {
             case NBTTagIntList:
                 if (singleObject instanceof Number) {
                     NBTList<Integer> intList = compound.getIntegerList(tag);
-                    int size = intList.size();
+                    intList.clear();
                     for (Object o : object)
                         if (o instanceof Number number)
                             intList.add(number.intValue());
-
-                    for (int i = 0; i < size; i++) {
-                        intList.remove(0);
-                    }
                 }
                 break;
             case NBTTagLongList:
                 if (singleObject instanceof Number) {
                     NBTList<Long> longList = compound.getLongList(tag);
-                    int size = longList.size();
+                    longList.clear();
                     for (Object o : object)
                         if (o instanceof Number number)
                             longList.add(number.longValue());
-
-                    for (int i = 0; i < size; i++) {
-                        longList.remove(0);
-                    }
                 }
                 break;
             case NBTTagFloatList:
                 if (singleObject instanceof Number) {
                     NBTList<Float> floatList = compound.getFloatList(tag);
-                    int size = floatList.size();
+                    floatList.clear();
                     for (Object o : object)
                         if (o instanceof Number number)
                             floatList.add(number.floatValue());
-
-                    for (int i = 0; i < size; i++) {
-                        floatList.remove(0);
-                    }
                 }
                 break;
             case NBTTagDoubleList:
                 if (singleObject instanceof Number) {
                     NBTList<Double> doubleList = compound.getDoubleList(tag);
-                    int size = doubleList.size();
+                    doubleList.clear();
                     for (Object o : object)
                         if (o instanceof Number number)
                             doubleList.add(number.doubleValue());
-
-                    for (int i = 0; i < size; i++) {
-                        doubleList.remove(0);
-                    }
                 }
                 break;
             case NBTTagStringList:
                 if (singleObject instanceof String) {
                     NBTList<String> stringList = compound.getStringList(tag);
-                    int size = stringList.size();
+                    stringList.clear();
                     for (Object o : object)
                         if (o instanceof String string)
                             stringList.add(string);
-                    for (int i = 0; i < size; i++) {
-                        stringList.remove(0);
-                    }
                 }
                 break;
             case NBTTagCompoundList:
                 if (singleObject instanceof NBTCompound) {
                     NBTCompoundList compoundList = compound.getCompoundList(tag);
-                    int size = compoundList.size();
+                    compoundList.clear();
                     for (Object o : object) {
                         if (o instanceof NBTCompound comp)
                             compoundList.addCompound(comp);
-                    }
-
-                    for (int i = 0; i < size; i++) {
-                        compoundList.remove(0);
                     }
                 }
                 break;
