@@ -32,7 +32,22 @@ test "SkBee - simple nbt compound":
     # Test that Pretty nbt works
     set {_pretty} to pretty nbt of {_n}
     assert {_pretty} is set with "Pretty NBT should have worked"
-    
+
+    # Test adding/removing to/from lists
+    set {_n} to empty nbt compound
+
+    add "hello" and "hi" to string list tag "string-list" of {_n}
+    assert size of (string list tag "string-list" of {_n}) = 2 with "size of string-list should have been 2 after adding"
+
+    add 1 and 2 to int list tag "int-list" of {_n}
+    assert size of (int list tag "int-list" of {_n}) = 2 with "size of int-list should have been 2 after adding"
+
+    remove "hi" from string list tag "string-list" of {_n}
+    assert size of (string list tag "string-list" of {_n}) = 1 with "size of string-list should have been 1 after removing"
+
+    remove 2 from int list tag "int-list" of {_n}
+    assert size of (int list tag "int-list" of {_n}) = 1 with "size of int-list should have been 1 after removing"
+
 test "SkBee - NBTCustomBlock":
     set {_l} to location(1,1,1)
     set block at {_l} to stone
