@@ -662,7 +662,7 @@ public class NBTApi {
                     NBTList<Integer> intList = compound.getIntegerList(tag);
                     for (Object o : object)
                         if (o instanceof Number number)
-                            intList.remove(number.intValue());
+                            intList.remove((Object) number.intValue());
                 }
             }
             case NBTTagLongList -> {
