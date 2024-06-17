@@ -71,9 +71,9 @@ public enum NBTCustomType {
         for (NBTCustomType type : NBTCustomType.values()) {
             if (type != NBTTagEnd) {
                 BY_NAME.put(type.name, type);
-                // Only register if type isn't registered yet
-                if (!BY_TYPE.containsKey(type.nbtType)) BY_TYPE.put(type.nbtType, type);
             }
+            // Only register if type isn't registered yet
+            if (!BY_TYPE.containsKey(type.nbtType)) BY_TYPE.put(type.nbtType, type);
         }
     }
 
