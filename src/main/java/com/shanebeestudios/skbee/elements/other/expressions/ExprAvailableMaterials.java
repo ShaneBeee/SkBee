@@ -195,7 +195,7 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         static <R extends Keyed> void registerRegistry(String pattern, Class<R> type, Registry<R> registry) {
             List<R> items = new ArrayList<>();
             registry.forEach(items::add);
-            items = items.stream().sorted(Comparator.comparing(item -> item.getKey().getKey())).collect(Collectors.toList());
+            items = items.stream().sorted(Comparator.comparing(item -> item.getKey().toString())).collect(Collectors.toList());
             registerList(pattern, type, items);
         }
 
