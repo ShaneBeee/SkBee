@@ -4,7 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
-import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
+import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import org.bukkit.Registry;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
@@ -15,7 +15,7 @@ public class Types {
     static {
         if (Skript.classExists("org.bukkit.damage.DamageSource")) {
             if (Classes.getExactClassInfo(DamageType.class) == null) {
-                Classes.registerClass(RegistryWrapper.getClassInfo(Registry.DAMAGE_TYPE, DamageType.class, "damagetype")
+                Classes.registerClass(RegistryClassInfo.create(Registry.DAMAGE_TYPE, DamageType.class, "damagetype")
                     .user("damage ?types?")
                     .name("Damage Type")
                     .description("Represents a type of damage.",

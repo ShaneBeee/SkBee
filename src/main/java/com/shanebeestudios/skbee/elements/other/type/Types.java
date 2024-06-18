@@ -15,7 +15,7 @@ import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
-import com.shanebeestudios.skbee.api.wrapper.RegistryWrapper;
+import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.Color;
 import org.bukkit.EntityEffect;
@@ -215,14 +215,14 @@ public class Types {
                     }
                 }));
 
-            Classes.registerClass(RegistryWrapper.getClassInfo(Registry.TRIM_MATERIAL, TrimMaterial.class, "trimmaterial", null, "material")
+            Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_MATERIAL, TrimMaterial.class, "trimmaterial", null, "material")
                 .user("trim ?materials?")
                 .name("ArmorTrim - TrimMaterial")
                 .description("Represents a material that may be used in an ArmorTrim.",
                     "NOTE: These are auto-generated and may differ between server versions.")
                 .since("2.13.0"));
 
-            Classes.registerClass(RegistryWrapper.getClassInfo(Registry.TRIM_PATTERN, TrimPattern.class, "trimpattern", null, "pattern")
+            Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_PATTERN, TrimPattern.class, "trimpattern", null, "pattern")
                 .user("trim ?patterns?")
                 .name("ArmorTrim - TrimPattern")
                 .description("Represents a pattern that may be used in an ArmorTrim.",
@@ -256,7 +256,7 @@ public class Types {
             Util.logLoading("You may have to use their EntityEffects in SkBee's 'play entity effect' effect.");
         }
 
-        Classes.registerClass(RegistryWrapper.getClassInfo(Registry.MEMORY_MODULE_TYPE, MemoryKey.class, "memory")
+        Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, MemoryKey.class, "memory")
             .user("memor(y|ies)")
             .name("Memory")
             .description("Represents the different memories of an entity.",
@@ -327,7 +327,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(EntityType.class) == null) {
-            Classes.registerClass(RegistryWrapper.getClassInfo(Registry.ENTITY_TYPE, EntityType.class, "minecraftentitytype")
+            Classes.registerClass(RegistryClassInfo.create(Registry.ENTITY_TYPE, EntityType.class, "minecraftentitytype")
                 .user("minecraft ?entity ?types?")
                 .name("Minecraft - EntityType")
                 .description("Represents a Minecraft entity.",

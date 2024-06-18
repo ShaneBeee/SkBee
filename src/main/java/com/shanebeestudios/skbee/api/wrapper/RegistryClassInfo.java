@@ -4,6 +4,7 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.util.StringUtils;
+import com.google.common.base.Preconditions;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
@@ -23,7 +24,7 @@ import java.util.List;
  * @param <T> Type of item in the registry
  */
 @SuppressWarnings({"unused"})
-public class RegistryWrapper<T extends Keyed> extends ClassInfo<T> {
+public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
 
     /**
      * Create a Registry ClassInfo
@@ -33,8 +34,8 @@ public class RegistryWrapper<T extends Keyed> extends ClassInfo<T> {
      * @param codename      Codename for ClassInfo
      * @return ClassInfo from Registry
      */
-    public static <T extends Keyed> RegistryWrapper<T> getClassInfo(@NotNull Registry<T> registry, Class<T> registryClass, String codename) {
-        return getClassInfo(registry, registryClass, codename, null, null);
+    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<T> registry, @NotNull Class<T> registryClass, @NotNull String codename) {
+        return create(registry, registryClass, codename, null, null);
     }
 
     /**
@@ -47,8 +48,13 @@ public class RegistryWrapper<T extends Keyed> extends ClassInfo<T> {
      * @param suffix        Optional suffix to append to items in registry
      * @return ClassInfo from Registry
      */
-    public static <T extends Keyed> RegistryWrapper<T> getClassInfo(@NotNull Registry<T> registry, Class<T> registryClass, String codename, @Nullable String prefix, @Nullable String suffix) {
-        return new RegistryWrapper<>(registry, registryClass, codename, prefix, suffix);
+    @SuppressWarnings("ConstantValue")
+    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<T> registry, @NotNull Class<T> registryClass, @NotNull String codename, @Nullable String prefix, @Nullable String suffix) {
+        // Safety precautions
+        Preconditions.checkArgument(registry != null, "Registry cannot be null");
+        Preconditions.checkArgument(registryClass != null, "RegistryClass cannot be null");
+        Preconditions.checkArgument(!codename.isEmpty(), "Codename cannot be empty");
+        return new RegistryClassInfo<>(registry, registryClass, codename, prefix, suffix);
     }
 
 
@@ -56,7 +62,7 @@ public class RegistryWrapper<T extends Keyed> extends ClassInfo<T> {
     @Nullable
     private final String prefix, suffix;
 
-    private RegistryWrapper(Registry<T> registry, Class<T> registryClass, String codename, @Nullable String prefix, @Nullable String suffix) {
+    private RegistryClassInfo(Registry<T> registry, Class<T> registryClass, String codename, @Nullable String prefix, @Nullable String suffix) {
         super(registryClass, codename);
         this.registry = registry;
         this.prefix = prefix;
@@ -67,12 +73,12 @@ public class RegistryWrapper<T extends Keyed> extends ClassInfo<T> {
             @SuppressWarnings("NullableProblems")
             @Override
             public @Nullable T parse(String string, ParseContext context) {
-                return RegistryWrapper.this.parse(string);
+                return RegistryClassInfo.this.parse(string);
             }
 
             @Override
             public @NotNull String toString(T o, int flags) {
-                return RegistryWrapper.this.toString(o);
+                return RegistryClassInfo.this.toString(o);
             }
 
             @Override
