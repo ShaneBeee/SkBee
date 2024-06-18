@@ -12,6 +12,7 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.util.EnchantmentType;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
@@ -20,6 +21,7 @@ import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -87,6 +89,9 @@ public class ExprNamespacedKeyObject extends SimplePropertyExpression<Object, Na
         } else if (object instanceof Slot slot) {
             ItemStack item = slot.getItem();
             if (item != null) return item.getType().getKey();
+        } else if (object instanceof EnchantmentType enchantmentType) {
+            Enchantment type = enchantmentType.getType();
+            if (type != null) return type.getKey();
         }
         return null;
     }
