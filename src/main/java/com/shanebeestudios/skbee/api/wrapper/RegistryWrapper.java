@@ -1,10 +1,10 @@
 package com.shanebeestudios.skbee.api.wrapper;
 
+import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -18,55 +18,37 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * Wrapper class for {@link Registry Bukkit Registries}
+ * {@link ClassInfo} wrapper class for {@link Registry Bukkit Registries}
  *
  * @param <T> Type of item in the registry
  */
-@SuppressWarnings({"unused", "deprecation"})
-public class RegistryWrapper<T extends Keyed> {
+@SuppressWarnings({"unused"})
+public class RegistryWrapper<T extends Keyed> extends ClassInfo<T> {
 
     /**
-     * Wrap a registry
+     * Create a Registry ClassInfo
      *
-     * @param registryClass Class of registry to wrap
-     * @return Wrapped registry
+     * @param registry      Registry to wrap
+     * @param registryClass Class of registry
+     * @param codename      Codename for ClassInfo
+     * @return ClassInfo from Registry
      */
-    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Class<T> registryClass) {
-        return wrap(registryClass, null, null);
+    public static <T extends Keyed> RegistryWrapper<T> getClassInfo(@NotNull Registry<T> registry, Class<T> registryClass, String codename) {
+        return getClassInfo(registry, registryClass, codename, null, null);
     }
 
     /**
-     * Wrap a registry
+     * Create a Registry ClassInfo with optional prefix and suffix
      *
-     * @param registry Registry to wrap
-     * @return Wrapped registry
-     */
-    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Registry<T> registry) {
-        return wrap(registry, null, null);
-    }
-
-    /**
-     * Wrap a registry with optional prefix and suffix
-     *
-     * @param registryClass Class of registry to wrap
+     * @param registry      Registry to wrap
+     * @param registryClass Class of registry
+     * @param codename      Codename for ClassInfo
      * @param prefix        Optional prefix to prepend to items in registry
      * @param suffix        Optional suffix to append to items in registry
-     * @return Wrapped registry
+     * @return ClassInfo from Registry
      */
-    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Class<T> registryClass, @Nullable String prefix, @Nullable String suffix) {
-        return new RegistryWrapper<>(registryClass, prefix, suffix);
-    }
-
-    /**
-     * Wrap a registry with optional prefix and suffix
-     *
-     * @param registry Registry to wrap
-     * @param prefix        Optional prefix to prepend to items in registry
-     * @param suffix        Optional suffix to append to items in registry
-     * @return Wrapped registry
-     */
-    public static <T extends Keyed> RegistryWrapper<T> wrap(@NotNull Registry<T> registry, @Nullable String prefix, @Nullable String suffix) {
-        return new RegistryWrapper<>(registry, prefix, suffix);
+    public static <T extends Keyed> RegistryWrapper<T> getClassInfo(@NotNull Registry<T> registry, Class<T> registryClass, String codename, @Nullable String prefix, @Nullable String suffix) {
+        return new RegistryWrapper<>(registry, registryClass, codename, prefix, suffix);
     }
 
 
@@ -74,18 +56,30 @@ public class RegistryWrapper<T extends Keyed> {
     @Nullable
     private final String prefix, suffix;
 
-    private RegistryWrapper(Class<T> registryClass, @Nullable String prefix, @Nullable String suffix) {
-        this.registry = Bukkit.getRegistry(registryClass);
-        this.prefix = prefix;
-        this.suffix = suffix;
-        Comparators.registerComparator(registryClass, registryClass, (o1, o2) -> Relation.get(o1.equals(o2)));
-    }
-
-    private RegistryWrapper(Registry<T> registry, @Nullable String prefix, @Nullable String suffix) {
+    private RegistryWrapper(Registry<T> registry, Class<T> registryClass, String codename, @Nullable String prefix, @Nullable String suffix) {
+        super(registryClass, codename);
         this.registry = registry;
         this.prefix = prefix;
         this.suffix = suffix;
-        Comparators.registerComparator(registry.getClass(), registry.getClass(), (o1, o2) -> Relation.get(o1.equals(o2)));
+        Comparators.registerComparator(registryClass, registryClass, (o1, o2) -> Relation.get(o1.equals(o2)));
+        this.usage(getNames());
+        this.parser(new Parser<>() {
+            @SuppressWarnings("NullableProblems")
+            @Override
+            public @Nullable T parse(String string, ParseContext context) {
+                return RegistryWrapper.this.parse(string);
+            }
+
+            @Override
+            public @NotNull String toString(T o, int flags) {
+                return RegistryWrapper.this.toString(o);
+            }
+
+            @Override
+            public @NotNull String toVariableNameString(T o) {
+                return toString(o, 0);
+            }
+        });
     }
 
     /**
@@ -148,32 +142,6 @@ public class RegistryWrapper<T extends Keyed> {
         NamespacedKey key = Util.getMCNamespacedKey(string, false);
         if (key == null) return null;
         return this.registry.get(key);
-    }
-
-    /**
-     * Get a {@link Parser} to be used in {@link ch.njol.skript.classes.ClassInfo}
-     *
-     * @return Parser for classinfo
-     */
-    public Parser<T> getParser() {
-        return new Parser<>() {
-
-            @SuppressWarnings("NullableProblems")
-            @Override
-            public @Nullable T parse(String string, ParseContext context) {
-                return RegistryWrapper.this.parse(string);
-            }
-
-            @Override
-            public @NotNull String toString(T o, int flags) {
-                return RegistryWrapper.this.toString(o);
-            }
-
-            @Override
-            public @NotNull String toVariableNameString(T o) {
-                return toString(o, 0);
-            }
-        };
     }
 
 }

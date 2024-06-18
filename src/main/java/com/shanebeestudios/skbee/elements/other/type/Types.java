@@ -45,7 +45,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
 
-@SuppressWarnings({"rawtypes", "removal"})
+@SuppressWarnings({"removal", "deprecation"})
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
@@ -215,25 +215,19 @@ public class Types {
                     }
                 }));
 
-            RegistryWrapper<TrimMaterial> TRIM_REGISTRY = RegistryWrapper.wrap(TrimMaterial.class, null, "material");
-            Classes.registerClass(new ClassInfo<>(TrimMaterial.class, "trimmaterial")
+            Classes.registerClass(RegistryWrapper.getClassInfo(Registry.TRIM_MATERIAL, TrimMaterial.class, "trimmaterial", null, "material")
                 .user("trim ?materials?")
                 .name("ArmorTrim - TrimMaterial")
                 .description("Represents a material that may be used in an ArmorTrim.",
                     "NOTE: These are auto-generated and may differ between server versions.")
-                .usage(TRIM_REGISTRY.getNames())
-                .since("2.13.0")
-                .parser(TRIM_REGISTRY.getParser()));
+                .since("2.13.0"));
 
-            RegistryWrapper<TrimPattern> TRIM_PATTERN_REGISTER = RegistryWrapper.wrap(TrimPattern.class, null, "pattern");
-            Classes.registerClass(new ClassInfo<>(TrimPattern.class, "trimpattern")
+            Classes.registerClass(RegistryWrapper.getClassInfo(Registry.TRIM_PATTERN, TrimPattern.class, "trimpattern", null, "pattern")
                 .user("trim ?patterns?")
                 .name("ArmorTrim - TrimPattern")
                 .description("Represents a pattern that may be used in an ArmorTrim.",
                     "NOTE: These are auto-generated and may differ between server versions.")
-                .usage(TRIM_PATTERN_REGISTER.getNames())
-                .since("2.13.0")
-                .parser(TRIM_PATTERN_REGISTER.getParser()));
+                .since("2.13.0"));
         }
 
         if (HAS_CHUNK_LOAD_LEVEL) {
@@ -262,14 +256,11 @@ public class Types {
             Util.logLoading("You may have to use their EntityEffects in SkBee's 'play entity effect' effect.");
         }
 
-        RegistryWrapper<MemoryKey> MEMORY_REGISTRY = RegistryWrapper.wrap(Registry.MEMORY_MODULE_TYPE);
-        Classes.registerClass(new ClassInfo<>(MemoryKey.class, "memory")
+        Classes.registerClass(RegistryWrapper.getClassInfo(Registry.MEMORY_MODULE_TYPE, MemoryKey.class, "memory")
             .user("memor(y|ies)")
             .name("Memory")
             .description("Represents the different memories of an entity.",
-                "NOTE: These are auto-generated and may differ between server versions.")
-            .usage(MEMORY_REGISTRY.getNames())
-            .parser(MEMORY_REGISTRY.getParser()));
+                "NOTE: These are auto-generated and may differ between server versions."));
 
         if (Classes.getExactClassInfo(EquipmentSlot.class) == null) {
             EnumWrapper<EquipmentSlot> SLOT_ENUM = new EnumWrapper<>(EquipmentSlot.class, null, "slot");
@@ -336,8 +327,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(EntityType.class) == null) {
-            RegistryWrapper<EntityType> ENTITY_TYPE = RegistryWrapper.wrap(Registry.ENTITY_TYPE);
-            Classes.registerClass(new ClassInfo<>(EntityType.class, "minecraftentitytype")
+            Classes.registerClass(RegistryWrapper.getClassInfo(Registry.ENTITY_TYPE, EntityType.class, "minecraftentitytype")
                 .user("minecraft ?entity ?types?")
                 .name("Minecraft - EntityType")
                 .description("Represents a Minecraft entity.",
@@ -347,10 +337,8 @@ public class Types {
                 .examples("mc spawn sheep at player",
                     "mc spawn minecraft:sheep at player",
                     "mc spawn minecraft:armor_stand at player")
-                .usage(ENTITY_TYPE.getNames())
                 .after("entitydata", "entitydata")
-                .since("3.5.0")
-                .parser(ENTITY_TYPE.getParser()));
+                .since("3.5.0"));
         }
 
         Classes.registerClass(new ClassInfo<>(Color.class, "bukkitcolor")
