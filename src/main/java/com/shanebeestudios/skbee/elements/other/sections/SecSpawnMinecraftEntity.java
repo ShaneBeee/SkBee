@@ -18,6 +18,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.RegionAccessor;
 import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -33,37 +34,40 @@ import java.util.function.Consumer;
 // Derived from https://github.com/SkriptLang/Skript/blob/master/src/main/java/ch/njol/skript/sections/EffSecSpawn.java
 @Name("Minecraft - Spawn Entity")
 @Description({"Spawn an entity from a Minecraft Key/EntityType.",
-        "This is both a section and an effect (used just like Skript's spawn sec/effect)."})
+    "This is both a section and an effect (used just like Skript's spawn sec/effect). Requires Minecraft 1.20.2+"})
 @Examples({"# Spawn from MinecraftEntityType",
-        "mc spawn sheep at player",
-        "mc spawn minecraft:cow at player",
-        "mc spawn minecraft:wind_charge at player",
-        "",
-        "# Spawn from String",
-        "mc spawn \"sheep\" at player",
-        "mc spawn \"minecraft:cow\" at location(1,100,1)",
-        "mc spawn \"minecraft:wind_charge\" above target block",
-        "",
-        "# Spawn from Minecraft Key",
-        "set {_key} to mc key from \"minecraft:sheep\"",
-        "mc spawn {_key} above target block",
-        "mc spawn (mc key from \"sheep\") at {_location}",
-        "mc spawn (minecraft key from \"minecraft:breeze\") at location(1,100,1, world \"world_nether\")",
-        "",
-        "# Spawn Using Section",
-        "le spawn sheep at player:",
-        "\tset ai of entity to false",
-        "mc spawn minecraft:armor_stand at player:",
-        "\tset gravity of entity to false",
-        "mc spawn \"minecraft:breeze\" at player:",
-        "\tset max health of entity to 100",
-        "\tset health of entity to 100"})
+    "mc spawn sheep at player",
+    "mc spawn minecraft:cow at player",
+    "mc spawn minecraft:wind_charge at player",
+    "",
+    "# Spawn from String",
+    "mc spawn \"sheep\" at player",
+    "mc spawn \"minecraft:cow\" at location(1,100,1)",
+    "mc spawn \"minecraft:wind_charge\" above target block",
+    "",
+    "# Spawn from Minecraft Key",
+    "set {_key} to mc key from \"minecraft:sheep\"",
+    "mc spawn {_key} above target block",
+    "mc spawn (mc key from \"sheep\") at {_location}",
+    "mc spawn (minecraft key from \"minecraft:breeze\") at location(1,100,1, world \"world_nether\")",
+    "",
+    "# Spawn Using Section",
+    "le spawn sheep at player:",
+    "\tset ai of entity to false",
+    "mc spawn minecraft:armor_stand at player:",
+    "\tset gravity of entity to false",
+    "mc spawn \"minecraft:breeze\" at player:",
+    "\tset max health of entity to 100",
+    "\tset health of entity to 100"})
 @Since("3.5.0")
 public class SecSpawnMinecraftEntity extends EffectSection {
 
     static {
-        Skript.registerSection(SecSpawnMinecraftEntity.class,
+        // Bukkit changed from a Bukkit Consumer to Java Consumer in 1.20.2
+        if (Skript.methodExists(RegionAccessor.class, "spawn", Location.class, Class.class, Consumer.class)) {
+            Skript.registerSection(SecSpawnMinecraftEntity.class,
                 "(minecraft|mc|skbee|le) spawn [%number% of] %minecraftentitytypes/namespacedkeys/strings% [%directions% %locations%]");
+        }
     }
 
     private Expression<Number> amount;
