@@ -26,6 +26,7 @@ import java.util.List;
 @Name("NamespacedKey - Object From")
 @Description({"Get an object from a namespaced key.",
     "This may come in handy in an instance you have a string version that doesn't match Skript and can't be parsed.",
+    "Also supports some custom objects such as custom Enchantments in Minecraft 1.21+",
     "Currently supported types: attribute, biome, damage type, enchantment, entity type, game event, item type,",
     "particle, potion effect type, statistic, world."})
 @Examples({"set {_n} to mc key from \"minecraft:zombie\"",
@@ -39,7 +40,8 @@ import java.util.List;
     "",
     "set {_e} to enchantment from key \"minecraft:breach\"",
     "set {_e} to enchantment from key \"custom:my_custom_enchant\"",
-    "set enchantment level of {_e} of player's tool to 3"})
+    "set enchantment level of {_e} of player's tool to 3",
+    "set {_e::*} to enchantments from keys \"minecraft:sharpness\" and \"bloop:shiver\""})
 @Since("2.17.0")
 public class ExprNamespacedKeyObjectFrom extends SimpleExpression<Object> {
 
