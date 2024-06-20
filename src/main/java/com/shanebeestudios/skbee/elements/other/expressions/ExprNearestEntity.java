@@ -46,7 +46,7 @@ public class ExprNearestEntity extends SimpleExpression<Entity> {
         if (Skript.methodExists(World.class, "getNearbyEntitiesByType", Class.class, Location.class, double.class)) {
             Skript.registerExpression(ExprNearestEntity.class, Entity.class, ExpressionType.COMBINED,
                 "[num:%number%] nearest %entitydata% [in radius %-number%] (at|of|around) %location/entity%" +
-                    " [excluding %entities%]");
+                    " [excluding %-entities%]");
         }
     }
 
