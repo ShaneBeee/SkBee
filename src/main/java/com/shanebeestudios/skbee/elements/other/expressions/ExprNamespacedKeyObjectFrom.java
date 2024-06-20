@@ -76,7 +76,7 @@ public class ExprNamespacedKeyObjectFrom extends SimpleExpression<Object> {
             if (object instanceof NamespacedKey key) {
                 objects.add(this.objectConverter.get(key));
             } else if (object instanceof String string) {
-                NamespacedKey key = Util.getMCNamespacedKey(string, false);
+                NamespacedKey key = Util.getNamespacedKey(string, false);
                 objects.add(this.objectConverter.get(key));
             }
         }

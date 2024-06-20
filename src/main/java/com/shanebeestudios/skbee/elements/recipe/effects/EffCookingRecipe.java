@@ -14,6 +14,7 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -109,7 +110,7 @@ public class EffCookingRecipe extends Effect {
             return;
         }
         String group = this.group != null ? this.group.getSingle(event) : "";
-        NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
+        NamespacedKey key = Util.getNamespacedKey(this.key.getSingle(event), false);
         if (key == null) {
             RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
             return;

@@ -12,13 +12,6 @@ settings:
     # Whether or not the update check should be done on another thread
     async: false
 
-  # This is the namespace skbee uses for recipe ids and namespace expression.
-  # You're free to use whatever you want as long as it follows the rules listed below
-  # all lowercase, alphabetical, numbers, a single colon, underscores, hyphens and periods. NO SPACES!!!
-  # Example, when using the minecraft recipe command `/minecraft:recipe give playerName skbee:my_custom_recipe`
-  # Example, when using the namespaced key expression `namespaced key from "some_cool_namespace"` (`skbee:some_cool_namespace`)
-  namespace: "skbee"
-
   # Whether scoreboard lines should be in normal order or reversed
   # False = Line 1 at the top, line 15 at the bottom (default)
   # True = Line 15 at the top, line 1 at the bottom

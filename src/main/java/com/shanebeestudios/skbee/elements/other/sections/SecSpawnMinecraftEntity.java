@@ -144,7 +144,7 @@ public class SecSpawnMinecraftEntity extends EffectSection {
             EntityType et = Registry.ENTITY_TYPE.get(key);
             if (et != null) return et.getEntityClass();
         } else if (object instanceof String string) {
-            NamespacedKey key = Util.getMCNamespacedKey(string, false);
+            NamespacedKey key = Util.getNamespacedKey(string, false);
             if (key != null) return getEntityClass(key);
         }
         return null;

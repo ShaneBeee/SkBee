@@ -62,7 +62,7 @@ public class ExprTagGet extends SimpleExpression<Tag> {
             if (object instanceof NamespacedKey namespacedKey) {
                 keys.add(namespacedKey);
             } else if (object instanceof String string) {
-                NamespacedKey key = Util.getMCNamespacedKey(string, true);
+                NamespacedKey key = Util.getNamespacedKey(string, true);
                 if (key != null) keys.add(key);
             }
         }

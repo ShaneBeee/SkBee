@@ -71,7 +71,7 @@ public class BeeWorldConfig {
     public @Nullable BeeWorldCreator loadWorld(String name) {
         String path = "worlds." + name + ".";
         String keyString = worldConfig.getString(path + "key");
-        NamespacedKey key = keyString != null ? Util.getMCNamespacedKey(keyString, false) : null;
+        NamespacedKey key = keyString != null ? Util.getNamespacedKey(keyString, false) : null;
         BeeWorldCreator worldCreator = new BeeWorldCreator(name, key);
 
         String type = worldConfig.getString(path + "type");

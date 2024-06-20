@@ -60,7 +60,7 @@ public class ExprTagCustom extends SimpleExpression<Tag> {
         NamespacedKey key;
         Object object = this.object.getSingle(event);
         if (object instanceof NamespacedKey namespacedKey) key = namespacedKey;
-        else if (object instanceof String string) key = Util.getMCNamespacedKey(string, false);
+        else if (object instanceof String string) key = Util.getNamespacedKey(string, false);
         else return null;
 
         if (key != null) {

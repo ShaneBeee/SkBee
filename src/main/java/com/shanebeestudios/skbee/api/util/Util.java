@@ -27,14 +27,13 @@ public class Util {
     private static final String PREFIX_ERROR = "&7[&bSk&3Bee &cERROR&7] ";
     private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f\\d]){6}>");
     private static final boolean SKRIPT_IS_THERE = Bukkit.getPluginManager().getPlugin("Skript") != null;
-    private static final String SETTINGS_NAMESPACE = SkBee.getPlugin().getPluginConfig().SETTINGS_NAMESPACE;
 
     // QuickLinks
     public static final String MCWIKI_TICK_COMMAND = "See [**Tick Command**](https://minecraft.wiki/w/Commands/tick) on McWiki for more details.";
 
     // Shortcut for finding stuff to remove later
-    public static final boolean IS_RUNNING_SKRIPT_2_9 = Skript.getVersion().isLargerThan(new Version(2,8,999));
-    public static final boolean IS_RUNNING_MC_1_21 = Skript.isRunningMinecraft(1,21);
+    public static final boolean IS_RUNNING_SKRIPT_2_9 = Skript.getVersion().isLargerThan(new Version(2, 8, 999));
+    public static final boolean IS_RUNNING_MC_1_21 = Skript.isRunningMinecraft(1, 21);
 
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
@@ -104,28 +103,15 @@ public class Util {
 
     /**
      * Gets a Minecraft NamespacedKey from string
-     * <p>If no colon (':') is not include it will prepend it to the start</p>
+     * <p>If a namespace is not provided, it will default to "minecraft:" namespace</p>
      *
      * @param key   Key for new Minecraft NamespacedKey
      * @param error Whether to send a skript/console error if one occurs
      * @return new Minecraft NamespacedKey
      */
     @Nullable
-    public static NamespacedKey getMCNamespacedKey(@NotNull String key, boolean error) {
-        if (!key.contains(":")) key = "minecraft:" + key;
-        return getNamespacedKey(key, error);
-    }
-
-    /**
-     * Get a NamespacedKey from string
-     * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
-     *
-     * @param key   Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
-     * @param error Whether to send a skript/console error if one occurs
-     * @return new NamespacedKey
-     */
-    @Nullable
     public static NamespacedKey getNamespacedKey(@NotNull String key, boolean error) {
+        if (!key.contains(":")) key = "minecraft:" + key;
         if (key.length() > 255) {
             if (error)
                 skriptError("An invalid key was provided, key must be less than 256 characters: %s", key);
@@ -136,22 +122,7 @@ public class Util {
             key = key.replace(" ", "_");
         }
 
-        NamespacedKey namespacedKey = null;
-        if (key.contains(":")) {
-            namespacedKey = NamespacedKey.fromString(key);
-        } else { // Just a safety check, settings_namespace can't be null but in case this is defaulted to.
-            try {
-                if (SETTINGS_NAMESPACE != null) {
-                    namespacedKey = new NamespacedKey(SETTINGS_NAMESPACE, key);
-                } else {
-                    namespacedKey = new NamespacedKey(SkBee.getPlugin(), key);
-                }
-            } catch (Exception exception) {
-                if (error) {
-                    skriptError(exception.getMessage());
-                }
-            }
-        }
+        NamespacedKey namespacedKey = NamespacedKey.fromString(key);
         if (namespacedKey == null && error)
             skriptError("An invalid key was provided, that didn't follow [a-z0-9/._-:]. key: %s", key);
         return namespacedKey;

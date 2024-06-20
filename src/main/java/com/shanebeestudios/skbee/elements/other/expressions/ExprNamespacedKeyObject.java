@@ -32,11 +32,11 @@ import org.jetbrains.annotations.Nullable;
 @Description({"Get the namespaced key of an object or string.",
         "\nNote when getting key from string:",
         "NamespacedKeys are a string based key which consists of two components - a namespace and a key.",
-        "\nNamespaces may only contain lowercase alphanumeric characters, periods, underscores, and hyphens.",
-        "Minecraft generally uses the \"minecraft\" namespace for built in objects.",
-        "\nIf a namespace is not provided, the SkBee config namespace will be used by default -> \"skbee:your_key\"",
-        "\nKeys may only contain lowercase alphanumeric characters, periods, underscores, hyphens, and forward slashes.",
-        "\nKeep an eye on your console when using namespaced keys as errors will spit out when they're invalid."})
+        "Namespaces may only contain lowercase alphanumeric characters, periods, underscores, and hyphens.",
+        "Minecraft uses the \"minecraft:\" namespace for built in objects.",
+        "If a namespace is not provided, the Minecraft namespace will be used by default -> \"minecraft:your_key\"",
+        "Keys may only contain lowercase alphanumeric characters, periods, underscores, hyphens, and forward slashes.",
+        "Keep an eye on your console when using namespaced keys as errors will spit out when they're invalid."})
 @Examples({"set {_key} to mc key of target block",
         "set {_key} to namespaced key of player's tool",
         "set {_key} to minecraft key of biome at player",
@@ -48,15 +48,12 @@ public class ExprNamespacedKeyObject extends SimplePropertyExpression<Object, Na
 
     static {
         Skript.registerExpression(ExprNamespacedKeyObject.class, NamespacedKey.class, ExpressionType.COMBINED,
-                "(mc:(minecraft|mc)|namespaced|resource)[ ](key|id[entifier]|location)[s] [(from|of)] %objects%");
+                "(minecraft|mc|namespaced|resource)[ ](key|id[entifier]|location)[s] [(from|of)] %objects%");
     }
-
-    private boolean useMinecraftNamespace;
 
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.useMinecraftNamespace = parseResult.hasTag("mc");
         Expression<Object> objects = LiteralUtils.defendExpression(exprs[0]);
         setExpr(objects);
         return LiteralUtils.canInitSafely(objects);
@@ -66,11 +63,7 @@ public class ExprNamespacedKeyObject extends SimplePropertyExpression<Object, Na
     @Override
     public @Nullable NamespacedKey convert(Object object) {
         if (object instanceof String string) {
-            if (this.useMinecraftNamespace) {
-                return Util.getMCNamespacedKey(string, true);
-            } else {
-                return Util.getNamespacedKey(string, true);
-            }
+            return Util.getNamespacedKey(string, true);
         } else if (object instanceof Keyed keyed) {
             return keyed.getKey();
         } else if (object instanceof Block block) {

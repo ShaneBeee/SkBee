@@ -12,6 +12,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
@@ -48,7 +49,7 @@ public class ExprRecipeCookTime extends SimpleExpression<Timespan> {
     protected @Nullable Timespan[] get(Event event) {
         List<Timespan> cookTimes = new ArrayList<>();
         for (String key : this.key.getArray(event)) {
-            NamespacedKey namespacedKey = RecipeUtil.getKey(key);
+            NamespacedKey namespacedKey = Util.getNamespacedKey(key, false);
             if (namespacedKey == null) continue;
 
             Recipe recipe = Bukkit.getRecipe(namespacedKey);

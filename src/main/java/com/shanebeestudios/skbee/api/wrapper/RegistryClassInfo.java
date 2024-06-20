@@ -145,7 +145,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
         }
         string = string.trim();
 
-        NamespacedKey key = Util.getMCNamespacedKey(string, false);
+        NamespacedKey key = Util.getNamespacedKey(string, false);
         if (key == null) return null;
         return this.registry.get(key);
     }
