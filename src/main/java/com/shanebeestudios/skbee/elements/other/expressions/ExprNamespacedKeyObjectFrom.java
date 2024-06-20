@@ -19,13 +19,13 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
 @Name("NamespacedKey - Object From")
 @Description({"Get an object from a namespaced key.",
     "This may come in handy in an instance you have a string version that doesn't match Skript and can't be parsed.",
-    "**NOTE**: These often error when using in a one liner, best to set as a var and use said var, see examples.",
     "Currently supported types: attribute, biome, damage type, enchantment, entity type, game event, item type,",
     "particle, potion effect type, statistic, world."})
 @Examples({"set {_n} to mc key from \"minecraft:zombie\"",
@@ -78,8 +78,12 @@ public class ExprNamespacedKeyObjectFrom extends SimpleExpression<Object> {
                 objects.add(this.objectConverter.get(key));
             }
         }
-        Class<?> c = this.classInfo.getSingle().getC();
-        return objects.toArray();
+        // Prevent ClassCastException (taken from Skript's parsed as expression)
+        Object[] objectArray = (Object[]) Array.newInstance(this.classInfo.getSingle().getC(), objects.size());
+        for (int i = 0; i < objectArray.length; i++) {
+            objectArray[i] = objects.get(i);
+        }
+        return objectArray;
     }
 
     @Override
