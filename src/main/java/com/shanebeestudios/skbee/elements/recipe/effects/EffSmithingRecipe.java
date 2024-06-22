@@ -12,6 +12,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.Bukkit;
@@ -88,7 +89,7 @@ public class EffSmithingRecipe extends Effect {
             return;
         }
 
-        NamespacedKey key = RecipeUtil.getKey(this.key.getSingle(event));
+        NamespacedKey key = Util.getNamespacedKey(this.key.getSingle(event), false);
         if (key == null) {
             RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
             return;

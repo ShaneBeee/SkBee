@@ -18,7 +18,6 @@ public class Config {
     public boolean SETTINGS_DEBUG;
     public boolean SETTINGS_UPDATE_CHECKER_ENABLED;
     public boolean SETTINGS_UPDATE_CHECKER_ASYNC;
-    public String SETTINGS_NAMESPACE;
     public boolean SETTINGS_SCOREBOARD_LINES;
     public boolean ELEMENTS_NBT;
     public boolean NBT_EVENTS_BREAK_BLOCK;
@@ -132,7 +131,6 @@ public class Config {
         this.SETTINGS_UPDATE_CHECKER_ASYNC = getSetting("update-checker.async");
 
         String namespace = this.config.getString("settings.namespace");
-        this.SETTINGS_NAMESPACE = namespace != null ? namespace.toLowerCase() : "skbee";
         this.SETTINGS_SCOREBOARD_LINES = getSetting("scoreboard-reverse-lines");
 
         this.ELEMENTS_NBT = getElement("nbt");

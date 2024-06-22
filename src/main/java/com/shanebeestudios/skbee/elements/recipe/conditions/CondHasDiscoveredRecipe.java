@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -56,7 +57,7 @@ public class CondHasDiscoveredRecipe extends Condition {
     @Override
     public boolean check(Event event) {
         return players.check(event, player -> recipes.check(event, recipeString -> {
-            NamespacedKey key = RecipeUtil.getKey(recipeString);
+            NamespacedKey key = Util.getNamespacedKey(recipeString, false);
             return key != null && player.hasDiscoveredRecipe(key);
         }), isNegated());
     }

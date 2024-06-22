@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 @Name("Nearest Entity")
-@Description({"Returns the nearest entity around a location/entity.",
+@Description({"Returns the nearest entity around a location/entity. Requires PaperMC.",
     "\nNOTE: When using `around entity`, this will exclude that entity in the search.",
     "\nNOTE: When radius is excluded, the distance will default to Skript's `maximum target block distance`."})
 @Examples({"kill nearest player in radius 10 around player",
@@ -43,9 +43,11 @@ public class ExprNearestEntity extends SimpleExpression<Entity> {
     private static final int MAX_TARGET_BLOCK_DISTANCE = SkriptConfig.maxTargetBlockDistance.value();
 
     static {
-        Skript.registerExpression(ExprNearestEntity.class, Entity.class, ExpressionType.COMBINED,
-            "[num:%number%] nearest %entitydata% [in radius %-number%] (at|of|around) %location/entity%" +
-                " [excluding %entities%]");
+        if (Skript.methodExists(World.class, "getNearbyEntitiesByType", Class.class, Location.class, double.class)) {
+            Skript.registerExpression(ExprNearestEntity.class, Entity.class, ExpressionType.COMBINED,
+                "[num:%number%] nearest %entitydata% [in radius %-number%] (at|of|around) %location/entity%" +
+                    " [excluding %-entities%]");
+        }
     }
 
     private Expression<Number> number;
@@ -122,7 +124,7 @@ public class ExprNearestEntity extends SimpleExpression<Entity> {
         String data = this.entityData.toString(e, d);
         String radius = this.radius.toString(e, d);
         String loc = this.location.toString(e, d);
-        String excluding = this.excluding != null ? (" excluding " + this.excluding.toString(e,d)) : "";
+        String excluding = this.excluding != null ? (" excluding " + this.excluding.toString(e, d)) : "";
         return num + "nearest " + data + " in radius " + radius + " around " + loc + excluding;
     }
 

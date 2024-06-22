@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -81,7 +82,7 @@ public class EffKnowledgeBook extends Effect {
             else if (plugin != null)
                 key = new NamespacedKey(plugin, recipe);
             else
-                key = RecipeUtil.getKey(recipe);
+                key = Util.getNamespacedKey(recipe, false);
 
             if (add)
                 allRecipes.add(key);

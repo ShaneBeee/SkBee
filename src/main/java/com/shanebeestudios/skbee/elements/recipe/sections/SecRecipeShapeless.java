@@ -16,6 +16,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
@@ -132,7 +133,7 @@ public class SecRecipeShapeless extends Section {
             RecipeUtil.error("Invalid/Missing recipe ID: &e" + this.toString(event, false));
             return;
         }
-        NamespacedKey key = RecipeUtil.getKey(id);
+        NamespacedKey key = Util.getNamespacedKey(id, false);
         if (key == null) return;
 
         ItemStack result = this.result.getSingle(event);

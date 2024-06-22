@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -38,7 +39,7 @@ public class EffRemoveRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffRemoveRecipe.class,
-                "remove [(custom|1:(mc|minecraft))] recipe[s] %strings%",
+                "remove [(custom|mc|minecraft)] recipe[s] %strings%",
                 "remove all [(1:(mc|minecraft))] recipe[s]");
     }
 
@@ -74,13 +75,7 @@ public class EffRemoveRecipe extends Effect {
         }
 
         for (String recipe : this.recipes.getAll(event)) {
-            NamespacedKey key;
-            if (minecraft) {
-                recipe = recipe.replace("minecraft:", "");
-                key = NamespacedKey.minecraft(recipe);
-            } else {
-                key = RecipeUtil.getKey(recipe);
-            }
+            NamespacedKey key = Util.getNamespacedKey(recipe, false);
             if (key != null) {
                 Bukkit.removeRecipe(key);
                 if (config.SETTINGS_DEBUG) {

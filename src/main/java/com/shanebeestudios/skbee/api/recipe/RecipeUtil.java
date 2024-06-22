@@ -10,7 +10,6 @@ import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.ItemStack;
@@ -36,20 +35,6 @@ import java.util.NoSuchElementException;
 public class RecipeUtil {
 
     public static final boolean HAS_CATEGORY = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
-
-    /**
-     * Get a NamespacedKey from string
-     * <p>If no namespace is provided, it will default to namespace in SkBee config (default = "skbee")</p>
-     *
-     * @param key Key for new NamespacedKey, ex: "plugin:key" or "minecraft:something"
-     * @return New NamespacedKey
-     */
-    // TODO remove instances of `getKey` usage in other files before 3.0 release
-    @Nullable
-    public static NamespacedKey getKey(String key) {
-        if (key == null) return null;
-        return Util.getNamespacedKey(key, false);
-    }
 
     /**
      * @param object a RecipeChoice or ItemStack/ItemType/Slot that will be converted to a RecipeChoice
@@ -150,7 +135,7 @@ public class RecipeUtil {
         }
         log(" - &7Ingredients:");
         recipe.getChoiceList().forEach(recipeChoice ->
-                log("   - &6%s", getFancy(recipeChoice)));
+            log("   - &6%s", getFancy(recipeChoice)));
     }
 
     /**
@@ -214,11 +199,11 @@ public class RecipeUtil {
 
     private static String getFancy(RecipeChoice matChoice) {
         return matChoice.toString()
-                .replace("MaterialChoice{choices=", "")
-                .replace("ExactChoice{choices=", "")
-                .replace("[", "&r[&b")
-                .replace(",", "&r,&b")
-                .replace("]}", "&r]");
+            .replace("MaterialChoice{choices=", "")
+            .replace("ExactChoice{choices=", "")
+            .replace("[", "&r[&b")
+            .replace(",", "&r,&b")
+            .replace("]}", "&r]");
     }
 
     /**

@@ -13,6 +13,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -99,7 +100,7 @@ public class EffCraftingRecipe extends Effect {
 
         String group = this.group != null ? this.group.getSingle(event) : null;
         String id = this.id.getSingle(event);
-        NamespacedKey key = RecipeUtil.getKey(id);
+        NamespacedKey key = Util.getNamespacedKey(id, false);
         if (key == null) {
             RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
             return;
