@@ -50,7 +50,9 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
         NBTCompound compound = this.compound.getSingle(e);
         if (tag == null || compound == null) return null;
 
-        return new NBTCustomType[]{NBTApi.getTagType(compound, tag)};
+        NBTCustomType tagType = NBTApi.getTagType(compound, tag);
+        if (tagType == NBTCustomType.NBTTagEnd) return null;
+        return new NBTCustomType[]{tagType};
     }
 
     @Override
