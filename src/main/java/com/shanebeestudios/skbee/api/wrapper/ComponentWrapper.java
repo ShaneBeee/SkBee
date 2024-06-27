@@ -167,6 +167,17 @@ public class ComponentWrapper {
         return new ComponentWrapper(Component.translatable(translate, comps));
     }
 
+    /**
+     * Deserialize a json string into a component
+     *
+     * @param json Json string to deserialize
+     * @return Component from json string
+     */
+    public static ComponentWrapper fromJson(String json) {
+        Component deserialize = JSONComponentSerializer.json().deserialize(json);
+        return new ComponentWrapper(deserialize);
+    }
+
     @Nullable
     private static Component getItem(Object object) {
         ItemStack itemStack = null;
