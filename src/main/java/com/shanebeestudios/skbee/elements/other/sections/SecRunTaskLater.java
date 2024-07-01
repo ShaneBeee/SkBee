@@ -121,6 +121,10 @@ public class SecRunTaskLater extends Section {
         Bukkit.getScheduler().cancelTask(this.currentTaskId);
     }
 
+    public int getCurrentTaskId() {
+        return this.currentTaskId;
+    }
+
     @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
