@@ -268,7 +268,7 @@ public class BeeWorldCreator implements Keyed {
                             FileUtils.copyFile(file, new File(cloneDirectory, fileName));
                         }
                     }
-                    WorldCreator creator = new WorldCreator(cloneName, this.key);
+                    WorldCreator creator = getWorldCreator(cloneName, this.key);
                     Bukkit.getScheduler().runTaskLater(SkBee.getPlugin(), () -> {
                         // Let's head back to the main thread
                         worldCompletableFuture.complete(creator);
