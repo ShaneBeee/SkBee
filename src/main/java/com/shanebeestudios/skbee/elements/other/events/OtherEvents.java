@@ -10,6 +10,7 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -374,7 +375,7 @@ public class OtherEvents extends SimpleEvent {
         }, EventValues.TIME_NOW);
 
         // Bell Ring Event
-        if (Skript.classExists("org.bukkit.event.block.BellRingEvent")) {
+        if (!Util.IS_RUNNING_SKRIPT_2_9 && Skript.classExists("org.bukkit.event.block.BellRingEvent")) {
             Skript.registerEvent("Bell Ring", OtherEvents.class, BellRingEvent.class, "bell ring")
                     .description("Called when a bell is being rung. Requires Minecraft 1.19.4+")
                     .examples("on bell ring:",
