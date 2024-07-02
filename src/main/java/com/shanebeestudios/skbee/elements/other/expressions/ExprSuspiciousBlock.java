@@ -35,7 +35,7 @@ public class ExprSuspiciousBlock extends SimplePropertyExpression<Block, ItemTyp
         }
     }
 
-    @SuppressWarnings({"deprecation"})
+    @SuppressWarnings({"deprecation", "removal"})
     @Override
     public @Nullable ItemType convert(Block block) {
         BlockState state = block.getState();
@@ -57,7 +57,7 @@ public class ExprSuspiciousBlock extends SimplePropertyExpression<Block, ItemTyp
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue", "deprecation"})
+    @SuppressWarnings({"NullableProblems", "ConstantValue", "deprecation", "removal"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         ItemStack itemStack = null;

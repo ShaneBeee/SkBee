@@ -105,7 +105,8 @@ public class ComponentWrapper {
      */
     @SuppressWarnings("NullableProblems")
     public static ComponentWrapper fromMiniMessage(@NotNull String text, @Nullable TagResolver... resolvers) {
-        String string = text;
+        // Skript 2.9+ no longer requires double hash, so let's manage that
+        String string = text.replaceAll("##(\\w{6})", "#$1");
         // MiniMessage doesn't like these
         if (text.contains("&")) {
             TextComponent deserialize = LegacyComponentSerializer.legacyAmpersand().deserialize(string);
@@ -165,6 +166,17 @@ public class ComponentWrapper {
             }
         }
         return new ComponentWrapper(Component.translatable(translate, comps));
+    }
+
+    /**
+     * Deserialize a json string into a component
+     *
+     * @param json Json string to deserialize
+     * @return Component from json string
+     */
+    public static ComponentWrapper fromJson(String json) {
+        Component deserialize = JSONComponentSerializer.json().deserialize(json);
+        return new ComponentWrapper(deserialize);
     }
 
     @Nullable
