@@ -14,7 +14,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Text Component - Replace Text")
+@Name("TextComponent - Replace Text")
 @Description({"Replace a string with another string or text component in a text component. Supports regex patterns."})
 @Examples({"component replace \"puppy\" with \"***\" in {_comp}",
         "component replace \"\\d+\" with \"0\" in {_comp}"})

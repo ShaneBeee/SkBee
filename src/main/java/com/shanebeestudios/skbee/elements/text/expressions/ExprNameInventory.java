@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@Name("Text Component - Inventory Name")
+@Name("TextComponent - Inventory Name")
 @Description({"Get/set the name of an inventory using components.",
         "NOTE: This will only rename OPEN inventories, not inventories saved in variables."})
 @Examples("set component inventory title of player's current inventory to {_t}")

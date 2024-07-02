@@ -16,7 +16,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Text Component - Send Title")
+@Name("TextComponent - Send Title")
 @Description({"Send titles containing components. Supports strings as well.",
         "If you are using variables and the title won't send, make sure to add `component`."})
 @Examples({"send title mini message from \"<rainbow>OOO RAINBOW TITLE\"",

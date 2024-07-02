@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Text Component - Item Lore")
+@Name("TextComponent - Item Lore")
 @Description("Get/set the lore of an item using text components.")
 @Examples("set component lore of player's tool to mini message from \"<rainbow>OOO RAINBOW LORE\"")
 @Since("2.4.0")

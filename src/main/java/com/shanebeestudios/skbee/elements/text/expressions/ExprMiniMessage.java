@@ -18,7 +18,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Text Component - MiniMessage")
+@Name("TextComponent - MiniMessage")
 @Description({"Get a mini message from a string.",
         "These messages are still components, which you can still apply hover/click events to.",
         "You can also add optional tag resolvers. Essential you create a resolver to replace `<someString>` ",

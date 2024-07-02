@@ -13,7 +13,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Text Component - ItemType Name")
+@Name("TextComponent - ItemType Name")
 @Description("Get/set the component name of an ItemType.")
 @Examples("set component item name of player's tool to translate component of \"item.minecraft.diamond_sword\"")
 @Since("2.4.0")

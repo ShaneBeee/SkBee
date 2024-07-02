@@ -17,7 +17,7 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Text Component - Team Prefix/Suffix")
+@Name("TextComponent - Team Prefix/Suffix")
 @Description("Get/set prefix/suffix of teams using components.")
 @Examples("set component team prefix of team of player to mini message from \"<color:grey>[<color:aqua>OWNER<color:grey>] \"")
 @Since("2.4.0")

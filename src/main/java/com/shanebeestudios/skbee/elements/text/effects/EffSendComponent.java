@@ -18,7 +18,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Text Component - Send")
+@Name("TextComponent - Send")
 @Description({"Send text components to players/console. You can also broadcast components as well.",
         "The optional sender (supported in Minecraft 1.16.4+) allows you to send components from a specific player.",
         "This is useful to make sure players can block messages using MC 1.16.4's new player chat ignore system.",

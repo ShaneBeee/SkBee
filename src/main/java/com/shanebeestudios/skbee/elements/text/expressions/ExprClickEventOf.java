@@ -16,7 +16,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Text Component - Click Event Of")
+@Name("TextComponent - Click Event Of")
 @Description("Set the click event of a text component.")
 @Examples({"set {_t} to text component from \"Check out this cool thing at SPAWN!\"",
         "set hover event of {_t} to a new hover event showing \"Clicky clicky to go to spawn!\"",

@@ -17,7 +17,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Text Component - Entity Name")
+@Name("TextComponent - Entity Name")
 @Description({"Get/set the component name of an entity.",
     "\nNAME = the name will only show when crosshair is on entity.",
     "\nDISPLAY NAME = the name will always show (for a player, this will get/set their display name)."})

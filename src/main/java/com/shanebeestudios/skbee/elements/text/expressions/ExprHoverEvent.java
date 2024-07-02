@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("rawtypes")
-@Name("Text Component - Hover Event")
+@Name("TextComponent - Hover Event")
 @Description({"Create a new hover event. Can show texts, text components, an item or an entity to a player.",
     "'showing %itemtype%' requires Minecraft 1.18.2+"})
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",

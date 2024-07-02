@@ -18,7 +18,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Text Component - Sign Change")
+@Name("TextComponent - Sign Change")
 @Description({"Sends a sign change to the player. You CAN send a block change first.",
         "\nColor = the color of the text on the sign.",
         "\nGlowing = make the text glow."})

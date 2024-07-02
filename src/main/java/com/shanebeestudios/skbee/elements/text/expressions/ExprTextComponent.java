@@ -31,6 +31,7 @@ import java.util.List;
     "  - Also supports getting translations for objects such as ItemTypes, Entities and PotionEffectTypes.",
     "  - When sent to the client, the client will translate based on the lang they've picked.",
     "  - Some lang file entries take in other objects, thats what the optional `using %objects%` is for.",
+    "",
     "Json: Will deserialize a json string back into a component.",
     "  - Minecraft stores components in NBT as json components (ex: name of a held item)."})
 @Examples({"set {_comp::1} to text component from \"hi player \"",

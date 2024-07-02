@@ -24,7 +24,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Text Component - Join/Quit/Kick/Death Message")
+@Name("TextComponent - Join/Quit/Kick/Death Message")
 @Description("Get/set the join, quit, kick, death messages.")
 @Examples({"on join:",
         "\tset component join message to mini message from \"<hover:show_entity:player:%uuid of player%><gradient:##FAA401:##5FFA01>%player%<reset><green> joined the game\"",

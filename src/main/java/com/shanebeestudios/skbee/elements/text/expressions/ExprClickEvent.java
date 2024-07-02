@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-@Name("Text Component - Click Event")
+@Name("TextComponent - Click Event")
 @Description("Create a new click event. Supports run command, suggest command, open link and copy to clipboard.")
 @Examples({"set {_t} to text component from \"Check out my cool website\"",
         "add hover event showing \"Clicky clicky to go to spawn!\" to {_t}",

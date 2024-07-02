@@ -19,7 +19,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Text Component - Async Chat Format/Message")
+@Name("TextComponent - Async Chat Format/Message")
 @Description({"Get/set the chat message from an async chat event as a text component.",
         "Set the chat format of an async chat event (no getter for this).",
         "Requires PaperMC!"})

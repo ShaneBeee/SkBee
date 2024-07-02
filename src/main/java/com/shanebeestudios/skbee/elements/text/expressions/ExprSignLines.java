@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("NullableProblems")
-@Name("Text Component - Sign Line")
+@Name("TextComponent - Sign Line")
 @Description({"Get/set lines of a sign with text components. Optionally set the front/back of a sign. (Defaults to front)",
         "\nNOTE: Setting the back of a sign requires Minecraft 1.20+"})
 @Examples({"set sign line 1 of target block to mini message from \"<rainbow>LINE ONE\"",

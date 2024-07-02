@@ -18,7 +18,7 @@ import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Text Component - Chest Inventory")
+@Name("TextComponent - Chest Inventory")
 @Description("Create a chest inventory with a component name.")
 @Examples({"set {_t} to mini message from \"<rainbow>THIS IS A CHEST\"",
         "set {_i} to chest inventory with component name {_t} with 2 rows",

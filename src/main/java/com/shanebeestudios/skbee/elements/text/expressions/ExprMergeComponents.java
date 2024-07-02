@@ -15,7 +15,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Text Component - Merge Components")
+@Name("TextComponent - Merge Components")
 @Description("Merge multiple components into one. If adding strings/texts, they will be converted into components.")
 @Examples({"set {_t} to merge components {_t::*}",
         "set {_t} to merge components {_t::*} joined with newline"})

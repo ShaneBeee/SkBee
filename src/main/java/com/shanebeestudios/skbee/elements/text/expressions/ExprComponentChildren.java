@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Text Component - Children")
+@Name("TextComponent - Children")
 @Description("Get the children of a text component. This essentially splits the component up into its parts.")
 @Examples("set {_children::*} to component children of {_textcomp}")
 @Since("2.14.0")

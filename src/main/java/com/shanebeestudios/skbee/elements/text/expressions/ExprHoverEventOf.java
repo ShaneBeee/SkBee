@@ -18,7 +18,7 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 
 @SuppressWarnings("deprecation")
-@Name("Text Component - Hover Event Of")
+@Name("TextComponent - Hover Event Of")
 @Description("Set the hover event of a text component.")
 @Examples({"set {_t} to text component from \"Check out my cool tool!\"",
         "set hover event of {_t} to a new hover event showing player's tool",
