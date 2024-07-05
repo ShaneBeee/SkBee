@@ -11,18 +11,18 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Skript Type of Object")
 @Description({"Returns the Skript type (also known as 'ClassInfo') of an object.",
-        "Useful for debugging. Will return as a string."})
+    "Useful for debugging. Will return as a string."})
 @Examples("set {_info} to class info of player's tool")
 @Since("2.5.2")
 public class ExprClassInfoOf extends SimplePropertyExpression<Object, String> {
 
     static {
-        register(ExprClassInfoOf.class, String.class, "(class info|skript type)", "objects");
+        register(ExprClassInfoOf.class, String.class, "(class[ ]info|skript[ ]type)", "objects");
     }
 
     @SuppressWarnings("NullableProblems")
