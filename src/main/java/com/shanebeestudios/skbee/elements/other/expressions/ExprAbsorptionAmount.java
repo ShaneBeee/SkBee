@@ -10,12 +10,16 @@ import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Absorption Amount")
 @Description("Represents the absorption amount of an entity.")
-@Examples("set absorption amount of player to 5")
+@Examples({"set {_absorption} to absorption amount of player",
+    "set absorption amount of player to 5",
+    "add 2 to absorption amount of player",
+    "remove 2 from absorption amount of player",
+    "reset absorption amount of player"})
 @Since("1.17.0")
 public class ExprAbsorptionAmount extends SimplePropertyExpression<Entity, Number> {
 
@@ -33,27 +37,27 @@ public class ExprAbsorptionAmount extends SimplePropertyExpression<Entity, Numbe
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {
-            case SET, ADD, REMOVE -> CollectionUtils.array(Number.class);
+            case SET, ADD, REMOVE, RESET -> CollectionUtils.array(Number.class);
             default -> null;
         };
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        double change = delta[0] != null ? ((Number) delta[0]).doubleValue() : 0;
+        double value = (delta != null && delta[0] != null) ? ((Number) delta[0]).doubleValue() : 0;
         for (Entity entity : getExpr().getArray(event)) {
             if (entity instanceof Damageable damageable) {
                 double oldAmount = damageable.getAbsorptionAmount();
-                if (mode == ChangeMode.ADD) {
-                    change = oldAmount + change;
-                } else if (mode == ChangeMode.REMOVE) {
-                    change = oldAmount - change;
-                }
-                if (change < 0) change = 0;
-                damageable.setAbsorptionAmount(change);
+                double change = switch (mode) {
+                    case SET -> value;
+                    case ADD -> oldAmount + value;
+                    case REMOVE -> oldAmount - value;
+                    default -> 0;
+                };
+                damageable.setAbsorptionAmount(Math.max(0, change));
             }
         }
     }
