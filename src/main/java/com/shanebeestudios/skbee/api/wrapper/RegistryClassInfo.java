@@ -2,8 +2,10 @@ package com.shanebeestudios.skbee.api.wrapper;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.util.StringUtils;
+import ch.njol.yggdrasil.Fields;
 import com.google.common.base.Preconditions;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Keyed;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparators;
 import org.skriptlang.skript.lang.comparator.Relation;
 
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -84,6 +87,45 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
             @Override
             public @NotNull String toVariableNameString(T o) {
                 return toString(o, 0);
+            }
+        });
+        this.serializer(new Serializer<>() {
+            @Override
+            public @NotNull Fields serialize(T object) {
+                Fields fields = new Fields();
+                fields.putObject("key", object.getKey().toString());
+                return fields;
+            }
+
+            @Override
+            public void deserialize(T o, @NotNull Fields f) {
+            }
+
+            @Override
+            protected T deserialize(@NotNull Fields fields) throws StreamCorruptedException {
+                String key = fields.getObject("key", String.class);
+                if (key == null) {
+                    throw new StreamCorruptedException("Key is null");
+                }
+                NamespacedKey namespacedKey = NamespacedKey.fromString(key);
+                if (namespacedKey == null) {
+                    throw new StreamCorruptedException("NamespacedKey is null for key: " + key);
+                }
+                T registryObject = RegistryClassInfo.this.registry.get(namespacedKey);
+                if (registryObject == null) {
+                    throw new StreamCorruptedException("RegistryObject is null for key: " + key);
+                }
+                return registryObject;
+            }
+
+            @Override
+            public boolean mustSyncDeserialization() {
+                return true;
+            }
+
+            @Override
+            protected boolean canBeInstantiated() {
+                return false;
             }
         });
     }
