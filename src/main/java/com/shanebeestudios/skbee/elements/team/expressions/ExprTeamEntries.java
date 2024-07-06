@@ -18,26 +18,29 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Team - Entries")
 @Description({"Get the entries of a team. Entries can be entities/players or strings.",
-        "\nWhen returning as strings this will return the list how Minecraft stores it, player names and entity UUIDs.",
-        "\nNOTE: adding/removing to/from team entries is now deprecated. Please directly add/remove to/from teams.",
-        "See Team type docs for more info!"})
+    "\nNOTE: When returning as entities, if the entity isn't currently loaded in a world it wont return.",
+    "OfflinePlayers will also not return. Use strings intead.",
+    "\nNOTE: When returning as strings this will return the list how Minecraft stores it, player names and entity UUIDs.",
+    "\nNOTE: adding/removing to/from team entries is now deprecated. Please directly add/remove to/from the team itself.",
+    "See Team type docs for more info!"})
 @Examples({"set {_team} to team named \"my-team\"",
-        "clear team entries of {_team}",
-        "kill team entries of team named \"mob-team\"",
-        "set {_entities::*} to team entries of team named \"mobs\"",
-        "set {_strings::*} to team entries as strings of team named \"mobs\""})
+    "clear team entries of {_team}",
+    "kill team entries of team named \"mob-team\"",
+    "set {_entities::*} to team entries of team named \"mobs\"",
+    "set {_strings::*} to team entries as strings of team named \"mobs\""})
 @Since("1.16.0, 2.10.0 (strings)")
 public class ExprTeamEntries extends SimpleExpression<Object> {
 
     static {
         Skript.registerExpression(ExprTeamEntries.class, Object.class, ExpressionType.PROPERTY,
-                "team entries [string:as strings] of %team%",
-                "%team%'[s] team entries [string:as strings]");
+            "[all] team entries [string:as strings] of %team%",
+            "[all] team entries of %team% [string:as strings]",
+            "%team%'[s] team entries [string:as strings]");
     }
 
     private Expression<Team> team;
@@ -68,12 +71,12 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
     @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
-    public Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         switch (mode) {
             case ADD, REMOVE -> {
                 // TODO Deprecated 2.11.0
                 Skript.warning("You can now add/remove entities/strings to/from teams directly without this expression. " +
-                        "ex: 'add player to team named \"a-team\"'");
+                    "ex: 'add player to team named \"a-team\"'");
                 return CollectionUtils.array(OfflinePlayer[].class, Player[].class, Entity[].class, String[].class);
             }
             case DELETE -> {
@@ -125,7 +128,7 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String string = this.strings ? " as strings " : " ";
         return "team entries" + string + "of " + this.team.toString(e, d);
     }
