@@ -63,8 +63,7 @@ dependencies {
 }
 
 tasks.withType(JavaCompile).configureEach {
-    sourceCompatibility = oldestJava
-    targetCompatibility = oldestJava
+    options.compilerArgs += ['-source', '' + oldestJava, '-target', '' + oldestJava]
 }
 
 build {
