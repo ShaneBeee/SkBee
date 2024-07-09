@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Advancement - Load")
 @Description({"Load an advancement represented by the specified string into the server.",
         "The advancement format is governed by Minecraft and has no specified layout.",
-        "It is currently a JSON object, as described by the Minecraft Wiki: http://minecraft.gamepedia.com/Advancements.",
+        "It is currently a JSON object, as described by [**McWiki**](https://minecraft.wiki/w/Advancement).",
         "Loaded advancements will be stored and persisted across server restarts and reloads.",
         "NOTE: Bukkit has marked this as 'Unsafe', so please use at your own risk.",
         "Watch console for errors when loading an advancement."})
