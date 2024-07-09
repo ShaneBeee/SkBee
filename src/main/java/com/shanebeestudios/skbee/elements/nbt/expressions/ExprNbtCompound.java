@@ -121,27 +121,26 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             } else if (object instanceof Entity entity) {
                 compound = new NBTCustomEntity(entity);
             } else if (object instanceof ItemType itemType) {
+                if (itemType.getMaterial() == Material.AIR) return null;
                 if (this.isFullItem) {
                     compound = NBTItem.convertItemtoNBT(itemType.getRandom());
                 } else {
-                    if (itemType.getMaterial() == Material.AIR) return null;
                     compound = new NBTCustomItemType(itemType, this.isComponents);
                 }
             } else if (object instanceof ItemStack itemStack) {
+                if (itemStack.getType() == Material.AIR) return null;
                 if (this.isFullItem) {
                     return NBTItem.convertItemtoNBT(itemStack);
                 } else {
-                    if (itemStack.getType() == Material.AIR) return null;
                     compound = new NBTCustomItemStack(itemStack, this.isComponents);
                 }
             } else if (object instanceof Slot slot) {
                 ItemStack stack = slot.getItem();
-                if (stack == null) return null;
+                if (stack == null || stack.getType() == Material.AIR) return null;
 
                 if (this.isFullItem) {
                     compound = NBTItem.convertItemtoNBT(stack);
                 } else {
-                    if (stack.getType() == Material.AIR) return null;
                     compound = new NBTCustomSlot(slot, this.isComponents);
                 }
             } else if (object instanceof String nbtString) {
