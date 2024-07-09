@@ -152,7 +152,9 @@ public class ComponentWrapper {
     public static ComponentWrapper fromTranslate(String translate, Object... objects) {
         List<Component> comps = new ArrayList<>();
         for (Object object : objects) {
-            if (object instanceof String string) {
+            if (object instanceof ComponentWrapper component) {
+                comps.add(component.component);
+            } else if (object instanceof String string) {
                 comps.add(Component.text(string));
             } else if (object instanceof Entity entity) {
                 comps.add(entity.name());
