@@ -14,18 +14,18 @@ import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.bukkit.util.BlockVector;
-import org.jetbrains.annotations.Nullable;
 
 @Name("Structure - Fill")
 @Description({"Fill a structure with blocks. Requires MC 1.17.1+"})
-@Examples({"fill structure {_s} between {loc1} and {loc2}",
-        "fill structure {_s} between location at player and location(10,10,10, world \"world\")"})
+@Examples({"set {_s} to structure with id \"my_structure\"",
+    "fill structure {_s} between {loc1} and {loc2}",
+    "fill structure {_s} between location at player and location(10,10,10, world \"world\")"})
 @Since("1.12.0")
 public class EffStructureFill extends Effect {
 
     static {
         Skript.registerEffect(EffStructureFill.class,
-                "fill [structure] %structure% (between|within) %location% and %location%");
+            "fill [structure] %structure% (between|within) %location% and %location%");
     }
 
     private Expression<StructureWrapper> structure;
@@ -74,9 +74,9 @@ public class EffStructureFill extends Effect {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public String toString(Event e, boolean d) {
         return String.format("fill structure %s between %s and %s",
-                structure.toString(e, d), loc1.toString(e, d), loc2.toString(e, d));
+            structure.toString(e, d), loc1.toString(e, d), loc2.toString(e, d));
     }
 
 }

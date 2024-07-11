@@ -13,22 +13,21 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 
 @Name("Structure - Place")
 @Description({"Place an already created structure into the world.",
-        "\nPalette = The palette index of the structure to use, starting at 0, or -1 to pick a random palette.",
-        "A palette represents a variation of a structure.",
-        "Most structures, like the ones generated with structure blocks, only have a single variant.",
-        "Requires MC 1.17.1+"})
-@Examples({"set {_s} to structure named \"minecraft:village/taiga/houses/taiga_cartographer_house_1\"",
-        "place structure {_s} above target block of player"})
+    "Palette = The palette index of the structure to use, starting at 0, or -1 to pick a random palette.",
+    "A palette represents a variation of a structure.",
+    "Most structures, like the ones generated with structure blocks, only have a single variant.",
+    "Requires MC 1.17.1+"})
+@Examples({"set {_s} to structure with id \"minecraft:village/taiga/houses/taiga_cartographer_house_1\"",
+    "place structure {_s} above target block of player"})
 @Since("1.12.0")
 public class EffStructurePlace extends Effect {
 
     static {
         Skript.registerEffect(EffStructurePlace.class,
-                "place [structure] %structure% [using palette %-number%] %directions% %locations%");
+            "place [structure] %structure% [using palette %-number%] %directions% %locations%");
     }
 
     private Expression<StructureWrapper> structure;
@@ -63,10 +62,10 @@ public class EffStructurePlace extends Effect {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public String toString(@Nullable Event e, boolean d) {
-        String palette = this.palette != null ? ("using palette " + this.palette.toString(e,d)): "";
+    public String toString(Event e, boolean d) {
+        String palette = this.palette != null ? ("using palette " + this.palette.toString(e, d)) : "";
         return "paste " + structure.toString(e, d) + " " + palette +
-                locations.toString(e, d);
+            locations.toString(e, d);
     }
 
 }

@@ -21,14 +21,16 @@ import java.util.List;
 
 @Name("Structure - Object")
 @Description({"Create a new, empty structure or load a structure from file. ",
-        "If the file you have specified is not available, it will be created upon saving.",
-        "Structures without a namespace (ex: \"tree\") will load from/save to \"(main world folder)/generated/skbee/structures/\".",
-        "Structures with a namespace (ex:\"myname:house\") will load from/save to \"(main world folder)/generated/myname/structures/\".",
-        "To create folders, simply add a slash in your name, ex: \"buildings/house\".",
-        "Requires MC 1.17.1+"})
-@Examples({"set {_s} to structure named \"my-server:houses/house1\"",
-        "set {_s} to structure named \"my-house\"",
-        "set {_s::*} to structures named \"house1\" and \"house2\""})
+    "If the file you have specified is not available, it will be created upon saving.",
+    "Structures without a namespace (ex: \"tree\") will default to the \"minecraft\" namespace and load from/save to \"(main world folder)/generated/minecraft/structures/\".",
+    "Structures with a namespace (ex:\"myname:house\") will load from/save to \"(main world folder)/generated/myname/structures/\".",
+    "To create folders, simply add a slash in your name, ex: \"buildings/house\".",
+    "Changes made to structures will not automatically be saved to file, you will need to use the save structure effect.",
+    "Requires MC 1.17.1+"})
+@Examples({"set {_s} to structure with id \"my-server:houses/house1\"",
+    "set {_s} to structure with id \"my-house\"",
+    "set {_s} to structure with id \"minecraft:village/taiga/houses/taiga_cartographer_house_1\"",
+    "set {_s::*} to structures with id \"house1\" and \"house2\""})
 @Since("1.12.0")
 public class ExprStructureObject extends SimpleExpression<StructureWrapper> {
 
@@ -37,7 +39,7 @@ public class ExprStructureObject extends SimpleExpression<StructureWrapper> {
     static {
         STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
         Skript.registerExpression(ExprStructureObject.class, StructureWrapper.class, ExpressionType.SIMPLE,
-                "structure[s] (named|with id|with key) %strings%");
+            "structure[s] (named|with id|with key) %strings%");
     }
 
     @SuppressWarnings("null")
@@ -76,9 +78,9 @@ public class ExprStructureObject extends SimpleExpression<StructureWrapper> {
         return StructureWrapper.class;
     }
 
-    @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
+    @SuppressWarnings({"NullableProblems"})
     @Override
-    public String toString(@Nullable Event e, boolean d) {
+    public String toString(Event e, boolean d) {
         return "structure[s] with id " + fileString.toString(e, d);
     }
 
