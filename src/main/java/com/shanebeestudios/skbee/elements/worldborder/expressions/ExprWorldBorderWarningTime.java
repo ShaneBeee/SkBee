@@ -26,7 +26,7 @@ public class ExprWorldBorderWarningTime extends SimplePropertyExpression<WorldBo
 
     @Override
     public @Nullable Timespan convert(WorldBorder worldBorder) {
-        return Timespan.fromTicks_i(worldBorder.getWarningTime());
+        return Timespan.fromTicks(worldBorder.getWarningTime());
     }
 
     @SuppressWarnings("NullableProblems")
@@ -42,7 +42,7 @@ public class ExprWorldBorderWarningTime extends SimplePropertyExpression<WorldBo
         Timespan timespan = (Timespan) delta[0];
         if (timespan == null) return;
 
-        int seconds = (int)(timespan.getTicks_i() / 20);
+        int seconds = (int)(timespan.getTicks() / 20);
         for (WorldBorder border : getExpr().getArray(event)) {
             border.setWarningTime(seconds);
         }

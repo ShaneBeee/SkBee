@@ -146,7 +146,7 @@ public class SecRecipeCooking extends Section {
         ItemStack result = this.result.getSingle(event);
         // #getConvertedExpression() is used to prevent the famous 'UnparsedLiterals must be converted before use'
         RecipeChoice input = this.input.getSingle(event);
-        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : this.recipeType.getCookTime();
+        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks() : this.recipeType.getCookTime();
         float experience = this.experience != null ? this.experience.getSingle(event).floatValue() : 0;
 
         if (namespacedKey == null) {

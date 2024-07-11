@@ -85,12 +85,12 @@ public class SecRunTaskLater extends Section {
     protected @Nullable TriggerItem walk(Event event) {
         Object localVars = Variables.copyLocalVariables(event);
         Timespan timespan = this.timespan.getSingle(event);
-        long delay = timespan != null ? timespan.getTicks_i() : 0;
+        long delay = timespan != null ? timespan.getTicks() : 0;
 
         long repeat = 0;
         if (this.repeating != null) {
             Timespan repeatingTimespan = this.repeating.getSingle(event);
-            if (repeatingTimespan != null) repeat = repeatingTimespan.getTicks_i();
+            if (repeatingTimespan != null) repeat = repeatingTimespan.getTicks();
         }
 
         BukkitScheduler scheduler = Bukkit.getScheduler();

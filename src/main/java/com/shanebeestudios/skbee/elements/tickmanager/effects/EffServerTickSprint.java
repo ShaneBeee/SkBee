@@ -50,7 +50,7 @@ public class EffServerTickSprint extends Effect {
         } else {
             Timespan timespan = this.ticks.getSingle(event);
             if (timespan != null) {
-                tickManager.requestGameToSprint((int) timespan.getTicks_i());
+                tickManager.requestGameToSprint((int) timespan.getTicks());
             }
         }
     }

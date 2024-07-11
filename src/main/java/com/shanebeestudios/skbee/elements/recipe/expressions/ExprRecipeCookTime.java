@@ -54,7 +54,7 @@ public class ExprRecipeCookTime extends SimpleExpression<Timespan> {
 
             Recipe recipe = Bukkit.getRecipe(namespacedKey);
             if (recipe instanceof CookingRecipe<?> cookingRecipe)
-                cookTimes.add(Timespan.fromTicks_i(cookingRecipe.getCookingTime()));
+                cookTimes.add(Timespan.fromTicks(cookingRecipe.getCookingTime()));
 
         }
         return cookTimes.toArray(new Timespan[0]);

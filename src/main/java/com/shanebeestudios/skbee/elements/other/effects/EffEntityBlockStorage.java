@@ -62,7 +62,7 @@ public class EffEntityBlockStorage extends Effect {
     protected void execute(Event event) {
         if (this.release) {
             if (this.blocks == null) return;
-            long ticks = this.timespan != null ? this.timespan.getSingle(event).getTicks_i() : 0;
+            long ticks = this.timespan != null ? this.timespan.getSingle(event).getTicks() : 0;
             for (Block block : this.blocks.getArray(event)) {
                 BlockState state = block.getState();
                 if (state instanceof EntityBlockStorage<?>) {

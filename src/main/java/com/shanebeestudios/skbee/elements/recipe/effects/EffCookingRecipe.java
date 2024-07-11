@@ -117,7 +117,7 @@ public class EffCookingRecipe extends Effect {
         }
 
         float xp = experience != null ? experience.getSingle(event).floatValue() : 0;
-        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks_i() : getDefaultCookTime(recipeType);
+        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks() : getDefaultCookTime(recipeType);
 
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);

@@ -57,7 +57,7 @@ public class EffWorldBorderExpand extends Effect {
         long speed = 0;
         if (this.timeSpan != null) {
             Timespan timeSpan = this.timeSpan.getSingle(event);
-            if (timeSpan != null) speed = timeSpan.getTicks_i() / 20;
+            if (timeSpan != null) speed = timeSpan.getTicks() / 20;
         }
 
         int size = sizeNum.intValue();

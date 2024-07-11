@@ -113,7 +113,7 @@ public class RecipeUtil {
         if (HAS_CATEGORY) {
             log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
         }
-        log(" - &7CookTime: &b%s", Timespan.fromTicks_i(recipe.getCookingTime()));
+        log(" - &7CookTime: &b%s", Timespan.fromTicks(recipe.getCookingTime()));
         log(" - &7Experience: &b%s", recipe.getExperience());
         log(" - &7Ingredients: %s", getFancy(recipe.getInputChoice()));
     }

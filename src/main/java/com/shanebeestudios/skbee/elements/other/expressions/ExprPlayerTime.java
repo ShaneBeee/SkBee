@@ -56,7 +56,7 @@ public class ExprPlayerTime extends SimplePropertyExpression<Player, Object> {
     @Override
     public @Nullable Object convert(Player player) {
         if (this.relative) {
-            return Timespan.fromTicks_i(player.getPlayerTimeOffset());
+            return Timespan.fromTicks(player.getPlayerTimeOffset());
         }
         return new Time((int) player.getPlayerTime());
     }
@@ -82,7 +82,7 @@ public class ExprPlayerTime extends SimplePropertyExpression<Player, Object> {
         } else if (delta != null) {
             int ticks = 0;
             if (delta[0] instanceof Timespan timespan) {
-                ticks = (int) timespan.getTicks_i();
+                ticks = (int) timespan.getTicks();
             } else if (delta[0] instanceof Time time) {
                 ticks = time.getTicks();
             }

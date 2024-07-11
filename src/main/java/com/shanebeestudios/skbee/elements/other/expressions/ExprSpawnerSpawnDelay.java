@@ -53,7 +53,7 @@ public class ExprSpawnerSpawnDelay extends SimplePropertyExpression<Block, Times
                 case TRUE -> spawner.getMaxSpawnDelay();
                 default -> spawner.getDelay();
             };
-            return Timespan.fromTicks_i(delay);
+            return Timespan.fromTicks(delay);
         }
         return null;
     }
@@ -71,7 +71,7 @@ public class ExprSpawnerSpawnDelay extends SimplePropertyExpression<Block, Times
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         int changeValue = 0;
         if (delta != null) {
-            changeValue += delta[0] instanceof Timespan timespan ? timespan.getTicks_i() : ((Integer) delta[0]);
+            changeValue += delta[0] instanceof Timespan timespan ? timespan.getTicks() : ((Integer) delta[0]);
         } else {
             changeValue = switch (action) {
                 case TRUE -> DEFAULT_MAX_TICKS;

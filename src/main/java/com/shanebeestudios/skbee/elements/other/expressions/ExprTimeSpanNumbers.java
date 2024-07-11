@@ -38,7 +38,7 @@ public class ExprTimeSpanNumbers extends SimplePropertyExpression<Timespan, Numb
 
     @Override
     public @Nullable Number convert(Timespan timespan) {
-        long ticks = timespan.getTicks_i();
+        long ticks = timespan.getTicks();
         return switch (pattern) {
             case 1 -> (ticks / 20);
             case 2 -> (ticks / 20 / 60);

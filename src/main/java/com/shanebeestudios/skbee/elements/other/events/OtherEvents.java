@@ -289,7 +289,7 @@ public class OtherEvents extends SimpleEvent {
                 if (event.getEntity() instanceof LivingEntity livingEntity) {
                     ticks = livingEntity.getRemainingAir();
                 }
-                return Timespan.fromTicks_i(ticks);
+                return Timespan.fromTicks(ticks);
             }
         }, EventValues.TIME_PAST);
 
@@ -303,7 +303,7 @@ public class OtherEvents extends SimpleEvent {
         EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new Getter<>() {
             @Override
             public Timespan get(EntityAirChangeEvent event) {
-                return Timespan.fromTicks_i(event.getAmount());
+                return Timespan.fromTicks(event.getAmount());
             }
         }, EventValues.TIME_NOW);
 

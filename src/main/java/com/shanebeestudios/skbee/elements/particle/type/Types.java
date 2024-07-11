@@ -157,7 +157,7 @@ public class Types {
                 // Apparently original location makes no difference
                 Location origin = new Location(null, 0, 0, 0);
                 Location destination = (Location) params[0][0];
-                int arrivalTime = (int) ((Timespan) params[1][0]).getTicks_i();
+                int arrivalTime = (int) ((Timespan) params[1][0]).getTicks();
                 Vibration vibration = new Vibration(origin, new Vibration.Destination.BlockDestination(destination), arrivalTime);
                 return new Vibration[]{vibration};
             }
