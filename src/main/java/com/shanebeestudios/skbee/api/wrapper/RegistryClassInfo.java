@@ -2,8 +2,10 @@ package com.shanebeestudios.skbee.api.wrapper;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.util.StringUtils;
+import ch.njol.yggdrasil.Fields;
 import com.google.common.base.Preconditions;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Keyed;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparators;
 import org.skriptlang.skript.lang.comparator.Relation;
 
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -35,7 +38,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
      * @return ClassInfo from Registry
      */
     public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<T> registry, @NotNull Class<T> registryClass, @NotNull String codename) {
-        return create(registry, registryClass, codename, null, null);
+        return create(registry, registryClass, true, codename, null, null);
     }
 
     /**
@@ -48,13 +51,41 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
      * @param suffix        Optional suffix to append to items in registry
      * @return ClassInfo from Registry
      */
-    @SuppressWarnings("ConstantValue")
     public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<T> registry, @NotNull Class<T> registryClass, @NotNull String codename, @Nullable String prefix, @Nullable String suffix) {
+        return create(registry, registryClass, true, codename, prefix, suffix);
+    }
+
+    /**
+     * Create a Registry ClassInfo
+     *
+     * @param registry      Registry to wrap
+     * @param registryClass Class of registry
+     * @param usage         Whether to create usage
+     * @param codename      Codename for ClassInfo
+     * @return ClassInfo from Registry
+     */
+    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<T> registry, @NotNull Class<T> registryClass, boolean usage, @NotNull String codename) {
+        return create(registry, registryClass, usage, codename, null, null);
+    }
+
+    /**
+     * Create a Registry ClassInfo with optional prefix and suffix
+     *
+     * @param registry      Registry to wrap
+     * @param registryClass Class of registry
+     * @param usage         Whether to create usage
+     * @param codename      Codename for ClassInfo
+     * @param prefix        Optional prefix to prepend to items in registry
+     * @param suffix        Optional suffix to append to items in registry
+     * @return ClassInfo from Registry
+     */
+    @SuppressWarnings("ConstantValue")
+    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<T> registry, @NotNull Class<T> registryClass, boolean usage, @NotNull String codename, @Nullable String prefix, @Nullable String suffix) {
         // Safety precautions
         Preconditions.checkArgument(registry != null, "Registry cannot be null");
         Preconditions.checkArgument(registryClass != null, "RegistryClass cannot be null");
         Preconditions.checkArgument(!codename.isEmpty(), "Codename cannot be empty");
-        return new RegistryClassInfo<>(registry, registryClass, codename, prefix, suffix);
+        return new RegistryClassInfo<>(registry, registryClass, usage, codename, prefix, suffix);
     }
 
 
@@ -62,13 +93,13 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
     @Nullable
     private final String prefix, suffix;
 
-    private RegistryClassInfo(Registry<T> registry, Class<T> registryClass, String codename, @Nullable String prefix, @Nullable String suffix) {
+    private RegistryClassInfo(Registry<T> registry, Class<T> registryClass, boolean usage, String codename, @Nullable String prefix, @Nullable String suffix) {
         super(registryClass, codename);
         this.registry = registry;
         this.prefix = prefix;
         this.suffix = suffix;
         Comparators.registerComparator(registryClass, registryClass, (o1, o2) -> Relation.get(o1.equals(o2)));
-        this.usage(getNames());
+        if (usage) this.usage(getNames());
         this.parser(new Parser<>() {
             @SuppressWarnings("NullableProblems")
             @Override
@@ -84,6 +115,45 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
             @Override
             public @NotNull String toVariableNameString(T o) {
                 return toString(o, 0);
+            }
+        });
+        this.serializer(new Serializer<>() {
+            @Override
+            public @NotNull Fields serialize(T object) {
+                Fields fields = new Fields();
+                fields.putObject("key", object.getKey().toString());
+                return fields;
+            }
+
+            @Override
+            public void deserialize(T o, @NotNull Fields f) {
+            }
+
+            @Override
+            protected T deserialize(@NotNull Fields fields) throws StreamCorruptedException {
+                String key = fields.getObject("key", String.class);
+                if (key == null) {
+                    throw new StreamCorruptedException("Key is null");
+                }
+                NamespacedKey namespacedKey = NamespacedKey.fromString(key);
+                if (namespacedKey == null) {
+                    throw new StreamCorruptedException("NamespacedKey is null for key: " + key);
+                }
+                T registryObject = RegistryClassInfo.this.registry.get(namespacedKey);
+                if (registryObject == null) {
+                    throw new StreamCorruptedException("RegistryObject is null for key: " + key);
+                }
+                return registryObject;
+            }
+
+            @Override
+            public boolean mustSyncDeserialization() {
+                return true;
+            }
+
+            @Override
+            protected boolean canBeInstantiated() {
+                return false;
             }
         });
     }

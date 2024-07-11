@@ -21,24 +21,25 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("BossBar - Create")
 @Description({"Create your own custom BossBar.",
-        "\nNOTE: Progress is a number between 0-100.",
-        "\nNOTE: This just creates a new custom bossbar. It will by default not be visible to anyone",
-        "until you actually add players to it. See examples!!!"})
+    "**NOTE**: Progress is a number between 0-100.",
+    "**NOTE**: This just creates a new custom bossbar. It will by default not be visible to anyone",
+    "until you actually add players to it. See examples!!!",
+    "**NOTE**: The ID is optional. If excluded, the BossBar will not save to the server."})
 @Examples({"set {_bar} to boss bar with id \"le-bar\" with title \"My BossBar\"",
-        "set {_bar} to boss bar with id \"le-bar\" with title \"Le Title\" with color pink with progress 50",
-        "add all players to {_bar}"})
+    "set {_bar} to boss bar with id \"le-bar\" with title \"Le Title\" with color pink with progress 50",
+    "add all players to {_bar}"})
 @Since("2.14.1")
 public class ExprBossBarCreate extends SimpleExpression<BossBar> {
 
     static {
         Skript.registerExpression(ExprBossBarCreate.class, BossBar.class, ExpressionType.COMBINED,
-                "[new] boss[ ]bar (named|with id) %string% with title %string% [with (color|colour) %-color%] " +
-                        "[with style %-bossbarstyle%] [with progress %-number%]");
+            "[new] boss[ ]bar [(named|with id) %-string%] with title %string% [with (color|colour) %-color%] " +
+                "[with style %-bossbarstyle%] [with progress %-number%]");
     }
 
     private Expression<String> key;
@@ -61,49 +62,58 @@ public class ExprBossBarCreate extends SimpleExpression<BossBar> {
     @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable BossBar[] get(Event event) {
-        String name = this.key.getSingle(event);
-        if (name == null) return null;
-        NamespacedKey key = Util.getNamespacedKey(name, true);
-        if (key != null) {
-            KeyedBossBar bossBar = Bukkit.getBossBar(key);
-            if (bossBar == null) {
-                String title = null;
-                if (this.title != null && this.title.getSingle(event) != null) {
-                    title = this.title.getSingle(event);
-                }
 
-                BarColor barColor = null;
-                if (this.color != null) {
-                    SkriptColor skriptColor = this.color.getSingle(event);
-                    if (skriptColor != null) {
-                        barColor = BossBarUtils.getBossBarColor(skriptColor);
-                    }
-                }
-                if (barColor == null) {
-                    barColor = BarColor.PURPLE;
-                }
+        NamespacedKey key = null;
+        if (this.key != null) {
+            String keyString = this.key.getSingle(event);
+            if (keyString != null) key = Util.getNamespacedKey(keyString, false);
 
-                BarStyle barStyle = null;
-                if (this.barStyle != null) {
-                    barStyle = this.barStyle.getSingle(event);
-                }
-                if (barStyle == null) {
-                    barStyle = BarStyle.SEGMENTED_20;
-                }
-
-                float progress = 1;
-                if (this.progress != null) {
-                    Number proNumber = this.progress.getSingle(event);
-                    if (proNumber != null) {
-                        progress = MathUtil.clamp(proNumber.floatValue() / 100, 0, 1);
-                    }
-                }
-                bossBar = Bukkit.createBossBar(key, title, barColor, barStyle);
-                bossBar.setProgress(progress);
+            if (key != null) {
+                KeyedBossBar bossBar = Bukkit.getBossBar(key);
+                if (bossBar != null) return new BossBar[]{bossBar};
             }
-            return new BossBar[]{bossBar};
         }
-        return null;
+
+        String title = null;
+        if (this.title != null && this.title.getSingle(event) != null) {
+            title = this.title.getSingle(event);
+        }
+
+        BarColor barColor = null;
+        if (this.color != null) {
+            SkriptColor skriptColor = this.color.getSingle(event);
+            if (skriptColor != null) {
+                barColor = BossBarUtils.getBossBarColor(skriptColor);
+            }
+        }
+        if (barColor == null) {
+            barColor = BarColor.PURPLE;
+        }
+
+        BarStyle barStyle = null;
+        if (this.barStyle != null) {
+            barStyle = this.barStyle.getSingle(event);
+        }
+        if (barStyle == null) {
+            barStyle = BarStyle.SEGMENTED_20;
+        }
+
+        float progress = 1;
+        if (this.progress != null) {
+            Number proNumber = this.progress.getSingle(event);
+            if (proNumber != null) {
+                progress = MathUtil.clamp(proNumber.floatValue() / 100, 0, 1);
+            }
+        }
+        BossBar bossBar;
+        if (key != null) {
+            bossBar = Bukkit.createBossBar(key, title, barColor, barStyle);
+        } else {
+            bossBar = Bukkit.createBossBar(title, barColor, barStyle);
+        }
+        bossBar.setProgress(progress);
+
+        return new BossBar[]{bossBar};
     }
 
     @Override
@@ -117,8 +127,8 @@ public class ExprBossBarCreate extends SimpleExpression<BossBar> {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
-        String name = "boss bar with id " + this.key.toString(e, d);
+    public @NotNull String toString(Event e, boolean d) {
+        String bar = "boss bar" + (this.key != null ? " " + this.key.toString(e, d) : "");
         String title = this.title != null ? " named " + this.title.toString(e, d) : "";
         String color = "";
         if (this.color != null) {
@@ -126,7 +136,7 @@ public class ExprBossBarCreate extends SimpleExpression<BossBar> {
         }
         String style = this.barStyle != null ? " with style " + this.barStyle.toString(e, d) : "";
         String progress = this.progress != null ? " with progress " + this.progress.toString(e, d) : "";
-        return name + title + color + style + progress;
+        return bar + title + color + style + progress;
     }
 
 }
