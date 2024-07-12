@@ -14,12 +14,12 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Player Health Scale")
 @Description({"Represents the scaled health of the player sent to the client.",
-        "\nNOTE: This is not persistent, does not last restarts/relogs.",
-        "\nNOTE: displayedHealth = (health * 2) / (max health * 2) * scale."})
+    "\nNOTE: This is not persistent, does not last restarts/relogs.",
+    "\nNOTE: displayedHealth = (health * 2) / (max health * 2) * scale."})
 @Examples({"set health scale of all players to 10",
-        "add 10 to health scale of player",
-        "reset health scale of player",
-        "set health scale of (\"BrettPlaysMC\" parsed as offline player) to 0.01"})
+    "add 10 to health scale of player",
+    "reset health scale of player",
+    "set health scale of (\"BrettPlaysMC\" parsed as offline player) to 0.01"})
 @Since("2.7.2")
 public class ExprHealthScale extends SimplePropertyExpression<Player, Number> {
 
@@ -34,7 +34,7 @@ public class ExprHealthScale extends SimplePropertyExpression<Player, Number> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.RESET) {
             return CollectionUtils.array(Number.class);
         }
@@ -59,9 +59,8 @@ public class ExprHealthScale extends SimplePropertyExpression<Player, Number> {
                     scaled = false;
                 }
             }
-            player.setHealthScaled(scaled);
             player.setHealthScale(oldScale);
-
+            player.setHealthScaled(scaled);
         }
     }
 
