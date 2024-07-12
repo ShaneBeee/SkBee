@@ -22,33 +22,32 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("NullableProblems")
 @Name("BossBar - Properties")
 @Description({"Represents the properties of a BossBar that can be changed.",
-        "Progress of a bar is a number from 0-100."})
-@Examples({"add all players to bar players of {_bar}",
-        "remove player from bar players of {_bar}",
-        "set bar color of {_bar} to blue",
-        "set bar style of {_bar} to segmented 20",
-        "set bar title of {_bar} to \"Le-Title\"",
-        "reset bar title of {_bar}",
-        "set bar progress of {_bar} to 100",
-        "set bar flag darken sky of {_bar} to true"})
+    "Progress of a bar is a number from 0-100."})
+@Examples({"set {_players::*} to bar players of {_bar}",
+    "set bar color of {_bar} to blue",
+    "set bar style of {_bar} to segmented 20",
+    "set bar title of {_bar} to \"Le-Title\"",
+    "reset bar title of {_bar}",
+    "set bar progress of {_bar} to 100",
+    "set bar flag darken sky of {_bar} to true"})
 @Since("2.14.1")
 public class ExprBossBarProperties extends SimpleExpression<Object> {
 
     static {
         Skript.registerExpression(ExprBossBarProperties.class, Object.class, ExpressionType.COMBINED,
-                "[boss[ ]]bar players of %bossbar%",
-                "[boss[ ]]bar (color|colour) of %bossbar%",
-                "[boss[ ]]bar style of %bossbar%",
-                "[boss[ ]]bar title of %bossbar%",
-                "[boss[ ]]bar progress of %bossbar%",
-                "[boss[ ]]bar flag %bossbarflag% of %bossbar%",
-                "[boss[ ]]bar visibility of %bossbar%");
+            "[boss[ ]]bar players of %bossbar%",
+            "[boss[ ]]bar (color|colour) of %bossbar%",
+            "[boss[ ]]bar style of %bossbar%",
+            "[boss[ ]]bar title of %bossbar%",
+            "[boss[ ]]bar progress of %bossbar%",
+            "[boss[ ]]bar flag %bossbarflag% of %bossbar%",
+            "[boss[ ]]bar visibility of %bossbar%");
     }
 
     private static final int PLAYERS = 0;
@@ -68,19 +67,15 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
         pattern = matchedPattern;
         bossBar = (Expression<BossBar>) exprs[pattern == 5 ? 1 : 0];
         barFlag = pattern == 5 ? (Expression<BarFlag>) exprs[0] : null;
-        if (pattern == 0) {
-            Skript.warning("'bossbar players of %bossbar%' expression will be removed in the future. " +
-                    "You can directly add players to BossBars using 'add player to %bossbar%'");
-        }
         return true;
     }
 
     @Override
-    protected @Nullable Object[] get(Event event) {
+    protected Object @Nullable [] get(Event event) {
         BossBar bossBar = this.bossBar.getSingle(event);
         if (bossBar == null) return null;
 
-        switch (pattern) {
+        switch (this.pattern) {
             case PLAYERS -> {
                 return bossBar.getPlayers().toArray(new Player[0]);
             }
@@ -110,26 +105,26 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (pattern == PLAYERS) {
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
+        if (this.pattern == PLAYERS) {
             if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.SET || mode == ChangeMode.RESET) {
                 return CollectionUtils.array(Player[].class);
             }
-        } else if (pattern == BAR_COLOR && mode == ChangeMode.SET) {
+        } else if (this.pattern == BAR_COLOR && mode == ChangeMode.SET) {
             return CollectionUtils.array(Color.class, BarColor.class);
-        } else if (pattern == BAR_STYLE && mode == ChangeMode.SET) {
+        } else if (this.pattern == BAR_STYLE && mode == ChangeMode.SET) {
             return CollectionUtils.array(BarStyle.class);
-        } else if (pattern == BAR_TITLE && (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.DELETE)) {
+        } else if (this.pattern == BAR_TITLE && (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.DELETE)) {
             return CollectionUtils.array(String.class);
-        } else if (pattern == BAR_PROGRESS) {
+        } else if (this.pattern == BAR_PROGRESS) {
             if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.SET || mode == ChangeMode.RESET) {
                 return CollectionUtils.array(Number.class);
             }
-        } else if (pattern == BAR_FLAG) {
+        } else if (this.pattern == BAR_FLAG) {
             if (mode == ChangeMode.SET || mode == ChangeMode.REMOVE) {
                 return CollectionUtils.array(Boolean.class);
             }
-        } else if (pattern == BAR_VISIBILITY) {
+        } else if (this.pattern == BAR_VISIBILITY) {
             if (mode == ChangeMode.SET) {
                 return CollectionUtils.array(Boolean.class);
             }
@@ -144,7 +139,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
         BossBar bossBar = this.bossBar.getSingle(event);
         if (bossBar == null) return;
 
-        if (pattern == PLAYERS) {
+        if (this.pattern == PLAYERS) {
             if (delta instanceof Player[] players) {
                 if (mode == ChangeMode.SET || mode == ChangeMode.RESET) {
                     bossBar.removeAll();
@@ -160,24 +155,24 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
                 }
 
             }
-        } else if (pattern == BAR_COLOR && mode == ChangeMode.SET) {
+        } else if (this.pattern == BAR_COLOR && mode == ChangeMode.SET) {
             if (object instanceof SkriptColor skriptColor) {
                 BarColor bossBarColor = BossBarUtils.getBossBarColor(skriptColor);
                 bossBar.setColor(bossBarColor);
             } else if (object instanceof BarColor barColor) {
                 bossBar.setColor(barColor);
             }
-        } else if (pattern == BAR_STYLE && mode == ChangeMode.SET) {
+        } else if (this.pattern == BAR_STYLE && mode == ChangeMode.SET) {
             if (object instanceof BarStyle barStyle) {
                 bossBar.setStyle(barStyle);
             }
-        } else if (pattern == BAR_TITLE) {
+        } else if (this.pattern == BAR_TITLE) {
             if (mode == ChangeMode.SET && object instanceof String title) {
                 bossBar.setTitle(title);
             } else if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE) {
                 bossBar.setTitle(null);
             }
-        } else if (pattern == BAR_PROGRESS) {
+        } else if (this.pattern == BAR_PROGRESS) {
             if (mode == ChangeMode.RESET) {
                 bossBar.setProgress(1.0);
             } else if (object instanceof Number number) {
@@ -196,7 +191,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
                 if (Double.isNaN(newProgress)) newProgress = 0;
                 bossBar.setProgress(newProgress);
             }
-        } else if (pattern == BAR_FLAG) {
+        } else if (this.pattern == BAR_FLAG) {
             BarFlag barFlag = this.barFlag.getSingle(event);
             if (barFlag == null) return;
 
@@ -209,32 +204,32 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
             } else if (mode == ChangeMode.REMOVE) {
                 bossBar.removeFlag(barFlag);
             }
-        } else if (pattern == BAR_VISIBILITY && object instanceof Boolean isVisible) {
+        } else if (this.pattern == BAR_VISIBILITY && object instanceof Boolean isVisible) {
             bossBar.setVisible(isVisible);
         }
     }
 
     @Override
     public boolean isSingle() {
-        return pattern != 0;
+        return this.pattern != 0;
     }
 
     @Override
     public @NotNull Class<?> getReturnType() {
-        return switch (pattern) {
+        return switch (this.pattern) {
             case PLAYERS -> Player.class;
             case BAR_COLOR -> SkriptColor.class;
             case BAR_STYLE -> BarStyle.class;
             case BAR_TITLE -> String.class;
             case BAR_PROGRESS -> Number.class;
             case BAR_FLAG, BAR_VISIBILITY -> Boolean.class;
-            default -> throw new IllegalStateException("Unexpected value: " + pattern);
+            default -> throw new IllegalStateException("Unexpected value: " + this.pattern);
         };
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
-        String prop = switch (pattern) {
+    public @NotNull String toString(Event e, boolean d) {
+        String prop = switch (this.pattern) {
             case PLAYERS -> "bar players";
             case BAR_COLOR -> "bar color";
             case BAR_STYLE -> "bar style";
