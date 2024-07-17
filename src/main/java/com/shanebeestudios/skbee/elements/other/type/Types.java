@@ -11,8 +11,10 @@ import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
+import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.MathUtil;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
@@ -22,6 +24,7 @@ import org.bukkit.EntityEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.TreeType;
+import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
@@ -35,6 +38,7 @@ import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.bukkit.event.player.PlayerSpawnChangeEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
@@ -44,6 +48,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
+import java.util.Map;
 
 @SuppressWarnings({"removal", "deprecation"})
 public class Types {
@@ -385,6 +390,40 @@ public class Types {
             .description("Represents the pose of an entity.",
                 "NOTE: These are auto-generated and may differ between server versions.")
             .since("3.5.4"));
+
+        if (Skript.classExists("org.bukkit.inventory.EquipmentSlotGroup")) {
+            // This class is not an enum, and does not have a registry
+            Map<String, EquipmentSlotGroup> equipmentSlotGroups = SkriptUtils.getEquipmentSlotGroups();
+            Classes.registerClass(new ClassInfo<>(EquipmentSlotGroup.class, "equipmentslotgroup")
+                .user("equipment ?slot ?groups?")
+                .name("Equipment Slot Group")
+                .description("Represents different groups of equipment slots.")
+                .usage(StringUtils.join(equipmentSlotGroups.keySet().stream().sorted().toList(), ", "))
+                .parser(new Parser<>() {
+
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public @Nullable EquipmentSlotGroup parse(String string, ParseContext context) {
+                        string = string.replace(" ", "_");
+                        return equipmentSlotGroups.get(string);
+                    }
+
+                    @Override
+                    public @NotNull String toString(EquipmentSlotGroup slot, int flags) {
+                        return slot.toString();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(EquipmentSlotGroup slot) {
+                        return slot.toString();
+                    }
+                }));
+        }
+
+        Classes.registerClass(new EnumWrapper<>(Operation.class).getClassInfo("attributeoperation")
+            .user("attribute ?operations?")
+            .name("Attribute Modifier Operation")
+            .description("Represents the different operations of an attribute modifer."));
     }
 
     // FUNCTIONS

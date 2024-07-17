@@ -9,8 +9,12 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.inventory.EquipmentSlotGroup;
 
 import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -112,6 +116,22 @@ public class SkriptUtils {
                 return o.toString();
             }
         };
+    }
+
+    public static Map<String,EquipmentSlotGroup> getEquipmentSlotGroups() {
+        Map<String,EquipmentSlotGroup> groups = new HashMap<>();
+        for (Field declaredField : EquipmentSlotGroup.class.getDeclaredFields()) {
+            if (EquipmentSlotGroup.class.isAssignableFrom(declaredField.getType())) {
+                try {
+                    EquipmentSlotGroup equipmentSlotGroup = (EquipmentSlotGroup) declaredField.get(null);
+                    String name = declaredField.getName().toLowerCase(Locale.ROOT) + "_slot_group";
+                    groups.put(name, equipmentSlotGroup);
+                } catch (IllegalAccessException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+        }
+        return groups;
     }
 
 }
