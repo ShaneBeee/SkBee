@@ -32,9 +32,9 @@ import java.util.List;
 @Description({"Apply a tool component to any item making it usable tool. Requires Minecraft 1.20.5+",
     "",
     "**Entries/Sections**:",
-    "`default mining speed` = The default mining speed of this tool, used if no rules override it. Defaults to 1.0. [Optional]",
-    "`damage per block` = The amount of durability to remove each time a block is broken with this tool. Must be a non-negative integer.",
-    "`rules:` =  A list of rules for the blocks that this tool has a special behavior with."})
+    "- `default mining speed` = The default mining speed of this tool, used if no rules override it. Defaults to 1.0. [Optional]",
+    "- `damage per block` = The amount of durability to remove each time a block is broken with this tool. Must be a non-negative integer.",
+    "- `rules:` =  A list of rules for the blocks that this tool has a special behavior with."})
 @Examples({"set {_i} to a stick",
     "apply tool component to {_i}:",
     "\tdefault mining speed: 2.3",
