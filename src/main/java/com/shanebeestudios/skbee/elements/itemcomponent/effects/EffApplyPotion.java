@@ -15,7 +15,7 @@ import org.bukkit.event.Event;
 import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Component - Food Component Apply Potion Effect")
+@Name("ItemComponent - Food Component Apply Potion Effect")
 @Description({"Apply a potion effect to a food component. This works in the `effects` section of a food component section.",
     "Probability is an optional value between 0 and 100. This is the chance the player will get this effect when eaten."})
 @Examples({"apply food component to player's tool:",

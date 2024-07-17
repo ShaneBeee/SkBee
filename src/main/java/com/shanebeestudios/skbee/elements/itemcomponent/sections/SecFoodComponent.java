@@ -29,7 +29,7 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import java.util.List;
 
 @SuppressWarnings("DataFlowIssue")
-@Name("Component - Food Component Apply")
+@Name("ItemComponent - Food Component Apply")
 @Description({"Apply a food component to any item making it an edible item. Requires Minecraft 1.20.5+",
     "",
     "**Entries/Sections**:",
