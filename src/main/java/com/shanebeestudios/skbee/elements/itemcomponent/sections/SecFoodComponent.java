@@ -14,6 +14,7 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -119,6 +120,8 @@ public class SecFoodComponent extends Section {
     @SuppressWarnings({"NullableProblems", "IfCanBeSwitch"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
+        Object localVars = Variables.copyLocalVariables(event);
+
         Number nutritionNum = this.nutrition.getSingle(event);
         Number saturationNum = this.saturation.getSingle(event);
         if (nutritionNum == null || saturationNum == null) return super.walk(event, false);
@@ -147,7 +150,11 @@ public class SecFoodComponent extends Section {
             }
 
             if (this.potionEffectSection != null) {
-                TriggerItem.walk(this.potionEffectSection, new FoodComponentApplyEvent(food));
+                FoodComponentApplyEvent foodEvent = new FoodComponentApplyEvent(food);
+                Variables.setLocalVariables(foodEvent, localVars);
+                TriggerItem.walk(this.potionEffectSection, foodEvent);
+                Variables.setLocalVariables(event, Variables.copyLocalVariables(foodEvent));
+                Variables.removeLocals(foodEvent);
             }
 
             itemMeta.setFood(food);

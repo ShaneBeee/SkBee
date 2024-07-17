@@ -13,6 +13,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.slot.Slot;
+import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
@@ -104,6 +105,8 @@ public class SecToolComponent extends Section {
     @SuppressWarnings({"NullableProblems", "IfCanBeSwitch"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
+        Object localVars = Variables.copyLocalVariables(event);
+
         Number miningSpeedNum = this.defaultMiningSpeed.getSingle(event);
         Number damagePerNum = this.damagePerBlock.getSingle(event);
         if (damagePerNum == null) return super.walk(event, false);
@@ -124,7 +127,11 @@ public class SecToolComponent extends Section {
             tool.setDamagePerBlock(damagePerBlock);
 
             if (this.rulesSection != null) {
-                TriggerItem.walk(this.rulesSection, new ToolComponentApplyRulesEvent(tool));
+                ToolComponentApplyRulesEvent toolEvent = new ToolComponentApplyRulesEvent(tool);
+                Variables.setLocalVariables(toolEvent, localVars);
+                TriggerItem.walk(this.rulesSection, toolEvent);
+                Variables.setLocalVariables(event, Variables.copyLocalVariables(toolEvent));
+                Variables.removeLocals(toolEvent);
             }
 
             itemMeta.setTool(tool);
