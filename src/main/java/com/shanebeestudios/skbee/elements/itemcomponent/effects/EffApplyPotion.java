@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -25,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
     "\teffects:",
     "\t\tapply potion effect of nausea without particles for 10 seconds",
     "\t\tapply potion effect of poison without particles for 5 seconds with probability 50"})
+@Since("INSERT VERSION")
 public class EffApplyPotion extends Effect {
 
     static {
