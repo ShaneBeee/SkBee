@@ -1,26 +1,70 @@
 # Welcome to SkBee
 
 settings:
-  # Enable this if you would like to see more verbose debug messages
-  debug: false
+    # Enable this if you would like to see more verbose debug messages
+    debug: false
 
-  # Enable this to automatically check for SkBee updates
-  # Disable this if you do not want to check for updates, or it takes too long/has issues checking
-  update-checker:
-    # Whether or not to check for updates
-    enabled: true
-    # Whether or not the update check should be done on another thread
-    async: false
+    # Enable this to automatically check for SkBee updates
+    # Disable this if you do not want to check for updates, or it takes too long/has issues checking
+    update-checker:
+        # Whether or not to check for updates
+        enabled: true
+        # Whether or not the update check should be done on another thread
+        async: false
 
-  # Whether scoreboard lines should be in normal order or reversed
-  # False = Line 1 at the top, line 15 at the bottom (default)
-  # True = Line 15 at the top, line 1 at the bottom
-  scoreboard-reverse-lines: false
+    # Whether scoreboard lines should be in normal order or reversed
+    # False = Line 1 at the top, line 15 at the bottom (default)
+    # True = Line 15 at the top, line 1 at the bottom
+    scoreboard-reverse-lines: false
 
 # Disable elements you do not plan to use.
 elements:
+    # Enable advancement elements
+    advancement: true
+
+    # Enable boss bar elements
+    boss-bar: true
+
+    # Enable bound elements
+    # Bounds are like custom world guard regions
+    bound: true
+
+    # Enable Chunk Generator elements
+    # Due to the complexity of this, it is disabled by default
+    chunk-generator: false
+
+    # Enable Damage Source elements
+    # This is specifically for Minecraft 1.20.4+
+    damage-source: true
+
+    # Enable display entity elements
+    # This is specifically for Minecraft 1.19.4+
+    display-entity: true
+
+    # Enable fishing elements
+    fishing: true
+
+    # Enable Minecraft GameEvent elements
+    game-event: true
+
+    # Enable different Item Component elements
+    # This is specifically for Minecraft 1.20.5+
+    item-component: true
+
+    # Enable MinecraftTag Elements
+    minecraft-tag: true
+
     # Enable NBT elements
     nbt: true
+
+    # Enable particle elements
+    particle: true
+
+    # Enable RayTrace elements
+    raytrace: true
+
+    # Enable custom recipe elements
+    recipe: true
 
     # Enable Scoreboard elements
     scoreboard: true
@@ -28,82 +72,38 @@ elements:
     # Enable Scoreboard Objective elements
     scoreboard-objective: true
 
-    # Enable Team elements
-    team: true
-
-    # Enable custom recipe elements
-    recipe: true
-
-    # Enable bound elements
-    # Bounds are like custom world guard regions
-    bound: true
+    # Enable statistic elements
+    statistic: true
 
     # Enable structure elements
     structure: true
 
-    # Enable VirtualFurnace elements
-    # This feature is semi-experimental, please use with caution
-    virtual-furnace: false
+    # Enable Team elements
+    team: true
 
     # Enable Text Component elements
     text-component: true
-
-    # Enable world creator elements
-    world-creator: true
-    # Whether or not custom worlds should automatically load on server start
-    # If disabled, you will need to load worlds with the load world effect
-    auto-load-custom-worlds: true
-
-    # Enable Chunk Generator elements
-    # Due to the complexity of this, it is disabled by default
-    chunk-generator: false
-
-    # Enable Minecraft GameEvent elements
-    game-event: true
-
-    # Enable boss bar elements
-    boss-bar: true
-
-    # Enable statistic elements
-    statistic: true
-
-    # Enable villager/merchant elements
-    villager: true
-
-    # Enable advancement elements
-    advancement: true
-
-    # Enable world border elements
-    world-border: true
-
-    # Enable particle elements
-    particle: true
-
-    # Enable MinecraftTag Elements
-    minecraft-tag: true
-
-    # Enable RayTrace elements
-    raytrace: true
-
-    # Enable fishing elements
-    fishing: true
-
-    # Enable display entity elements
-    # This is specifically for Minecraft 1.19.4+
-    display-entity: true
 
     # Enable Server Tick Manager elements
     # These elements are based around Minecraft's tick command
     # This is specifically for Minecraft 1.20.4+
     tick-manager: true
 
-    # Enable Damage Source elements
-    # This is specifically for Minecraft 1.20.4+
-    damage-source: true
+    # Enable villager/merchant elements
+    villager: true
 
-    # Enable different Item Component elements
-    # This is specifically for Minecraft 1.20.5+
-    item-component: true
+    # Enable VirtualFurnace elements
+    # This feature is semi-experimental, please use with caution
+    virtual-furnace: false
+
+    # Enable world border elements
+    world-border: true
+
+    # Enable world creator elements
+    world-creator: true
+    # Whether or not custom worlds should automatically load on server start
+    # If disabled, you will need to load worlds with the load world effect
+    auto-load-custom-worlds: true
 
 # Enable different event listeners for NBT
 nbt-events:
