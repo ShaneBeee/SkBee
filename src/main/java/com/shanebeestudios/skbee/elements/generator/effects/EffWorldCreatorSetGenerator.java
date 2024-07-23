@@ -51,6 +51,8 @@ public class EffWorldCreatorSetGenerator extends Effect {
         if (chunkGen == null) return;
         worldCreator.setChunkGenerator(chunkGen.getChunkGenerator());
         worldCreator.setBiomeProvider(chunkGen.getBiomeGenerator());
+        // Prevent autoloading world before generator is created
+        worldCreator.setLoadOnStart(false);
     }
 
     @Override
