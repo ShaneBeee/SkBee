@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.shanebeestudios.skbee.api.util.WorldUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -153,9 +154,18 @@ public class Bound implements ConfigurationSerializable {
      * @return List of blocks within bound
      */
     public List<Block> getBlocks() {
-        World w = getWorld();
-        if (w == null) return null;
+        return getBlocks(null);
+    }
+
+    /**
+     * Get a list of blocks with the specified material within a bound
+     *
+     * @return List of blocks with the specified material within bound
+     */
+    public List<Block> getBlocks(Material material) {
         List<Block> array = new ArrayList<>();
+        World w = getWorld();
+        if (w == null) return array;
         int minX = (int) boundingBox.getMinX();
         int minY = (int) boundingBox.getMinY();
         int minZ = (int) boundingBox.getMinZ();
@@ -166,6 +176,8 @@ public class Bound implements ConfigurationSerializable {
             for (int y = minY; y < maxY; y++) {
                 for (int z = minZ; z < maxZ; z++) {
                     Block b = w.getBlockAt(x, y, z);
+                    if (material != null && !b.getType().equals(material))
+                        continue;
                     array.add(b);
                 }
             }
