@@ -30,8 +30,7 @@ elements:
     bound: true
 
     # Enable Chunk Generator elements
-    # Due to the complexity of this, it is disabled by default
-    chunk-generator: false
+    chunk-generator: true
 
     # Enable Damage Source elements
     # This is specifically for Minecraft 1.20.4+

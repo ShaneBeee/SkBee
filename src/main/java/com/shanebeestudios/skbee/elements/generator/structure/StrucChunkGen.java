@@ -42,7 +42,6 @@ import org.skriptlang.skript.lang.structure.Structure;
         "`height gen` = Tell Minecraft where the highest block in a chunk is for generating structures.",
         "`block pop` = Used to decorate after initial surface is generated (Structures can be placed during this stage).",
         "NOTES:",
-        "- `chunk-generator` needs to be enabled in the config (disabled by default)",
         "- `world-creator` needs to be enabled in the config",
         "- Please see the [**Chunk Generator**](https://github.com/ShaneBeee/SkBee/wiki/Chunk-Generator) wiki for further details."})
 @Examples({"register chunk generator with id \"mars\":",
