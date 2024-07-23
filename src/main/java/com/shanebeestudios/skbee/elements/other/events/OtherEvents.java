@@ -129,12 +129,14 @@ public class OtherEvents extends SimpleEvent {
             }
         }, 0);
 
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
-            @Override
-            public Player get(PrepareAnvilEvent event) {
-                return (Player) event.getView().getPlayer();
-            }
-        }, 0);
+        if (Skript.isRunningMinecraft(1,21)) {
+            EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
+                @Override
+                public Player get(PrepareAnvilEvent event) {
+                    return (Player) event.getView().getPlayer();
+                }
+            }, 0);
+        }
 
         // Player shear entity event
         Skript.registerEvent("Shear Entity", OtherEvents.class, PlayerShearEntityEvent.class, "[player] shear entity")
