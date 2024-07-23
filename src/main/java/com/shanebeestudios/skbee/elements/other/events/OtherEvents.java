@@ -129,7 +129,7 @@ public class OtherEvents extends SimpleEvent {
             }
         }, 0);
 
-        if (Skript.isRunningMinecraft(1,21)) {
+        if (Util.IS_RUNNING_MC_1_21) {
             EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
                 @Override
                 public Player get(PrepareAnvilEvent event) {
