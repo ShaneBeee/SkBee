@@ -29,6 +29,7 @@ import java.util.List;
 @SuppressWarnings("DataFlowIssue")
 @Name("ItemComponent - Tool Rule Apply")
 @Description({"Apply rules to a tool component. You can add as many as you'd like.",
+    "See [**McWiki Tool Component**](https://minecraft.wiki/w/Data_component_format#tool) for more details.",
     "",
     "**Entries/Sections**:",
     "NOTE: One of either `block types` or `block tag` MUST be used.",

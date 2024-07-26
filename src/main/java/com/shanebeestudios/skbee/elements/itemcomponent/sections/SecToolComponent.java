@@ -29,6 +29,7 @@ import java.util.List;
 @SuppressWarnings("DataFlowIssue")
 @Name("ItemComponent - Tool Component Apply")
 @Description({"Apply a tool component to any item making it usable tool. Requires Minecraft 1.20.5+",
+    "See [**McWiki Tool Component**](https://minecraft.wiki/w/Data_component_format#tool) for more details.",
     "",
     "**Entries/Sections**:",
     "- `default mining speed` = The default mining speed of this tool, used if no rules override it. Defaults to 1.0. [Optional]",

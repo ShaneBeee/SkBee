@@ -31,6 +31,7 @@ import java.util.List;
 @SuppressWarnings("DataFlowIssue")
 @Name("ItemComponent - Food Component Apply")
 @Description({"Apply a food component to any item making it an edible item. Requires Minecraft 1.20.5+",
+    "See [**McWiki Food Component**](https://minecraft.wiki/w/Data_component_format#food) for more details.",
     "",
     "**Entries/Sections**:",
     "- `nutrition` = The number of food points restored by this item when eaten. Must be a non-negative integer.",
