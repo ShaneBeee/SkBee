@@ -12,12 +12,10 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.util.slot.Slot;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.ToolComponent;
 import org.jetbrains.annotations.NotNull;
@@ -77,21 +75,21 @@ public class SecToolComponent extends Section {
         VALIDATIOR.addEntryData(new ExpressionEntryData<>("default mining speed", null, false, Number.class));
         VALIDATIOR.addEntryData(new ExpressionEntryData<>("damage per block", null, true, Number.class));
         VALIDATIOR.addSection("rules", true);
-        Skript.registerSection(SecToolComponent.class, "apply tool component to %itemtypes/itemstacks/slots%");
+        Skript.registerSection(SecToolComponent.class, "apply tool component to %itemtypes%");
     }
 
-    private Expression<?> items;
+    private Expression<ItemType> items;
     private Expression<Number> defaultMiningSpeed;
     private Expression<Number> damagePerBlock;
     private Trigger rulesSection;
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
-    public boolean init(Expression<?>[] expr, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         EntryContainer container = VALIDATIOR.build().validate(sectionNode);
         if (container == null) return false;
 
-        this.items = expr[0];
+        this.items = (Expression<ItemType>) exprs[0];
         this.defaultMiningSpeed = (Expression<Number>) container.getOptional("default mining speed", false);
         this.damagePerBlock = (Expression<Number>) container.getOptional("damage per block", false);
 
@@ -102,7 +100,7 @@ public class SecToolComponent extends Section {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "IfCanBeSwitch"})
+    @SuppressWarnings({"NullableProblems"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Object localVars = Variables.copyLocalVariables(event);
@@ -113,12 +111,8 @@ public class SecToolComponent extends Section {
 
         int damagePerBlock = damagePerNum.intValue();
 
-        for (Object object : this.items.getArray(event)) {
-            ItemMeta itemMeta;
-            if (object instanceof ItemStack itemStack) itemMeta = itemStack.getItemMeta();
-            else if (object instanceof ItemType itemType) itemMeta = itemType.getItemMeta();
-            else if (object instanceof Slot slot) itemMeta = slot.getItem().getItemMeta();
-            else continue;
+        for (ItemType itemType : this.items.getArray(event)) {
+            ItemMeta itemMeta = itemType.getItemMeta();
 
             ToolComponent tool = itemMeta.getTool();
             if (miningSpeedNum != null) {
@@ -135,15 +129,7 @@ public class SecToolComponent extends Section {
             }
 
             itemMeta.setTool(tool);
-
-            if (object instanceof ItemStack itemStack) itemStack.setItemMeta(itemMeta);
-            else if (object instanceof ItemType itemType) itemType.setItemMeta(itemMeta);
-            else {
-                Slot slot = (Slot) object;
-                ItemStack slotItem = slot.getItem();
-                slotItem.setItemMeta(itemMeta);
-                slot.setItem(slotItem);
-            }
+            itemType.setItemMeta(itemMeta);
         }
 
         return super.walk(event, false);

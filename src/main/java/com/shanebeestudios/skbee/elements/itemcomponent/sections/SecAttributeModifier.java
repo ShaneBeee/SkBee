@@ -11,7 +11,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.NamespacedKey;
@@ -20,7 +19,6 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.EquipmentSlotGroup;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -58,22 +56,18 @@ import java.util.List;
     "give player 1 of {_i}"})
 @Since("INSERT VERSION")
 public class SecAttributeModifier extends Section {
-
-    private static final boolean HAS_KEY = Skript.methodExists(AttributeModifier.class, "getKey");
     private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
 
     static {
-        if (HAS_KEY) {
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("attribute", null, false, Attribute.class));
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("slot", null, false, EquipmentSlotGroup.class));
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("amount", null, false, Number.class));
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("operation", null, false, Operation.class));
-            Skript.registerSection(SecAttributeModifier.class, "apply attribute modifier to %itemtypes/itemstacks/slots%");
-        }
+        VALIDATIOR.addEntryData(new ExpressionEntryData<>("attribute", null, false, Attribute.class));
+        VALIDATIOR.addEntryData(new ExpressionEntryData<>("slot", null, false, EquipmentSlotGroup.class));
+        VALIDATIOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
+        VALIDATIOR.addEntryData(new ExpressionEntryData<>("amount", null, false, Number.class));
+        VALIDATIOR.addEntryData(new ExpressionEntryData<>("operation", null, false, Operation.class));
+        Skript.registerSection(SecAttributeModifier.class, "apply attribute modifier to %itemtypes%");
     }
 
-    private Expression<?> items;
+    private Expression<ItemType> items;
     private Expression<Attribute> attribute;
     private Expression<EquipmentSlotGroup> slotGroup;
     private Expression<String> id;
@@ -82,11 +76,11 @@ public class SecAttributeModifier extends Section {
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
-    public boolean init(Expression<?>[] expr, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         EntryContainer container = VALIDATIOR.build().validate(sectionNode);
         if (container == null) return false;
 
-        this.items = expr[0];
+        this.items = (Expression<ItemType>) exprs[0];
         this.attribute = (Expression<Attribute>) container.getOptional("attribute", false);
         this.slotGroup = (Expression<EquipmentSlotGroup>) container.getOptional("slot", false);
         this.id = (Expression<String>) container.getOptional("id", false);
@@ -95,7 +89,7 @@ public class SecAttributeModifier extends Section {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "IfCanBeSwitch"})
+    @SuppressWarnings({"NullableProblems"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Attribute attribute = this.attribute.getSingle(event);
@@ -110,25 +104,22 @@ public class SecAttributeModifier extends Section {
         NamespacedKey namespacedKey = Util.getNamespacedKey(id, false);
         if (namespacedKey == null) return super.walk(event, false);
 
-        for (Object object : this.items.getArray(event)) {
-            ItemMeta itemMeta;
-            if (object instanceof ItemStack itemStack) itemMeta = itemStack.getItemMeta();
-            else if (object instanceof ItemType itemType) itemMeta = itemType.getItemMeta();
-            else if (object instanceof Slot slot) itemMeta = slot.getItem().getItemMeta();
-            else continue;
+        item_loop:
+        for (ItemType itemType : this.items.getArray(event)) {
+            ItemMeta itemMeta = itemType.getItemMeta();
 
             AttributeModifier attributeModifier = new AttributeModifier(namespacedKey, amountNum.doubleValue(), operation, slotGroup);
+            if (itemMeta.hasAttributeModifiers()) {
+                for (AttributeModifier modifier : itemMeta.getAttributeModifiers().values()) {
+                    if (modifier.getKey().equals(namespacedKey)) {
+                        // If the same key already exists, we exit
+                        continue item_loop;
+                    }
+                }
+            }
             itemMeta.addAttributeModifier(attribute, attributeModifier);
 
-            if (object instanceof ItemStack itemStack) itemStack.setItemMeta(itemMeta);
-            else if (object instanceof ItemType itemType) itemType.setItemMeta(itemMeta);
-            else {
-                Slot slot = (Slot) object;
-                ItemStack slotItem = slot.getItem();
-                slotItem.setItemMeta(itemMeta);
-                slot.setItem(slotItem);
-            }
-
+            itemType.setItemMeta(itemMeta);
         }
         return super.walk(event, false);
     }

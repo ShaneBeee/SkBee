@@ -71,7 +71,7 @@ public class SecToolRule extends Section {
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
-    public boolean init(Expression<?>[] expr, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         if (!getParser().isCurrentEvent(ToolComponentApplyRulesEvent.class)) {
             Skript.error("Tool rules can only be applied in a 'rules' section of a tool component section.");
             return false;

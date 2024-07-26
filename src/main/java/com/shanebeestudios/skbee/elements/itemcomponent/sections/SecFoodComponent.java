@@ -13,7 +13,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
-import ch.njol.skript.util.slot.Slot;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import org.bukkit.event.Event;
@@ -87,10 +86,10 @@ public class SecFoodComponent extends Section {
         VALIDATIOR.addEntryData(new ExpressionEntryData<>("eat time", null, true, Timespan.class));
         VALIDATIOR.addEntryData(new ExpressionEntryData<>("using converts to", null, true, ItemType.class));
         VALIDATIOR.addSection("effects", true);
-        Skript.registerSection(SecFoodComponent.class, "apply food component to %itemtypes/itemstacks/slots%");
+        Skript.registerSection(SecFoodComponent.class, "apply food component to %itemtypes%");
     }
 
-    private Expression<?> items;
+    private Expression<ItemType> items;
     private Expression<Number> nutrition;
     private Expression<Number> saturation;
     private Expression<Boolean> canAlwaysEat;
@@ -100,11 +99,11 @@ public class SecFoodComponent extends Section {
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
-    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         EntryContainer container = VALIDATIOR.build().validate(sectionNode);
         if (container == null) return false;
 
-        this.items = expressions[0];
+        this.items = (Expression<ItemType>) exprs[0];
         this.nutrition = (Expression<Number>) container.getOptional("nutrition", false);
         this.saturation = (Expression<Number>) container.getOptional("saturation", false);
         this.canAlwaysEat = (Expression<Boolean>) container.getOptional("can always eat", false);
@@ -117,7 +116,7 @@ public class SecFoodComponent extends Section {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "IfCanBeSwitch"})
+    @SuppressWarnings({"NullableProblems"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Object localVars = Variables.copyLocalVariables(event);
@@ -133,12 +132,8 @@ public class SecFoodComponent extends Section {
         Timespan eatTime = this.eatTime != null ? this.eatTime.getSingle(event) : null;
         ItemStack usingConvertsTo = this.usingConverts != null ? this.usingConverts.getSingle(event).getRandom() : null;
 
-        for (Object object : this.items.getArray(event)) {
-            ItemMeta itemMeta;
-            if (object instanceof ItemStack itemStack) itemMeta = itemStack.getItemMeta();
-            else if (object instanceof ItemType itemType) itemMeta = itemType.getItemMeta();
-            else if (object instanceof Slot slot) itemMeta = slot.getItem().getItemMeta();
-            else continue;
+        for (ItemType itemType : this.items.getArray(event)) {
+            ItemMeta itemMeta = itemType.getItemMeta();
 
             FoodComponent food = itemMeta.getFood();
             food.setNutrition(nutrition);
@@ -158,16 +153,7 @@ public class SecFoodComponent extends Section {
             }
 
             itemMeta.setFood(food);
-
-            if (object instanceof ItemStack itemStack) itemStack.setItemMeta(itemMeta);
-            else if (object instanceof ItemType itemType) itemType.setItemMeta(itemMeta);
-            else {
-                Slot slot = (Slot) object;
-                ItemStack slotItem = slot.getItem();
-                slotItem.setItemMeta(itemMeta);
-                slot.setItem(slotItem);
-            }
-
+            itemType.setItemMeta(itemMeta);
         }
         return super.walk(event, false);
     }
