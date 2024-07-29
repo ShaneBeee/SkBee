@@ -111,6 +111,7 @@ public class AddonLoader {
         loadDisplayEntityElements();
         loadFishingElements();
         loadGameEventElements();
+        loadItemComponentElements();
         loadParticleElements();
         loadRayTraceElements();
         loadRecipeElements();
@@ -565,6 +566,24 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.damagesource");
             Util.logLoading("&5Damage Source elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadItemComponentElements() {
+        if (!this.config.ELEMENTS_ITEM_COMPONENT) {
+            Util.logLoading("&5Item Component elements &cdisabled via config");
+            return;
+        }
+        if (!Skript.classExists("org.bukkit.inventory.meta.components.FoodComponent")) {
+            Util.logLoading("&5Item Component elements &cdisabled &7(&eRequires Minecraft 1.20.5+&7)");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.itemcomponent");
+            Util.logLoading("&5Item Component Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);

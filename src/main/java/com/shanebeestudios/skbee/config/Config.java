@@ -58,6 +58,7 @@ public class Config {
     public boolean ELEMENTS_DISPLAY;
     public boolean ELEMENTS_TICK_MANAGER;
     public boolean ELEMENTS_DAMAGE_SOURCE;
+    public boolean ELEMENTS_ITEM_COMPONENT;
     public boolean ELEMENTS_CHUNK_GEN;
     public boolean AUTO_LOAD_WORLDS;
 
@@ -175,6 +176,7 @@ public class Config {
         this.ELEMENTS_TICK_MANAGER = getElement("tick-manager");
         this.ELEMENTS_DAMAGE_SOURCE = getElement("damage-source");
         this.ELEMENTS_CHUNK_GEN = getElement("chunk-generator");
+        this.ELEMENTS_ITEM_COMPONENT = getElement("item-component");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
     }
 

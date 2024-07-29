@@ -165,7 +165,7 @@ public class ParticleUtil {
         } else {
             for (Player player : players) {
                 assert player != null;
-                player.spawnParticle(particle, location, count, x, y, z, extra, particleData);
+                player.spawnParticle(particle, location, count, x, y, z, extra, particleData, force);
             }
         }
     }

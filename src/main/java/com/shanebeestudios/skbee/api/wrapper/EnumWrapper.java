@@ -112,21 +112,21 @@ public final class EnumWrapper<E extends Enum<E>> {
     }
 
     /**
-     * Create ClassInfo with default praser and usage
+     * Create ClassInfo with default parser and usage
      *
      * @param codeName Name for class info
-     * @return ClassInfo with default praser and usage
+     * @return ClassInfo with default parser and usage
      */
     public ClassInfo<E> getClassInfo(String codeName) {
         return new ClassInfo<>(this.enumClass, codeName).usage(getAllNames()).parser(new EnumParser<>(this));
     }
 
     /**
-     * Create ClassInfo with default praser and usage
+     * Create ClassInfo with default parser and usage
      * <p>If using `.usage()` use this method to prevent double call/assertion error</p>
      *
      * @param codeName Name for class info
-     * @return ClassInfo with default praser and usage
+     * @return ClassInfo with default parser and usage
      */
     public ClassInfo<E> getClassInfoWithoutUsage(String codeName) {
         return new ClassInfo<>(this.enumClass, codeName).parser(new EnumParser<>(this));
