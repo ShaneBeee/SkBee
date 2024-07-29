@@ -54,7 +54,7 @@ import java.util.List;
     "\tamount: -0.9",
     "\toperation: add_number",
     "give player 1 of {_i}"})
-@Since("INSERT VERSION")
+@Since("3.5.8")
 public class SecAttributeModifier extends Section {
     private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
 

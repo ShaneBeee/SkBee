@@ -20,7 +20,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"clear food component of player's tool",
     "clear tool component of player's tool",
     "clear attribute modifier components of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.5.8")
 public class EffClearComponent extends Effect {
 
     static {

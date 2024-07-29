@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
     "reset component player list name of player",
     "set {_comp} to component player list name of player",
     "set component player list header of all players to mini message from \"<rainbow>MY SERVER!!!\""})
-@Since("INSERT VERSION")
+@Since("3.5.8")
 public class ExprPlayerListName extends SimplePropertyExpression<Player, ComponentWrapper> {
 
     static {

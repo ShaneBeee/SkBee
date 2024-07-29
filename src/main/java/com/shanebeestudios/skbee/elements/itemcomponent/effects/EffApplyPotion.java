@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
     "\teffects:",
     "\t\tapply potion effect of nausea without particles for 10 seconds",
     "\t\tapply potion effect of poison without particles for 5 seconds with probability 50"})
-@Since("INSERT VERSION")
+@Since("3.5.8")
 public class EffApplyPotion extends Effect {
 
     static {

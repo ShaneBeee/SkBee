@@ -56,7 +56,7 @@ import java.util.List;
     "\t\tapply potion effect of nausea without particles for 10 seconds",
     "\t\tapply potion effect of poison without particles for 5 seconds ",
     "give player 1 of {_i}"})
-@Since("INSERT VERSION")
+@Since("3.5.8")
 public class SecFoodComponent extends Section {
 
     public static class FoodComponentApplyEvent extends Event {
