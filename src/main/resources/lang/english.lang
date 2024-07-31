@@ -81,3 +81,5 @@ types:
 	blockaction: block action¦s
 	bukkittreetype: bukkit tree type¦s
 	pose: pose¦s
+	equipmentslotgroup: equipment slot group¦s
+	attributeoperation: attribute operation¦s
