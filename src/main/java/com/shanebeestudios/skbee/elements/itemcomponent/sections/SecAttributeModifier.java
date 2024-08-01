@@ -86,7 +86,7 @@ public class SecAttributeModifier extends Section {
         this.id = (Expression<String>) container.getOptional("id", false);
         this.amount = (Expression<Number>) container.getOptional("amount", false);
         this.operation = (Expression<Operation>) container.getOptional("operation", false);
-        return true;
+        return this.attribute != null && this.slotGroup != null && this.id != null && this.amount != null;
     }
 
     @SuppressWarnings({"NullableProblems"})
