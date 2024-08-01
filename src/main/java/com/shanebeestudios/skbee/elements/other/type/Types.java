@@ -24,7 +24,6 @@ import org.bukkit.EntityEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.TreeType;
-import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
@@ -421,12 +420,6 @@ public class Types {
                     }
                 }));
         }
-
-        Classes.registerClass(new EnumWrapper<>(Operation.class).getClassInfo("attributeoperation")
-            .user("attribute ?operations?")
-            .name("Attribute Modifier Operation")
-            .description("Represents the different operations of an attribute modifer.",
-                "NOTE: These are auto-generated and may differ between server versions."));
     }
 
     // FUNCTIONS
