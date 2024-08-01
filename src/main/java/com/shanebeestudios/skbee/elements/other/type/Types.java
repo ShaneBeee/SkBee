@@ -379,7 +379,8 @@ public class Types {
         Classes.registerClass(TREE_TYPE.getClassInfo("bukkittreetype")
             .user("bukkit ?tree ?types?")
             .name("Bukkit Tree Type")
-            .description("Represents the different types of trees.")
+            .description("Represents the different types of trees.",
+                "NOTE: These are auto-generated and may differ between server versions.")
             .after("structuretype")
             .since("3.5.3"));
 
@@ -397,7 +398,8 @@ public class Types {
             Classes.registerClass(new ClassInfo<>(EquipmentSlotGroup.class, "equipmentslotgroup")
                 .user("equipment ?slot ?groups?")
                 .name("Equipment Slot Group")
-                .description("Represents different groups of equipment slots.")
+                .description("Represents different groups of equipment slots.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .usage(StringUtils.join(equipmentSlotGroups.keySet().stream().sorted().toList(), ", "))
                 .parser(new Parser<>() {
 
@@ -423,7 +425,8 @@ public class Types {
         Classes.registerClass(new EnumWrapper<>(Operation.class).getClassInfo("attributeoperation")
             .user("attribute ?operations?")
             .name("Attribute Modifier Operation")
-            .description("Represents the different operations of an attribute modifer."));
+            .description("Represents the different operations of an attribute modifer.",
+                "NOTE: These are auto-generated and may differ between server versions."));
     }
 
     // FUNCTIONS
