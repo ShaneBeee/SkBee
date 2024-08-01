@@ -362,10 +362,16 @@ public class OtherEvents extends SimpleEvent {
         // Entity Shoot Bow Event
         Skript.registerEvent("Entity Shoot Bow", OtherEvents.class, EntityShootBowEvent.class,
                         "entity shoot bow")
-                .description("Called when a LivingEntity shoots a bow firing an arrow.")
+                .description("Called when a LivingEntity shoots a bow/crossbow firing an arrow.",
+                    "`event-entity` = Entity which shot the bow.",
+                    "`event-projectile` = The projectile which was shot.",
+                    "`event-item[type]` = The item which will be consumed from the entity's inventory (if any).")
                 .examples("on entity shoot bow:",
                         "\tif name of shot bow != \"Mr Bow\":",
-                        "\t\tcancel event")
+                        "\t\tcancel event",
+                    "on entity shoot bow:",
+                        "\tif gamemode of player = survival:",
+                        "\t\tgive player 1 of event-item")
                 .since("2.16.0");
 
         EventValues.registerEventValue(EntityShootBowEvent.class, Projectile.class, new Getter<>() {
@@ -373,6 +379,22 @@ public class OtherEvents extends SimpleEvent {
             public @Nullable Projectile get(EntityShootBowEvent event) {
                 if (event.getProjectile() instanceof Projectile projectile) return projectile;
                 return null;
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(EntityShootBowEvent.class, ItemType.class, new Getter<>() {
+            @Override
+            public @Nullable ItemType get(EntityShootBowEvent event) {
+                ItemStack consumable = event.getConsumable();
+                if (consumable != null) return new ItemType(consumable);
+                return null;
+            }
+        }, EventValues.TIME_NOW);
+
+        EventValues.registerEventValue(EntityShootBowEvent.class, ItemStack.class, new Getter<>() {
+            @Override
+            public @Nullable ItemStack get(EntityShootBowEvent event) {
+                return event.getConsumable();
             }
         }, EventValues.TIME_NOW);
 
