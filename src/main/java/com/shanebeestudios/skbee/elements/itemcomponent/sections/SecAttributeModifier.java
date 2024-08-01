@@ -39,7 +39,7 @@ import java.util.List;
     "- `slot` = Equipment Slot Type the item must be in for the modifier to take effect.",
     "- `id` = The NamespacedKey for this modifier.",
     "- `amount` = Amount of change from the modifier.",
-    "- `operation` = The operation to decide how to modify."})
+    "- `operation` = The operation to decide how to modify. See [**McWiki**](https://minecraft.wiki/w/Attribute#Operations) for more details."})
 @Examples({"set {_i} to a stick",
     "apply attribute modifier to {_i}:",
     "\tattribute: scale",
