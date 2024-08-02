@@ -25,13 +25,14 @@ import java.util.Collection;
 import java.util.List;
 
 @Name("ItemComponent - Attribute Modifiers of Item")
-@Description({"Get the attribute modifiers of an item.",
+@Description({"Get/change the attribute modifiers of an item. Requires Minecraft 1.20.5+",
     "The `default` option will return the vanilla modifiers of an item.",
     "`modifier` will return a single modifier (will default to the 1st element of modifiers of that attribute type).",
     "`modifiers` will return a list of modifiers of that attribute type.",
     "**CHANGERS:**",
-    "- `delete` = Will delete all modifiers of an attribute type from an item.",
-    "- `remove` = Remove a specific modifier of an attribute type from an item."})
+    "- `add` = Will add a modifier of an attribute type to an item.",
+    "- `remove` = Remove a specific modifier of an attribute type from an item.",
+    "- `delete` = Will delete all modifiers of an attribute type from an item."})
 @Examples({"set {_mods::*} to attack damage modifier of player's tool",
     "set {_mod} to first element of attack damage modifier of player's tool"})
 @Since("INSERT VERSION")
@@ -88,23 +89,42 @@ public class ExprAttributeModifierOfItem extends SimpleExpression<AttributeModif
             return null;
         }
         if (mode == ChangeMode.DELETE) return CollectionUtils.array();
-        else if (mode == ChangeMode.REMOVE) return CollectionUtils.array(AttributeModifier.class);
+        else if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)
+            return CollectionUtils.array(AttributeModifier.class);
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
+    @SuppressWarnings({"NullableProblems", "ConstantValue", "DataFlowIssue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Attribute attribute = this.attribute.getSingle(event);
         if (attribute == null) return;
 
+        List<AttributeModifier> modifiers = new ArrayList<>();
+        if (delta != null) {
+            for (Object object : delta) {
+                if (object instanceof AttributeModifier modifier) modifiers.add(modifier);
+            }
+        }
+
         for (ItemType itemType : this.itemType.getArray(event)) {
             ItemMeta itemMeta = itemType.getItemMeta();
             if (mode == ChangeMode.DELETE) {
                 itemMeta.removeAttributeModifier(attribute);
-            } else if (mode == ChangeMode.REMOVE || delta != null) {
-                for (Object object : delta) {
-                    if (object instanceof AttributeModifier modifier) {
+            } else if (!modifiers.isEmpty()) {
+                modifier_loop:
+                for (AttributeModifier modifier : modifiers) {
+                    if (mode == ChangeMode.ADD) {
+                        if (itemMeta.hasAttributeModifiers()) {
+                            for (AttributeModifier mod : itemMeta.getAttributeModifiers().values()) {
+                                if (modifier.getKey().equals(mod.getKey())) {
+                                    // If the same key already exists, we exit
+                                    continue modifier_loop;
+                                }
+                            }
+                        }
+                        itemMeta.addAttributeModifier(attribute, modifier);
+                    } else if (mode == ChangeMode.REMOVE) {
                         itemMeta.removeAttributeModifier(attribute, modifier);
                     }
                 }
