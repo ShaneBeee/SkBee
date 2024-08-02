@@ -81,13 +81,15 @@ public class SecFoodComponent extends Section {
     private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
 
     static {
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("nutrition", null, false, Number.class));
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("saturation", null, false, Number.class));
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("can always eat", null, true, Boolean.class));
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("eat time", null, true, Timespan.class));
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("using converts to", null, true, ItemType.class));
-        VALIDATIOR.addSection("effects", true);
-        Skript.registerSection(SecFoodComponent.class, "apply food component to %itemtypes%");
+        if (Skript.classExists("org.bukkit.inventory.meta.components.FoodComponent")) {
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("nutrition", null, false, Number.class));
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("saturation", null, false, Number.class));
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("can always eat", null, true, Boolean.class));
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("eat time", null, true, Timespan.class));
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("using converts to", null, true, ItemType.class));
+            VALIDATIOR.addSection("effects", true);
+            Skript.registerSection(SecFoodComponent.class, "apply food component to %itemtypes%");
+        }
     }
 
     private Expression<ItemType> items;

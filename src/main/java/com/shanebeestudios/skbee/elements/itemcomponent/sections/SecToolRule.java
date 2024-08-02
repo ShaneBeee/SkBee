@@ -58,11 +58,13 @@ public class SecToolRule extends Section {
     private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
 
     static {
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("block types", null, true, ItemType.class));
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("block tag", null, true, Tag.class));
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("speed", null, true, Number.class));
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("correct for drops", null, true, Boolean.class));
-        Skript.registerSection(SecToolRule.class, "apply tool rule");
+        if (Skript.classExists("org.bukkit.inventory.meta.components.ToolComponent")) {
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("block types", null, true, ItemType.class));
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("block tag", null, true, Tag.class));
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("speed", null, true, Number.class));
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("correct for drops", null, true, Boolean.class));
+            Skript.registerSection(SecToolRule.class, "apply tool rule");
+        }
     }
 
     private Expression<ItemType> blockTypes;

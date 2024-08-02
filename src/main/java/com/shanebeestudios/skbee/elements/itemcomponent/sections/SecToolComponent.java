@@ -73,10 +73,12 @@ public class SecToolComponent extends Section {
     private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
 
     static {
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("default mining speed", null, false, Number.class));
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("damage per block", null, true, Number.class));
-        VALIDATIOR.addSection("rules", true);
-        Skript.registerSection(SecToolComponent.class, "apply tool component to %itemtypes%");
+        if (Skript.classExists("org.bukkit.inventory.meta.components.ToolComponent")) {
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("default mining speed", null, false, Number.class));
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("damage per block", null, true, Number.class));
+            VALIDATIOR.addSection("rules", true);
+            Skript.registerSection(SecToolComponent.class, "apply tool component to %itemtypes%");
+        }
     }
 
     private Expression<ItemType> items;
