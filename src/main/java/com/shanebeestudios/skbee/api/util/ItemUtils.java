@@ -6,7 +6,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemUtils {
 
-    private static final boolean HAS_KEY = Skript.methodExists(AttributeModifier.class, "getKey");
+    public static final boolean HAS_KEY = Skript.methodExists(AttributeModifier.class, "getKey");
+    public static final boolean HAS_EQUIPMENT_SLOT_GROUP = Skript.classExists("org.bukkit.inventory.EquipmentSlotGroup");
 
     /**
      * Check if an ItemMeta already contains a specific AttributeModifier
