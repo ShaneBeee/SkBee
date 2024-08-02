@@ -71,7 +71,7 @@ public class ExprAttributeModifierOfItem extends SimpleExpression<AttributeModif
             Collection<AttributeModifier> attributeModifiers = this.defaultMods ?
                 itemType.getMaterial().getDefaultAttributeModifiers().get(attribute) : itemMeta.getAttributeModifiers(attribute);
 
-            if (attributeModifiers == null) continue;
+            if (attributeModifiers == null || attributeModifiers.isEmpty()) continue;
 
             if (this.single) {
                 modifiers.add(attributeModifiers.iterator().next());
