@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
+package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -18,7 +18,7 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("ItemComponent - Attribute Modifier Properties")
+@Name("Attribute Modifier Properties")
 @Description({"Represents the different components of an attribute modifier.",
     "NOTE: These cannot be changed.",
     "`id` = The unique NamespacedKey of a modifier (Requires Minecraft 1.21+).",
