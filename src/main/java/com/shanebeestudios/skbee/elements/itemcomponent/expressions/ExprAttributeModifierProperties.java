@@ -51,7 +51,7 @@ public class ExprAttributeModifierProperties extends SimplePropertyExpression<At
         return super.init(exprs, matchedPattern, isDelayed, parseResult);
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "removal"})
     @Override
     public @Nullable Object convert(AttributeModifier modifier) {
         return switch (this.pattern) {
