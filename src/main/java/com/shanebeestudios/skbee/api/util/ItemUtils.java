@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.registrations.Classes;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -44,6 +45,26 @@ public class ItemUtils {
 
         }
         return false;
+    }
+
+    @SuppressWarnings({"deprecation", "removal"})
+    public static String attributeModifierToString(AttributeModifier attributeModifier) {
+        StringBuilder builder = new StringBuilder("AttributeModifier{");
+        if (HAS_KEY) {
+            builder.append("key='").append(attributeModifier.getKey()).append("'");
+        } else {
+            builder.append("name='").append(attributeModifier.getName()).append("'");
+            builder.append(",uuid='").append(attributeModifier.getUniqueId()).append("'");
+        }
+        builder.append(",amount=").append(attributeModifier.getAmount());
+        if (HAS_EQUIPMENT_SLOT_GROUP) {
+            builder.append(",slot=").append(Classes.toString(attributeModifier.getSlotGroup()));
+        } else {
+            builder.append(",slot=").append(Classes.toString(attributeModifier.getSlot()));
+        }
+        builder.append(",operation=").append(Classes.toString(attributeModifier.getOperation()));
+        builder.append("}");
+        return builder.toString();
     }
 
 }

@@ -13,6 +13,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
+import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -24,6 +25,7 @@ import org.bukkit.EntityEffect;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.TreeType;
+import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.entity.EntityType;
@@ -420,6 +422,35 @@ public class Types {
                     }
                 }));
         }
+
+        Classes.registerClass(new ClassInfo<>(AttributeModifier.class, "attributemodifier")
+            .user("attribute ?modifiers?")
+            .name("Attribute Modifier")
+            .description("Represents an attribute modifier from an item/living entity.")
+            .parser(new Parser<>() {
+
+                @SuppressWarnings("NullableProblems")
+                @Override
+                public boolean canParse(ParseContext context) {
+                    return false;
+                }
+
+                @Override
+                public @NotNull String toString(AttributeModifier modifier, int flags) {
+                    return ItemUtils.attributeModifierToString(modifier);
+                }
+
+                @Override
+                public @NotNull String toVariableNameString(AttributeModifier o) {
+                    return toString(o, 0);
+                }
+            }));
+
+        Classes.registerClass(new EnumWrapper<>(AttributeModifier.Operation.class).getClassInfo("attributeoperation")
+            .user("attribute ?operations?")
+            .name("Attribute Modifier Operation")
+            .description("Represents the different operations of an attribute modifer.",
+                "NOTE: These are auto-generated and may differ between server versions."));
     }
 
     // FUNCTIONS
