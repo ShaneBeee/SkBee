@@ -115,7 +115,7 @@ public class SecAttributeModifier extends Section {
         return this.attribute != null && this.slot != null && this.amount != null;
     }
 
-    @SuppressWarnings({"NullableProblems"})
+    @SuppressWarnings({"NullableProblems", "removal"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Attribute attribute = this.attribute.getSingle(event);
@@ -162,7 +162,7 @@ public class SecAttributeModifier extends Section {
         for (ItemType itemType : this.items.getArray(event)) {
             ItemMeta itemMeta = itemType.getItemMeta();
 
-            if (!ItemUtils.hasAttributeModifier(itemMeta, attributeModifier)) {
+            if (!ItemUtils.hasAttributeModifier(itemMeta, attribute, attributeModifier)) {
                 itemMeta.addAttributeModifier(attribute, attributeModifier);
             }
 

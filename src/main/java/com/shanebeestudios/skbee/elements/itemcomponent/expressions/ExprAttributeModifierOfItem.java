@@ -115,7 +115,7 @@ public class ExprAttributeModifierOfItem extends SimpleExpression<AttributeModif
             } else if (!modifiers.isEmpty()) {
                 for (AttributeModifier modifier : modifiers) {
                     if (mode == ChangeMode.ADD) {
-                        if (!ItemUtils.hasAttributeModifier(itemMeta, modifier)) {
+                        if (!ItemUtils.hasAttributeModifier(itemMeta, attribute, modifier)) {
                             itemMeta.addAttributeModifier(attribute, modifier);
                         }
                     } else if (mode == ChangeMode.REMOVE) {
