@@ -13,6 +13,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.ItemUtils;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.event.Event;
@@ -94,7 +95,7 @@ public class ExprAttributeModifierOfItem extends SimpleExpression<AttributeModif
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue", "DataFlowIssue"})
+    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Attribute attribute = this.attribute.getSingle(event);
@@ -112,18 +113,11 @@ public class ExprAttributeModifierOfItem extends SimpleExpression<AttributeModif
             if (mode == ChangeMode.DELETE) {
                 itemMeta.removeAttributeModifier(attribute);
             } else if (!modifiers.isEmpty()) {
-                modifier_loop:
                 for (AttributeModifier modifier : modifiers) {
                     if (mode == ChangeMode.ADD) {
-                        if (itemMeta.hasAttributeModifiers()) {
-                            for (AttributeModifier mod : itemMeta.getAttributeModifiers().values()) {
-                                if (modifier.getKey().equals(mod.getKey())) {
-                                    // If the same key already exists, we exit
-                                    continue modifier_loop;
-                                }
-                            }
+                        if (!ItemUtils.hasAttributeModifier(itemMeta, modifier)) {
+                            itemMeta.addAttributeModifier(attribute, modifier);
                         }
-                        itemMeta.addAttributeModifier(attribute, modifier);
                     } else if (mode == ChangeMode.REMOVE) {
                         itemMeta.removeAttributeModifier(attribute, modifier);
                     }

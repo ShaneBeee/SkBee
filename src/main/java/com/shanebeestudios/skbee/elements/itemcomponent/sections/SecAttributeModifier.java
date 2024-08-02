@@ -12,6 +12,7 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -104,20 +105,14 @@ public class SecAttributeModifier extends Section {
         NamespacedKey namespacedKey = Util.getNamespacedKey(id, false);
         if (namespacedKey == null) return super.walk(event, false);
 
-        item_loop:
+        AttributeModifier attributeModifier = new AttributeModifier(namespacedKey, amountNum.doubleValue(), operation, slotGroup);
+
         for (ItemType itemType : this.items.getArray(event)) {
             ItemMeta itemMeta = itemType.getItemMeta();
 
-            AttributeModifier attributeModifier = new AttributeModifier(namespacedKey, amountNum.doubleValue(), operation, slotGroup);
-            if (itemMeta.hasAttributeModifiers()) {
-                for (AttributeModifier modifier : itemMeta.getAttributeModifiers().values()) {
-                    if (modifier.getKey().equals(namespacedKey)) {
-                        // If the same key already exists, we exit
-                        continue item_loop;
-                    }
-                }
+            if (!ItemUtils.hasAttributeModifier(itemMeta, attributeModifier)) {
+                itemMeta.addAttributeModifier(attribute, attributeModifier);
             }
-            itemMeta.addAttributeModifier(attribute, attributeModifier);
 
             itemType.setItemMeta(itemMeta);
         }
