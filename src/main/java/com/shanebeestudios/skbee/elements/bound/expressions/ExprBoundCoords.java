@@ -24,17 +24,18 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("Bound - Coords")
 @Description({"The coords and world of a bounding box. You can get the world/coords for a specific bound, you can also " +
-        "set the coords of a bounding box. You can NOT set the world of a bounding box. ",
-        "\nLesser will always equal the lower south-east corner. ", "Greater will always equal the higher north-west corner."})
+    "set the coords of a bounding box. You can NOT set the world of a bounding box. ",
+    "Greater will always equal the higher south-east corner. ",
+    "Lesser will always equal the lower north-west corner."})
 @Examples({"set lesser y coord of {bound} to 10", "set {_x} to greater x coord of bound with id \"my.bound\""})
 @Since("1.0.0")
 public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
 
     static {
         Skript.registerExpression(ExprBoundCoords.class, Object.class, ExpressionType.PROPERTY,
-                "lesser (x|1:y|2:z) coord[inate] of [bound] %bound%",
-                "greater (x|1:y|2:z) coord[inate] of [bound] %bound%",
-                "world of bound %bound%");
+            "lesser (x|1:y|2:z) coord[inate] of [bound] %bound%",
+            "greater (x|1:y|2:z) coord[inate] of [bound] %bound%",
+            "world of bound %bound%");
     }
 
     private boolean WORLD;
