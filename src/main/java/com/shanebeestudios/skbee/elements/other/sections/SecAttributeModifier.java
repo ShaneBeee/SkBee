@@ -42,7 +42,7 @@ import java.util.UUID;
     "See [**McWiki Component**](https://minecraft.wiki/w/Data_component_format#attribute_modifiers) and " +
         "[**McWiki Modifiers**](https://minecraft.wiki/w/Attribute#Modifiers) for further details.",
     "",
-    "`transient` = Non-persisent attribute modifier, will not save to the entity's NBT (Requires PaperMC).",
+    "`transient` = Non-persisent attribute modifier (LivingEntities only, not Items), will not save to the entity's NBT (Requires PaperMC).",
     "",
     "**Entries/Sections**:",
     "- `attribute` = The attribute this modifier is to act upon.",
@@ -52,7 +52,8 @@ import java.util.UUID;
     "- `uuid` = The uuid used to identify this modifier [optional] (Minecraft 1.20.6 and below).",
     "- `amount` = Amount of change from the modifier.",
     "- `operation` = The operation to decide how to modify. See [**McWiki**](https://minecraft.wiki/w/Attribute#Operations) for more details."})
-@Examples({"set {_i} to a stick",
+@Examples({"#Apply Attribute Modifiers to Items",
+    "set {_i} to a stick",
     "apply attribute modifier to {_i}:",
     "\tattribute: scale",
     "\tid: \"minecraft:my_hand_scale\"",
@@ -65,7 +66,18 @@ import java.util.UUID;
     "\tslot: offhand_slot_group",
     "\tamount: -0.9",
     "\toperation: add_number",
-    "give player 1 of {_i}"})
+    "give player 1 of {_i}",
+    "#Apply Attribute Modifiers to LivingEntities",
+    "apply transient attribute modifier to player:",
+    "\tid: \"my_mods:mining\"",
+    "\tattribute: player mining efficiency",
+    "\tamount: 50",
+    "\toperation: add_number",
+    "apply transient attribute modifier to player:",
+    "\tid: \"my_mods:scale\"",
+    "\tattribute: scale",
+    "\tamount: -0.5",
+    "\toperation: add_number"})
 @Since("3.5.9")
 public class SecAttributeModifier extends Section {
 
