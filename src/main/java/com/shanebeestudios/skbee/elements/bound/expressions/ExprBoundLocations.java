@@ -19,7 +19,7 @@ import org.jetbrains.annotations.Nullable;
     "Lesser will always equal the lower north-west corner."})
 @Examples({"set {_center} to bound center of bound with id \"spawn-bound\"",
     "set block at bound greater corner of {_bound} to pink wool"})
-@Since("INSERT VERSION")
+@Since("3.5.9")
 public class ExprBoundLocations extends SimplePropertyExpression<Bound, Location> {
 
     static {

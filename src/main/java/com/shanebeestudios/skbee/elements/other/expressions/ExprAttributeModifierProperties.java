@@ -30,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set {_id} to modifier id of {_modifier}",
     "set {_slot} to modifier slot of {_modifier}",
     "if modifier amount of {_mod} > 1:"})
-@Since("INSERT VERSION")
+@Since("3.5.9")
 public class ExprAttributeModifierProperties extends SimplePropertyExpression<AttributeModifier, Object> {
 
     static {

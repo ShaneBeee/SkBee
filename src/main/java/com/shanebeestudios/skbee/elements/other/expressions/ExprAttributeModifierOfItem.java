@@ -43,7 +43,7 @@ import java.util.List;
     "set {_mod} to gravity attribute modifier of player",
     "delete gravity attribute modifier of player",
     "add scale modifier of player's tool to scale modifier of player"})
-@Since("INSERT VERSION")
+@Since("3.5.9")
 public class ExprAttributeModifierOfItem extends SimpleExpression<AttributeModifier> {
 
     static {
