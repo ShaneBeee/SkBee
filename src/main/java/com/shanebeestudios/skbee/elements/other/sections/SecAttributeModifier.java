@@ -66,7 +66,7 @@ import java.util.UUID;
     "\tamount: -0.9",
     "\toperation: add_number",
     "give player 1 of {_i}"})
-@Since("3.5.8")
+@Since("3.5.9")
 public class SecAttributeModifier extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
