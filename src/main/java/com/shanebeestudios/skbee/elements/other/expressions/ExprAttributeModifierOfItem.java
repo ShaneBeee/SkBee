@@ -157,7 +157,7 @@ public class ExprAttributeModifierOfItem extends SimpleExpression<AttributeModif
                 if (attributeInstance == null) continue;
 
                 if (mode == ChangeMode.DELETE) {
-                    attributeInstance.getModifiers().clear();
+                    attributeInstance.getModifiers().forEach(attributeInstance::removeModifier);
                 } else if (!modifiers.isEmpty()) {
                     for (AttributeModifier modifier : modifiers) {
                         if (mode == ChangeMode.ADD) {
