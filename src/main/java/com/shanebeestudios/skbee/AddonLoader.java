@@ -577,10 +577,6 @@ public class AddonLoader {
             Util.logLoading("&5Item Component elements &cdisabled via config");
             return;
         }
-        if (!Skript.classExists("org.bukkit.inventory.meta.components.FoodComponent")) {
-            Util.logLoading("&5Item Component elements &cdisabled &7(&eRequires Minecraft 1.20.5+&7)");
-            return;
-        }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.itemcomponent");
             Util.logLoading("&5Item Component Elements &asuccessfully loaded");
