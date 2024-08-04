@@ -15,6 +15,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -24,7 +25,9 @@ import org.jetbrains.annotations.Nullable;
     "Unlike setting the name of an item, this name cannot be changed through an anvil, and does not show in some labels, such as banner markers and item frames.",
     "See [**McWiki**](https://minecraft.wiki/w/Data_component_format#item_name) for more details."})
 @Examples({"set component item name of player's tool to translate component of \"item.minecraft.diamond_sword\"",
-    "set component custom name of player's tool to mini message from \"Stickaxe\""})
+    "delete component item name of player's tool",
+    "set component custom item name of player's tool to mini message from \"Stickaxe\"",
+    "delete component custom item name of player's tool"})
 @Since("2.4.0")
 public class ExprItemName extends SimplePropertyExpression<ItemType, ComponentWrapper> {
 
@@ -60,22 +63,21 @@ public class ExprItemName extends SimplePropertyExpression<ItemType, ComponentWr
     @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(ComponentWrapper.class);
-        }
+        if (mode == ChangeMode.SET) return CollectionUtils.array(ComponentWrapper.class);
+        else if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE) return CollectionUtils.array();
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (mode == ChangeMode.SET) {
-            if (delta[0] instanceof ComponentWrapper component) {
-                for (ItemType itemType : getExpr().getArray(event)) {
-                    if (this.custom) component.setCustomItemName(itemType);
-                    else component.setItemName(itemType);
-                }
-            }
+        Component component = delta != null && delta[0] instanceof ComponentWrapper comp ? comp.getComponent() : null;
+
+        for (ItemType itemType : getExpr().getArray(event)) {
+            ItemMeta itemMeta = itemType.getItemMeta();
+            if (this.custom) itemMeta.itemName(component);
+            else itemMeta.displayName(component);
+            itemType.setItemMeta(itemMeta);
         }
     }
 
