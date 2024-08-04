@@ -56,6 +56,10 @@ public class ComponentWrapper {
 
     // STATIC
     private static final boolean HAS_SIDES = Skript.classExists("org.bukkit.block.sign.SignSide");
+    /**
+     * Check if ItemMeta supports 'itemName' ('item_name' component
+     */
+    public static final boolean HAS_ITEM_NAME = Skript.methodExists(ItemMeta.class, "itemName");
 
     /**
      * Create an empty component
@@ -530,6 +534,22 @@ public class ComponentWrapper {
         ItemMeta itemMeta = itemType.getItemMeta();
         itemMeta.displayName(this.component);
         itemType.setItemMeta(itemMeta);
+    }
+
+    /**
+     * Set the <b>'item_name'</b> component of an item.
+     * <br>Unlike the <b>'custom_name'</b> component, this name cannot be changed through an anvil,
+     * and does not show in some labels, such as banner markers and item frames.
+     * <br><b>Requires Minecraft 1.20.5+</b>
+     *
+     * @param itemType Item to change name
+     */
+    public void setCustomItemName(ItemType itemType) {
+        if (HAS_ITEM_NAME) {
+            ItemMeta itemMeta = itemType.getItemMeta();
+            itemMeta.itemName(this.component);
+            itemType.setItemMeta(itemMeta);
+        }
     }
 
     /**
