@@ -33,7 +33,7 @@ import java.util.List;
     "",
     "**Entries/Sections**:",
     "- `default mining speed` = The default mining speed of this tool, used if no rules override it. Defaults to 1.0. [Optional]",
-    "- `damage per block` = The amount of durability to remove each time a block is broken with this tool. Must be a non-negative integer.",
+    "- `damage per block` = The amount of durability to remove each time a block is broken with this tool. Must be a non-negative integer. [Optional]",
     "- `rules:` =  A list of rules for the blocks that this tool has a special behavior with."})
 @Examples({"set {_i} to a stick",
     "apply tool component to {_i}:",
@@ -74,7 +74,7 @@ public class SecToolComponent extends Section {
 
     static {
         if (Skript.classExists("org.bukkit.inventory.meta.components.ToolComponent")) {
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("default mining speed", null, false, Number.class));
+            VALIDATIOR.addEntryData(new ExpressionEntryData<>("default mining speed", null, true, Number.class));
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("damage per block", null, true, Number.class));
             VALIDATIOR.addSection("rules", true);
             Skript.registerSection(SecToolComponent.class, "apply tool component to %itemtypes%");
@@ -108,20 +108,20 @@ public class SecToolComponent extends Section {
     protected @Nullable TriggerItem walk(Event event) {
         Object localVars = Variables.copyLocalVariables(event);
 
-        Number miningSpeedNum = this.defaultMiningSpeed.getSingle(event);
-        Number damagePerNum = this.damagePerBlock.getSingle(event);
-        if (damagePerNum == null) return super.walk(event, false);
-
-        int damagePerBlock = damagePerNum.intValue();
+        Number defaultMiningSpeed = this.defaultMiningSpeed != null ? this.defaultMiningSpeed.getSingle(event) : null;
+        Number damagePerBlock = this.damagePerBlock != null ? this.damagePerBlock.getSingle(event) : null;
 
         for (ItemType itemType : this.items.getArray(event)) {
             ItemMeta itemMeta = itemType.getItemMeta();
 
             ToolComponent tool = itemMeta.getTool();
-            if (miningSpeedNum != null) {
-                tool.setDefaultMiningSpeed(miningSpeedNum.floatValue());
+            if (defaultMiningSpeed != null) {
+                tool.setDefaultMiningSpeed(defaultMiningSpeed.floatValue());
             }
-            tool.setDamagePerBlock(damagePerBlock);
+            if (damagePerBlock != null) {
+                int dpb = damagePerBlock.intValue();
+                if (dpb >= 0) tool.setDamagePerBlock(dpb);
+            }
 
             if (this.rulesSection != null) {
                 ToolComponentApplyRulesEvent toolEvent = new ToolComponentApplyRulesEvent(tool);
