@@ -125,6 +125,7 @@ public class Types {
                 "# setup the mini message with the replacement placeholder",
                 "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r::*}",
                 "send component {_m}")
+            .parser(SkriptUtils.getDefaultParser())
             .since("3.5.0"));
 
         // Functions

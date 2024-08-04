@@ -107,6 +107,7 @@ public class Types {
                     "which can identify built-in and user-defined objects without potential ambiguity or conflicts.",
                     "For more information see [**Resource Location**](https://minecraft.wiki/w/Resource_location) on McWiki.")
                 .since("2.6.0")
+                .parser(SkriptUtils.getDefaultParser())
                 .serializer(new Serializer<>() {
                     @Override
                     public @NotNull Fields serialize(NamespacedKey namespacedKey) {
