@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.itemcomponent;
+package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
