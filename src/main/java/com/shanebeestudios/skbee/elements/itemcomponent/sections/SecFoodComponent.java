@@ -77,11 +77,12 @@ public class SecFoodComponent extends Section {
         }
     }
 
-    private static final boolean HAS_CONVERT = Skript.methodExists(FoodComponent.class, "setUsingConvertsTo", ItemStack.class);
+    private static boolean HAS_CONVERT = false;
     private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
 
     static {
         if (Skript.classExists("org.bukkit.inventory.meta.components.FoodComponent")) {
+            HAS_CONVERT = Skript.methodExists(FoodComponent.class, "setUsingConvertsTo", ItemStack.class);
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("nutrition", null, false, Number.class));
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("saturation", null, false, Number.class));
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("can always eat", null, true, Boolean.class));
