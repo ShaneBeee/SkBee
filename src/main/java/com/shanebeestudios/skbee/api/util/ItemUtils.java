@@ -1,12 +1,16 @@
 package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.registrations.Classes;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class ItemUtils {
 
@@ -65,6 +69,46 @@ public class ItemUtils {
         builder.append(",operation=").append(Classes.toString(attributeModifier.getOperation()));
         builder.append("}");
         return builder.toString();
+    }
+
+    /**
+     * Add ItemTypes to a list of ItemStacks
+     * <br>This will split up oversized stacks as well
+     *
+     * @param itemTypes List of ItemTypes to add
+     * @return List of ItemStacks split up correctly
+     */
+    public static List<ItemStack> addItemTypesToList(List<ItemType> itemTypes) {
+        List<ItemStack> itemStacks = new ArrayList<>();
+        for (ItemType itemType : itemTypes) {
+            // Split up oversized stacks
+            ItemStack[] is = new ItemStack[itemType.getAmount()];
+            itemType.addTo(is);
+            for (ItemStack itemStack : is) {
+                if (itemStack != null && !itemStack.isEmpty()) itemStacks.add(itemStack);
+            }
+        }
+        return itemStacks;
+    }
+
+    /**
+     * Remove list of ItemTypes from a list of ItemStacks
+     * <br>This will split up oversized stacks as well
+     *
+     * @param itemStacks List of ItemStacks to have ItemTypes removed from
+     * @param itemTypes  List of ItemTypes to remove
+     * @return Updated list of ItemStacks
+     */
+    public static List<ItemStack> removeItemTypesFromList(List<ItemStack> itemStacks, List<ItemType> itemTypes) {
+        List<ItemStack> copyList = new ArrayList<>(itemStacks);
+        for (ItemType itemType : itemTypes) {
+            itemType.removeFrom(copyList);
+        }
+        List<ItemStack> newItems = new ArrayList<>();
+        for (ItemStack itemStack : copyList) {
+            if (itemStack != null && !itemStack.isEmpty()) newItems.add(itemStack);
+        }
+        return newItems;
     }
 
 }
