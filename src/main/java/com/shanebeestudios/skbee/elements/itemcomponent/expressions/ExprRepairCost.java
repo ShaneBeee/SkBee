@@ -18,6 +18,9 @@ import org.jetbrains.annotations.Nullable;
 @Description({"The number of experience levels to add to the base level cost when repairing, combining, or renaming this item with an anvil.",
     "Must be a non-negative integer, defaults to 0."})
 @Examples({"set repair cost of player's tool to 3",
+    "add 2 to repair cost of player's tool",
+    "subtract 1 from repair cost of player's tool",
+    "reset repair cost of player's tool",
     "if repair cost of player's tool > 0:"})
 @Since("INSERT VERSION")
 public class ExprRepairCost extends SimplePropertyExpression<ItemType, Number> {
@@ -38,7 +41,7 @@ public class ExprRepairCost extends SimplePropertyExpression<ItemType, Number> {
     @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(Number.class);
+        if (mode == ChangeMode.SET || mode == ChangeMode.REMOVE || mode == ChangeMode.ADD) return CollectionUtils.array(Number.class);
         else if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE) return CollectionUtils.array();
         return null;
     }
@@ -46,11 +49,16 @@ public class ExprRepairCost extends SimplePropertyExpression<ItemType, Number> {
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        int cost = delta != null && delta[0] instanceof Number num ? Math.max(num.intValue(), 0) : 0;
+        int cost = delta != null && delta[0] instanceof Number num ? num.intValue() : 0;
         for (ItemType itemType : getExpr().getArray(event)) {
             ItemMeta itemMeta = itemType.getItemMeta();
             if (itemMeta instanceof Repairable repairable) {
-                repairable.setRepairCost(cost);
+                int newCost = switch (mode) {
+                    case ADD -> repairable.getRepairCost() + cost;
+                    case REMOVE -> repairable.getRepairCost() - cost;
+                    default-> cost;
+                };
+                repairable.setRepairCost(Math.max(newCost, 0));
                 itemType.setItemMeta(itemMeta);
             }
         }
