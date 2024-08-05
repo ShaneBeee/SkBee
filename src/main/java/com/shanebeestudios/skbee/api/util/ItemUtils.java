@@ -75,20 +75,22 @@ public class ItemUtils {
      * Add ItemTypes to a list of ItemStacks
      * <br>This will split up oversized stacks as well
      *
-     * @param itemTypes List of ItemTypes to add
+     * @param itemTypes  List of ItemTypes to add
+     * @param itemStacks Option list of ItemStacks to modify
      * @return List of ItemStacks split up correctly
      */
-    public static List<ItemStack> addItemTypesToList(List<ItemType> itemTypes) {
-        List<ItemStack> itemStacks = new ArrayList<>();
+    public static List<ItemStack> addItemTypesToList(List<ItemType> itemTypes, List<ItemStack> itemStacks) {
+        List<ItemStack> originalList = itemStacks != null ? new ArrayList<>(itemStacks) : new ArrayList<>();
+        ItemStack[] buffer = originalList.toArray(new ItemStack[1000]);
         for (ItemType itemType : itemTypes) {
             // Split up oversized stacks
-            ItemStack[] is = new ItemStack[itemType.getAmount()];
-            itemType.addTo(is);
-            for (ItemStack itemStack : is) {
-                if (itemStack != null && !itemStack.isEmpty()) itemStacks.add(itemStack);
-            }
+            itemType.addTo(buffer);
         }
-        return itemStacks;
+        List<ItemStack> newList = new ArrayList<>();
+        for (ItemStack itemStack : buffer) {
+            if (itemStack != null && !itemStack.isEmpty()) newList.add(itemStack);
+        }
+        return newList;
     }
 
     /**
