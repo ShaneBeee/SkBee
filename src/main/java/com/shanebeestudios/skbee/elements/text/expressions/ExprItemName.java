@@ -20,29 +20,31 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("TextComponent - Item Name")
-@Description({"Get/set the component name of an ItemType.",
-    "**NOTE**: The `custom` option allows you to get/set the `item_name` component of an item (Requires Minecraft 1.20.5+).",
-    "Unlike setting the name of an item, this name cannot be changed through an anvil, and does not show in some labels, such as banner markers and item frames.",
+@Description({"Get/set the component name of an Item.",
+    "`(custom|display) name` = Get/set the `custom_name` component of an item just like you would with Skript's name expression.",
+    "`item name` = Get/set the `item_name` component of an item (Requires Minecraft 1.20.5+).",
+    "Unlike setting the custom/display name of an item, this name cannot be changed through an anvil,",
+    "and does not show in some labels, such as banner markers and item frames.",
     "See [**McWiki**](https://minecraft.wiki/w/Data_component_format#item_name) for more details."})
-@Examples({"set component item name of player's tool to translate component of \"item.minecraft.diamond_sword\"",
-    "delete component item name of player's tool",
-    "set component custom item name of player's tool to mini message from \"Stickaxe\"",
-    "delete component custom item name of player's tool"})
+@Examples({"set component custom name of player's tool to translate component of \"item.minecraft.diamond_sword\"",
+    "delete component custom name of player's tool",
+    "set component item name of player's tool to mini message from \"Stickaxe\"",
+    "delete component item name of player's tool"})
 @Since("2.4.0")
 public class ExprItemName extends SimplePropertyExpression<ItemType, ComponentWrapper> {
 
     static {
         register(ExprItemName.class, ComponentWrapper.class,
-            "component [:custom] item[[ ]type] name", "itemtypes");
+            "component (:item|(custom|display)) name", "itemtypes");
     }
 
-    private boolean custom;
+    private boolean itemName;
 
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.custom = parseResult.hasTag("custom");
-        if (this.custom && !ComponentWrapper.HAS_ITEM_NAME) {
+        this.itemName = parseResult.hasTag("item");
+        if (this.itemName && !ComponentWrapper.HAS_ITEM_NAME) {
             Skript.error("'custom item name' requires Minecraft 1.20.5+");
             return false;
         }
@@ -52,7 +54,7 @@ public class ExprItemName extends SimplePropertyExpression<ItemType, ComponentWr
     @Override
     public @Nullable ComponentWrapper convert(ItemType itemType) {
         Component nameComponent;
-        if (this.custom) {
+        if (this.itemName) {
             nameComponent = itemType.getItemMeta().itemName();
         } else {
             nameComponent = itemType.getItemMeta().displayName();
@@ -75,7 +77,7 @@ public class ExprItemName extends SimplePropertyExpression<ItemType, ComponentWr
 
         for (ItemType itemType : getExpr().getArray(event)) {
             ItemMeta itemMeta = itemType.getItemMeta();
-            if (this.custom) itemMeta.itemName(component);
+            if (this.itemName) itemMeta.itemName(component);
             else itemMeta.displayName(component);
             itemType.setItemMeta(itemMeta);
         }
@@ -88,8 +90,8 @@ public class ExprItemName extends SimplePropertyExpression<ItemType, ComponentWr
 
     @Override
     protected @NotNull String getPropertyName() {
-        String custom = this.custom ? " custom" : "";
-        return "component" + custom + " item name";
+        String type = this.itemName ? "item" : "custom";
+        return "component" + type + " name";
     }
 
 }
