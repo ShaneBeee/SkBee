@@ -41,23 +41,23 @@ import org.jetbrains.annotations.NotNull;
 @Description({"Get the NBT compound of a block/entity/item/file/chunk.",
     "",
     "SPECIAL CASES:",
-    "`full nbt of %item%` = Returns a copy of the FULL NBT of an item (this includes id, count and 'tag/components' compound).",
+    "- `full nbt of %item%` = Returns a copy of the FULL NBT of an item (this includes id, count and 'tag/components' compound).",
     "Modifying this will have no effect on the original item. This is useful for serializing items.",
-    "`nbt of %item%` = Returns the original. Modifying this will modify the original item.",
-    "\\- (1.20.4-) This will return the 'tag' portion of an items full NBT.",
-    "\\- (1.20.5+) This will return the 'minecraft:custom_data' component container of an item's NBT.",
-    "`components nbt of %item%` = Returns the components container of an item's NBT. Modifying this will modify the original item. (This is an MC 1.20.5+ feature).",
+    "- `nbt of %item%` = Returns the original. Modifying this will modify the original item.",
+    "\\- (MC 1.20.4-) This will return the 'tag' portion of an items full NBT.",
+    "\\- (MC 1.20.5+) This will return the 'components' portion of an item's full NBT.",
+    "- `custom nbt of %item%` = Returns the 'minecraft:custom_data' component of an item's NBT. Modifying this will modify the original item. (This is an MC 1.20.5+ feature).",
     "Please see [**Data Component Format**](https://minecraft.wiki/w/Data_component_format) on McWiki for more information on item NBT components.",
-    "`nbt copy of %objects%` = Returns a copy of the original NBT compound. This way you can modify it without",
+    "- `nbt copy of %objects%` = Returns a copy of the original NBT compound. This way you can modify it without",
     "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to other entities.",
     "",
     "NBT from a file will need to be saved manually using",
-    "the 'NBT - Save File effect'. If the file does not yet exist, a new file will be created.",
+    "the 'NBT - Save File' effect. If the file does not yet exist, a new file will be created.",
     "",
     "CHANGERS:",
-    "\t`add` = Adding a compound to another compound will merge them (This is controlled by Minecraft, results may vary).",
-    "\t`delete` = Will delete NBT files, or clear the NBT compound (This can break entities/players, be careful!).",
-    "\t`reset` = Will clear the NBT compound (This can break entities/players, be careful!)"})
+    "- `add` = Adding a compound to another compound will merge them (This is controlled by Minecraft, results may vary).",
+    "- `delete` = Will delete NBT files, or clear the NBT compound (This can break entities/players, be careful!).",
+    "- `reset` = Will clear the NBT compound (This can break entities/players, be careful!)"})
 @Examples({"set {_n} to nbt of player's tool",
     "set {_n} to full nbt of player's tool",
     "set {_nbt} to nbt of target entity",
@@ -79,13 +79,13 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-            "[(:full|:component[s])] nbt [compound] [:copy] (of|from) %objects%",
+            "[(:full|:custom)] nbt [compound] [:copy] (of|from) %objects%",
             "nbt [compound] [:copy] (of|from) file[s] %strings%"
         );
     }
 
     private boolean isFullItem;
-    private boolean isComponents;
+    private boolean isCustom;
     private boolean isCopy;
     private boolean isFile;
 
@@ -94,7 +94,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
         Expression<?> expr = LiteralUtils.defendExpression(exprs[0]);
         setExpr(expr);
         this.isFullItem = parseResult.hasTag("full");
-        this.isComponents = parseResult.hasTag("component") || !NBTApi.HAS_ITEM_COMPONENTS;
+        this.isCustom = parseResult.hasTag("custom") && NBTApi.HAS_ITEM_COMPONENTS;
         this.isCopy = parseResult.hasTag("copy");
         this.isFile = matchedPattern == 1;
         return LiteralUtils.canInitSafely(expr);
@@ -125,14 +125,14 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 if (this.isFullItem) {
                     compound = NBTItem.convertItemtoNBT(itemType.getRandom());
                 } else {
-                    compound = new NBTCustomItemType(itemType, this.isComponents);
+                    compound = new NBTCustomItemType(itemType, this.isCustom);
                 }
             } else if (object instanceof ItemStack itemStack) {
                 if (itemStack.getType() == Material.AIR) return null;
                 if (this.isFullItem) {
                     return NBTItem.convertItemtoNBT(itemStack);
                 } else {
-                    compound = new NBTCustomItemStack(itemStack, this.isComponents);
+                    compound = new NBTCustomItemStack(itemStack, this.isCustom);
                 }
             } else if (object instanceof Slot slot) {
                 ItemStack stack = slot.getItem();
@@ -141,7 +141,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 if (this.isFullItem) {
                     compound = NBTItem.convertItemtoNBT(stack);
                 } else {
-                    compound = new NBTCustomSlot(slot, this.isComponents);
+                    compound = new NBTCustomSlot(slot, this.isCustom);
                 }
             } else if (object instanceof String nbtString) {
                 if (this.isFile) {
@@ -176,7 +176,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
-        String full = this.isFullItem ? "full " : (this.isComponents && NBTApi.HAS_ITEM_COMPONENTS) ? "components " : "";
+        String full = this.isFullItem ? "full " : this.isCustom ? "custom " : "";
         String copy = this.isCopy ? "copy " : "";
         return full + "nbt " + copy + "from " + getExpr().toString(e, d);
     }
