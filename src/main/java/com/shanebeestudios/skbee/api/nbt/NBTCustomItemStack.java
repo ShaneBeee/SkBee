@@ -16,13 +16,25 @@ public class NBTCustomItemStack extends NBTContainer {
     private final ItemStack originalItemStack;
     private final boolean isCustomData;
 
-    public NBTCustomItemStack(ItemStack itemStack, boolean isCustomData) {
-        super(getContainer(NBTItem.convertItemtoNBT(itemStack), isCustomData).toString());
+    public NBTCustomItemStack(ItemStack itemStack, boolean isCustomData, boolean isVanilla, boolean isFull) {
+        super(getInitialContainer(itemStack, isCustomData, isVanilla, isFull).toString());
         this.originalItemStack = itemStack;
         this.isCustomData = isCustomData;
     }
 
-    private static NBTCompound getContainer(NBTContainer itemContainer, boolean isCustomData) {
+    private static NBTCompound getInitialContainer(ItemStack itemStack, boolean isCustomData, boolean isVanilla, boolean isFull) {
+        NBTCompound nbtContainer;
+        if (isVanilla) {
+            nbtContainer = NBTReflection.getVanillaNBT(itemStack);
+        } else {
+            nbtContainer = NBTItem.convertItemtoNBT(itemStack);
+        }
+        if (nbtContainer == null) nbtContainer = new NBTContainer();
+        return getContainer(nbtContainer, isCustomData, isFull);
+    }
+
+    private static NBTCompound getContainer(NBTCompound itemContainer, boolean isCustomData, boolean isFull) {
+        if (isFull) return itemContainer;
         NBTCompound componentsContainer = itemContainer.getOrCreateCompound(NBTApi.TAG_NAME);
         if (isCustomData) {
             return componentsContainer.getOrCreateCompound("minecraft:custom_data");
@@ -35,7 +47,7 @@ public class NBTCustomItemStack extends NBTContainer {
     protected void saveCompound() {
         super.saveCompound();
         NBTContainer originalItemContainer = NBTItem.convertItemtoNBT(this.originalItemStack.clone());
-        NBTCompound components = getContainer(originalItemContainer, this.isCustomData);
+        NBTCompound components = getContainer(originalItemContainer, this.isCustomData, false);
         components.clearNBT();
         components.mergeCompound(this);
         ItemStack itemStack = NBTItem.convertNBTtoItem(originalItemContainer);

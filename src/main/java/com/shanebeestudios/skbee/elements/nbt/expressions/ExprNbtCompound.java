@@ -24,7 +24,6 @@ import com.shanebeestudios.skbee.api.nbt.NBTCustomTileEntity;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -36,7 +35,6 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 @Name("NBT - Compound of Object")
 @Description({"Get the NBT compound of a block/entity/item/file/chunk.",
     "",
@@ -48,6 +46,7 @@ import org.jetbrains.annotations.NotNull;
     "\\- (MC 1.20.5+) This will return the 'components' portion of an item's full NBT.",
     "- `custom nbt of %item%` = Returns the 'minecraft:custom_data' component of an item's NBT. Modifying this will modify the original item. (This is an MC 1.20.5+ feature).",
     "Please see [**Data Component Format**](https://minecraft.wiki/w/Data_component_format) on McWiki for more information on item NBT components.",
+    "- `[full] vanilla nbt of %item%` = Will return the same as above except it will include vanilla components which don't normally show in NBT.",
     "- `nbt copy of %objects%` = Returns a copy of the original NBT compound. This way you can modify it without",
     "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to other entities.",
     "",
@@ -79,12 +78,13 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
-            "[(:full|:custom)] nbt [compound] [:copy] (of|from) %objects%",
+            "[:full] [:vanilla] [:custom] nbt [compound] [:copy] (of|from) %objects%",
             "nbt [compound] [:copy] (of|from) file[s] %strings%"
         );
     }
 
     private boolean isFullItem;
+    private boolean isVanilla;
     private boolean isCustom;
     private boolean isCopy;
     private boolean isFile;
@@ -94,6 +94,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
         Expression<?> expr = LiteralUtils.defendExpression(exprs[0]);
         setExpr(expr);
         this.isFullItem = parseResult.hasTag("full");
+        this.isVanilla = parseResult.hasTag("vanilla") && NBTApi.HAS_ITEM_COMPONENTS;
         this.isCustom = parseResult.hasTag("custom") && NBTApi.HAS_ITEM_COMPONENTS;
         this.isCopy = parseResult.hasTag("copy");
         this.isFile = matchedPattern == 1;
@@ -122,27 +123,14 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 compound = new NBTCustomEntity(entity);
             } else if (object instanceof ItemType itemType) {
                 if (itemType.getMaterial() == Material.AIR) return null;
-                if (this.isFullItem) {
-                    compound = NBTItem.convertItemtoNBT(itemType.getRandom());
-                } else {
-                    compound = new NBTCustomItemType(itemType, this.isCustom);
-                }
+                compound = new NBTCustomItemType(itemType, this.isCustom, this.isVanilla, this.isFullItem);
             } else if (object instanceof ItemStack itemStack) {
                 if (itemStack.getType() == Material.AIR) return null;
-                if (this.isFullItem) {
-                    return NBTItem.convertItemtoNBT(itemStack);
-                } else {
-                    compound = new NBTCustomItemStack(itemStack, this.isCustom);
-                }
+                compound = new NBTCustomItemStack(itemStack, this.isCustom, this.isVanilla, this.isFullItem);
             } else if (object instanceof Slot slot) {
                 ItemStack stack = slot.getItem();
                 if (stack == null || stack.getType() == Material.AIR) return null;
-
-                if (this.isFullItem) {
-                    compound = NBTItem.convertItemtoNBT(stack);
-                } else {
-                    compound = new NBTCustomSlot(slot, this.isCustom);
-                }
+                compound = new NBTCustomSlot(slot, this.isCustom, this.isVanilla, this.isFullItem);
             } else if (object instanceof String nbtString) {
                 if (this.isFile) {
                     compound = NBTApi.getNBTFile(nbtString);
