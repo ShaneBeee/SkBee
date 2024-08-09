@@ -78,7 +78,8 @@ public class Types {
             Classes.registerClass(SPELL_ENUM.getClassInfo("spell")
                 .user("spells?")
                 .name("Spellcaster Spell")
-                .description("Represents the different spells of a spellcaster.")
+                .description("Represents the different spells of a spellcaster.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .since("1.17.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'spell' already.");
@@ -92,7 +93,8 @@ public class Types {
             Classes.registerClass(POTION_EFFECT_EVENT_CAUSE.getClassInfo("potioneffectcause")
                 .user("potion ?effect ?causes?")
                 .name("Potion Effect Cause")
-                .description("Represents the different causes of an entity potion effect event.")
+                .description("Represents the different causes of an entity potion effect event.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .since("1.17.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'potioneffectcause' already.");
@@ -148,7 +150,8 @@ public class Types {
             Classes.registerClass(BLOCK_FACE_ENUM.getClassInfo("blockface")
                 .user("blockfaces?")
                 .name("BlockFace")
-                .description("Represents the face of a block.")
+                .description("Represents the face of a block.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .since("2.6.0")
                 .defaultExpression(new SimpleLiteral<>(BlockFace.NORTH, true)));
         }
@@ -158,7 +161,8 @@ public class Types {
             Classes.registerClass(RESPAWN_REASON_ENUM.getClassInfo("respawnreason")
                 .user("respawn ?reasons?")
                 .name("Respawn Reason")
-                .description("Represents the reason the respawn event was called. Requires MC 1.19.4+")
+                .description("Represents the reason the respawn event was called. Requires MC 1.19.4+",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .examples("on respawn:",
                     "\tif respawn reason = death respawn:",
                     "\t\tgive player 10 diamonds")
@@ -243,11 +247,12 @@ public class Types {
                 .user("chunk ?load ?levels?")
                 .name("Chunk Load Level")
                 .description("Represents the types of load levels of a chunk.",
-                    "\n`border_level` = Most game logic is not processed, including entities and redstone.",
-                    "\n`entity_ticking_level` = All game logic is processed.",
-                    "\n`inaccessible_level` = No game logic is processed, world generation may still occur.",
-                    "\n`ticking_level` = All game logic except entities is processed.",
-                    "\n`unloaded_level` = This chunk is not loaded.")
+                    "- `border_level` = Most game logic is not processed, including entities and redstone.",
+                    "- `entity_ticking_level` = All game logic is processed.",
+                    "- `inaccessible_level` = No game logic is processed, world generation may still occur.",
+                    "- `ticking_level` = All game logic except entities is processed.",
+                    "- `unloaded_level` = This chunk is not loaded.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .since("2.17.0"));
         }
 
@@ -256,7 +261,8 @@ public class Types {
             Classes.registerClass(ENTITY_EFFECT_ENUM.getClassInfo("entityeffect")
                 .user("entit(y|ies) ?effects?")
                 .name("Entity Effect")
-                .description("Represents an effect that can be played on an entity.")
+                .description("Represents an effect that can be played on an entity.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .since("3.0.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'EntityEffect' already.");
@@ -274,7 +280,8 @@ public class Types {
             Classes.registerClass(SLOT_ENUM.getClassInfo("equipmentslot")
                 .user("equipment ?slots?")
                 .name("Equipment Slot")
-                .description("")
+                .description("Represents different slots of an entity.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .since("3.4.0"));
         }
 
@@ -283,7 +290,8 @@ public class Types {
             Classes.registerClass(ACTION_ENUM.getClassInfo("blockaction")
                 .user("block ?actions?")
                 .name("Block Action")
-                .description("")
+                .description("Represents different wants to interact.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .since("3.4.0"));
         }
 
@@ -318,7 +326,8 @@ public class Types {
             Classes.registerClass(CAUSE_ENUM.getClassInfo("entityremovecause")
                 .user("entity ?remove ?causes?")
                 .name("Entity Remove Cause")
-                .description("Represents the reasons an entity was removed from the world.")
+                .description("Represents the reasons an entity was removed from the world.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .after("damagecause", "damagetype")
                 .since("3.4.0"));
         }
@@ -328,7 +337,8 @@ public class Types {
             Classes.registerClass(CAUSE_ENUM.getClassInfo("playerspawnchangereason")
                 .user("player ?spawn ?change ?reasons?")
                 .name("Player Spawn Change Reason")
-                .description("Represents the reasons why a player changed their spawn location.")
+                .description("Represents the reasons why a player changed their spawn location.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
                 .after("damagecause", "damagetype", "itemtype")
                 .since("3.4.0"));
         }
