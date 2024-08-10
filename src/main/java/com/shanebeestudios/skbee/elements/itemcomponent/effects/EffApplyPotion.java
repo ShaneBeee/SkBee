@@ -17,7 +17,7 @@ import org.jetbrains.annotations.NotNull;
 
 @Name("ItemComponent - Food Component Apply Potion Effect")
 @Description({"Apply a potion effect to a food component. This works in the `effects` section of a food component section.",
-    "Probability is an optional value between 0 and 100. This is the chance the player will get this effect when eaten."})
+    "`probability` is an optional value between 0 and 1. This is the chance the player will get this effect when eaten."})
 @Examples({"apply food component to player's tool:",
     "\tnutrition: 5",
     "\tsaturation: 3",
@@ -25,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
     "\tcan always eat: true",
     "\teffects:",
     "\t\tapply potion effect of nausea without particles for 10 seconds",
-    "\t\tapply potion effect of poison without particles for 5 seconds with probability 50"})
+    "\t\tapply potion effect of poison without particles for 5 seconds with probability 0.5"})
 @Since("3.5.8")
 public class EffApplyPotion extends Effect {
 
@@ -56,7 +56,7 @@ public class EffApplyPotion extends Effect {
             if (effect == null) return;
 
             Number probNum = this.probability != null ? this.probability.getSingle(event) : null;
-            float probability = probNum != null ? MathUtil.clamp((probNum.floatValue() / 100), 0.0F, 1.0F) : 1;
+            float probability = probNum != null ? MathUtil.clamp(probNum.floatValue(), 0.0F, 1.0F) : 1;
 
             applyEvent.getComponent().addEffect(effect, probability);
         }

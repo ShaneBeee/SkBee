@@ -10,22 +10,22 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.ItemUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 @Name("Give or Drop Item")
 @Description("Attempts to give an item to a player and if they dont have room it will drop instead.")
 @Examples({"give or drop a diamond to player",
-        "give or drop {_items::*} to all players"})
+    "give or drop {_items::*} to all players"})
 @Since("2.14.0")
 public class EffGiveOrDrop extends Effect {
 
@@ -47,11 +47,7 @@ public class EffGiveOrDrop extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        List<ItemStack> itemStacks = new ArrayList<>();
-        for (ItemType itemData : this.itemTypes.getArray(event)) {
-            itemStacks.add(itemData.getRandom());
-        }
-
+        List<ItemStack> itemStacks = ItemUtils.addItemTypesToList(Arrays.asList(this.itemTypes.getArray(event)), null);
         ItemStack[] itemStacksArray = itemStacks.toArray(itemStacks.toArray(new ItemStack[0]));
 
         for (Player player : this.players.getArray(event)) {
@@ -65,7 +61,7 @@ public class EffGiveOrDrop extends Effect {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "give or drop " + this.itemTypes.toString(e, d) + " to " + this.players.toString(e, d);
     }
 

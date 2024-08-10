@@ -56,6 +56,10 @@ public class ComponentWrapper {
 
     // STATIC
     private static final boolean HAS_SIDES = Skript.classExists("org.bukkit.block.sign.SignSide");
+    /**
+     * Check if ItemMeta supports 'itemName' ('item_name' component
+     */
+    public static final boolean HAS_ITEM_NAME = Skript.methodExists(ItemMeta.class, "itemName");
 
     /**
      * Create an empty component
@@ -519,17 +523,6 @@ public class ComponentWrapper {
             entity.customName(this.component);
             entity.setCustomNameVisible(alwaysVisible);
         }
-    }
-
-    /**
-     * Set the name of an item
-     *
-     * @param itemType Item to change name
-     */
-    public void setItemName(ItemType itemType) {
-        ItemMeta itemMeta = itemType.getItemMeta();
-        itemMeta.displayName(this.component);
-        itemType.setItemMeta(itemMeta);
     }
 
     /**

@@ -35,7 +35,7 @@ import java.util.List;
     "NOTE: One of either `block types` or `block tag` MUST be used.",
     "`block types` = The blocks to match for this rule to apply.",
     "`block tag` = A Minecraft Tag to match for this rule to apply.",
-    "`speed` = If the blocks match, overrides the default mining speed. [Optional]",
+    "`speed` = If the blocks match, overrides the default mining speed (Must be a positive number). [Optional]",
     "`correct for drops` = If the blocks match, overrides whether or not this tool is " +
         "considered correct to mine at its most efficient speed, and to drop items if the block's loot table requires it. [Optional]"})
 @Examples({"set {_i} to a stick",
@@ -102,6 +102,7 @@ public class SecToolRule extends Section {
 
             Number speedNum = this.speed != null ? this.speed.getSingle(event) : null;
             Float speed = speedNum != null ? speedNum.floatValue() : null;
+            if (speed != null && speed <= 0) speed = null;
             Boolean correctForDrops = this.correctForDrops != null ? this.correctForDrops.getSingle(event) : null;
 
             if (this.blockTypes != null) {

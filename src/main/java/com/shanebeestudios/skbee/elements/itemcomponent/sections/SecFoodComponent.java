@@ -77,11 +77,12 @@ public class SecFoodComponent extends Section {
         }
     }
 
-    private static final boolean HAS_CONVERT = Skript.methodExists(FoodComponent.class, "setUsingConvertsTo", ItemStack.class);
+    private static boolean HAS_CONVERT = false;
     private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
 
     static {
         if (Skript.classExists("org.bukkit.inventory.meta.components.FoodComponent")) {
+            HAS_CONVERT = Skript.methodExists(FoodComponent.class, "setUsingConvertsTo", ItemStack.class);
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("nutrition", null, false, Number.class));
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("saturation", null, false, Number.class));
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("can always eat", null, true, Boolean.class));
@@ -112,6 +113,10 @@ public class SecFoodComponent extends Section {
         this.canAlwaysEat = (Expression<Boolean>) container.getOptional("can always eat", false);
         this.eatTime = (Expression<Timespan>) container.getOptional("eat time", false);
         this.usingConverts = (Expression<ItemType>) container.getOptional("using converts to", false);
+        if (this.usingConverts != null && !HAS_CONVERT) {
+            Skript.error("'using converts to' requires Minecraft 1.21+");
+            return false;
+        }
         SectionNode potionEffects = container.getOptional("effects", SectionNode.class, false);
         if (potionEffects != null) {
             this.potionEffectSection = loadCode(potionEffects, "potion effects", FoodComponentApplyEvent.class);

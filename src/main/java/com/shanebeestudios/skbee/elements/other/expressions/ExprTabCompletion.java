@@ -95,7 +95,7 @@ public class ExprTabCompletion extends SimpleExpression<String> {
             switch (mode) {
                 case SET, ADD -> {
                     String arg;
-                    if (position == buffers.length) {
+                    if (position == buffers.length || position == -1) {
                         arg = "";
                     } else {
                         arg = buffers[position];

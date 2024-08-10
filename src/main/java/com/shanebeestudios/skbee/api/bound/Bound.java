@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.api.bound;
 
 import com.google.common.base.Preconditions;
 import com.shanebeestudios.skbee.api.util.WorldUtils;
+import com.shanebeestudios.skbee.api.wrapper.LazyLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -12,6 +13,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -139,11 +141,11 @@ public class Bound implements ConfigurationSerializable {
      * @param type Type of entity to get
      * @return List of loaded entities in bound
      */
-    public List<Entity> getEntities(Class<? extends Entity> type) {
+    public @Nullable List<Entity> getEntities(Class<? extends Entity> type) {
         World world = getWorld();
         if (world == null) return null;
         Collection<Entity> nearbyEntities = world.getNearbyEntities(this.boundingBox, entity ->
-                type.isAssignableFrom(entity.getClass()));
+            type.isAssignableFrom(entity.getClass()));
         return new ArrayList<>(nearbyEntities);
     }
 
@@ -152,7 +154,7 @@ public class Bound implements ConfigurationSerializable {
      *
      * @return List of blocks within bound
      */
-    public List<Block> getBlocks() {
+    public @Nullable List<Block> getBlocks() {
         World w = getWorld();
         if (w == null) return null;
         List<Block> array = new ArrayList<>();
@@ -457,7 +459,11 @@ public class Bound implements ConfigurationSerializable {
      * @param value Value to set
      */
     public void setValue(String key, Object value) {
-        this.values.put(key, value);
+        if (value instanceof Location location) {
+            this.values.put(key, new LazyLocation(location));
+        } else {
+            this.values.put(key, value);
+        }
     }
 
     /**
@@ -483,7 +489,9 @@ public class Bound implements ConfigurationSerializable {
      * @return Value from bound
      */
     public Object getValue(String key) {
-        return this.values.get(key);
+        Object o = this.values.get(key);
+        if (o instanceof LazyLocation lazyLocation) return lazyLocation.getLocation();
+        return o;
     }
 
     /**

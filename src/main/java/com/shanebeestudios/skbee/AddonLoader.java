@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
+import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
@@ -140,6 +141,16 @@ public class AddonLoader {
         Util.log("Loaded (%s) elements:", total);
         for (int i = 0; i < finish.length; i++) {
             Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
+        }
+
+        if (this.config.SETTINGS_DEBUG) {
+            // Print names of ClassInfos with missing lang entry
+            Bukkit.getScheduler().runTaskLater(this.plugin, () -> Classes.getClassInfos().forEach(classInfo -> {
+                Noun name = classInfo.getName();
+                if (name.toString().contains("types.")) {
+                    Util.log("ClassInfo missing lang entry for: &c%s", name);
+                }
+            }), 1);
         }
     }
 

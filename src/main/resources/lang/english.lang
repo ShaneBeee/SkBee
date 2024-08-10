@@ -1,85 +1,83 @@
 version: @version@
 
 types:
-	worldcreator: world creator
-	environment: environment type¦s @an
-	worldtype: world type¦s @-
-	bound: bound
-	nbtcompound: nbt compound¦s @an
-	nbttype: nbt type¦s @an
-	textcomponent: text component¦s @-
-	particle: particle¦s @-
-	dustoption: dust option¦s @-
-	dusttransition: dust transition¦s @-
-	vibration: vibration¦s @-
-	recipechoice: recipe choice¦s
-	minecrafttag: minecraft tag¦s
-	structure: structure¦s
-	mirror: mirror¦s
-	structurerotation: structure rotation¦s
-	blockstate: blockstate¦s
-	gameevent: game event¦s
-	team: team¦s
-	teamoption: team options¦s
-	teamoptionstatus: team option status¦es
-	equipmentslot: equipment slot¦s
-	attributeoperation: attribute operation¦s
-	attributepair: attribute pair¦s
-	attributemodifier: attribute modifier¦s
-	fishingstate: fishing state¦s
-	fishhookstate: fish hook state¦s
-	bossbar: boss bars¦s
-	bossbarcolor: boss bar color¦s
-	bossbarstyle: boss bar style¦s
-	bossbarflag: boss bar flags¦s
-	statistic: statistic¦s
-	profession: profession¦s
-	villagertype: villager type¦s
-	potioneffectcause: potion effect cause¦s
-	merchant: merchant¦s
-	merchantrecipe: merchant recipe¦s
-	merchantinventory: merchant inventor¦y¦ies
-	advancement: advancement¦s
-	advancementpro: advancement progress¦es
-	worldborder: world border¦s
-	spell: spell¦s
-	itemflag: item flag¦s
-	transformreason: transform reason¦s
-	quitreason: quit reason¦s
-	recipetype: recipe type¦s
-	objective: objective¦s
-	criteria: criteria¦s
-	rendertype: render type¦s
-	displayslot: display slot¦s
-	namespacedkey: namespacedkey¦s
-	blockface: blockface¦s
-	raytraceresult: raytraceresult¦s
-	displaybrightness: display brightness¦es
-	displaybillboard: display billboard¦s
-	textalignment: text alignment¦s
-	itemdisplaytransform: item display transform¦s
-	bukkitcolor: bukkit col(or|our)¦s
-	quaternion: quaternion¦s
-	transformation: transformation¦s
-	respawnreason: respawn reason¦s
-	armortrim: armor trim¦s
-	trimpattern: trim pattern¦s
-	trimmaterial: trim material¦s
-	machine: machine¦s
-	machineproperty: machine propert¦y¦ies
-	damagesource: damage source¦s
-	damagetype: damage type¦s
-	memory: memor¦y¦ies
-	loottable: loot table¦s
-	entityremovecause: entity remove cause¦s
-	playerspawnchangereason: player spawn change reason¦s
-	signedmessage: signed message¦s
-	tagresolver: tag resolver¦s
-	minecraftentitytype: minecraft entity type¦s
-	chunkloadlevel: chunk load level¦s
-	entityeffect: entity effect¦s
-	blockaction: block action¦s
-	bukkittreetype: bukkit tree type¦s
-	pose: pose¦s
-	equipmentslotgroup: equipment slot group¦s
-	attributeoperation: attribute operation¦s
+    advancement: advancement¦s
+    advancementpro: advancement progress¦es
+    armortrim: armor trim¦s
+    attributemodifier: attribute modifier¦s
+    attributeoperation: attribute operation¦s
+    blockaction: block action¦s
+    blockface: blockface¦s
+    blockstate: blockstate¦s
+    bossbar: boss bars¦s
+    bossbarcolor: boss bar color¦s
+    bossbarflag: boss bar flags¦s
+    bossbarstyle: boss bar style¦s
+    bound: bound
+    bukkitcolor: bukkit col(or|our)¦s
+    bukkittreetype: bukkit tree type¦s
+    chunkloadlevel: chunk load level¦s
+    criteria: criteria¦s
+    damagesource: damage source¦s
+    damagetype: damage type¦s
+    displaybillboard: display billboard¦s
+    displaybrightness: display brightness¦es
+    displayslot: display slot¦s
+    dustoption: dust option¦s @-
+    dusttransition: dust transition¦s @-
+    entityeffect: entity effect¦s
+    entityremovecause: entity remove cause¦s
+    environment: environment type¦s @an
+    equipmentslot: equipment slot¦s
+    equipmentslotgroup: equipment slot group¦s
+    fishingstate: fishing state¦s
+    fishhookstate: fish hook state¦s
+    gameevent: game event¦s
+    itemdisplaytransform: item display transform¦s
+    itemflag: item flag¦s
+    loottable: loot table¦s
+    machine: machine¦s
+    machineproperty: machine propert¦y¦ies
+    memory: memor¦y¦ies
+    merchant: merchant¦s
+    merchantinventory: merchant inventor¦y¦ies
+    merchantrecipe: merchant recipe¦s
+    minecraftentitytype: minecraft entity type¦s
+    minecrafttag: minecraft tag¦s
+    mirror: mirror¦s
+    namespacedkey: namespacedkey¦s
+    nbtcompound: nbt compound¦s @an
+    nbttype: nbt type¦s @an
+    objective: objective¦s
+    particle: particle¦s @-
+    playerspawnchangereason: player spawn change reason¦s
+    pose: pose¦s
+    potioneffectcause: potion effect cause¦s
+    profession: profession¦s
+    quaternion: quaternion¦s
+    quitreason: quit reason¦s
+    raytraceresult: raytraceresult¦s
+    recipechoice: recipe choice¦s
+    recipetype: recipe type¦s
+    rendertype: render type¦s
+    respawnreason: respawn reason¦s
+    spell: spell¦s
+    signedmessage: signed message¦s
+    statistic: statistic¦s
+    structure: structure¦s
+    structurerotation: structure rotation¦s
+    tagresolver: tag resolver¦s
+    team: team¦s
+    teamoption: team options¦s
+    teamoptionstatus: team option status¦es
+    textalignment: text alignment¦s
+    textcomponent: text component¦s @-
+    transformation: transformation¦s
+    transformreason: transform reason¦s
+    trimmaterial: trim material¦s
+    trimpattern: trim pattern¦s
+    vibration: vibration¦s @-
+    villagertype: villager type¦s
+    worldborder: world border¦s
+    worldcreator: world creator
+    worldtype: world type¦s @-

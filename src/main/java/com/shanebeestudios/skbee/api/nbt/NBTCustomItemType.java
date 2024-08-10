@@ -10,8 +10,8 @@ public class NBTCustomItemType extends NBTCustomItemStack {
 
     private final ItemType itemType;
 
-    public NBTCustomItemType(ItemType itemType, boolean useComponents) {
-        super(itemType.getRandom(), useComponents);
+    public NBTCustomItemType(ItemType itemType, boolean isCustomData, boolean isVanilla, boolean isFull) {
+        super(itemType.getRandom(), isCustomData, isVanilla, isFull);
         this.itemType = itemType;
     }
 
