@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
     "refresh chunk at player # forces biomes to be re-sent to the player.",
     "set {_key} to biome key of block at player",
     "set {_keys::*} to biome keys of blocks in chunk at player"})
-@Since("INSERT VERSION")
+@Since("3.6.0")
 public class ExprBiomeKeyLocation extends SimplePropertyExpression<Location, NamespacedKey> {
 
     private static final UnsafeValues UNSAFE = Bukkit.getUnsafe();

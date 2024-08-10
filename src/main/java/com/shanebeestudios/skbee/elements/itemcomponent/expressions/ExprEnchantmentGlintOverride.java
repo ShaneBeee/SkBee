@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
     "- `reset` = Reset back to default state."})
 @Examples({"set glint override of player's tool to true",
     "set glint override of player's tool to false"})
-@Since("INSERT VERSION")
+@Since("3.6.0")
 public class ExprEnchantmentGlintOverride extends SimplePropertyExpression<ItemType, Boolean> {
 
     static {

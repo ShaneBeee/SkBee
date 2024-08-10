@@ -29,7 +29,7 @@ import java.util.List;
 @Examples({"add 100 diamonds to bundle contents of player's tool",
     "remove all diamonds from bundle contents of player's tool",
     "delete bundle contents of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.6.0")
 public class ExprBundleContents extends SimpleExpression<ItemType> {
 
     static {

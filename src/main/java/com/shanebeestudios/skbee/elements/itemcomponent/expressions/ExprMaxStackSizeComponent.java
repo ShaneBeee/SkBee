@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
     "- `reset` = Resets back to default stack size."})
 @Examples({"set max stack size component of player's tool to 1",
     "reset max stack size component of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.6.0")
 public class ExprMaxStackSizeComponent extends SimplePropertyExpression<ItemType, Number> {
 
     static {

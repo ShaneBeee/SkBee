@@ -26,7 +26,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"open real anvil inventory to player",
     "open real anvil named \"Mr Anvil\" to player",
     "open real anvil at location(1,1,1) named \"Senor Anvil\" to player"})
-@Since("INSERT VERSION")
+@Since("3.6.0")
 public class EffOpenRealInventory extends Effect {
 
     private static final boolean HAS_PAPER = Skript.methodExists(HumanEntity.class, "openAnvil", Location.class, boolean.class);

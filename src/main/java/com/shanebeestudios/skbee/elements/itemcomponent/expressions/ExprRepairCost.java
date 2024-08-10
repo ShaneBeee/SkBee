@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
     "subtract 1 from repair cost of player's tool",
     "reset repair cost of player's tool",
     "if repair cost of player's tool > 0:"})
-@Since("INSERT VERSION")
+@Since("3.6.0")
 public class ExprRepairCost extends SimplePropertyExpression<ItemType, Number> {
 
     static {
