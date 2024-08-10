@@ -39,6 +39,8 @@ If you need SkBee to work on an older version of Skript this is the last version
 [**SkBee 2.18.4**](https://github.com/ShaneBeee/SkBee/releases/tag/2.18.4)
 (Just like any other <ins>**outdated**</ins> build, this one is no longer supported)
 
+### <ins>1.18.2</ins>
+[**SkBee 3.5.9**](https://github.com/ShaneBeee/SkBee/releases/tag/3.5.9)
 ### <ins>1.17.1</ins>
 [**SkBee 2.11.0**](https://github.com/ShaneBeee/SkBee/releases/tag/2.11.0)
 ### <ins>1.16.5</ins>
