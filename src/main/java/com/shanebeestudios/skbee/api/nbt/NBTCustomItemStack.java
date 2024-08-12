@@ -15,11 +15,13 @@ public class NBTCustomItemStack extends NBTContainer {
 
     private final ItemStack originalItemStack;
     private final boolean isCustomData;
+    private final boolean isFull;
 
     public NBTCustomItemStack(ItemStack itemStack, boolean isCustomData, boolean isVanilla, boolean isFull) {
         super(getInitialContainer(itemStack, isCustomData, isVanilla, isFull).toString());
         this.originalItemStack = itemStack;
         this.isCustomData = isCustomData;
+        this.isFull = isFull;
     }
 
     private static NBTCompound getInitialContainer(ItemStack itemStack, boolean isCustomData, boolean isVanilla, boolean isFull) {
@@ -46,6 +48,7 @@ public class NBTCustomItemStack extends NBTContainer {
     @Override
     protected void saveCompound() {
         super.saveCompound();
+        if (this.isFull) return;
         NBTContainer originalItemContainer = NBTItem.convertItemtoNBT(this.originalItemStack.clone());
         NBTCompound components = getContainer(originalItemContainer, this.isCustomData, false);
         components.clearNBT();
