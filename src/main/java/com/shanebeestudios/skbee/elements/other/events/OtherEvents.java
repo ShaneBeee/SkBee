@@ -29,7 +29,6 @@ import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.block.MoistureChangeEvent;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
@@ -627,31 +626,6 @@ public class OtherEvents extends SimpleEvent {
                     return event.getNewSpawn();
                 }
             }, EventValues.TIME_FUTURE);
-        }
-
-        if (Skript.classExists("org.bukkit.event.block.CrafterCraftEvent")) {
-            Skript.registerEvent("Crafter Craft Event", OtherEvents.class, CrafterCraftEvent.class, "crafter craft")
-                .description("Called when a Crafter is about to craft an item. Requires Minecraft 1.21.1+",
-                    "`event-string` = The key for the recipe used in this event.",
-                    "`recipe result` = An expression that reprsents the result slot (can be changed).")
-                .examples("on crafter craft:",
-                    "\tif event-string = \"minecraft:diamond_sword\":",
-                    "\t\tset name of recipe result to \"Señor Sword\"",
-                    "\telse:",
-                    "\t\tset recipe result to a stick named \"&cNice Try\"",
-                    "",
-                    "on preparing craft:",
-                    "\tset {_e} to event-string",
-                    "\tif {_e} = \"minecraft:diamond_shovel\":",
-                    "\t\tset name of recipe result to \"&cMr Shovel\"")
-                .since("INSERT VERSION");
-
-            EventValues.registerEventValue(CrafterCraftEvent.class, String.class, new Getter<>() {
-                @Override
-                public @NotNull String get(CrafterCraftEvent event) {
-                    return event.getRecipe().getKey().toString();
-                }
-            }, EventValues.TIME_NOW);
         }
     }
 
