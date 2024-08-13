@@ -191,6 +191,7 @@ public class SecAttributeModifier extends Section {
                 itemType.setItemMeta(itemMeta);
             } else if (object instanceof LivingEntity entity) {
                 AttributeInstance attributeInstance = entity.getAttribute(attribute);
+                if (attributeInstance == null) continue;
                 if (!EntityUtils.hasAttributeModifier(entity, attribute, attributeModifier)) {
                     if (this.trans) {
                         attributeInstance.addTransientModifier(attributeModifier);
