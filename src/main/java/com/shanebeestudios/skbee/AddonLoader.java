@@ -285,7 +285,7 @@ public class AddonLoader {
             Util.logLoading("&5Text Component Elements &cdisabled via config");
             return;
         }
-        if (!Skript.classExists("net.kyori.adventure.text.Component")) {
+        if (!Skript.classExists("io.papermc.paper.event.player.AsyncChatEvent")) {
             Util.logLoading("&5Text Component Elements &cdisabled");
             Util.logLoading("&7- Text components require a PaperMC server.");
             return;
