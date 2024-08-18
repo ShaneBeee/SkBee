@@ -7,6 +7,7 @@ import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.slot.Slot;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.ChatUtil;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.identity.Identity;
@@ -47,15 +48,17 @@ import org.jetbrains.annotations.Nullable;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.PatternSyntaxException;
 
 /**
  * Wrapper for {@link Component Adventure API Components}
  */
-@SuppressWarnings({"PatternValidation"})
+@SuppressWarnings({"PatternValidation", "CallToPrintStackTrace"})
 public class ComponentWrapper {
 
     // STATIC
     private static final boolean HAS_SIDES = Skript.classExists("org.bukkit.block.sign.SignSide");
+    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     /**
      * Check if ItemMeta supports 'itemName' ('item_name' component
      */
@@ -424,18 +427,26 @@ public class ComponentWrapper {
      */
     @SuppressWarnings("LanguageMismatch")
     public void replace(String text, ComponentWrapper replacement) {
-        this.component = this.component.replaceText(c -> c.match(text).replacement(replacement.component));
+        try {
+            this.component = this.component.replaceText(c -> c.match(text).replacement(replacement.component));
+        } catch (PatternSyntaxException ex) {
+            if (DEBUG) ex.printStackTrace();
+        }
     }
 
     /**
-     * Rpelace a string with a string
+     * Replace a string with a string
      *
      * @param text        String to replace
      * @param replacement To replace with
      */
     @SuppressWarnings("LanguageMismatch")
     public void replace(String text, String replacement) {
-        this.component = this.component.replaceText(c -> c.match(text).replacement(replacement));
+        try {
+            this.component = this.component.replaceText(c -> c.match(text).replacement(replacement));
+        } catch (PatternSyntaxException ex) {
+            if (DEBUG) ex.printStackTrace();
+        }
     }
 
     /**

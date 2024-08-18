@@ -295,7 +295,7 @@ public class Bound implements ConfigurationSerializable {
         Location greaterCorner = bound.getGreaterCorner().clone();
         Bound newBound = new Bound(lesserCorner, greaterCorner, id, bound.isTemporary());
         newBound.setOwners(bound.getOwners());
-        newBound.setMembers(bound.getOwners());
+        newBound.setMembers(bound.getMembers());
         newBound.setBoundingBox(bound.getBoundingBox().clone());
         newBound.values = bound.values;
         return newBound;
@@ -377,7 +377,7 @@ public class Bound implements ConfigurationSerializable {
      * @param owners Owners to set
      */
     public void setOwners(List<UUID> owners) {
-        this.owners = owners;
+        this.owners = new ArrayList<>(owners);
     }
 
     /**
@@ -422,7 +422,7 @@ public class Bound implements ConfigurationSerializable {
      * @param members Members to set
      */
     public void setMembers(List<UUID> members) {
-        this.members = members;
+        this.members = new ArrayList<>(members);
     }
 
     /**

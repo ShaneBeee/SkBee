@@ -12,18 +12,20 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Name("TextComponent - Replace Text")
-@Description({"Replace a string with another string or text component in a text component. Supports regex patterns."})
+@Description({"Replace a string with another string or text component in a text component. Supports regex patterns.",
+    "NOTE: If you notice sometimes your symbols aren't replace, this could be a regex pattern issue and you may need to escape characters.",
+    "ex: `:(` -> `:\\(` and `[` -> `\\[`"})
 @Examples({"component replace \"puppy\" with \"***\" in {_comp}",
-        "component replace \"\\d+\" with \"0\" in {_comp}"})
+    "component replace \"\\d+\" with \"0\" in {_comp}",
+    "component replace \":\\(\" with \"sad\" in {_comp}"})
 @Since("2.18.0")
 public class EffComponentReplace extends Effect {
 
     static {
         Skript.registerEffect(EffComponentReplace.class,
-                "component replace %strings% with %string/textcomponent% in %textcomponents%");
+            "component replace %strings% with %string/textcomponent% in %textcomponents%");
     }
 
     private Expression<String> toReplace;
@@ -54,7 +56,7 @@ public class EffComponentReplace extends Effect {
     }
 
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String toReplace = this.toReplace.toString(e, d);
         String replace = this.replacement.toString(e, d);
         String comp = this.components.toString(e, d);

@@ -23,17 +23,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("LootTable - Lootables")
+@Name("LootTable - LootTable of Lootable")
 @Description({"Get/set/delete the LootTable of a lootable object such as a block or entity.",
-        "`with seed` = Provide an optional seed for loot generation otherwise will randomly generate."})
+    "`with seed` = Provide an optional seed for loot generation otherwise will randomly generate."})
 @Examples({"set {_lootTable} to loottable of target block",
-        "set loottable of target block to loottable from key \"minecraft:chests/ancient_city\""})
+    "set loottable of target block to loottable from key \"minecraft:chests/ancient_city\""})
 @Since("3.4.0")
 public class ExprLootTableObject extends SimpleExpression<LootTable> {
 
     static {
         Skript.registerExpression(ExprLootTableObject.class, LootTable.class, ExpressionType.COMBINED,
-                "loot[ ]table of %blocks/entities% [with seed %-number%]");
+            "loot[ ]table of %blocks/entities% [with seed %-number%]");
     }
 
     private Expression<?> objects;

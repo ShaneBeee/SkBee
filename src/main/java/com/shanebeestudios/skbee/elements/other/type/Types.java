@@ -311,7 +311,7 @@ public class Types {
 
                     @Override
                     public @NotNull String toString(LootTable lootTable, int flags) {
-                        return "LootTable{" + lootTable.getKey() + "}";
+                        return lootTable.getKey().toString();
                     }
 
                     @Override

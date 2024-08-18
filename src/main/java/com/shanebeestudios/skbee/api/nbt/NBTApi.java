@@ -617,7 +617,11 @@ public class NBTApi {
                             byteArray = ArrayUtils.remove(byteArray, index);
                         }
                     }
-                    compound.setByteArray(tag, byteArray);
+                    if (byteArray.length > 0) {
+                        compound.setByteArray(tag, byteArray);
+                    } else {
+                        compound.removeKey(tag);
+                    }
                 }
             }
             case NBTTagIntArray -> {
@@ -631,7 +635,11 @@ public class NBTApi {
                             intArray = ArrayUtils.remove(intArray, index);
                         }
                     }
-                    compound.setIntArray(tag, intArray);
+                    if (intArray.length > 0) {
+                        compound.setIntArray(tag, intArray);
+                    } else {
+                        compound.removeKey(tag);
+                    }
                 }
             }
             case NBTTagIntList -> {
@@ -640,6 +648,7 @@ public class NBTApi {
                     for (Object o : object)
                         if (o instanceof Number number)
                             intList.remove((Object) number.intValue());
+                    if (intList.isEmpty()) compound.removeKey(tag);
                 }
             }
             case NBTTagLongList -> {
@@ -648,6 +657,7 @@ public class NBTApi {
                     for (Object o : object)
                         if (o instanceof Number number)
                             longList.remove(number.longValue());
+                    if (longList.isEmpty()) compound.removeKey(tag);
                 }
             }
             case NBTTagFloatList -> {
@@ -656,6 +666,7 @@ public class NBTApi {
                     for (Object o : object)
                         if (o instanceof Number number)
                             floatList.remove(number.floatValue());
+                    if (floatList.isEmpty()) compound.removeKey(tag);
                 }
             }
             case NBTTagDoubleList -> {
@@ -664,6 +675,7 @@ public class NBTApi {
                     for (Object o : object)
                         if (o instanceof Number number)
                             doubleList.remove(number.doubleValue());
+                    if (doubleList.isEmpty()) compound.removeKey(tag);
                 }
             }
             case NBTTagStringList -> {
@@ -672,6 +684,7 @@ public class NBTApi {
                     for (Object o : object)
                         if (o instanceof String string)
                             stringList.remove(string);
+                    if (stringList.isEmpty()) compound.removeKey(tag);
                 }
             }
             case NBTTagCompoundList -> {
