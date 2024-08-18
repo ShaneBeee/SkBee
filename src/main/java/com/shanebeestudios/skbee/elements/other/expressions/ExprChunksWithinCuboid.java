@@ -26,7 +26,7 @@ import java.util.List;
 @Description("Get a list of all chunks within 2 locations.")
 @Examples({"loop all chunks within {_l1} and {_l2}:",
     "refresh all chunks within {_l1} and {_l2}"})
-@Since("INSERT VERSION")
+@Since("3.6.1")
 public class ExprChunksWithinCuboid extends SimpleExpression<Chunk> {
 
     static {

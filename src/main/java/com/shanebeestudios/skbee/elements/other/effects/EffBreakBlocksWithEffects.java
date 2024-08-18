@@ -22,7 +22,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"break blocks in radius 2 around target block with effects",
     "break {_blocks::*} with effects and with xp",
     "break {_blocks::*} with effects and with xp using player's tool"})
-@Since("INSERT VERSION")
+@Since("3.6.1")
 public class EffBreakBlocksWithEffects extends Effect {
 
     private static final boolean HAS_EFFECTS = Skript.methodExists(Block.class, "breakNaturally", boolean.class, boolean.class);

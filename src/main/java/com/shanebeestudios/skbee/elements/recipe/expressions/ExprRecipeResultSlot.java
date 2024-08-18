@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
     "\tset {_e} to event-string",
     "\tif {_e} = \"minecraft:diamond_shovel\":",
     "\t\tset name of recipe result to \"&cMr Shovel\""})
-@Since("INSERT VERSION")
+@Since("3.6.1")
 public class ExprRecipeResultSlot extends SimpleExpression<Slot> {
 
     public static final boolean HAS_CRAFTER_RECIPE = Skript.classExists("org.bukkit.event.block.CrafterCraftEvent");

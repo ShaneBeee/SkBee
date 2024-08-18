@@ -44,7 +44,7 @@ public class EvtRecipe extends SimpleEvent {
                     "\tset {_e} to event-string",
                     "\tif {_e} = \"minecraft:diamond_shovel\":",
                     "\t\tset name of recipe result to \"&cMr Shovel\"")
-                .since("INSERT VERSION");
+                .since("3.6.1");
 
             EventValues.registerEventValue(CrafterCraftEvent.class, String.class, new Getter<>() {
                 @Override
