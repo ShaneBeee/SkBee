@@ -114,6 +114,7 @@ public class AddonLoader {
         loadGameEventElements();
         loadItemComponentElements();
         loadParticleElements();
+        loadPropertyElements();
         loadRayTraceElements();
         loadRecipeElements();
         loadScoreboardElements();
@@ -597,6 +598,18 @@ public class AddonLoader {
         }
     }
 
+    private void loadPropertyElements() {
+        if (!this.config.ELEMENTS_PROPERTY) {
+            Util.logLoading("&5Property elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.property");
+            Util.logLoading("&5Property Elements &asuccessfully loaded");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
     public boolean isTextComponentEnabled() {
         return this.textComponentEnabled;
     }

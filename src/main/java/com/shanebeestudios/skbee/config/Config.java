@@ -60,6 +60,7 @@ public class Config {
     public boolean ELEMENTS_DAMAGE_SOURCE;
     public boolean ELEMENTS_ITEM_COMPONENT;
     public boolean ELEMENTS_CHUNK_GEN;
+    public boolean ELEMENTS_PROPERTY;
     public boolean AUTO_LOAD_WORLDS;
 
     /**
@@ -177,6 +178,7 @@ public class Config {
         this.ELEMENTS_DAMAGE_SOURCE = getElement("damage-source");
         this.ELEMENTS_CHUNK_GEN = getElement("chunk-generator");
         this.ELEMENTS_ITEM_COMPONENT = getElement("item-component");
+        this.ELEMENTS_PROPERTY = getElement("property");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
     }
 
