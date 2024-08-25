@@ -98,7 +98,7 @@ public enum NBTCustomType {
                     case NBTTagLong -> NBTTagLongList;
                     case NBTTagFloat -> NBTTagFloatList;
                     case NBTTagDouble -> NBTTagDoubleList;
-                    case NBTTagString -> NBTTagString;
+                    case NBTTagString -> NBTTagStringList;
                     case NBTTagCompound -> NBTTagCompoundList;
                     default -> null;
                 };
