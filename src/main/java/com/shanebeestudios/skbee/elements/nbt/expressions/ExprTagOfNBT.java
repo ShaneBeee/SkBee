@@ -93,7 +93,7 @@ import java.util.ArrayList;
     "set string tag \"minecraft:rarity\" of nbt of player's tool to \"epic\"",
     "",
     "# All custom data must be within the \"minecraft:custom_data\" compound",
-    "# See NBT Compound expression for futher details on the `component nbt` expression",
+    "# See NBT Compound expression for futher details on the `custom nbt` expression",
     "set byte tag \"Points\" of custom nbt of player's tool to 10",
     "set int tag \"MyBloop\" of custom nbt of player's tool to 152",
     "# These examples will do the same as above",
