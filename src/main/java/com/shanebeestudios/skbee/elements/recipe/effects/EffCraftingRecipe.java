@@ -33,7 +33,7 @@ import java.util.List;
 @Description({"Register a new shaped/shapeless recipe for a specific item using custom ingredients.",
         "Recipes support items and material choices for ingredients. Material choices allow you to use Minecraft tags or lists of items.",
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
-        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
+        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"minecraft:\",",
         "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
         "<b>NOTE:</b> Recipes with 4 or less ingredients will be craftable in the player's crafting grid.",
