@@ -15,8 +15,9 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Average Tick Time")
-@Description("Represents the average amount of time (in milliseconds) it takes for the server to finish a tick. Requires PaperMC.")
+@Name("Average Tick Time - MSPT")
+@Description({"Represents the average amount of time (in milliseconds) it takes for the server to finish a tick, also know as MSPT",
+    "Requires PaperMC."})
 @Examples({"set {_avg} to average tick time",
     "if average tick time > 40:"})
 @Since("3.5.4")
