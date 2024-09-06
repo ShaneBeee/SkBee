@@ -11,6 +11,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.Consumer;
 
 public class ItemUtils {
 
@@ -111,6 +112,18 @@ public class ItemUtils {
             if (itemStack != null && !itemStack.isEmpty()) newItems.add(itemStack);
         }
         return newItems;
+    }
+
+    public static void modifyItemMeta(ItemType itemType, Consumer<ItemMeta> meta) {
+        ItemMeta itemMeta = itemType.getItemMeta();
+        meta.accept(itemMeta);
+        itemType.setItemMeta(itemMeta);
+    }
+
+    public static void modifyItemMeta(ItemStack itemStack, Consumer<ItemMeta> meta) {
+        ItemMeta itemMeta = itemStack.getItemMeta();
+        meta.accept(itemMeta);
+        itemStack.setItemMeta(itemMeta);
     }
 
 }
