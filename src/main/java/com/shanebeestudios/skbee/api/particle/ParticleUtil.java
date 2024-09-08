@@ -39,6 +39,8 @@ public class ParticleUtil {
 
     private static final Map<String, Particle> PARTICLES = new HashMap<>();
     private static final Map<Particle, String> PARTICLE_NAMES = new HashMap<>();
+    private static final boolean HAS_FORCE = Skript.methodExists(Player.class, "spawnParticle",
+        Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class);
 
     static {
         // Added in Spigot 1.20.2 (oct 20/2023)
@@ -165,7 +167,11 @@ public class ParticleUtil {
         } else {
             for (Player player : players) {
                 assert player != null;
-                player.spawnParticle(particle, location, count, x, y, z, extra, particleData, force);
+                if (HAS_FORCE) {
+                    player.spawnParticle(particle, location, count, x, y, z, extra, particleData, force);
+                } else {
+                    player.spawnParticle(particle, location, count, x, y, z, extra, particleData);
+                }
             }
         }
     }
