@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.worldcreator.objects;
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
+import net.kyori.adventure.util.TriState;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -24,6 +25,8 @@ import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "CallToPrintStackTrace"})
 public class BeeWorldCreator implements Keyed {
+
+    private static final boolean HAS_KEEP_SPAWN_LOADED = Skript.methodExists(WorldCreator.class, "keepSpawnLoaded");
 
     private final String worldName;
     private final NamespacedKey key;
@@ -200,6 +203,11 @@ public class BeeWorldCreator implements Keyed {
                 worldCreator.biomeProvider(biomeProvider);
             }
 
+            if (this.keepSpawnLoaded.isPresent() && HAS_KEEP_SPAWN_LOADED) {
+                TriState state = this.keepSpawnLoaded.get() ? TriState.TRUE : TriState.FALSE;
+                worldCreator.keepSpawnLoaded(state);
+            }
+
             genStructures.ifPresent(worldCreator::generateStructures);
             hardcore.ifPresent(worldCreator::hardcore);
 
@@ -229,7 +237,9 @@ public class BeeWorldCreator implements Keyed {
                 }
 
                 // Let's update the world with some other values
-                keepSpawnLoaded.ifPresent(world::setKeepSpawnInMemory);
+                if (keepSpawnLoaded.isPresent() && !HAS_KEEP_SPAWN_LOADED) {
+                    keepSpawnLoaded.ifPresent(world::setKeepSpawnInMemory);
+                }
             }
 
             SkBee.getPlugin().getBeeWorldConfig().saveWorldToFile(this);
