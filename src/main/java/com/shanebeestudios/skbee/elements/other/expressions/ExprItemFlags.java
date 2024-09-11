@@ -61,7 +61,7 @@ public class ExprItemFlags extends PropertyExpression<ItemType, ItemFlag> {
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {
-            case SET, ADD, REMOVE -> CollectionUtils.array(ItemFlag.class);
+            case SET, ADD, REMOVE -> CollectionUtils.array(ItemFlag[].class);
             case DELETE, RESET -> CollectionUtils.array();
             default -> null;
         };
