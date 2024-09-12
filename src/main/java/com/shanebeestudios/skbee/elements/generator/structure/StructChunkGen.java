@@ -29,57 +29,57 @@ import org.skriptlang.skript.lang.structure.Structure;
 
 @Name("ChunkGenerator - Register Generator")
 @Description({"Register a chunk generator to manipulate the world layout to your liking.",
-        "ENTRIES:",
-        "(These are all optional, and will default to false)",
-        "`vanilla decor` = Whether Minecraft will decorate the surface based on biomes.",
-        "`vanilla caves` = Whether Minecraft will carve caves.",
-        "`vanilla structures` = Whether Minecraft will generate structures based on biomes.",
-        "`vanilla mobs` = Whether Minecraft will spawn mobs based on biomes.",
-        "SECTIONS:",
-        "(These are all optional, but some do rely on others. `height gen` and `block pop` require `chunk gen`)",
-        "`biome gen` = Generate the biomes to be placed in the world.",
-        "`chunk gen` = Generate your surface layer of your world.",
-        "`height gen` = Tell Minecraft where the highest block in a chunk is for generating structures.",
-        "`block pop` = Used to decorate after initial surface is generated (Structures can be placed during this stage).",
-        "NOTES:",
-        "- `world-creator` needs to be enabled in the config",
-        "- Please see the [**Chunk Generator**](https://github.com/ShaneBeee/SkBee/wiki/Chunk-Generator) wiki for further details."})
+    "ENTRIES:",
+    "(These are all optional, and will default to false)",
+    "`vanilla decor` = Whether Minecraft will decorate the surface based on biomes.",
+    "`vanilla caves` = Whether Minecraft will carve caves.",
+    "`vanilla structures` = Whether Minecraft will generate structures based on biomes.",
+    "`vanilla mobs` = Whether Minecraft will spawn mobs based on biomes.",
+    "SECTIONS:",
+    "(These are all optional, but some do rely on others. `height gen` and `block pop` require `chunk gen`)",
+    "`biome gen` = Generate the biomes to be placed in the world.",
+    "`chunk gen` = Generate your surface layer of your world.",
+    "`height gen` = Tell Minecraft where the highest block in a chunk is for generating structures.",
+    "`block pop` = Used to decorate after initial surface is generated (Structures can be placed during this stage).",
+    "NOTES:",
+    "- `world-creator` needs to be enabled in the config",
+    "- Please see the [**Chunk Generator**](https://github.com/ShaneBeee/SkBee/wiki/Chunk-Generator) wiki for further details."})
 @Examples({"register chunk generator with id \"mars\":",
-        "\tvanilla decor: false",
-        "\tvanilla caves: false",
-        "\tvanilla structures: false",
-        "\tvanilla mobs: false",
-        "\tchunk gen:",
-        "\t\tloop 16 times:",
-        "\t\t\tloop 16 times:",
-        "\t\t\t\tset {_x} to (loop-number-1) - 1",
-        "\t\t\t\tset {_z} to (loop-number-2) - 1",
-        "",
-        "\t\t\t\t# This is just an expression I created with reflect to give you an idea how it can work",
-        "\t\t\t\tset {_y} to biome noise at vector({_x} + (chunkdata chunk x * 16), 1, {_z} + (chunkdata chunk z * 16))",
-        "\t\t\t\t# Fill blocks from 0 to y level with concrete",
-        "\t\t\t\tset chunkdata blocks within vector({_x}, 0, {_z}) and vector({_x}, {_y}, {_z}) to red_concrete[]",
-        "\t\t\t\t# Set the surface layer to concrete powder",
-        "\t\t\t\tset chunkdata block at vector({_x}, {_y}, {_z}) to red_concrete_powder[]",
-        "",
-        "\tbiome gen:",
-        "\t\t# Set our biome to something mars like",
-        "\t\tset chunkdata biome to crimson forest"})
+    "\tvanilla decor: false",
+    "\tvanilla caves: false",
+    "\tvanilla structures: false",
+    "\tvanilla mobs: false",
+    "\tchunk gen:",
+    "\t\tloop 16 times:",
+    "\t\t\tloop 16 times:",
+    "\t\t\t\tset {_x} to (loop-number-1) - 1",
+    "\t\t\t\tset {_z} to (loop-number-2) - 1",
+    "",
+    "\t\t\t\t# This is just an expression I created with reflect to give you an idea how it can work",
+    "\t\t\t\tset {_y} to biome noise at vector({_x} + (chunkdata chunk x * 16), 1, {_z} + (chunkdata chunk z * 16))",
+    "\t\t\t\t# Fill blocks from 0 to y level with concrete",
+    "\t\t\t\tset chunkdata blocks within vector({_x}, 0, {_z}) and vector({_x}, {_y}, {_z}) to red_concrete[]",
+    "\t\t\t\t# Set the surface layer to concrete powder",
+    "\t\t\t\tset chunkdata block at vector({_x}, {_y}, {_z}) to red_concrete_powder[]",
+    "",
+    "\tbiome gen:",
+    "\t\t# Set our biome to something mars like",
+    "\t\tset chunkdata biome to crimson forest"})
 @Since("3.5.0")
-public class StrucChunkGen extends Structure {
+public class StructChunkGen extends Structure {
 
     static {
         EntryValidator validator = EntryValidator.builder()
-                .addEntryData(new LiteralEntryData<>("vanilla decor", false, true, Boolean.class))
-                .addEntryData(new LiteralEntryData<>("vanilla caves", false, true, Boolean.class))
-                .addEntryData(new LiteralEntryData<>("vanilla structures", false, true, Boolean.class))
-                .addEntryData(new LiteralEntryData<>("vanilla mobs", false, true, Boolean.class))
-                .addSection("chunk gen", true)
-                .addSection("biome gen", true)
-                .addSection("height gen", true)
-                .addSection("block pop", true)
-                .build();
-        Skript.registerStructure(StrucChunkGen.class, validator, "register chunk generator with id %string%");
+            .addEntryData(new LiteralEntryData<>("vanilla decor", false, true, Boolean.class))
+            .addEntryData(new LiteralEntryData<>("vanilla caves", false, true, Boolean.class))
+            .addEntryData(new LiteralEntryData<>("vanilla structures", false, true, Boolean.class))
+            .addEntryData(new LiteralEntryData<>("vanilla mobs", false, true, Boolean.class))
+            .addSection("chunk gen", true)
+            .addSection("biome gen", true)
+            .addSection("height gen", true)
+            .addSection("block pop", true)
+            .build();
+        Skript.registerStructure(StructChunkGen.class, validator, "register chunk generator with id %string%");
     }
 
     private Literal<String> id;
@@ -146,6 +146,29 @@ public class StrucChunkGen extends Structure {
             }
         }
         return true;
+    }
+
+    @Override
+    public @NotNull Priority getPriority() {
+        // For Reference:
+        // 15 = ch.njol.skript.structures.StructUsing
+        // 100 = ch.njol.skript.structures.StructOptions
+        // 150 = org.skriptlang.reflect.java.elements.structures.StructImport
+        // 200 = ch.njol.skript.structures.StructAliases
+        // 300 = ch.njol.skript.structures.StructVariables
+        // 350 = org.skriptlang.reflect.syntax.condition.elements.StructCustomCondition
+        // 350 = org.skriptlang.reflect.syntax.effect.elements.StructCustomEffect
+        // 350 = org.skriptlang.reflect.syntax.event.elements.StructCustomEvent
+        // 350 = org.skriptlang.reflect.syntax.expression.elements.StructCustomConstant
+        // 350 = org.skriptlang.reflect.syntax.expression.elements.StructCustomExpression
+        // 400 = ch.njol.skript.structures.StructFunction
+        // 401 = com.shanebeestudios.skbee.elements.generator.structure.StructChunkGen
+        // 500 = ch.njol.skript.structures.StructCommand
+        // 600 = ch.njol.skript.structures.StructEvent
+        // Load after Options/Aliases/Variables/Function/CustomSyntax structures
+        // Load before Command/Event structures
+        // This ensures custom chunk generators can be used in WorldCreator within the load event
+        return new Priority(401);
     }
 
     @Override
