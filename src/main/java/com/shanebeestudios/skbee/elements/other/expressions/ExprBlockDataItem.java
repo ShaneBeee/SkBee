@@ -33,7 +33,7 @@ public class ExprBlockDataItem extends SimplePropertyExpression<ItemType, BlockD
     public @Nullable BlockData convert(ItemType itemType) {
         if (itemType.getItemMeta() instanceof BlockDataMeta meta) {
             Material blockForm = BlockDataUtils.getBlockForm(itemType.getMaterial());
-            if (blockForm.isBlock()) return meta.getBlockData(blockForm);
+            if (blockForm != null && blockForm.isBlock()) return meta.getBlockData(blockForm);
         }
         return null;
     }

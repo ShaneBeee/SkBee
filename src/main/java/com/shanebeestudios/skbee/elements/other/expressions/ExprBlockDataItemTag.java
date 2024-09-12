@@ -47,7 +47,7 @@ public class ExprBlockDataItemTag extends PropertyExpression<ItemType, Object> {
             if (!(itemType.getItemMeta() instanceof BlockDataMeta meta)) return null;
 
             Material blockForm = BlockDataUtils.getBlockForm(itemType.getMaterial());
-            if (!blockForm.isBlock()) return null;
+            if (blockForm == null || !blockForm.isBlock()) return null;
 
             BlockData blockData = meta.getBlockData(blockForm);
 
@@ -68,13 +68,11 @@ public class ExprBlockDataItemTag extends PropertyExpression<ItemType, Object> {
         if (delta == null) return;
         for (ItemType itemType : getExpr().getAll(event)) {
             Material blockForm = BlockDataUtils.getBlockForm(itemType.getMaterial());
+            if (blockForm == null || !blockForm.isBlock()) continue;
+
             BlockDataMeta itemMeta = (BlockDataMeta) itemType.getItemMeta();
-            BlockData oldBlockData;
-            if (itemMeta.hasBlockData()) {
-                oldBlockData = itemMeta.getBlockData(blockForm);
-            } else {
-                oldBlockData = blockForm.createBlockData();
-            }
+            BlockData oldBlockData = itemMeta.getBlockData(blockForm);
+
             BlockData newBlockData = BlockDataUtils.setBlockDataTag(oldBlockData, this.tag.getSingle(event), delta[0]);
             itemMeta.setBlockData(newBlockData);
             itemType.setItemMeta(itemMeta);

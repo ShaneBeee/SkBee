@@ -50,7 +50,7 @@ public class ExprBlockDataItemTags extends SimpleExpression<String> {
             if (!(itemType.getItemMeta() instanceof BlockDataMeta blockDataMeta)) continue;
 
             Material blockForm = BlockDataUtils.getBlockForm(itemType.getMaterial());
-            if (!blockForm.isBlock()) continue;
+            if (blockForm == null || !blockForm.isBlock()) continue;
 
             BlockData blockData = blockDataMeta.getBlockData(blockForm);
             String[] data = BlockDataUtils.getBlockDataTags(blockData);
