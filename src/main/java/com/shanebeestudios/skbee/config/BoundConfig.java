@@ -43,11 +43,6 @@ public class BoundConfig {
         }
         boundConfig = YamlConfiguration.loadConfiguration(boundFile);
         loadBounds();
-
-        // Update heights for 1.18 worlds
-        if (Skript.isRunningMinecraft(1, 18) && !boundConfig.getBoolean(UPDATED_18_HEIGHTS)) {
-            update18Heights();
-        }
     }
 
     private void loadBounds() {
