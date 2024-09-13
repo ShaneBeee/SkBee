@@ -24,6 +24,7 @@ import com.shanebeestudios.skbee.elements.bound.expressions.ExprLastCreatedBound
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
+import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
@@ -120,9 +121,8 @@ public class EffSecBoundCreate extends EffectSection {
             greater.setY(max);
         }
         Bound bound = new Bound(lesser, greater, id, isTemporary);
-        if (bound.getGreaterY() - bound.getLesserY() < 1 ||
-                bound.getGreaterX() - bound.getLesserX() < 1 ||
-                bound.getGreaterZ() - bound.getLesserZ() < 1) {
+        BoundingBox box = bound.getBoundingBox();
+        if (box.getWidthX() < 1 || box.getWidthZ() < 1 || box.getHeight() < 1) {
             Util.skriptError("&cBounding box must have a size of at least 2x2x2 &7(&6%s&7)", toString(event, true));
             return super.walk(event, false);
         }
