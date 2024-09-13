@@ -11,7 +11,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.config.BoundConfig;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
@@ -73,6 +75,7 @@ public class ExprBoundLocations extends SimplePropertyExpression<Bound, Location
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
+        BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
         if (delta == null) return;
 
         if (mode == ChangeMode.SET) {
@@ -81,13 +84,14 @@ public class ExprBoundLocations extends SimplePropertyExpression<Bound, Location
                     Location less = this.type == 2 ? location : bound.getLesserCorner();
                     Location great = this.type == 1 ? location : bound.getGreaterCorner();
                     bound.resize(less, great);
+                    boundConfig.saveBound(bound);
                 }
             }
         } else {
             if (delta[0] instanceof Vector vector) {
                 for (Bound bound : getExpr().getArray(event)) {
                     Location less = bound.getLesserCorner();
-                    Location great = bound.getGreaterCorner();
+                    Location great = bound.getGreaterCorner().subtract(1,1,1);
                     if (mode == ChangeMode.ADD) {
                         if (this.type == 1) great.add(vector);
                         else less.add(vector);
@@ -95,9 +99,8 @@ public class ExprBoundLocations extends SimplePropertyExpression<Bound, Location
                         if (this.type == 1) great.subtract(vector);
                         else less.subtract(vector);
                     }
-                    // since bounds add 1 to each axis, let's subtract first
-                    great.subtract(new Vector(1, 1, 1));
                     bound.resize(less, great);
+                    boundConfig.saveBound(bound);
                 }
             }
         }
