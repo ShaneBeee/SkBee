@@ -141,12 +141,15 @@ public class Bound implements ConfigurationSerializable {
      * @param type Type of entity to get
      * @return List of loaded entities in bound
      */
-    public @Nullable List<Entity> getEntities(Class<? extends Entity> type) {
+    public List<Entity> getEntities(Class<? extends Entity> type) {
+        List<Entity> entities = new ArrayList<>();
         World world = getWorld();
-        if (world == null) return null;
-        Collection<Entity> nearbyEntities = world.getNearbyEntities(this.boundingBox, entity ->
-            type.isAssignableFrom(entity.getClass()));
-        return new ArrayList<>(nearbyEntities);
+        if (world != null) {
+            Collection<Entity> nearbyEntities = world.getNearbyEntities(this.boundingBox, entity ->
+                type.isAssignableFrom(entity.getClass()));
+            entities.addAll(nearbyEntities);
+        }
+        return entities;
     }
 
     /**
@@ -218,70 +221,6 @@ public class Bound implements ConfigurationSerializable {
         return new Location(getWorld(), center.getX(), center.getY(), center.getZ());
     }
 
-    public int getLesserX() {
-        return ((int) boundingBox.getMinX());
-    }
-
-    public void setLesserX(int x) {
-        Vector min = this.boundingBox.getMin();
-        min.setX(x);
-        resize(min, this.boundingBox.getMax());
-    }
-
-    public int getLesserY() {
-        return ((int) boundingBox.getMinY());
-    }
-
-    public void setLesserY(int y) {
-        Vector min = this.boundingBox.getMin();
-        min.setY(y);
-        resize(min, this.boundingBox.getMax());
-    }
-
-    public int getLesserZ() {
-        return ((int) boundingBox.getMinZ());
-    }
-
-    public void setLesserZ(int z) {
-        Vector min = this.boundingBox.getMin();
-        min.setZ(z);
-        resize(min, this.boundingBox.getMax());
-    }
-
-    public int getGreaterX() {
-        return ((int) boundingBox.getMaxX());
-    }
-
-    public void setGreaterX(int x2) {
-        Vector max = this.boundingBox.getMax();
-        max.setX(x2);
-        resize(this.boundingBox.getMin(), max);
-    }
-
-    public int getGreaterY() {
-        return ((int) boundingBox.getMaxY());
-    }
-
-    public void setGreaterY(int y2) {
-        Vector max = this.boundingBox.getMax();
-        max.setY(y2);
-        resize(this.boundingBox.getMin(), max);
-    }
-
-    public int getGreaterZ() {
-        return ((int) boundingBox.getMaxZ());
-    }
-
-    public void setGreaterZ(int z2) {
-        Vector max = this.boundingBox.getMax();
-        max.setZ(z2);
-        resize(this.boundingBox.getMin(), max);
-    }
-
-    public void resize(Vector v1, Vector v2) {
-        this.boundingBox = this.boundingBox.resize(v1.getX(), v1.getY(), v1.getZ(), v2.getX(), v2.getY(), v2.getZ());
-    }
-
     public void resize(Location loc1, Location loc2) {
         Preconditions.checkArgument(loc1.getWorld() == loc2.getWorld(), "Worlds have to match");
         Preconditions.checkArgument(loc1.getWorld().getName().equalsIgnoreCase(this.world), "World cannot be changed!");
@@ -290,14 +229,20 @@ public class Bound implements ConfigurationSerializable {
         this.boundingBox = BoundingBox.of(block1, block2);
     }
 
-    public Bound copy(Bound bound, String id) {
-        Location lesserCorner = bound.getLesserCorner().clone();
-        Location greaterCorner = bound.getGreaterCorner().clone();
-        Bound newBound = new Bound(lesserCorner, greaterCorner, id, bound.isTemporary());
-        newBound.setOwners(bound.getOwners());
-        newBound.setMembers(bound.getMembers());
-        newBound.setBoundingBox(bound.getBoundingBox().clone());
-        newBound.values = bound.values;
+    /**
+     * Create a copy of a bound
+     *
+     * @param newId ID of new bound
+     * @return New cloned bound
+     */
+    public Bound copy(String newId) {
+        Location lesserCorner = this.getLesserCorner().clone();
+        Location greaterCorner = this.getGreaterCorner().clone();
+        Bound newBound = new Bound(lesserCorner, greaterCorner, newId, this.isTemporary());
+        newBound.setOwners(this.getOwners());
+        newBound.setMembers(this.getMembers());
+        newBound.setBoundingBox(this.getBoundingBox().clone());
+        newBound.values = this.values;
         return newBound;
     }
 
@@ -312,36 +257,6 @@ public class Bound implements ConfigurationSerializable {
         min.setY(WorldUtils.getMinHeight(world));
         max.setY(WorldUtils.getMaxHeight(world));
         this.boundingBox = BoundingBox.of(min, max);
-    }
-
-    public void change(Axis axis, Corner corner, int amount) {
-        if (axis == Axis.X) {
-            if (corner == Corner.GREATER) {
-                setGreaterX(getGreaterX() + amount);
-            } else {
-                setLesserX(getLesserX() + amount);
-            }
-        } else if (axis == Axis.Y) {
-            if (corner == Corner.GREATER) {
-                setGreaterY(getGreaterY() + amount);
-            } else {
-                setLesserY(getLesserY() + amount);
-            }
-        } else {
-            if (corner == Corner.GREATER) {
-                setGreaterZ(getGreaterZ() + amount);
-            } else {
-                setLesserZ(getLesserZ() + amount);
-            }
-        }
-    }
-
-    public enum Axis {
-        X, Y, Z
-    }
-
-    public enum Corner {
-        GREATER, LESSER
     }
 
     /**
