@@ -542,6 +542,7 @@ public class ComponentWrapper {
      *
      * @param inventory Inventory to change name
      */
+    @SuppressWarnings("deprecation")
     public void setInventoryName(Inventory inventory) {
         List<HumanEntity> viewers = inventory.getViewers();
         if (viewers.isEmpty()) return;
