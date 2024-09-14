@@ -80,7 +80,7 @@ public class Bound implements ConfigurationSerializable {
     public boolean isInRegion(@NotNull Location loc) {
         World w = loc.getWorld();
         if (w != null && w.getName().equals(world)) {
-            return this.boundingBox.contains(loc.toVector());
+            return getCachedBoundingBox().contains(loc.toVector());
         }
         return false;
     }
@@ -93,7 +93,7 @@ public class Bound implements ConfigurationSerializable {
      */
     public boolean overlaps(Bound bound) {
         if (bound.world.equals(world)) {
-            return boundingBox.overlaps(bound.boundingBox);
+            return getCachedBoundingBox().overlaps(bound.getCachedBoundingBox());
         }
         return false;
     }
@@ -107,7 +107,7 @@ public class Bound implements ConfigurationSerializable {
      */
     public boolean overlaps(Location l1, Location l2) {
         if (l1.getWorld() != null && l1.getWorld() == l2.getWorld()) {
-            return boundingBox.overlaps(l1.toVector(), l2.toVector());
+            return getCachedBoundingBox().overlaps(l1.toVector(), l2.toVector());
         }
         return false;
     }
@@ -398,12 +398,9 @@ public class Bound implements ConfigurationSerializable {
             int minY = world != null ? world.getMinHeight() : 0;
             int maxY = world != null ? world.getMaxHeight() - 1 : 255;
             this.fullBoundBoxCache = box.resize(box.getMinX(), minY, box.getMinZ(), box.getMaxX(), maxY, box.getMaxZ());
+            return this.fullBoundBoxCache;
         }
         return this.boundingBox;
-    }
-
-    public void setBoundingBox(BoundingBox box) {
-        this.boundingBox = box;
     }
 
     /**
@@ -415,10 +412,20 @@ public class Bound implements ConfigurationSerializable {
         return temporary;
     }
 
+    /**
+     * Check if this bound is full
+     *
+     * @return Whether bound is full
+     */
     public boolean isFull() {
         return this.full;
     }
 
+    /**
+     * Set if this bound is full
+     *
+     * @param full Whether the bound is full
+     */
     public void setFull(boolean full) {
         this.full = full;
     }
