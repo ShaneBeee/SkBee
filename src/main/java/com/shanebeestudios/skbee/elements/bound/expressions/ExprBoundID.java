@@ -9,23 +9,25 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.BoundConfig;
-import com.shanebeestudios.skbee.api.bound.Bound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Bound - ID")
 @Description({"Get/set the id of a bound. When setting the ID of a bound, if another bound has that ID, this will fail with an error in console.",
-        "You cannot set the IDs of multiple bounds at once."})
+    "You cannot set the IDs of multiple bounds at once."})
 @Examples({"set {_id} to id of first element of bounds at player",
-        "loop all bounds at player:",
-        "\tset id of loop-bound to \"%player%-%id of loop-bound%\"",
-        "set {_id} to id of event-bound",
-        "send \"You entered bound '%id of loop-bound%'\""})
+    "loop all bounds at player:",
+    "\tset id of loop-bound to \"%player%-%id of loop-bound%\"",
+    "set {_id} to id of event-bound",
+    "send \"You entered bound '%id of loop-bound%'\""})
 @Since("1.15.0")
 public class ExprBoundID extends SimplePropertyExpression<Bound, String> {
+
+    private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
     static {
         register(ExprBoundID.class, String.class, "[bound] id", "bounds");
@@ -60,15 +62,14 @@ public class ExprBoundID extends SimplePropertyExpression<Bound, String> {
         Bound bound = getExpr().getSingle(event);
         if (bound == null) return;
 
-        BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
-        if (boundConfig.boundExists(id)) {
+        if (BOUND_CONFIG.boundExists(id)) {
             // We don't want to rename a bound if the name already exists
             Util.skriptError("Bound with ID '%s' already exists, you can not rename bound with id '%s' to that.", id, bound.getId());
             return;
         }
-        boundConfig.removeBound(bound);
+        BOUND_CONFIG.removeBound(bound);
         bound.setId(id);
-        boundConfig.saveBound(bound);
+        BOUND_CONFIG.saveBound(bound, false);
 
     }
 

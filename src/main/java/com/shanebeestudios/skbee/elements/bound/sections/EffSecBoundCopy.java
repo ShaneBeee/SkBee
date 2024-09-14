@@ -34,10 +34,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Since("2.15.0")
 public class EffSecBoundCopy extends EffectSection {
 
-    private static final BoundConfig BOUND_CONFIG;
+    private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
     static {
-        BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
         Skript.registerSection(EffSecBoundCopy.class,
             "create [a] copy of [bound] %bound% (with|using) [the] id %string%");
     }
@@ -80,7 +79,7 @@ public class EffSecBoundCopy extends EffectSection {
             Variables.setLocalVariables(event, Variables.copyLocalVariables(boundCreateEvent));
             Variables.removeLocals(boundCreateEvent);
         }
-        BOUND_CONFIG.saveBound(newBound);
+        BOUND_CONFIG.saveBound(newBound, true);
         return super.walk(event, false);
     }
 

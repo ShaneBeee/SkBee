@@ -21,10 +21,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Bound - Entities")
-@Description({"Get all the entities within a bound.",
+@Description({"Get all of the entities within a bound.",
     "NOTE: If the chunk in a bound is unloaded, entities will also be unloaded."})
 @Examples({"set {_b} to bound with id \"my-bound\"",
-    "loop entities in bound {_b}:",
+    "loop bound entities in {_b}:",
     "\tif loop-entity is a cow or pig:",
     "\t\tkill loop-entity"})
 @Since("1.15.0")
@@ -32,6 +32,7 @@ public class ExprBoundEntities extends SimpleExpression<Entity> {
 
     static {
         Skript.registerExpression(ExprBoundEntities.class, Entity.class, ExpressionType.SIMPLE,
+            "[(all [[of] the]|the)] bound %*entitydatas% (of|in|within) %bounds%",
             "[(all [[of] the]|the)] %*entitydatas% (of|in|within) bound[s] %bounds%");
     }
 
@@ -72,7 +73,7 @@ public class ExprBoundEntities extends SimpleExpression<Entity> {
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
-        return this.entityDatas.toString(e, d) + " of bound[s] " + this.bounds.toString(e, d);
+        return "bound " + this.entityDatas.toString(e, d) + " of " + this.bounds.toString(e, d);
     }
 
 }

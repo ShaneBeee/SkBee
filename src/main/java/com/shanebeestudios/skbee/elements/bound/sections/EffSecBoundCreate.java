@@ -45,10 +45,9 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Since("2.5.3, 2.10.0 (temporary bounds)")
 public class EffSecBoundCreate extends EffectSection {
 
-    private static final BoundConfig BOUND_CONFIG;
+    private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
     static {
-        BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
         Skript.registerSection(EffSecBoundCreate.class,
             "create [a] [new] [:temporary] [:full] bound with id %string% (within|between) %location% and %location%");
     }
@@ -127,7 +126,7 @@ public class EffSecBoundCreate extends EffectSection {
             return super.walk(event, false);
         }
         ExprLastCreatedBound.lastCreated = bound;
-        BOUND_CONFIG.saveBound(bound);
+        BOUND_CONFIG.saveBound(bound, true);
 
         if (this.trigger != null) {
             BoundCreateEvent boundCreateEvent = new BoundCreateEvent(bound);

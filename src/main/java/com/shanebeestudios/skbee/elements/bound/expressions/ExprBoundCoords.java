@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 @Since("1.0.0")
 public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
 
+    private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
     static {
         Skript.registerExpression(ExprBoundCoords.class, Object.class, ExpressionType.PROPERTY,
             "lesser (x|1:y|2:z) coord[inate] of [bound] %bound%",
@@ -90,7 +91,6 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
     @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event e, Object[] delta, ChangeMode mode) {
-        BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
         for (Bound bound : getExpr().getArray(e)) {
             int coord = ((Number) delta[0]).intValue();
             if (mode == ChangeMode.REMOVE) coord = -coord;
@@ -113,7 +113,7 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
             }
 
             bound.resize(less, great);
-            boundConfig.saveBound(bound);
+            BOUND_CONFIG.saveBound(bound, true);
         }
     }
 

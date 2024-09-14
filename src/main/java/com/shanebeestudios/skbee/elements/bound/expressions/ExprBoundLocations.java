@@ -35,6 +35,8 @@ import org.jetbrains.annotations.Nullable;
 @Since("3.5.9")
 public class ExprBoundLocations extends SimplePropertyExpression<Bound, Location> {
 
+    private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
+
     static {
         register(ExprBoundLocations.class, Location.class,
             "bound (0:center|(1:greater|2:lesser) corner)", "bounds");
@@ -75,7 +77,6 @@ public class ExprBoundLocations extends SimplePropertyExpression<Bound, Location
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
         if (delta == null) return;
 
         if (mode == ChangeMode.SET) {
@@ -84,14 +85,14 @@ public class ExprBoundLocations extends SimplePropertyExpression<Bound, Location
                     Location less = this.type == 2 ? location : bound.getLesserCorner();
                     Location great = this.type == 1 ? location : bound.getGreaterCorner();
                     bound.resize(less, great);
-                    boundConfig.saveBound(bound);
+                    BOUND_CONFIG.saveBound(bound, true);
                 }
             }
         } else {
             if (delta[0] instanceof Vector vector) {
                 for (Bound bound : getExpr().getArray(event)) {
                     Location less = bound.getLesserCorner();
-                    Location great = bound.getGreaterCorner().subtract(1,1,1);
+                    Location great = bound.getGreaterCorner().subtract(1, 1, 1);
                     if (mode == ChangeMode.ADD) {
                         if (this.type == 1) great.add(vector);
                         else less.add(vector);
@@ -100,7 +101,7 @@ public class ExprBoundLocations extends SimplePropertyExpression<Bound, Location
                         else less.subtract(vector);
                     }
                     bound.resize(less, great);
-                    boundConfig.saveBound(bound);
+                    BOUND_CONFIG.saveBound(bound, true);
                 }
             }
         }

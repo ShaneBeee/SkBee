@@ -13,7 +13,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -157,10 +156,11 @@ public class Bound implements ConfigurationSerializable {
      *
      * @return List of blocks within bound
      */
-    public @Nullable List<Block> getBlocks() {
+    public @NotNull List<Block> getBlocks() {
+        List<Block> blocks = new ArrayList<>();
         World w = getWorld();
-        if (w == null) return null;
-        List<Block> array = new ArrayList<>();
+        if (w == null) return blocks;
+
         int minX = (int) boundingBox.getMinX();
         int minY = (int) boundingBox.getMinY();
         int minZ = (int) boundingBox.getMinZ();
@@ -170,12 +170,11 @@ public class Bound implements ConfigurationSerializable {
         for (int x = minX; x < maxX; x++) {
             for (int y = minY; y < maxY; y++) {
                 for (int z = minZ; z < maxZ; z++) {
-                    Block b = w.getBlockAt(x, y, z);
-                    array.add(b);
+                    blocks.add(w.getBlockAt(x, y, z));
                 }
             }
         }
-        return array;
+        return blocks;
     }
 
     /**
