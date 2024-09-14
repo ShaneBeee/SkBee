@@ -18,7 +18,6 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.event.bound.BoundCreateEvent;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.util.WorldUtils;
 import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprLastCreatedBound;
 import org.bukkit.Location;
@@ -33,8 +32,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 @Name("Bound - Create")
 @Description({"Create a bound within 2 locations. This can be used as an effect and as a section.",
-    "Optional value \"temporary\" creates a bound which persists until server stops.",
-    "Optional value \"full\" is a bound from min to max height of world.",
+    "Optional value `temporary` creates a bound which persists until server stops (not saved to file).",
+    "Optional value `full` will mark the bound to use the world's min/max height.",
     "These optional values can be used together."})
 @Examples({"create bound with id \"le-test\" between {_1} and {_2}:",
     "\tset bound value \"le-value\" of event-bound to 52",
@@ -109,24 +108,14 @@ public class EffSecBoundCreate extends EffectSection {
             return super.walk(event, false);
         }
 
-        if (this.isFull) {
-            // clone to prevent changing original location variables
-            lesser = lesser.clone();
-            greater = greater.clone();
-            int max = worldG.getMaxHeight() - 1;
-            int min = WorldUtils.getMinHeight(worldG);
-
-            lesser.setY(min);
-            greater.setY(max);
-        }
         Bound bound = new Bound(lesser, greater, id, this.isTemporary);
+        bound.setFull(this.isFull);
         BoundingBox box = bound.getBoundingBox();
         if (box.getWidthX() < 1 || box.getWidthZ() < 1 || box.getHeight() < 1) {
             Util.skriptError("&cBounding box must have a size of at least 2x2x2 &7(&6%s&7)", toString(event, true));
             return super.walk(event, false);
         }
         ExprLastCreatedBound.lastCreated = bound;
-        BOUND_CONFIG.saveBound(bound, true);
 
         if (this.trigger != null) {
             BoundCreateEvent boundCreateEvent = new BoundCreateEvent(bound);
@@ -135,6 +124,7 @@ public class EffSecBoundCreate extends EffectSection {
             Variables.setLocalVariables(event, Variables.copyLocalVariables(boundCreateEvent));
             Variables.removeLocals(boundCreateEvent);
         }
+        BOUND_CONFIG.saveBound(bound, true);
         return super.walk(event, false);
     }
 

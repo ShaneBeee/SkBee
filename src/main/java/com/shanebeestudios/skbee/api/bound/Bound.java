@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.api.bound;
 
 import com.google.common.base.Preconditions;
-import com.shanebeestudios.skbee.api.util.WorldUtils;
 import com.shanebeestudios.skbee.api.wrapper.LazyLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -13,6 +12,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.util.BoundingBox;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -32,46 +32,21 @@ public class Bound implements ConfigurationSerializable {
     private final String world;
     private String id;
     private final boolean temporary;
+    private boolean full;
     private List<UUID> owners = new ArrayList<>();
     private List<UUID> members = new ArrayList<>();
     private Map<String, Object> values = new HashMap<>();
     private BoundingBox boundingBox;
+    private BoundingBox fullBoundBoxCache;
 
     /**
-     * Create a new global bound in a {@link World} with ID using a {@link BoundingBox}
-     *
-     * @param world       World this bound is in
-     * @param id          ID of this bound
-     * @param boundingBox BoundingBox of this bound
+     * @hidden only used to deserialize
      */
     public Bound(String world, String id, BoundingBox boundingBox) {
-        this(world, id, boundingBox, false);
-    }
-
-    /**
-     * Create a new bound in a {@link World} with ID using a {@link BoundingBox}
-     *
-     * @param world       World this bound is in
-     * @param id          ID of this bound
-     * @param boundingBox BoundingBox of this bound
-     * @param temporary   Whether this bound is temporary
-     */
-    public Bound(String world, String id, BoundingBox boundingBox, boolean temporary) {
         this.world = world;
         this.id = id;
         this.boundingBox = boundingBox;
-        this.temporary = temporary;
-    }
-
-    /**
-     * Create a new global bound between 2 locations (must be in same world)
-     *
-     * @param location  Location 1
-     * @param location2 Location 2
-     * @param id        ID of this bound
-     */
-    public Bound(Location location, Location location2, String id) {
-        this(location, location2, id, false);
+        this.temporary = false;
     }
 
     /**
@@ -144,7 +119,8 @@ public class Bound implements ConfigurationSerializable {
         List<Entity> entities = new ArrayList<>();
         World world = getWorld();
         if (world != null) {
-            Collection<Entity> nearbyEntities = world.getNearbyEntities(this.boundingBox, entity ->
+            BoundingBox box = getCachedBoundingBox();
+            Collection<Entity> nearbyEntities = world.getNearbyEntities(box, entity ->
                 type.isAssignableFrom(entity.getClass()));
             entities.addAll(nearbyEntities);
         }
@@ -161,15 +137,12 @@ public class Bound implements ConfigurationSerializable {
         World w = getWorld();
         if (w == null) return blocks;
 
-        int minX = (int) boundingBox.getMinX();
-        int minY = (int) boundingBox.getMinY();
-        int minZ = (int) boundingBox.getMinZ();
-        int maxX = (int) boundingBox.getMaxX();
-        int maxY = (int) boundingBox.getMaxY();
-        int maxZ = (int) boundingBox.getMaxZ();
-        for (int x = minX; x < maxX; x++) {
-            for (int y = minY; y < maxY; y++) {
-                for (int z = minZ; z < maxZ; z++) {
+        Location min = getLesserCorner();
+        Location max = getGreaterCorner();
+
+        for (int x = min.getBlockX(); x < max.getBlockX(); x++) {
+            for (int y = min.getBlockY(); y < max.getBlockY(); y++) {
+                for (int z = min.getBlockZ(); z < max.getBlockZ(); z++) {
                     blocks.add(w.getBlockAt(x, y, z));
                 }
             }
@@ -182,6 +155,7 @@ public class Bound implements ConfigurationSerializable {
      *
      * @return World of this bound
      */
+    @Nullable
     public World getWorld() {
         return Bukkit.getWorld(this.world);
     }
@@ -196,7 +170,7 @@ public class Bound implements ConfigurationSerializable {
      * @return Location of greater corner
      */
     public Location getGreaterCorner() {
-        Vector max = this.boundingBox.getMax();
+        Vector max = getCachedBoundingBox().getMax();
         return new Location(getWorld(), max.getX(), max.getY(), max.getZ());
     }
 
@@ -206,7 +180,7 @@ public class Bound implements ConfigurationSerializable {
      * @return Location of lesser corner
      */
     public Location getLesserCorner() {
-        Vector min = this.boundingBox.getMin();
+        Vector min = getCachedBoundingBox().getMin();
         return new Location(getWorld(), min.getX(), min.getY(), min.getZ());
     }
 
@@ -216,7 +190,7 @@ public class Bound implements ConfigurationSerializable {
      * @return The center location
      */
     public Location getCenter() {
-        Vector center = this.boundingBox.getCenter();
+        Vector center = getCachedBoundingBox().getCenter();
         return new Location(getWorld(), center.getX(), center.getY(), center.getZ());
     }
 
@@ -243,19 +217,6 @@ public class Bound implements ConfigurationSerializable {
         newBound.setBoundingBox(this.getBoundingBox().clone());
         newBound.values = this.values;
         return newBound;
-    }
-
-    /**
-     * Make this bound a full bound
-     * <p>Stretch from bottom to top of world</p>
-     */
-    public void makeFull() {
-        World world = getWorld();
-        Vector min = this.boundingBox.getMin().clone();
-        Vector max = this.boundingBox.getMax().clone();
-        min.setY(WorldUtils.getMinHeight(world));
-        max.setY(WorldUtils.getMaxHeight(world));
-        this.boundingBox = BoundingBox.of(min, max);
     }
 
     /**
@@ -426,6 +387,18 @@ public class Bound implements ConfigurationSerializable {
         return this.boundingBox;
     }
 
+    private BoundingBox getCachedBoundingBox() {
+        if (this.isFull()) {
+            if (this.fullBoundBoxCache != null) return this.fullBoundBoxCache;
+            BoundingBox box = this.boundingBox.clone();
+            World world = getWorld();
+            int minY = world != null ? world.getMinHeight() : 0;
+            int maxY = world != null ? world.getMaxHeight() - 1 : 255;
+            this.fullBoundBoxCache = box.resize(box.getMinX(), minY, box.getMinZ(), box.getMaxX(), maxY, box.getMaxZ());
+        }
+        return this.boundingBox;
+    }
+
     public void setBoundingBox(BoundingBox box) {
         this.boundingBox = box;
     }
@@ -437,6 +410,14 @@ public class Bound implements ConfigurationSerializable {
      */
     public boolean isTemporary() {
         return temporary;
+    }
+
+    public boolean isFull() {
+        return this.full;
+    }
+
+    public void setFull(boolean full) {
+        this.full = full;
     }
 
     public String toString() {
@@ -453,9 +434,10 @@ public class Bound implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<>();
 
-        result.put("id", id);
-        result.put("world", world);
-        result.put("boundingbox", boundingBox);
+        result.put("id", this.id);
+        result.put("world", this.world);
+        result.put("boundingbox", this.boundingBox);
+        result.put("full", this.full);
 
         List<String> owners = new ArrayList<>();
         this.owners.forEach(uuid -> owners.add(uuid.toString()));
@@ -463,7 +445,7 @@ public class Bound implements ConfigurationSerializable {
         this.members.forEach(uuid -> members.add(uuid.toString()));
         result.put("owners", owners);
         result.put("members", members);
-        result.put("values", values);
+        result.put("values", this.values);
 
         return result;
     }
@@ -491,6 +473,10 @@ public class Bound implements ConfigurationSerializable {
             int z2 = ((Number) args.get("z2")).intValue();
             BoundingBox box = new BoundingBox(x, y, z, x2, y2, z2);
             bound = new Bound(world, id, box);
+        }
+
+        if (args.containsKey("full")) {
+            bound.setFull((Boolean) args.get("full"));
         }
 
         if (args.containsKey("owners")) {
