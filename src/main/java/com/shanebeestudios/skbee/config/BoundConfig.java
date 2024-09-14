@@ -3,16 +3,19 @@ package com.shanebeestudios.skbee.config;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundWorld;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -24,6 +27,10 @@ public class BoundConfig {
     private final FileConfiguration boundConfig;
     private final Map<String, Bound> boundsMap = new HashMap<>();
     private final Map<World, BoundWorld> boundWorldMap = new HashMap<>();
+
+    // Maps scheduled to remove/save later
+    private final Map<String, Bound> scheduledToSave = new HashMap<>();
+    private final List<String> scheduledToRemove = new ArrayList<>();
 
     /**
      * @hidden
@@ -38,17 +45,40 @@ public class BoundConfig {
 
         // Load bounds
         ConfigurationSection section = this.boundConfig.getConfigurationSection("bounds");
-        if (section == null) return;
-        for (String key : section.getKeys(true)) {
-            Object object = section.get(key);
-            if (object instanceof Bound bound) {
-                addBoundToRegionAndMap(bound);
+        if (section != null) {
+            for (String key : section.getKeys(true)) {
+                Object object = section.get(key);
+                if (object instanceof Bound bound) {
+                    addBoundToRegionAndMap(bound);
+                }
             }
         }
+        startSaveTimer(plugin);
+    }
+
+    private void startSaveTimer(SkBee plugin) {
+        BukkitScheduler scheduler = Bukkit.getScheduler();
+
+        scheduler.runTaskTimer(plugin, () -> {
+            // Skip saving if maps are empty
+            if (this.scheduledToSave.isEmpty() && this.scheduledToRemove.isEmpty()) return;
+
+            // Remove cached bounds from yaml
+            this.scheduledToRemove.forEach(id -> this.boundConfig.set("bounds." + id, null));
+            this.scheduledToRemove.clear();
+
+            // Save cached bounds to yaml
+            this.scheduledToSave.forEach((id, bound) -> this.boundConfig.set("bounds." + id, bound));
+            this.scheduledToSave.clear();
+
+            // Async save yaml to file
+            scheduler.runTaskAsynchronously(plugin, this::saveConfig);
+        }, 6000, 6000); // Every 5 minutes
     }
 
     /**
      * Save a bound to regions, map and config
+     * <br>Will be scheduled to save to config later
      *
      * @param bound         Bound to save
      * @param updateRegions Whether to update in regions
@@ -61,13 +91,13 @@ public class BoundConfig {
             addBoundToRegionAndMap(bound);
         }
         if (!bound.isTemporary()) {
-            this.boundConfig.set("bounds." + bound.getId(), bound);
-            saveConfig();
+            this.scheduledToSave.put(bound.getId(), bound);
         }
     }
 
     /**
      * Remove a bound
+     * <br>Will be schedule to remove from config later
      * <br>Will remove from regions, map and config
      *
      * @param bound Bound to remove
@@ -75,8 +105,7 @@ public class BoundConfig {
     public void removeBound(Bound bound) {
         removeBoundFromRegionAndMap(bound);
         if (!bound.isTemporary()) {
-            this.boundConfig.set("bounds." + bound.getId(), null);
-            saveConfig();
+            this.scheduledToRemove.add(bound.getId());
         }
     }
 
@@ -104,12 +133,12 @@ public class BoundConfig {
 
     /**
      * Save all bounds to file
+     * <br>This is only used when the server stops
      */
     public void saveAllBounds() {
         for (Bound bound : this.boundsMap.values()) {
             if (bound.isTemporary()) continue;
             this.boundConfig.set("bounds." + bound.getId(), bound);
-            //boundsMap.put(bound.getId(), bound); why is this here?!?!?
         }
         saveConfig();
     }
