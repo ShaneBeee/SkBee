@@ -42,11 +42,11 @@ public class Bound implements ConfigurationSerializable {
     /**
      * @hidden only used to deserialize
      */
-    public Bound(String world, String id, BoundingBox boundingBox) {
+    public Bound(String world, String id, BoundingBox boundingBox, boolean temporary) {
         this.world = world;
         this.id = id;
         this.boundingBox = boundingBox;
-        this.temporary = false;
+        this.temporary = temporary;
     }
 
     /**
@@ -57,13 +57,17 @@ public class Bound implements ConfigurationSerializable {
      * @param id        ID of this bound
      * @param temporary Whether this bound is temporary
      */
-    public Bound(Location location, Location location2, String id, boolean temporary) {
+    public Bound(Location location, Location location2, String id, boolean temporary, boolean usingBlocks) {
         Preconditions.checkArgument(location.getWorld() == location2.getWorld(), "Worlds have to match");
         this.world = location.getWorld().getName();
         this.id = id;
-        Block block1 = location.getBlock();
-        Block block2 = location2.getBlock();
-        this.boundingBox = BoundingBox.of(block1, block2);
+        if (usingBlocks) {
+            Block block1 = location.getBlock();
+            Block block2 = location2.getBlock();
+            this.boundingBox = BoundingBox.of(block1, block2);
+        } else {
+            this.boundingBox = BoundingBox.of(location, location2);
+        }
         this.temporary = temporary;
     }
 
@@ -211,10 +215,9 @@ public class Bound implements ConfigurationSerializable {
     public Bound copy(String newId) {
         Location lesserCorner = this.getLesserCorner().clone();
         Location greaterCorner = this.getGreaterCorner().clone();
-        Bound newBound = new Bound(lesserCorner, greaterCorner, newId, this.isTemporary());
+        Bound newBound = new Bound(this.world, newId, this.boundingBox.clone(), this.temporary);
         newBound.setOwners(this.getOwners());
         newBound.setMembers(this.getMembers());
-        newBound.setBoundingBox(this.getBoundingBox().clone());
         newBound.values = this.values;
         return newBound;
     }
@@ -463,7 +466,7 @@ public class Bound implements ConfigurationSerializable {
         Bound bound;
         if (args.containsKey("boundingbox")) {
             BoundingBox box = ((BoundingBox) args.get("boundingbox"));
-            bound = new Bound(world, id, box);
+            bound = new Bound(world, id, box, false);
         } else {
             int x = ((Number) args.get("x1")).intValue();
             int y = ((Number) args.get("y1")).intValue();
@@ -472,7 +475,7 @@ public class Bound implements ConfigurationSerializable {
             int y2 = ((Number) args.get("y2")).intValue();
             int z2 = ((Number) args.get("z2")).intValue();
             BoundingBox box = new BoundingBox(x, y, z, x2, y2, z2);
-            bound = new Bound(world, id, box);
+            bound = new Bound(world, id, box, false);
         }
 
         if (args.containsKey("full")) {

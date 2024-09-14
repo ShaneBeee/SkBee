@@ -22,6 +22,7 @@ import com.shanebeestudios.skbee.config.BoundConfig;
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprLastCreatedBound;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.NotNull;
@@ -34,13 +35,22 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Description({"Create a bound within 2 locations. This can be used as an effect and as a section.",
     "Optional value `temporary` creates a bound which persists until server stops (not saved to file).",
     "Optional value `full` will mark the bound to use the world's min/max height.",
-    "These optional values can be used together."})
-@Examples({"create bound with id \"le-test\" between {_1} and {_2}:",
+    "These optional values can be used together.",
+    "**SPECIAL NOTE**:",
+    "- When using locations = The bound created will use the locations you pass thru",
+    "- When using blocks = The bound created will extend the x/y/z axes by 1 to fully include those blocks."})
+@Examples({"# Create bounds using locations",
+    "create bound with id \"le-test\" between {_1} and {_2}:",
     "\tset bound value \"le-value\" of event-bound to 52",
     "\tset owner of event-bound to player",
     "create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
     "create a temporary bound with id \"%{_world}%.safezone-%random uuid%\" between {loc1} and {loc2}",
-    "create a full bound with id \"spawn\" between {loc} and location of player"})
+    "create a full bound with id \"spawn\" between {loc} and location of player",
+    "",
+    "# Create bounds using blocks",
+    "create bound with id \"my_home\" within block at player and block 10 above target block",
+    "create bound with id \"le_bound\" within {_block1} and {_block2}",
+    "create a new bound with id \"%uuid of player%.home\" between {block1} and {block2}"})
 @Since("2.5.3, 2.10.0 (temporary bounds)")
 public class EffSecBoundCreate extends EffectSection {
 
@@ -48,11 +58,12 @@ public class EffSecBoundCreate extends EffectSection {
 
     static {
         Skript.registerSection(EffSecBoundCreate.class,
-            "create [a] [new] [:temporary] [:full] bound with id %string% (within|between) %location% and %location%");
+            "create [a] [new] [:temporary] [:full] bound with id %string% (within|between) " +
+                "%block/location% and %block/location%");
     }
 
     private Expression<String> boundID;
-    private Expression<Location> loc1, loc2;
+    private Expression<?> point1, point2;
     private boolean isFull;
     private boolean isTemporary;
     private Trigger trigger;
@@ -61,8 +72,8 @@ public class EffSecBoundCreate extends EffectSection {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
         this.boundID = (Expression<String>) exprs[0];
-        this.loc1 = (Expression<Location>) exprs[1];
-        this.loc2 = (Expression<Location>) exprs[2];
+        this.point1 = exprs[1];
+        this.point2 = exprs[2];
         this.isFull = parseResult.hasTag("full");
         this.isTemporary = parseResult.hasTag("temporary");
         if (sectionNode != null) {
@@ -91,9 +102,25 @@ public class EffSecBoundCreate extends EffectSection {
             return super.walk(event, false);
         }
 
-        Location lesser = this.loc1.getSingle(event);
-        Location greater = this.loc2.getSingle(event);
-        if (lesser == null || greater == null) return super.walk(event, false);
+        Object point1 = this.point1.getSingle(event);
+        Object point2 = this.point2.getSingle(event);
+        if (point1 == null || point2 == null) return super.walk(event, false);
+
+        boolean usingBlocks = false;
+        Location lesser;
+        Location greater;
+        if (point1 instanceof Location loc1) lesser = loc1;
+        else if (point1 instanceof Block block1) {
+            lesser = block1.getLocation();
+            usingBlocks = true;
+        } else return super.walk(event, false);
+
+        if (point2 instanceof Location loc2) {
+            greater = loc2;
+            usingBlocks = false;
+        } else if (point2 instanceof Block block2) {
+            greater = block2.getLocation();
+        } else return super.walk(event, false);
 
         // both locations need to be in the same world
         World worldL = lesser.getWorld();
@@ -108,11 +135,11 @@ public class EffSecBoundCreate extends EffectSection {
             return super.walk(event, false);
         }
 
-        Bound bound = new Bound(lesser, greater, id, this.isTemporary);
+        Bound bound = new Bound(lesser, greater, id, this.isTemporary, usingBlocks);
         bound.setFull(this.isFull);
         BoundingBox box = bound.getBoundingBox();
         if (box.getWidthX() < 1 || box.getWidthZ() < 1 || box.getHeight() < 1) {
-            Util.skriptError("&cBounding box must have a size of at least 2x2x2 &7(&6%s&7)", toString(event, true));
+            Util.skriptError("&cBound must have a size of at least 2x2x2 &7(&6%s&7)", toString(event, true));
             return super.walk(event, false);
         }
         ExprLastCreatedBound.lastCreated = bound;
@@ -132,8 +159,8 @@ public class EffSecBoundCreate extends EffectSection {
     public @NotNull String toString(Event e, boolean d) {
         String temporary = this.isTemporary ? "temporary " : "";
         String full = this.isFull ? "full " : "";
-        String create = " between " + this.loc1.toString(e, d) + " and " + this.loc2.toString(e, d);
-        return "create " + temporary + full + "bound with id " + this.boundID.toString(e, d) + create;
+        String points = " between " + this.point1.toString(e, d) + " and " + this.point2.toString(e, d);
+        return "create " + temporary + full + "bound with id " + this.boundID.toString(e, d) + points;
     }
 
 }
