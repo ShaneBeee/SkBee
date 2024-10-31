@@ -67,6 +67,7 @@ types:
     structure: structure¦s
     structurerotation: structure rotation¦s
     tagresolver: tag resolver¦s
+    targetcolor: target color¦s
     team: team¦s
     teamoption: team options¦s
     teamoptionstatus: team option status¦es

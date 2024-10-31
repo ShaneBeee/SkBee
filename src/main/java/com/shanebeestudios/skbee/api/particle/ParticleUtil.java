@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Utility class for {@link Particle particles}
  */
-@SuppressWarnings("CallToPrintStackTrace")
+@SuppressWarnings({"CallToPrintStackTrace", "UnstableApiUsage"})
 public class ParticleUtil {
 
     private ParticleUtil() {
@@ -39,6 +39,8 @@ public class ParticleUtil {
 
     private static final Map<String, Particle> PARTICLES = new HashMap<>();
     private static final Map<Particle, String> PARTICLE_NAMES = new HashMap<>();
+    // Added in Minecraft 1.21.2
+    public static final boolean HAS_TARGET_COLOR = Skript.classExists("org.bukkit.Particle$TargetColor");
 
     static {
         // Added in Spigot 1.20.2 (oct 20/2023)
@@ -145,6 +147,8 @@ public class ParticleUtil {
             return "number(float)";
         } else if (dataType == Color.class) {
             return "color/bukkitcolor";
+        } else if (HAS_TARGET_COLOR && dataType == Particle.TargetColor.class) {
+            return "targetColor";
         }
         // For future particle data additions that haven't been added here yet
         Util.debug("Missing particle data type: '&e" + dataType.getName() + "&7'");
@@ -200,6 +204,8 @@ public class ParticleUtil {
                     return material.createBlockData();
                 }
             }
+        } else if (HAS_TARGET_COLOR && dataType == Particle.TargetColor.class && data instanceof Particle.TargetColor) {
+            return data;
         }
         return null;
     }
