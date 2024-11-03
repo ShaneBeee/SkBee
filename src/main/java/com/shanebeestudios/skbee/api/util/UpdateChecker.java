@@ -50,7 +50,7 @@ public class UpdateChecker implements Listener {
 
                 Bukkit.getScheduler().runTaskLater(UpdateChecker.this.plugin, () -> getUpdateVersion(true).thenApply(version -> {
                     Util.sendColMsg(player, "&7[&bSk&3Bee&7] update available: &a" + version);
-                    Util.sendColMsg(player, "&7[&bSk&3Bee&7] download at &bhttps://github.com/ShaneBeee/SkBee/releases");
+                    Util.sendColMsg(player, "&7[&bSk&3Bee&7] download at &bhttps://github.com/SkriptHub/SkBee/releases");
                     return true;
                 }), 30);
             }
@@ -63,7 +63,7 @@ public class UpdateChecker implements Listener {
             Util.logLoading("&cPlugin is not up to date!");
             Util.logLoading(" - Current version: &cv%s", this.pluginVersion);
             Util.logLoading(" - Available update: &av%s", version);
-            Util.logLoading(" - Download available at: https://github.com/ShaneBeee/SkBee/releases");
+            Util.logLoading(" - Download available at: https://github.com/SkriptHub/SkBee/releases");
             return true;
         }).exceptionally(throwable -> {
             Util.logLoading("&aPlugin is up to date!");
@@ -108,7 +108,7 @@ public class UpdateChecker implements Listener {
     @SuppressWarnings("CallToPrintStackTrace")
     private @Nullable Version getLastestVersionFromGitHub() {
         try {
-            URL url = new URL("https://api.github.com/repos/ShaneBeee/SkBee/releases/latest");
+            URL url = new URL("https://api.github.com/repos/SkriptHub/SkBee/releases/latest");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
             JsonObject jsonObject = new Gson().fromJson(reader, JsonObject.class);
             String tag_name = jsonObject.get("tag_name").getAsString();
