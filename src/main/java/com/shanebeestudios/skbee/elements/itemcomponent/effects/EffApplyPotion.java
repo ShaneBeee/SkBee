@@ -12,12 +12,18 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecFoodComponent.FoodComponentApplyEvent;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.meta.components.FoodComponent;
 import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+
+@SuppressWarnings("UnstableApiUsage")
 @Name("ItemComponent - Food Component Apply Potion Effect")
 @Description({"Apply a potion effect to a food component. This works in the `effects` section of a food component section.",
-    "`probability` is an optional value between 0 and 1. This is the chance the player will get this effect when eaten."})
+    "`probability` is an optional value between 0 and 1. This is the chance the player will get this effect when eaten.",
+    "**NOTE**: Removed in Minecraft 1.21.2."})
 @Examples({"apply food component to player's tool:",
     "\tnutrition: 5",
     "\tsaturation: 3",
@@ -29,8 +35,17 @@ import org.jetbrains.annotations.NotNull;
 @Since("3.5.8")
 public class EffApplyPotion extends Effect {
 
+    private static Method ADD_EFFECT_METHOD;
+
     static {
         Skript.registerEffect(EffApplyPotion.class, "apply [potion[[ ]effect]] %potioneffect% [with probability %-number%]");
+        if (Skript.methodExists(FoodComponent.class, "addEffect", PotionEffect.class, float.class)) {
+            try {
+                ADD_EFFECT_METHOD = FoodComponent.class.getDeclaredMethod("addEffect", PotionEffect.class, float.class);
+            } catch (NoSuchMethodException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
     private Expression<PotionEffect> effect;
@@ -58,13 +73,23 @@ public class EffApplyPotion extends Effect {
             Number probNum = this.probability != null ? this.probability.getSingle(event) : null;
             float probability = probNum != null ? MathUtil.clamp(probNum.floatValue(), 0.0F, 1.0F) : 1;
 
-            applyEvent.getComponent().addEffect(effect, probability);
+            addEffect(applyEvent.getComponent(), effect, probability);
         }
     }
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
         return "apply " + this.effect.toString(e, d) + (this.probability != null ? (" with probability " + this.probability.toString(e, d)) : "");
+    }
+
+    private static void addEffect(FoodComponent food, PotionEffect effect, float probability) {
+        if (ADD_EFFECT_METHOD != null) {
+            try {
+                ADD_EFFECT_METHOD.invoke(food, effect, probability);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 }

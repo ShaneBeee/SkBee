@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
     "`delta` = a vector with the maximum random offset. The position of each particle will be randomized positively and negatively by the offset parameters on each axis.",
     "Some particles use the delta to set color/direction if count is set to 0.",
     "`extra` = the extra data for this particle, depends on the particle used (normally speed).",
-    "`forc`e = whether to send the particle to players within an extended range and encourage ",
+    "`force` = whether to send the particle to players within an extended range and encourage ",
     "their client to render it regardless of settings (this only works when not using `for player[s]`) (default = false)",
     "`for %players%` = will only send this particle to a player, not the whole server."})
 @Examples({"make 3 of item particle using diamond at location of player",
@@ -45,8 +45,8 @@ public class EffParticle extends Effect {
 
     static {
         Skript.registerEffect(EffParticle.class,
-            "(lerp|draw|make) %number% [of] %particle% [particle] [using %-itemtype/blockdata/dustoption/dusttransition/vibration" +
-                "/number/color/bukkitcolor%] %directions% %locations% [with (delta|offset) %-vector%] [with extra %-number%] [(1:with force)] [(for|to) %-players%]");
+            "(lerp|draw|make) %number% [of] %particle% [particle] [using %-object%] %directions% %locations% " +
+                "[with (delta|offset) %-vector%] [with extra %-number%] [(1:with force)] [(for|to) %-players%]");
     }
 
     private Expression<Number> count;

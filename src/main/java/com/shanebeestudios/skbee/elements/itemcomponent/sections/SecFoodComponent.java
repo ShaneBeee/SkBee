@@ -20,26 +20,30 @@ import org.bukkit.event.HandlerList;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.components.FoodComponent;
+import org.bukkit.potion.PotionEffect;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.util.List;
 
-@SuppressWarnings("DataFlowIssue")
+@SuppressWarnings({"DataFlowIssue", "UnstableApiUsage"})
 @Name("ItemComponent - Food Component Apply")
 @Description({"Apply a food component to any item making it an edible item. Requires Minecraft 1.20.5+",
     "See [**McWiki Food Component**](https://minecraft.wiki/w/Data_component_format#food) for more details.",
+    "**NOTE**: `eat time`, `using converts to` and the `effects` section were all removed in Minecraft 1.21.2.",
     "",
     "**Entries/Sections**:",
     "- `nutrition` = The number of food points restored by this item when eaten. Must be a non-negative integer.",
     "- `saturation` = The amount of saturation restored by this item when eaten.",
     "- `can always eat` = If true, this item can be eaten even if the player is not hungry. Defaults to false. [Optional]",
-    "- `eat time` = The number of seconds taken by this item to be eaten. Defaults to 1.6 seconds. [Optional]",
-    "- `using converts to` = The item to replace this item with when it is eaten. [Optional] (Requires Minecraft 1.21+)",
-    "- `effects:` = A section to apply potion effects to this food item. [Optional]"})
+    "- `eat time` = The number of seconds taken by this item to be eaten. Defaults to 1.6 seconds. [Optional] (Requires Minecraft 1.21/1.21.1)",
+    "- `using converts to` = The item to replace this item with when it is eaten. [Optional] (Requires Minecraft 1.21/1.21.1)",
+    "- `effects:` = A section to apply potion effects to this food item. [Optional] (Removed in Minecraft 1.21.2)"})
 @Examples({"# Directly apply a food component to the player's tool",
     "apply food component to player's tool:",
     "\tnutrition: 5",
@@ -78,11 +82,17 @@ public class SecFoodComponent extends Section {
     }
 
     private static boolean HAS_CONVERT = false;
+    private static boolean HAS_EAT_SECONDS = false;
+    private static boolean HAS_EFFECTS = false;
+    private static Method EAT_SECONDS_METHOD;
+    private static Method USING_CONVERTS_TO_METHOD;
     private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
 
     static {
         if (Skript.classExists("org.bukkit.inventory.meta.components.FoodComponent")) {
             HAS_CONVERT = Skript.methodExists(FoodComponent.class, "setUsingConvertsTo", ItemStack.class);
+            HAS_EAT_SECONDS = Skript.methodExists(FoodComponent.class, "setEatSeconds", float.class);
+            HAS_EFFECTS = Skript.methodExists(FoodComponent.class, "addEffect", PotionEffect.class, float.class);
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("nutrition", null, false, Number.class));
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("saturation", null, false, Number.class));
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("can always eat", null, true, Boolean.class));
@@ -90,6 +100,20 @@ public class SecFoodComponent extends Section {
             VALIDATIOR.addEntryData(new ExpressionEntryData<>("using converts to", null, true, ItemType.class));
             VALIDATIOR.addSection("effects", true);
             Skript.registerSection(SecFoodComponent.class, "apply food component to %itemtypes%");
+            if (HAS_CONVERT) {
+                try {
+                    USING_CONVERTS_TO_METHOD = FoodComponent.class.getDeclaredMethod("setUsingConvertsTo", ItemStack.class);
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+            }
+            if (HAS_EAT_SECONDS) {
+                try {
+                    EAT_SECONDS_METHOD = FoodComponent.class.getDeclaredMethod("setEatSeconds", float.class);
+                } catch (NoSuchMethodException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
     }
 
@@ -112,13 +136,21 @@ public class SecFoodComponent extends Section {
         this.saturation = (Expression<Number>) container.getOptional("saturation", false);
         this.canAlwaysEat = (Expression<Boolean>) container.getOptional("can always eat", false);
         this.eatTime = (Expression<Timespan>) container.getOptional("eat time", false);
+        if (this.eatTime != null && !HAS_EAT_SECONDS) {
+            Skript.error("'eat time' requires Minecraft 1.21 or 1.21.1");
+            return false;
+        }
         this.usingConverts = (Expression<ItemType>) container.getOptional("using converts to", false);
         if (this.usingConverts != null && !HAS_CONVERT) {
-            Skript.error("'using converts to' requires Minecraft 1.21+");
+            Skript.error("'using converts to' requires Minecraft 1.21 or 1.21.1");
             return false;
         }
         SectionNode potionEffects = container.getOptional("effects", SectionNode.class, false);
         if (potionEffects != null) {
+            if (!HAS_EFFECTS) {
+                Skript.error("'effects' was removed in Minecraft 1.21.2");
+                return false;
+            }
             this.potionEffectSection = loadCode(potionEffects, "potion effects", FoodComponentApplyEvent.class);
         }
         return true;
@@ -147,9 +179,11 @@ public class SecFoodComponent extends Section {
             food.setNutrition(nutrition);
             food.setSaturation(saturation);
             food.setCanAlwaysEat(canAlwaysEat);
-            if (eatTime != null) food.setEatSeconds((float) eatTime.getTicks() / 20);
+            if (HAS_EAT_SECONDS && eatTime != null) {
+                setEatSeconds(food, (float) eatTime.getTicks() / 20);
+            }
             if (HAS_CONVERT && usingConvertsTo != null) {
-                food.setUsingConvertsTo(usingConvertsTo);
+                setUsingConverts(food, usingConvertsTo);
             }
 
             if (this.potionEffectSection != null) {
@@ -169,6 +203,26 @@ public class SecFoodComponent extends Section {
     @Override
     public @NotNull String toString(Event e, boolean d) {
         return "apply food component to " + this.items.toString(e, d);
+    }
+
+    private static void setEatSeconds(FoodComponent food, float seconds) {
+        if (EAT_SECONDS_METHOD != null) {
+            try {
+                EAT_SECONDS_METHOD.invoke(food, seconds);
+            } catch (IllegalAccessException | InvocationTargetException e) {
+                throw new RuntimeException(e);
+            }
+        }
+    }
+
+    private static void setUsingConverts(FoodComponent food, ItemStack usingConvertsTo) {
+        if (USING_CONVERTS_TO_METHOD != null) {
+            try {
+                USING_CONVERTS_TO_METHOD.invoke(food, usingConvertsTo);
+            } catch (InvocationTargetException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
     }
 
 }
