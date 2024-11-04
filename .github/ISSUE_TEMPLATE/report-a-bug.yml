@@ -1,5 +1,5 @@
 name: 🐞 Bug Report
-description: Report an unexpected behaviour with skBee. This fork of skBee doesn't accept feature requests.
+description: Report unexpected behavior with skBee. This fork of skBee doesn't accept feature requests.
 title: "[BUG]"
 body:
   - type: textarea

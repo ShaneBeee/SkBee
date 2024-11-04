@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"apply lock to target block using player's tool",
     "apply lock to {_blocks::*} using stick named \"Mr Locky\"",
     "remove lock from target block"})
-@Since("INSERT VERSION")
+@Since("3.6.2")
 public class EffBlockLock extends Effect {
 
     static {

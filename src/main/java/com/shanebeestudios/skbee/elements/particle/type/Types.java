@@ -194,7 +194,7 @@ public class Types {
                     "Requires Minecraft 1.21.2+")
                 .examples("set {_target} to targetColor(location of target block, blue)",
                     "make 10 of trail using {_target} at location of player")
-                .since("INSERT VERSION");
+                .since("3.6.2");
         }
     }
 
