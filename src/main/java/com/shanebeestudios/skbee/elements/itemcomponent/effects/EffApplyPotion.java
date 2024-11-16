@@ -38,10 +38,11 @@ public class EffApplyPotion extends Effect {
     private static Method ADD_EFFECT_METHOD;
 
     static {
-        Skript.registerEffect(EffApplyPotion.class, "apply [potion[[ ]effect]] %potioneffect% [with probability %-number%]");
-        if (Skript.methodExists(FoodComponent.class, "addEffect", PotionEffect.class, float.class)) {
+        if (Skript.classExists("org.bukkit.inventory.meta.components.FoodComponent") &&
+            Skript.methodExists(FoodComponent.class, "addEffect", PotionEffect.class, float.class)) {
             try {
                 ADD_EFFECT_METHOD = FoodComponent.class.getDeclaredMethod("addEffect", PotionEffect.class, float.class);
+                Skript.registerEffect(EffApplyPotion.class, "apply [potion[[ ]effect]] %potioneffect% [with probability %-number%]");
             } catch (NoSuchMethodException e) {
                 throw new RuntimeException(e);
             }
