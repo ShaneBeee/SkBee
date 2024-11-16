@@ -62,7 +62,7 @@ public class EffBlockLock extends Effect {
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
-        if (this.item != null) {
+        if (this.item == null) {
             return "remove lock from " + this.blocks.toString(e, d);
         }
         return "apply lock to " + this.blocks.toString(e, d) + " using " + this.item.toString(e, d);
