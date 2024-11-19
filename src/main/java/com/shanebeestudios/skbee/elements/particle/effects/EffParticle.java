@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import org.bukkit.Location;
@@ -56,7 +57,7 @@ public class EffParticle extends Effect {
     private Expression<Vector> delta;
     private Expression<Number> extra;
     @Nullable
-    private Expression<Object> data;
+    private Expression<?> data;
     @Nullable
     private Expression<Player> players;
     private boolean force;
@@ -66,7 +67,7 @@ public class EffParticle extends Effect {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         count = (Expression<Number>) exprs[0];
         particle = (Expression<Particle>) exprs[1];
-        data = (Expression<Object>) exprs[2];
+        data = LiteralUtils.defendExpression(exprs[2]);
         location = Direction.combine((Expression<? extends Direction>) exprs[3], (Expression<? extends Location>) exprs[4]);
         delta = (Expression<Vector>) exprs[5];
         extra = (Expression<Number>) exprs[6];
