@@ -100,7 +100,7 @@ shadowJar {
 tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
-    into '/Users/ShaneBee/Desktop/Server/Skript/1-21-1/plugins'
+    into '/Users/ShaneBee/Desktop/Server/Skript/1-21-2/plugins'
 }
 
 publishing {
