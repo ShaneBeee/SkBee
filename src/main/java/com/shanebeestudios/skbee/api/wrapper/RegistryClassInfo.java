@@ -98,7 +98,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
         this.registry = registry;
         this.prefix = prefix;
         this.suffix = suffix;
-        if (!Comparators.comparatorExists(registryClass, registryClass)) {
+        if (!Comparators.exactComparatorExists(registryClass, registryClass)) {
             Comparators.registerComparator(registryClass, registryClass, (o1, o2) -> Relation.get(o1.equals(o2)));
         }
         if (usage) this.usage(getNames());
