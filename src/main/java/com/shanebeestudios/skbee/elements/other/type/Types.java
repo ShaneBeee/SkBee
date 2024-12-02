@@ -198,7 +198,7 @@ public class Types {
                 }));
         }
 
-        if (HAS_ARMOR_TRIM) {
+        if (HAS_ARMOR_TRIM && Classes.getExactClassInfo(ArmorTrim.class) == null) {
             Classes.registerClass(new ClassInfo<>(ArmorTrim.class, "armortrim")
                 .user("armor ?trims?")
                 .name("ArmorTrim")
@@ -225,23 +225,27 @@ public class Types {
                         return toString(o, 0);
                     }
                 }));
+            }
 
-            Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_MATERIAL, TrimMaterial.class, "trimmaterial", null, "material")
-                .user("trim ?materials?")
-                .name("ArmorTrim - TrimMaterial")
-                .description("Represents a material that may be used in an ArmorTrim.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .since("2.13.0"));
+            if (Classes.getExactClassInfo(TrimMaterial.class) == null) {
+                Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_MATERIAL, TrimMaterial.class, "trimmaterial", null, "material")
+                    .user("trim ?materials?")
+                    .name("ArmorTrim - TrimMaterial")
+                    .description("Represents a material that may be used in an ArmorTrim.",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .since("2.13.0"));
+            }
 
-            Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_PATTERN, TrimPattern.class, "trimpattern", null, "pattern")
-                .user("trim ?patterns?")
-                .name("ArmorTrim - TrimPattern")
-                .description("Represents a pattern that may be used in an ArmorTrim.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .since("2.13.0"));
-        }
+            if (Classes.getExactClassInfo(TrimPattern.class) == null) {
+                Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_PATTERN, TrimPattern.class, "trimpattern", null, "pattern")
+                    .user("trim ?patterns?")
+                    .name("ArmorTrim - TrimPattern")
+                    .description("Represents a pattern that may be used in an ArmorTrim.",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .since("2.13.0"));
+            }
 
-        if (HAS_CHUNK_LOAD_LEVEL) {
+        if (HAS_CHUNK_LOAD_LEVEL && Classes.getExactClassInfo(LoadLevel.class) == null) {
             EnumWrapper<LoadLevel> LOAD_LEVEL_ENUM = new EnumWrapper<>(LoadLevel.class, "", "level");
             Classes.registerClass(LOAD_LEVEL_ENUM.getClassInfo("chunkloadlevel")
                 .user("chunk ?load ?levels?")
@@ -254,7 +258,7 @@ public class Types {
                     "- `unloaded_level` = This chunk is not loaded.",
                     "NOTE: These are auto-generated and may differ between server versions.")
                 .since("2.17.0"));
-        }
+            }
 
         if (Classes.getExactClassInfo(EntityEffect.class) == null) {
             EnumWrapper<EntityEffect> ENTITY_EFFECT_ENUM = new EnumWrapper<>(EntityEffect.class);
@@ -269,11 +273,13 @@ public class Types {
             Util.logLoading("You may have to use their EntityEffects in SkBee's 'play entity effect' effect.");
         }
 
-        Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, MemoryKey.class, "memory")
-            .user("memor(y|ies)")
-            .name("Memory")
-            .description("Represents the different memories of an entity.",
-                "NOTE: These are auto-generated and may differ between server versions."));
+        if (Classes.getExactClassInfo(MemoryKey.class) == null) {
+            Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, MemoryKey.class, "memory")
+                .user("memor(y|ies)")
+                .name("Memory")
+                .description("Represents the different memories of an entity.",
+                    "NOTE: These are auto-generated and may differ between server versions."));
+        }
 
         if (Classes.getExactClassInfo(EquipmentSlot.class) == null) {
             EnumWrapper<EquipmentSlot> SLOT_ENUM = new EnumWrapper<>(EquipmentSlot.class, null, "slot");
@@ -358,51 +364,57 @@ public class Types {
                 .since("3.5.0"));
         }
 
-        Classes.registerClass(new ClassInfo<>(Color.class, "bukkitcolor")
-            .user("bukkit ?colors?")
-            .name("Bukkit Color")
-            .description("Represents a Bukkit color. This is different than a Skript color",
-                "as it adds an alpha channel.")
-            .since("2.8.0")
-            .parser(new Parser<>() {
+        if (Classes.getExactClassInfo(Color.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Color.class, "bukkitcolor")
+                .user("bukkit ?colors?")
+                .name("Bukkit Color")
+                .description("Represents a Bukkit color. This is different than a Skript color",
+                    "as it adds an alpha channel.")
+                .since("2.8.0")
+                .parser(new Parser<>() {
 
-                @SuppressWarnings("NullableProblems")
-                @Override
-                public boolean canParse(ParseContext context) {
-                    return false;
-                }
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
+                    }
 
-                @Override
-                public @NotNull String toString(Color bukkitColor, int flags) {
-                    int alpha = bukkitColor.getAlpha();
-                    int red = bukkitColor.getRed();
-                    int green = bukkitColor.getGreen();
-                    int blue = bukkitColor.getBlue();
-                    return String.format("BukkitColor(a=%s,r=%s,g=%s,b=%s)", alpha, red, green, blue);
-                }
+                    @Override
+                    public @NotNull String toString(Color bukkitColor, int flags) {
+                        int alpha = bukkitColor.getAlpha();
+                        int red = bukkitColor.getRed();
+                        int green = bukkitColor.getGreen();
+                        int blue = bukkitColor.getBlue();
+                        return String.format("BukkitColor(a=%s,r=%s,g=%s,b=%s)", alpha, red, green, blue);
+                    }
 
-                @Override
-                public @NotNull String toVariableNameString(Color bukkitColor) {
-                    return toString(bukkitColor, 0);
-                }
-            }));
+                    @Override
+                    public @NotNull String toVariableNameString(Color bukkitColor) {
+                        return toString(bukkitColor, 0);
+                    }
+                }));
+        }
 
-        EnumWrapper<TreeType> TREE_TYPE = new EnumWrapper<>(TreeType.class, "", "tree");
-        Classes.registerClass(TREE_TYPE.getClassInfo("bukkittreetype")
-            .user("bukkit ?tree ?types?")
-            .name("Bukkit Tree Type")
-            .description("Represents the different types of trees.",
-                "NOTE: These are auto-generated and may differ between server versions.")
-            .after("structuretype")
-            .since("3.5.3"));
+        if (Classes.getExactClassInfo(TreeType.class) == null) {
+            EnumWrapper<TreeType> TREE_TYPE = new EnumWrapper<>(TreeType.class, "", "tree");
+            Classes.registerClass(TREE_TYPE.getClassInfo("bukkittreetype")
+                .user("bukkit ?tree ?types?")
+                .name("Bukkit Tree Type")
+                .description("Represents the different types of trees.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
+                .after("structuretype")
+                .since("3.5.3"));
+        }
 
-        EnumWrapper<Pose> POSE = new EnumWrapper<>(Pose.class, "", "pose");
-        Classes.registerClass(POSE.getClassInfo("pose")
-            .user("poses?")
-            .name("Entity Pose")
-            .description("Represents the pose of an entity.",
-                "NOTE: These are auto-generated and may differ between server versions.")
-            .since("3.5.4"));
+        if (Classes.getExactClassInfo(Pose.class) == null) {
+            EnumWrapper<Pose> POSE = new EnumWrapper<>(Pose.class, "", "pose");
+            Classes.registerClass(POSE.getClassInfo("pose")
+                .user("poses?")
+                .name("Entity Pose")
+                .description("Represents the pose of an entity.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
+                .since("3.5.4"));
+        }
 
         if (Skript.classExists("org.bukkit.inventory.EquipmentSlotGroup")) {
             // This class is not an enum, and does not have a registry
@@ -434,34 +446,39 @@ public class Types {
                 }));
         }
 
-        Classes.registerClass(new ClassInfo<>(AttributeModifier.class, "attributemodifier")
-            .user("attribute ?modifiers?")
-            .name("Attribute Modifier")
-            .description("Represents an attribute modifier from an item/living entity.")
-            .parser(new Parser<>() {
 
-                @SuppressWarnings("NullableProblems")
-                @Override
-                public boolean canParse(ParseContext context) {
-                    return false;
-                }
+        if (Classes.getExactClassInfo(AttributeModifier.class) == null) {
+            Classes.registerClass(new ClassInfo<>(AttributeModifier.class, "attributemodifier")
+                .user("attribute ?modifiers?")
+                .name("Attribute Modifier")
+                .description("Represents an attribute modifier from an item/living entity.")
+                .parser(new Parser<>() {
 
-                @Override
-                public @NotNull String toString(AttributeModifier modifier, int flags) {
-                    return ItemUtils.attributeModifierToString(modifier);
-                }
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
+                    }
 
-                @Override
-                public @NotNull String toVariableNameString(AttributeModifier o) {
-                    return toString(o, 0);
-                }
-            }));
+                    @Override
+                    public @NotNull String toString(AttributeModifier modifier, int flags) {
+                        return ItemUtils.attributeModifierToString(modifier);
+                    }
 
-        Classes.registerClass(new EnumWrapper<>(AttributeModifier.Operation.class).getClassInfo("attributeoperation")
-            .user("attribute ?operations?")
-            .name("Attribute Modifier Operation")
-            .description("Represents the different operations of an attribute modifer.",
-                "NOTE: These are auto-generated and may differ between server versions."));
+                    @Override
+                    public @NotNull String toVariableNameString(AttributeModifier o) {
+                        return toString(o, 0);
+                    }
+                }));
+        }
+
+        if (Classes.getExactClassInfo(AttributeModifier.Operation.class) == null) {
+            Classes.registerClass(new EnumWrapper<>(AttributeModifier.Operation.class).getClassInfo("attributeoperation")
+                .user("attribute ?operations?")
+                .name("Attribute Modifier Operation")
+                .description("Represents the different operations of an attribute modifer.",
+                    "NOTE: These are auto-generated and may differ between server versions."));
+        }
     }
 
     // FUNCTIONS

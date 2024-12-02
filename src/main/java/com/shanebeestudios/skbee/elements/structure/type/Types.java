@@ -39,21 +39,25 @@ public class Types {
                     }
                 }));
 
-        EnumWrapper<Mirror> MIRROR_ENUM = new EnumWrapper<>(Mirror.class);
-        Classes.registerClass(MIRROR_ENUM.getClassInfo("mirror")
+        if (Classes.getExactClassInfo(Mirror.class) == null) {
+            EnumWrapper<Mirror> MIRROR_ENUM = new EnumWrapper<>(Mirror.class);
+            Classes.registerClass(MIRROR_ENUM.getClassInfo("mirror")
                 .user("mirrors?")
                 .name("Structure - Mirror")
                 .description("Represents the different states of mirroring for a structure. Requires MC 1.17.1+")
                 .examples("set structure mirror of structure {_s} to front back")
                 .since("1.12.0"));
+        }
 
-        EnumWrapper<StructureRotation> ROTATION_ENUM = new EnumWrapper<>(StructureRotation.class);
-        Classes.registerClass(ROTATION_ENUM.getClassInfo("structurerotation")
+        if (Classes.getExactClassInfo(StructureRotation.class) == null) {
+            EnumWrapper<StructureRotation> ROTATION_ENUM = new EnumWrapper<>(StructureRotation.class);
+            Classes.registerClass(ROTATION_ENUM.getClassInfo("structurerotation")
                 .user("structure ?rotations?")
                 .name("Structure - Rotation")
                 .description("Represents the different states of rotation for a structure. Requires MC 1.17.1+")
                 .examples("set structure rotation of structure {_s} to clockwise 90")
                 .since("1.12.0"));
+        }
     }
 
 }

@@ -61,44 +61,52 @@ public class Types {
             Util.logLoading("You may have to use their particles in SkBee's 'particle spawn' effect.");
         }
 
-        Classes.registerClass(new ClassInfo<>(Particle.DustOptions.class, "dustoption")
-            .name(ClassInfo.NO_DOC).user("dust ?options?")
-            .parser(new Parser<>() {
-                @SuppressWarnings("NullableProblems")
-                @Override
-                public boolean canParse(ParseContext context) {
-                    return false;
-                }
-
-                @Override
-                public @NotNull String toString(Particle.DustOptions dustOption, int flags) {
-                    org.bukkit.Color bukkitColor = dustOption.getColor();
-                    int red = bukkitColor.getRed();
-                    int green = bukkitColor.getGreen();
-                    int blue = bukkitColor.getBlue();
-                    SkriptColor skriptColor = SkriptColor.fromBukkitColor(bukkitColor);
-
-                    String color;
-                    //noinspection ConstantConditions
-                    if (skriptColor != null) {
-                        color = skriptColor.toString();
-                    } else {
-                        color = String.format("rgb(%s,%s,%s)", red, green, blue);
+        if (Classes.getExactClassInfo(Particle.DustOptions.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Particle.DustOptions.class, "dustoption")
+                .name(ClassInfo.NO_DOC).user("dust ?options?")
+                .parser(new Parser<>() {
+                    @SuppressWarnings("NullableProblems")
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
                     }
-                    return "dustOption(color=" + color + ",size=" + dustOption.getSize() + ")";
-                }
 
-                @Override
-                public @NotNull String toVariableNameString(Particle.DustOptions o) {
-                    return toString(o, 0);
-                }
-            }));
-        Classes.registerClass(new ClassInfo<>(DustTransition.class, "dusttransition")
-            .name(ClassInfo.NO_DOC).user("dust ?transitions?")
-            .parser(SkriptUtils.getDefaultParser()));
-        Classes.registerClass(new ClassInfo<>(Vibration.class, "vibration")
-            .name(ClassInfo.NO_DOC).user("vibrations?")
-            .parser(SkriptUtils.getDefaultParser()));
+                    @Override
+                    public @NotNull String toString(Particle.DustOptions dustOption, int flags) {
+                        org.bukkit.Color bukkitColor = dustOption.getColor();
+                        int red = bukkitColor.getRed();
+                        int green = bukkitColor.getGreen();
+                        int blue = bukkitColor.getBlue();
+                        SkriptColor skriptColor = SkriptColor.fromBukkitColor(bukkitColor);
+
+                        String color;
+                        //noinspection ConstantConditions
+                        if (skriptColor != null) {
+                            color = skriptColor.toString();
+                        } else {
+                            color = String.format("rgb(%s,%s,%s)", red, green, blue);
+                        }
+                        return "dustOption(color=" + color + ",size=" + dustOption.getSize() + ")";
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(Particle.DustOptions o) {
+                        return toString(o, 0);
+                    }
+                }));
+        }
+        
+        if (Classes.getExactClassInfo(DustTransition.class) == null) {
+            Classes.registerClass(new ClassInfo<>(DustTransition.class, "dusttransition")
+                .name(ClassInfo.NO_DOC).user("dust ?transitions?")
+                .parser(SkriptUtils.getDefaultParser()));
+        }
+        
+        if (Classes.getExactClassInfo(DustTransition.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Vibration.class, "vibration")
+                .name(ClassInfo.NO_DOC).user("vibrations?")
+                .parser(SkriptUtils.getDefaultParser()));
+        }
 
         if (ParticleUtil.HAS_TARGET_COLOR && Classes.getExactClassInfo(Particle.TargetColor.class) == null) {
             Classes.registerClass(new ClassInfo<>(Particle.TargetColor.class, "targetcolor")
