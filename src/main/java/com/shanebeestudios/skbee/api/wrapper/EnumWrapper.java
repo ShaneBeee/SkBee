@@ -133,6 +133,7 @@ public final class EnumWrapper<E extends Enum<E>> {
     }
 
     private void registerComparator(Class<E> c) {
+        if (Comparators.comparatorExists(c, c)) return;
         Comparators.registerComparator(c, c, (o1, o2) -> Relation.get(o1.equals(o2)));
     }
 
