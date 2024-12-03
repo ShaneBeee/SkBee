@@ -46,7 +46,7 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.14.0") {
+    implementation("de.tr7zw:item-nbt-api:2.14.1-SNAPSHOT") { // TODO temporary (update before release)
         transitive = false
     }
 
