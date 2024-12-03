@@ -102,7 +102,7 @@ public class Types {
                 .parser(SkriptUtils.getDefaultParser()));
         }
 
-        if (Classes.getExactClassInfo(DustTransition.class) == null) {
+        if (Classes.getExactClassInfo(Vibration.class) == null) {
             Classes.registerClass(new ClassInfo<>(Vibration.class, "vibration")
                 .name(ClassInfo.NO_DOC).user("vibrations?")
                 .parser(SkriptUtils.getDefaultParser()));
