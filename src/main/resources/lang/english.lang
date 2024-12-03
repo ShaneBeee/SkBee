@@ -67,12 +67,12 @@ types:
     structure: structure¦s
     structurerotation: structure rotation¦s
     tagresolver: tag resolver¦s
-    targetcolor: target color¦s
     team: team¦s
     teamoption: team options¦s
     teamoptionstatus: team option status¦es
     textalignment: text alignment¦s
     textcomponent: text component¦s @-
+    trail: trail¦s
     transformation: transformation¦s
     transformreason: transform reason¦s
     trimmaterial: trim material¦s
