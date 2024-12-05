@@ -203,7 +203,7 @@ public class Types {
                     "Requires Minecraft 1.21.4+")
                 .examples("set {_trail} to trail(location of target block, blue, 1 second)",
                     "make 10 of trail using {_trail} at location of player")
-                .since("INSERT VERSION");
+                .since("3.6.5");
         }
     }
 
