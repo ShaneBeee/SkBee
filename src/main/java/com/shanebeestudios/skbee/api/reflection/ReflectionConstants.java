@@ -18,6 +18,16 @@ public class ReflectionConstants {
     public static String NMS_SCOREBOARD_TEAM_SET_PREFIX_METHOD = get("setPlayerPrefix", "b");
     // net.minecraft.world.scores.PlayerTeam -> setPlayerSuffix
     public static String NMS_SCOREBOARD_TEAM_SET_SUFFIX_METHOD = get("setPlayerSuffix", "c");
+    // net.minecraft.world.level.Level -> registryAccess
+    public static String LEVEL_REGISTRY_ACCESS_METHOD = get("registryAccess", "null", "null", "null", "null", "H_", "K_");
+    // net.minecraft.core.component.DataComponentMap -> CODEC
+    public static String COMPONENT_MAP_CODEC_FIELD = get("CODEC", "b");
+    // net.minecraft.nbt.NbtOps -> INSTANCE
+    public static String NBT_OPS_INSTANCE_FIELD = get("INSTANCE", "a");
+    // net.minecraft.world.item.ItemStack -> getComponents
+    public static String ITEM_STACK_GET_COMPONENTS_METHOD = get("getComponents", "a");
+    // net.minecraft.core.HolderLookup$Provider -> createSerializationContext
+    public static String HOLDER_LOOKUP_SERIALIZATION_METHOD = get("createSerializationContext", "a");
 
     @SuppressWarnings("SameParameterValue")
     private static String get(String mapped, String v118, String v119, String v1194, String v1202, String v1205, String v1212) {
