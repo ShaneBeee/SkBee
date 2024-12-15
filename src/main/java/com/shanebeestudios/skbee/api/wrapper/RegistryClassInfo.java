@@ -102,6 +102,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
             Comparators.registerComparator(registryClass, registryClass, (o1, o2) -> Relation.get(o1.equals(o2)));
         }
         if (usage) this.usage(getNames());
+        this.supplier(registry::iterator);
         this.parser(new Parser<>() {
             @SuppressWarnings("NullableProblems")
             @Override
