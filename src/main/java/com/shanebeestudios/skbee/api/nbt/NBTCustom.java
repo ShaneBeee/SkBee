@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.nbt;
 import com.shanebeestudios.skbee.SkBee;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.NamespacedKey;
+import org.jetbrains.annotations.NotNull;
 
 public interface NBTCustom {
 
@@ -11,6 +12,6 @@ public interface NBTCustom {
 
     void deleteCustomNBT();
 
-    NBTCompound getCopy();
+    @NotNull NBTCompound getCopy();
 
 }
