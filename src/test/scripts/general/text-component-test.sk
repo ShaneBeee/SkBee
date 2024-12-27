@@ -3,8 +3,47 @@ test "SkBee - text component test":
     # These tests are more so to check if anything fails
     # They can't really do anything
 
+    # Create a mini message
     set {_m} to mini message from "well who cares what is here"
-    assert {_m} is set with "Welp, i guess the mini message didnt work"
+    assert {_m} is set with "Welp, I guess the mini message didn't work"
 
+    # Component replace text effect
+    assert "%{_m}%" contains "cares" with "'cares' should be in there"
+    component replace "cares" with "" in {_m}
+    assert "%{_m}%" does not contain "cares" with "'cares' should have been removed"
+
+    # Click event
+    assert click event of {_m} is not set with "component should not have a click event yet"
+    add click event to run command "/some command" to {_m}
+    assert click event of {_m} is set with "component should have a click event"
+
+    # Hover event
+    assert hover event of {_m} is not set with "component should not have a hover event yet"
+    add hover event showing "test" to {_m}
+    assert hover event of {_m} is set with "component should have a hover event"
+
+    # Component item name/lore
+    set {_i} to 1 of diamond sword
+    assert lore of {_i} is not set with "The item shouldn't have lore yet"
+    set component item lore of {_i} to {_m}
+    assert lore of {_i} is set with "The item should have lore now"
+    assert name of {_i} is not set with "The item shouldn't have a name yet"
+    set component display name of {_i} to {_m}
+    assert name of {_i} is set with "The item should have a name now"
+
+    # Send to console
+    send component {_m} to console
+
+    # Create a text component
     set {_t} to text component from "test"
-    assert {_t} is set with "Welp, i guess the text component didnt work"
+    assert {_t} is set with "Welp, I guess the text component didn't work"
+
+    # Component formats
+    set color format of {_t} to red
+    assert color format of {_t} = red with "The color format should be red"
+    set bold format of {_t} to true
+    assert bold format of {_t} = true with "The bold format should be true"
+
+    # Merge
+    Set {_merge} to merge components {_m} and {_t} with "s"
+    assert {_merge} is set with "Merging components should return a new component"
