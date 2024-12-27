@@ -40,7 +40,9 @@ test "SkBee - text component test":
 
     # Component formats
     set color format of {_t} to red
-    assert color format of {_t} = red with "The color format should be red"
+    # TODO Skript 2.9.x currently cannot compare a color to a color
+    # TODO I think this is fixed in 2.10.x
+    # assert color format of {_t} = red with "The color format should be red"
     set bold format of {_t} to true
     assert bold format of {_t} = true with "The bold format should be true"
 
