@@ -47,3 +47,16 @@ test "SkBee - text component test":
     # Merge
     Set {_merge} to merge components {_m} and {_t} with "s"
     assert {_merge} is set with "Merging components should return a new component"
+
+    # Translatable components with fallback
+    set {_trans} to translate component from "test.test" with fallback "some fallback"
+    assert fallback format of {_trans} is set with "Fallback of component should be set"
+    assert fallback format of {_trans} = "some fallback" with "Fallback of component should be 'some fallback'"
+    set fallback format of {_trans} to "a new fallback"
+    assert fallback format of {_trans} = "a new fallback" with "Fallback of component should be 'a new fallback'"
+    set {_m} to mini message from "test"
+    set fallback format of {_m} to "this is a fallback"
+    assert fallback format of {_m} is not set with "Fallback of non-translatable component should not be set"
+    delete {_trans}
+    set {_trans} to translate component from "Test.test" with args "some arg" with fallback "some fallback"
+    assert {_trans} is set with "Component with args and fallback should be set"

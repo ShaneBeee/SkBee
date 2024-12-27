@@ -14,6 +14,7 @@ import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.format.TextColor;
@@ -156,7 +157,7 @@ public class ComponentWrapper {
      * @param objects   Objects to add into translation
      * @return Component from translation
      */
-    public static ComponentWrapper fromTranslate(String translate, Object... objects) {
+    public static ComponentWrapper fromTranslate(String translate, @Nullable String fallback, Object... objects) {
         List<Component> comps = new ArrayList<>();
         for (Object object : objects) {
             if (object instanceof ComponentWrapper component) {
@@ -174,7 +175,7 @@ public class ComponentWrapper {
                 comps.add(Component.text(objectString));
             }
         }
-        return new ComponentWrapper(Component.translatable(translate, comps));
+        return new ComponentWrapper(Component.translatable(translate, fallback, comps));
     }
 
     /**
@@ -409,6 +410,19 @@ public class ComponentWrapper {
         } else {
             return null;
         }
+    }
+
+    public void setFallback(String fallback) {
+        if (this.component instanceof TranslatableComponent translatable) {
+            this.component = translatable.fallback(fallback);
+        }
+    }
+
+    public String getFallback() {
+        if (this.component instanceof TranslatableComponent translatable) {
+            return translatable.fallback();
+        }
+        return null;
     }
 
     public void setInsertion(String insertion) {
