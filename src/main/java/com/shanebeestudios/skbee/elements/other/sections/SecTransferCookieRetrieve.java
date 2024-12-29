@@ -28,14 +28,13 @@ import java.util.List;
 @Description({"Retrieve a cookie from a player. Requires Minecraft 1.20.5+",
     "Due to the retrieval process happening async, this will delay proceeding code.",
     "While the cookie is being retrieved, the following code will wait.",
-    "If there is no available cookie, the section will not execute.",
     "NOTE: Cookies are stored across server transfers."})
 @Examples({"command /server <string>:",
     "\ttrigger:",
     "\t\tstore cookie \"%uuid of player%-transfer\" with key \"transfer\" on player",
     "\t\ttransfer player to arg-1",
     "",
-    "on join:",
+    "on connect:",
     "\t# only do a cookie check if player was transferred",
     "\tif player is transferred:",
     "\t\tretrieve cookie with key \"transfer\" from player:",
@@ -48,8 +47,10 @@ import java.util.List;
 public class SecTransferCookieRetrieve extends Section {
 
     static {
+        if (Skript.methodExists(Player.class, "retrieveCookie", NamespacedKey.class)) {
         Skript.registerSection(SecTransferCookieRetrieve.class,
             "retrieve cookie with key %namespacedkey/string% [from %player%]");
+        }
     }
 
     private Expression<?> key;
@@ -74,49 +75,43 @@ public class SecTransferCookieRetrieve extends Section {
     protected @Nullable TriggerItem walk(Event event) {
         TriggerItem next = getNext();
 
-        //Let's save you guys for later after the cookie has loaded
-        Object localVars = Variables.removeLocals(event);
+        // Let's save you guys for later after the cookie has loaded
+        Object localVars = Variables.copyLocalVariables(event);
 
         Player player = this.player.getSingle(event);
         Object keyObject = this.key.getSingle(event);
         if (player == null || keyObject == null) return next;
 
-        NamespacedKey key;
+        NamespacedKey key = null;
         if (keyObject instanceof String string) {
             key = Util.getNamespacedKey(string, false);
         } else if (keyObject instanceof NamespacedKey namespacedKey) {
             key = namespacedKey;
-        } else {
-            return next;
         }
         if (key == null) return next;
 
         player.retrieveCookie(key).thenAccept(bytes -> {
             Delay.addDelayedEvent(event); // Delay event to make sure kick effect still works
-            String cookie = new String(bytes);
-            ExprTransferCookie.setLastTransferCookie(cookie);
-            walkNext(localVars, event, first, next);
+            ExprTransferCookie.setLastTransferCookie(new String(bytes));
+            // Walk the section
+            walkNext(localVars, event, first);
+            // Clear cookie data before moving on
+            ExprTransferCookie.setLastTransferCookie(null);
         }).exceptionally(throwable -> {
-            walkNext(localVars, event, null, next);
+            // Walk the section even if no cookie was found
+            walkNext(localVars, event, first);
             return null;
         });
         return null;
     }
 
-    private static void walkNext(Object localVars, Event event, @Nullable TriggerItem sec, TriggerItem next) {
-        //re-set local variables
+    private static void walkNext(Object localVars, Event event, @Nullable TriggerItem triggerItem) {
+        // re-set local variables
         if (localVars != null) Variables.setLocalVariables(event, localVars);
 
-        // walk section
-        if (sec != null) {
-            // walk the section
-            TriggerItem.walk(sec, event);
-            // Clear cookie data before moving on
-            ExprTransferCookie.setLastTransferCookie(null);
+        if (triggerItem != null) {
+            TriggerItem.walk(triggerItem, event);
         }
-
-        // walk next trigger
-        else if (next != null) TriggerItem.walk(next, event);
 
         // remove local vars as we're now done
         Variables.removeLocals(event);
