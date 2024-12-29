@@ -17,13 +17,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Transfer - Transfer Cookie")
-@Description("Represents the cookie data in a transfer section.")
+@Description("Represents the cookie data in a retrieve cookie section.")
 @Examples({"command /server <string>:",
     "\ttrigger:",
     "\t\tstore cookie \"%uuid of player%-transfer\" with key \"transfer\" on player",
     "\t\ttransfer player to arg-1",
     "",
-    "on join:",
+    "on connect:",
     "\t# only do a cookie check if player was transferred",
     "\tif player is transferred:",
     "\t\tretrieve cookie with key \"transfer\" from player:",
