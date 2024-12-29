@@ -8,8 +8,10 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.elements.other.sections.SecTransferCookieRetrieve;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -47,6 +49,10 @@ public class ExprTransferCookie extends SimpleExpression<String> {
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        if (!ParserInstance.get().isCurrentSection(SecTransferCookieRetrieve.class)) {
+            Skript.error("'transfer cookie' can only be used in a 'retrieve cookie' section.");
+            return false;
+        }
         return true;
     }
 
