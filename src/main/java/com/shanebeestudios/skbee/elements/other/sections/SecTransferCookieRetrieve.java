@@ -6,6 +6,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -48,7 +49,7 @@ public class SecTransferCookieRetrieve extends Section {
 
     static {
         Skript.registerSection(SecTransferCookieRetrieve.class,
-            "retrieve cookie with key %namespacedkey/string% from %player%");
+            "retrieve cookie with key %namespacedkey/string% [from %player%]");
     }
 
     private Expression<?> key;
@@ -91,6 +92,7 @@ public class SecTransferCookieRetrieve extends Section {
         if (key == null) return next;
 
         player.retrieveCookie(key).thenAccept(bytes -> {
+            Delay.addDelayedEvent(event); // Delay event to make sure kick effect still works
             String cookie = new String(bytes);
             ExprTransferCookie.setLastTransferCookie(cookie);
             walkNext(localVars, event, first, next);
