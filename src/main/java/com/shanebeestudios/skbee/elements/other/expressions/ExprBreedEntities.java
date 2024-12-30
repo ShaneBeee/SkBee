@@ -12,6 +12,7 @@ import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityBreedEvent;
@@ -19,17 +20,20 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Breed Event Entities")
-@Description("Get the entities involved in a breed event.")
+@Description({"Get the entities involved in a breed event.",
+    "Removed if running Skript 2.10+ (now included in Skript).",})
 @Examples({"on entity breed:",
-        "\tif breeding mother is a sheep:",
-        "\t\tkill breeding player"})
+    "\tif breeding mother is a sheep:",
+    "\t\tkill breeding player"})
 @Since("1.17.0")
 public class ExprBreedEntities extends SimpleExpression<Entity> {
 
     static {
-        Skript.registerExpression(ExprBreedEntities.class, Entity.class, ExpressionType.SIMPLE,
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            Skript.registerExpression(ExprBreedEntities.class, Entity.class, ExpressionType.SIMPLE,
                 "[the] breed[ing] parents",
                 "[the] breed[ing] (mother|1:father|2:baby|3:player)");
+        }
     }
 
     private int pattern;

@@ -9,11 +9,14 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Entity - Is Ticking")
-@Description("Check if an entity is currently ticking. If they're in a chunk that is not ticking, this will be false.")
+@Description({"Check if an entity is currently ticking.",
+    "If they're in a chunk that is not ticking, this will be false.",
+    "Removed if running Skript 2.10+ (now included in Skript)."})
 @Examples("loop all entities where [input is ticking]:")
 @Since("2.6.0")
 public class CondEntityTicking extends PropertyCondition<Entity> {
@@ -21,7 +24,9 @@ public class CondEntityTicking extends PropertyCondition<Entity> {
     private static final boolean TICKING_METHOD_EXISTS = Skript.methodExists(Entity.class, "isTicking");
 
     static {
-        register(CondEntityTicking.class, "ticking", "entities");
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            register(CondEntityTicking.class, "ticking", "entities");
+        }
     }
 
     @SuppressWarnings("NullableProblems")

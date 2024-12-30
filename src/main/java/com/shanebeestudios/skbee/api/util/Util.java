@@ -33,6 +33,7 @@ public class Util {
 
     // Shortcut for finding stuff to remove later
     public static final boolean IS_RUNNING_SKRIPT_2_9 = Skript.getVersion().isLargerThan(new Version(2, 8, 999));
+    public static final boolean IS_RUNNING_SKRIPT_2_10 = Skript.getVersion().isLargerThan(new Version(2, 9, 999));
     public static final boolean IS_RUNNING_MC_1_21 = Skript.isRunningMinecraft(1, 21);
 
     @SuppressWarnings("deprecation") // Paper deprecation

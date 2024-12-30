@@ -7,22 +7,26 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Type;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Villager - Type")
-@Description("Represents the type of villager. Resetting will set a villager to a plains villager.")
+@Description({"Represents the type of villager. Resetting will set a villager to a plains villager.",
+    "Removed if running Skript 2.10+ (now included in Skript)."})
 @Examples({"set {_t} to villager type of last spawned villager",
-        "set villager type of target entity to desert villager"})
+    "set villager type of target entity to desert villager"})
 @Since("1.17.0")
 public class ExprVillagerType extends SimplePropertyExpression<LivingEntity, Type> {
 
     static {
-        register(ExprVillagerType.class, Type.class, "villager type", "livingentities");
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            register(ExprVillagerType.class, Type.class, "villager type", "livingentities");
+        }
     }
 
     @Override

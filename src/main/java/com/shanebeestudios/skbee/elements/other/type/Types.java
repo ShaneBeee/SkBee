@@ -58,18 +58,21 @@ public class Types {
     public static boolean HAS_CHUNK_LOAD_LEVEL = Skript.classExists("org.bukkit.Chunk$LoadLevel");
 
     static {
-        if (Classes.getExactClassInfo(ItemFlag.class) == null) {
-            EnumWrapper<ItemFlag> ITEM_FLAGS = new EnumWrapper<>(ItemFlag.class);
-            Classes.registerClass(ITEM_FLAGS.getClassInfo("itemflag")
-                .user("item ?flags?")
-                .name("ItemFlag")
-                .description("Represents the different ItemFlags that can be applied to an item.",
-                    "NOTE: Underscores aren't required, you CAN use spaces.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .since("3.4.0"));
-        } else {
-            Util.logLoading("It looks like another addon registered 'itemflag' already.");
-            Util.logLoading("You may have to use their ItemFlags in SkBee's 'Item Flags' expressions.");
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            if (Classes.getExactClassInfo(ItemFlag.class) == null) {
+                EnumWrapper<ItemFlag> ITEM_FLAGS = new EnumWrapper<>(ItemFlag.class);
+                Classes.registerClass(ITEM_FLAGS.getClassInfo("itemflag")
+                    .user("item ?flags?")
+                    .name("ItemFlag")
+                    .description("Represents the different ItemFlags that can be applied to an item.",
+                        "Removed if running Skript 2.10+ (now included in Skript).",
+                        "NOTE: Underscores aren't required, you CAN use spaces.",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .since("3.4.0"));
+            } else {
+                Util.logLoading("It looks like another addon registered 'itemflag' already.");
+                Util.logLoading("You may have to use their ItemFlags in SkBee's 'Item Flags' expressions.");
+            }
         }
 
         // Only register if no other addons have registered this class
@@ -88,17 +91,20 @@ public class Types {
 
         // Only register if no other addons have registered this class
         // EntityPotionEffectEvent.Cause
-        if (Classes.getExactClassInfo(Cause.class) == null) {
-            EnumWrapper<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumWrapper<>(Cause.class, "", "effect");
-            Classes.registerClass(POTION_EFFECT_EVENT_CAUSE.getClassInfo("potioneffectcause")
-                .user("potion ?effect ?causes?")
-                .name("Potion Effect Cause")
-                .description("Represents the different causes of an entity potion effect event.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .since("1.17.0"));
-        } else {
-            Util.logLoading("It looks like another addon registered 'potioneffectcause' already.");
-            Util.logLoading("You may have to use their potion effect causes in SkBee's 'Entity Potion Effect' event.");
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            if (Classes.getExactClassInfo(Cause.class) == null) {
+                EnumWrapper<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumWrapper<>(Cause.class, "", "effect");
+                Classes.registerClass(POTION_EFFECT_EVENT_CAUSE.getClassInfo("potioneffectcause")
+                    .user("potion ?effect ?causes?")
+                    .name("Potion Effect Cause")
+                    .description("Represents the different causes of an entity potion effect event.",
+                        "Removed if running Skript 2.10+ (now included in Skript).",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .since("1.17.0"));
+            } else {
+                Util.logLoading("It looks like another addon registered 'potioneffectcause' already.");
+                Util.logLoading("You may have to use their potion effect causes in SkBee's 'Entity Potion Effect' event.");
+            }
         }
 
         if (Classes.getExactClassInfo(NamespacedKey.class) == null) {
