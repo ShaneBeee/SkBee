@@ -499,6 +499,10 @@ public class AddonLoader {
     }
 
     private void loadTagElements() {
+        if (Util.IS_RUNNING_SKRIPT_2_10) {
+            Util.logLoading("&5Minecraft Tag elements &cdisabled &r(&7now in Skript&r)");
+            return;
+        }
         if (!this.config.ELEMENTS_MINECRAFT_TAG) {
             Util.logLoading("&5Minecraft Tag elements &cdisabled via config");
             return;
