@@ -5,7 +5,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.EquipmentSlot;
@@ -19,34 +18,26 @@ public class EvtPlayerUseUnknown extends SkriptEvent {
     static {
         if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent")) {
             Skript.registerEvent("Player Click Unknown Entity", EvtPlayerUseUnknown.class, PlayerUseUnknownEntityEvent.class,
-                            "[player] click unknown entity [with (main|:off) hand]",
-                            "[player] right[( |-)]click unknown entity [with (main|:off) hand]",
-                            "[player] left[( |-)]click unknown entity [with (main|:off) hand]")
-                    .description("Represents an event that is called when a player right-clicks an unknown entity.",
-                            "Useful for dealing with virtual entities (entities that aren't actually spawned on the server).",
-                            "This event may be called multiple times per interaction (this is a server issue).",
-                            "\n`event-vector` = Returns the position relative to the entity that was clicked if available. (Requires Paper 1.20.1+)",
-                            "\n`event-number` = Returns the entity id of the unknown entity that was interacted with. (Not sure if this usefull or not)",
-                            "\nRequires PaperMC.")
-                    .examples("oh right click unknown entity:",
-                            "\tteleport player to spawn of world \"world\"")
-                    .since("2.17.0");
+                    "[player] click unknown entity [with (main|:off) hand]",
+                    "[player] right[( |-)]click unknown entity [with (main|:off) hand]",
+                    "[player] left[( |-)]click unknown entity [with (main|:off) hand]")
+                .description("Represents an event that is called when a player right-clicks an unknown entity.",
+                    "Useful for dealing with virtual entities (entities that aren't actually spawned on the server).",
+                    "This event may be called multiple times per interaction (this is a server issue).",
+                    "\n`event-vector` = Returns the position relative to the entity that was clicked if available. (Requires Paper 1.20.1+)",
+                    "\n`event-number` = Returns the entity id of the unknown entity that was interacted with. (Not sure if this usefull or not)",
+                    "\nRequires PaperMC.")
+                .examples("oh right click unknown entity:",
+                    "\tteleport player to spawn of world \"world\"")
+                .since("2.17.0");
 
-            EventValues.registerEventValue(PlayerUseUnknownEntityEvent.class, Number.class, new Getter<>() {
-                @Override
-                public @NotNull Number get(PlayerUseUnknownEntityEvent event) {
-                    return event.getEntityId();
-                }
-            }, EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerUseUnknownEntityEvent.class, Number.class, PlayerUseUnknownEntityEvent::getEntityId, EventValues.TIME_NOW);
             if (Skript.methodExists(PlayerUseUnknownEntityEvent.class, "getClickedRelativePosition")) {
-                EventValues.registerEventValue(PlayerUseUnknownEntityEvent.class, Vector.class, new Getter<>() {
-                    @Override
-                    public @Nullable Vector get(PlayerUseUnknownEntityEvent event) {
-                        try {
-                            return event.getClickedRelativePosition();
-                        } catch (NullPointerException ignore) {
-                            return null;
-                        }
+                EventValues.registerEventValue(PlayerUseUnknownEntityEvent.class, Vector.class, event -> {
+                    try {
+                        return event.getClickedRelativePosition();
+                    } catch (NullPointerException ignore) {
+                        return null;
                     }
                 }, EventValues.TIME_NOW);
             }
@@ -57,7 +48,6 @@ public class EvtPlayerUseUnknown extends SkriptEvent {
     private boolean attack;
     private boolean offHand;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
         this.pattern = matchedPattern;
@@ -66,7 +56,6 @@ public class EvtPlayerUseUnknown extends SkriptEvent {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
         if (event instanceof PlayerUseUnknownEntityEvent useEvent) {

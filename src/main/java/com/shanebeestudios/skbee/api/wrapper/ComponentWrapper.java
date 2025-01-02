@@ -197,7 +197,7 @@ public class ComponentWrapper {
             itemStack = is;
         } else if (object instanceof ItemType itemType) {
             itemStack = itemType.getRandom();
-            material = itemStack.getType();
+            if (itemStack != null) material = itemStack.getType();
         } else if (object instanceof Slot slot) {
             itemStack = slot.getItem();
         }
@@ -355,7 +355,7 @@ public class ComponentWrapper {
         if (skriptColor != null) {
             return skriptColor;
         }
-        return new ColorRGB(textColor.red(), textColor.green(), textColor.blue());
+        return ColorRGB.fromRGB(textColor.red(), textColor.green(), textColor.blue());
     }
 
     public void setBold(boolean bold) {
@@ -556,6 +556,7 @@ public class ComponentWrapper {
      *
      * @param inventory Inventory to change name
      */
+    @SuppressWarnings("deprecation")
     public void setInventoryName(Inventory inventory) {
         List<HumanEntity> viewers = inventory.getViewers();
         if (viewers.isEmpty()) return;

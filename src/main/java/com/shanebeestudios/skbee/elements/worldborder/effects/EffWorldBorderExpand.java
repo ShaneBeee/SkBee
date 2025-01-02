@@ -37,7 +37,7 @@ public class EffWorldBorderExpand extends Effect {
     private Expression<Number> size;
     private Expression<Timespan> timeSpan;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         this.expand = parseResult.mark == 0;
@@ -48,7 +48,6 @@ public class EffWorldBorderExpand extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Number sizeNum = this.size.getSingle(event);
@@ -57,7 +56,7 @@ public class EffWorldBorderExpand extends Effect {
         long speed = 0;
         if (this.timeSpan != null) {
             Timespan timeSpan = this.timeSpan.getSingle(event);
-            if (timeSpan != null) speed = timeSpan.getTicks() / 20;
+            if (timeSpan != null) speed = timeSpan.getAs(Timespan.TimePeriod.TICK) / 20;
         }
 
         int size = sizeNum.intValue();

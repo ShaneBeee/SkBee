@@ -9,7 +9,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.util.Timespan;
@@ -28,24 +27,24 @@ import java.util.List;
 
 @Name("Task - Run Task Later")
 @Description({"Run a task later. Similar to Skript's delay effect, with the difference being everything in the",
-        "section is run later. All code after your section will keep running as normal without a delay.",
-        "This can be very useful in loops, to prevent halting the loop.",
-        "You can optionally have your task repeat until cancelled.",
-        "You can optionally run your code async/on another thread.",
-        "\nNOTE: A good chunk of Bukkit/Minecraft stuff can NOT be run async. It may throw console errors.",
-        "Please be careful when running async, this is generally reserved for heavy math/functions that could cause lag.",
-        "Simply waiting a tick, or running a new non-async section will put your code back on the main thread."})
+    "section is run later. All code after your section will keep running as normal without a delay.",
+    "This can be very useful in loops, to prevent halting the loop.",
+    "You can optionally have your task repeat until cancelled.",
+    "You can optionally run your code async/on another thread.",
+    "\nNOTE: A good chunk of Bukkit/Minecraft stuff can NOT be run async. It may throw console errors.",
+    "Please be careful when running async, this is generally reserved for heavy math/functions that could cause lag.",
+    "Simply waiting a tick, or running a new non-async section will put your code back on the main thread."})
 @Examples({"on explode:",
-        "\tloop exploded blocks:",
-        "\t\tset {_loc} to location of loop-block",
-        "\t\tset {_data} to block data of loop-block",
-        "\t\trun 2 seconds later:",
-        "\t\t\tset block at {_loc} to {_data}\n",
-        "",
-        "run 0 ticks later repeating every second:",
-        "\tadd 1 to {_a}",
-        "\tif {_a} > 10:",
-        "\t\tstop current task"})
+    "\tloop exploded blocks:",
+    "\t\tset {_loc} to location of loop-block",
+    "\t\tset {_data} to block data of loop-block",
+    "\t\trun 2 seconds later:",
+    "\t\t\tset block at {_loc} to {_data}\n",
+    "",
+    "run 0 ticks later repeating every second:",
+    "\tadd 1 to {_a}",
+    "\tif {_a} > 10:",
+    "\t\tstop current task"})
 @Since("3.0.0")
 public class SecRunTaskLater extends Section {
 
@@ -57,16 +56,15 @@ public class SecRunTaskLater extends Section {
 
     static {
         Skript.registerSection(SecRunTaskLater.class,
-                "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%]");
+            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%]");
     }
 
     private boolean async;
     private Expression<Timespan> timespan;
     private Expression<Timespan> repeating;
-    private Trigger trigger;
     private int currentTaskId;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.async = parseResult.hasTag("async");
@@ -80,17 +78,16 @@ public class SecRunTaskLater extends Section {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Object localVars = Variables.copyLocalVariables(event);
         Timespan timespan = this.timespan.getSingle(event);
-        long delay = timespan != null ? timespan.getTicks() : 0;
+        long delay = timespan != null ? timespan.getAs(Timespan.TimePeriod.TICK) : 0;
 
         long repeat = 0;
         if (this.repeating != null) {
             Timespan repeatingTimespan = this.repeating.getSingle(event);
-            if (repeatingTimespan != null) repeat = repeatingTimespan.getTicks();
+            if (repeatingTimespan != null) repeat = repeatingTimespan.getAs(Timespan.TimePeriod.TICK);
         }
 
         BukkitScheduler scheduler = Bukkit.getScheduler();
@@ -125,7 +122,6 @@ public class SecRunTaskLater extends Section {
         return this.currentTaskId;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String async = this.async ? "async " : "";

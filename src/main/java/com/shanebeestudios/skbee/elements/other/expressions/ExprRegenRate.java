@@ -20,24 +20,23 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Regeneration Rate")
 @Description({"Represents the regeneration rate (1 health per x ticks) of the Player.",
-        "\nSaturated = When they have saturation and their food level >= 20. Default is 10 ticks.",
-        "\nUnsaturated = When they have no saturation and their food level >= 18. Default is 80 ticks."})
+    "\nSaturated = When they have saturation and their food level >= 20. Default is 10 ticks.",
+    "\nUnsaturated = When they have no saturation and their food level >= 18. Default is 80 ticks."})
 @Examples({"set {_regen} to saturated regen rate of player",
-        "set unsaturated regen rate of player to 10 ticks",
-        "add 1 second to unsaturated regen rate of player"})
+    "set unsaturated regen rate of player to 10 ticks",
+    "add 1 second to unsaturated regen rate of player"})
 @Since("3.0.2")
 public class ExprRegenRate extends SimplePropertyExpression<Player, Timespan> {
 
     static {
         if (Skript.methodExists(HumanEntity.class, "getSaturatedRegenRate")) {
             register(ExprRegenRate.class, Timespan.class,
-                    "[:un]saturated regen[eration] rate", "players");
+                "[:un]saturated regen[eration] rate", "players");
         }
     }
 
     private boolean saturated;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.saturated = !parseResult.hasTag("un");
@@ -47,10 +46,9 @@ public class ExprRegenRate extends SimplePropertyExpression<Player, Timespan> {
     @Override
     public @Nullable Timespan convert(Player player) {
         int ticks = this.saturated ? player.getSaturatedRegenRate() : player.getUnsaturatedRegenRate();
-        return Timespan.fromTicks(ticks);
+        return new Timespan(Timespan.TimePeriod.TICK, ticks);
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {
@@ -60,13 +58,12 @@ public class ExprRegenRate extends SimplePropertyExpression<Player, Timespan> {
         };
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         int changeValue;
         if (mode == ChangeMode.RESET) changeValue = this.saturated ? 10 : 80;
         else if (delta != null && delta[0] instanceof Timespan timespan) {
-            changeValue = (int) timespan.getTicks();
+            changeValue = (int) timespan.getAs(Timespan.TimePeriod.TICK);
         } else return;
 
 

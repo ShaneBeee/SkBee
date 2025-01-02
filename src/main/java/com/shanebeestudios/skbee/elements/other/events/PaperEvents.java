@@ -5,7 +5,6 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Experience;
-import ch.njol.skript.util.Getter;
 import com.destroystokyo.paper.event.block.BeaconEffectEvent;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
@@ -34,8 +33,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"unused", "unchecked"})
@@ -53,12 +50,7 @@ public class PaperEvents extends SimpleEvent {
                     "\t\tcancel event")
                 .since("1.5.0");
 
-            EventValues.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, new Getter<>() {
-                @Override
-                public @NotNull String get(@NotNull PlayerRecipeBookClickEvent event) {
-                    return event.getRecipe().toString();
-                }
-            }, 0);
+            EventValues.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, event -> event.getRecipe().toString(), EventValues.TIME_NOW);
         }
 
         // Player Pickup XP Event
@@ -73,26 +65,9 @@ public class PaperEvents extends SimpleEvent {
                     "\tadd 10 to level of player")
                 .since("1.8.0");
 
-            EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Experience.class, new Getter<>() {
-                @Override
-                public Experience get(PlayerPickupExperienceEvent event) {
-                    return new Experience(event.getExperienceOrb().getExperience());
-                }
-            }, 0);
-
-            EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Number.class, new Getter<>() {
-                @Override
-                public Number get(PlayerPickupExperienceEvent event) {
-                    return event.getExperienceOrb().getExperience();
-                }
-            }, 0);
-
-            EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Entity.class, new Getter<>() {
-                @Override
-                public Entity get(PlayerPickupExperienceEvent event) {
-                    return event.getExperienceOrb();
-                }
-            }, 0);
+            EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Experience.class, event -> new Experience(event.getExperienceOrb().getExperience()), EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Number.class, event -> event.getExperienceOrb().getExperience(), EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Entity.class, PlayerPickupExperienceEvent::getExperienceOrb, EventValues.TIME_NOW);
         }
 
         // Player Elytra Boost Event
@@ -102,12 +77,7 @@ public class PaperEvents extends SimpleEvent {
                 .examples("on elytra boost:",
                     "\tpush player forward at speed 50")
                 .since("1.8.0");
-            EventValues.registerEventValue(PlayerElytraBoostEvent.class, ItemType.class, new Getter<>() {
-                @Override
-                public ItemType get(PlayerElytraBoostEvent e) {
-                    return new ItemType(e.getItemStack());
-                }
-            }, 0);
+            EventValues.registerEventValue(PlayerElytraBoostEvent.class, ItemType.class, e -> new ItemType(e.getItemStack()), EventValues.TIME_NOW);
         }
 
         // Player Stop Using Item Event
@@ -120,18 +90,8 @@ public class PaperEvents extends SimpleEvent {
                     "\tif event-item is a spyglass:",
                     "\t\tkill player")
                 .since("1.17.0");
-            EventValues.registerEventValue(PlayerStopUsingItemEvent.class, ItemType.class, new Getter<>() {
-                @Override
-                public ItemType get(PlayerStopUsingItemEvent event) {
-                    return new ItemType(event.getItem());
-                }
-            }, 0);
-            EventValues.registerEventValue(PlayerStopUsingItemEvent.class, Number.class, new Getter<>() {
-                @Override
-                public Number get(PlayerStopUsingItemEvent event) {
-                    return event.getTicksHeldFor();
-                }
-            }, 0);
+            EventValues.registerEventValue(PlayerStopUsingItemEvent.class, ItemType.class, event -> new ItemType(event.getItem()), EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerStopUsingItemEvent.class, Number.class, PlayerStopUsingItemEvent::getTicksHeldFor, EventValues.TIME_NOW);
         }
 
         // Player Change Beacon Effect Event
@@ -145,12 +105,7 @@ public class PaperEvents extends SimpleEvent {
                     "\tset primary beacon effect of event-block to levitation")
                 .since("2.16.0");
 
-            EventValues.registerEventValue(PlayerChangeBeaconEffectEvent.class, Block.class, new Getter<>() {
-                @Override
-                public Block get(PlayerChangeBeaconEffectEvent event) {
-                    return event.getBeacon();
-                }
-            }, EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerChangeBeaconEffectEvent.class, Block.class, PlayerChangeBeaconEffectEvent::getBeacon, EventValues.TIME_NOW);
 
         }
 
@@ -168,12 +123,7 @@ public class PaperEvents extends SimpleEvent {
                     "\t\t\tmake player see loop-block as stone")
                 .since("2.6.1");
 
-            EventValues.registerEventValue(PlayerChunkLoadEvent.class, Player.class, new Getter<>() {
-                @Override
-                public @Nullable Player get(PlayerChunkLoadEvent event) {
-                    return event.getPlayer();
-                }
-            }, 0);
+            EventValues.registerEventValue(PlayerChunkLoadEvent.class, Player.class, PlayerChunkLoadEvent::getPlayer, EventValues.TIME_NOW);
         }
 
         // Player Chunk Unload Event
@@ -187,12 +137,7 @@ public class PaperEvents extends SimpleEvent {
                     "\tsend \"looks like you lost your chunk cowboy!\" to player")
                 .since("2.6.1");
 
-            EventValues.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, new Getter<>() {
-                @Override
-                public @Nullable Player get(PlayerChunkUnloadEvent event) {
-                    return event.getPlayer();
-                }
-            }, 0);
+            EventValues.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, PlayerChunkUnloadEvent::getPlayer, EventValues.TIME_NOW);
         }
 
         // == ENTITY EVENTS == //
@@ -207,12 +152,7 @@ public class PaperEvents extends SimpleEvent {
                     "\t\tcancel event")
                 .since("1.5.0");
 
-            EventValues.registerEventValue(EntityPathfindEvent.class, Location.class, new Getter<>() {
-                @Override
-                public @NotNull Location get(@NotNull EntityPathfindEvent event) {
-                    return event.getLoc();
-                }
-            }, 0);
+            EventValues.registerEventValue(EntityPathfindEvent.class, Location.class, EntityPathfindEvent::getLoc, EventValues.TIME_NOW);
         }
 
         // Skeleton Horse Trap Event
@@ -234,12 +174,7 @@ public class PaperEvents extends SimpleEvent {
                     "\tif event-entity is a pig:",
                     "\t\tspawn 3 zombie pigmen at event-location")
                 .since("1.8.0");
-            EventValues.registerEventValue(EntityZapEvent.class, Location.class, new Getter<>() {
-                @Override
-                public Location get(EntityZapEvent e) {
-                    return e.getEntity().getLocation();
-                }
-            }, 0);
+            EventValues.registerEventValue(EntityZapEvent.class, Location.class, e -> e.getEntity().getLocation(), EventValues.TIME_NOW);
         }
 
         // Entity Knockback Event
@@ -284,25 +219,10 @@ public class PaperEvents extends SimpleEvent {
                         "\tif event-player does not have permission \"my.server.beacons\":",
                         "\t\tcancel event")
                     .since("1.8.4");
-                EventValues.registerEventValue(BeaconEffectEvent.class, Player.class, new Getter<>() {
-                    @Override
-                    public Player get(BeaconEffectEvent e) {
-                        return e.getPlayer();
-                    }
-                }, EventValues.TIME_NOW);
+                EventValues.registerEventValue(BeaconEffectEvent.class, Player.class, BeaconEffectEvent::getPlayer, EventValues.TIME_NOW);
 
-                EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffectType.class, new Getter<>() {
-                    @Override
-                    public PotionEffectType get(BeaconEffectEvent e) {
-                        return e.getEffect().getType();
-                    }
-                }, EventValues.TIME_NOW);
-                EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffect.class, new Getter<>() {
-                    @Override
-                    public @NotNull PotionEffect get(BeaconEffectEvent e) {
-                        return e.getEffect();
-                    }
-                }, EventValues.TIME_NOW);
+                EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffectType.class, beaconEffectEvent -> beaconEffectEvent.getEffect().getType(), EventValues.TIME_NOW);
+                EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffect.class, BeaconEffectEvent::getEffect, EventValues.TIME_NOW);
             }
 
 
@@ -340,12 +260,7 @@ public class PaperEvents extends SimpleEvent {
                     "\t\tbroadcast \"OUCHIE\"")
                 .since("3.4.0");
 
-            EventValues.registerEventValue(EntityInsideBlockEvent.class, Block.class, new Getter<>() {
-                @Override
-                public Block get(EntityInsideBlockEvent event) {
-                    return event.getBlock();
-                }
-            }, EventValues.TIME_NOW);
+            EventValues.registerEventValue(EntityInsideBlockEvent.class, Block.class, EntityInsideBlockEvent::getBlock, EventValues.TIME_NOW);
         }
 
         // PlayerAttemptPickupItemEvent
@@ -362,26 +277,9 @@ public class PaperEvents extends SimpleEvent {
                     "\t\tkill event-dropped item")
                 .since("3.5.0");
 
-            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, new Getter<>() {
-                @Override
-                public Number get(PlayerAttemptPickupItemEvent event) {
-                    return event.getRemaining();
-                }
-            }, EventValues.TIME_NOW);
-
-            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, new Getter<>() {
-                @Override
-                public Number get(PlayerAttemptPickupItemEvent event) {
-                    return event.getItem().getItemStack().getAmount();
-                }
-            }, EventValues.TIME_PAST);
-
-            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Item.class, new Getter<>() {
-                @Override
-                public Item get(PlayerAttemptPickupItemEvent event) {
-                    return event.getItem();
-                }
-            }, EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, PlayerAttemptPickupItemEvent::getRemaining, EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, event -> event.getItem().getItemStack().getAmount(), EventValues.TIME_PAST);
+            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Item.class, PlayerAttemptPickupItemEvent::getItem, EventValues.TIME_NOW);
         }
 
         // PlayerTrackEntityEvent
@@ -397,12 +295,7 @@ public class PaperEvents extends SimpleEvent {
                     "\t\tcancel event")
                 .since("3.5.1");
 
-            EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, new Getter<>() {
-                @Override
-                public Entity get(PlayerTrackEntityEvent event) {
-                    return event.getEntity();
-                }
-            }, EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, PlayerTrackEntityEvent::getEntity, EventValues.TIME_NOW);
         }
 
     }

@@ -28,7 +28,7 @@ public class ExprTimeSpanNumbers extends SimplePropertyExpression<Timespan, Numb
 
     private int pattern;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = parseResult.mark;
@@ -38,7 +38,7 @@ public class ExprTimeSpanNumbers extends SimplePropertyExpression<Timespan, Numb
 
     @Override
     public @Nullable Number convert(Timespan timespan) {
-        long ticks = timespan.getTicks();
+        long ticks = timespan.getAs(Timespan.TimePeriod.TICK);
         return switch (pattern) {
             case 1 -> (ticks / 20);
             case 2 -> (ticks / 20 / 60);

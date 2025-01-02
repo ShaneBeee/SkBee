@@ -18,10 +18,11 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
     private static final String PLAYER_FOLDER;
 
     static {
-        String worldFolder = Bukkit.getWorlds().get(0).getWorldFolder().getPath();
+        String worldFolder = Bukkit.getWorlds().getFirst().getWorldFolder().getPath();
         PLAYER_FOLDER = worldFolder + "/playerdata/";
     }
 
+    @SuppressWarnings("deprecation")
     public NBTCustomOfflinePlayer(OfflinePlayer offlinePlayer) throws IOException {
         super(new File(PLAYER_FOLDER + offlinePlayer.getUniqueId() + ".dat"));
     }
@@ -88,6 +89,7 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
         return getCopy().toString();
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public @NotNull NBTCompound getCopy() {
         try {

@@ -13,27 +13,27 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("TextComponent - Send Title")
 @Description({"Send titles containing components. Supports strings as well.",
-        "If you are using variables and the title won't send, make sure to add `component`."})
+    "If you are using variables and the title won't send, make sure to add `component`."})
 @Examples({"send title mini message from \"<rainbow>OOO RAINBOW TITLE\"",
-        "send title component {_comp} for 10 seconds with fadein 5 ticks and fadeout 10 ticks"})
+    "send title component {_comp} for 10 seconds with fadein 5 ticks and fadeout 10 ticks"})
 @Since("2.4.0")
 public class EffSendComponentTitle extends Effect {
 
     static {
         Skript.registerEffect(EffSendComponentTitle.class,
-                "send title [component] %textcomponent/string% [with subtitle [component] %-textcomponent/string%] [to %players%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]");
+            "send title [component] %textcomponent/string% [with subtitle [component] %-textcomponent/string%] [to %players%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]");
     }
 
     private Expression<Object> title, subtitle;
     private Expression<Player> players;
     private Expression<Timespan> stay, fadeIn, fadeOut;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         this.title = (Expression<Object>) exprs[0];
@@ -45,7 +45,6 @@ public class EffSendComponentTitle extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Object title = this.title.getSingle(event);
@@ -61,19 +60,19 @@ public class EffSendComponentTitle extends Effect {
         if (this.stay != null) {
             Timespan staySingle = this.stay.getSingle(event);
             if (staySingle != null) {
-                stay = staySingle.getTicks();
+                stay = staySingle.getAs(Timespan.TimePeriod.TICK);
             }
         }
         if (this.fadeIn != null) {
             Timespan fadeInSingle = this.fadeIn.getSingle(event);
             if (fadeInSingle != null) {
-                fadeIn = fadeInSingle.getTicks();
+                fadeIn = fadeInSingle.getAs(Timespan.TimePeriod.TICK);
             }
         }
         if (this.fadeOut != null) {
             Timespan fadeOutSingle = this.fadeOut.getSingle(event);
             if (fadeOutSingle != null) {
-                fadeOut = fadeOutSingle.getTicks();
+                fadeOut = fadeOutSingle.getAs(Timespan.TimePeriod.TICK);
             }
         }
         ComponentWrapper.sendTitle(players, title, subtitle, stay, fadeIn, fadeOut);

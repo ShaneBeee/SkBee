@@ -11,7 +11,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -32,19 +31,18 @@ public class ExprRecipeCookTime extends SimpleExpression<Timespan> {
 
     static {
         Skript.registerExpression(ExprRecipeCookTime.class, Timespan.class, ExpressionType.COMBINED,
-                "cook[ ]time of recipe[s] [with id[s]] %strings%");
+            "cook[ ]time of recipe[s] [with id[s]] %strings%");
     }
 
     private Expression<String> key;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.key = (Expression<String>) exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable Timespan[] get(Event event) {
         List<Timespan> cookTimes = new ArrayList<>();
@@ -54,7 +52,7 @@ public class ExprRecipeCookTime extends SimpleExpression<Timespan> {
 
             Recipe recipe = Bukkit.getRecipe(namespacedKey);
             if (recipe instanceof CookingRecipe<?> cookingRecipe)
-                cookTimes.add(Timespan.fromTicks(cookingRecipe.getCookingTime()));
+                cookTimes.add(new Timespan(Timespan.TimePeriod.TICK, cookingRecipe.getCookingTime()));
 
         }
         return cookTimes.toArray(new Timespan[0]);

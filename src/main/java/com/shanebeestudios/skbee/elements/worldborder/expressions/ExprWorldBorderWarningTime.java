@@ -10,8 +10,8 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.WorldBorder;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("WorldBorder - Warning Time")
 @Description("Get/set the warning time of a world border.")
@@ -21,28 +21,26 @@ public class ExprWorldBorderWarningTime extends SimplePropertyExpression<WorldBo
 
     static {
         register(ExprWorldBorderWarningTime.class, Timespan.class,
-                "[border] warning time", "worldborders");
+            "[border] warning time", "worldborders");
     }
 
     @Override
     public @Nullable Timespan convert(WorldBorder worldBorder) {
-        return Timespan.fromTicks(worldBorder.getWarningTime());
+        return new Timespan(Timespan.TimePeriod.TICK, worldBorder.getWarningTime());
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(Timespan.class);
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Timespan timespan = (Timespan) delta[0];
         if (timespan == null) return;
 
-        int seconds = (int)(timespan.getTicks() / 20);
+        int seconds = (int) (timespan.getAs(Timespan.TimePeriod.TICK) / 20);
         for (WorldBorder border : getExpr().getArray(event)) {
             border.setWarningTime(seconds);
         }
