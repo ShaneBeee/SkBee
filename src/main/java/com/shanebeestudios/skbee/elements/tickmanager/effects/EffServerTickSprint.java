@@ -19,29 +19,28 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Server Tick - Sprint")
 @Description({"Attempts to initiate a sprint, which executes all server ticks at a faster rate then normal.",
-        Util.MCWIKI_TICK_COMMAND, "Requires Minecraft 1.20.4+"})
+    Util.MCWIKI_TICK_COMMAND, "Requires Minecraft 1.20.4+"})
 @Examples({"request game to sprint 10 ticks",
-        "stop sprinting game"})
+    "stop sprinting game"})
 @Since("3.1.0")
 public class EffServerTickSprint extends Effect {
 
     static {
         Skript.registerEffect(EffServerTickSprint.class,
-                "request (game|server) to sprint %timespan%",
-                "stop sprinting (game|server)");
+            "request (game|server) to sprint %timespan%",
+            "stop sprinting (game|server)");
 
     }
 
     private Expression<Timespan> ticks;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.ticks = matchedPattern == 0 ? (Expression<Timespan>) exprs[0] : null;
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         ServerTickManager tickManager = Bukkit.getServerTickManager();
@@ -50,7 +49,7 @@ public class EffServerTickSprint extends Effect {
         } else {
             Timespan timespan = this.ticks.getSingle(event);
             if (timespan != null) {
-                tickManager.requestGameToSprint((int) timespan.getTicks());
+                tickManager.requestGameToSprint((int) timespan.getAs(Timespan.TimePeriod.TICK));
             }
         }
     }

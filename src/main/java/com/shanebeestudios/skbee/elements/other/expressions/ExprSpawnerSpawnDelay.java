@@ -20,13 +20,13 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Spawner - Spawn Delay")
 @Description({"The delay between a spawner spawning a new entity.",
-        "Maximum default is 800 ticks (40 seconds).",
-        "Minimum default is 200 ticks (10 seconds)."})
+    "Maximum default is 800 ticks (40 seconds).",
+    "Minimum default is 200 ticks (10 seconds)."})
 @Examples({"on place of mob spawner:",
-        "\tset spawner spawn delay of event-block to 3 seconds",
-        "\tadd 100 to max spawn delay of event-block",
-        "\tremove 1 second from min spawn delay of event-block",
-        "\treset spawn delay of event-block"})
+    "\tset spawner spawn delay of event-block to 3 seconds",
+    "\tadd 100 to max spawn delay of event-block",
+    "\tremove 1 second from min spawn delay of event-block",
+    "\treset spawn delay of event-block"})
 @Since("2.16.0")
 public class ExprSpawnerSpawnDelay extends SimplePropertyExpression<Block, Timespan> {
 
@@ -53,7 +53,7 @@ public class ExprSpawnerSpawnDelay extends SimplePropertyExpression<Block, Times
                 case TRUE -> spawner.getMaxSpawnDelay();
                 default -> spawner.getDelay();
             };
-            return Timespan.fromTicks(delay);
+            return new Timespan(Timespan.TimePeriod.TICK, delay);
         }
         return null;
     }
@@ -61,7 +61,7 @@ public class ExprSpawnerSpawnDelay extends SimplePropertyExpression<Block, Times
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         return switch (mode) {
-            case SET, ADD, REMOVE -> CollectionUtils.array(Timespan.class, Integer.class);
+            case SET, ADD, REMOVE -> CollectionUtils.array(Timespan.class, Number.class);
             case RESET -> CollectionUtils.array();
             default -> null;
         };
@@ -71,7 +71,8 @@ public class ExprSpawnerSpawnDelay extends SimplePropertyExpression<Block, Times
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         int changeValue = 0;
         if (delta != null) {
-            changeValue += delta[0] instanceof Timespan timespan ? timespan.getTicks() : ((Integer) delta[0]);
+            if (delta[0] instanceof Timespan timespan) changeValue = (int) timespan.getAs(Timespan.TimePeriod.TICK);
+            else if (delta[0] instanceof Number number) changeValue = number.intValue();
         } else {
             changeValue = switch (action) {
                 case TRUE -> DEFAULT_MAX_TICKS;

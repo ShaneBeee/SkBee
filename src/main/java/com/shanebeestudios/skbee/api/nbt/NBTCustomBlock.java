@@ -17,6 +17,7 @@ public class NBTCustomBlock extends NBTContainer {
     private final NBTCompound chunkData;
     private final boolean canSave;
 
+    @SuppressWarnings("deprecation")
     public NBTCustomBlock(Block block) {
         this.block = block;
         this.blockTag = String.format("%s_%s_%s", block.getX(), block.getY(), block.getZ());
@@ -51,6 +52,7 @@ public class NBTCustomBlock extends NBTContainer {
         blockCompound.mergeCompound(this);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public String toString() {
         NBTContainer tag = new NBTContainer();

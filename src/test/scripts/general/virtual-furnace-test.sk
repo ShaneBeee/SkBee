@@ -15,3 +15,4 @@ test "SkBee - virtual furnace elements":
 
     set machine name of {_furnace} to "&bSlow Furny"
     assert machine name of {_furnace} = "&bSlow Furny" with "Name of furnace should have been Slow Furny"
+    delete machine within {_furnace}

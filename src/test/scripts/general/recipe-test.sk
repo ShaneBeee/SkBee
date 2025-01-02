@@ -23,7 +23,7 @@ test "SkBee - shaped recipe section":
         result: 4 of string
         shape: "a"
         ingredients:
-            set ingredient of "a" to material choice of all wool
+            set ingredient of "a" to material choice of red wool and yellow wool
 
     register shaped recipe:
         id: "custom:bee_2"
@@ -38,7 +38,7 @@ test "SkBee - shapeless recipe section":
         id: "custom:string"
         result: 4 string
         ingredients:
-            add material choice of every wool to ingredients
+            add material choice of minecraft item tag "minecraft:wools" to ingredients
 
     register shapeless recipe:
         id: "custom:totem_of_undying"
@@ -47,7 +47,7 @@ test "SkBee - shapeless recipe section":
         category: "redstone"
         ingredients:
             add diamond block to ingredients
-            add material choice of every plank to ingredients
+            add material choice of minecraft item tag "minecraft:planks" to ingredients
             add emerald block to ingredients
             add end rod to ingredients
             add wither skeleton skull to ingredients
@@ -92,7 +92,7 @@ test "SkBee - cooking recipe section":
 test "SkBee - brewer recipe section":
     register brewing recipe:
         id: "custom:brew_glow_diamond"
-        result: diamond of unbreaking with all item flags
+        result: diamond of unbreaking with item flag hide enchants
         ingredient: glowstone dust
         input: potato
 
@@ -100,4 +100,4 @@ test "SkBee - brewer recipe section":
         id: "custom:yummy_soup"
         result: mushroom stew named "&bYummy Soup"
         ingredient: glowstone dust
-        input: water bottle
+        input: potion

@@ -180,7 +180,7 @@ public class SecFoodComponent extends Section {
             food.setSaturation(saturation);
             food.setCanAlwaysEat(canAlwaysEat);
             if (HAS_EAT_SECONDS && eatTime != null) {
-                setEatSeconds(food, (float) eatTime.getTicks() / 20);
+                setEatSeconds(food, (float) eatTime.getAs(Timespan.TimePeriod.TICK) / 20);
             }
             if (HAS_CONVERT && usingConvertsTo != null) {
                 setUsingConverts(food, usingConvertsTo);

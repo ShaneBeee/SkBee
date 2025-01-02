@@ -30,18 +30,17 @@ import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.SmokingRecipe;
 
-@SuppressWarnings({"NullableProblems", "ConstantConditions"})
 @Name("Recipe - Cooking")
 @Description({"Register new cooking recipes. On 1.13+ you can register recipes for furnaces.",
-        "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires.",
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
-        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
-        "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
-        "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",})
+    "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires.",
+    "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
+    "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
+    "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
+    "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",})
 @Examples({"on skript load:",
-        "\tregister new furnace recipe for diamond using dirt with id \"furnace_diamond\"",
-        "\tregister new blasting recipe for emerald using dirt with id \"my_recipes:blasting_emerald\"",
-        "\tregister new smoking recipe for cooked cod named \"Hot Cod\" using puffer fish with id \"smoking_cod\""})
+    "\tregister new furnace recipe for diamond using dirt with id \"furnace_diamond\"",
+    "\tregister new blasting recipe for emerald using dirt with id \"my_recipes:blasting_emerald\"",
+    "\tregister new smoking recipe for cooked cod named \"Hot Cod\" using puffer fish with id \"smoking_cod\""})
 @RequiredPlugins("1.13+ for furnaces. 1.14+ for smokers, blast furnaces and campfires.")
 @Since("1.0.0")
 public class EffCookingRecipe extends Effect {
@@ -50,12 +49,11 @@ public class EffCookingRecipe extends Effect {
 
     static {
         Skript.registerEffect(EffCookingRecipe.class,
-                "register [new] (furnace|1:(blast furnace|blasting)|2:smok(er|ing)|3:campfire) recipe for %itemtype% " +
-                        "(using|with ingredient) %itemtype/recipechoice% with id %string% [[and ]with exp[erience] %-number%] " +
-                        "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
+            "register [new] (furnace|1:(blast furnace|blasting)|2:smok(er|ing)|3:campfire) recipe for %itemtype% " +
+                "(using|with ingredient) %itemtype/recipechoice% with id %string% [[and ]with exp[erience] %-number%] " +
+                "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
     }
 
-    @SuppressWarnings("null")
     private Expression<ItemType> item;
     private Expression<Object> ingredient;
     private Expression<String> key;
@@ -81,6 +79,7 @@ public class EffCookingRecipe extends Effect {
     protected void execute(Event event) {
         ItemType res = this.item.getSingle(event);
         Object ing = this.ingredient.getSingle(event);
+        String keyString = this.key.getSingle(event);
         if (res == null) {
             RecipeUtil.error("Error registering cooking recipe - result is null");
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
@@ -91,11 +90,16 @@ public class EffCookingRecipe extends Effect {
             RecipeUtil.error("Current Item: §6" + this.toString(event, true));
             return;
         }
+        if (keyString == null) {
+            RecipeUtil.error("Error registering cooking recipe - key is null");
+            RecipeUtil.error("Current Item: §6" + this.toString(event, true));
+        }
 
         ItemStack result = res.getRandom();
         RecipeChoice ingredient;
-        if (ing instanceof ItemType) {
-            ItemStack itemStack = ((ItemType) ing).getRandom();
+        if (ing instanceof ItemType itemType) {
+            ItemStack itemStack = itemType.getRandom();
+            assert itemStack != null;
             Material material = itemStack.getType();
 
             // If ingredient isn't a custom item, just register the material
@@ -110,14 +114,14 @@ public class EffCookingRecipe extends Effect {
             return;
         }
         String group = this.group != null ? this.group.getSingle(event) : "";
-        NamespacedKey key = Util.getNamespacedKey(this.key.getSingle(event), false);
+        NamespacedKey key = Util.getNamespacedKey(keyString, false);
         if (key == null) {
             RecipeUtil.error("Current Item: §6'" + toString(event, true) + "'");
             return;
         }
 
         float xp = experience != null ? experience.getSingle(event).floatValue() : 0;
-        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks() : getDefaultCookTime(recipeType);
+        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getAs(Timespan.TimePeriod.TICK) : getDefaultCookTime(recipeType);
 
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);
@@ -128,13 +132,13 @@ public class EffCookingRecipe extends Effect {
     private void cookingRecipe(ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp, int cookTime) {
         CookingRecipe<?> recipe = switch (recipeType) {
             case 1 -> // BLASTING
-                    new BlastingRecipe(key, result, ingredient, xp, cookTime);
+                new BlastingRecipe(key, result, ingredient, xp, cookTime);
             case 2 -> // SMOKING
-                    new SmokingRecipe(key, result, ingredient, xp, cookTime);
+                new SmokingRecipe(key, result, ingredient, xp, cookTime);
             case 3 -> // CAMPFIRE
-                    new CampfireRecipe(key, result, ingredient, xp, cookTime);
+                new CampfireRecipe(key, result, ingredient, xp, cookTime);
             default -> // FURNACE
-                    new FurnaceRecipe(key, result, ingredient, xp, cookTime);
+                new FurnaceRecipe(key, result, ingredient, xp, cookTime);
         };
 
         recipe.setGroup(group);
@@ -147,11 +151,11 @@ public class EffCookingRecipe extends Effect {
     private int getDefaultCookTime(int t) {
         return switch (t) { // BLASTING
             case 1, 2 -> // SMOKING
-                    100;
+                100;
             case 3 -> // CAMPFIRE
-                    600;
+                600;
             default -> // FURNACE
-                    200;
+                200;
         };
     }
 
@@ -166,7 +170,7 @@ public class EffCookingRecipe extends Effect {
         String xp = experience != null ? " and with xp " + experience.toString(e, d) : "";
         String cook = cookTime != null ? " and with cooktime " + cookTime.toString(e, d) : "";
         return "register new " + type + " recipe for " + item.toString(e, d) + " using " + ingredient.toString(e, d) +
-                " with id " + key.toString(e, d) + xp + cook;
+            " with id " + key.toString(e, d) + xp + cook;
     }
 
 }

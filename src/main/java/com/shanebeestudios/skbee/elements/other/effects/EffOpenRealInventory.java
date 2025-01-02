@@ -65,7 +65,7 @@ public class EffOpenRealInventory extends Effect {
     private Expression<String> name;
     private Expression<Player> players;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.viewType = InventoryViewType.values()[matchedPattern];
@@ -79,7 +79,7 @@ public class EffOpenRealInventory extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings("deprecation")
     @Override
     protected void execute(Event event) {
         Location location = this.location != null ? this.location.getSingle(event) : null;

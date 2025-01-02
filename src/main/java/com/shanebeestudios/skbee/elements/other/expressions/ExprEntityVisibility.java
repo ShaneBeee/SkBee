@@ -9,7 +9,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.entity.ArmorStand;
@@ -24,8 +23,8 @@ import javax.annotation.Nullable;
 @Name("Entity Visibility")
 @Description("Get/set visibility for entities. Armor stands on all versions, ItemFrames on 1.15+ and LivingEntities on 1.16.3+")
 @Examples({"set visibility of target entity to false",
-        "set {_v} to visibility of target entity",
-        "if visibility of target entity is true:"})
+    "set {_v} to visibility of target entity",
+    "if visibility of target entity is true:"})
 @Since("1.7.0")
 public class ExprEntityVisibility extends PropertyExpression<Entity, Boolean> {
 
@@ -47,23 +46,18 @@ public class ExprEntityVisibility extends PropertyExpression<Entity, Boolean> {
 
     @Override
     protected Boolean @NotNull [] get(@NotNull Event e, Entity @NotNull [] source) {
-        return get(source, new Getter<>() {
-            @Nullable
-            @Override
-            public Boolean get(@NotNull Entity entity) {
-                if (entity instanceof ArmorStand armorStand) {
-                    return armorStand.isVisible();
-                } else if (entity instanceof ItemFrame itemFrame && ITEM_FRAME) {
-                    return itemFrame.isVisible();
-                } else if (entity instanceof LivingEntity livingEntity && LIVING_ENTITY) {
-                    return !livingEntity.isInvisible();
-                }
-                return null;
+        return get(source, entity -> {
+            if (entity instanceof ArmorStand armorStand) {
+                return armorStand.isVisible();
+            } else if (entity instanceof ItemFrame itemFrame && ITEM_FRAME) {
+                return itemFrame.isVisible();
+            } else if (entity instanceof LivingEntity livingEntity && LIVING_ENTITY) {
+                return !livingEntity.isInvisible();
             }
+            return null;
         });
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET) {

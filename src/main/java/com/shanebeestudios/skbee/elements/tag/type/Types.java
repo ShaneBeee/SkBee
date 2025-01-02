@@ -21,8 +21,6 @@ public class Types {
                     .description("Represents a Minecraft Tag.")
                     .since("2.6.0")
                     .parser(new Parser<>() {
-
-                        @SuppressWarnings("NullableProblems")
                         @Override
                         public boolean canParse(ParseContext context) {
                             return false;

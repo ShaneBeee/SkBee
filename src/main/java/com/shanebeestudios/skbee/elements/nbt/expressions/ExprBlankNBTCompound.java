@@ -19,22 +19,21 @@ import org.jetbrains.annotations.Nullable;
 @Name("NBT - Empty Compound")
 @Description("Returns an empty/new NBT compound.")
 @Examples({"set {_n} to blank nbt compound",
-        "set tag \"points\" of {_n} to 10"})
+    "set tag \"points\" of {_n} to 10"})
 @Since("2.8.0")
 public class ExprBlankNBTCompound extends SimpleExpression<NBTCompound> {
 
     static {
         Skript.registerExpression(ExprBlankNBTCompound.class, NBTCompound.class, ExpressionType.SIMPLE,
-                "[a[n]] (blank|empty|new) nbt compound");
+            "[a[n]] (blank|empty|new) nbt compound");
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings("deprecation")
     @Override
     protected @Nullable NBTCompound[] get(Event event) {
         return new NBTCompound[]{new NBTContainer()};

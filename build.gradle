@@ -37,7 +37,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 
     // Skript
-    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.8.7') {
+    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.10.0-pre1') {
         transitive = false
     }
 
@@ -54,7 +54,7 @@ dependencies {
     implementation("fr.mrmicky:fastboard:2.1.3")
 
     // Virtual Furnace
-    implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.0.0") {
+    implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.1.1") {
         transitive = false
     }
 

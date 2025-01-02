@@ -62,7 +62,7 @@ public class EffFurnaceFuel extends Effect {
             }
         } else {
             Material fuel = this.fuel.getSingle(e).getMaterial();
-            int burn = (int) this.burn.getSingle(e).getTicks();
+            int burn = (int) this.burn.getSingle(e).getAs(Timespan.TimePeriod.TICK);
             String key = "fuel_" + fuel.toString() + "_" + burn;
             Fuel f = new Fuel(Util.getKey(key), fuel, burn);
             RECIPE_MANAGER.registerFuel(f);

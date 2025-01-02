@@ -9,8 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.util.Getter;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
@@ -42,9 +41,9 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
     private boolean LESSER;
     private int parse;
 
-    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
         setExpr((Expression<Bound>) exprs[0]);
         this.WORLD = matchedPattern == 2;
         this.LESSER = matchedPattern == 0;
@@ -52,21 +51,17 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Object[] get(Event event, Bound[] bounds) {
-        return get(bounds, new Getter<>() {
-            @Override
-            public Object get(Bound bound) {
-                if (WORLD) {
-                    return bound.getWorld();
-                } else {
-                    return switch (parse) {
-                        case 0 -> LESSER ? bound.getLesserX() : bound.getGreaterX();
-                        case 1 -> LESSER ? bound.getLesserY() : bound.getGreaterY();
-                        default -> LESSER ? bound.getLesserZ() : bound.getGreaterZ();
-                    };
-                }
+        return get(bounds, bound -> {
+            if (WORLD) {
+                return bound.getWorld();
+            } else {
+                return switch (parse) {
+                    case 0 -> LESSER ? bound.getLesserX() : bound.getGreaterX();
+                    case 1 -> LESSER ? bound.getLesserY() : bound.getGreaterY();
+                    default -> LESSER ? bound.getLesserZ() : bound.getGreaterZ();
+                };
             }
         });
     }
@@ -80,7 +75,6 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(ChangeMode mode) {
         if (!WORLD && (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)) {
@@ -89,7 +83,6 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event e, Object[] delta, ChangeMode mode) {
         BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();

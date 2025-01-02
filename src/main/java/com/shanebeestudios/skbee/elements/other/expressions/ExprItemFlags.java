@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -22,20 +23,23 @@ import java.util.List;
 import java.util.Set;
 
 @Name("ItemFlag - ItemFlags of Items")
-@Description("Get/Set the ItemFlags of an item.")
+@Description({"Get/Set the ItemFlags of an item.",
+    "Removed if running Skript 2.10+ (now included in Skript)."})
 @Examples({"set {_flags::*} to item flags of player's tool",
-        "add hide enchants to item flags of player's tool",
-        "add hide attributes to item flags of player's tool",
-        "add hide enchants and hide attributes to item flags of player's tool",
-        "remove hide enchants from item flags of player's tool",
-        "remove hide attributes from item flags of player's tool",
-        "delete item flags of player's tool",
-        "reset item flags of player's tool"})
+    "add hide enchants to item flags of player's tool",
+    "add hide attributes to item flags of player's tool",
+    "add hide enchants and hide attributes to item flags of player's tool",
+    "remove hide enchants from item flags of player's tool",
+    "remove hide attributes from item flags of player's tool",
+    "delete item flags of player's tool",
+    "reset item flags of player's tool"})
 @Since("3.4.0")
 public class ExprItemFlags extends PropertyExpression<ItemType, ItemFlag> {
 
     static {
-        register(ExprItemFlags.class, ItemFlag.class, "item[ ]flags", "itemtypes");
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            register(ExprItemFlags.class, ItemFlag.class, "item[ ]flags", "itemtypes");
+        }
     }
 
     @SuppressWarnings({"NullableProblems", "unchecked"})

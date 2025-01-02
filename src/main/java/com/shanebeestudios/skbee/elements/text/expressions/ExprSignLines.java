@@ -9,28 +9,26 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("NullableProblems")
 @Name("TextComponent - Sign Line")
 @Description({"Get/set lines of a sign with text components. Optionally set the front/back of a sign. (Defaults to front)",
-        "\nNOTE: Setting the back of a sign requires Minecraft 1.20+"})
+    "\nNOTE: Setting the back of a sign requires Minecraft 1.20+"})
 @Examples({"set sign line 1 of target block to mini message from \"<rainbow>LINE ONE\"",
-        "set sign line 2 of target block to translate component from \"item.minecraft.diamond_sword\"",
-        "set {_line1} to sign line 1 of target block",
-        "set {_line1} to front sign line 1 of target block",
-        "set back sign line 1 of {_sign} to mini message from \"<rainbow>LINE ONE\""})
+    "set sign line 2 of target block to translate component from \"item.minecraft.diamond_sword\"",
+    "set {_line1} to sign line 1 of target block",
+    "set {_line1} to front sign line 1 of target block",
+    "set back sign line 1 of {_sign} to mini message from \"<rainbow>LINE ONE\""})
 @Since("2.4.0, 2.11.0 (front|back)")
 public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
 
-    private static final boolean HAS_SIDES = Skript.isRunningMinecraft(1,20);
+    private static final boolean HAS_SIDES = Skript.isRunningMinecraft(1, 20);
 
     static {
         register(ExprSignLines.class, ComponentWrapper.class, "[(front|:back)] sign line %number%", "blocks");
@@ -39,7 +37,7 @@ public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
     private Expression<Number> signLine;
     private boolean front;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setExpr((Expression<? extends Block>) exprs[1]);
@@ -52,7 +50,6 @@ public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected ComponentWrapper[] get(Event event, Block[] source) {
         Number signLineSingle = this.signLine.getSingle(event);
@@ -60,12 +57,7 @@ public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
         int signLine = signLineSingle.intValue();
         if (signLine > 4 || signLine < 1) return null;
 
-        return get(source, new Getter<>() {
-            @Override
-            public @Nullable ComponentWrapper get(Block block) {
-                return ComponentWrapper.getSignLine(block, signLine - 1, front);
-            }
-        });
+        return get(source, block -> ComponentWrapper.getSignLine(block, signLine - 1, front));
     }
 
     @Override

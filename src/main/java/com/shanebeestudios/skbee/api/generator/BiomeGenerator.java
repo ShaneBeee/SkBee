@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.generator;
 import ch.njol.skript.lang.Trigger;
 import com.shanebeestudios.skbee.api.generator.event.BiomeGenEvent;
 import org.bukkit.Location;
+import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.generator.BiomeProvider;
@@ -30,10 +31,11 @@ public class BiomeGenerator extends BiomeProvider {
         return biomeGenEvent.getBiome();
     }
 
+    @SuppressWarnings({"deprecation", "UnstableApiUsage", "removal"})
     @Override
     public @NotNull List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
         List<Biome> biomes = new ArrayList<>();
-        for (Biome biome : Biome.values()) {
+        for (Biome biome : Registry.BIOME) {
             if (biome != Biome.CUSTOM) biomes.add(biome);
         }
         return biomes;
