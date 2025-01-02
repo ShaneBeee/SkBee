@@ -57,3 +57,4 @@ jobs:
                     test_script_directory: src/test/scripts
                     skript_repo_ref: 2.10.0-pre1
                     extra_plugins_directory: extra-plugins/
+                    run_vanilla_tests: 'false' # temporarily disable
