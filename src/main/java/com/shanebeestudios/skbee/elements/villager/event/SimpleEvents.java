@@ -22,7 +22,7 @@ public class SimpleEvents extends SimpleEvent {
                 "`event-number` = Used to get the index of the trade the player clicked on.",
                 "`event-merchantrecipe` = The merchant recipe of the trade that the player clicked on.")
             .examples("")
-            .since("1.17.EventValues.TIME_NOW");
+            .since("1.17.0");
 
         EventValues.registerEventValue(TradeSelectEvent.class, MerchantInventory.class, TradeSelectEvent::getInventory, EventValues.TIME_NOW);
         EventValues.registerEventValue(TradeSelectEvent.class, Number.class, TradeSelectEvent::getIndex, EventValues.TIME_NOW);
