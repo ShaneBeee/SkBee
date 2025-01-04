@@ -17,6 +17,7 @@ types:
     bukkitcolor: bukkit col(or|our)¦s
     bukkittreetype: bukkit tree type¦s
     chunkloadlevel: chunk load level¦s
+    consumeeffect: consume effect¦s
     criteria: criteria¦s
     damagesource: damage source¦s
     damagetype: damage type¦s
