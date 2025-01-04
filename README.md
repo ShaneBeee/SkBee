@@ -32,7 +32,7 @@ Keep in mind, these <ins>**outdated**</ins> builds for <ins>**outdated**</ins> s
 ### <ins>Skript 2.9.5 (and below)</ins>
 Due to changes in Skript 2.10's API, SkBee 3.7.0+ will only work on Skript 2.10+
 If you need SkBee to work on an older version of Skript this is the last version that will work:
-[**SkBee 3.6.6**](https://github.com/SkriptHub/SkBee/releases/tag/3.6.6)
+[**SkBee 3.6.6**](https://github.com/ShaneBeee/SkBee/releases/tag/3.6.6)
 (Just like any other <ins>**outdated**</ins> build, this one is no longer supported)
 
 ### <ins>Skript 2.6.4 (and below)</ins>
