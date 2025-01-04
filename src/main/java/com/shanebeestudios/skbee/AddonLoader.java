@@ -590,6 +590,10 @@ public class AddonLoader {
             Util.logLoading("&5Item Component elements &cdisabled via config");
             return;
         }
+        if (!Skript.classExists("io.papermc.paper.datacomponent.DataComponentTypes")) {
+            Util.logLoading("&5Item Component elements &cdisabled &7(&eRequires Paper 1.21.3+&7)");
+            return;
+        }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.itemcomponent");
             Util.logLoading("&5Item Component Elements &asuccessfully loaded");
