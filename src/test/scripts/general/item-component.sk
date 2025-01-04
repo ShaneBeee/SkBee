@@ -96,6 +96,16 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
     reset repair cost component of {_i}
     assert repair cost component of {_i} = 0 with "Reset repair cost component of diamond axe should be 0"
 
+    # Use Remainder
+    set {_i} to 1 of honey bottle
+    assert use remainder component of {_i} is glass bottle with "Default use remainder of a honey bottle should be a glass bottle"
+    set use remainder component of {_i} to 1 of stone
+    assert use remainder component of {_i} is stone with "Changed use remainder should be stone"
+    delete use remainder component of {_i}
+    assert use remainder component of {_i} is not set with "Deleted component should not be set"
+    reset use remainder component of {_i}
+    assert use remainder component of {_i} is glass bottle with "Reset use remainder of a honey bottle should be a glass bottle"
+
     # Consume Effect Functions
     set {_c::1} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
     set {_c::2} to remove_effects(poison and night vision)
