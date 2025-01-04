@@ -31,7 +31,8 @@ import org.jetbrains.annotations.Nullable;
 public class ExprMaxStackSizeComponent extends SimplePropertyExpression<Object, Number> {
 
     static {
-        register(ExprMaxStackSizeComponent.class, Number.class, "max stack size component", "itemtypes");
+        register(ExprMaxStackSizeComponent.class, Number.class,
+            "max stack size component", "itemstacks/itemtypes/slots");
     }
 
     @Override
