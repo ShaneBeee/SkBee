@@ -149,6 +149,9 @@ public class Types {
                         return false;
                     }
                 }));
+        } else {
+            Util.logLoading("It looks like another addon registered 'namespaced key' already.");
+            Util.logLoading("You may have to use their NamespacedKeys in SkBee's synaxes.");
         }
 
         if (Classes.getExactClassInfo(BlockFace.class) == null) {
@@ -160,6 +163,9 @@ public class Types {
                     "NOTE: These are auto-generated and may differ between server versions.")
                 .since("2.6.0")
                 .defaultExpression(new SimpleLiteral<>(BlockFace.NORTH, true)));
+        } else {
+            Util.logLoading("It looks like another addon registered 'blockFace' already.");
+            Util.logLoading("You may have to use their BlockFace in SkBee's syntaxes.");
         }
 
         if (Skript.methodExists(PlayerRespawnEvent.class, "getRespawnReason")) {
@@ -202,6 +208,9 @@ public class Types {
                         return toString(blockState, 0);
                     }
                 }));
+        } else {
+            Util.logLoading("It looks like another addon registered 'blockState' already.");
+            Util.logLoading("You may have to use their BlockState in SkBee's syntaxes.");
         }
 
         if (HAS_ARMOR_TRIM && Classes.getExactClassInfo(ArmorTrim.class) == null) {
@@ -285,6 +294,9 @@ public class Types {
                 .name("Memory")
                 .description("Represents the different memories of an entity.",
                     "NOTE: These are auto-generated and may differ between server versions."));
+        } else {
+            Util.logLoading("It looks like another addon registered 'memory' already.");
+            Util.logLoading("You may have to use their ItemFlags in SkBee's syntaxes.");
         }
 
         if (Classes.getExactClassInfo(EquipmentSlot.class) == null) {
@@ -295,6 +307,9 @@ public class Types {
                 .description("Represents different slots of an entity.",
                     "NOTE: These are auto-generated and may differ between server versions.")
                 .since("3.4.0"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'slot' already.");
+            Util.logLoading("You may have to use their EquipmentSlot in SkBee's syntaxes.");
         }
 
         if (Classes.getExactClassInfo(Action.class) == null) {
@@ -305,32 +320,39 @@ public class Types {
                 .description("Represents different wants to interact.",
                     "NOTE: These are auto-generated and may differ between server versions.")
                 .since("3.4.0"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'blockaction' already.");
+            Util.logLoading("You may have to use their BlockAction in SkBee's syntaxes.");
         }
 
-        if (Classes.getExactClassInfo(LootTable.class) == null) {
-            Classes.registerClass(new ClassInfo<>(LootTable.class, "loottable")
-                .user("loot ?tables?")
-                .name("LootTable")
-                .description("Represents a LootTable.")
-                .examples("set {_table} to loottable from key \"minecraft:chests/ancient_city\"")
-                .since("3.4.0")
-                .parser(new Parser<>() {
-                    @SuppressWarnings("NullableProblems")
-                    @Override
-                    public @Nullable LootTable parse(String string, ParseContext context) {
-                        return null;
-                    }
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            if (Classes.getExactClassInfo(LootTable.class) == null) {
+                Classes.registerClass(new ClassInfo<>(LootTable.class, "loottable")
+                    .user("loot ?tables?")
+                    .name("LootTable")
+                    .description("Represents a LootTable.")
+                    .examples("set {_table} to loottable from key \"minecraft:chests/ancient_city\"")
+                    .since("3.4.0")
+                    .parser(new Parser<>() {
+                        @Override
+                        public @Nullable LootTable parse(String string, ParseContext context) {
+                            return null;
+                        }
 
-                    @Override
-                    public @NotNull String toString(LootTable lootTable, int flags) {
-                        return lootTable.getKey().toString();
-                    }
+                        @Override
+                        public @NotNull String toString(LootTable lootTable, int flags) {
+                            return lootTable.getKey().toString();
+                        }
 
-                    @Override
-                    public @NotNull String toVariableNameString(LootTable lootTable) {
-                        return "loottable:" + lootTable.getKey();
-                    }
-                }));
+                        @Override
+                        public @NotNull String toVariableNameString(LootTable lootTable) {
+                            return "loottable:" + lootTable.getKey();
+                        }
+                    }));
+            } else {
+                Util.logLoading("It looks like another addon registered 'loottable' already.");
+                Util.logLoading("You may have to use their LootTable in SkBee's syntaxes.");
+            }
         }
 
         if (Skript.classExists("org.bukkit.event.entity.EntityRemoveEvent") && Classes.getExactClassInfo(EntityRemoveEvent.Cause.class) == null) {
@@ -368,6 +390,9 @@ public class Types {
                     "mc spawn minecraft:armor_stand at player")
                 .after("entitydata", "entitydata")
                 .since("3.5.0"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'minecraftEntityType' already.");
+            Util.logLoading("You may have to use their Minecraft EntityType in SkBee's syntaxes.");
         }
 
         if (Classes.getExactClassInfo(Color.class) == null) {
@@ -399,6 +424,9 @@ public class Types {
                         return toString(bukkitColor, 0);
                     }
                 }));
+        } else {
+            Util.logLoading("It looks like another addon registered 'bukkitColor' already.");
+            Util.logLoading("You may have to use their Color in SkBee's syntaxes.");
         }
 
         if (Classes.getExactClassInfo(TreeType.class) == null) {
@@ -410,6 +438,9 @@ public class Types {
                     "NOTE: These are auto-generated and may differ between server versions.")
                 .after("structuretype")
                 .since("3.5.3"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'tree' already.");
+            Util.logLoading("You may have to use their TreeType in SkBee's syntaxes.");
         }
 
         if (Classes.getExactClassInfo(Pose.class) == null) {
@@ -420,6 +451,9 @@ public class Types {
                 .description("Represents the pose of an entity.",
                     "NOTE: These are auto-generated and may differ between server versions.")
                 .since("3.5.4"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'pose' already.");
+            Util.logLoading("You may have to use their Pose in SkBee's syntaxes.");
         }
 
         if (Skript.classExists("org.bukkit.inventory.EquipmentSlotGroup")) {
@@ -433,7 +467,6 @@ public class Types {
                 .usage(StringUtils.join(equipmentSlotGroups.keySet().stream().sorted().toList(), ", "))
                 .parser(new Parser<>() {
 
-                    @SuppressWarnings("NullableProblems")
                     @Override
                     public @Nullable EquipmentSlotGroup parse(String string, ParseContext context) {
                         string = string.replace(" ", "_");
@@ -450,6 +483,9 @@ public class Types {
                         return slot.toString();
                     }
                 }));
+        } else {
+            Util.logLoading("It looks like another addon registered 'equipmentSlotGroup' already.");
+            Util.logLoading("You may have to use their EquipmentSlotGroup in SkBee's syntaxes.");
         }
 
 
@@ -476,6 +512,9 @@ public class Types {
                         return toString(o, 0);
                     }
                 }));
+        } else {
+            Util.logLoading("It looks like another addon registered 'attributeModifier' already.");
+            Util.logLoading("You may have to use their AttributeModifier in SkBee's syntaxes.");
         }
 
         if (Classes.getExactClassInfo(AttributeModifier.Operation.class) == null) {
@@ -484,6 +523,9 @@ public class Types {
                 .name("Attribute Modifier Operation")
                 .description("Represents the different operations of an attribute modifer.",
                     "NOTE: These are auto-generated and may differ between server versions."));
+        } else {
+            Util.logLoading("It looks like another addon registered 'attributeOperation' already.");
+            Util.logLoading("You may have to use their AttributeModifier Operation in SkBee's syntaxes.");
         }
     }
 
