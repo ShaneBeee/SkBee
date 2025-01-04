@@ -66,7 +66,7 @@ import org.skriptlang.skript.lang.structure.Structure;
     "\t\t# Set our biome to something mars like",
     "\t\tset chunkdata biome to crimson forest"})
 @Since("3.5.0")
-public class StrucChunkGen extends Structure {
+public class StructChunkGen extends Structure {
 
     static {
         EntryValidator validator = EntryValidator.builder()
@@ -79,7 +79,7 @@ public class StrucChunkGen extends Structure {
             .addSection("height gen", true)
             .addSection("block pop", true)
             .build();
-        Skript.registerStructure(StrucChunkGen.class, validator, "register chunk generator with id %string%");
+        Skript.registerStructure(StructChunkGen.class, validator, "register chunk generator with id %string%");
     }
 
     private Literal<String> id;
