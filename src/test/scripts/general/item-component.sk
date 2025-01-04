@@ -96,6 +96,14 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
     reset repair cost component of {_i}
     assert repair cost component of {_i} = 0 with "Reset repair cost component of diamond axe should be 0"
 
+    # Use Cooldown
+    set {_i} to 1 of apple
+    parse:
+        apply use cooldown to {_i}:
+            seconds: 5 seconds
+            group: "blah:special_apple"
+    assert parse logs are not set with "Applying use cooldown should have run normally"
+
     # Use Remainder
     set {_i} to 1 of honey bottle
     assert use remainder component of {_i} is glass bottle with "Default use remainder of a honey bottle should be a glass bottle"
