@@ -3,6 +3,8 @@ package com.shanebeestudios.skbee.api.util;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.slot.InventorySlot;
+import ch.njol.skript.util.slot.Slot;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
@@ -124,6 +126,47 @@ public class ItemUtils {
         ItemMeta itemMeta = itemStack.getItemMeta();
         meta.accept(itemMeta);
         itemStack.setItemMeta(itemMeta);
+    }
+
+    public static ItemStack getItemStackFromObjects(Object object) {
+        if (object instanceof ItemStack itemStack) return itemStack;
+        else if (object instanceof ItemType itemType) return itemType.getRandom();
+        else if (object instanceof Slot slot) return slot.getItem();
+        return null;
+    }
+
+    /**
+     * Quick method to modify an array of objects which can be {@link ItemStack}, {@link ItemType} or {@link Slot}
+     *
+     * @param objects      Array of Item based objects to modify
+     * @param itemConsumer ItemStack consumer to modify
+     */
+    public static void modifyItems(Object[] objects, Consumer<ItemStack> itemConsumer) {
+        for (Object object : objects) {
+            modifyItems(object, itemConsumer);
+        }
+    }
+
+    /**
+     * Quick method to modify an object which can be {@link ItemStack}, {@link ItemType} or {@link Slot}
+     *
+     * @param object       Item based object to modify
+     * @param itemConsumer ItemStack consumer to modify
+     */
+    public static void modifyItems(Object object, Consumer<ItemStack> itemConsumer) {
+        ItemStack itemStack = null;
+        if (object instanceof ItemStack i) itemStack = i;
+        else if (object instanceof ItemType itemType) itemStack = itemType.getRandom();
+        else if (object instanceof Slot slot) itemStack = slot.getItem();
+
+        if (itemStack == null) return;
+        itemConsumer.accept(itemStack);
+
+        if (object instanceof ItemType itemType) {
+            itemType.setItemMeta(itemStack.getItemMeta());
+        } else if (object instanceof Slot slot && slot instanceof InventorySlot) {
+            slot.setItem(itemStack);
+        }
     }
 
 }
