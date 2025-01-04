@@ -53,6 +53,15 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
             camera_overlay: "my_pack:some_overlay"
     assert parse logs are not set with "Applying equippable should have run normally"
 
+    # Food section
+    set {_i} to 1 of stick
+    parse:
+        apply food component to {_i}:
+            nutrition: 10
+            saturation: 32
+            can_always_eat: true
+    assert parse logs are not set with "Applying food should have run normally"
+
     # Item Model
     set {_i} to 1 of diamond sword
     assert item model of {_i} = "minecraft:diamond_sword" with "Default item model of a diamond sword should be 'minecraft:diamond_sword'"
