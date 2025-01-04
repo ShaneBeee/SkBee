@@ -11,7 +11,7 @@ public class Types {
     static {
         Classes.registerClass(RegistryClassInfo.create(Registry.DATA_COMPONENT_TYPE, DataComponentType.class,
             false, "datacomponenttype")
-            .usage("data ?component ?types?")
+            .user("data ?component ?types?")
             .name("Data Component Type"));
     }
 
