@@ -11,16 +11,16 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("ItemFlag - Item with ItemFlags")
 @Description({"Get an item with ItemFlags.",
-    "As of Minecraft 1.20.5, the `hide attributes` flag doesn't work as intended. ",
-    "See [**SkBee Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Tricks-Hide-Attribute-Modifiers) for more info."})
+    "Removed if running Skript 2.10+ (now included in Skript)."})
 @Examples({"set {_sword} to diamond sword with all item flags",
     "set {_sword} to diamond sword of sharpness 3 with hide enchants item flag",
     "set {_sword} to diamond sword of sharpness 3 with item flag hide enchants",
@@ -31,10 +31,12 @@ import org.jetbrains.annotations.Nullable;
 public class ExprItemFlagsItem extends SimpleExpression<ItemType> {
 
     static {
-        Skript.registerExpression(ExprItemFlagsItem.class, ItemType.class, ExpressionType.COMBINED,
-            "%itemtype% with all item[ ]flags",
-            "%itemtype% with item[ ]flag[s] %itemflags%",
-            "%itemtype% with %itemflags% item[ ]flag[s]");
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            Skript.registerExpression(ExprItemFlagsItem.class, ItemType.class, ExpressionType.COMBINED,
+                "%itemtype% with all item[ ]flags",
+                "%itemtype% with item[ ]flag[s] %itemflags%",
+                "%itemtype% with %itemflags% item[ ]flag[s]");
+        }
     }
 
     private int pattern;
@@ -56,12 +58,13 @@ public class ExprItemFlagsItem extends SimpleExpression<ItemType> {
     @Override
     protected ItemType @Nullable [] get(Event event) {
         ItemType itemType = this.itemType.getSingle(event);
-        ItemFlag[] flags = this.pattern == 0 ? ItemFlag.values() : this.itemFlags.getArray(event);
         if (itemType == null) return null;
 
         itemType = itemType.clone();
-        ItemUtils.modifyItemMeta(itemType, itemMeta -> itemMeta.addItemFlags(flags));
-
+        ItemMeta itemMeta = itemType.getItemMeta();
+        ItemFlag[] flags = this.pattern == 0 ? ItemFlag.values() : this.itemFlags.getArray(event);
+        itemMeta.addItemFlags(flags);
+        itemType.setItemMeta(itemMeta);
         return new ItemType[]{itemType};
     }
 

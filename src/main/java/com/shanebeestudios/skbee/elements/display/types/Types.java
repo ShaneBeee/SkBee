@@ -34,45 +34,58 @@ public class Types {
 
     // TYPES
     static {
-        Classes.registerClass(new ClassInfo<>(Brightness.class, "displaybrightness")
+        if (Classes.getExactClassInfo(Brightness.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Brightness.class, "displaybrightness")
                 .user("display ?brightness(es)?")
                 .name("DisplayEntity - Display Brightness")
                 .description("Represents the brightness attributes of a Display Entity.", McWIKI)
                 .since("2.8.0")
                 .parser(SkriptUtils.getDefaultParser()));
+        }
 
-        EnumWrapper<Billboard> BILLBOARD_ENUM = new EnumWrapper<>(Billboard.class);
-        Classes.registerClass(BILLBOARD_ENUM.getClassInfo("displaybillboard")
+        if (Classes.getExactClassInfo(Billboard.class) == null) {
+            EnumWrapper<Billboard> BILLBOARD_ENUM = new EnumWrapper<>(Billboard.class);
+            Classes.registerClass(BILLBOARD_ENUM.getClassInfo("displaybillboard")
                 .user("display ?billboards?")
                 .name("DisplayEntity - Billboard")
                 .description("Represents the Billboard of a Display Entity.", McWIKI)
                 .since("2.8.0"));
+        }
 
-        EnumWrapper<TextAlignment> TEXT_ALIGNMENT_ENUM = new EnumWrapper<>(TextAlignment.class, "", "aligned");
-        Classes.registerClass(TEXT_ALIGNMENT_ENUM.getClassInfo("textalignment")
+        if (Classes.getExactClassInfo(TextAlignment.class) == null) {
+            EnumWrapper<TextAlignment> TEXT_ALIGNMENT_ENUM = new EnumWrapper<>(TextAlignment.class, "", "aligned");
+            Classes.registerClass(TEXT_ALIGNMENT_ENUM.getClassInfo("textalignment")
                 .user("text ?alignments?")
                 .name("DisplayEntity - Text Alignment")
                 .description("Represents the text alignment of a Text Display Entity.",
-                        "NOTE: While I understand these names do not directly align with Minecraft,",
-                        "I had to suffix them to deal with conflict issues.", McWIKI)
+                    "NOTE: While I understand these names do not directly align with Minecraft,",
+                    "I had to suffix them to deal with conflict issues.", McWIKI)
                 .since("2.8.0"));
+        }
 
-        EnumWrapper<ItemDisplayTransform> TRANSFORM_ENUM = new EnumWrapper<>(ItemDisplayTransform.class, "", "transform");
-        Classes.registerClass(TRANSFORM_ENUM.getClassInfo("itemdisplaytransform")
+        if (Classes.getExactClassInfo(ItemDisplayTransform.class) == null) {
+            EnumWrapper<ItemDisplayTransform> TRANSFORM_ENUM = new EnumWrapper<>(ItemDisplayTransform.class, "", "transform");
+            Classes.registerClass(TRANSFORM_ENUM.getClassInfo("itemdisplaytransform")
                 .user("item ?display ?transforms?")
                 .name("DisplayEntity - Item Display Transform")
                 .description("Represents the item display transform of an Item Display Entity.", McWIKI)
                 .since("2.8.0"));
+        }
 
-        TRANSFORMATION = new ClassInfo<>(Transformation.class, "transformation")
+        TRANSFORMATION = Classes.getExactClassInfo(Transformation.class);
+        if (TRANSFORMATION == null) {
+            TRANSFORMATION = new ClassInfo<>(Transformation.class, "transformation")
                 .user("transformations?")
                 .name("DisplayEntity - Transformation")
                 .description("Represents a transformation of a Display Entity.", McWIKI)
                 .since("2.8.0")
                 .parser(SkriptUtils.getDefaultParser());
-        Classes.registerClass(TRANSFORMATION);
+            Classes.registerClass(TRANSFORMATION);
+        }
 
-        QUATERNION = new ClassInfo<>(Quaternionf.class, "quaternion")
+        QUATERNION = Classes.getExactClassInfo(Quaternionf.class);
+        if (QUATERNION == null) {
+            QUATERNION = new ClassInfo<>(Quaternionf.class, "quaternion")
                 .user("quaternions?")
                 .name("Quaternion")
                 .description("Represents a Quaternion (like a vector but with 4 values).")
@@ -99,7 +112,8 @@ public class Types {
                         return toString(vec4f, 0);
                     }
                 });
-        Classes.registerClass(QUATERNION);
+            Classes.registerClass(QUATERNION);
+        }
     }
 
     // FUNCTIONS
@@ -149,91 +163,99 @@ public class Types {
                 .examples("set {_v} to vector4(1,0,0,0)")
                 .since("2.8.0 (DEPRECATED)"));
 
-        Functions.registerFunction(new SimpleJavaFunction<>("quaternion", new Parameter[]{
+        if (Functions.getGlobalFunction("quaternion") == null) {
+            Functions.registerFunction(new SimpleJavaFunction<>("quaternion", new Parameter[]{
                 new Parameter<>("x", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("y", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("z", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("w", DefaultClasses.NUMBER, true, null)
-        }, QUATERNION, true) {
-            @SuppressWarnings("NullableProblems")
-            @Override
-            public @Nullable Quaternionf[] executeSimple(Object[][] params) {
-                float x = ((Number) params[0][0]).floatValue();
-                float y = ((Number) params[1][0]).floatValue();
-                float z = ((Number) params[2][0]).floatValue();
-                float w = ((Number) params[3][0]).floatValue();
-                return new Quaternionf[]{new Quaternionf(x, y, z, w)};
+            }, QUATERNION, true) {
+                @SuppressWarnings("NullableProblems")
+                @Override
+                public @Nullable Quaternionf[] executeSimple(Object[][] params) {
+                    float x = ((Number) params[0][0]).floatValue();
+                    float y = ((Number) params[1][0]).floatValue();
+                    float z = ((Number) params[2][0]).floatValue();
+                    float w = ((Number) params[3][0]).floatValue();
+                    return new Quaternionf[]{new Quaternionf(x, y, z, w)};
+                }
             }
-        }
                 .description("Creates a new Quaternion.")
                 .examples("set {_v} to quaternion(1,0,0,0)")
                 .since("2.8.1"));
+        }
 
-        Functions.registerFunction(new SimpleJavaFunction<>("axisAngle", new Parameter[]{
+        if (Functions.getGlobalFunction("axisAngle") == null) {
+            Functions.registerFunction(new SimpleJavaFunction<>("axisAngle", new Parameter[]{
                 new Parameter<>("angle", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("x", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("y", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("z", DefaultClasses.NUMBER, true, null)
-        }, QUATERNION, true) {
-            @SuppressWarnings("NullableProblems")
-            @Override
-            public @Nullable Quaternionf[] executeSimple(Object[][] params) {
-                float angle = ((Number) params[0][0]).floatValue();
-                float x = ((Number) params[1][0]).floatValue();
-                float y = ((Number) params[2][0]).floatValue();
-                float z = ((Number) params[3][0]).floatValue();
-                AxisAngle4f axisAngle4f = new AxisAngle4f(angle, x, y, z);
-                return new Quaternionf[]{new Quaternionf(axisAngle4f)};
+            }, QUATERNION, true) {
+                @SuppressWarnings("NullableProblems")
+                @Override
+                public @Nullable Quaternionf[] executeSimple(Object[][] params) {
+                    float angle = ((Number) params[0][0]).floatValue();
+                    float x = ((Number) params[1][0]).floatValue();
+                    float y = ((Number) params[2][0]).floatValue();
+                    float z = ((Number) params[3][0]).floatValue();
+                    AxisAngle4f axisAngle4f = new AxisAngle4f(angle, x, y, z);
+                    return new Quaternionf[]{new Quaternionf(axisAngle4f)};
+                }
             }
-        }
                 .description("Creates a new AxisAngle4f (Will be converted and returned as a Quaternion).",
-                        "I have no clue what this is, ask ThatOneWizard!")
+                    "I have no clue what this is, ask ThatOneWizard!")
                 .examples("set {_v} to axisAngle(0.25,0,0,1)")
                 .since("2.8.1"));
+        }
 
-        Functions.registerFunction(new SimpleJavaFunction<>("axisAngleFromVector", new Parameter[]{
+        if (Functions.getGlobalFunction("axisAngleFromVector") == null) {
+            Functions.registerFunction(new SimpleJavaFunction<>("axisAngleFromVector", new Parameter[]{
                 new Parameter<>("angle", DefaultClasses.NUMBER, true, null),
                 new Parameter<>("vector", DefaultClasses.VECTOR, true, null)
-        }, QUATERNION, true) {
-            @SuppressWarnings("NullableProblems")
-            @Override
-            public @Nullable Quaternionf[] executeSimple(Object[][] params) {
-                float angle = ((Number) params[0][0]).floatValue();
-                Vector vector = (Vector) params[1][0];
-                AxisAngle4d axisAngle4f = new AxisAngle4d((angle * Math.PI / 180),
+            }, QUATERNION, true) {
+                @SuppressWarnings("NullableProblems")
+                @Override
+                public @Nullable Quaternionf[] executeSimple(Object[][] params) {
+                    float angle = ((Number) params[0][0]).floatValue();
+                    Vector vector = (Vector) params[1][0];
+                    AxisAngle4d axisAngle4f = new AxisAngle4d((angle * Math.PI / 180),
                         vector.getX(), vector.getY(), vector.getZ());
-                return new Quaternionf[]{new Quaternionf(axisAngle4f)};
+                    return new Quaternionf[]{new Quaternionf(axisAngle4f)};
+                }
             }
-        }
                 .description("Creates a new AxisAngle4f using a vector and angle (Will be converted and returned as a Quaternion).",
-                        "I have no clue what this is, ask ThatOneWizard!")
+                    "I have no clue what this is, ask ThatOneWizard!")
                 .examples("set {_v} to axisAngleFromVector(0.25, vector(0,0,1))")
                 .since("2.15.0"));
+        }
 
-        Functions.registerFunction(new SimpleJavaFunction<>("transformation", new Parameter[]{
+        if (Functions.getGlobalFunction("transformation") == null) {
+            Functions.registerFunction(new SimpleJavaFunction<>("transformation", new Parameter[]{
                 new Parameter<>("translation", DefaultClasses.VECTOR, true, null),
                 new Parameter<>("scale", DefaultClasses.VECTOR, true, null),
                 new Parameter<>("leftRotation", QUATERNION, true, null),
                 new Parameter<>("rightRotation", QUATERNION, true, null)
-        }, TRANSFORMATION, true) {
-            @SuppressWarnings("NullableProblems")
-            @Override
-            public Transformation[] executeSimple(Object[][] params) {
-                Vector3f translation = converToVector3f((Vector) params[0][0]);
-                Vector3f scale = converToVector3f((Vector) params[1][0]);
-                Quaternionf leftRotation = (Quaternionf) params[2][0];
-                Quaternionf rightRotation = (Quaternionf) params[3][0];
-                return new Transformation[]{new Transformation(translation, leftRotation, scale, rightRotation)};
+            }, TRANSFORMATION, true) {
+                @SuppressWarnings("NullableProblems")
+                @Override
+                public Transformation[] executeSimple(Object[][] params) {
+                    Vector3f translation = converToVector3f((Vector) params[0][0]);
+                    Vector3f scale = converToVector3f((Vector) params[1][0]);
+                    Quaternionf leftRotation = (Quaternionf) params[2][0];
+                    Quaternionf rightRotation = (Quaternionf) params[3][0];
+                    return new Transformation[]{new Transformation(translation, leftRotation, scale, rightRotation)};
+                }
             }
-        }
                 .description("Creates a new Transformation")
                 .examples("on load:",
-                        "\tset {_trans} to vector(0,1,0)",
-                        "\tset {_scale} to vector(1,1,1)",
-                        "\tset {_lr} to quaternion(1,1,1,1)",
-                        "\tset {_rr} to axisAngle(2,2,2,2)",
-                        "\tset {_transform} to transformation({_trans}, {_scale}, {_lr}, {_rr})")
+                    "\tset {_trans} to vector(0,1,0)",
+                    "\tset {_scale} to vector(1,1,1)",
+                    "\tset {_lr} to quaternion(1,1,1,1)",
+                    "\tset {_rr} to axisAngle(2,2,2,2)",
+                    "\tset {_transform} to transformation({_trans}, {_scale}, {_lr}, {_rr})")
                 .since("2.8.0"));
+        }
     }
 
     public static Vector3f converToVector3f(Vector vector) {

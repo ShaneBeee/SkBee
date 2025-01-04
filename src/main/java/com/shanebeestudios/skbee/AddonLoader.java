@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
@@ -62,9 +61,9 @@ public class AddonLoader {
             return false;
         }
         Version skriptVersion = Skript.getVersion();
-        if (skriptVersion.isSmallerThan(new Version(2, 7))) {
+        if (skriptVersion.isSmallerThan(new Version(2, 9, 999))) {
             Util.log("&cDependency Skript outdated, plugin disabling.");
-            Util.log("&eSkBee requires Skript 2.7+ but found Skript " + skriptVersion);
+            Util.log("&eSkBee requires Skript 2.10+ but found Skript " + skriptVersion);
             return false;
         }
         if (!Skript.isAcceptRegistrations()) {
@@ -323,8 +322,7 @@ public class AddonLoader {
     }
 
     private void loadVirtualFurnaceElements() {
-        // Force load if running tests as this is defaulted to false in the config
-        if (!this.config.ELEMENTS_VIRTUAL_FURNACE && !TestMode.ENABLED) {
+        if (!this.config.ELEMENTS_VIRTUAL_FURNACE) {
             Util.logLoading("&5Virtual Furnace Elements &cdisabled via config");
             return;
         }
@@ -501,6 +499,10 @@ public class AddonLoader {
     }
 
     private void loadTagElements() {
+        if (Util.IS_RUNNING_SKRIPT_2_10) {
+            Util.logLoading("&5Minecraft Tag elements &cdisabled &r(&7now in Skript&r)");
+            return;
+        }
         if (!this.config.ELEMENTS_MINECRAFT_TAG) {
             Util.logLoading("&5Minecraft Tag elements &cdisabled via config");
             return;

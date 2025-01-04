@@ -80,7 +80,7 @@ public class EffFurnaceRecipe extends Effect {
         } else {
             Material ing = this.ingredient.getSingle(event).getMaterial();
             Material result = this.result.getSingle(event).getMaterial();
-            int cook = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks() : 200;
+            int cook = this.cookTime != null ? (int) this.cookTime.getSingle(event).getAs(Timespan.TimePeriod.TICK) : 200;
             String key = "recipe_" + ing.toString() + "_" + result.toString() + "_" + cook;
             FurnaceRecipe recipe = new FurnaceRecipe(Util.getKey(key), ing, result, cook);
             RECIPE_MANAGER.registerFurnaceRecipe(recipe);

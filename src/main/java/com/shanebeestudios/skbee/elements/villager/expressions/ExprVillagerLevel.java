@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
 import org.bukkit.event.Event;
@@ -18,17 +19,20 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Villager - Level/Experience")
 @Description({"Represents the level/experience of a villager.",
-        "Level is between 1 and 5.","" +
-        "Experience is a number greater than or equal to 0."})
+    "Removed if running Skript 2.10+ (now included in Skript).",
+    "Level is between 1 and 5.",
+    "Experience is a number greater than or equal to 0."})
 @Examples({"set villager level of target entity to 5",
-        "set villager experience of last spawned villager to 10",
-        "if villager level of target entity > 2:",
-        "if villager experience of target entity > 10:"})
+    "set villager experience of last spawned villager to 10",
+    "if villager level of target entity > 2:",
+    "if villager experience of target entity > 10:"})
 @Since("1.17.0")
 public class ExprVillagerLevel extends SimplePropertyExpression<LivingEntity, Number> {
 
     static {
-        register(ExprVillagerLevel.class, Number.class, "villager (level|1:experience)", "livingentities");
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            register(ExprVillagerLevel.class, Number.class, "villager (level|1:experience)", "livingentities");
+        }
     }
 
     private int pattern;

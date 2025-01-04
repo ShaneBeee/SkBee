@@ -29,29 +29,29 @@ import java.util.List;
 
 @Name("TextComponent - Click Event Callback")
 @Description({"Create a click event, that when clicked will run the code in this section.",
-        "\nNOTE: Internally this just makes the player run a special command",
-        "so you will see console messages where a player runs the command \"/paper callback\" in your console.",
-        "\nNOTE: Paper didn't make this command available by default",
-        "so you'll have to give your players the permission `bukkit.command.paper.callback`.",
-        "(As of PaperMC 1.20.1[build-169], the permission is no longer required).",
-        "\n`uses` = The amount of times the player can click this. Defaults to 1. Use `-1` for unlimited uses.",
-        "\n`lifetime` = How long the player has til they can't click it. Defaults to 12 hours."})
+    "\nNOTE: Internally this just makes the player run a special command",
+    "so you will see console messages where a player runs the command \"/paper callback\" in your console.",
+    "\nNOTE: Paper didn't make this command available by default",
+    "so you'll have to give your players the permission `bukkit.command.paper.callback`.",
+    "(As of PaperMC 1.20.1[build-169], the permission is no longer required).",
+    "\n`uses` = The amount of times the player can click this. Defaults to 1. Use `-1` for unlimited uses.",
+    "\n`lifetime` = How long the player has til they can't click it. Defaults to 12 hours."})
 @Examples({"set {_t} to mini message from \"JOIN US AT SPAWN FOR A SPECIAL EVENT (10 SECONDS REMAINING!)\"",
-        "create callback for {_t} with a duration of 10 seconds:",
-        "\tteleport player to spawn of world \"world\"",
-        "send component {_t} to all players",
-        "",
-        "set {_t} to text component from \"&cDONT CLICK ME\"",
-        "create callback for {_t} with (size of players) uses:",
-        "\tkill player",
-        "\tbroadcast \"&b%player% &eclicked it &cAND DIED&7!!!\"",
-        "send component {_t} to all players",
-        "",
-        "set {_t} to text component from \"Hey you! Click this for a free item.\"",
-        "set {_t2} to text component from \"&e&lONE TIME USE!\"",
-        "create a callback for {_t}:",
-        "\tgive player random item out of available item types",
-        "send components (merge components {_t} and {_t2} with \" \") to players"})
+    "create callback for {_t} with a duration of 10 seconds:",
+    "\tteleport player to spawn of world \"world\"",
+    "send component {_t} to all players",
+    "",
+    "set {_t} to text component from \"&cDONT CLICK ME\"",
+    "create callback for {_t} with (size of players) uses:",
+    "\tkill player",
+    "\tbroadcast \"&b%player% &eclicked it &cAND DIED&7!!!\"",
+    "send component {_t} to all players",
+    "",
+    "set {_t} to text component from \"Hey you! Click this for a free item.\"",
+    "set {_t2} to text component from \"&e&lONE TIME USE!\"",
+    "create a callback for {_t}:",
+    "\tgive player random item out of available item types",
+    "send components (merge components {_t} and {_t2} with \" \") to players"})
 @Since("2.17.0")
 public class SecClickEventCallback extends Section {
 
@@ -70,8 +70,8 @@ public class SecClickEventCallback extends Section {
 
     static {
         Skript.registerSection(SecClickEventCallback.class,
-                "create [a] [new] [click event] callback for %textcomponent% " +
-                        "[with %-number% use[s]] [[and] with [a] (lifetime|duration) of %-timespan%]");
+            "create [a] [new] [click event] callback for %textcomponent% " +
+                "[with %-number% use[s]] [[and] with [a] (lifetime|duration) of %-timespan%]");
     }
 
     private Expression<ComponentWrapper> component;
@@ -79,7 +79,7 @@ public class SecClickEventCallback extends Section {
     private Expression<Timespan> lifeTime;
     private Trigger trigger;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
                         SectionNode sectionNode, List<TriggerItem> triggerItems) {
@@ -103,7 +103,8 @@ public class SecClickEventCallback extends Section {
             Duration lifeTime = ClickCallback.DEFAULT_LIFETIME;
             if (this.lifeTime != null) {
                 Timespan lifeTimeSpan = this.lifeTime.getSingle(event);
-                if (lifeTimeSpan != null) lifeTime = Duration.ofMillis(lifeTimeSpan.getMilliSeconds());
+                if (lifeTimeSpan != null)
+                    lifeTime = Duration.ofMillis(lifeTimeSpan.getAs(Timespan.TimePeriod.MILLISECOND));
             }
 
             Object localVariables = Variables.copyLocalVariables(event);

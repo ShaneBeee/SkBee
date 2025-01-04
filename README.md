@@ -2,6 +2,8 @@
 
 **SkBee** is a [**Skript**](https://github.com/SkriptLang/Skript) addon that aims to add more useful elements to Skript.
 
+This is a fork of the original [skBee](https://github.com/ShaneBeee/SkBee) by ShaneBeee that is being maintained by the Skript Hub team as a maintenance fork. This means that no new features will be added to skBee, but it will be updated as need to support new versions of Minecraft and Skript. Bug fix PR's will be accepted, but PR's for new feature will not.
+
 ## Elements
 This is only a small list of the many things included
 - **NBT elements** get/set NBT of items, blocks (tile entities) and entities. (Available for 1.8.8+)
@@ -23,15 +25,15 @@ See the [**Wiki**](https://github.com/ShaneBeee/SkBee/wiki) for more detailed in
 
 ## [**JavaDocs**](https://shanebeee.github.io/docs/SkBee/)
 
-## <ins>OpenSource</ins>
-SkBee is proudly built using JetBrains' IntelliJ IDEA!
-We here at SkBee proudly support open source development with a big thanks to JetBrains for the [open source license](https://jb.gg/OpenSourceSupport).
-
-<img src="https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.png" width="200">
-
 ## <ins>Outdated</ins>
 Are you running an <ins>**outdated**</ins> version of Minecraft and looking for an <ins>**outdated**</ins> build of SkBee that will work on your <ins>**outdated**</ins> server? Well look no further, here is a list of <ins>**outdated**</ins> builds of SkBee for your <ins>**outdated**</ins> server.
 Keep in mind, these <ins>**outdated**</ins> builds for <ins>**outdated**</ins> servers are not supported and you will not get support/bug fixes, because they're <ins>**outdated**</ins>!
+
+### <ins>Skript 2.9.5 (and below)</ins>
+Due to changes in Skript 2.10's API, SkBee 3.7.0+ will only work on Skript 2.10+
+If you need SkBee to work on an older version of Skript this is the last version that will work:
+[**SkBee 3.6.6**](https://github.com/ShaneBeee/SkBee/releases/tag/3.6.6)
+(Just like any other <ins>**outdated**</ins> build, this one is no longer supported)
 
 ### <ins>Skript 2.6.4 (and below)</ins>
 Due to changes in Skript 2.7's API, SkBee 3.0.0+ will only work on Skript 2.7+

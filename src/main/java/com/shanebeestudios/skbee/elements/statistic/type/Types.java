@@ -14,16 +14,18 @@ import java.util.List;
 public class Types {
 
     static {
-        Classes.registerClass(RegistryClassInfo.create(Registry.STATISTIC, Statistic.class, false, "statistic")
-            .user("statistics?")
-            .name("Statistic")
-            .description("Represents the different statistics for a player.",
-                "Some stats require extra data, these are distinguished by their data type within the square brackets.",
-                "Underscores in stat names are not required, you can use spaces.",
-                "NOTE: 'play_one_minute' stat's name is misleading, it's actually amount of ticks played.",
-                "NOTE: These are auto-generated and may differ between server versions.")
-            .usage(getNames())
-            .since("1.17.0"));
+        if (Classes.getExactClassInfo(Statistic.class) == null) {
+            Classes.registerClass(RegistryClassInfo.create(Registry.STATISTIC, Statistic.class, false, "statistic")
+                .user("statistics?")
+                .name("Statistic")
+                .description("Represents the different statistics for a player.",
+                    "Some stats require extra data, these are distinguished by their data type within the square brackets.",
+                    "Underscores in stat names are not required, you can use spaces.",
+                    "NOTE: 'play_one_minute' stat's name is misleading, it's actually amount of ticks played.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
+                .usage(getNames())
+                .since("1.17.0"));
+        }
     }
 
     /**

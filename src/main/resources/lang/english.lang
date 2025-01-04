@@ -72,6 +72,7 @@ types:
     teamoptionstatus: team option status¦es
     textalignment: text alignment¦s
     textcomponent: text component¦s @-
+    trail: trail¦s
     transformation: transformation¦s
     transformreason: transform reason¦s
     trimmaterial: trim material¦s

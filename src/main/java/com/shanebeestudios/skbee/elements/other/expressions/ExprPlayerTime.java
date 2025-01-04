@@ -19,23 +19,23 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Player Time")
 @Description({"Represents the current time on the player's client.",
-        "When relative is used the player's time will be kept synchronized to its world time with the specified offset.",
-        "When using non-relative time the player's time will stay fixed at the specified time parameter.",
-        "It's up to the caller to continue updating the player's time.",
-        "To restore player time to normal use reset.",
-        "Both Time and TimeSpan can be used for this. It is best to use Time for non-relative and TimeSpan for relative.",
-        "Relative will return as a TimeSpan (the offset from world time), non-relative will return as a Time."})
+    "When relative is used the player's time will be kept synchronized to its world time with the specified offset.",
+    "When using non-relative time the player's time will stay fixed at the specified time parameter.",
+    "It's up to the caller to continue updating the player's time.",
+    "To restore player time to normal use reset.",
+    "Both Time and TimeSpan can be used for this. It is best to use Time for non-relative and TimeSpan for relative.",
+    "Relative will return as a TimeSpan (the offset from world time), non-relative will return as a Time."})
 @Examples({"set player time of player to 12:00am",
-        "set player time of all players to 6pm",
-        "set relative player time of player to 12000 ticks",
-        "set relative player time of player to 10 minutes",
-        "set relative player time of all players to 6000 ticks",
-        "add 10 minutes to player time of player",
-        "add 1 minute to relative player time of player",
-        "remove 10 minutes from player time of all players",
-        "remove 1 minute from relative player time of player",
-        "reset player time of player",
-        "reset player time of all players"})
+    "set player time of all players to 6pm",
+    "set relative player time of player to 12000 ticks",
+    "set relative player time of player to 10 minutes",
+    "set relative player time of all players to 6000 ticks",
+    "add 10 minutes to player time of player",
+    "add 1 minute to relative player time of player",
+    "remove 10 minutes from player time of all players",
+    "remove 1 minute from relative player time of player",
+    "reset player time of player",
+    "reset player time of all players"})
 @Since("3.3.0")
 public class ExprPlayerTime extends SimplePropertyExpression<Player, Object> {
 
@@ -56,7 +56,7 @@ public class ExprPlayerTime extends SimplePropertyExpression<Player, Object> {
     @Override
     public @Nullable Object convert(Player player) {
         if (this.relative) {
-            return Timespan.fromTicks(player.getPlayerTimeOffset());
+            return new Timespan(Timespan.TimePeriod.TICK, player.getPlayerTimeOffset());
         }
         return new Time((int) player.getPlayerTime());
     }
@@ -72,7 +72,6 @@ public class ExprPlayerTime extends SimplePropertyExpression<Player, Object> {
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (mode == ChangeMode.RESET) {
@@ -82,7 +81,7 @@ public class ExprPlayerTime extends SimplePropertyExpression<Player, Object> {
         } else if (delta != null) {
             int ticks = 0;
             if (delta[0] instanceof Timespan timespan) {
-                ticks = (int) timespan.getTicks();
+                ticks = (int) timespan.getAs(Timespan.TimePeriod.TICK);
             } else if (delta[0] instanceof Time time) {
                 ticks = time.getTicks();
             }

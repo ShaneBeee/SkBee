@@ -101,6 +101,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
         return LiteralUtils.canInitSafely(expr);
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected NBTCompound @NotNull [] get(@NotNull Event e, Object @NotNull [] source) {
         return get(source, object -> {

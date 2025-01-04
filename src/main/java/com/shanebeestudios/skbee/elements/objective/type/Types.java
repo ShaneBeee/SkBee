@@ -18,11 +18,12 @@ import org.jetbrains.annotations.NotNull;
 public class Types {
 
     static {
-        Classes.registerClass(new ClassInfo<>(Objective.class, "objective")
+        if (Classes.getExactClassInfo(Objective.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Objective.class, "objective")
                 .user("objectives?")
                 .name("Scoreboard - Objective")
                 .description("Represents an objective in a scoreboard.",
-                        "When deleting, the objective will be unregistered.")
+                    "When deleting, the objective will be unregistered.")
                 .since("2.6.0")
                 .parser(new Parser<>() {
 
@@ -61,46 +62,51 @@ public class Types {
                         }
                     }
                 }));
-
-        if (Skript.classExists("org.bukkit.scoreboard.Criteria")) {
-            Classes.registerClass(new ClassInfo<>(Criteria.class, "criteria")
-                    .user("criterias?")
-                    .name("Scoreboard - Criteria")
-                    .description("Represents a criteria for a scoreboard objective.",
-                            "See [**Scoreboard Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki for more details.")
-                    .since("2.6.0")
-                    .parser(new Parser<>() {
-
-                        @Override
-                        public boolean canParse(@NotNull ParseContext context) {
-                            return false;
-                        }
-
-                        @Override
-                        public @NotNull String toString(Criteria o, int flags) {
-                            return "criteria " + o.getName();
-                        }
-
-                        @Override
-                        public @NotNull String toVariableNameString(Criteria o) {
-                            return "criteria{name=" + o.getName() + "}";
-                        }
-                    }));
         }
 
-        EnumWrapper<RenderType> RENDER_ENUM = new EnumWrapper<>(RenderType.class);
-        Classes.registerClass(RENDER_ENUM.getClassInfo("rendertype")
+        if (Skript.classExists("org.bukkit.scoreboard.Criteria") && Classes.getExactClassInfo(Criteria.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Criteria.class, "criteria")
+                .user("criterias?")
+                .name("Scoreboard - Criteria")
+                .description("Represents a criteria for a scoreboard objective.",
+                    "See [**Scoreboard Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki for more details.")
+                .since("2.6.0")
+                .parser(new Parser<>() {
+
+                    @Override
+                    public boolean canParse(@NotNull ParseContext context) {
+                        return false;
+                    }
+
+                    @Override
+                    public @NotNull String toString(Criteria o, int flags) {
+                        return "criteria " + o.getName();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(Criteria o) {
+                        return "criteria{name=" + o.getName() + "}";
+                    }
+                }));
+            }
+
+        if (Classes.getExactClassInfo(RenderType.class) == null) {
+            EnumWrapper<RenderType> RENDER_ENUM = new EnumWrapper<>(RenderType.class);
+            Classes.registerClass(RENDER_ENUM.getClassInfo("rendertype")
                 .user("render ?types?")
                 .name("Scoreboard - Objective Render Type")
                 .description("Controls the way in which an Objective is rendered client side.")
                 .since("2.6.0"));
+        }
 
-        EnumWrapper<DisplaySlot> DISPLAY_ENUM = new EnumWrapper<>(DisplaySlot.class);
-        Classes.registerClass(DISPLAY_ENUM.getClassInfo("displayslot")
+        if (Classes.getExactClassInfo(DisplaySlot.class) == null) {
+            EnumWrapper<DisplaySlot> DISPLAY_ENUM = new EnumWrapper<>(DisplaySlot.class);
+            Classes.registerClass(DISPLAY_ENUM.getClassInfo("displayslot")
                 .user("display ?slots?")
                 .name("Scoreboard - Objective Display Slot")
                 .description("Locations for displaying objectives to the player")
                 .since("2.6.0"));
+        }
     }
 
 }

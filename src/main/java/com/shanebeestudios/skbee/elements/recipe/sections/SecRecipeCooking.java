@@ -41,42 +41,42 @@ import java.util.Map;
 
 @Name("Recipe - Register Cooking Recipe")
 @Description({"This section allows you to register any cooking recipe and define special properties.",
-        "\n`id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
-        "\n`result` = The resulting ItemStack of this recipe.",
-        "\n`input` = The item the recipe requires as an input to output the result (Accepts an ItemStack or RecipeChoice) (Required).",
-        "\n`cooktime` = How long the recipe will take to finish cooking before result is given (Optional).",
-        "\n`experience` = The amount of experience gained when the recipe is finished cooking (Optional).",
-        "Default cook times are, furnace = 10 seconds, smoking/blasting = 5 seconds and campfire = 30 seconds.",
-        "\n`group` = You can define a group in which all recipes under this are sorted together in the recipe book (Optional).",
-        "Examples of this in game are beds and wood types.",
-        "\n`category` = Which category in the recipe book this recipe should appear within (Optional 1.19.4+).",
-        "Valid category types are \"food\", \"blocks\", \"misc\", if no category is defined it defaults to \"misc\"."})
+    "\n`id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
+    "\n`result` = The resulting ItemStack of this recipe.",
+    "\n`input` = The item the recipe requires as an input to output the result (Accepts an ItemStack or RecipeChoice) (Required).",
+    "\n`cooktime` = How long the recipe will take to finish cooking before result is given (Optional).",
+    "\n`experience` = The amount of experience gained when the recipe is finished cooking (Optional).",
+    "Default cook times are, furnace = 10 seconds, smoking/blasting = 5 seconds and campfire = 30 seconds.",
+    "\n`group` = You can define a group in which all recipes under this are sorted together in the recipe book (Optional).",
+    "Examples of this in game are beds and wood types.",
+    "\n`category` = Which category in the recipe book this recipe should appear within (Optional 1.19.4+).",
+    "Valid category types are \"food\", \"blocks\", \"misc\", if no category is defined it defaults to \"misc\"."})
 @Examples({"register new furnace recipe:",
-        "\tid: \"sieve:gravel_to_sand\"",
-        "\tresult: sand",
-        "\tinput: gravel",
-        "\tgroup: \"sieve\"",
-        "\tcooktime: 1 minecraft day # 20 minutes",
-        "\texperience: 6",
-        "\tcategory: \"blocks\"",
-        "",
-        "register new campfire recipe:",
-        "\tid: \"sieve:cobblestone_to_gravel\"",
-        "\tresult: gravel",
-        "\tinput: cobblestone",
-        "\tgroup: \"sieve\"",
-        "\tcategory: \"blocks\"",
-        "",
-        "register new smoking recipe:",
-        "\tid: \"chef:beef_jerky\"",
-        "\tresult: cooked mutton named \"&oBeef&r Jerky\"",
-        "\tinput: rotten flesh",
-        "\tcategory: \"food\"",
-        "",
-        "register a new blasting recipe:",
-        "\tid: \"firery_sword\"",
-        "\tresult: diamond sword of fire aspect named \"Flaming Sword\"",
-        "\tinput: diamond sword"})
+    "\tid: \"sieve:gravel_to_sand\"",
+    "\tresult: sand",
+    "\tinput: gravel",
+    "\tgroup: \"sieve\"",
+    "\tcooktime: 1 minecraft day # 20 minutes",
+    "\texperience: 6",
+    "\tcategory: \"blocks\"",
+    "",
+    "register new campfire recipe:",
+    "\tid: \"sieve:cobblestone_to_gravel\"",
+    "\tresult: gravel",
+    "\tinput: cobblestone",
+    "\tgroup: \"sieve\"",
+    "\tcategory: \"blocks\"",
+    "",
+    "register new smoking recipe:",
+    "\tid: \"chef:beef_jerky\"",
+    "\tresult: cooked mutton named \"&oBeef&r Jerky\"",
+    "\tinput: rotten flesh",
+    "\tcategory: \"food\"",
+    "",
+    "register a new blasting recipe:",
+    "\tid: \"firery_sword\"",
+    "\tresult: diamond sword of fire aspect named \"Flaming Sword\"",
+    "\tinput: diamond sword"})
 @Since("3.0.0")
 public class SecRecipeCooking extends Section {
 
@@ -129,7 +129,6 @@ public class SecRecipeCooking extends Section {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         execute(event);
@@ -146,7 +145,7 @@ public class SecRecipeCooking extends Section {
         ItemStack result = this.result.getSingle(event);
         // #getConvertedExpression() is used to prevent the famous 'UnparsedLiterals must be converted before use'
         RecipeChoice input = this.input.getSingle(event);
-        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getTicks() : this.recipeType.getCookTime();
+        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getAs(Timespan.TimePeriod.TICK) : this.recipeType.getCookTime();
         float experience = this.experience != null ? this.experience.getSingle(event).floatValue() : 0;
 
         if (namespacedKey == null) {

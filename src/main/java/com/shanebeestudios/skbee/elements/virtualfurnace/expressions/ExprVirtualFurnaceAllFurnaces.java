@@ -27,19 +27,17 @@ public class ExprVirtualFurnaceAllFurnaces extends SimpleExpression<Machine> {
 
     static {
         Skript.registerExpression(ExprVirtualFurnaceAllFurnaces.class, Machine.class, ExpressionType.SIMPLE,
-                "all virtual (machines|furnaces)");
+            "all virtual (machines|furnaces)");
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable Machine[] get(Event event) {
-        List<Machine> machines = new ArrayList<>(Types.FURNACE_MANAGER.getAllFurnaces());
+        List<Machine> machines = new ArrayList<>(Types.FURNACE_MANAGER.getAllMachines());
         return machines.toArray(new Machine[0]);
     }
 

@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -15,15 +16,19 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Death Location of Player")
-@Description("Represents the last death location of player. Set/Delete will only work for online players not offline players.")
+@Description({"Represents the last death location of player.",
+    "Set/Delete will only work for online players not offline players.",
+    "Removed if running Skript 2.10+ (now included in Skript)."})
 @Examples({"command /death:",
-        "\ttrigger:",
-        "\t\tteleport player to last death location of player"})
+    "\ttrigger:",
+    "\t\tteleport player to last death location of player"})
 @Since("2.8.5")
 public class ExprLastDeathLocation extends SimplePropertyExpression<OfflinePlayer, Location> {
 
     static {
-        register(ExprLastDeathLocation.class, Location.class, "[last ]death location", "offlineplayers");
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            register(ExprLastDeathLocation.class, Location.class, "[last ]death location", "offlineplayers");
+        }
     }
 
     @Override

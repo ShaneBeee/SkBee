@@ -9,6 +9,7 @@ import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.entity.Entity;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("deprecation")
 public class NBTCustomEntity extends NBTEntity implements NBTCustom {
@@ -81,7 +82,7 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     }
 
     @Override
-    public NBTCompound getCopy() {
+    public @NotNull NBTCompound getCopy() {
         try {
             String bukkit = "BukkitValues";
             NBTCompound compound = new NBTContainer();
@@ -108,7 +109,7 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
             if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
                 ex.printStackTrace();
             }
-            return null;
+            return new NBTContainer();
         }
     }
 

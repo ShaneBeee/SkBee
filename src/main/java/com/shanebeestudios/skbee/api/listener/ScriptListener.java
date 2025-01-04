@@ -49,7 +49,7 @@ public class ScriptListener implements Listener {
     static {
     }
 
-    @SuppressWarnings("UnstableApiUsage")
+    @SuppressWarnings({"UnstableApiUsage", "removal"})
     @EventHandler
     private void onLoadScript(PreScriptLoadEvent event) {
         List<Config> scriptsToRemove = new ArrayList<>();

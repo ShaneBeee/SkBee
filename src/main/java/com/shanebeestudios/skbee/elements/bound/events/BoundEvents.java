@@ -5,7 +5,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
@@ -24,21 +23,6 @@ public class BoundEvents extends SkriptEvent {
     private static BoundBorderListener boundBorderListener;
 
     static {
-
-        EventValues.registerEventValue(BoundEvent.class, Bound.class, new Getter<>() {
-            @Override
-            public @Nullable Bound get(BoundEvent event) {
-                return event.getBound();
-            }
-        }, EventValues.TIME_NOW);
-
-        EventValues.registerEventValue(BoundEvent.class, String.class, new Getter<>() {
-            @Override
-            public @Nullable String get(BoundEvent event) {
-                return event.getBound().getId();
-            }
-        }, EventValues.TIME_NOW);
-
         Skript.registerEvent("Bound - Enter", BoundEvents.class, BoundEnterEvent.class, "(bound enter|enter bound) [with id %-string%]")
             .description("Called when a player enters a bound. Optional ID of bound. 'event-string' = bound ID.",
                 "NOTE: Due to breaking changes in Bukkit API, enter/exit events will not be called when a player mounts/dismounts an entity if running SkBee 3.5.0+ on MC 1.20.4 and below.")
@@ -48,13 +32,6 @@ public class BoundEvents extends SkriptEvent {
                 "on enter bound with id \"spawn\":",
                 "\tcancel event")
             .since("1.0.0, 1.12.2 (Bound IDs)");
-
-        EventValues.registerEventValue(BoundEnterEvent.class, Player.class, new Getter<>() {
-            @Override
-            public Player get(BoundEnterEvent event) {
-                return event.getPlayer();
-            }
-        }, 0);
 
         Skript.registerEvent("Bound - Exit", BoundEvents.class, BoundExitEvent.class, "(bound exit|exit bound) [with id %-string%]")
             .description("Called when a player exits a bound. Optional ID of bound. 'event-string' = bound ID.",
@@ -67,18 +44,15 @@ public class BoundEvents extends SkriptEvent {
                 "\tcancel event")
             .since("1.0.0, 1.12.2 (Bound IDs)");
 
-        EventValues.registerEventValue(BoundExitEvent.class, Player.class, new Getter<>() {
-            @Override
-            public Player get(BoundExitEvent event) {
-                return event.getPlayer();
-            }
-        }, 0);
-
+        EventValues.registerEventValue(BoundEvent.class, Bound.class, BoundEvent::getBound, EventValues.TIME_NOW);
+        EventValues.registerEventValue(BoundEvent.class, String.class, event -> event.getBound().getId(), EventValues.TIME_NOW);
+        EventValues.registerEventValue(BoundEnterEvent.class, Player.class, BoundEnterEvent::getPlayer, 0);
+        EventValues.registerEventValue(BoundExitEvent.class, Player.class, BoundExitEvent::getPlayer, 0);
     }
 
     private Literal<String> boundID;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
         boundID = (Literal<String>) args[0];

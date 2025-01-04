@@ -35,7 +35,7 @@ import org.bukkit.inventory.SmokingRecipe;
 @Description({"Register new cooking recipes. On 1.13+ you can register recipes for furnaces.",
         "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires.",
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
-        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"minecraft:\",",
+        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
         "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
         "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",})
 @Examples({"on skript load:",

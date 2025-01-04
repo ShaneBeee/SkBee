@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -11,21 +11,21 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Name("ItemFlag - ItemFlags of Items")
-@Description({"Get/Set the ItemFlags of an item. Delete/reset will remove all item flags.",
-    "As of Minecraft 1.20.5, the `hide attributes` flag doesn't work as intended. ",
-    "See [**SkBee Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Tricks-Hide-Attribute-Modifiers) for more info."})
+@Description({"Get/Set the ItemFlags of an item.",
+    "Removed if running Skript 2.10+ (now included in Skript)."})
 @Examples({"set {_flags::*} to item flags of player's tool",
-    "set item flags of player's tool to hide enchants",
     "add hide enchants to item flags of player's tool",
     "add hide attributes to item flags of player's tool",
     "add hide enchants and hide attributes to item flags of player's tool",
@@ -37,7 +37,9 @@ import java.util.List;
 public class ExprItemFlags extends PropertyExpression<ItemType, ItemFlag> {
 
     static {
-        register(ExprItemFlags.class, ItemFlag.class, "item[ ]flags", "itemtypes");
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            register(ExprItemFlags.class, ItemFlag.class, "item[ ]flags", "itemtypes");
+        }
     }
 
     @SuppressWarnings({"NullableProblems", "unchecked"})
@@ -59,41 +61,36 @@ public class ExprItemFlags extends PropertyExpression<ItemType, ItemFlag> {
 
     @SuppressWarnings("NullableProblems")
     @Override
-    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-        return switch (mode) {
-            case SET, ADD, REMOVE -> CollectionUtils.array(ItemFlag[].class);
-            case DELETE, RESET -> CollectionUtils.array();
-            default -> null;
-        };
+    public Class<?> @Nullable [] acceptChange(Changer.ChangeMode mode) {
+        if (mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE) {
+            return CollectionUtils.array(ItemFlag[].class);
+        } else if (mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.RESET) {
+            return CollectionUtils.array();
+        }
+        return null;
     }
 
     @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
-    public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (mode == ChangeMode.SET) {
-            if (delta != null && delta instanceof ItemFlag[] itemFlags) {
-                for (ItemType itemType : getExpr().getArray(event)) {
-                    ItemUtils.modifyItemMeta(itemType, itemMeta -> {
-                        itemMeta.removeItemFlags(ItemFlag.values());
-                        itemMeta.addItemFlags(itemFlags);
-                    });
-                }
-            }
-        } else if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
-            if (delta != null && delta instanceof ItemFlag[] itemFlags) {
-                for (ItemType itemType : getExpr().getArray(event)) {
-                    ItemUtils.modifyItemMeta(itemType, itemMeta -> {
-                        if (mode == ChangeMode.ADD) {
-                            itemMeta.addItemFlags(itemFlags);
-                        } else {
-                            itemMeta.removeItemFlags(itemFlags);
-                        }
-                    });
-                }
-            }
-        } else if (mode == ChangeMode.DELETE || mode == ChangeMode.RESET) {
+    public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
+        if (mode == Changer.ChangeMode.DELETE || mode == Changer.ChangeMode.RESET) {
             for (ItemType itemType : getExpr().getArray(event)) {
-                ItemUtils.modifyItemMeta(itemType, itemMeta -> itemMeta.removeItemFlags(ItemFlag.values()));
+                ItemMeta itemMeta = itemType.getItemMeta();
+                Set<ItemFlag> itemFlags = itemMeta.getItemFlags();
+                itemMeta.removeItemFlags(itemFlags.toArray(new ItemFlag[0]));
+                itemType.setItemMeta(itemMeta);
+            }
+        } else if (mode == Changer.ChangeMode.ADD || mode == Changer.ChangeMode.REMOVE) {
+            if (delta != null && delta instanceof ItemFlag[] itemFlags) {
+                for (ItemType itemType : getExpr().getArray(event)) {
+                    ItemMeta itemMeta = itemType.getItemMeta();
+                    if (mode == Changer.ChangeMode.ADD) {
+                        itemMeta.addItemFlags(itemFlags);
+                    } else {
+                        itemMeta.removeItemFlags(itemFlags);
+                    }
+                    itemType.setItemMeta(itemMeta);
+                }
             }
         }
     }

@@ -6,6 +6,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -27,14 +28,15 @@ import java.util.List;
 @Description({"Retrieve a cookie from a player. Requires Minecraft 1.20.5+",
     "Due to the retrieval process happening async, this will delay proceeding code.",
     "While the cookie is being retrieved, the following code will wait.",
-    "If there is no available cookie, the section will not execute.",
     "NOTE: Cookies are stored across server transfers."})
 @Examples({"command /server <string>:",
     "\ttrigger:",
     "\t\tstore cookie \"%uuid of player%-transfer\" with key \"transfer\" on player",
     "\t\ttransfer player to arg-1",
     "",
-    "on join:",
+    "# Connect event is recommended over join event",
+    "# This way if you have to kick the player it's done before they join",
+    "on connect:",
     "\t# only do a cookie check if player was transferred",
     "\tif player is transferred:",
     "\t\tretrieve cookie with key \"transfer\" from player:",
@@ -47,14 +49,16 @@ import java.util.List;
 public class SecTransferCookieRetrieve extends Section {
 
     static {
-        Skript.registerSection(SecTransferCookieRetrieve.class,
-            "retrieve cookie with key %namespacedkey/string% from %player%");
+        if (Skript.methodExists(Player.class, "retrieveCookie", NamespacedKey.class)) {
+            Skript.registerSection(SecTransferCookieRetrieve.class,
+                "retrieve cookie with key %namespacedkey/string% [from %player%]");
+        }
     }
 
     private Expression<?> key;
     private Expression<Player> player;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.key = exprs[0];
@@ -68,56 +72,42 @@ public class SecTransferCookieRetrieve extends Section {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         TriggerItem next = getNext();
 
-        //Let's save you guys for later after the cookie has loaded
-        Object localVars = Variables.removeLocals(event);
+        // Let's save you guys for later after the cookie has loaded
+        Object localVars = Variables.copyLocalVariables(event);
 
         Player player = this.player.getSingle(event);
         Object keyObject = this.key.getSingle(event);
         if (player == null || keyObject == null) return next;
 
-        NamespacedKey key;
+        NamespacedKey key = null;
         if (keyObject instanceof String string) {
             key = Util.getNamespacedKey(string, false);
         } else if (keyObject instanceof NamespacedKey namespacedKey) {
             key = namespacedKey;
-        } else {
-            return next;
         }
         if (key == null) return next;
 
         player.retrieveCookie(key).thenAccept(bytes -> {
-            String cookie = new String(bytes);
-            ExprTransferCookie.setLastTransferCookie(cookie);
-            walkNext(localVars, event, first, next);
-        }).exceptionally(throwable -> {
-            walkNext(localVars, event, null, next);
-            return null;
-        });
-        return null;
-    }
+            Delay.addDelayedEvent(event); // Delay event to make sure kick effect still works
+            ExprTransferCookie.setLastTransferCookie(bytes != null ? new String(bytes) : null);
+            // re-set local variables
+            if (localVars != null) Variables.setLocalVariables(event, localVars);
 
-    private static void walkNext(Object localVars, Event event, @Nullable TriggerItem sec, TriggerItem next) {
-        //re-set local variables
-        if (localVars != null) Variables.setLocalVariables(event, localVars);
+            if (this.first != null) {
+                // Walk the section if there is one
+                TriggerItem.walk(this.first, event);
+            }
 
-        // walk section
-        if (sec != null) {
-            // walk the section
-            TriggerItem.walk(sec, event);
+            // remove local vars as we're now done
+            Variables.removeLocals(event);
             // Clear cookie data before moving on
             ExprTransferCookie.setLastTransferCookie(null);
-        }
-
-        // walk next trigger
-        else if (next != null) TriggerItem.walk(next, event);
-
-        // remove local vars as we're now done
-        Variables.removeLocals(event);
+        });
+        return null;
     }
 
     @Override

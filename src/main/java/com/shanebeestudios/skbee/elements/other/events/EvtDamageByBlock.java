@@ -7,7 +7,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
@@ -20,31 +19,26 @@ public class EvtDamageByBlock extends SkriptEvent {
 
     static {
         Skript.registerEvent("Damage By Block", EvtDamageByBlock.class, EntityDamageByBlockEvent.class,
-                        "damag(e|ing) [of %-entitydata%] (by|from) (block|%itemtypes/blockdatas%)")
-                .description("Called when an entity is damaged by a block.",
-                        "Anything that works in vanilla Skript's damage event (victim/damage cause/damage/final damage)",
-                        "will all work in this event too.",
-                        "\n`victim` = Same as vanilla Skript, `victim` is used to get the damaged entity.",
-                        "\n`event-block` = The block that damaged the entity")
-                .examples("on damage of player by sweet berry bush:",
-                        "\tcancel event",
-                        "",
-                        "on damage by block:",
-                        "\tbroadcast \"%victim% was damaged by %type of event-block%\"")
-                .since("3.0.2");
+                "damag(e|ing) [of %-entitydata%] (by|from) (block|%itemtypes/blockdatas%)")
+            .description("Called when an entity is damaged by a block.",
+                "Anything that works in vanilla Skript's damage event (victim/damage cause/damage/final damage)",
+                "will all work in this event too.",
+                "\n`victim` = Same as vanilla Skript, `victim` is used to get the damaged entity.",
+                "\n`event-block` = The block that damaged the entity")
+            .examples("on damage of player by sweet berry bush:",
+                "\tcancel event",
+                "",
+                "on damage by block:",
+                "\tbroadcast \"%victim% was damaged by %type of event-block%\"")
+            .since("3.0.2");
 
-        EventValues.registerEventValue(EntityDamageByBlockEvent.class, Block.class, new Getter<>() {
-            @Override
-            public @Nullable Block get(EntityDamageByBlockEvent event) {
-                return event.getDamager();
-            }
-        }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(EntityDamageByBlockEvent.class, Block.class, EntityDamageByBlockEvent::getDamager, EventValues.TIME_NOW);
     }
 
     private Literal<EntityData<?>> entityType;
     private Literal<?> blockType;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
         this.entityType = (Literal<EntityData<?>>) args[0];
@@ -52,7 +46,6 @@ public class EvtDamageByBlock extends SkriptEvent {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
         if (event instanceof EntityDamageByBlockEvent damageEvent) {

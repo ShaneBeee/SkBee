@@ -7,6 +7,9 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -14,6 +17,7 @@ import org.bukkit.NamespacedKey;
 import org.bukkit.RegionAccessor;
 import org.bukkit.UnsafeValues;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -41,6 +45,15 @@ public class ExprBiomeKeyLocation extends SimplePropertyExpression<Location, Nam
     }
 
     @Override
+    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        if (Biome.class.isInterface()) {
+            Skript.warning("Deprecated, you can just set the biome now.");
+        }
+        return super.init(expressions, matchedPattern, isDelayed, parseResult);
+    }
+
+    @SuppressWarnings("removal")
+    @Override
     public @Nullable NamespacedKey convert(Location from) {
         World world = from.getWorld();
         if (world != null) {
@@ -49,14 +62,13 @@ public class ExprBiomeKeyLocation extends SimplePropertyExpression<Location, Nam
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(NamespacedKey.class);
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
+    @SuppressWarnings("removal")
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof NamespacedKey key) {
@@ -64,7 +76,7 @@ public class ExprBiomeKeyLocation extends SimplePropertyExpression<Location, Nam
                 World world = loc.getWorld();
                 if (world != null) {
                     try {
-                        UNSAFE.setBiomeKey(world, loc.blockX(), loc.blockY(), loc.blockZ(), key);
+                        UNSAFE.setBiomeKey(world, loc.getBlockX(), loc.getBlockY(), loc.getBlockZ(), key);
                     } catch (IllegalStateException ignore) {
 
                     }

@@ -1,4 +1,4 @@
-test "memory value":
+test "SkBee - memory value":
 
     set {_l} to location(1,100,1)
     spawn a villager at {_l}

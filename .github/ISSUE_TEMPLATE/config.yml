@@ -1,8 +1,11 @@
 blank_issues_enabled: false
 contact_links:
-  - name: 🦆 skUnity Discord
-    url: https://discord.gg/skript
-    about: For general help with SkBee join skUnity's Discord
+  - name: 📖 Skript Hub Docs
+    url: https://skripthub.net/docs/
+    about: Find SkBee's docs and 100's of examples on Skript Hub
+  - name: 💻 Skript Hub Discord
+    url: https://discord.gg/da9n4S7
+    about: For general help with Skript & SkBee ask in the #skript-help channel in the Skript Hub discord
   - name: 🚰 SpigotMC Resource
     url: https://www.spigotmc.org/resources/skbee-skript-addon.75839/
-    about: Read about SkBee!
+    about: Read about SkBee on spigot!

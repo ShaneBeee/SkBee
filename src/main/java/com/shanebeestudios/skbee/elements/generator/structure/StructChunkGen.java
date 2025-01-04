@@ -66,7 +66,7 @@ import org.skriptlang.skript.lang.structure.Structure;
     "\t\t# Set our biome to something mars like",
     "\t\tset chunkdata biome to crimson forest"})
 @Since("3.5.0")
-public class StructChunkGen extends Structure {
+public class StrucChunkGen extends Structure {
 
     static {
         EntryValidator validator = EntryValidator.builder()
@@ -79,26 +79,26 @@ public class StructChunkGen extends Structure {
             .addSection("height gen", true)
             .addSection("block pop", true)
             .build();
-        Skript.registerStructure(StructChunkGen.class, validator, "register chunk generator with id %string%");
+        Skript.registerStructure(StrucChunkGen.class, validator, "register chunk generator with id %string%");
     }
 
     private Literal<String> id;
+    private EntryContainer entryContainer;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, EntryContainer entryContainer) {
         this.id = (Literal<String>) args[0];
+        this.entryContainer = entryContainer;
         return true;
     }
 
     @Override
     public boolean load() {
-        EntryContainer entryContainer = getEntryContainer();
-
-        SectionNode chunkNode = entryContainer.getOptional("chunk gen", SectionNode.class, false);
-        SectionNode biomeNode = entryContainer.getOptional("biome gen", SectionNode.class, false);
-        SectionNode heightNode = entryContainer.getOptional("height gen", SectionNode.class, false);
-        SectionNode blockNode = entryContainer.getOptional("block pop", SectionNode.class, false);
+        SectionNode chunkNode = this.entryContainer.getOptional("chunk gen", SectionNode.class, false);
+        SectionNode biomeNode = this.entryContainer.getOptional("biome gen", SectionNode.class, false);
+        SectionNode heightNode = this.entryContainer.getOptional("height gen", SectionNode.class, false);
+        SectionNode blockNode = this.entryContainer.getOptional("block pop", SectionNode.class, false);
 
         Script currentScript = getParser().getCurrentScript();
         ChunkGen chunkGen = ChunkGenManager.registerOrGetGenerator(this.id.getSingle(), chunkNode != null, biomeNode != null);
@@ -106,13 +106,13 @@ public class StructChunkGen extends Structure {
         if (chunkNode != null) {
             ChunkGenerator chunkGenerator = chunkGen.getChunkGenerator();
             if (chunkGenerator != null) {
-                boolean vanillaDecor = Boolean.TRUE.equals(entryContainer.getOptional("vanilla decor", Boolean.class, true));
+                boolean vanillaDecor = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla decor", Boolean.class, true));
                 chunkGenerator.setVanillaDecor(vanillaDecor);
-                boolean vanillaCaves = Boolean.TRUE.equals(entryContainer.getOptional("vanilla caves", Boolean.class, true));
+                boolean vanillaCaves = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla caves", Boolean.class, true));
                 chunkGenerator.setVanillaCaves(vanillaCaves);
-                boolean vanillaStructures = Boolean.TRUE.equals(entryContainer.getOptional("vanilla structures", Boolean.class, true));
+                boolean vanillaStructures = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla structures", Boolean.class, true));
                 chunkGenerator.setVanillaStructures(vanillaStructures);
-                boolean vanillaMobs = Boolean.TRUE.equals(entryContainer.getOptional("vanilla mobs", Boolean.class, true));
+                boolean vanillaMobs = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla mobs", Boolean.class, true));
                 chunkGenerator.setVanillaMobs(vanillaMobs);
 
                 getParser().setCurrentEvent("ChunkGenSection", ChunkGenEvent.class);
@@ -146,29 +146,6 @@ public class StructChunkGen extends Structure {
             }
         }
         return true;
-    }
-
-    @Override
-    public @NotNull Priority getPriority() {
-        // For Reference:
-        // 15 = ch.njol.skript.structures.StructUsing
-        // 100 = ch.njol.skript.structures.StructOptions
-        // 150 = org.skriptlang.reflect.java.elements.structures.StructImport
-        // 200 = ch.njol.skript.structures.StructAliases
-        // 300 = ch.njol.skript.structures.StructVariables
-        // 350 = org.skriptlang.reflect.syntax.condition.elements.StructCustomCondition
-        // 350 = org.skriptlang.reflect.syntax.effect.elements.StructCustomEffect
-        // 350 = org.skriptlang.reflect.syntax.event.elements.StructCustomEvent
-        // 350 = org.skriptlang.reflect.syntax.expression.elements.StructCustomConstant
-        // 350 = org.skriptlang.reflect.syntax.expression.elements.StructCustomExpression
-        // 400 = ch.njol.skript.structures.StructFunction
-        // 401 = com.shanebeestudios.skbee.elements.generator.structure.StructChunkGen
-        // 500 = ch.njol.skript.structures.StructCommand
-        // 600 = ch.njol.skript.structures.StructEvent
-        // Load after Options/Aliases/Variables/Function/CustomSyntax structures
-        // Load before Command/Event structures
-        // This ensures custom chunk generators can be used in WorldCreator within the load event
-        return new Priority(401);
     }
 
     @Override

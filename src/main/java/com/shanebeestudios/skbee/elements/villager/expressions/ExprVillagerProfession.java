@@ -8,21 +8,25 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Villager.Profession;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Villager - Profession")
-@Description("Represents the profession of a villager.")
+@Description({"Represents the profession of a villager.",
+    "Removed if running Skript 2.10+ (now included in Skript)."})
 @Examples("set profession of target entity to nitwit profession")
 @Since("1.17.0")
 public class ExprVillagerProfession extends SimplePropertyExpression<LivingEntity, Profession> {
 
     static {
-        register(ExprVillagerProfession.class, Profession.class, "profession", "livingentities");
+        if (!Util.IS_RUNNING_SKRIPT_2_10) {
+            register(ExprVillagerProfession.class, Profession.class, "profession", "livingentities");
+        }
     }
 
     @Override

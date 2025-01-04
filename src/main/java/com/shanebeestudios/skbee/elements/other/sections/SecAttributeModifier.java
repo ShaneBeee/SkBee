@@ -165,7 +165,7 @@ public class SecAttributeModifier extends Section {
             UUID uuid;
             try {
                 uuid = UUID.fromString(uuidString);
-            } catch (IllegalArgumentException ignore) {
+            } catch (IllegalArgumentException | NullPointerException ignore) {
                 uuid = UUID.randomUUID();
             }
             if (name == null) return super.walk(event, false);
