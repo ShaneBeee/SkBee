@@ -6,9 +6,6 @@ contact_links:
   - name: 💻 Skript Hub Discord
     url: https://discord.gg/da9n4S7
     about: For general help with Skript & SkBee ask in the #skript-help channel in the Skript Hub discord
-  - name: 🐝 Original skBee repository
-    url: https://github.com/ShaneBeee/SkBee
-    about: Check out the original SkBee repository
-  - name: 🚰 Original skBee SpigotMC Resource
+  - name: 🚰 SpigotMC Resource
     url: https://www.spigotmc.org/resources/skbee-skript-addon.75839/
     about: Read about SkBee on spigot!
