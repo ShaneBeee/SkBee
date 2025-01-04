@@ -57,21 +57,10 @@ public class ExprItemModel extends SimplePropertyExpression<Object, String> {
 
     @Override
     public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-        if (delta != null && delta[0] instanceof String string) {
-            NamespacedKey namespacedKey = Util.getNamespacedKey(string, false);
-            if (namespacedKey == null) return;
+        String string = delta != null && delta[0] instanceof String s ? s : null;
+        NamespacedKey key = Util.getNamespacedKey(string, false);
 
-            Key key = namespacedKey.key();
-            ItemUtils.modifyItems(getExpr().getArray(event), itemStack ->
-                itemStack.setData(DataComponentTypes.ITEM_MODEL, key));
-        } else {
-            ItemUtils.modifyItems(getExpr().getArray(event), itemStack -> {
-                if (mode == ChangeMode.DELETE)
-                    itemStack.unsetData(DataComponentTypes.ITEM_MODEL);
-                else
-                    itemStack.resetData(DataComponentTypes.ITEM_MODEL);
-            });
-        }
+        ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.ITEM_MODEL, key);
     }
 
     @Override

@@ -58,15 +58,7 @@ public class ExprEnchantmentGlintOverride extends SimplePropertyExpression<Objec
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Boolean glint = delta != null && delta[0] instanceof Boolean bool ? bool : null;
 
-        ItemUtils.modifyItems(getExpr().getArray(event), itemStack -> {
-            if (mode == ChangeMode.SET && glint != null) {
-                itemStack.setData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, glint);
-            } else if (mode == ChangeMode.RESET) {
-                itemStack.unsetData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE);
-            } else if (mode == ChangeMode.DELETE) {
-                itemStack.resetData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE);
-            }
-        });
+        ItemUtils.modifyComponent(getExpr().getArray(event),  mode, DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, glint);
     }
 
     @Override

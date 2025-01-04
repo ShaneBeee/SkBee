@@ -60,15 +60,7 @@ public class ExprEnchantableComponent extends SimplePropertyExpression<Object, N
         int value = delta != null && delta[0] instanceof Number number ? number.intValue() : 0;
         Enchantable enchantable = Enchantable.enchantable(Math.max(1, value));
 
-        ItemUtils.modifyItems(getExpr().getArray(event), itemStack -> {
-            if (mode == ChangeMode.SET) {
-                itemStack.setData(DataComponentTypes.ENCHANTABLE, enchantable);
-            } else if (mode == ChangeMode.RESET) {
-                itemStack.resetData(DataComponentTypes.ENCHANTABLE);
-            } else if (mode == ChangeMode.DELETE) {
-                itemStack.unsetData(DataComponentTypes.ENCHANTABLE);
-            }
-        });
+        ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.ENCHANTABLE, enchantable);
     }
 
     @Override

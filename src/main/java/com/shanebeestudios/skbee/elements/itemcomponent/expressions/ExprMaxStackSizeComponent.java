@@ -54,15 +54,8 @@ public class ExprMaxStackSizeComponent extends SimplePropertyExpression<Object, 
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Integer maxStackSize = delta != null && delta[0] instanceof Number num ? MathUtil.clamp(num.intValue(), 1, 99) : null;
-        ItemUtils.modifyItems(getExpr().getArray(event), itemStack -> {
-            if (mode == ChangeMode.SET && maxStackSize != null) {
-                itemStack.setData(DataComponentTypes.MAX_STACK_SIZE, maxStackSize);
-            } else if (mode == ChangeMode.DELETE) {
-                itemStack.unsetData(DataComponentTypes.MAX_STACK_SIZE);
-            } else if (mode == ChangeMode.RESET) {
-                itemStack.resetData(DataComponentTypes.MAX_STACK_SIZE);
-            }
-        });
+
+        ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.MAX_STACK_SIZE, maxStackSize);
     }
 
     @Override
