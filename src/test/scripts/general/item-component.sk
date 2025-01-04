@@ -96,6 +96,14 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
     reset repair cost component of {_i}
     assert repair cost component of {_i} = 0 with "Reset repair cost component of diamond axe should be 0"
 
+    # Tooltip Style
+    set {_i} to 1 of stick
+    assert tooltip style of {_i} is not set with "Default stick should not have a tooltip style"
+    set tooltip style of {_i} to "blah:blah"
+    assert tooltip style of {_i} is "blah:blah" with "Setting the style should now be 'blah:blah'"
+    delete tooltip style of {_i}
+    assert tooltip style of {_i} is not set with "Deleting should remove the style"
+
     # Use Cooldown
     set {_i} to 1 of apple
     parse:
