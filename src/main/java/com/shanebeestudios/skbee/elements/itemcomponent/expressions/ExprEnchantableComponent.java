@@ -58,8 +58,8 @@ public class ExprEnchantableComponent extends SimplePropertyExpression<Object, N
 
     @Override
     public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-        int value = delta != null && delta[0] instanceof Number number ? Math.max(0, number.intValue()) : 0;
-        Enchantable enchantable = Enchantable.enchantable(value);
+        int value = delta != null && delta[0] instanceof Number number ? number.intValue() : 0;
+        Enchantable enchantable = Enchantable.enchantable(Math.max(1, value));
 
         ItemUtils.modifyItems(getExpr().getArray(event), itemStack -> {
             if (mode == ChangeMode.SET) {
