@@ -96,6 +96,23 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
     reset repair cost component of {_i}
     assert repair cost component of {_i} = 0 with "Reset repair cost component of diamond axe should be 0"
 
+    # Tool
+    set {_i} to 1 of stick
+    parse:
+        apply tool component to {_i}:
+            default_mining_speed: 2.3
+            damage_per_block: 2
+            rules:
+                apply tool rule:
+                    block_tag: minecraft block tag "minecraft:dirt"
+                    speed: 1.0
+                    correct_for_drops: true
+                apply tool rule:
+                    block_types: granite, stone and andesite
+                    speed: 5.5
+                    correct_for_drops: false
+    assert parse logs are not set with "Applying a tool should have run normally"
+
     # Tooltip Style
     set {_i} to 1 of stick
     assert tooltip style of {_i} is not set with "Default stick should not have a tooltip style"
