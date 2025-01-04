@@ -19,7 +19,6 @@ import org.jetbrains.annotations.Nullable;
     "Positive integer representing the item's enchantability. A higher value allows enchantments with a higher cost to be picked.",
     "Requires Paper 1.21.3+",
     "See [**Enchantable Component**](https://minecraft.wiki/w/Data_component_format#enchantable) on McWiki for more details.",
-    "Requires Paper 1.21.3+",
     "",
     "**Changers**:",
     "- `set` = Allows you to override the glint.",
