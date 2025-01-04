@@ -10,7 +10,6 @@ import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.util.Getter;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
@@ -34,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
 
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
+
     static {
         Skript.registerExpression(ExprBoundCoords.class, Object.class, ExpressionType.PROPERTY,
             "lesser (x|1:y|2:z) coord[inate] of [bound] %bound%",
@@ -63,18 +63,15 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
     @SuppressWarnings("NullableProblems")
     @Override
     protected Object[] get(Event event, Bound[] bounds) {
-        return get(bounds, new Getter<>() {
-            @Override
-            public Object get(Bound bound) {
-                if (WORLD) {
-                    return bound.getWorld();
-                } else {
-                    return switch (parse) {
-                        case 0 -> LESSER ? bound.getLesserCorner().getX() : bound.getGreaterCorner().getX();
-                        case 1 -> LESSER ? bound.getLesserCorner().getY() : bound.getGreaterCorner().getY();
-                        default -> LESSER ? bound.getLesserCorner().getZ() : bound.getGreaterCorner().getZ();
-                    };
-                }
+        return get(bounds, bound -> {
+            if (WORLD) {
+                return bound.getWorld();
+            } else {
+                return switch (parse) {
+                    case 0 -> LESSER ? bound.getLesserCorner().getX() : bound.getGreaterCorner().getX();
+                    case 1 -> LESSER ? bound.getLesserCorner().getY() : bound.getGreaterCorner().getY();
+                    default -> LESSER ? bound.getLesserCorner().getZ() : bound.getGreaterCorner().getZ();
+                };
             }
         });
     }
