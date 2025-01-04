@@ -3,22 +3,20 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
     # Consumable section
     set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
     set {_i} to 1 of stick
-    parse:
-        apply consumable component to {_i}:
-            consume_seconds: 3.2 seconds
-            animation: "brush"
-            sound: "block.stone.break"
-            has_consume_particles: false
-            on_consume_effects: {_effects}
-    assert parse logs are not set with "Applying consumable should have run normally"
+    apply consumable component to {_i}:
+        consume_seconds: 3.2 seconds
+        animation: "brush"
+        sound: "block.stone.break"
+        has_consume_particles: false
+        on_consume_effects: {_effects}
+    assert {_i} has item component minecraft:consumable with "The stick should have a consumable component"
 
     # Death Protection Section
     set {_i} to 1 of diamond sword
     set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
-    parse:
-        apply death protection component to {_i}:
-            death_effects: {_effects}
-    assert parse logs are not set with "Applying death protection should have run normally"
+    apply death protection component to {_i}:
+        death_effects: {_effects}
+    assert {_i} has item component minecraft:death_protection with "The diamond sword should have a death protection component"
 
     # Enchantable
     set {_i} to 1 of diamond sword
@@ -40,27 +38,25 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 
     # Equippable Section
     set {_i} to 1 of stick
-    parse:
-        apply equippable component to {_i}:
-            slot: hand_slot
-            equip_sound: "entity.player.burp"
-            asset_id: "my_pack:some_asset"
-            allowed_entity_types: player, evoker
-            allowed_entity_tags: minecraft entity tag "undead"
-            dispensable: false
-            swappable: true
-            damage_on_hurt: true
-            camera_overlay: "my_pack:some_overlay"
-    assert parse logs are not set with "Applying equippable should have run normally"
+    apply equippable component to {_i}:
+        slot: hand_slot
+        equip_sound: "entity.player.burp"
+        asset_id: "my_pack:some_asset"
+        allowed_entity_types: player, evoker
+        allowed_entity_tags: minecraft entity tag "undead"
+        dispensable: false
+        swappable: true
+        damage_on_hurt: true
+        camera_overlay: "my_pack:some_overlay"
+    assert {_i} has item component minecraft:equippable with "The stick should have an equippable component"
 
     # Food section
     set {_i} to 1 of stick
-    parse:
-        apply food component to {_i}:
-            nutrition: 10
-            saturation: 32
-            can_always_eat: true
-    assert parse logs are not set with "Applying food should have run normally"
+    apply food component to {_i}:
+        nutrition: 10
+        saturation: 32
+        can_always_eat: true
+    assert {_i} has item component minecraft:food with "The stick should have a food component"
 
     # Item Model
     set {_i} to 1 of diamond sword
@@ -98,20 +94,19 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 
     # Tool
     set {_i} to 1 of stick
-    parse:
-        apply tool component to {_i}:
-            default_mining_speed: 2.3
-            damage_per_block: 2
-            rules:
-                apply tool rule:
-                    block_tag: minecraft block tag "minecraft:dirt"
-                    speed: 1.0
-                    correct_for_drops: true
-                apply tool rule:
-                    block_types: granite, stone and andesite
-                    speed: 5.5
-                    correct_for_drops: false
-    assert parse logs are not set with "Applying a tool should have run normally"
+    apply tool component to {_i}:
+        default_mining_speed: 2.3
+        damage_per_block: 2
+        rules:
+            apply tool rule:
+                block_tag: minecraft block tag "minecraft:dirt"
+                speed: 1.0
+                correct_for_drops: true
+            apply tool rule:
+                block_types: granite, stone and andesite
+                speed: 5.5
+                correct_for_drops: false
+    assert {_i} has item component minecraft:tool with "The stick should have a tool component"
 
     # Tooltip Style
     set {_i} to 1 of stick
@@ -123,11 +118,10 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 
     # Use Cooldown
     set {_i} to 1 of apple
-    parse:
-        apply use cooldown to {_i}:
-            seconds: 5 seconds
-            group: "blah:special_apple"
-    assert parse logs are not set with "Applying use cooldown should have run normally"
+    apply use cooldown to {_i}:
+        seconds: 5 seconds
+        group: "blah:special_apple"
+    assert {_i} has item component minecraft:use_cooldown with "The apple should have a use cooldown component"
 
     # Use Remainder
     set {_i} to 1 of honey bottle

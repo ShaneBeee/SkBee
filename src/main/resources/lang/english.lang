@@ -21,6 +21,7 @@ types:
     criteria: criteria¦s
     damagesource: damage source¦s
     damagetype: damage type¦s
+    datacomponenttype: data component type¦s
     displaybillboard: display billboard¦s
     displaybrightness: display brightness¦es
     displayslot: display slot¦s

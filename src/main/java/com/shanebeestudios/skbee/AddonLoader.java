@@ -127,6 +127,7 @@ public class AddonLoader {
         loadWorldBorderElements();
         loadWorldCreatorElements();
         loadChunkGenElements();
+        loadTestingElements();
 
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
@@ -597,6 +598,16 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.itemcomponent");
             Util.logLoading("&5Item Component Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadTestingElements() {
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.testing");
+            Util.logLoading("&5Testing Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);
