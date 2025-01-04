@@ -78,6 +78,23 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
     reset max stack size component of {_i}
     assert max stack size component of {_i} = 64 with "Reset max stack size component should be 64 for oak planks"
 
+    # Repairable
+    set {_i} to 1 of stick
+    assert repairable items of {_i} is not set with "A stick should not have any repairable items"
+    set repairable items of {_i} to diamond, emerald and iron ingot
+    assert repairable items of {_i} is set with "The stick should now have repairable items"
+    assert size of (repairable items of {_i}) is 3 with "The stick should have 3 repairable items"
+    set {_i} to 1 of diamond sword
+    assert repairable items of {_i} is set with "A diamond sword should have repairable items"
+    delete repairable items of {_i}
+    assert repairable items of {_i} is not set with "After deletion, should no longer have repairable items"
+    reset repairable items of {_i}
+    assert repairable items of {_i} is set with "After reset, should have repairable items"
+    set {_tag} to repairable tag of {_i}
+    assert {_tag} is minecraft item tag "diamond_tool_materials" with "Tag should match"
+    set {_i::*} to repairable items of {_i}
+    assert {_i::*} is set with "The list of items should be set"
+
     # Repair Cost
     set {_i} to 1 of diamond axe
     assert repair cost component of {_i} = 0 with "Default repair cost component of diamond axe should be 0"
