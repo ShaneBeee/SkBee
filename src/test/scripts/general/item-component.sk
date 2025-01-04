@@ -1,0 +1,96 @@
+test "SkBee - Item Component test" when running minecraft "1.21.3":
+
+    # Consumable section
+    set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
+    set {_i} to 1 of stick
+    parse:
+        apply consumable component to {_i}:
+            consume_seconds: 3.2 seconds
+            animation: "brush"
+            sound: "block.stone.break"
+            has_consume_particles: false
+            on_consume_effects: {_effects}
+    assert parse logs are not set with "Applying consumable should have run normally"
+
+    # Death Protection Section
+    set {_i} to 1 of diamond sword
+    set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
+    parse:
+        apply death protection component to {_i}:
+            death_effects: {_effects}
+    assert parse logs are not set with "Applying death protection should have run normally"
+
+    # Enchantable
+    set {_i} to 1 of diamond sword
+    assert enchantable component of {_i} = 10 with "Default enchantable of a diamond sword should be 10"
+    set enchantable component of {_i} to 3
+    assert enchantable component of {_i} = 3 with "Setting should change the value to 3"
+    delete enchantable component of {_i}
+    assert enchantable component of {_i} is not set with "Deleting the component should have no return value"
+    reset enchantable component of {_i}
+    assert enchantable component of {_i} = 10 with "Reset enchantable of a diamond sword should be back 10"
+
+    # Enchantment Glint Override
+    set {_i} to 1 of diamond axe
+    assert enchantment glint override of {_i} is not set with "Default item should not have a glint override"
+    set enchantment glint override of {_i} to true
+    assert enchantment glint override of {_i} = true with "Modified glint should be true"
+    delete enchantment glint override of {_i}
+    assert enchantment glint override of {_i} is not set with "Reset should not have a glint override"
+
+    # Equippable Section
+    set {_i} to 1 of stick
+    parse:
+        apply equippable component to {_i}:
+            slot: hand_slot
+            equip_sound: "entity.player.burp"
+            asset_id: "my_pack:some_asset"
+            allowed_entity_types: player, evoker
+            allowed_entity_tags: minecraft entity tag "undead"
+            dispensable: false
+            swappable: true
+            damage_on_hurt: true
+            camera_overlay: "my_pack:some_overlay"
+    assert parse logs are not set with "Applying equippable should have run normally"
+
+    # Item Model
+    set {_i} to 1 of diamond sword
+    assert item model of {_i} = "minecraft:diamond_sword" with "Default item model of a diamond sword should be 'minecraft:diamond_sword'"
+    set item model of {_i} to "test:test"
+    assert item model of {_i} = "test:test" with "Modified item model of item should be 'test:test'"
+    delete item model of {_i}
+    assert item model of {_i} is not set with "After delete, no model should be present"
+    reset item model of {_i}
+    assert item model of {_i} = "minecraft:diamond_sword" with "Reset item model of a diamond sword should be 'minecraft:diamond_sword'"
+
+    # Max Stack Size
+    set {_i} to 1 of oak planks
+    assert max stack size component of {_i} = 64 with "Default max stack size component should be 64 for oak planks"
+    set max stack size component of {_i} to 16
+    assert max stack size component of {_i} = 16 with "Modified max stack size should be 16"
+    delete max stack size component of {_i}
+    assert max stack size component of {_i} is not set with "Deleting component should result in no return"
+    reset max stack size component of {_i}
+    assert max stack size component of {_i} = 64 with "Reset max stack size component should be 64 for oak planks"
+
+    # Repair Cost
+    set {_i} to 1 of diamond axe
+    assert repair cost component of {_i} = 0 with "Default repair cost component of diamond axe should be 0"
+    add 5 to repair cost component of {_i}
+    assert repair cost component of {_i} = 5 with "Add 5 to repair cost component should result in 5"
+    remove 2 from repair cost component of {_i}
+    assert repair cost component of {_i} = 3 with "Remove 2 from repair cost component should result in 3"
+    remove 10 from repair cost component of {_i}
+    assert repair cost component of {_i} = 0 with "Remove 10 from repair cost component should result in 0"
+    delete repair cost component of {_i}
+    assert repair cost component of {_i} is not set with "Delete should remove the component"
+    reset repair cost component of {_i}
+    assert repair cost component of {_i} = 0 with "Reset repair cost component of diamond axe should be 0"
+
+    # Consume Effect Functions
+    set {_c::1} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
+    set {_c::2} to remove_effects(poison and night vision)
+    set {_c::3} to clear_all_effects()
+    set {_c::4} to teleport_randomly(15)
+    set {_c::5} to play_sound("minecraft:block.stone.break")
+    assert size of {_c::*} = 5 with "5 consume effects should have been created"
