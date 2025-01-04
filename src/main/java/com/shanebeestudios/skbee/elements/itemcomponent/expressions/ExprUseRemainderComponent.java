@@ -2,7 +2,9 @@ package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
@@ -21,6 +23,10 @@ import org.jetbrains.annotations.Nullable;
     "- `set` = Set the item to be replaced with.",
     "- `reset` = Reset back to default state.",
     "- `delete` = Will delete any value (vanilla or not)."})
+@Examples({"set use remainder of player's tool to 1 of glass bottle",
+    "delete use remainder of {_item}",
+    "reset use remainder of {_item}"})
+@Since("INSERT VERSION")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprUseRemainderComponent extends SimplePropertyExpression<Object, ItemStack> {
 
