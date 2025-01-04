@@ -58,6 +58,14 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
         can_always_eat: true
     assert {_i} has item component minecraft:food with "The stick should have a food component"
 
+    # Glider
+    set {_i} to 1 of elytra
+    assert glider component of {_i} = true with "Elytra should have a glider by default"
+    delete glider component of {_i}
+    assert glider component of {_i} is not set with "After deleting, item should no longer have a glider"
+    reset glider component of {_i}
+    assert glider component of {_i} = true with "After reset, item should have a glider"
+
     # Item Model
     set {_i} to 1 of diamond sword
     assert item model of {_i} = "minecraft:diamond_sword" with "Default item model of a diamond sword should be 'minecraft:diamond_sword'"
