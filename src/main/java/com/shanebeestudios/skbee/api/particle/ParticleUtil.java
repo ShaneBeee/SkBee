@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Utility class for {@link Particle particles}
  */
-@SuppressWarnings("CallToPrintStackTrace")
+@SuppressWarnings({"CallToPrintStackTrace", "UnstableApiUsage"})
 public class ParticleUtil {
 
     private ParticleUtil() {
@@ -39,6 +39,10 @@ public class ParticleUtil {
 
     private static final Map<String, Particle> PARTICLES = new HashMap<>();
     private static final Map<Particle, String> PARTICLE_NAMES = new HashMap<>();
+    private static final boolean HAS_PLAYER_FORCE = Skript.methodExists(Player.class, "spawnParticle",
+        Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class);
+    // Added in Minecraft 1.21.4
+    public static final boolean HAS_TRAIL = Skript.classExists("org.bukkit.Particle$Trail");
 
     static {
         // Added in Spigot 1.20.2 (oct 20/2023)
@@ -145,6 +149,8 @@ public class ParticleUtil {
             return "number(float)";
         } else if (dataType == Color.class) {
             return "color/bukkitcolor";
+        } else if (HAS_TRAIL && dataType == Particle.Trail.class) {
+            return "trail";
         }
         // For future particle data additions that haven't been added here yet
         Util.debug("Missing particle data type: '&e" + dataType.getName() + "&7'");
@@ -165,7 +171,11 @@ public class ParticleUtil {
         } else {
             for (Player player : players) {
                 assert player != null;
-                player.spawnParticle(particle, location, count, x, y, z, extra, particleData, force);
+                if (HAS_PLAYER_FORCE) {
+                    player.spawnParticle(particle, location, count, x, y, z, extra, particleData, force);
+                } else {
+                    player.spawnParticle(particle, location, count, x, y, z, extra, particleData);
+                }
             }
         }
     }
@@ -200,6 +210,8 @@ public class ParticleUtil {
                     return material.createBlockData();
                 }
             }
+        } else if (HAS_TRAIL && dataType == Particle.Trail.class && data instanceof Particle.Trail) {
+            return data;
         }
         return null;
     }

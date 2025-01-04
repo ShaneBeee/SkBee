@@ -71,7 +71,7 @@ public class SkBee extends JavaPlugin {
         String version = getDescription().getVersion();
         if (version.contains("-")) {
             Util.log("&eThis is a BETA build, things may not work as expected, please report any bugs on GitHub");
-            Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
+            Util.log("&ehttps://github.com/SkriptHub/SkBee/issues");
         }
 
         new UpdateChecker(this);

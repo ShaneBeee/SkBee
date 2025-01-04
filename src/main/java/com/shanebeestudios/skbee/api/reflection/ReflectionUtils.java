@@ -18,6 +18,7 @@ public class ReflectionUtils {
 
     private static final String CRAFTBUKKIT_PACKAGE = Bukkit.getServer().getClass().getPackage().getName();
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
+    private static final boolean MAPPED_SERVER = Skript.classExists("net.minecraft.world.level.Level");
 
     /**
      * Get a CraftBukkit class
@@ -27,14 +28,7 @@ public class ReflectionUtils {
      */
     public static @Nullable Class<?> getOBCClass(String obcClassString) {
         String name = CRAFTBUKKIT_PACKAGE + "." + obcClassString;
-        try {
-            return Class.forName(name);
-        } catch (ClassNotFoundException e) {
-            if (DEBUG) {
-                e.printStackTrace();
-            }
-            return null;
-        }
+        return getClass(name);
     }
 
     /**
@@ -44,8 +38,27 @@ public class ReflectionUtils {
      * @return Minecraft class
      */
     public static @Nullable Class<?> getNMSClass(String nmsClass) {
+        return getClass(nmsClass);
+    }
+
+    /**
+     * Get a Minecraft class with an optional Bukkit mapping alternative
+     *
+     * @param nmsClass      Path of class to get (ex: "net.minecraft.world.entity.Entity")
+     * @param bukkitMapping Optional Bukkit mapping for NMS class (just the class, not the package)
+     * @return Minecraft class
+     */
+    public static @Nullable Class<?> getNMSClass(String nmsClass, String bukkitMapping) {
+        if (!MAPPED_SERVER) {
+            String split = nmsClass.substring(0, nmsClass.lastIndexOf("."));
+            nmsClass = split + "." + bukkitMapping;
+        }
+        return getClass(nmsClass);
+    }
+
+    private static @Nullable Class<?> getClass(String className) {
         try {
-            return Class.forName(nmsClass);
+            return Class.forName(className);
         } catch (ClassNotFoundException e) {
             if (DEBUG) {
                 e.printStackTrace();

@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.config;
 
+import ch.njol.skript.test.runner.TestMode;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import com.shanebeestudios.skbee.SkBee;
@@ -115,6 +116,7 @@ public class Config {
     }
 
     private boolean getElement(String element) {
+        if (TestMode.ENABLED) return true;
         return this.config.getBoolean("elements." + element);
     }
 

@@ -23,15 +23,25 @@ test "SkBee - simple nbt compound":
     delete {_n}
 
     set {_i} to diamond sword with custom model data 1
+    set max damage of {_i} to 25
     set {_n} to nbt of {_i}
 
     # Test that tag of item nbt is set
-    assert int tag "minecraft:custom_model_data" of {_n} is set with "tag ""minecraft:custom_model_data"" of an item should be set"
-    assert int tag "minecraft:custom_model_data" of {_n} = 1 with "tag ""minecraft:custom_model_data"" of an item should be 1"
+    assert int tag "minecraft:max_damage" of {_n} = 25 with "tag 'minecraft:max_damage' of an item should be 25"
+    set int tag "minecraft:max_damage" of {_n} to 10
+    assert max damage of {_i} is 10 with "Updating the 'minecraft:max_damage' tag should update the item"
+
+    # Test that vanilla NBT of an item works
+    assert vanilla nbt of {_i} is set with "Vanilla NBT of an item should work"
+    assert int tag "minecraft:damage" of vanilla nbt of {_i} is 0 with "Tag 'minecraft:damage' should be 0 on a new item"
+    damage {_i} by 10
+    assert int tag "minecraft:damage" of vanilla nbt of {_i} is 10 with "Tag 'minecraft:damage' should be 10 after damaging an item"
 
     # Test that Pretty nbt works
     set {_pretty} to pretty nbt of {_n}
     assert {_pretty} is set with "Pretty NBT should have worked"
+    set {_vp} to pretty nbt of vanilla nbt of {_i}
+    assert {_vp} is set with "Pretty NBT of vanilla nbt should have worked"
 
     # Test adding/removing to/from lists
     set {_n} to empty nbt compound

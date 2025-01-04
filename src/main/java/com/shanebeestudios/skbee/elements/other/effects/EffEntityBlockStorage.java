@@ -46,7 +46,7 @@ public class EffEntityBlockStorage extends Effect {
     private Expression<?> var;
     private boolean release;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
         this.entities = i == 0 ? null : (Expression<Entity>) exprs[0];
@@ -57,15 +57,19 @@ public class EffEntityBlockStorage extends Effect {
         return true;
     }
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     protected void execute(Event event) {
         if (this.release) {
             if (this.blocks == null) return;
-            long ticks = this.timespan != null ? this.timespan.getSingle(event).getTicks() : 0;
+            long ticks = 0;
+            if (this.timespan != null) {
+                Timespan timespan = this.timespan.getSingle(event);
+                if (timespan != null) ticks = timespan.getAs(Timespan.TimePeriod.TICK);
+            }
             for (Block block : this.blocks.getArray(event)) {
                 BlockState state = block.getState();
-                if (state instanceof EntityBlockStorage<?>) {
+                if (state instanceof EntityBlockStorage<?> st) {
                     List<Entity> entities = ((EntityBlockStorage<Entity>) state).releaseEntities();
                     for (Entity entity : entities) {
                         if (entity instanceof Bee && ticks > 0) {
@@ -94,7 +98,6 @@ public class EffEntityBlockStorage extends Effect {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(Event e, boolean d) {
         String time = this.timespan != null ? " for " + this.timespan.toString(e, d) : "";

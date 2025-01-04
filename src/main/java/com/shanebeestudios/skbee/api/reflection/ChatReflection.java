@@ -50,6 +50,7 @@ public class ChatReflection {
      *                 (usually spaces)
      * @return Pretty string of NBTCompound
      */
+    @SuppressWarnings("deprecation")
     public static @Nullable String getPrettyNBT(NBTCompound compound, String split) {
         Object nmsNBT = new NBTContainer(compound.toString()).getCompound();
         String s = split != null ? split : "";

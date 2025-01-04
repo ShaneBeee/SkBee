@@ -9,6 +9,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("deprecation")
 public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
@@ -82,7 +83,7 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     }
 
     @Override
-    public NBTCompound getCopy() {
+    public @NotNull NBTCompound getCopy() {
         try {
             String bukkit = "PublicBukkitValues";
             NBTCompound compound = new NBTContainer(new NBTTileEntity(blockState).toString());

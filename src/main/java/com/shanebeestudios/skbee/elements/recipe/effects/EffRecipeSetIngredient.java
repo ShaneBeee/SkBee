@@ -88,6 +88,9 @@ public class EffRecipeSetIngredient extends Effect {
         RecipeChoice recipeChoice = null;
         if (ingredient instanceof ItemStack itemStack) {
             Material material = itemStack.getType();
+            // Air cannot be used in recipes
+            if (material.isAir()) return null;
+
             if (itemStack.isSimilar(new ItemStack(material))) {
                 recipeChoice = new RecipeChoice.MaterialChoice(material);
             } else {

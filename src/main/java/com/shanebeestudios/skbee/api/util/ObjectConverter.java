@@ -88,7 +88,12 @@ public abstract class ObjectConverter<T> {
     }
 
     static {
-        register(Advancement.class, Registry.ADVANCEMENT);
+        register(Advancement.class, new ObjectConverter<>() {
+            @Override
+            public @Nullable Advancement get(NamespacedKey key) {
+                return Bukkit.getAdvancement(key);
+            }
+        });
         register(Attribute.class, Registry.ATTRIBUTE);
         register(Biome.class, Registry.BIOME);
         if (Skript.classExists("org.bukkit.damage.DamageType")) {

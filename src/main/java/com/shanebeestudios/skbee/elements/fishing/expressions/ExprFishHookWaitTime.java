@@ -19,13 +19,13 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Fish Hook - Wait time")
 @Description({"Represents the min/max wait time for a fish hook to catch a fish.",
-        "\nNOTE: this is before applying lure.",
-        "\nNOTE: min wait time must be less than max wait time. Both must be greater than 0.",
-        "\nDefaults: min = 100 ticks (5 seconds), max = 600 ticks (30 seconds)."})
+    "\nNOTE: this is before applying lure.",
+    "\nNOTE: min wait time must be less than max wait time. Both must be greater than 0.",
+    "\nDefaults: min = 100 ticks (5 seconds), max = 600 ticks (30 seconds)."})
 @Examples({"on fish:",
-        "\tif fish state = fishing:",
-        "\t\tset min wait time of fish hook to 1 second",
-        "\t\tset max wait time of fish hook to 2 seconds"})
+    "\tif fish state = fishing:",
+    "\t\tset min wait time of fish hook to 1 second",
+    "\t\tset max wait time of fish hook to 2 seconds"})
 @Since("2.8.0")
 public class ExprFishHookWaitTime extends SimplePropertyExpression<Entity, Timespan> {
 
@@ -35,7 +35,7 @@ public class ExprFishHookWaitTime extends SimplePropertyExpression<Entity, Times
 
     private boolean max;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setExpr((Expression<? extends Entity>) exprs[0]);
@@ -47,12 +47,11 @@ public class ExprFishHookWaitTime extends SimplePropertyExpression<Entity, Times
     public @Nullable Timespan convert(Entity entity) {
         if (entity instanceof FishHook fishHook) {
             int wait = this.max ? fishHook.getMaxWaitTime() : fishHook.getMinWaitTime();
-            return Timespan.fromTicks(wait);
+            return new Timespan(Timespan.TimePeriod.TICK, wait);
         }
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         return switch (mode) {
@@ -61,10 +60,9 @@ public class ExprFishHookWaitTime extends SimplePropertyExpression<Entity, Times
         };
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        int changeValue = delta != null && delta[0] != null ? (int) ((Timespan) delta[0]).getTicks() : 0;
+        int changeValue = delta != null && delta[0] != null ? (int) ((Timespan) delta[0]).getAs(Timespan.TimePeriod.TICK) : 0;
         for (Entity entity : getExpr().getArray(event)) {
             if (entity instanceof FishHook fishHook) {
                 int value = this.max ? fishHook.getMaxWaitTime() : fishHook.getMinWaitTime();

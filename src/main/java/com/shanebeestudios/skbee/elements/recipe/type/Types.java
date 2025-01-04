@@ -22,17 +22,18 @@ import java.util.List;
 public class Types {
 
     static {
-        Classes.registerClass(new ClassInfo<>(RecipeChoice.class, "recipechoice")
+        if (Classes.getExactClassInfo(RecipeChoice.class) == null) {
+            Classes.registerClass(new ClassInfo<>(RecipeChoice.class, "recipechoice")
                 .name("Recipe Choice")
                 .user("recipe ?choices?")
                 .description("Represents an Exact/Material Choice.",
-                        "MaterialChoice represents a set of materials/minecraft tags which can be used in some recipes.",
-                        "ExactChoice represents a special ItemStack used in some recipes.",
-                        "Requires Minecraft 1.13+")
+                    "MaterialChoice represents a set of materials/minecraft tags which can be used in some recipes.",
+                    "ExactChoice represents a special ItemStack used in some recipes.",
+                    "Requires Minecraft 1.13+")
                 .usage("see material choice expression")
                 .examples("set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
-                        "set {_a} to material choice of every sword",
-                        "set {_a} to material choice of minecraft tag \"doors\"")
+                    "set {_a} to material choice of every sword",
+                    "set {_a} to material choice of minecraft tag \"doors\"")
                 .after("itemtype", "itemstack")
                 .since("1.10.0")
                 .parser(new Parser<>() {
@@ -53,6 +54,7 @@ public class Types {
                         return "recipechoice:" + toString(matChoice, 0);
                     }
                 }));
+        }
 
         EnumWrapper<RecipeType> RECIPE_TYPE_ENUM = new EnumWrapper<>(RecipeType.class);
         Classes.registerClass(RECIPE_TYPE_ENUM.getClassInfo("recipetype")

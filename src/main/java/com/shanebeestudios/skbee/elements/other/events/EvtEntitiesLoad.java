@@ -5,14 +5,12 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.world.EntitiesLoadEvent;
 import org.bukkit.event.world.EntitiesUnloadEvent;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class EvtEntitiesLoad extends SkriptEvent {
     static {
@@ -29,19 +27,8 @@ public class EvtEntitiesLoad extends SkriptEvent {
                 "\t\tbroadcast \"REMOVED ENTITIES!\"")
             .since("3.5.0");
 
-        EventValues.registerEventValue(EntitiesLoadEvent.class, Entity[].class, new Getter<>() {
-            @Override
-            public Entity @Nullable [] get(EntitiesLoadEvent event) {
-                return event.getEntities().toArray(new Entity[0]);
-            }
-        }, EventValues.TIME_NOW);
-
-        EventValues.registerEventValue(EntitiesUnloadEvent.class, Entity[].class, new Getter<>() {
-            @Override
-            public Entity @Nullable [] get(EntitiesUnloadEvent event) {
-                return event.getEntities().toArray(new Entity[0]);
-            }
-        }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(EntitiesLoadEvent.class, Entity[].class, event -> event.getEntities().toArray(new Entity[0]), EventValues.TIME_NOW);
+        EventValues.registerEventValue(EntitiesUnloadEvent.class, Entity[].class, event -> event.getEntities().toArray(new Entity[0]), EventValues.TIME_NOW);
     }
 
     private boolean load;

@@ -6,7 +6,6 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.Getter;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Entity;
@@ -19,33 +18,29 @@ public class EvtSpawnerSpawn extends SkriptEvent {
 
     static {
         Skript.registerEvent("Spawner Spawn", EvtSpawnerSpawn.class, SpawnerSpawnEvent.class,
-                        "spawner spawn[ing] [of %entitydatas%]")
-                .description("Called whenever an entity is spawned via a spawner.")
-                .examples("on spawner spawn of zombie:",
-                        "\treset spawner timer of event-block")
-                .since("2.16.0");
+                "spawner spawn[ing] [of %entitydatas%]")
+            .description("Called whenever an entity is spawned via a spawner.")
+            .examples("on spawner spawn of zombie:",
+                "\treset spawner timer of event-block")
+            .since("2.16.0");
 
-        EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, new Getter<>() {
-            @Override
-            public @Nullable Block get(SpawnerSpawnEvent event) {
-                CreatureSpawner spawner = event.getSpawner();
-                if (spawner != null) return spawner.getBlock();
-                return null;
-            }
+        EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
+            CreatureSpawner spawner = event.getSpawner();
+            if (spawner != null) return spawner.getBlock();
+            return null;
         }, EventValues.TIME_NOW);
 
     }
 
     private Literal<EntityData<?>> spawnedEntities;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?>[] literals, int matchedPattern, ParseResult parseResult) {
         this.spawnedEntities = (Literal<EntityData<?>>) literals[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
         if (this.spawnedEntities == null) return true;

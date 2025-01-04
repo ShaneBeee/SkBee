@@ -21,6 +21,7 @@ import org.bukkit.Vibration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("UnstableApiUsage")
 public class Types {
 
     static {
@@ -37,8 +38,6 @@ public class Types {
                 .after("itemtype")
                 .since("1.9.0")
                 .parser(new Parser<>() {
-
-                    @SuppressWarnings("NullableProblems")
                     @Nullable
                     @Override
                     public Particle parse(String s, ParseContext context) {
@@ -47,7 +46,7 @@ public class Types {
 
                     @Override
                     public @NotNull String toString(Particle particle, int flags) {
-                        return "" + ParticleUtil.getName(particle);
+                        return ParticleUtil.getName(particle);
                     }
 
                     @Override
@@ -60,45 +59,58 @@ public class Types {
             Util.logLoading("You may have to use their particles in SkBee's 'particle spawn' effect.");
         }
 
-        Classes.registerClass(new ClassInfo<>(Particle.DustOptions.class, "dustoption")
-            .name(ClassInfo.NO_DOC).user("dust ?options?")
-            .parser(new Parser<>() {
-                @SuppressWarnings("NullableProblems")
-                @Override
-                public boolean canParse(ParseContext context) {
-                    return false;
-                }
-
-                @Override
-                public @NotNull String toString(Particle.DustOptions dustOption, int flags) {
-                    org.bukkit.Color bukkitColor = dustOption.getColor();
-                    int red = bukkitColor.getRed();
-                    int green = bukkitColor.getGreen();
-                    int blue = bukkitColor.getBlue();
-                    SkriptColor skriptColor = SkriptColor.fromBukkitColor(bukkitColor);
-
-                    String color;
-                    //noinspection ConstantConditions
-                    if (skriptColor != null) {
-                        color = skriptColor.toString();
-                    } else {
-                        color = String.format("rgb(%s,%s,%s)", red, green, blue);
+        if (Classes.getExactClassInfo(Particle.DustOptions.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Particle.DustOptions.class, "dustoption")
+                .name(ClassInfo.NO_DOC).user("dust ?options?")
+                .parser(new Parser<>() {
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return false;
                     }
-                    return "dustOption(color=" + color + ",size=" + dustOption.getSize() + ")";
-                }
 
-                @Override
-                public @NotNull String toVariableNameString(Particle.DustOptions o) {
-                    return toString(o, 0);
-                }
-            }));
-        Classes.registerClass(new ClassInfo<>(DustTransition.class, "dusttransition")
-            .name(ClassInfo.NO_DOC).user("dust ?transitions?")
-            .parser(SkriptUtils.getDefaultParser()));
-        Classes.registerClass(new ClassInfo<>(Vibration.class, "vibration")
-            .name(ClassInfo.NO_DOC).user("vibrations?")
-            .parser(SkriptUtils.getDefaultParser()));
+                    @Override
+                    public @NotNull String toString(Particle.DustOptions dustOption, int flags) {
+                        org.bukkit.Color bukkitColor = dustOption.getColor();
+                        int red = bukkitColor.getRed();
+                        int green = bukkitColor.getGreen();
+                        int blue = bukkitColor.getBlue();
+                        SkriptColor skriptColor = SkriptColor.fromBukkitColor(bukkitColor);
 
+                        String color;
+                        //noinspection ConstantConditions
+                        if (skriptColor != null) {
+                            color = skriptColor.toString();
+                        } else {
+                            color = String.format("rgb(%s,%s,%s)", red, green, blue);
+                        }
+                        return "dustOption(color=" + color + ",size=" + dustOption.getSize() + ")";
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(Particle.DustOptions o) {
+                        return toString(o, 0);
+                    }
+                }));
+        }
+
+        if (Classes.getExactClassInfo(DustTransition.class) == null) {
+            Classes.registerClass(new ClassInfo<>(DustTransition.class, "dusttransition")
+                .name(ClassInfo.NO_DOC).user("dust ?transitions?")
+                .parser(SkriptUtils.getDefaultParser()));
+        }
+
+        if (Classes.getExactClassInfo(Vibration.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Vibration.class, "vibration")
+                .name(ClassInfo.NO_DOC).user("vibrations?")
+                .parser(SkriptUtils.getDefaultParser()));
+        }
+
+        if (ParticleUtil.HAS_TRAIL && Classes.getExactClassInfo(Particle.Trail.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Particle.Trail.class, "trail")
+                .name(ClassInfo.NO_DOC)
+                .user("trails?")
+                .parser(SkriptUtils.getDefaultParser()));
+        }
 
         // == FUNCTIONS ==
 
@@ -108,7 +120,6 @@ public class Types {
             new Parameter<>("color", DefaultClasses.COLOR, true, null),
             new Parameter<>("size", DefaultClasses.NUMBER, true, null)
         }, Classes.getExactClassInfo(Particle.DustOptions.class), true) {
-            @SuppressWarnings("NullableProblems")
             @Override
             public Particle.DustOptions[] executeSimple(Object[][] params) {
                 org.bukkit.Color color = ((Color) params[0][0]).asBukkitColor();
@@ -128,7 +139,6 @@ public class Types {
             new Parameter<>("toColor", DefaultClasses.COLOR, true, null),
             new Parameter<>("size", DefaultClasses.NUMBER, true, null)
         }, Classes.getExactClassInfo(DustTransition.class), true) {
-            @SuppressWarnings("NullableProblems")
             @Override
             public DustTransition[] executeSimple(Object[][] params) {
                 org.bukkit.Color fromColor = ((Color) params[0][0]).asBukkitColor();
@@ -148,7 +158,6 @@ public class Types {
             new Parameter<>("to", DefaultClasses.LOCATION, true, null),
             new Parameter<>("arrivalTime", DefaultClasses.TIMESPAN, true, null)
         }, Classes.getExactClassInfo(Vibration.class), true) {
-            @SuppressWarnings({"NullableProblems", "removal"})
             @Override
             public Vibration[] executeSimple(Object[][] params) {
                 if (params[0].length == 0 || params[1].length == 0) {
@@ -157,7 +166,7 @@ public class Types {
                 // Apparently original location makes no difference
                 Location origin = new Location(null, 0, 0, 0);
                 Location destination = (Location) params[0][0];
-                int arrivalTime = (int) ((Timespan) params[1][0]).getTicks();
+                int arrivalTime = (int) ((Timespan) params[1][0]).getAs(Timespan.TimePeriod.TICK);
                 Vibration vibration = new Vibration(origin, new Vibration.Destination.BlockDestination(destination), arrivalTime);
                 return new Vibration[]{vibration};
             }
@@ -167,6 +176,27 @@ public class Types {
                 "Requires MC 1.17+")
             .examples("set {_v} to vibration({loc}, 10 seconds)")
             .since("1.11.1"));
+
+        if (ParticleUtil.HAS_TRAIL) {
+            Functions.registerFunction(new SimpleJavaFunction<>("trail", new Parameter[]{
+                    new Parameter<>("target", DefaultClasses.LOCATION, true, null),
+                    new Parameter<>("color", DefaultClasses.COLOR, true, null),
+                    new Parameter<>("duration", DefaultClasses.TIMESPAN, true, null)
+                }, Classes.getExactClassInfo(Particle.Trail.class), true) {
+                    @Override
+                    public Particle.Trail[] executeSimple(Object[][] params) {
+                        Location target = (Location) params[0][0];
+                        org.bukkit.Color color = ((Color) params[1][0]).asBukkitColor();
+                        Timespan timespan = (Timespan) params[2][0];
+                        return new Particle.Trail[]{new Particle.Trail(target, color, (int) timespan.getAs(Timespan.TimePeriod.TICK))};
+                    }
+                }).description("Creates a new trail to be used with 'trail' particle.",
+                    "Takes in a location for the target (where the trail heads to), the color and duration.",
+                    "Requires Minecraft 1.21.4+")
+                .examples("set {_trail} to trail(location of target block, blue, 1 second)",
+                    "make 10 of trail using {_trail} at location of player")
+                .since("3.6.5");
+        }
     }
 
 }

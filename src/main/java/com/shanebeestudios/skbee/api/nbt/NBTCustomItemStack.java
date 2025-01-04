@@ -18,7 +18,7 @@ public class NBTCustomItemStack extends NBTContainer {
     private final boolean isFull;
 
     public NBTCustomItemStack(ItemStack itemStack, boolean isCustomData, boolean isVanilla, boolean isFull) {
-        super(getInitialContainer(itemStack, isCustomData, isVanilla, isFull).toString());
+        super(getInitialContainer(itemStack, isCustomData, isVanilla, isFull).getCompound());
         this.originalItemStack = itemStack;
         this.isCustomData = isCustomData;
         this.isFull = isFull;
@@ -32,7 +32,10 @@ public class NBTCustomItemStack extends NBTContainer {
             nbtContainer = NBTItem.convertItemtoNBT(itemStack);
         }
         if (nbtContainer == null) nbtContainer = new NBTContainer();
-        return getContainer(nbtContainer, isCustomData, isFull);
+        // Create a clone (Minecraft seems to freak out without doing this)
+        NBTCompound clone = new NBTContainer();
+        clone.mergeCompound(getContainer(nbtContainer, isCustomData, isFull));
+        return clone;
     }
 
     private static NBTCompound getContainer(NBTCompound itemContainer, boolean isCustomData, boolean isFull) {

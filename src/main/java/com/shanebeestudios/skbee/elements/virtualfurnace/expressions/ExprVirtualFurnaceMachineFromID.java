@@ -52,8 +52,8 @@ public class ExprVirtualFurnaceMachineFromID extends SimpleExpression<Machine> {
             } catch (IllegalArgumentException ignore) {
             }
             if (uuid == null) continue;
-            Furnace furnace = Types.FURNACE_MANAGER.getByID(uuid);
-            machines.add(furnace);
+            Machine machine = Types.FURNACE_MANAGER.getByID(uuid);
+            machines.add(machine);
         }
         return machines.toArray(new Machine[0]);
     }

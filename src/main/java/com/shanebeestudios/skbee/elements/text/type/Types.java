@@ -81,7 +81,7 @@ public class Types {
             }).changer(COMP_CHANGER)
         );
 
-        if (Skript.classExists("net.kyori.adventure.chat.SignedMessage")) {
+        if (Skript.classExists("net.kyori.adventure.chat.SignedMessage") && Classes.getExactClassInfo(SignedMessage.class) == null) {
             Classes.registerClass(new ClassInfo<>(SignedMessage.class, "signedmessage")
                 .user("signed ?messages?")
                 .name("Signed Chat Message")
@@ -113,21 +113,23 @@ public class Types {
                         }
                     }
                 }));
-        }
+            }
 
-        Classes.registerClass(new ClassInfo<>(TagResolver.class, "tagresolver")
-            .user("tag ?resolvers?")
-            .description("Represents an object to replace text in a mini message.")
-            .examples("# Create a component",
-                "set {_t} to translate component of player's tool",
-                "add hover event showing player's tool to {_t}",
-                "# Use this component in the resolver to replace \"<item>\" in the mini message",
-                "set {_r} to resolver(\"item\", {_t})",
-                "# setup the mini message with the replacement placeholder",
-                "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r}",
-                "send component {_m}")
-            .parser(SkriptUtils.getDefaultParser())
-            .since("3.5.0"));
+        if (Classes.getExactClassInfo(TagResolver.class) == null) {
+            Classes.registerClass(new ClassInfo<>(TagResolver.class, "tagresolver")
+                .user("tag ?resolvers?")
+                .description("Represents an object to replace text in a mini message.")
+                .examples("# Create a component",
+                    "set {_t} to translate component of player's tool",
+                    "add hover event showing player's tool to {_t}",
+                    "# Use this component in the resolver to replace \"<item>\" in the mini message",
+                    "set {_r} to resolver(\"item\", {_t})",
+                    "# setup the mini message with the replacement placeholder",
+                    "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r}",
+                    "send component {_m}")
+                .parser(SkriptUtils.getDefaultParser())
+                .since("3.5.0"));
+        }
 
         // Functions
         //noinspection DataFlowIssue

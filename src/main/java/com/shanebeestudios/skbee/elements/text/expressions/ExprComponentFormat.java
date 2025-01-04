@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -15,33 +14,29 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @Name("TextComponent - Format")
-@Description({"Change formatting options of text components. Most of these are pretty straight forward. Insertion means the text ",
-        "that will copy to chat when a player shift-clicks the component (Might not be available on all versions). Color supports color ",
-        "names as well as RGB color codes via Skript's RGB function (RGB = Minecraft 1.16+) (see examples)."})
+@Description({"Change formatting options of text components. Most of these are pretty straight forward. ",
+    "Insertion means the text that will copy to chat when a player shift-clicks the component (Might not be available on all versions). ",
+    "Color supports color names as well as RGB color codes via Skript's RGB function (see examples).",
+    "Fallback is the fallback text used in a translation component when the client cannot find said translation."})
 @Examples({"set {_t} to text component from \"my fancy text component\"",
-        "set bold format of {_t} to true",
-        "set color format of {_t} to aqua",
-        "set color format of {_t} to rgb(100, 0, 160)",
-        "set insertion format of {_t} to \"ooooo\""})
+    "set bold format of {_t} to true",
+    "set color format of {_t} to aqua",
+    "set color format of {_t} to rgb(100, 0, 160)",
+    "set insertion format of {_t} to \"ooooo\"",
+    "set fallback format of {_t} to \"Le Fallback\""})
 @Since("1.5.1")
 public class ExprComponentFormat extends PropertyExpression<ComponentWrapper, Object> {
 
-    private static final int COLOR = 0, BOLD = 1, ITALIC = 2, OBFUSCATED = 3, STRIKETHROUGH = 4, UNDERLINE = 5, FONT = 6, INSERT = 7;
+    private static final int COLOR = 0, BOLD = 1, ITALIC = 2, OBFUSCATED = 3, STRIKETHROUGH = 4,
+        UNDERLINE = 5, FONT = 6, INSERT = 7, FALLBACK = 8;
 
     static {
-        if (Skript.methodExists(ComponentWrapper.class, "setInsertion", String.class)) {
-            register(ExprComponentFormat.class, Object.class,
-                    "(color|1:bold|2:italic|3:(obfuscate[d]|magic)|4:strikethrough|5:underline[d]|6:font|7:insert[ion]) format",
-                    "textcomponents");
-        } else {
-            register(ExprComponentFormat.class, Object.class,
-                    "(color|1:bold|2:italic|3:(obfuscate[d]|magic)|4:strikethrough|5:underline[d]|6:font) format",
-                    "textcomponents");
-        }
+        register(ExprComponentFormat.class, Object.class,
+            "(color|1:bold|2:italic|3:(obfuscate[d]|magic)|4:strikethrough|5:underline[d]|6:font|7:insert[ion]|8:fallback) format",
+            "textcomponents");
     }
 
     private int pattern;
@@ -65,17 +60,19 @@ public class ExprComponentFormat extends PropertyExpression<ComponentWrapper, Ob
             case UNDERLINE -> component.isUnderlined();
             case FONT -> component.getFont();
             case INSERT -> component.getInsertion();
+            case FALLBACK -> component.getFallback();
             default -> null;
         });
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(Object.class);
+        if (mode == ChangeMode.SET) return CollectionUtils.array(getReturnType());
         return null;
     }
 
+    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(@NotNull Event e, @Nullable Object[] delta, @NotNull ChangeMode mode) {
         Object object = delta != null ? delta[0] : null;
@@ -130,6 +127,11 @@ public class ExprComponentFormat extends PropertyExpression<ComponentWrapper, Ob
                     component.setInsertion(insert);
                 }
                 break;
+            case FALLBACK:
+                String fallback = object instanceof String ? ((String) object) : object.toString();
+                for (ComponentWrapper component : getExpr().getArray(e)) {
+                    component.setFallback(fallback);
+                }
         }
     }
 
@@ -137,14 +139,14 @@ public class ExprComponentFormat extends PropertyExpression<ComponentWrapper, Ob
     public @NotNull Class<?> getReturnType() {
         return switch (pattern) {
             case COLOR -> Color.class;
-            case INSERT, FONT -> String.class;
+            case INSERT, FONT, FALLBACK -> String.class;
             default -> Boolean.class;
         };
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String[] type = new String[]{"color", "bold", "italic", "obfuscated", "strikethrough", "underline", "font", "insertion"};
+        String[] type = new String[]{"color", "bold", "italic", "obfuscated", "strikethrough", "underline", "font", "insertion", "fallback"};
         return type[pattern] + " format of " + getExpr().toString(e, d);
     }
 
