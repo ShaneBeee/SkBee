@@ -12,12 +12,12 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
-import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.UseCooldown;
-import org.bukkit.NamespacedKey;
+import net.kyori.adventure.key.Key;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -80,8 +80,8 @@ public class SecUseCooldownComponent extends Section {
         UseCooldown.Builder builder = UseCooldown.useCooldown(seconds);
 
         if (this.group != null) {
-            NamespacedKey group = Util.getNamespacedKey(this.group.getSingle(event), false);
-            if (group != null) builder.cooldownGroup(group);
+            Key key = KeyUtils.getKey(this.group.getSingle(event));
+            if (group != null) builder.cooldownGroup(key);
         }
 
         UseCooldown useCooldown = builder.build();

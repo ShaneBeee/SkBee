@@ -12,14 +12,14 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
-import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Consumable;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect;
 import io.papermc.paper.datacomponent.item.consumable.ItemUseAnimation;
-import org.bukkit.NamespacedKey;
+import net.kyori.adventure.key.Key;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
@@ -107,9 +107,9 @@ public class SecConsumableComponent extends EffectSection {
         }
         if (this.sound != null) {
             String soundString = this.sound.getOptionalSingle(event).orElse("entity.generic.eat");
-            NamespacedKey namespacedKey = Util.getNamespacedKey(soundString, false);
-            if (namespacedKey != null) {
-                builder.sound(namespacedKey);
+            Key key = KeyUtils.getKey(soundString);
+            if (key != null) {
+                builder.sound(key);
             }
         }
         if (this.hasConsumeParticles != null) {

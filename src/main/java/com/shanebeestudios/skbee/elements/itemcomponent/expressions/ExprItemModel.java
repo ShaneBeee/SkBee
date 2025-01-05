@@ -6,11 +6,10 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.key.Key;
-import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -58,7 +57,7 @@ public class ExprItemModel extends SimplePropertyExpression<Object, String> {
     @Override
     public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
         String string = delta != null && delta[0] instanceof String s ? s : null;
-        NamespacedKey key = Util.getNamespacedKey(string, false);
+        Key key = KeyUtils.getKey(string);
 
         ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.ITEM_MODEL, key);
     }

@@ -9,7 +9,7 @@ import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.Math2;
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect.ApplyStatusEffects;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect.ClearAllStatusEffects;
@@ -19,7 +19,7 @@ import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
 import io.papermc.paper.registry.set.RegistryKeySet;
 import io.papermc.paper.registry.set.RegistrySet;
-import org.bukkit.NamespacedKey;
+import net.kyori.adventure.key.Key;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -138,10 +138,10 @@ public class Types {
             @Override
             public ConsumeEffect @Nullable [] executeSimple(Object[][] params) {
                 String sound = (String) params[0][0];
-                NamespacedKey namespacedKey = Util.getNamespacedKey(sound, false);
-                if (namespacedKey == null) return null;
+                Key key = KeyUtils.getKey(sound);
+                if (key == null) return null;
 
-                ConsumeEffect.PlaySound playSound = ConsumeEffect.playSoundConsumeEffect(namespacedKey.key());
+                ConsumeEffect.PlaySound playSound = ConsumeEffect.playSoundConsumeEffect(key);
                 return new ConsumeEffect[]{playSound};
             }
         }

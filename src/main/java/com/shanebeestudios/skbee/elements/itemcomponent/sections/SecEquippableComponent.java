@@ -13,17 +13,17 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
-import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Equippable;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
 import io.papermc.paper.registry.set.RegistryKeySet;
 import io.papermc.paper.registry.set.RegistrySet;
+import net.kyori.adventure.key.Key;
 import org.bukkit.Keyed;
-import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Event;
@@ -120,14 +120,14 @@ public class SecEquippableComponent extends Section {
         EquipmentSlot slot = this.equipmentSlot.getOptionalSingle(event).orElse(EquipmentSlot.HEAD);
         Equippable.Builder builder = Equippable.equippable(slot);
         if (this.equipSound != null) {
-            NamespacedKey namespacedKey = Util.getNamespacedKey(this.equipSound.getOptionalSingle(event).orElse("item.armor.equip_generic"), false);
-            if (namespacedKey != null) builder.equipSound(namespacedKey);
+            Key key = KeyUtils.getKey(this.equipSound.getOptionalSingle(event).orElse("item.armor.equip_generic"));
+            if (key != null) builder.equipSound(key);
         }
         if (this.assetId != null) {
             String assetId = this.assetId.getSingle(event);
             if (assetId != null) {
-                NamespacedKey namespacedKey = Util.getNamespacedKey(assetId, false);
-                if (namespacedKey != null) builder.assetId(namespacedKey);
+                Key key = KeyUtils.getKey(assetId);
+                if (key != null) builder.assetId(key);
             }
         }
 
@@ -168,8 +168,8 @@ public class SecEquippableComponent extends Section {
         if (this.cameraOverlay != null) {
             String overlay = this.cameraOverlay.getSingle(event);
             if (overlay != null) {
-                NamespacedKey namespacedKey = Util.getNamespacedKey(overlay, false);
-                if (namespacedKey != null) builder.cameraOverlay(namespacedKey);
+                Key key = KeyUtils.getKey(overlay);
+                if (key != null) builder.cameraOverlay(key);
             }
         }
 

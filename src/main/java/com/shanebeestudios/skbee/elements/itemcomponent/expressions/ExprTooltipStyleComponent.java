@@ -7,11 +7,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.key.Key;
-import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
@@ -59,9 +58,9 @@ public class ExprTooltipStyleComponent extends SimplePropertyExpression<Object, 
     @Override
     public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
         String string = delta != null && delta[0] instanceof String s ? s : null;
-        NamespacedKey namespacedKey = Util.getNamespacedKey(string, false);
+        Key key = KeyUtils.getKey(string);
 
-        ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.TOOLTIP_STYLE, namespacedKey);
+        ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.TOOLTIP_STYLE, key);
     }
 
     @Override
