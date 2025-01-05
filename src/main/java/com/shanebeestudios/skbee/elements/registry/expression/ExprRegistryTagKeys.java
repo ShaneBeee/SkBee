@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Registry - Registry TagKeys")
+@Name("Registry - TagKeys from Registry")
 @Description("Get all the tag keys that belong to a registry.")
 @Examples({"loop tag keys of block registry:",
     "set {_keys::*} to tag keys of biome registry"})
