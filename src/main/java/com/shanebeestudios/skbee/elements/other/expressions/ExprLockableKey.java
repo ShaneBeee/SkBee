@@ -11,9 +11,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import org.bukkit.block.Beacon;
 import org.bukkit.block.Block;
-import org.bukkit.block.Container;
+import org.bukkit.block.BlockState;
+import org.bukkit.block.Lockable;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -35,7 +35,6 @@ public class ExprLockableKey extends SimplePropertyExpression<Block, String> {
         register(ExprLockableKey.class, String.class, "(container|lockable) key", "blocks");
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (INVALID) {
@@ -46,10 +45,8 @@ public class ExprLockableKey extends SimplePropertyExpression<Block, String> {
 
     @Override
     public @Nullable String convert(Block block) {
-        if (block.getState() instanceof Container container) {
+        if (block.getState() instanceof Lockable container) {
             return container.isLocked() ? container.getLock() : null;
-        } else if (block.getState() instanceof Beacon beacon) {
-            return beacon.isLocked() ? beacon.getLock() : null;
         }
         return null;
     }
@@ -70,12 +67,10 @@ public class ExprLockableKey extends SimplePropertyExpression<Block, String> {
         switch (mode) {
             case RESET, SET -> {
                 for (Block block : getExpr().getArray(event)) {
-                    if (block.getState() instanceof Container container) {
-                        container.setLock(lock);
-                        container.update();
-                    } else if (block.getState() instanceof Beacon beacon) {
-                        beacon.setLock(lock);
-                        beacon.update();
+                    BlockState state = block.getState();
+                    if (state instanceof Lockable lockable) {
+                        lockable.setLock(lock);
+                        state.update();
                     }
                 }
             }

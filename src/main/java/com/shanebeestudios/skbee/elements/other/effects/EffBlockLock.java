@@ -26,7 +26,8 @@ public class EffBlockLock extends Effect {
 
     static {
         if (Skript.isRunningMinecraft(1, 21, 2)) {
-            Skript.registerEffect(EffBlockLock.class, "apply lock to %blocks% using %itemstack%",
+            Skript.registerEffect(EffBlockLock.class,
+                "apply lock to %blocks% using %itemstack%",
                 "(remove|clear) lock (of|from) %blocks%");
         }
     }
@@ -34,7 +35,7 @@ public class EffBlockLock extends Effect {
     private Expression<Block> blocks;
     private Expression<ItemStack> item;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.blocks = (Expression<Block>) exprs[0];
@@ -44,7 +45,7 @@ public class EffBlockLock extends Effect {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "UnstableApiUsage"})
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     protected void execute(Event event) {
         if (this.blocks == null) return;
