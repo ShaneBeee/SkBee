@@ -31,9 +31,6 @@ test "SkBee - text component test":
     set component display name of {_i} to {_m}
     assert name of {_i} is set with "The item should have a name now"
 
-    # Send to console
-    send component {_m} to console
-
     # Create a text component
     set {_t} to text component from "test"
     assert {_t} is set with "Welp, I guess the text component didn't work"
