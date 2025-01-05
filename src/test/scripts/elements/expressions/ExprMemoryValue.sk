@@ -23,3 +23,4 @@ test "SkBee - memory value":
 
     set ram_cooldown_ticks memory of {_e} to 0
     assert ram_cooldown_ticks memory of {_e} = 0 with "ram cooldown ticks of goat should have been 0"
+    delete entity within {_e}

@@ -3,6 +3,7 @@ test "SkBee - display entities":
     # Test for TextDisplay
     spawn text display at location(1,100,1):
         set display text of entity to "bob"
+        add entity to {_e::*}
     set {_e} to last spawned entity
 
     # Test that text is set correctly
@@ -11,6 +12,7 @@ test "SkBee - display entities":
     # Test for BlockDisplay
     spawn block display at location(1,1,1):
         set display blockdata of entity to stone[]
+        add entity to {_e::*}
     set {_e} to last spawned entity
 
     # Test that blockdata is set correctly
@@ -19,6 +21,7 @@ test "SkBee - display entities":
     # Test for ItemDisplay
     spawn item display at location(1,1,1):
         set display item of entity to diamond sword
+        add entity to {_e::*}
     set {_e} to last spawned entity
 
     # Test that item is set correctly
@@ -38,3 +41,5 @@ test "SkBee - display entities":
     set display glow color override of {_e} to bukkitColor(255,1,1,100)
     set display interpolation start of {_e} to -1
     set display interpolation delay of {_e} to 200
+
+    delete entities within {_e::*}
