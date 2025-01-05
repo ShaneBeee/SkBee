@@ -3,10 +3,12 @@ package com.shanebeestudios.skbee.api.registry;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
+import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.GameEvent;
 import org.bukkit.Keyed;
 import org.bukkit.Particle;
+import org.bukkit.Registry;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.block.Biome;
 import org.bukkit.damage.DamageType;
@@ -33,6 +35,7 @@ import java.util.function.Supplier;
 @SuppressWarnings({"UnstableApiUsage", "rawtypes", "deprecation", "removal"})
 public class RegistryUtils {
 
+    private static final RegistryAccess REGISTRY_ACCESS = RegistryAccess.registryAccess();
     private static final Map<String, RegistryHolder> REGISTRY_HOLDERS_BY_NAME = new HashMap<>();
     private static final Map<RegistryKey, RegistryHolder> REGISTRY_HOLDERS_BY_REGISTRY_KEY = new HashMap<>();
 
@@ -116,6 +119,27 @@ public class RegistryUtils {
     @NotNull
     public static RegistryHolder getRegistryHolder(RegistryKey<?> key) {
         return REGISTRY_HOLDERS_BY_REGISTRY_KEY.get(key);
+    }
+
+    /**
+     * Quick method to get {@link RegistryAccess}
+     *
+     * @return Instance of RegistryAccess
+     */
+    public static RegistryAccess getRegistryAccess() {
+        return REGISTRY_ACCESS;
+    }
+
+    /**
+     * Get a {@link Registry} from a {@link RegistryKey}
+     *
+     * @param registryKey Key of registry to get
+     * @param <T>         Type of registry
+     * @return Registry from key
+     */
+    @NotNull
+    public static <T extends Keyed> Registry<T> getRegistry(RegistryKey<T> registryKey) {
+        return getRegistryAccess().getRegistry(registryKey);
     }
 
 }
