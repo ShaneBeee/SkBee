@@ -7,3 +7,4 @@ test "SkBee - ExprNoClip test":
     set no clip state of {_e} to true
 
     assert no clip state of {_e} = true with "NoClip state of entity should be true"
+    delete entity within {_e}
