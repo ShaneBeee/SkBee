@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registry.RegistryHolder;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
 import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.event.Event;
@@ -24,10 +25,10 @@ import java.util.List;
 @Examples({"set {_biomes::*} to registry values of biome registry",
     "loop registry values of item registry:"})
 @Since("INSERT VERSION")
-public class ExpRegistryValues extends SimpleExpression<Object> {
+public class ExprRegistryValues extends SimpleExpression<Object> {
 
     static {
-        Skript.registerExpression(ExpRegistryValues.class, Object.class, ExpressionType.COMBINED,
+        Skript.registerExpression(ExprRegistryValues.class, Object.class, ExpressionType.COMBINED,
             "registry values of %registrykey%");
     }
 
@@ -49,7 +50,7 @@ public class ExpRegistryValues extends SimpleExpression<Object> {
         RegistryKey<?> registryKey = this.registryKey.getSingle(event);
         if (registryKey == null) return null;
 
-        RegistryUtils.RegistryHolder<?, ?> registryHolder = RegistryUtils.getRegistryHolder(registryKey);
+        RegistryHolder<?, ?> registryHolder = RegistryUtils.getRegistryHolder(registryKey);
         if (this.returnType == null) {
             this.returnType = registryHolder.getReturnType();
         }
