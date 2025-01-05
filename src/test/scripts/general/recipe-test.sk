@@ -27,7 +27,7 @@ test "SkBee - shaped recipe section":
 
     register shaped recipe:
         id: "custom:bee_2"
-        result: (skull of "MHF_Bee" parsed as offline player) named "&bMr &3Bee"
+        result: iron ingot named "Mr Honey"
         shape: "x x", " z ", "x x"
         ingredients:
             set ingredient of "x" to honeycomb
