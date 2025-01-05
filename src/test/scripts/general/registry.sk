@@ -10,7 +10,7 @@ test "SkBee - Registry Values" when running minecraft "1.21.3":
     set {_attribute} to random element of registry values of attribute registry
     assert class info of {_attribute} = "attribute type" with "Type of registry value should be 'attribute type'"
 
-test "SkBee - Registry TagKeys" when running minecraft "1.21.3":
+test "SkBee - Registry TagKeys from Registry" when running minecraft "1.21.3":
 
     set {_keys::*} to tag keys from biome registry
     assert {_keys::*} is set with "TagKeys from biome registry should be set"
@@ -22,3 +22,11 @@ test "SkBee - Registry TagKeys" when running minecraft "1.21.3":
     assert size of {_keys::*} > 1 with "TagKeys from block registry should be more than 1"
     delete {_keys::*}
 
+test "SkBee - Registry TagKey from Registry" when running minecraft "1.21.3":
+
+    set {_key} to tag key "minecraft:wool" from block registry
+    assert {_key} is set with "Block registry should have 'minecraft:wool' TagKey."
+    assert "%{_key}%" contains "minecraft:wool" with "The TagKey should contain 'minecraft:wool"
+    delete {_key}
+    set {_key} to tag key "minecraft:blah" from block registry
+    assert {_key} is not set with "Block registry should NOT have 'minecraft:blah' TagKey."
