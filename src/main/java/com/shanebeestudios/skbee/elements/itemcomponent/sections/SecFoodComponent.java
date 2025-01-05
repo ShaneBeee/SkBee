@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.FoodProperties;
 import org.bukkit.event.Event;
@@ -19,7 +20,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
 
@@ -50,11 +50,11 @@ public class SecFoodComponent extends Section {
     private static final EntryValidator VALIDATOR;
 
     static {
-        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
-        builder.addEntryData(new ExpressionEntryData<>("nutrition", null, false, Number.class));
-        builder.addEntryData(new ExpressionEntryData<>("saturation", null, false, Number.class));
-        builder.addEntryData(new ExpressionEntryData<>("can_always_eat", null, true, Boolean.class));
-        VALIDATOR = builder.build();
+        VALIDATOR = SimpleEntryValidator.builder()
+            .addRequiredEntry("nutrition", Number.class)
+            .addRequiredEntry("saturation", Number.class)
+            .addOptionalEntry("can_always_eat", Boolean.class)
+            .build();
         Skript.registerSection(SecFoodComponent.class, "apply food component to %itemstacks/itemtypes/slots%");
     }
 

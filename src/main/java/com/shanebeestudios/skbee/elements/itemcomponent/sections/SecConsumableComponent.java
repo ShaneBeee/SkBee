@@ -13,6 +13,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Consumable;
@@ -23,7 +24,6 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
 import java.util.Locale;
@@ -57,12 +57,12 @@ public class SecConsumableComponent extends EffectSection {
     private static final EntryValidator VALIDATOR;
 
     static {
-        VALIDATOR = EntryValidator.builder()
-            .addEntryData(new ExpressionEntryData<>("consume_seconds", null, true, Timespan.class))
-            .addEntryData(new ExpressionEntryData<>("animation", null, true, String.class))
-            .addEntryData(new ExpressionEntryData<>("sound", null, true, String.class))
-            .addEntryData(new ExpressionEntryData<>("has_consume_particles", null, true, Boolean.class))
-            .addEntryData(new ExpressionEntryData<>("on_consume_effects", null, true, ConsumeEffect.class))
+        VALIDATOR = SimpleEntryValidator.builder()
+            .addOptionalEntry("consume_seconds", Timespan.class)
+            .addOptionalEntry("animation", String.class)
+            .addOptionalEntry("sound", String.class)
+            .addOptionalEntry("has_consume_particles", Boolean.class)
+            .addOptionalEntry("on_consume_effects", ConsumeEffect.class)
             .build();
         Skript.registerSection(SecConsumableComponent.class,
             "apply consumable [component] to %itemstacks/itemtypes/slots%");

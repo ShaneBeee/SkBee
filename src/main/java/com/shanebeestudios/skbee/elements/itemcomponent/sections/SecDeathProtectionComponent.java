@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.DeathProtection;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect;
@@ -19,7 +20,6 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
 
@@ -44,8 +44,8 @@ public class SecDeathProtectionComponent extends EffectSection {
     private static final EntryValidator VALIDATOR;
 
     static {
-        VALIDATOR = EntryValidator.builder()
-            .addEntryData(new ExpressionEntryData<>("death_effects", null, true, ConsumeEffect.class))
+        VALIDATOR = SimpleEntryValidator.builder()
+            .addOptionalEntry("death_effects", ConsumeEffect.class)
             .build();
         Skript.registerSection(SecDeathProtectionComponent.class,
             "apply death protection [component] to %itemstacks/itemtypes/slots%");

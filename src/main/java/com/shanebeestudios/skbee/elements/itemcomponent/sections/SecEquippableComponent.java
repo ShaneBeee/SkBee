@@ -14,6 +14,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Equippable;
@@ -30,7 +31,6 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,17 +67,16 @@ public class SecEquippableComponent extends Section {
     private static final EntryValidator VALIDATOR;
 
     static {
-        VALIDATOR = EntryValidator.builder()
-            .addEntryData(new ExpressionEntryData<>("slot", null, false, EquipmentSlot.class))
-            .addEntryData(new ExpressionEntryData<>("equip_sound", null, true, String.class))
-            .addEntryData(new ExpressionEntryData<>("asset_id", null, true, String.class))
-            .addEntryData(new ExpressionEntryData<>("allowed_entity_types", null, true, EntityData.class))
-            .addEntryData(new ExpressionEntryData<>("allowed_entity_tags", null, true, Tag.class))
-            .addEntryData(new ExpressionEntryData<>("dispensable", null, true, Boolean.class))
-            .addEntryData(new ExpressionEntryData<>("swappable", null, true, Boolean.class))
-            .addEntryData(new ExpressionEntryData<>("damage_on_hurt", null, true, Boolean.class))
-            .addEntryData(new ExpressionEntryData<>("camera_overlay", null, true, String.class))
-
+        VALIDATOR = SimpleEntryValidator.builder()
+            .addRequiredEntry("slot", EquipmentSlot.class)
+            .addOptionalEntry("equip_sound", String.class)
+            .addOptionalEntry("asset_id", String.class)
+            .addOptionalEntry("allowed_entity_types", EntityData.class)
+            .addOptionalEntry("allowed_entity_tags", Tag.class)
+            .addOptionalEntry("dispensable", Boolean.class)
+            .addOptionalEntry("swappable", Boolean.class)
+            .addOptionalEntry("damage_on_hurt", Boolean.class)
+            .addOptionalEntry("camera_overlay", String.class)
             .build();
         Skript.registerSection(SecEquippableComponent.class,
             "apply equippable [component] to %itemstacks/itemtypes/slots%");

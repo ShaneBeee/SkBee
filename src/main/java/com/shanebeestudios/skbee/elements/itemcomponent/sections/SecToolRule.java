@@ -12,6 +12,7 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecToolComponent.ToolComponentApplyRulesEvent;
 import io.papermc.paper.datacomponent.item.Tool;
 import io.papermc.paper.registry.RegistryAccess;
@@ -29,7 +30,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,13 +67,13 @@ public class SecToolRule extends Section {
     private static final RegistryAccess REGISTRY_ACCESS = RegistryAccess.registryAccess();
 
     static {
-        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
-        builder.addEntryData(new ExpressionEntryData<>("block_types", null, true, ItemType.class));
-        builder.addEntryData(new ExpressionEntryData<>("block_tag", null, true, Tag.class));
-        builder.addEntryData(new ExpressionEntryData<>("speed", null, true, Number.class));
-        builder.addEntryData(new ExpressionEntryData<>("correct_for_drops", null, true, Boolean.class));
+        VALIDATOR = SimpleEntryValidator.builder()
+            .addOptionalEntry("block_types", ItemType.class)
+            .addOptionalEntry("block_tag", Tag.class)
+            .addOptionalEntry("speed", Number.class)
+            .addOptionalEntry("correct_for_drops", Boolean.class)
+            .build();
         Skript.registerSection(SecToolRule.class, "apply tool rule");
-        VALIDATOR = builder.build();
     }
 
     private Expression<ItemType> blockTypes;

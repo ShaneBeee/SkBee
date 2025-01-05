@@ -16,6 +16,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Tool;
 import org.bukkit.event.Event;
@@ -24,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
 
@@ -76,12 +76,12 @@ public class SecToolComponent extends Section {
     private static final EntryValidator VALIDATOR;
 
     static {
-        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
-        builder.addEntryData(new ExpressionEntryData<>("default_mining_speed", null, true, Number.class));
-        builder.addEntryData(new ExpressionEntryData<>("damage_per_block", null, true, Number.class));
-        builder.addSection("rules", true);
+        VALIDATOR = SimpleEntryValidator.builder()
+            .addOptionalEntry("default_mining_speed", Number.class)
+            .addOptionalEntry("damage_per_block", Number.class)
+            .addOptionalSection("rules")
+            .build();
         Skript.registerSection(SecToolComponent.class, "apply tool component to %itemstacks/itemtypes/slots%");
-        VALIDATOR = builder.build();
     }
 
     private Expression<ItemType> items;
