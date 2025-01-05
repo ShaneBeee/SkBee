@@ -9,7 +9,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -111,7 +110,8 @@ public class Util {
      * @return new Minecraft NamespacedKey
      */
     @Nullable
-    public static NamespacedKey getNamespacedKey(@NotNull String key, boolean error) {
+    public static NamespacedKey getNamespacedKey(@Nullable String key, boolean error) {
+        if (key == null) return null;
         if (!key.contains(":")) key = "minecraft:" + key;
         if (key.length() > 255) {
             if (error)

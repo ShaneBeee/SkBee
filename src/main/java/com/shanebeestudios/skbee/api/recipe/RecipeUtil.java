@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.api.recipe;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -86,6 +87,7 @@ public class RecipeUtil {
      * @param ingredients Ingredients of recipe to log
      */
     public static void logRecipe(Recipe recipe, RecipeChoice... ingredients) {
+        if (TestMode.ENABLED) return;
         if (!(recipe instanceof Keyed)) return;
         log("&aRegistered new recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
@@ -103,6 +105,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logCookingRecipe(CookingRecipe<?> recipe) {
+        if (TestMode.ENABLED) return;
         String type = recipe.getClass().getSimpleName().replace("Recipe", "").toLowerCase(Locale.ROOT);
         log("&aRegistered new %s recipe: &7(&b%s&7)", type, ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
@@ -124,6 +127,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logShapelessRecipe(ShapelessRecipe recipe) {
+        if (TestMode.ENABLED) return;
         log("&aRegistered new shapeless recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         String group = recipe.getGroup();
@@ -144,6 +148,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logShapedRecipe(ShapedRecipe recipe) {
+        if (TestMode.ENABLED) return;
         log("&aRegistered new shaped recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
 
@@ -174,6 +179,7 @@ public class RecipeUtil {
      * @param potionMix PotionMix to log
      */
     public static void logBrewingRecipe(PotionMix potionMix) {
+        if (TestMode.ENABLED) return;
         log("&aRegistered new shaped recipe: &7(&b%s&7)", potionMix.getKey().toString());
         log(" - &7Result: &e%s", potionMix.getResult());
         log(" - &7Ingredient: %s", getFancy(potionMix.getIngredient()));
@@ -186,6 +192,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logSmithingRecipe(SmithingTransformRecipe recipe) {
+        if (TestMode.ENABLED) return;
         log("&aRegistered new smithing recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         log(" - &7Template: %s", getFancy(recipe.getTemplate()));

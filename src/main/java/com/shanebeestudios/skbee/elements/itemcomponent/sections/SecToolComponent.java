@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -14,54 +15,56 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.Tool;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.components.ToolComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
 
-@SuppressWarnings("DataFlowIssue")
+@SuppressWarnings("UnstableApiUsage")
 @Name("ItemComponent - Tool Component Apply")
-@Description({"Apply a tool component to any item making it usable tool. Requires Minecraft 1.20.5+",
-    "See [**McWiki Tool Component**](https://minecraft.wiki/w/Data_component_format#tool) for more details.",
+@Description({"Apply a tool component to any item making it usable tool.",
+    "Requires Paper 1.21.3+",
+    "See [**Tool Component**](https://minecraft.wiki/w/Data_component_format#tool) on McWiki for more details.",
     "",
     "**Entries/Sections**:",
-    "- `default mining speed` = The default mining speed of this tool, used if no rules override it. Defaults to 1.0. [Optional]",
-    "- `damage per block` = The amount of durability to remove each time a block is broken with this tool. Must be a non-negative integer. [Optional]",
+    "- `default_mining_speed` = The default mining speed of this tool, used if no rules override it. Defaults to 1.0. [Optional]",
+    "- `damage_per_block` = The amount of durability to remove each time a block is broken with this tool. Must be a non-negative integer. [Optional]",
     "- `rules:` =  A list of rules for the blocks that this tool has a special behavior with."})
 @Examples({"set {_i} to a stick",
     "apply tool component to {_i}:",
-    "\tdefault mining speed: 2.3",
-    "\tdamage per block: 2",
+    "\tdefault_mining_speed: 2.3",
+    "\tdamage_per_block: 2",
     "\trules:",
     "\t\tapply tool rule:",
-    "\t\t\tblock tag: minecraft block tag \"minecraft:dirt\"",
+    "\t\t\tblock_tag: minecraft block tag \"minecraft:dirt\"",
     "\t\t\tspeed: 1.0",
-    "\t\t\tcorrect for drops: true",
+    "\t\t\tcorrect_for_drops: true",
     "\t\tapply tool rule:",
-    "\t\t\tblock types: granite, stone and andesite",
+    "\t\t\tblock_types: granite, stone and andesite",
     "\t\t\tspeed: 0.5",
-    "\t\t\tcorrect for drops: false",
+    "\t\t\tcorrect_for_drops: false",
     "give {_i} to player"})
-@Since("3.5.8")
+@Since("INSERT VERSION")
 public class SecToolComponent extends Section {
 
     public static class ToolComponentApplyRulesEvent extends Event {
 
-        private final ToolComponent component;
+        private final Tool.Builder toolBuilder;
 
-        public ToolComponentApplyRulesEvent(ToolComponent component) {
-            this.component = component;
+        public ToolComponentApplyRulesEvent(Tool.Builder toolBuilder) {
+            this.toolBuilder = toolBuilder;
         }
 
-        public ToolComponent getComponent() {
-            return this.component;
+        public Tool.Builder getToolBuilder() {
+            return this.toolBuilder;
         }
 
         @Override
@@ -70,15 +73,15 @@ public class SecToolComponent extends Section {
         }
     }
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
-        if (Skript.classExists("org.bukkit.inventory.meta.components.ToolComponent")) {
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("default mining speed", null, true, Number.class));
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("damage per block", null, true, Number.class));
-            VALIDATIOR.addSection("rules", true);
-            Skript.registerSection(SecToolComponent.class, "apply tool component to %itemtypes%");
-        }
+        VALIDATOR = SimpleEntryValidator.builder()
+            .addOptionalEntry("default_mining_speed", Number.class)
+            .addOptionalEntry("damage_per_block", Number.class)
+            .addOptionalSection("rules")
+            .build();
+        Skript.registerSection(SecToolComponent.class, "apply tool component to %itemstacks/itemtypes/slots%");
     }
 
     private Expression<ItemType> items;
@@ -86,15 +89,15 @@ public class SecToolComponent extends Section {
     private Expression<Number> damagePerBlock;
     private Trigger rulesSection;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        EntryContainer container = VALIDATIOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.items = (Expression<ItemType>) exprs[0];
-        this.defaultMiningSpeed = (Expression<Number>) container.getOptional("default mining speed", false);
-        this.damagePerBlock = (Expression<Number>) container.getOptional("damage per block", false);
+        this.defaultMiningSpeed = (Expression<Number>) container.getOptional("default_mining_speed", false);
+        this.damagePerBlock = (Expression<Number>) container.getOptional("damage_per_block", false);
 
         SectionNode rulesNode = container.getOptional("rules", SectionNode.class, false);
         if (rulesNode != null) {
@@ -103,37 +106,31 @@ public class SecToolComponent extends Section {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Object localVars = Variables.copyLocalVariables(event);
 
-        Number defaultMiningSpeed = this.defaultMiningSpeed != null ? this.defaultMiningSpeed.getSingle(event) : null;
-        Number damagePerBlock = this.damagePerBlock != null ? this.damagePerBlock.getSingle(event) : null;
-
-        for (ItemType itemType : this.items.getArray(event)) {
-            ItemMeta itemMeta = itemType.getItemMeta();
-
-            ToolComponent tool = itemMeta.getTool();
-            if (defaultMiningSpeed != null) {
-                tool.setDefaultMiningSpeed(defaultMiningSpeed.floatValue());
-            }
-            if (damagePerBlock != null) {
-                int dpb = damagePerBlock.intValue();
-                if (dpb >= 0) tool.setDamagePerBlock(dpb);
-            }
-
-            if (this.rulesSection != null) {
-                ToolComponentApplyRulesEvent toolEvent = new ToolComponentApplyRulesEvent(tool);
-                Variables.setLocalVariables(toolEvent, localVars);
-                TriggerItem.walk(this.rulesSection, toolEvent);
-                Variables.setLocalVariables(event, Variables.copyLocalVariables(toolEvent));
-                Variables.removeLocals(toolEvent);
-            }
-
-            itemMeta.setTool(tool);
-            itemType.setItemMeta(itemMeta);
+        Tool.Builder toolBuilder = Tool.tool();
+        if (this.defaultMiningSpeed != null) {
+            float speed = this.defaultMiningSpeed.getOptionalSingle(event).orElse(1.0).floatValue();
+            toolBuilder.defaultMiningSpeed(speed);
         }
+        if (this.damagePerBlock != null) {
+            int damage = this.damagePerBlock.getOptionalSingle(event).orElse(1).intValue();
+            toolBuilder.damagePerBlock(damage);
+        }
+
+        if (this.rulesSection != null) {
+            ToolComponentApplyRulesEvent toolEvent = new ToolComponentApplyRulesEvent(toolBuilder);
+            Variables.setLocalVariables(toolEvent, localVars);
+            TriggerItem.walk(this.rulesSection, toolEvent);
+            Variables.setLocalVariables(event, Variables.copyLocalVariables(toolEvent));
+            Variables.removeLocals(toolEvent);
+        }
+
+        Tool tool = toolBuilder.build();
+
+        ItemUtils.modifyComponent(this.items.getArray(event), ChangeMode.SET, DataComponentTypes.TOOL, tool);
 
         return super.walk(event, false);
     }

@@ -17,9 +17,11 @@ types:
     bukkitcolor: bukkit col(or|our)¦s
     bukkittreetype: bukkit tree type¦s
     chunkloadlevel: chunk load level¦s
+    consumeeffect: consume effect¦s
     criteria: criteria¦s
     damagesource: damage source¦s
     damagetype: damage type¦s
+    datacomponenttype: data component type¦s
     displaybillboard: display billboard¦s
     displaybrightness: display brightness¦es
     displayslot: display slot¦s
@@ -59,6 +61,7 @@ types:
     raytraceresult: raytraceresult¦s
     recipechoice: recipe choice¦s
     recipetype: recipe type¦s
+    registrykey: registry key¦s
     rendertype: render type¦s
     respawnreason: respawn reason¦s
     spell: spell¦s
@@ -67,6 +70,7 @@ types:
     structure: structure¦s
     structurerotation: structure rotation¦s
     tagresolver: tag resolver¦s
+    tagkey: tag key¦s
     team: team¦s
     teamoption: team options¦s
     teamoptionstatus: team option status¦es
@@ -77,6 +81,7 @@ types:
     transformreason: transform reason¦s
     trimmaterial: trim material¦s
     trimpattern: trim pattern¦s
+    typedkey: typed key¦s
     vibration: vibration¦s @-
     villagertype: villager type¦s
     worldborder: world border¦s

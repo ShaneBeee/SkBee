@@ -1,0 +1,167 @@
+test "SkBee - Item Component test" when running minecraft "1.21.3":
+
+    # Consumable section
+    set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
+    set {_i} to 1 of stick
+    apply consumable component to {_i}:
+        consume_seconds: 3.2 seconds
+        animation: "brush"
+        sound: "block.stone.break"
+        has_consume_particles: false
+        on_consume_effects: {_effects}
+    assert {_i} has item component minecraft:consumable with "The stick should have a consumable component"
+
+    # Death Protection Section
+    set {_i} to 1 of diamond sword
+    set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
+    apply death protection component to {_i}:
+        death_effects: {_effects}
+    assert {_i} has item component minecraft:death_protection with "The diamond sword should have a death protection component"
+
+    # Enchantable
+    set {_i} to 1 of diamond sword
+    assert enchantable component of {_i} = 10 with "Default enchantable of a diamond sword should be 10"
+    set enchantable component of {_i} to 3
+    assert enchantable component of {_i} = 3 with "Setting should change the value to 3"
+    delete enchantable component of {_i}
+    assert enchantable component of {_i} is not set with "Deleting the component should have no return value"
+    reset enchantable component of {_i}
+    assert enchantable component of {_i} = 10 with "Reset enchantable of a diamond sword should be back 10"
+
+    # Enchantment Glint Override
+    set {_i} to 1 of diamond axe
+    assert enchantment glint override of {_i} is not set with "Default item should not have a glint override"
+    set enchantment glint override of {_i} to true
+    assert enchantment glint override of {_i} = true with "Modified glint should be true"
+    delete enchantment glint override of {_i}
+    assert enchantment glint override of {_i} is not set with "Reset should not have a glint override"
+
+    # Equippable Section
+    set {_i} to 1 of stick
+    apply equippable component to {_i}:
+        slot: hand_slot
+        equip_sound: "entity.player.burp"
+        asset_id: "my_pack:some_asset"
+        allowed_entity_types: player, evoker
+        allowed_entity_tags: minecraft entity tag "undead"
+        dispensable: false
+        swappable: true
+        damage_on_hurt: true
+        camera_overlay: "my_pack:some_overlay"
+    assert {_i} has item component minecraft:equippable with "The stick should have an equippable component"
+
+    # Food section
+    set {_i} to 1 of stick
+    apply food component to {_i}:
+        nutrition: 10
+        saturation: 32
+        can_always_eat: true
+    assert {_i} has item component minecraft:food with "The stick should have a food component"
+
+    # Glider
+    set {_i} to 1 of elytra
+    assert glider component of {_i} = true with "Elytra should have a glider by default"
+    delete glider component of {_i}
+    assert glider component of {_i} is not set with "After deleting, item should no longer have a glider"
+    reset glider component of {_i}
+    assert glider component of {_i} = true with "After reset, item should have a glider"
+
+    # Item Model
+    set {_i} to 1 of diamond sword
+    assert item model of {_i} = "minecraft:diamond_sword" with "Default item model of a diamond sword should be 'minecraft:diamond_sword'"
+    set item model of {_i} to "test:test"
+    assert item model of {_i} = "test:test" with "Modified item model of item should be 'test:test'"
+    delete item model of {_i}
+    assert item model of {_i} is not set with "After delete, no model should be present"
+    reset item model of {_i}
+    assert item model of {_i} = "minecraft:diamond_sword" with "Reset item model of a diamond sword should be 'minecraft:diamond_sword'"
+
+    # Max Stack Size
+    set {_i} to 1 of oak planks
+    assert max stack size component of {_i} = 64 with "Default max stack size component should be 64 for oak planks"
+    set max stack size component of {_i} to 16
+    assert max stack size component of {_i} = 16 with "Modified max stack size should be 16"
+    delete max stack size component of {_i}
+    assert max stack size component of {_i} is not set with "Deleting component should result in no return"
+    reset max stack size component of {_i}
+    assert max stack size component of {_i} = 64 with "Reset max stack size component should be 64 for oak planks"
+
+    # Repairable
+    set {_i} to 1 of stick
+    assert repairable items of {_i} is not set with "A stick should not have any repairable items"
+    set repairable items of {_i} to diamond, emerald and iron ingot
+    assert repairable items of {_i} is set with "The stick should now have repairable items"
+    assert size of (repairable items of {_i}) is 3 with "The stick should have 3 repairable items"
+    set {_i} to 1 of diamond sword
+    assert repairable items of {_i} is set with "A diamond sword should have repairable items"
+    delete repairable items of {_i}
+    assert repairable items of {_i} is not set with "After deletion, should no longer have repairable items"
+    reset repairable items of {_i}
+    assert repairable items of {_i} is set with "After reset, should have repairable items"
+    set {_tag} to repairable tag of {_i}
+    assert {_tag} is minecraft item tag "diamond_tool_materials" with "Tag should match"
+    set {_i::*} to repairable items of {_i}
+    assert {_i::*} is set with "The list of items should be set"
+
+    # Repair Cost
+    set {_i} to 1 of diamond axe
+    assert repair cost component of {_i} = 0 with "Default repair cost component of diamond axe should be 0"
+    add 5 to repair cost component of {_i}
+    assert repair cost component of {_i} = 5 with "Add 5 to repair cost component should result in 5"
+    remove 2 from repair cost component of {_i}
+    assert repair cost component of {_i} = 3 with "Remove 2 from repair cost component should result in 3"
+    remove 10 from repair cost component of {_i}
+    assert repair cost component of {_i} = 0 with "Remove 10 from repair cost component should result in 0"
+    delete repair cost component of {_i}
+    assert repair cost component of {_i} is not set with "Delete should remove the component"
+    reset repair cost component of {_i}
+    assert repair cost component of {_i} = 0 with "Reset repair cost component of diamond axe should be 0"
+
+    # Tool
+    set {_i} to 1 of stick
+    apply tool component to {_i}:
+        default_mining_speed: 2.3
+        damage_per_block: 2
+        rules:
+            apply tool rule:
+                block_tag: minecraft block tag "minecraft:dirt"
+                speed: 1.0
+                correct_for_drops: true
+            apply tool rule:
+                block_types: granite, stone and andesite
+                speed: 5.5
+                correct_for_drops: false
+    assert {_i} has item component minecraft:tool with "The stick should have a tool component"
+
+    # Tooltip Style
+    set {_i} to 1 of stick
+    assert tooltip style of {_i} is not set with "Default stick should not have a tooltip style"
+    set tooltip style of {_i} to "blah:blah"
+    assert tooltip style of {_i} is "blah:blah" with "Setting the style should now be 'blah:blah'"
+    delete tooltip style of {_i}
+    assert tooltip style of {_i} is not set with "Deleting should remove the style"
+
+    # Use Cooldown
+    set {_i} to 1 of apple
+    apply use cooldown to {_i}:
+        seconds: 5 seconds
+        group: "blah:special_apple"
+    assert {_i} has item component minecraft:use_cooldown with "The apple should have a use cooldown component"
+
+    # Use Remainder
+    set {_i} to 1 of honey bottle
+    assert use remainder component of {_i} is glass bottle with "Default use remainder of a honey bottle should be a glass bottle"
+    set use remainder component of {_i} to 1 of stone
+    assert use remainder component of {_i} is stone with "Changed use remainder should be stone"
+    delete use remainder component of {_i}
+    assert use remainder component of {_i} is not set with "Deleted component should not be set"
+    reset use remainder component of {_i}
+    assert use remainder component of {_i} is glass bottle with "Reset use remainder of a honey bottle should be a glass bottle"
+
+    # Consume Effect Functions
+    set {_c::1} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
+    set {_c::2} to remove_effects(poison and night vision)
+    set {_c::3} to clear_all_effects()
+    set {_c::4} to teleport_randomly(15)
+    set {_c::5} to play_sound("minecraft:block.stone.break")
+    assert size of {_c::*} = 5 with "5 consume effects should have been created"
