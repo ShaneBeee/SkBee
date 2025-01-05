@@ -616,8 +616,10 @@ public class AddonLoader {
 
     private void loadRegistryElements() {
         // We won't use a config for this
-        if (!Skript.classExists("io.papermc.paper.registry.tag.TagKey")) {
-            Util.logLoading("&5Registry elements &cdisabled &7(&eRequires Paper 1.21.3+&7)");
+        // Not sure which truly came last
+        if (!Skript.classExists("io.papermc.paper.registry.tag.TagKey") ||
+            !Skript.classExists("io.papermc.paper.registry.RegistryKey")) {
+            Util.logLoading("&5Registry elements &cdisabled &7(&eRequires Paper 1.21+&7)");
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.registry");
