@@ -38,7 +38,7 @@ test "SkBee - shapeless recipe section":
         id: "custom:string"
         result: 4 string
         ingredients:
-            add material choice of minecraft item tag "minecraft:wools" to ingredients
+            add material choice of minecraft item tag "minecraft:wool" to ingredients
 
     register shapeless recipe:
         id: "custom:totem_of_undying"
