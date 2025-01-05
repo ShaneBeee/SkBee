@@ -1,7 +1,8 @@
 package com.shanebeestudios.skbee.api.registry;
 
-import com.shanebeestudios.skbee.api.util.Util;
-import net.kyori.adventure.key.InvalidKeyException;
+import ch.njol.skript.Skript;
+import ch.njol.skript.test.runner.TestMode;
+import com.shanebeestudios.skbee.SkBee;
 import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.Nullable;
 
@@ -10,20 +11,22 @@ import org.jetbrains.annotations.Nullable;
  */
 public class KeyUtils {
 
+    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG && !TestMode.ENABLED;
+
     /**
-     * Gets a {@link Key Minecraft Key} from string
+     * Get a {@link Key Minecraft Key} from string
      * <p>If a namespace is not provided, it will default to "minecraft:" namespace.
-     * Will not send an error to console.</p>
+     * If an invalid key is provided, an error will send to console if debug is enabled</p>
      *
      * @param key Key for new Minecraft Key
      * @return new Minecraft NamespacedKey
      */
     public static Key getKey(@Nullable String key) {
-        return getKey(key, false);
+        return getKey(key, DEBUG);
     }
 
     /**
-     * Gets a {@link Key Minecraft Key} from string
+     * Get a {@link Key Minecraft Key} from string
      * <p>If a namespace is not provided, it will default to "minecraft:" namespace</p>
      *
      * @param key   Key for new Minecraft Key
@@ -34,22 +37,17 @@ public class KeyUtils {
     @Nullable
     public static Key getKey(@Nullable String key, boolean error) {
         if (key == null) return null;
-        if (!key.contains(":")) key = "minecraft:" + key;
-        if (key.length() > 255) {
-            if (error)
-                Util.skriptError("An invalid key was provided, key must be less than 256 characters: %s", key);
-            return null;
-        }
+
         key = key.toLowerCase();
         if (key.contains(" ")) {
             key = key.replace(" ", "_");
         }
 
-        try {
+        if (Key.parseable(key)) {
             return Key.key(key);
-        } catch (InvalidKeyException ignore) {
+        } else {
             if (error)
-                Util.skriptError("An invalid key was provided, that didn't follow [a-z0-9/._-:]. key: %s", key);
+                Skript.error("An invalid key was provided, that didn't follow [a-z0-9/._-:]. key: " + key);
             return null;
         }
     }
