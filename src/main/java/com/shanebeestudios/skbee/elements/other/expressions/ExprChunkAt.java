@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import org.bukkit.Chunk;
@@ -18,43 +19,43 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Chunk at Coords")
 @Description({"Get a chunk using chunk coords.",
-        "\nNOTE: Chunk coords are different than location coords.",
-        "Chunk coords are basically location coords divided by 16."})
+    "NOTE: Chunk coords are different than location coords.",
+    "Chunk coords are basically location coords divided by 16.",
+    "Optionally get the chunk without generating it (possibly doesn't load as well)."})
 @Examples({"set {_chunk} to chunk at coords 1,1",
-        "set {_chunk} to chunk at coords 1,1 in world \"world\""})
+    "set {_chunk} to chunk at coords 1,1 in world \"world\"",
+    "set {_chunk} to chunk at 50,50 in world \"world_nether\" without generating"})
 @Since("2.14.0")
 public class ExprChunkAt extends SimpleExpression<Chunk> {
 
     static {
         Skript.registerExpression(ExprChunkAt.class, Chunk.class, ExpressionType.COMBINED,
-                "chunk at [coord[inate]s] %number%,[ ]%number% [(in|of) %world%]");
+            "chunk at [coord[inate]s] %number%,[ ]%number% [(in|of) %world%] [nogen:without (generating|loading)]");
     }
 
     private Expression<Number> chunkX, chunkZ;
     private Expression<World> world;
+    private boolean generate;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.chunkX = (Expression<Number>) exprs[0];
         this.chunkZ = (Expression<Number>) exprs[1];
         this.world = (Expression<World>) exprs[2];
+        this.generate = !parseResult.hasTag("nogen");
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Chunk @Nullable [] get(Event event) {
         World world = this.world.getSingle(event);
-        Number chunkXNum = this.chunkX.getSingle(event);
-        Number chunkZNum = this.chunkZ.getSingle(event);
+        Number x = this.chunkX.getSingle(event);
+        Number z = this.chunkZ.getSingle(event);
 
-        if (world == null || chunkXNum == null || chunkZNum == null) return null;
+        if (world == null || x == null || z == null) return null;
 
-        int chunkX = chunkXNum.intValue();
-        int chunkZ = chunkZNum.intValue();
-
-        Chunk chunkAt = world.getChunkAt(chunkX, chunkZ);
+        Chunk chunkAt = world.getChunkAt(x.intValue(), z.intValue(), this.generate);
         return new Chunk[]{chunkAt};
     }
 
@@ -70,8 +71,11 @@ public class ExprChunkAt extends SimpleExpression<Chunk> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String world = this.world != null ? ("in " + this.world.toString(e, d)) : "";
-        return "chunk at coords " + this.chunkX.toString(e, d) + "," + this.chunkZ.toString(e, d) + world;
+        SyntaxStringBuilder builder = new SyntaxStringBuilder(e, d);
+        builder.append("chunk at coords [", this.chunkX, ",", this.chunkZ, "]");
+        builder.append("in world '", this.world, "'");
+        if (!this.generate) builder.append("without generating");
+        return builder.toString();
     }
 
 }
