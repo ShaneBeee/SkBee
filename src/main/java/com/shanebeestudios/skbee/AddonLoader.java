@@ -97,9 +97,9 @@ public class AddonLoader {
         this.addon.setLanguageFileDirectory("lang");
 
         int[] elementCountBefore = SkriptUtils.getElementCount();
-        // Load first as it's the base for many things
+        // Load first as these are the base for many things
+        loadRegistryElements();
         loadOtherElements();
-        // Load next as both are used in other places
         loadNBTElements();
         loadTextElements();
 
@@ -608,6 +608,20 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.testing");
             Util.logLoading("&5Testing Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadRegistryElements() {
+        // We won't use a config for this
+        if (!Skript.classExists("io.papermc.paper.registry.tag.TagKey")) {
+            Util.logLoading("&5Registry elements &cdisabled &7(&eRequires Paper 1.21.3+&7)");
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.registry");
+            Util.logLoading("&5Registry Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);

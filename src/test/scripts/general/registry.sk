@@ -1,0 +1,11 @@
+test "SkBee - Registry" when running minecraft "1.21.3":
+
+    set {_biome} to random element of registry values of biome registry
+    assert {_biome} is set with "Random element of biome registry should return a biome"
+    assert class info of {_biome} is "biome" with "Type of registry value should be 'biome'"
+
+    set {_item} to random element of registry values of item registry
+    assert class info of {_item} is "item type" with "Type of registry value should be 'item type'"
+
+    set {_attribute} to random element of registry values of attribute registry
+    assert class info of {_attribute} = "attribute type" with "Type of registry value should be 'attribute type'"
