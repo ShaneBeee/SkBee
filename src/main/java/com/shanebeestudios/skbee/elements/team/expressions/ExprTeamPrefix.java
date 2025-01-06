@@ -16,24 +16,23 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("NullableProblems")
 @Name("Team - Prefix/Suffix")
 @Description("Get/set/delete the prefix/suffix of a team.")
 @Examples({"set team prefix of {_team} to \"[OWNER]\"",
-        "set team suffix of {_team} to \"[GOLD]\"",
-        "set {_pre} to team prefix of {_team}",
-        "set team prefix of team of player to \"[BestTeam]\""})
+    "set team suffix of {_team} to \"[GOLD]\"",
+    "set {_pre} to team prefix of {_team}",
+    "set team prefix of team of player to \"[BestTeam]\""})
 @Since("1.16.0")
 public class ExprTeamPrefix extends SimplePropertyExpression<Team, String> {
 
     static {
         register(ExprTeamPrefix.class, String.class,
-                "team (prefix|1:suffix)", "team");
+            "team (prefix|1:suffix)", "team");
     }
 
     private int pattern;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = parseResult.mark;
@@ -44,11 +43,14 @@ public class ExprTeamPrefix extends SimplePropertyExpression<Team, String> {
     @SuppressWarnings("deprecation")
     @Override
     public @Nullable String convert(Team team) {
+        String value;
         if (pattern == 0) {
-            return team.getPrefix();
+            value = team.getPrefix();
         } else {
-            return team.getSuffix();
+            value = team.getSuffix();
         }
+        if (value.isEmpty()) return null;
+        return value;
     }
 
     @Nullable
