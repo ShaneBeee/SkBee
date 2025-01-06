@@ -1,4 +1,4 @@
-test "SkBee - simple nbt compound":
+test "SkBee - Simple nbt compound":
     set {_n} to nbt from "{test:123}"
 
     # Test that a tag is set

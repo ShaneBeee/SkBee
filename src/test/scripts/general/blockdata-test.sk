@@ -1,4 +1,4 @@
-test "SkBee - blockdata":
+test "SkBee - BlockData stuff":
     set {_l} to location(1,1,1)
     set block at {_l} to oak_stairs[waterlogged=true]
 

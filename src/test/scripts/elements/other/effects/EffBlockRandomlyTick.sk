@@ -1,0 +1,19 @@
+test "SkBee - EffBlockRandomlyTick":
+    set {_l} to location of highest block at location(1,100,1)
+    set {_data::1} to blockdata of block at {_l}
+    set {_data::2} to blockdata of block above block at {_l}
+
+    set block at {_l} to farmland
+    set block above {_l} to wheat[age=1]
+    while blockdata tag "age" of block above {_l} < 7:
+        # Keep ticking until we reach age 7
+        randomly tick block above {_l}
+        if loop-iteration > 200:
+            # Prevent the posibility of crashing the server
+            send "stopping..." to console
+            stop
+    assert blockdata of block above {_l} = wheat[age=7] with "After randomly ticking, block should be fully grown"
+
+    # reset
+    set block above {_l} to {_data::2}
+    set block at {_l} to {_data::1}

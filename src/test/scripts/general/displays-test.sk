@@ -1,4 +1,4 @@
-test "SkBee - display entities":
+test "SkBee - Display entities":
 
     # Test for TextDisplay
     spawn text display at location(1,100,1):

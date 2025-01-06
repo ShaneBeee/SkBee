@@ -1,0 +1,7 @@
+test "SkBee - SecSpawnMinecraftEntity.sk":
+    mc spawn minecraft:sheep at event-location:
+        set {_e} to entity
+
+    assert {_e} is set with "Entity should have spawned"
+    assert {_e} is a sheep with "Entity should be a sheep"
+    delete entity within {_e}

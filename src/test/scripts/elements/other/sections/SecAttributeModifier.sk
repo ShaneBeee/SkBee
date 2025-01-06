@@ -1,0 +1,11 @@
+test "SkBee - SecAttributeModifier":
+
+    set {_i} to 1 of stick
+    assert movement speed modifier of {_i} is not set with "The item shouldn't have a modifier yet"
+    apply attribute modifier to {_i}:
+        attribute: movement speed
+        slot: feet slot group
+        id: "test:test"
+        amount: 10
+        operation: add_number
+    assert movement speed modifier of {_i} is set with "The item should now have a modifier"

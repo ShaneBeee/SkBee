@@ -1,0 +1,14 @@
+function testNamespacedKey(o: object, s: string):
+    assert namespaced key of {_o} = {_s} with "Invalid namespaced key"
+
+test "SkBee - ExprNamespacedKeyObject":
+    testNamespacedKey(diamond sword, "minecraft:diamond_sword")
+    testNamespacedKey(oak_stairs[], "minecraft:oak_stairs")
+    testNamespacedKey(a sheep, "minecraft:sheep")
+    testNamespacedKey(nether wastes, "minecraft:nether_wastes")
+    testNamespacedKey(night vision, "minecraft:night_vision")
+    testNamespacedKey(movement speed, "minecraft:movement_speed")
+    testNamespacedKey(sharpness, "minecraft:sharpness")
+    testNamespacedKey(mob attack no aggro, "minecraft:mob_attack_no_aggro")
+    testNamespacedKey(world "world", "minecraft:overworld")
+    testNamespacedKey(librarian profession, "minecraft:librarian")

@@ -1,0 +1,30 @@
+test "SkBee - World Border":
+    set {_border} to world border of world "world"
+    reset {_border}
+
+    # Center
+    assert border center of {_border} = location(0,0,0, world "world") with "Border should be centered on 0,0,0"
+    set border center of {_border} to location(100,0,100)
+    assert border center of {_border} = location(100,0,100) with "Border center should now be 100,0,100"
+
+    # Values
+    assert border damage amount of {_border} = 0.2 with "Default damage should be 0.2"
+    set border damage amount of {_border} to 10
+    assert border damage amount of {_border} = 10 with "Default damage should be 10 after changing"
+
+    assert border size of {_border} = 59999968 with "Default border size should be 59999968"
+    set border size of {_border} to 10000
+    assert border size of {_border} = 10000 with "Border size should be 10000 after changing"
+    shrink {_border} by 100
+    assert border size of {_border} = 9900 with "Border size should be 9900 after shrinking"
+    expand {_border} by 1000
+    assert border size of {_border} = 10900 with "Border size should be 10900 after expanding"
+
+    assert border warning time of {_border} = 15 seconds with "Default warning time should be 15 seconds"
+    set border warning time of {_border} to 5 seconds
+    assert border warning time of {_border} = 5 seconds with "Warning time should be 5 seconds after being set"
+
+    assert location(10,10,10) is within border {_border} with "Location 10,10,10 should be within the border"
+
+    # Cleanup
+    reset {_border}

@@ -1,0 +1,9 @@
+test "SkBee - ExprMobAwareness":
+    spawn a villager at event-location:
+        set {_v} to entity
+
+    assert mob awareness of {_v} = true with "The villager should be aware of his surroundings"
+    set mob awareness of {_v} to false
+    assert mob awareness of {_v} = false with "The villager should have just given up on life"
+
+    delete entity within {_v}

@@ -1,4 +1,4 @@
-test "SkBee - chunk stuff":
+test "SkBee - Chunk stuff":
 
     # Test that these syntaxes don't cause errors
     set {_l} to location(500,100,500)

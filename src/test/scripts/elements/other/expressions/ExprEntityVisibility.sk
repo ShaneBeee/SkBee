@@ -1,0 +1,22 @@
+test "SkBee - Entity visibility":
+    spawn a sheep at location(0,100,0):
+        set {_e} to entity
+
+    assert visibility of {_e} = true with "Visibility of sheep should be true at start"
+    set visibility of {_e} to false
+    assert visibility of {_e} = false with "Visibility of sheep should be false after change"
+    delete entity within {_e}
+
+    spawn an armor stand at location(0,100,0):
+        set {_e} to entity
+    assert visibility of {_e} = true with "Visibility of armor stand should be true at start"
+    set visibility of {_e} to false
+    assert visibility of {_e} = false with "Visibility of armor stand should be false after change"
+    delete entity within {_e}
+
+    spawn an item frame at location(0,100,0):
+        set {_e} to entity
+    assert visibility of {_e} = true with "Visibility of item frame should be true at start"
+    set visibility of {_e} to false
+    assert visibility of {_e} = false with "Visibility of item frame should be false after change"
+    delete entity within {_e}
