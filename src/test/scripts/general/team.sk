@@ -34,3 +34,4 @@ test "SkBee - Team":
     # Cleanup
     delete entity within {_e}
     delete team with id "blah_team"
+    assert team named "blah_team" is not registered with "Team 'blah_team' should have been unregistered"
