@@ -67,6 +67,7 @@ public enum ChatUtil {
         return SkriptColor.fromBukkitColor(org.bukkit.Color.fromRGB(intValue));
     }
 
+    @SuppressWarnings("removal")
     public static @Nullable String getTranslation(Object object) {
         if (object instanceof Entity entity) {
             EntityType type = entity.getType();
@@ -85,6 +86,8 @@ public enum ChatUtil {
             return string;
         } else if (object instanceof Translatable translatable) {
             return translatable.translationKey();
+        } else if (object instanceof org.bukkit.Translatable translatable) {
+            return translatable.getTranslationKey();
         }
         return null;
     }
