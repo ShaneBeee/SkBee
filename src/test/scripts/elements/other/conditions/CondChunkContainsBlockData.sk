@@ -5,4 +5,4 @@ test "SkBee - CondChunkContainsBlockData":
 
     # Let's really make sure these conditions work
     assert {_c} has blockdata netherrack[] to fail with "This should fail, overworld shouldn't have netherrack"
-    assert {_c} doesn't have blockdata stone[] to fail with "This should fail, overworld should have stone"
+    assert {_c} doesn't have blockdata dirt[] to fail with "This should fail, overworld should have dirt"
