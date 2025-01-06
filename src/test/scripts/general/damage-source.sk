@@ -1,7 +1,7 @@
 test "SkBee - Damage Source":
     spawn a sheep at event-location:
         set {_e} to entity
-        set {-sheep} to true
+        set {sheep} to true
     spawn a zombie at event-location:
         set {_z} to entity
     set {_source} to damage source of minecraft:cramming directly by {_z}
@@ -12,8 +12,8 @@ test "SkBee - Damage Source":
     delete entity within {_z}
 
 on damage of sheep:
-    if {-sheep} is set:
-        delete {-sheep}
+    if {sheep} is set:
+        delete {sheep}
         set {_source} to the damage source
         assert {_source} is set with "The damage source should be set"
         assert damage type of {_source} is minecraft:cramming with "The damage type should be cramming"

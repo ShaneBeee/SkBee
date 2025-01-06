@@ -1,10 +1,10 @@
 test "SkBee - ExprParseEffect":
 
     suppress variable save warning
-    set {-inv} to chest inventory with 3 rows
-    set {_effect} to parse effect "add a diamond to {-inv}" from console
+    set {inv} to chest inventory with 3 rows
+    set {_effect} to parse effect "add a diamond to {inv}" from console
     assert {_effect} = true with "This should run fine"
-    assert {-inv} contains a diamond with "A diamond should have been added"
+    assert {inv} contains a diamond with "A diamond should have been added"
     delete {_effect}
 
     set {_effect} to parse effect "spawn a sheep at spawn of world ""world"""
