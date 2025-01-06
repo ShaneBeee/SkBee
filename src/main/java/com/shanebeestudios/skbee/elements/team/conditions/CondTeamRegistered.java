@@ -22,7 +22,7 @@ public class CondTeamRegistered extends Condition {
 
     static {
         Skript.registerCondition(CondTeamRegistered.class,
-                "team[s] [named] %strings% (is|are) registered",
+                "team[s] [named|with id] %strings% (is|are) registered",
                 "team[s] [named] %strings% (isn't|is not|are not|aren't) registered");
     }
 
@@ -46,7 +46,7 @@ public class CondTeamRegistered extends Condition {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String plural = this.teams.isSingle() ? " is" : " are";
         String neg = isNegated() ? " not" : "";
-        return "team " + this.toString(e, d) + plural + neg + " registered";
+        return "team " + this.teams.toString(e, d) + plural + neg + " registered";
     }
 
 }
