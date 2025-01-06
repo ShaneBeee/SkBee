@@ -17,7 +17,6 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("NullableProblems")
 @Name("Team - Get")
 @Description({"Get an instance of a team, either from an entity or by name of team, or get a list of all teams.",
     "If getting a team by id, and it does not exist, a new team with that id will be registered."})
@@ -38,7 +37,7 @@ public class ExprTeam extends SimpleExpression<Team> {
     private Expression<String> name;
     private Expression<Entity> entity;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = matchedPattern;
@@ -82,7 +81,7 @@ public class ExprTeam extends SimpleExpression<Team> {
     @Override
     public @NotNull String toString(Event e, boolean d) {
         return switch (this.pattern) {
-            case 0 -> "team named " + this.name.toString(e, d);
+            case 0 -> "team with id " + this.name.toString(e, d);
             case 1 -> "team of " + this.entity.toString(e, d);
             case 2 -> "all teams";
             default -> throw new IllegalStateException("Unexpected value: " + this.pattern);
