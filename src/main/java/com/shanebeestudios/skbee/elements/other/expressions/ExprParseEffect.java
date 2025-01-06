@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
@@ -19,23 +20,23 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Parse Effect - With Return")
 @Description({"This will parse a string as an effect, execute it and return whether or not it executed.",
-        "Works the same as Skript's 'effect commands'."})
+    "Works the same as Skript's 'effect commands'."})
 @Examples({"command /parse <string>:",
-        "\ttrigger:",
-        "\t\tif parse effect arg-1 = false:",
-        "\t\t\tsend \"ERROR: %arg-1%\""})
+    "\ttrigger:",
+    "\t\tif parse effect arg-1 = false:",
+    "\t\t\tsend \"ERROR: %arg-1%\""})
 @Since("2.15.0")
 public class ExprParseEffect extends SimpleExpression<Boolean> {
 
     static {
         Skript.registerExpression(ExprParseEffect.class, Boolean.class, ExpressionType.COMBINED,
-                "parse effect[s] %strings% [from %-commandsender%]");
+            "parse effect[s] %strings% [from %-commandsender%]");
     }
 
     private Expression<String> effects;
     private Expression<CommandSender> sender;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.effects = (Expression<String>) exprs[0];
@@ -43,7 +44,6 @@ public class ExprParseEffect extends SimpleExpression<Boolean> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable Boolean[] get(Event event) {
         boolean pasred = true;
@@ -68,7 +68,13 @@ public class ExprParseEffect extends SimpleExpression<Boolean> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "parse effect '" + this.effects.toString(e, d) + "' from " + this.sender.toString(e, d);
+        SyntaxStringBuilder builder = new SyntaxStringBuilder(e, d)
+            .append("parse effect `", this.effects, "'");
+        if (this.sender != null) {
+            builder.append("from", this.sender);
+        }
+
+        return builder.toString();
     }
 
 }
