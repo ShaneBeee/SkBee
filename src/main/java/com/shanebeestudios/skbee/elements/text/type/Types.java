@@ -141,7 +141,6 @@ public class Types {
             .user("audiences?")
             .name("TextComponent - Audience")
             .description("Represents things in Minecraft (players, entities, worlds, console, etc) which can receive media (messages, bossbars, action bars, etc).")
-            .since("INSERT VERSION")
             .defaultExpression(new EventValueExpression<>(CommandSender.class))
             .parser(SkriptUtils.getDefaultParser())
             .after("commandsender", "player", "livingentity", "entity")
