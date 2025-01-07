@@ -33,7 +33,6 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.block.sign.Side;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -463,21 +462,21 @@ public class ComponentWrapper {
     }
 
     /**
-     * Send a message to a player
+     * Send a message to an audience
      *
-     * @param receiver Who is to receive the message
+     * @param audience Who is to receive the message
      */
-    public void sendMessage(Audience receiver) {
-        receiver.sendMessage(this.component);
+    public void sendMessage(Audience audience) {
+        audience.sendMessage(this.component);
     }
 
     /**
      * Send an action bar
      *
-     * @param receiver Who to receive
+     * @param audience Who to receive
      */
-    public void sendActionBar(CommandSender receiver) {
-        receiver.sendActionBar(this.component);
+    public void sendActionBar(Audience audience) {
+        audience.sendActionBar(this.component);
     }
 
     /**
@@ -572,16 +571,16 @@ public class ComponentWrapper {
     }
 
     /**
-     * Send a title to players
+     * Send a title to audiences
      *
-     * @param players  Players to send to
-     * @param title    Title to send
-     * @param subtitle Subtitle to send
-     * @param stay     How long to stay for
-     * @param fadeIn   How long for fading in
-     * @param fadeOut  How long for fading out
+     * @param audiences Audiences to send to
+     * @param title     Title to send
+     * @param subtitle  Subtitle to send
+     * @param stay      How long to stay for
+     * @param fadeIn    How long for fading in
+     * @param fadeOut   How long for fading out
      */
-    public static void sendTitle(Player[] players, @NotNull Object title, @Nullable Object subtitle, long stay, long fadeIn, long fadeOut) {
+    public static void sendTitle(Audience[] audiences, @NotNull Object title, @Nullable Object subtitle, long stay, long fadeIn, long fadeOut) {
         Component titleComponent;
         Component subtitleComponent;
         if (title instanceof ComponentWrapper componentWrapper) {
@@ -605,8 +604,8 @@ public class ComponentWrapper {
 
         Title titleTitle = Title.title(titleComponent, subtitleComponent, times);
 
-        for (Player player : players) {
-            player.showTitle(titleTitle);
+        for (Audience audience : audiences) {
+            audience.showTitle(titleTitle);
         }
     }
 

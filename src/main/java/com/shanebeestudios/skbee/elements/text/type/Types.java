@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
+import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.Parameter;
@@ -11,17 +12,26 @@ import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converters;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Types {
 
@@ -30,14 +40,12 @@ public class Types {
         Converters.registerConverter(ComponentWrapper.class, String.class, ComponentWrapper::toString);
 
         Changer<ComponentWrapper> COMP_CHANGER = new Changer<>() {
-            @SuppressWarnings("NullableProblems")
             @Override
             public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
                 if (mode == ChangeMode.ADD) return CollectionUtils.array(HoverEvent.class, ClickEvent.class);
                 return null;
             }
 
-            @SuppressWarnings({"NullableProblems", "ConstantValue"})
             @Override
             public void change(ComponentWrapper[] components, @Nullable Object[] delta, ChangeMode mode) {
                 if (delta == null) return;
@@ -55,7 +63,7 @@ public class Types {
 
         Classes.registerClass(new ClassInfo<>(ComponentWrapper.class, "textcomponent")
             .user("text ?components?")
-            .name("Text Component - Text Component")
+            .name("TextComponent - Text Component")
             .description("Text components used for hover/click events. Due to the complexity of these, ",
                 "they can NOT be long term stored in variables. \n\bRequires a PaperMC server.")
             .examples("set {_t} to text component from \"CLICK FOR OUR DISCORD\"",
@@ -90,7 +98,6 @@ public class Types {
                 .parser(SkriptUtils.getDefaultParser())
                 .since("3.5.0")
                 .changer(new Changer<>() {
-                    @SuppressWarnings("NullableProblems")
                     @Override
                     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
                         if (mode == ChangeMode.REMOVE || mode == ChangeMode.REMOVE_ALL)
@@ -98,7 +105,6 @@ public class Types {
                         return null;
                     }
 
-                    @SuppressWarnings({"NullableProblems", "ConstantValue"})
                     @Override
                     public void change(SignedMessage[] what, @Nullable Object[] delta, ChangeMode mode) {
                         if (delta == null) return;
@@ -113,7 +119,7 @@ public class Types {
                         }
                     }
                 }));
-            }
+        }
 
         if (Classes.getExactClassInfo(TagResolver.class) == null) {
             Classes.registerClass(new ClassInfo<>(TagResolver.class, "tagresolver")
@@ -131,13 +137,24 @@ public class Types {
                 .since("3.5.0"));
         }
 
+        ClassInfo<Audience> audienceClassInfo = new ClassInfo<>(Audience.class, "audience")
+            .user("audiences?")
+            .name("TextComponent - Audience")
+            .description("Represents things in Minecraft (players, entities, worlds, console, etc) which can receive media (messages, bossbars, action bars, etc).")
+            .since("INSERT VERSION")
+            .defaultExpression(new EventValueExpression<>(CommandSender.class))
+            .parser(SkriptUtils.getDefaultParser())
+            .after("commandsender", "player", "livingentity", "entity")
+            .since("INSERT VERSION");
+        Classes.registerClass(audienceClassInfo);
+        setupUsage(audienceClassInfo);
+
         // Functions
-        //noinspection DataFlowIssue
         Functions.registerFunction(new SimpleJavaFunction<>("resolver", new Parameter[]{
             new Parameter<>("placeholder", DefaultClasses.STRING, true, null),
             new Parameter<>("replacement", DefaultClasses.OBJECT, true, null)
         }, Classes.getExactClassInfo(TagResolver.class), true) {
-            @SuppressWarnings({"NullableProblems", "PatternValidation"})
+            @SuppressWarnings("PatternValidation")
             @Override
             public TagResolver @Nullable [] executeSimple(Object[][] params) {
                 if (params[0].length == 0 || params[1].length == 0) return null;
@@ -170,6 +187,24 @@ public class Types {
                 "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r}",
                 "send component {_m}")
             .since("3.5.0"));
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    private static void setupUsage(ClassInfo<Audience> audienceClassInfo) {
+        // Make sure all class infos are created before creating usage
+        Bukkit.getScheduler().runTaskLater(SkBee.getPlugin(), () -> {
+            List<String> names = new ArrayList<>();
+            Classes.getExactClassInfo(ClassInfo.class).getSupplier().get().forEachRemaining(classInfo -> {
+                if (Audience.class.isAssignableFrom(classInfo.getC()) && classInfo.getC() != Audience.class) {
+                    String docName = classInfo.getDocName();
+                    if (docName != null && !docName.isEmpty()) names.add(docName);
+                }
+            });
+            Collections.sort(names);
+            String usage = String.join(", ", names);
+            audienceClassInfo.usage("Skript Types that are considered audiences:", usage);
+            Util.log("Usage: " + usage);
+        }, 1);
     }
 
 }

@@ -37,9 +37,7 @@ test "SkBee - text component test":
 
     # Component formats
     set color format of {_t} to red
-    # TODO Skript 2.9.x currently cannot compare a color to a color
-    # TODO I think this is fixed in 2.10.x
-    # assert color format of {_t} = red with "The color format should be red"
+    assert color format of {_t} = red with "The color format should be red"
     set bold format of {_t} to true
     assert bold format of {_t} = true with "The bold format should be true"
 
@@ -59,3 +57,13 @@ test "SkBee - text component test":
     delete {_trans}
     set {_trans} to translate component from "Test.test" with args "some arg" with fallback "some fallback"
     assert {_trans} is set with "Component with args and fallback should be set"
+
+    # Test effects
+    parse:
+        set {_m} to mini message from "oh hi there"
+        send component {_m} to console
+        send component {_m} to all worlds
+        send component {_m} to team named "blah_team"
+        broadcast component {_m}
+        send title component "blah" with subtitle "oh hi" to all worlds for 5 seconds
+    assert parse logs are not set with "These effects should have all parsed"
