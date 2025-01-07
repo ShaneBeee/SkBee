@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
@@ -107,7 +108,8 @@ public class SkBee extends JavaPlugin {
         if (this.virtualFurnaceAPI != null) {
             this.virtualFurnaceAPI.disableAPI();
         }
-        if (this.boundConfig != null) {
+        // Only save bounds if not in test mode
+        if (!TestMode.ENABLED && this.boundConfig != null) {
             this.boundConfig.saveAllBounds();
         }
     }

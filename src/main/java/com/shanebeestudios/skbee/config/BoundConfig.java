@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.config;
 
+import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundWorld;
@@ -53,7 +54,8 @@ public class BoundConfig {
                 }
             }
         }
-        startSaveTimer(plugin);
+        // Only start save timer if not in test mode
+        if (!TestMode.ENABLED) startSaveTimer(plugin);
     }
 
     private void startSaveTimer(SkBee plugin) {
