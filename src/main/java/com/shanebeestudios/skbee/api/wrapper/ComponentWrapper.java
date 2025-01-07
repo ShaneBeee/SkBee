@@ -10,7 +10,6 @@ import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.ChatUtil;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.identity.Identity;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
@@ -466,13 +465,10 @@ public class ComponentWrapper {
     /**
      * Send a message to a player
      *
-     * @param sender   Who sent the message (can be blocked on client)
      * @param receiver Who is to receive the message
      */
-    @SuppressWarnings("deprecation") // Maybe attend to this later?!?!
-    public void sendMessage(@Nullable Player sender, Audience receiver) {
-        Identity identity = sender != null ? sender.identity() : Identity.nil();
-        receiver.sendMessage(identity, this.component);
+    public void sendMessage(Audience receiver) {
+        receiver.sendMessage(this.component);
     }
 
     /**
@@ -486,11 +482,9 @@ public class ComponentWrapper {
 
     /**
      * Broadcast to all players and console
-     *
-     * @param sender Who sent the broadcast (can be blocked on client)
      */
-    public void broadcast(@Nullable Player sender) {
-        sendMessage(sender, Bukkit.getServer());
+    public void broadcast() {
+        sendMessage(Bukkit.getServer());
     }
 
     /**
