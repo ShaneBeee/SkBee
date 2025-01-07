@@ -138,7 +138,7 @@ public class ExprBoundValue extends SimpleExpression<Object> {
 
     @Override
     public boolean isSingle() {
-        return true;
+        return this.pattern == 0;
     }
 
     @Override
