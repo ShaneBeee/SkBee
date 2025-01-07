@@ -203,7 +203,6 @@ public class Types {
             Collections.sort(names);
             String usage = String.join(", ", names);
             audienceClassInfo.usage("Skript Types that are considered audiences:", usage);
-            Util.log("Usage: " + usage);
         }, 1);
     }
 
