@@ -14,8 +14,8 @@ import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.RenderType;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Types {
 
@@ -36,13 +36,13 @@ public class Types {
                     }
 
                     @Override
-                    public @NotNull String toString(Objective o, int flags) {
-                        return "objective with id \"" + o.getName() + "\"";
+                    public @NotNull String toString(Objective objective, int flags) {
+                        return "objective '" + objective.getName() + "' with criteria '" + objective.getTrackedCriteria().getName() + "'";
                     }
 
                     @Override
-                    public @NotNull String toVariableNameString(Objective o) {
-                        return "objective{name=" + o.getName() + "}";
+                    public @NotNull String toVariableNameString(Objective objective) {
+                        return "objective{name=" + objective.getName() + "}";
                     }
                 })
                 .changer(new Changer<>() {
@@ -80,8 +80,8 @@ public class Types {
                     }
 
                     @Override
-                    public @NotNull String toString(Criteria o, int flags) {
-                        return "criteria " + o.getName();
+                    public @NotNull String toString(Criteria criteria, int flags) {
+                        return "criteria '" + criteria.getName() + "'";
                     }
 
                     @Override
@@ -89,7 +89,7 @@ public class Types {
                         return "criteria{name=" + o.getName() + "}";
                     }
                 }));
-            }
+        }
 
         if (Classes.getExactClassInfo(RenderType.class) == null) {
             EnumWrapper<RenderType> RENDER_ENUM = new EnumWrapper<>(RenderType.class);
