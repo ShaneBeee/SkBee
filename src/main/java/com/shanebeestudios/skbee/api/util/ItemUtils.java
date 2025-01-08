@@ -146,8 +146,19 @@ public class ItemUtils {
      * @param itemConsumer ItemStack consumer to modify
      */
     public static void modifyItems(Object[] objects, Consumer<ItemStack> itemConsumer) {
+        modifyItems(objects, itemConsumer, true);
+    }
+
+    /**
+     * Quick method to modify an array of objects which can be {@link ItemStack}, {@link ItemType} or {@link Slot}
+     *
+     * @param objects      Array of Item based objects to modify
+     * @param itemConsumer ItemStack consumer to modify
+     * @param update       Whether to update the passed through ItemType/Slot
+     */
+    public static void modifyItems(Object[] objects, Consumer<ItemStack> itemConsumer, boolean update) {
         for (Object object : objects) {
-            modifyItems(object, itemConsumer);
+            modifyItems(object, itemConsumer, update);
         }
     }
 
@@ -158,6 +169,17 @@ public class ItemUtils {
      * @param itemConsumer ItemStack consumer to modify
      */
     public static void modifyItems(Object object, Consumer<ItemStack> itemConsumer) {
+        modifyItems(object, itemConsumer, true);
+    }
+
+    /**
+     * Quick method to modify an object which can be {@link ItemStack}, {@link ItemType} or {@link Slot}
+     *
+     * @param object       Item based object to modify
+     * @param itemConsumer ItemStack consumer to modify
+     * @param update       Whether to update the passed through ItemType/Slot
+     */
+    public static void modifyItems(Object object, Consumer<ItemStack> itemConsumer, boolean update) {
         ItemStack itemStack = null;
         if (object instanceof ItemStack i) itemStack = i;
         else if (object instanceof ItemType itemType) itemStack = itemType.getRandom();
@@ -165,6 +187,8 @@ public class ItemUtils {
 
         if (itemStack == null) return;
         itemConsumer.accept(itemStack);
+
+        if (!update) return;
 
         if (object instanceof ItemType itemType) {
             itemType.setItemMeta(itemStack.getItemMeta());
