@@ -261,12 +261,14 @@ public class StructureWrapper {
     }
 
     /**
-     * Get the size of this structure represented as a {@link BlockVector vector}
+     * Get the size of this structure represented as a {@link Vector}
      *
      * @return Size of structure
      */
-    public BlockVector getSize() {
-        return this.structure.getSize();
+    public Vector getSize() {
+        // Return a vector so users can compare with a vector
+        BlockVector size = this.structure.getSize();
+        return new Vector(size.getX(), size.getY(), size.getZ());
     }
 
     /**
