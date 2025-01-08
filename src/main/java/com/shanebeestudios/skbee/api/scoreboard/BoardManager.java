@@ -14,17 +14,19 @@ import java.util.UUID;
 
 public class BoardManager implements Listener {
 
-    private static final Map<UUID, FastBoardWrapper> BOARDS = new HashMap<>();
+    public static final boolean HAS_ADVENTURE = SkBee.getPlugin().getAddonLoader().isTextComponentEnabled();
+
+    private static final Map<UUID, FastBoardBase<?, ?>> BOARDS = new HashMap<>();
     private static final SkBee PLUGIN = SkBee.getPlugin();
 
     @Nullable
-    public static FastBoardWrapper getBoard(Player player) {
+    public static FastBoardBase<?, ?> getBoard(Player player) {
         if (!player.isOnline()) return null;
         UUID uuid = player.getUniqueId();
         if (BOARDS.containsKey(uuid)) {
             return BOARDS.get(uuid);
         }
-        FastBoardWrapper board = new FastBoardWrapper(player);
+        FastBoardBase<?, ?> board = HAS_ADVENTURE ? new FastBoardAdventure(player) : new FastBoardLegacy(player);
         BOARDS.put(uuid, board);
         return board;
     }

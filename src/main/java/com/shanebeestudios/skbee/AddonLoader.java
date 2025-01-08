@@ -201,7 +201,8 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.scoreboard");
             pluginManager.registerEvents(new BoardManager(), this.plugin);
-            Util.logLoading("&5Scoreboard Elements &asuccessfully loaded");
+            String type = BoardManager.HAS_ADVENTURE ? "Adventure" : "Legacy";
+            Util.logLoading("&5Scoreboard&7[&b%s&7] &5Elements &asuccessfully loaded", type);
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);
