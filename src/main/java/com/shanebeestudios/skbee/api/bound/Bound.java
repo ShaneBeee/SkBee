@@ -199,11 +199,17 @@ public class Bound implements ConfigurationSerializable {
     }
 
     public void resize(Location loc1, Location loc2) {
+        resize(loc1, loc2, false);
+    }
+
+    public void resize(Location loc1, Location loc2, boolean usingBlocks) {
         Preconditions.checkArgument(loc1.getWorld() == loc2.getWorld(), "Worlds have to match");
         Preconditions.checkArgument(loc1.getWorld().getName().equalsIgnoreCase(this.world), "World cannot be changed!");
-        Block block1 = loc1.getBlock();
-        Block block2 = loc2.getBlock();
-        this.boundingBox = BoundingBox.of(block1, block2);
+        if (usingBlocks) {
+            this.boundingBox = BoundingBox.of(loc1.getBlock(), loc2.getBlock());
+        } else {
+            this.boundingBox = BoundingBox.of(loc1, loc2);
+        }
     }
 
     /**
