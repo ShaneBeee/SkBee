@@ -142,7 +142,7 @@ public class BeeWorldCreator implements Keyed {
     }
 
     public boolean isKeepSpawnLoaded() {
-        return keepSpawnLoaded.orElse(false);
+        return keepSpawnLoaded.orElse(true);
     }
 
     public void setKeepSpawnLoaded(boolean loaded) {
