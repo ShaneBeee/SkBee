@@ -16,6 +16,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Objective;
+import org.bukkit.scoreboard.Score;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,23 +24,24 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Scoreboard - Objective Score")
-@Description("Get/Set the score of an entity/string for an objective.")
+@Description({"Get/Set the score of an entity/string for an objective.",
+    "If the score has never been set, it'll return nothing."})
 @Examples({"set score of player for {_objective} to 10",
-        "set score of \"le_test\" for {_objective} to 25",
-        "set {_score} to score of target entity for {_objective}",
-        "set {_score} to score of \"le_test\" for {_objective}"})
+    "set score of \"le_test\" for {_objective} to 25",
+    "set {_score} to score of target entity for {_objective}",
+    "set {_score} to score of \"le_test\" for {_objective}"})
 @Since("2.6.0")
 public class ExprObjScore extends SimpleExpression<Number> {
 
     static {
         Skript.registerExpression(ExprObjScore.class, Number.class, ExpressionType.COMBINED,
-                "score of %entities/strings% for %objective%");
+            "score of %entities/strings% for %objective%");
     }
 
     private Expression<Objective> objective;
     private Expression<?> entries;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.entries = exprs[0];
@@ -47,7 +49,6 @@ public class ExprObjScore extends SimpleExpression<Number> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable Number[] get(Event event) {
         List<Number> scores = new ArrayList<>();
@@ -60,7 +61,6 @@ public class ExprObjScore extends SimpleExpression<Number> {
         return scores.toArray(new Number[0]);
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         return switch (mode) {
@@ -69,7 +69,6 @@ public class ExprObjScore extends SimpleExpression<Number> {
         };
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Objective objective = this.objective.getSingle(event);
@@ -78,7 +77,8 @@ public class ExprObjScore extends SimpleExpression<Number> {
         if (delta[0] instanceof Number number) {
             int changeValue = number.intValue();
             for (Object entry : this.entries.getArray(event)) {
-                int oldScore = getScore(objective, entry);
+                Number score = getScore(objective, entry);
+                int oldScore = score != null ? score.intValue() : 0;
                 switch (mode) {
                     case SET -> setScore(objective, entry, changeValue);
                     case ADD -> setScore(objective, entry, oldScore + changeValue);
@@ -88,7 +88,7 @@ public class ExprObjScore extends SimpleExpression<Number> {
         }
     }
 
-    private int getScore(Objective objective, Object entry) {
+    private Number getScore(Objective objective, Object entry) {
         String stringEntiry = null;
         if (entry instanceof Player player) {
             stringEntiry = player.getName();
@@ -98,9 +98,12 @@ public class ExprObjScore extends SimpleExpression<Number> {
             stringEntiry = string;
         }
         if (stringEntiry != null) {
-            return objective.getScore(stringEntiry).getScore();
+            Score score = objective.getScore(stringEntiry);
+            if (score.isScoreSet()) {
+                return score.getScore();
+            }
         }
-        return 0;
+        return null;
     }
 
     private void setScore(Objective objective, Object entry, int score) {
@@ -113,7 +116,11 @@ public class ExprObjScore extends SimpleExpression<Number> {
             stringEntiry = string;
         }
         if (stringEntiry != null) {
-            objective.getScore(stringEntiry).setScore(score);
+            if (objective.isModifiable()) {
+                objective.getScore(stringEntiry).setScore(score);
+            } else {
+                Skript.debug("Objective '" + objective.getName() + "' has no modifiable score");
+            }
         }
     }
 
@@ -129,8 +136,8 @@ public class ExprObjScore extends SimpleExpression<Number> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "score of entities/strings " + this.entries.toString(e, d) +
-                " for objective " + this.objective.toString(e, d);
+        return "score of " + this.entries.toString(e, d) +
+            " for " + this.objective.toString(e, d);
     }
 
 }
