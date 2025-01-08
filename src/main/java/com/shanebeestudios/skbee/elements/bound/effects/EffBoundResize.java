@@ -60,7 +60,7 @@ public class EffBoundResize extends Effect {
     protected void execute(Event event) {
         Bound bound = this.bound.getSingle(event);
         if (bound == null) return;
-        if (this.full) {
+        if (this.pattern == 1) {
             bound.setFull(true);
             return;
         }
@@ -88,6 +88,7 @@ public class EffBoundResize extends Effect {
         if (world == null || lesser.getWorld() != world || greater.getWorld() != world) return;
 
         bound.resize(lesser, greater, usingBlocks);
+        if (this.full) bound.setFull(true);
     }
 
     @Override
