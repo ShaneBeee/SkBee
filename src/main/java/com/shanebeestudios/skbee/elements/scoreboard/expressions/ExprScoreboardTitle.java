@@ -12,12 +12,14 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.scoreboard.FastBoardWrapper;
 import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
+import com.shanebeestudios.skbee.api.scoreboard.FastBoardBase;
+import com.shanebeestudios.skbee.api.scoreboard.FastBoardLegacy;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,51 +27,49 @@ import java.util.List;
 @Name("Scoreboard - Title")
 @Description("Get/set the title of a scoreboard.")
 @Examples({"set title of player's scoreboard to \"Le Title\"",
-        "set {_title} to title of scoreboard of player"})
+    "set {_title} to title of scoreboard of player"})
 @Since("1.16.0")
-public class ExprScoreboardTitle extends SimpleExpression<String> {
+public class ExprScoreboardTitle extends SimpleExpression<Object> {
 
     static {
-        Skript.registerExpression(ExprScoreboardTitle.class, String.class, ExpressionType.PROPERTY,
-                "title of %players%'[s] [score]board[s]",
-                "title of [score]board of %players%");
+        Skript.registerExpression(ExprScoreboardTitle.class, Object.class, ExpressionType.PROPERTY,
+            "title of %players%'[s] [score]board[s]",
+            "title of [score]board of %players%");
     }
 
     private Expression<Player> player;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.player = (Expression<Player>) exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
-    protected @Nullable String[] get(Event event) {
-        List<String> titles = new ArrayList<>();
+    protected @Nullable Object[] get(Event event) {
+        List<Object> titles = new ArrayList<>();
         for (Player player : this.player.getArray(event)) {
-            FastBoardWrapper board = BoardManager.getBoard(player);
+            FastBoardBase<?, ?> board = BoardManager.getBoard(player);
+            if (board == null) continue;
             titles.add(board.getTitle());
         }
-        return titles.toArray(new String[0]);
+        return titles.toArray();
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(String.class);
+            return CollectionUtils.array(String.class, ComponentWrapper.class);
         }
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        String title = delta != null ? (String) delta[0] : null;
+        Object title = delta != null ? delta[0] : null;
         for (Player player : this.player.getArray(event)) {
-            FastBoardWrapper board = BoardManager.getBoard(player);
+            FastBoardBase<?,?> board = BoardManager.getBoard(player);
             if (board != null) {
                 board.setTitle(title);
             }
@@ -82,8 +82,8 @@ public class ExprScoreboardTitle extends SimpleExpression<String> {
     }
 
     @Override
-    public @NotNull Class<? extends String> getReturnType() {
-        return String.class;
+    public @NotNull Class<?> getReturnType() {
+        return BoardManager.HAS_ADVENTURE ? ComponentWrapper.class : String.class;
     }
 
     @Override
