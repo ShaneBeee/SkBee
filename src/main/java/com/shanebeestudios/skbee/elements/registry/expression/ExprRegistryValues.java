@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.registry.RegistryHolder;
-import com.shanebeestudios.skbee.api.registry.RegistryUtils;
+import com.shanebeestudios.skbee.api.registry.RegistryHolders;
 import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -40,7 +40,7 @@ public class ExprRegistryValues extends SimpleExpression<Object> {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.registryKey = (Expression<RegistryKey<?>>) exprs[0];
         if (this.registryKey instanceof Literal<RegistryKey<?>> literal) {
-            this.returnType = RegistryUtils.getRegistryHolder(literal.getSingle()).getReturnType();
+            this.returnType = RegistryHolders.getRegistryHolder(literal.getSingle()).getReturnType();
         }
         return true;
     }
@@ -50,7 +50,7 @@ public class ExprRegistryValues extends SimpleExpression<Object> {
         RegistryKey<?> registryKey = this.registryKey.getSingle(event);
         if (registryKey == null) return null;
 
-        RegistryHolder<?, ?> registryHolder = RegistryUtils.getRegistryHolder(registryKey);
+        RegistryHolder<?, ?> registryHolder = RegistryHolders.getRegistryHolder(registryKey);
         if (this.returnType == null) {
             this.returnType = registryHolder.getReturnType();
         }
