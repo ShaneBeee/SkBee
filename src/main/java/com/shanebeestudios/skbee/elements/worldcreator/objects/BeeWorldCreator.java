@@ -167,17 +167,17 @@ public class BeeWorldCreator implements Keyed {
 
     @SuppressWarnings({"deprecation", "CallToPrintStackTrace"})
     public CompletableFuture<World> loadWorld() {
-        CompletableFuture<WorldCreator> worldCreatorCompletableFuture = new CompletableFuture<>();
-        CompletableFuture<World> worldCompletableFuture = new CompletableFuture<>();
+        CompletableFuture<WorldCreator> creatorFuture = new CompletableFuture<>();
+        CompletableFuture<World> worldFuture = new CompletableFuture<>();
         // Copy/Clone world
         if (this.world != null) {
-            worldCreatorCompletableFuture = clone ? cloneWorld() : copyWorld();
+            creatorFuture = clone ? cloneWorld() : copyWorld();
         }
         // Create new world
         else {
-            worldCreatorCompletableFuture.complete(getWorldCreator(this.worldName, this.key));
+            creatorFuture.complete(getWorldCreator(this.worldName, this.key));
         }
-        worldCreatorCompletableFuture.thenAccept(worldCreator -> {
+        creatorFuture.thenAccept(worldCreator -> {
             World world = null;
 
             if (worldType != null) {
@@ -243,9 +243,11 @@ public class BeeWorldCreator implements Keyed {
             }
 
             SkBee.getPlugin().getBeeWorldConfig().saveWorldToFile(this);
-            worldCompletableFuture.complete(world);
+            worldFuture.complete(world);
+        }).exceptionally(t -> {
+            throw Skript.exception(t);
         });
-        return worldCompletableFuture;
+        return worldFuture;
     }
 
     private CompletableFuture<WorldCreator> copyWorld() {

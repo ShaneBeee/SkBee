@@ -65,13 +65,11 @@ public class EffLoadWorld extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         // not doing anything here since we're walking
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         TriggerItem next = getNext();
@@ -91,6 +89,11 @@ public class EffLoadWorld extends Effect {
 
                     // remove local vars as we're now done
                     Variables.removeLocals(event);
+                }).exceptionally(t -> {
+                    // If for some reason the loader fails
+                    // walk the next trigger and throw a Skript exception
+                    if (next != null) TriggerItem.walk(next, event);
+                    throw Skript.exception(t);
                 });
                 return null;
 
@@ -130,7 +133,7 @@ public class EffLoadWorld extends Effect {
     }
 
     private boolean unloadWorld(@NotNull World world) {
-        World mainWorld = Bukkit.getWorlds().get(0);
+        World mainWorld = Bukkit.getWorlds().getFirst();
         if (world == mainWorld) {
             // We can't unload the main world
             return false;
