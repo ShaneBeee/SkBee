@@ -23,9 +23,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Name("Scoreboard - Title")
-@Description("Get/set the title of a scoreboard.")
+@Description({"Get/set the title of a scoreboard.",
+    "When running Paper, text components are support."})
 @Examples({"set title of player's scoreboard to \"Le Title\"",
-    "set {_title} to title of scoreboard of player"})
+    "set {_title} to title of scoreboard of player",
+    "",
+    "# Component Support",
+    "set title of player's scoreboard to mini message from \"<rainbow>Le Title\"",
+    "set title of player's scoreboard to mini message from \"<font:uniform>Le Title\""})
 @Since("1.16.0")
 public class ExprScoreboardTitle extends SimpleExpression<Object> {
 

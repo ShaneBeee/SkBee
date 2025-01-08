@@ -26,13 +26,19 @@ import java.util.List;
 @Description({"Get/set/delete lines of a player's scoreboard.",
     "Lines are valid from 1 to 15. 1 being the line at the top and 15 being the bottom (This can be changed in the config).",
     "Line length is unlimited.",
-    "Supports number format on Minecraft 1.20.4+ by providing 2 strings (see examples)."})
+    "Supports number format on Minecraft 1.20.4+ by providing 2 strings (see examples).",
+    "When running Paper, text components are support."})
 @Examples({"set line 1 of player's scoreboard to \"Look mah I'm on Minecraft\"",
     "set line 15 of all players' scoreboards to \"I CAN SEE YOU\"",
     "set {_line} to line 10 of player's scoreboard",
     "",
-    "#NumberFormat on Minecraft 1.20.4+",
-    "set line 1 of scoreboard of player to \"Player:\" and \"&b%name of player%\""})
+    "# NumberFormat on Minecraft 1.20.4+",
+    "set line 1 of scoreboard of player to \"Player:\" and \"&b%name of player%\"",
+    "",
+    "# Component Support",
+    "set line 1 of player's scoreboard to mini message from \"<rainbow>OOOO RAINBOW\"",
+    "set line 2 of player's scoreboard to mini message from \"<font:uniform>OOOO Tiny Little Text\"",
+    "set line 3 of player's scoreboard to translate component of player's tool"})
 @Since("1.16.0")
 public class ExprScoreboardLine extends SimpleExpression<Object> {
 
