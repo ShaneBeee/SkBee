@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.testing.conditions;
+package com.shanebeestudios.skbee.elements.testing.elements;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.NoDoc;
