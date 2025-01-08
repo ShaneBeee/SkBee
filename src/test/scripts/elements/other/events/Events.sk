@@ -3,39 +3,39 @@ test "SkBee - Other/Events":
     load chunk at event-location with ticket
 
     # Call 'entity added to world' event
-    set {added} to true
+    set {test_added} to true
     spawn a sheep at event-location:
         set {_e} to entity
     assert {_e} is set with "The entity should have spawned"
-    assert {added} is not set with "'entity added to world' event didn't fire"
+    assert {test_added} is not set with "'entity added to world' event didn't fire"
 
     # Call 'entity teleport' event
-    set {tp} to true
+    set {test_tp} to true
     teleport {_e} to location 5 above {_e}
-    assert {tp} is not set with "'entity teleport' event didn't fire"
+    assert {test_tp} is not set with "'entity teleport' event didn't fire"
 
     # Call
-    set {remove} to true
+    set {test_remove} to true
     delete entity within {_e}
-    assert {remove} is not set with "'entity removed from world' event didn't fire"
+    assert {test_remove} is not set with "'entity removed from world' event didn't fire"
 
     # Cleanup
     unload chunk at event-location
 
 on entity added to world:
-    if {added} is set:
-        delete {added}
+    if {test_added} is set:
+        delete {test_added}
         assert event-entity is a sheep with "We should have added a sheep"
         assert event-entity is a cow to fail with "This should fail, we spawned a sheep not a cow"
 
 on entity teleport:
-    if {tp} is set:
-        delete {tp}
+    if {test_tp} is set:
+        delete {test_tp}
         assert event-entity is a sheep with "We should have teleported a sheep"
         assert event-entity is a cow to fail with "This should fail, we teleported a sheep not a cow"
 
 on entity removed from world:
-    if {remove} is set:
-        delete {remove}
+    if {test_remove} is set:
+        delete {test_remove}
         assert event-entity is a sheep with "We should have removed a sheep"
         assert event-entity is a cow to fail with "This should fail, we removed a sheep not a cow"

@@ -1,0 +1,44 @@
+test "SkBee - Structures":
+    # CondStructureExists
+    assert structure "minecraft:village/plains/houses/plains_small_house_1" exists
+
+    # ExprStructureObject
+    set {_village} to structure with id "minecraft:village/plains/houses/plains_small_house_1"
+    assert {_village} is set with "The structure should be set"
+    ## use a random number because loading this test locally many times won't work
+    set {_blank} to structure with id "test:test_%random integer between 1 and 1000000%"
+    assert {_blank} is set with "The structure should be set"
+
+    # ExprStructureblockStates
+    assert size of blockstates of structure {_village} > 0 with "Village structure should have some blocks"
+    assert size of blockstates of structure {_blank} = 0 with "This structure should be empty"
+
+    # ExprStructureProperties
+    assert structure size of {_village} = vector(7,7,7) with "The village should be 7x7x7"
+    assert structure mirror of {_village} = none with "The village shouldn't be mirror"
+    assert structure rotation of {_village} = none with "The village shouldn't be rotated"
+    assert structure integrity of {_village} = 1 with "The village should have full integrity"
+    assert structure include entities of {_village} = true with "The village should include entities"
+
+    assert structure mirror of {_blank} = none with "The structure shouldn't be mirrored yet"
+    set structure mirror of {_blank} to front_back
+    assert structure mirror of {_blank} = front_back with "The mirror should now be 'front_back'"
+
+    assert structure rotation of {_blank} = none with "The structure shouldn't be rotated yet"
+    set structure rotation of {_blank} to clockwise_90
+    assert structure rotation of {_blank} = clockwise_90 with "The rotation should now be 'clockwise_90'"
+
+    # EffStructureFill
+    assert structure size of {_blank} = vector(0,0,0) with "The structure should be empty"
+    fill structure {_blank} within location(0,0,0) and location(10,10,10)
+    assert structure size of {_blank} = vector(11,11,11) with "The structure should be loaded with blocks now"
+
+    # EffStructurePlace/Save
+    # We'll parse this one to not actually place in the world
+    parse:
+        place structure {_village} at event-location
+        save structure {_village}
+    assert parse logs is not set with "This should have parsed fine"
+
+    # Cleanup
+    delete structure {_blank}
