@@ -10,7 +10,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.scoreboard.FastBoardBase;
-import com.shanebeestudios.skbee.api.scoreboard.FastBoardLegacy;
 import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;

@@ -11,7 +11,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
 import com.shanebeestudios.skbee.api.scoreboard.FastBoardBase;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
@@ -36,6 +35,9 @@ import java.util.List;
     "set line 1 of scoreboard of player to \"Player:\" and \"&b%name of player%\""})
 @Since("1.16.0")
 public class ExprScoreboardLine extends SimpleExpression<Object> {
+
+    private static final Class<?>[] CHANGE_TYPES = BoardManager.HAS_ADVENTURE ?
+        new Class<?>[]{ComponentWrapper.class, String.class} : new Class<?>[]{String.class};
 
     static {
         Skript.registerExpression(ExprScoreboardLine.class, Object.class, ExpressionType.COMBINED,
@@ -75,7 +77,7 @@ public class ExprScoreboardLine extends SimpleExpression<Object> {
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {
-            case SET, DELETE -> CollectionUtils.array(String[].class, ComponentWrapper[].class);
+            case SET, DELETE -> CHANGE_TYPES;
             default -> null;
         };
     }

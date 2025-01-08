@@ -11,10 +11,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
 import com.shanebeestudios.skbee.api.scoreboard.FastBoardBase;
-import com.shanebeestudios.skbee.api.scoreboard.FastBoardLegacy;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -30,6 +28,9 @@ import java.util.List;
     "set {_title} to title of scoreboard of player"})
 @Since("1.16.0")
 public class ExprScoreboardTitle extends SimpleExpression<Object> {
+
+    private static final Class<?>[] CHANGE_TYPES = BoardManager.HAS_ADVENTURE ?
+        new Class<?>[]{ComponentWrapper.class, String.class} : new Class<?>[]{String.class};
 
     static {
         Skript.registerExpression(ExprScoreboardTitle.class, Object.class, ExpressionType.PROPERTY,
@@ -59,9 +60,7 @@ public class ExprScoreboardTitle extends SimpleExpression<Object> {
 
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) {
-            return CollectionUtils.array(String.class, ComponentWrapper.class);
-        }
+        if (mode == ChangeMode.SET) return CHANGE_TYPES;
         return null;
     }
 
@@ -69,7 +68,7 @@ public class ExprScoreboardTitle extends SimpleExpression<Object> {
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Object title = delta != null ? delta[0] : null;
         for (Player player : this.player.getArray(event)) {
-            FastBoardBase<?,?> board = BoardManager.getBoard(player);
+            FastBoardBase<?, ?> board = BoardManager.getBoard(player);
             if (board != null) {
                 board.setTitle(title);
             }

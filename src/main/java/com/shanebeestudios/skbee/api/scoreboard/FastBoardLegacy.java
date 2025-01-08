@@ -9,8 +9,6 @@ import java.util.List;
 
 public class FastBoardLegacy extends FastBoardBase<String, String> {
 
-    protected FastBoard fastBoard;
-
     public FastBoardLegacy(Player player) {
         super(player, new FastBoard(player));
         this.title = "";
@@ -33,17 +31,18 @@ public class FastBoardLegacy extends FastBoardBase<String, String> {
     public void setLine(int lineNumber, Object line, @Nullable Object lineFormat) {
         if (lineNumber > 15 || lineNumber < 1) return;
         if (!(line instanceof String stringLine)) return;
+        String stringFormat = lineFormat instanceof String s ? s : null;
 
         String previousLine = this.lines[REVERSE ? 15 - lineNumber : lineNumber - 1];
         String previousScore = this.formats[REVERSE ? 15 - lineNumber : lineNumber - 1];
         // If neither the line nor lineFormat have changed, don't send packets
-        if (previousLine != null && previousLine.equals(line)) {
-            if (previousScore == null && lineFormat == null) return;
-            if (previousScore != null && previousScore.equals(lineFormat)) return;
+        if (previousLine != null && previousLine.equals(stringLine)) {
+            if (previousScore == null && stringFormat == null) return;
+            if (previousScore != null && previousScore.equals(stringFormat)) return;
         }
 
         this.lines[REVERSE ? 15 - lineNumber : lineNumber - 1] = stringLine;
-        this.formats[REVERSE ? 15 - lineNumber : lineNumber - 1] = lineFormat instanceof String s ? s : null;
+        this.formats[REVERSE ? 15 - lineNumber : lineNumber - 1] = stringFormat;
         if (!visible) return;
         updateLines();
     }
@@ -70,15 +69,15 @@ public class FastBoardLegacy extends FastBoardBase<String, String> {
     @Override
     protected void updateLines() {
         List<String> lines = new ArrayList<>();
-        List<String> scores = new ArrayList<>();
+        List<String> formats = new ArrayList<>();
         for (int i = 0; i < 15; i++) {
             if (this.lines[i] != null) {
                 lines.add(this.lines[i]);
-                scores.add(this.formats[i] != null ? this.formats[i] : "");
+                formats.add(this.formats[i] != null ? this.formats[i] : "");
             }
         }
         if (this.fastBoard == null) return;
-        this.fastBoard.updateLines(lines, scores);
+        this.fastBoard.updateLines(lines, formats);
     }
 
 }
