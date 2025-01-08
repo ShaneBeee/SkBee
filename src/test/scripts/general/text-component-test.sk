@@ -1,4 +1,4 @@
-test "SkBee - text component test":
+test "SkBee - TextComponents":
 
     # These tests are more so to check if anything fails
     # They can't really do anything
@@ -67,3 +67,13 @@ test "SkBee - text component test":
         broadcast component {_m}
         send title component "blah" with subtitle "oh hi" to all worlds for 5 seconds
     assert parse logs are not set with "These effects should have all parsed"
+
+    # Computed tooltips
+    set {_t::*} to tooltip lines of 1 of stick
+    assert size of {_t::*} = 1 with "Stick should have 1 line"
+    delete {_t::*}
+    set {_t::*} to tooltip lines of 1 of diamond sword
+    assert size of {_t::*} = 5 with "Diamond sword should have 5 lines"
+    delete {_t::*}
+    set {_t::*} to advanced tooltip lines of 1 of diamond sword
+    assert size of {_t::*} = 7 with "Diamond sword should have 7 advanced lines"
