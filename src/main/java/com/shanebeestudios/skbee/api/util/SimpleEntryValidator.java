@@ -20,7 +20,19 @@ public class SimpleEntryValidator {
         return this;
     }
 
+    @SafeVarargs
+    public final SimpleEntryValidator addOptionalEntry(String key, Class<Object>... returnType) {
+        this.builder.addEntryData(new ExpressionEntryData<>(key, null, true, returnType));
+        return this;
+    }
+
     public SimpleEntryValidator addRequiredEntry(String key, Class<?> returnType) {
+        this.builder.addEntryData(new ExpressionEntryData<>(key, null, false, returnType));
+        return this;
+    }
+
+    @SafeVarargs
+    public final SimpleEntryValidator addRequiredEntry(String key, Class<Object>... returnType) {
         this.builder.addEntryData(new ExpressionEntryData<>(key, null, false, returnType));
         return this;
     }
