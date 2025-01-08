@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
@@ -605,6 +606,7 @@ public class AddonLoader {
     }
 
     private void loadTestingElements() {
+        if (!TestMode.ENABLED) return;
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.testing");
             Util.logLoading("&5Testing Elements &asuccessfully loaded");
