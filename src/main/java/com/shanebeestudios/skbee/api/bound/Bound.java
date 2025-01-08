@@ -210,6 +210,8 @@ public class Bound implements ConfigurationSerializable {
         } else {
             this.boundingBox = BoundingBox.of(loc1, loc2);
         }
+        // Reset full bound cache
+        this.fullBoundBoxCache = null;
     }
 
     /**
