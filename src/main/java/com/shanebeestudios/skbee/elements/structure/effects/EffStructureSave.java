@@ -9,6 +9,8 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -18,6 +20,8 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"save structure {_s}", "save structures {_s::*}", "delete structure {_s}"})
 @Since("1.12.0")
 public class EffStructureSave extends Effect {
+
+    private static final StructureManager STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
 
     static {
         Skript.registerEffect(EffStructureSave.class, "(save|1:delete) structure[s] %structures%");
@@ -37,11 +41,11 @@ public class EffStructureSave extends Effect {
     @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        for (StructureWrapper structureWrapper : this.structures.getAll(event)) {
+        for (StructureWrapper structureWrapper : this.structures.getArray(event)) {
             if (this.save)
                 structureWrapper.save();
             else
-                structureWrapper.delete();
+                STRUCTURE_MANAGER.deleteStructure(structureWrapper);
         }
     }
 

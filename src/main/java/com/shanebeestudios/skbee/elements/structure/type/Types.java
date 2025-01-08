@@ -1,20 +1,27 @@
 package com.shanebeestudios.skbee.elements.structure.type;
 
+import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
 public class Types {
+
+    private static final StructureManager STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
 
     static {
         Classes.registerClass(new ClassInfo<>(StructureWrapper.class, "structure")
@@ -46,6 +53,22 @@ public class Types {
                 @Override
                 public String toVariableNameString(StructureWrapper structure) {
                     return toString(structure, 0);
+                }
+            })
+            .changer(new Changer<>() {
+                @Override
+                public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
+                    if (mode == ChangeMode.DELETE) return CollectionUtils.array();
+                    return null;
+                }
+
+                @Override
+                public void change(StructureWrapper[] what, Object @Nullable [] delta, ChangeMode mode) {
+                    if (mode == ChangeMode.DELETE) {
+                        for (StructureWrapper structureWrapper : what) {
+                            STRUCTURE_MANAGER.deleteStructure(structureWrapper);
+                        }
+                    }
                 }
             }));
 

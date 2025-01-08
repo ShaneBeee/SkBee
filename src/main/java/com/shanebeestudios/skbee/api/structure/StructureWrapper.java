@@ -128,6 +128,7 @@ public class StructureWrapper {
     public void delete() {
         try {
             STRUCTURE_MANAGER.deleteStructure(key, true);
+            STRUCTURE_MANAGER.unregisterStructure(key);
         } catch (IOException e) {
             Util.skriptError("Could not delete structure '%s', enable debug in SkBee config for more info.", getName());
             if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {

@@ -39,6 +39,11 @@ public class StructureManager {
         }
     }
 
+    public void deleteStructure(StructureWrapper structure) {
+        STRUCTURE_MAP.remove(structure.getName());
+        structure.delete();
+    }
+
     public boolean structureExists(String name) {
         NamespacedKey namespacedKey = Util.getNamespacedKey(name, true);
         if (namespacedKey == null) {
