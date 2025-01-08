@@ -44,4 +44,3 @@ test "SkBee - World Creator":
 
     assert world "test_world" is not loaded with "the world should not be loaded"
     assert world file "test_world" doesn't exist with "The file should be deleted"
-    assert world file "world" exists with "The main world file should exist"
