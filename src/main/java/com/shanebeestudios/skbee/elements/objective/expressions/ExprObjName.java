@@ -14,45 +14,55 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Objective;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Scoreboard - Objective Name")
-@Description("Get/Set the display name of an objective.")
+@Description({"Represents the name/display name of an objective.",
+    "- `name` = The name/id given to the objective (Cannot be changed).",
+    "- `display name` = The name the players will see (Can be changed)."})
 @Examples("set objective display name of {_objective} to \"le-objective\"")
 @Since("2.6.0")
 public class ExprObjName extends SimpleExpression<String> {
 
     static {
         Skript.registerExpression(ExprObjName.class, String.class, ExpressionType.COMBINED,
-                "objective [display[ ]]name of %objective%");
+            "objective (name|id) of %objective%",
+            "objective display name of %objective%");
     }
 
     private Expression<Objective> objective;
+    private boolean display;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.objective = (Expression<Objective>) exprs[0];
+        this.display = matchedPattern == 1;
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings("deprecation")
     @Override
     protected @Nullable String[] get(Event event) {
         Objective objective = this.objective.getSingle(event);
         if (objective == null) return null;
-        return new String[]{objective.getName()};
+        return new String[]{this.display ? objective.getDisplayName() : objective.getName()};
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(String.class);
+        if (mode == ChangeMode.SET) {
+            if (!this.display) {
+                Skript.error("Cannot change the name of an objective.");
+                return null;
+            }
+            return CollectionUtils.array(String.class);
+        }
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "deprecation"})
+    @SuppressWarnings("deprecation")
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Objective objective = this.objective.getSingle(event);
@@ -73,7 +83,8 @@ public class ExprObjName extends SimpleExpression<String> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "objective display name of " + this.objective.toString(e, d);
+        String type = this.display ? "display name" : "name";
+        return "objective " + type + " of " + this.objective.toString(e, d);
     }
 
 }
