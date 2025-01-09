@@ -27,6 +27,21 @@ test "SkBee - Registry TagKey from Registry" when running minecraft "1.21.3":
     set {_key} to tag key "minecraft:wool" from block registry
     assert {_key} is set with "Block registry should have 'minecraft:wool' TagKey."
     assert "%{_key}%" contains "minecraft:wool" with "The TagKey should contain 'minecraft:wool"
+    assert {_key} contains black wool with "The wool tag should contain black wool"
+    assert {_key} doesn't contain stone with "The wool tag should not contain stone"
     delete {_key}
+
+    set {_key} to item registry tag key "minecraft:swords"
+    assert {_key} is set with "The key should be set"
+    assert {_key} contains diamond sword with "The swords tag should contain a diamond sword"
+    assert {_key} doesn't contain diamond axe with "The swords tag shouldn't contain an axe"
+    delete {_key}
+
+    set {_key} to biome registry tag key "minecraft:is_forest"
+    assert {_key} is set with "The key should be set"
+    assert {_key} contains forest with "The forests tag should contain forest"
+    assert {_key} doesn't contain desert with "The forests tag shouldn't contain desert"
+    delete {_key}
+
     set {_key} to tag key "minecraft:blah" from block registry
     assert {_key} is not set with "Block registry should NOT have 'minecraft:blah' TagKey."
