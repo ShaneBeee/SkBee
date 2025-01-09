@@ -44,11 +44,11 @@ import java.util.List;
     "\tdamage_per_block: 2",
     "\trules:",
     "\t\tapply tool rule:",
-    "\t\t\tblock_tag: minecraft block tag \"minecraft:dirt\"",
+    "\t\t\tblocks: minecraft block tag \"minecraft:all_signs\" # Shown as a Minecraft block tag",
     "\t\t\tspeed: 1.0",
     "\t\t\tcorrect_for_drops: true",
     "\t\tapply tool rule:",
-    "\t\t\tblock_types: granite, stone and andesite",
+    "\t\t\tblocks: stone, granite, andesite and gravel # Shown as a list of ItemTypes",
     "\t\t\tspeed: 0.5",
     "\t\t\tcorrect_for_drops: false",
     "give {_i} to player"})

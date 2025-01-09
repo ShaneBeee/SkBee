@@ -55,12 +55,18 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
         slot: hand_slot
         equip_sound: "entity.player.burp"
         asset_id: "my_pack:some_asset"
-        allowed_entity_types: player, evoker
-        allowed_entity_tags: minecraft entity tag "undead"
+        allowed_entities: player, evoker, zombie
         dispensable: false
         swappable: true
         damage_on_hurt: true
         camera_overlay: "my_pack:some_overlay"
+    assert {_i} has item component minecraft:equippable with "The stick should have an equippable component"
+    delete {_i}
+
+    set {_i} to 1 of stick
+    apply equippable component to {_i}:
+        slot: hand_slot
+        allowed_entities: minecraft entity tag "minecraft:undead"
     assert {_i} has item component minecraft:equippable with "The stick should have an equippable component"
 
     # Food section
@@ -137,11 +143,11 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
         damage_per_block: 2
         rules:
             apply tool rule:
-                block_tag: minecraft block tag "minecraft:dirt"
+                blocks: minecraft block tag "minecraft:dirt"
                 speed: 1.0
                 correct_for_drops: true
             apply tool rule:
-                block_types: granite, stone and andesite
+                blocks: granite, stone and andesite
                 speed: 5.5
                 correct_for_drops: false
     assert {_i} has item component minecraft:tool with "The stick should have a tool component"

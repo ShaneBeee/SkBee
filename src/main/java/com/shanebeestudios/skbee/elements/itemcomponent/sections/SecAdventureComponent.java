@@ -39,6 +39,7 @@ import java.util.List;
 
 @Name("ItemComponent - Adventure Predicate Apply")
 @Description({"Apply an adventure can break/can place on predicate to items.",
+    "Requires Paper 1.21.3+",
     "See [**Can Break**](https://minecraft.wiki/w/Data_component_format#can_break)/" +
         "[**Can Place On**](https://minecraft.wiki/w/Data_component_format#can_place_on) components on McWiki for more info.",
     "",
