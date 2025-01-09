@@ -1,5 +1,18 @@
 test "SkBee - Item Component test" when running minecraft "1.21.3":
 
+    # Can Break/Can Place On section
+    set {_i} to 1 of diamond axe
+    apply can break predicate to {_i}:
+        blocks: diamond ore, emerald ore, iron ore
+        show_in_tooltip: false
+    assert {_i} has item component minecraft:can_break with "The axe should have a can break component"
+    set {_i} to 1 of oak stairs
+    apply can place on predicate to {_i}:
+        blocks: minecraft block tag "minecraft:dirt"
+        show_in_tooltip: false
+    assert {_i} has item component minecraft:can_place_on with "The axe should have a can place on component"
+    delete {_i}
+
     # Consumable section
     set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
     set {_i} to 1 of stick
