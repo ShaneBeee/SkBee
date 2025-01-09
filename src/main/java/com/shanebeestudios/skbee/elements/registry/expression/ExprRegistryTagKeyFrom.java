@@ -24,14 +24,16 @@ import org.jetbrains.annotations.Nullable;
 @Name("Registry - TagKey from Registry")
 @Description("Get a TagKey from a registry.")
 @Examples({"set {_tagkey} to tag key \"minecraft:wool\" from block registry",
-    "set {_tagkey} to tag key \"my_pack:cool_enchantments\" from enchantment registry"})
+    "set {_tagkey} to tag key \"my_pack:cool_enchantments\" from enchantment registry",
+    "set {_tagkey} to item registry tag key \"minecraft:swords\""})
 @Since("INSERT VERSION")
 @SuppressWarnings({"UnstableApiUsage", "rawtypes"})
 public class ExprRegistryTagKeyFrom extends SimpleExpression<TagKey> {
 
     static {
         Skript.registerExpression(ExprRegistryTagKeyFrom.class, TagKey.class, ExpressionType.COMBINED,
-            "tag key %string% from %registrykey%");
+            "tag key %string% from %registrykey%",
+            "%registrykey% tag key %string%");
     }
 
     private Expression<String> key;
@@ -40,8 +42,8 @@ public class ExprRegistryTagKeyFrom extends SimpleExpression<TagKey> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.key = (Expression<String>) exprs[0];
-        this.registryKey = (Expression<RegistryKey<Keyed>>) exprs[1];
+        this.key = (Expression<String>) exprs[matchedPattern];
+        this.registryKey = (Expression<RegistryKey<Keyed>>) exprs[matchedPattern ^ 1];
         return true;
     }
 
