@@ -2,8 +2,6 @@
 
 **SkBee** is a [**Skript**](https://github.com/SkriptLang/Skript) addon that aims to add more useful elements to Skript.
 
-This is a fork of the original [skBee](https://github.com/ShaneBeee/SkBee) by ShaneBeee that is being maintained by the Skript Hub team as a maintenance fork. This means that no new features will be added to skBee, but it will be updated as need to support new versions of Minecraft and Skript. Bug fix PR's will be accepted, but PR's for new feature will not.
-
 ## Elements
 This is only a small list of the many things included
 - **NBT elements** get/set NBT of items, blocks (tile entities) and entities. (Available for 1.8.8+)
