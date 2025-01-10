@@ -14,16 +14,6 @@ body:
           required: true
 
     - type: textarea
-      id: alternatives
-      attributes:
-          label: Alternatives
-          description: Describe alternatives you've considered
-          placeholder: |
-              The more details, the better
-      validations:
-          required: true
-
-    - type: textarea
       id: additional
       attributes:
           label: Additional Information
