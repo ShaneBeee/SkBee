@@ -2,7 +2,7 @@
 
 ## Golden Rules:
 
-- I would prefer to keep NMS/Reflection related code to an absolute minimum.
+- Keep any/all NMS/Reflection related code to an absolute minimum.
 - Please make sure Skript doesn't already have an element before adding it to SkBee:
   - Check Skript's docs
   - Check Skript's `dev/feature` branch to see if anything has been added
