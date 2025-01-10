@@ -1,3 +1,4 @@
+<!-- Before opeaning a pull request to add a new feature, make sure this feature is approved by the team. -->
 ## Describe your changes
 
 ---
