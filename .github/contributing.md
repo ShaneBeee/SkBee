@@ -35,9 +35,9 @@ if (Classes.getExactClassInfo(Spellcaster.Spell.class) == null) {
 ```
 
 ## Branches:
-PRs should be done to the `dev/update` branch.
-Changes are done to this branch before getting merged into `master` on release.
-If you forget to point your PR towards the update branch... don't worry, you can change it or a team member can change it.
+Bug fix PRs should be aimed towards the `dev/patch` branch.
+New feature/major change PRs should be aimed towards the `dev/feature` branch.
+Fixes will be done on this branch and merged to `master` just before a minor release.
 
 ## Tests:
 
