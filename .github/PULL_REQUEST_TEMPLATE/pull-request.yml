@@ -1,0 +1,41 @@
+name: 🧑‍💻Pull Request
+description: Request code changes to be pulled into SkBee.
+labels: "needs triage"
+body:
+    -   type: textarea
+        id: description
+        attributes:
+            label: Description
+            description: Describe what your PR fixes/adds.
+            placeholder: Tell us what you want to do.
+        validations:
+            required: true
+
+    -   type: input
+        attributes:
+            label: Related Issues
+            description: Do any issues relate to this PR?
+            placeholder: |
+                Ex: #1234
+        validations:
+            required: false
+
+    -   type: textarea
+        attributes:
+            label: Additional Information
+            description: Any additional information that may help us solve the bug.
+            placeholder: |
+                Ex: "Using Spigot instead of Paper"
+        validations:
+            required: false
+
+    -   type: checkboxes
+        id: read_guidelines
+        attributes:
+            label: contributing guidelines
+            description: Did you read our [contributing guidelines](https://github.com/ShaneBeee/SkBee/blob/master/.github/contributing.md)?
+            options:
+                -   label: Yes
+                    required: true
+        validations:
+            required: true
