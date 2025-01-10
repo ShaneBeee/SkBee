@@ -8,4 +8,4 @@
 
 ## Checklist before requesting a review
 - [ ] Tests have been added if necessary
-- [ ] I have read the [contributing guidelines]()
+- [ ] I have read the [contributing guidelines](https://github.com/ShaneBeee/SkBee/blob/master/.github/contributing.md)
