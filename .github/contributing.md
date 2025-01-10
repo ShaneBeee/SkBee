@@ -49,7 +49,7 @@ If you are adding a single element, put the test in the appropriate `test/script
 - `<type>` = The type of element (expressions/conditions/effects/ect.)
 
 ### Modules/Grouped Elements:
-If you are adding a bunch of elements that can be grouped into one test, you can plop it in th `test/scripts/genera/` directory.
+If you are adding a bunch of elements that can be grouped into one test, you can plop it in th `test/scripts/general/` directory.
 See `test/scripts/general/text-component.sk` as an example.
 
 ### Naming:
