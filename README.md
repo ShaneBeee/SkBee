@@ -23,14 +23,22 @@ See the [**Wiki**](https://github.com/ShaneBeee/SkBee/wiki) for more detailed in
 
 ## [**JavaDocs**](https://shanebeee.github.io/docs/SkBee/)
 
+## <ins>Contributing</ins>
+SkBee is an open source project, and we are open to contributions from the community.
+Before working on a contribution please read our [contributing guidelines](https://github.com/ShaneBeee/SkBee/blob/master/.github/contributing.md)
+
+## <ins>Building</ins>
+SkBee is a gradle project.
+Simply clone the repo to your computer then run `./gradlew build`.
+
 ## <ins>Outdated</ins>
 Are you running an <ins>**outdated**</ins> version of Minecraft and looking for an <ins>**outdated**</ins> build of SkBee that will work on your <ins>**outdated**</ins> server? Well look no further, here is a list of <ins>**outdated**</ins> builds of SkBee for your <ins>**outdated**</ins> server.
 Keep in mind, these <ins>**outdated**</ins> builds for <ins>**outdated**</ins> servers are not supported and you will not get support/bug fixes, because they're <ins>**outdated**</ins>!
 
 ### <ins>Skript 2.9.5 (and below)</ins>
-Due to changes in Skript 2.10's API, SkBee 3.7.0+ will only work on Skript 2.10+
+Due to changes in Skript 2.10's API, SkBee INSERT VERSION+ will only work on Skript 2.10+   
 If you need SkBee to work on an older version of Skript this is the last version that will work:
-[**SkBee 3.6.6**](https://github.com/ShaneBeee/SkBee/releases/tag/3.6.6)
+[**SkBee 3.7.0**](https://github.com/ShaneBeee/SkBee/releases/tag/3.7.0)   
 (Just like any other <ins>**outdated**</ins> build, this one is no longer supported)
 
 ### <ins>Skript 2.6.4 (and below)</ins>
