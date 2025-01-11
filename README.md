@@ -36,9 +36,9 @@ Are you running an <ins>**outdated**</ins> version of Minecraft and looking for 
 Keep in mind, these <ins>**outdated**</ins> builds for <ins>**outdated**</ins> servers are not supported and you will not get support/bug fixes, because they're <ins>**outdated**</ins>!
 
 ### <ins>Skript 2.9.5 (and below)</ins>
-Due to changes in Skript 2.10's API, SkBee 3.7.0+ will only work on Skript 2.10+
+Due to changes in Skript 2.10's API, SkBee INSERT VERSION+ will only work on Skript 2.10+   
 If you need SkBee to work on an older version of Skript this is the last version that will work:
-[**SkBee 3.6.6**](https://github.com/ShaneBeee/SkBee/releases/tag/3.6.6)
+[**SkBee 3.7.0**](https://github.com/ShaneBeee/SkBee/releases/tag/3.7.0)   
 (Just like any other <ins>**outdated**</ins> build, this one is no longer supported)
 
 ### <ins>Skript 2.6.4 (and below)</ins>
