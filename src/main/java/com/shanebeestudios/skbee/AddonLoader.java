@@ -53,40 +53,40 @@ public class AddonLoader {
 
     boolean canLoadPlugin() {
         if (skriptPlugin == null) {
-            Util.log("&cDependency Skript was not found, plugin disabling.");
+            Util.logLoading("&cDependency Skript was not found, Skript elements cannot load.");
             return false;
         }
         if (!skriptPlugin.isEnabled()) {
-            Util.log("&cDependency Skript is not enabled, plugin disabling.");
-            Util.log("&cThis could mean SkBee is being forced to load before Skript.");
+            Util.logLoading("&cDependency Skript is not enabled, Skript elements cannot load.");
+            Util.logLoading("&cThis could mean SkBee is being forced to load before Skript.");
             return false;
         }
         Version skriptVersion = Skript.getVersion();
         if (skriptVersion.isSmallerThan(new Version(2, 9, 999))) {
-            Util.log("&cDependency Skript outdated, plugin disabling.");
-            Util.log("&eSkBee requires Skript 2.10+ but found Skript " + skriptVersion);
+            Util.logLoading("&cDependency Skript outdated, Skript elements cannot load.");
+            Util.logLoading("&eSkBee requires Skript 2.10+ but found Skript " + skriptVersion);
             return false;
         }
         if (!Skript.isAcceptRegistrations()) {
             // SkBee should be loading right after Skript, during Skript's registration period
             // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
             // We need to find the route of this issue, so far the only plugin I know that does this is PlugMan
-            Util.log("&cSkript is no longer accepting registrations, addons can no longer be loaded!");
+            Util.logLoading("&cSkript is no longer accepting registrations, addons can no longer be loaded!");
             Plugin plugMan = Bukkit.getPluginManager().getPlugin("PlugMan");
             if (plugMan != null && plugMan.isEnabled()) {
-                Util.log("&cIt appears you're running PlugMan.");
-                Util.log("&cIf you're trying to reload/enable SkBee with PlugMan.... you can't.");
-                Util.log("&ePlease restart your server!");
+                Util.logLoading("&cIt appears you're running PlugMan.");
+                Util.logLoading("&cIf you're trying to reload/enable SkBee with PlugMan.... you can't.");
+                Util.logLoading("&ePlease restart your server!");
             } else {
-                Util.log("&cNo clue how this could happen.");
-                Util.log("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
+                Util.logLoading("&cNo clue how this could happen.");
+                Util.logLoading("&cSeems a plugin is delaying SkBee loading, which is after Skript stops accepting registrations.");
             }
             return false;
         }
         Version version = new Version(SkBee.EARLIEST_VERSION);
         if (!Skript.isRunningMinecraft(version)) {
-            Util.log("&cYour server version &7'&bMC %s&7'&c is not supported, only &7'&bMC %s+&7'&c is supported!", Skript.getMinecraftVersion(), version);
-            Util.log("&7For outdated server versions please see: &ehttps://github.com/ShaneBeee/SkBee#outdated");
+            Util.logLoading("&cYour server version &7'&bMC %s&7'&c is not supported, only &7'&bMC %s+&7'&c is supported!", Skript.getMinecraftVersion(), version);
+            Util.logLoading("&7For outdated server versions please see: &ehttps://github.com/ShaneBeee/SkBee#outdated");
             return false;
         }
         loadSkriptElements();
