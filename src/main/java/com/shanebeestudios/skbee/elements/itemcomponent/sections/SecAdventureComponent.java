@@ -6,6 +6,7 @@ import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -54,6 +55,7 @@ import java.util.List;
     "",
     "apply can place on adventure predicate to player's tool:",
     "\tblocks: minecraft block tag \"minecraft:logs\""})
+@Since("INSERT VERSION")
 @SuppressWarnings({"UnstableApiUsage", "NullableProblems"})
 public class SecAdventureComponent extends Section {
 
