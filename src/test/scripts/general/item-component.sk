@@ -68,6 +68,37 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
         slot: hand_slot
         allowed_entities: minecraft entity tag "minecraft:undead"
     assert {_i} has item component minecraft:equippable with "The stick should have an equippable component"
+    delete {_i}
+
+    # Firework Explosion Section
+    set {_i} to 1 of firework star
+    apply firework explosion to {_i}:
+        shape: small ball
+        colors: red, yellow and white
+        fade_colors: blue, green and red
+        has_trail: true
+        has_twinkle: true
+    assert {_i} has item component minecraft:firework_explosion with "The start should have a firework explosion component"
+    delete {_i}
+
+    # Fireworks Section
+    set {_i} to 1 of firework rocket
+    apply fireworks to {_i}:
+        flight_duration: 3
+        explosions:
+            apply firework explosion:
+                shape: small ball
+                colors: red, yellow and white
+                fade_colors: blue, green and red
+                has_trail: true
+                has_twinkle: true
+            apply firework explosion:
+                shape: large ball
+                colors: red, white and blue
+                has_trail: false
+                has_twinkle: false
+    assert {_i} has item component minecraft:fireworks with "The rocket should have a fireworks component"
+    delete {_i}
 
     # Food section
     set {_i} to 1 of stick
