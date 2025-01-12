@@ -13,6 +13,15 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
     assert {_i} has item component minecraft:can_place_on with "The axe should have a can place on component"
     delete {_i}
 
+    # Charged Projectiles
+    set {_i} to 1 of crossbow
+    assert charged projectiles component of {_i} is not set with "The crossbow shouldn't have projectiles yet"
+    set charged projectiles of {_i} to an arrow and a stick
+    assert {_i} has item component minecraft:charged_projectiles with "The crossbow should have charged projectiles now"
+    assert size of (charged projectiles component of {_i}) = 2 with "There should be two projectiles"
+    delete charged projectiles component of {_i}
+    assert charged projectiles component of {_i} is not set with "The crossbow shouldn't have projectiles after deleting"
+
     # Consumable section
     set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
     set {_i} to 1 of stick
@@ -115,6 +124,14 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
     assert glider component of {_i} is not set with "After deleting, item should no longer have a glider"
     reset glider component of {_i}
     assert glider component of {_i} = true with "After reset, item should have a glider"
+
+    # Intangible Projectile
+    set {_i} to 1 of arrow
+    assert intangible projectile component of {_i} is not set with "The arrow should have the intangible projectile component yet"
+    set intangible projectile component of {_i} to true
+    assert intangible projectile component of {_i} = true with "The arrow should now have the intangible projectile component"
+    reset intangible projectile component of {_i}
+    assert intangible projectile component of {_i} is not set with "The arrow should no longer have the intangible projectile component"
 
     # Item Model
     set {_i} to 1 of diamond sword
