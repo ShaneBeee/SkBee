@@ -132,7 +132,7 @@ public class ItemUtils {
         itemStack.setItemMeta(itemMeta);
     }
 
-    public static ItemStack getItemStackFromObjects(Object object) {
+    public static @Nullable ItemStack getItemStackFromObjects(Object object) {
         if (object instanceof ItemStack itemStack) return itemStack;
         else if (object instanceof ItemType itemType) return itemType.getRandom();
         else if (object instanceof Slot slot) return slot.getItem();
