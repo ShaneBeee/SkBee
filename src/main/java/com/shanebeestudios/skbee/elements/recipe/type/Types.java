@@ -7,13 +7,17 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
+import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.Converters;
 
 import java.util.ArrayList;
@@ -71,6 +75,16 @@ public class Types {
                 return new MaterialChoice(material);
             }
             return new ExactChoice(from);
+        });
+        Converters.registerConverter(Tag.class, RecipeChoice.class, new Converter<>() {
+            @SuppressWarnings("unchecked")
+            @Override
+            public @Nullable RecipeChoice convert(Tag from) {
+                if (RecipeUtil.isMaterialTag(from)) {
+                    return new MaterialChoice((Tag<Material>) from);
+                }
+                return null;
+            }
         });
     }
 
