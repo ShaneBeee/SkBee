@@ -8,12 +8,12 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.jetbrains.annotations.NotNull;
-import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.Converters;
 
 import java.util.ArrayList;
@@ -37,8 +37,6 @@ public class Types {
                 .after("itemtype", "itemstack")
                 .since("1.10.0")
                 .parser(new Parser<>() {
-
-                    @SuppressWarnings("NullableProblems")
                     @Override
                     public boolean canParse(ParseContext context) {
                         return false;
@@ -58,20 +56,21 @@ public class Types {
 
         EnumWrapper<RecipeType> RECIPE_TYPE_ENUM = new EnumWrapper<>(RecipeType.class);
         Classes.registerClass(RECIPE_TYPE_ENUM.getClassInfo("recipetype")
-                .user("recipe ?types?")
-                .name("Recipe Type")
-                .description("Represents the types of recipes.")
-                .since("2.6.0"));
+            .user("recipe ?types?")
+            .name("Recipe Type")
+            .description("Represents the types of recipes.")
+            .since("2.6.0"));
 
         // CONVERTERS
-        Converters.registerConverter(ItemStack.class, RecipeChoice.class, new Converter<>() {
-            @Override
-            public @NotNull RecipeChoice convert(ItemStack from) {
-                if (from.isSimilar(new ItemStack(from.getType()))) {
-                    return new MaterialChoice(from.getType());
-                }
-                return new ExactChoice(from);
+        Converters.registerConverter(ItemStack.class, RecipeChoice.class, from -> {
+            Material material = from.getType();
+            if (material.isAir() || !material.isItem()) {
+                return null;
             }
+            if (from.isSimilar(new ItemStack(material))) {
+                return new MaterialChoice(material);
+            }
+            return new ExactChoice(from);
         });
     }
 
