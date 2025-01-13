@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -33,6 +34,7 @@ import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
+import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +80,7 @@ import java.util.Map;
     "\tresult: diamond sword of fire aspect named \"Flaming Sword\"",
     "\tinput: diamond sword"})
 @Since("3.0.0")
-public class SecRecipeCooking extends Section {
+public class SecRecipeCooking extends Section implements SyntaxRuntimeErrorProducer {
 
     private static final EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
     private static final Map<String, CookingBookCategory> CATEGORY_MAP = new HashMap<>();
@@ -100,6 +102,7 @@ public class SecRecipeCooking extends Section {
         }
     }
 
+    private Node node;
     private CookingRecipeType recipeType;
     private Expression<String> id;
     private Expression<ItemStack> result;
@@ -109,9 +112,10 @@ public class SecRecipeCooking extends Section {
     private Expression<Timespan> cookTime;
     private Expression<Number> experience;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        this.node = getParser().getNode();
         EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
         if (container == null) return false;
 
@@ -138,29 +142,41 @@ public class SecRecipeCooking extends Section {
     private void execute(Event event) {
         String recipeId = this.id.getSingle(event);
         if (recipeId == null) {
-            RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
+            error("Missing id");
             return;
         }
         NamespacedKey namespacedKey = Util.getNamespacedKey(recipeId, false);
         ItemStack result = this.result.getSingle(event);
         // #getConvertedExpression() is used to prevent the famous 'UnparsedLiterals must be converted before use'
         RecipeChoice input = this.input.getSingle(event);
-        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getAs(Timespan.TimePeriod.TICK) : this.recipeType.getCookTime();
-        float experience = this.experience != null ? this.experience.getSingle(event).floatValue() : 0;
+
+        int cookTime = this.recipeType.getCookTime();
+        if (this.cookTime != null) {
+            Timespan timespan = this.cookTime.getSingle(event);
+            if (timespan != null) {
+                cookTime = (int) timespan.getAs(Timespan.TimePeriod.TICK);
+            } else {
+                warning("Invalid cooktime, defaulting to recipe default: " + new Timespan(Timespan.TimePeriod.TICK, cookTime));
+            }
+        }
+        float experience = 0;
+        if (this.experience != null) {
+            Number num = this.experience.getSingle(event);
+            if (num != null) {
+                experience = num.floatValue();
+            } else {
+                warning("Invalid experience, defaulting to 0");
+            }
+        }
 
         if (namespacedKey == null) {
-            RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
+            error("Invalid id: " + recipeId);
             return;
         } else if (result == null || !result.getType().isItem() || result.getType().isAir()) {
-            RecipeUtil.error("Invalid/Missing recipe result: &e" + this.toString(event, DEBUG));
+            error("Invalid result: " + result);
             return;
         } else if (input == null) {
-            if (this.input != null) {
-                RecipeUtil.error("Invalid/Missing recipe input: &e" + this.input.toString(event, DEBUG));
-            } else {
-                // When an invalid expression like 'I AM REAL SYNTAX' is used, skript doesn't error this catches it
-                RecipeUtil.error("Invalid/Missing recipe input: &egiven recipe input is an invalid expression");
-            }
+            error("Invalid input: " + this.input.toString(event, true));
             return;
         }
 
@@ -187,6 +203,11 @@ public class SecRecipeCooking extends Section {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "register a new " + this.recipeType.toString().toLowerCase(Locale.ROOT) + " recipe";
+    }
+
+    @Override
+    public Node getNode() {
+        return this.node;
     }
 
 }

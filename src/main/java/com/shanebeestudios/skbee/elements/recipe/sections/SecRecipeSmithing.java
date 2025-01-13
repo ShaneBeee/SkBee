@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -15,7 +16,6 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -27,27 +27,28 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
+import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.List;
 
 @Name("Recipe - Register Smithing Recipe")
 @Description({"This section allows you to register a smithing transform recipe, define the output as well as the template, ",
-        "base and addition items. Requires MC 1.20+",
-        "\n`id` = The ID for your recipe.",
-        "\n`result` = The resulting ItemStack of this recipe.",
-        "\n`template` = Represents the first slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
-        "\n`base` = Represents the second slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
-        "\n`addition` = Represents the third slot in the smithing inventory (Optional).",
-        "\n`copynbt` = Represents whether to copy the nbt from the input base item to the output, default = true (Requires PaperMC) (Optional)."})
+    "base and addition items. Requires MC 1.20+",
+    "\n`id` = The ID for your recipe.",
+    "\n`result` = The resulting ItemStack of this recipe.",
+    "\n`template` = Represents the first slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
+    "\n`base` = Represents the second slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
+    "\n`addition` = Represents the third slot in the smithing inventory (Optional).",
+    "\n`copynbt` = Represents whether to copy the nbt from the input base item to the output, default = true (Requires PaperMC) (Optional)."})
 @Examples({"on load:",
-        "\tregister smithing transform recipe:",
-        "\t\tid: \"test:smithing\"",
-        "\t\tresult: emerald of unbreaking named \"&cFire Stone\" with all item flags",
-        "\t\ttemplate: paper named \"&cFire Paper\"",
-        "\t\tbase: diamond",
-        "\t\taddition: blaze powder"})
+    "\tregister smithing transform recipe:",
+    "\t\tid: \"test:smithing\"",
+    "\t\tresult: emerald of unbreaking named \"&cFire Stone\" with all item flags",
+    "\t\ttemplate: paper named \"&cFire Paper\"",
+    "\t\tbase: diamond",
+    "\t\taddition: blaze powder"})
 @Since("3.0.0")
-public class SecRecipeSmithing extends Section {
+public class SecRecipeSmithing extends Section implements SyntaxRuntimeErrorProducer {
 
     public static final boolean HAS_NBT_METHOD = Skript.methodExists(SmithingRecipe.class, "willCopyNbt");
     private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
@@ -56,7 +57,7 @@ public class SecRecipeSmithing extends Section {
     static {
         if (Skript.isRunningMinecraft(1, 20)) {
             Skript.registerSection(SecRecipeSmithing.class,
-                    "register [a] [new] smithing [transform] recipe");
+                "register [a] [new] smithing [transform] recipe");
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
             ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("template", null, false, RecipeChoice.class));
@@ -66,6 +67,7 @@ public class SecRecipeSmithing extends Section {
         }
     }
 
+    private Node node;
     private Expression<String> id;
     private Expression<ItemStack> result;
     private Expression<RecipeChoice> template;
@@ -73,9 +75,10 @@ public class SecRecipeSmithing extends Section {
     private Expression<RecipeChoice> addition;
     private Expression<Boolean> copyNbt;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        this.node = getParser().getNode();
         EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
         if (container == null) return false;
 
@@ -88,12 +91,10 @@ public class SecRecipeSmithing extends Section {
         this.base = (Expression<RecipeChoice>) container.getOptional("base", false);
         if (this.base == null) return false;
         this.addition = (Expression<RecipeChoice>) container.getOptional("addition", false);
-        if (this.addition == null) return false;
         this.copyNbt = (Expression<Boolean>) container.getOptional("copynbt", false);
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         execute(event);
@@ -103,7 +104,7 @@ public class SecRecipeSmithing extends Section {
     private void execute(Event event) {
         String recipeId = this.id.getSingle(event);
         if (recipeId == null) {
-            RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
+            error("Missing id");
             return;
         }
         NamespacedKey key = Util.getNamespacedKey(recipeId, false);
@@ -113,19 +114,19 @@ public class SecRecipeSmithing extends Section {
         RecipeChoice addition = this.addition != null ? RecipeUtil.getRecipeChoice(this.addition.getSingle(event)) : null;
 
         if (key == null) {
-            RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
+            error("Invalid id: " + recipeId);
             return;
         } else if ((result == null || !result.getType().isItem() || result.getType().isAir())) {
-            RecipeUtil.error("Invalid/Missing recipe result: &e" + this.toString(event, DEBUG));
+            error("Missing/Invalid recipe result: " + result);
             return;
         } else if (base == null) {
-            RecipeUtil.error("Invalid/Missing recipe base: &e" + this.toString(event, DEBUG));
+            error("Invalid/Missing recipe base: " + this.toString(event, true));
             return;
         } else if (template == null) {
-            RecipeUtil.error("Invalid/Missing recipe template: &e" + this.toString(event, DEBUG));
+            error("Invalid/Missing recipe template: " + this.toString(event, true));
             return;
         } else if (addition == null) {
-            addition = new RecipeChoice.MaterialChoice(Material.AIR);
+            addition = RecipeChoice.empty();
         }
 
         SmithingTransformRecipe recipe;
@@ -147,6 +148,11 @@ public class SecRecipeSmithing extends Section {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "register smithing recipe";
+    }
+
+    @Override
+    public Node getNode() {
+        return this.node;
     }
 
 }
