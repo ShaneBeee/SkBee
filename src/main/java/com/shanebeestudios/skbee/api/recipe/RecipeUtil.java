@@ -34,6 +34,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.NoSuchElementException;
+import java.util.StringJoiner;
 
 /**
  * Utility methods for {@link Recipe recipes}
@@ -52,7 +53,7 @@ public class RecipeUtil {
     }
 
     /**
-     * @param object a RecipeChoice or ItemStack/ItemType/Slot that will be converted to a RecipeChoice
+     * @param object a RecipeChoice or ItemStack/ItemType/Slot/Tag that will be converted to a RecipeChoice
      * @return null if an invalid object/item or air, otherwise a RecipeChoice
      */
     @SuppressWarnings("unchecked")
@@ -108,7 +109,7 @@ public class RecipeUtil {
      * @param ingredients Ingredients of recipe to log
      */
     public static void logRecipe(Recipe recipe, RecipeChoice... ingredients) {
-        if (TestMode.ENABLED) return;
+        if (!LOG_RECIPES) return;
         if (!(recipe instanceof Keyed)) return;
         log("&aRegistered new recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
@@ -126,7 +127,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logCookingRecipe(CookingRecipe<?> recipe) {
-        if (TestMode.ENABLED) return;
+        if (!LOG_RECIPES) return;
         String type = recipe.getClass().getSimpleName().replace("Recipe", "").toLowerCase(Locale.ROOT);
         log("&aRegistered new %s recipe: &7(&b%s&7)", type, ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
@@ -135,7 +136,7 @@ public class RecipeUtil {
             log(" - &7Group: &r\"&6%s&r\"", group);
         }
         if (HAS_CATEGORY) {
-            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
+            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory().name().toLowerCase(Locale.ROOT));
         }
         log(" - &7CookTime: &b%s", new Timespan(Timespan.TimePeriod.TICK, recipe.getCookingTime()));
         log(" - &7Experience: &b%s", recipe.getExperience());
@@ -148,7 +149,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logShapelessRecipe(ShapelessRecipe recipe) {
-        if (TestMode.ENABLED) return;
+        if (!LOG_RECIPES) return;
         log("&aRegistered new shapeless recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         String group = recipe.getGroup();
@@ -156,11 +157,11 @@ public class RecipeUtil {
             log(" - &7Group: &r\"&6%s&r\"", group);
         }
         if (HAS_CATEGORY) {
-            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
+            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory().name().toLowerCase(Locale.ROOT));
         }
         log(" - &7Ingredients:");
         recipe.getChoiceList().forEach(recipeChoice ->
-            log("   - &6%s", getFancy(recipeChoice)));
+            log("   - %s", getFancy(recipeChoice)));
     }
 
     /**
@@ -169,7 +170,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logShapedRecipe(ShapedRecipe recipe) {
-        if (TestMode.ENABLED) return;
+        if (!LOG_RECIPES) return;
         log("&aRegistered new shaped recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
 
@@ -178,18 +179,19 @@ public class RecipeUtil {
             log(" - &7Group: &r\"&6%s&r\"", group);
         }
         if (HAS_CATEGORY) {
-            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory());
+            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory().name().toLowerCase(Locale.ROOT));
         }
 
         String[] shape = recipe.getShape();
-        String grid = " - &7Shape: &r[&d%s&r]&7";
-        if (shape.length > 1) grid += "&7, &r[&d%s&r]";
-        if (shape.length > 2) grid += "&7, &r[&d%s&r]";
-        log(grid, (Object[]) shape);
+        StringJoiner joiner = new StringJoiner("&r], &r[&d", "&r[&d", "&r]");
+        for (String s : shape) {
+            joiner.add(s);
+        }
+        log(" - &7Shape: &r%s&7", joiner.toString());
         log(" - &7Ingredients:");
         recipe.getChoiceMap().forEach((character, recipeChoice) -> {
             if (recipeChoice != null) {
-                log("   - &r'&d%s&r' = &6%s", character, getFancy(recipeChoice));
+                log("   - &r'&d%s&r' = %s", character, getFancy(recipeChoice));
             }
         });
     }
@@ -200,7 +202,7 @@ public class RecipeUtil {
      * @param potionMix PotionMix to log
      */
     public static void logBrewingRecipe(PotionMix potionMix) {
-        if (TestMode.ENABLED) return;
+        if (!LOG_RECIPES) return;
         log("&aRegistered new shaped recipe: &7(&b%s&7)", potionMix.getKey().toString());
         log(" - &7Result: &e%s", potionMix.getResult());
         log(" - &7Ingredient: %s", getFancy(potionMix.getIngredient()));
@@ -213,7 +215,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logSmithingRecipe(SmithingTransformRecipe recipe) {
-        if (TestMode.ENABLED) return;
+        if (!LOG_RECIPES) return;
         log("&aRegistered new smithing recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         log(" - &7Template: %s", getFancy(recipe.getTemplate()));
@@ -238,13 +240,15 @@ public class RecipeUtil {
         }
     }
 
-    private static String getFancy(RecipeChoice matChoice) {
-        return matChoice.toString()
-            .replace("MaterialChoice{choices=", "")
-            .replace("ExactChoice{choices=", "")
-            .replace("[", "&r[&b")
-            .replace(",", "&r,&b")
-            .replace("]}", "&r]");
+    private static String getFancy(RecipeChoice recipeChoice) {
+        StringJoiner joiner = new StringJoiner("&r, &e", "&r[&e", "&r]");
+        if (recipeChoice instanceof MaterialChoice materialChoice) {
+            materialChoice.getChoices().forEach(material ->
+                joiner.add(material.getKey().toString()));
+        } else if (recipeChoice instanceof ExactChoice exactChoice) {
+            joiner.add(exactChoice.toString());
+        }
+        return joiner.toString();
     }
 
     /**
