@@ -16,6 +16,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.CookingRecipeType;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -32,8 +33,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.HashMap;
@@ -82,24 +81,28 @@ import java.util.Map;
 @Since("3.0.0")
 public class SecRecipeCooking extends Section implements SyntaxRuntimeErrorProducer {
 
-    private static final EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
     private static final Map<String, CookingBookCategory> CATEGORY_MAP = new HashMap<>();
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
-        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe");
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, RecipeChoice.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("cooktime", null, true, Timespan.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("experience", null, true, Number.class));
+        SimpleEntryValidator builder = SimpleEntryValidator.builder();
+        builder.addRequiredEntry("id", String.class);
+        builder.addRequiredEntry("result", ItemStack.class);
+        builder.addRequiredEntry("input", RecipeChoice.class);
+
+        builder.addOptionalEntry("group", String.class);
+        builder.addOptionalEntry("cooktime", Timespan.class);
+        builder.addOptionalEntry("experience", Number.class);
         if (RecipeUtil.HAS_CATEGORY) {
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
+            builder.addOptionalEntry("category", String.class);
             for (CookingBookCategory category : CookingBookCategory.values()) {
                 CATEGORY_MAP.put(category.toString().toLowerCase(Locale.ROOT), category);
             }
         }
+        VALIDATOR = builder.build();
+
+        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe");
     }
 
     private Node node;
@@ -116,7 +119,7 @@ public class SecRecipeCooking extends Section implements SyntaxRuntimeErrorProdu
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.node = getParser().getNode();
-        EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.recipeType = CookingRecipeType.values()[parseResult.mark];

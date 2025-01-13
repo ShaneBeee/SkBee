@@ -14,6 +14,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Bukkit;
@@ -26,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.List;
@@ -52,19 +52,22 @@ import java.util.List;
 @Since("3.0.0")
 public class SecRecipeBrewing extends Section implements SyntaxRuntimeErrorProducer {
 
-    private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
+    private static EntryValidator VALIDATOR;
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     private static PotionBrewer POTION_BREWER = null;
 
     static {
         if (Skript.classExists("io.papermc.paper.potion.PotionMix")) {
+            SimpleEntryValidator builder = SimpleEntryValidator.builder();
+            builder.addRequiredEntry("id", String.class);
+            builder.addRequiredEntry("result", ItemStack.class);
+            builder.addRequiredEntry("ingredient", RecipeChoice.class);
+            builder.addRequiredEntry("input", RecipeChoice.class);
+            POTION_BREWER = Bukkit.getPotionBrewer();
+            VALIDATOR = builder.build();
+
             Skript.registerSection(SecRecipeBrewing.class,
                 "register [a] [new] (brewing recipe|potion mix)");
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("ingredient", null, false, RecipeChoice.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, RecipeChoice.class));
-            POTION_BREWER = Bukkit.getPotionBrewer();
         }
     }
 
@@ -78,7 +81,7 @@ public class SecRecipeBrewing extends Section implements SyntaxRuntimeErrorProdu
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.node = getParser().getNode();
-        EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.id = (Expression<String>) container.getOptional("id", false);

@@ -14,6 +14,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -26,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.List;
@@ -51,19 +51,20 @@ import java.util.List;
 public class SecRecipeSmithing extends Section implements SyntaxRuntimeErrorProducer {
 
     public static final boolean HAS_NBT_METHOD = Skript.methodExists(SmithingRecipe.class, "willCopyNbt");
-    private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
+    private static EntryValidator VALIDATOR;
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
         if (Skript.isRunningMinecraft(1, 20)) {
-            Skript.registerSection(SecRecipeSmithing.class,
-                "register [a] [new] smithing [transform] recipe");
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("template", null, false, RecipeChoice.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("base", null, false, RecipeChoice.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("addition", null, true, RecipeChoice.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("copynbt", null, true, Boolean.class));
+            SimpleEntryValidator builder = SimpleEntryValidator.builder();
+            builder.addRequiredEntry("id", String.class);
+            builder.addRequiredEntry("result", ItemStack.class);
+            builder.addRequiredEntry("template", RecipeChoice.class);
+            builder.addRequiredEntry("base", RecipeChoice.class);
+            builder.addOptionalEntry("addition", RecipeChoice.class);
+            builder.addOptionalEntry("copynbt", Boolean.class);
+            Skript.registerSection(SecRecipeSmithing.class, "register [a] [new] smithing [transform] recipe");
+            VALIDATOR = builder.build();
         }
     }
 
@@ -79,7 +80,7 @@ public class SecRecipeSmithing extends Section implements SyntaxRuntimeErrorProd
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.node = getParser().getNode();
-        EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.id = (Expression<String>) container.getOptional("id", false);

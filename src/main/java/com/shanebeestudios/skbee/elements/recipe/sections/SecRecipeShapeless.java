@@ -17,6 +17,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -28,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.HashMap;
@@ -78,21 +78,24 @@ public class SecRecipeShapeless extends Section implements SyntaxRuntimeErrorPro
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     private static final boolean HAS_CATEGORY = RecipeUtil.HAS_CATEGORY;
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>(); // TODO this will cause errors on lower versions, will fix later
-    private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
-        Skript.registerSection(SecRecipeShapeless.class, "register [a] [new] shapeless recipe");
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
+        SimpleEntryValidator builder = SimpleEntryValidator.builder();
+        builder.addRequiredEntry("id", String.class);
+        builder.addRequiredEntry("result", ItemStack.class);
+        builder.addOptionalEntry("group", String.class);
         if (HAS_CATEGORY) {
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
+            builder.addOptionalEntry("category", String.class);
             for (CraftingBookCategory value : CraftingBookCategory.values()) {
                 String name = value.name().toLowerCase(Locale.ROOT);
                 CATEGORY_MAP.put(name, value);
             }
         }
-        ENTRY_VALIDATOR.addSection("ingredients", false);
+        builder.addRequiredSection("ingredients");
+        VALIDATOR = builder.build();
+
+        Skript.registerSection(SecRecipeShapeless.class, "register [a] [new] shapeless recipe");
     }
 
     private Node node;
@@ -106,7 +109,7 @@ public class SecRecipeShapeless extends Section implements SyntaxRuntimeErrorPro
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.node = getParser().getNode();
-        EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.id = (Expression<String>) container.getOptional("id", false);

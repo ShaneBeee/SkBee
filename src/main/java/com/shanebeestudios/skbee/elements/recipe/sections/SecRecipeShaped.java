@@ -17,6 +17,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.event.recipe.ShapedRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -28,7 +29,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.Arrays;
@@ -90,22 +90,24 @@ public class SecRecipeShaped extends Section implements SyntaxRuntimeErrorProduc
 
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
-    private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
-        Skript.registerSection(SecRecipeShaped.class, "register [a] [new] shaped recipe");
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("shape", null, false, String.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
+        SimpleEntryValidator builder = SimpleEntryValidator.builder();
+        builder.addRequiredEntry("id", String.class);
+        builder.addRequiredEntry("result", ItemStack.class);
+        builder.addRequiredEntry("shape", String.class);
+        builder.addOptionalEntry("group", String.class);
         if (RecipeUtil.HAS_CATEGORY) {
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
+            builder.addOptionalEntry("category", String.class);
             for (CraftingBookCategory value : CraftingBookCategory.values()) {
                 String name = value.name().toLowerCase(Locale.ROOT);
                 CATEGORY_MAP.put(name, value);
             }
         }
-        ENTRY_VALIDATOR.addSection("ingredients", false);
+        builder.addRequiredSection("ingredients");
+        VALIDATOR = builder.build();
+        Skript.registerSection(SecRecipeShaped.class, "register [a] [new] shaped recipe");
     }
 
     private Node node;
@@ -120,7 +122,7 @@ public class SecRecipeShaped extends Section implements SyntaxRuntimeErrorProduc
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.node = getParser().getNode();
-        EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.id = (Expression<String>) container.getOptional("id", false);
