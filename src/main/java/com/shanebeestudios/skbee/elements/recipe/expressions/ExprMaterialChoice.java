@@ -56,7 +56,8 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
             if (object instanceof ItemType itemType) {
                 itemType.getAll().forEach(itemStack -> {
                     Material material = itemStack.getType();
-                    if (!materials.contains(material)) materials.add(material);
+                    if (!materials.contains(material) && material.isItem() && !material.isAir())
+                        materials.add(material);
                 });
             } else if (RecipeUtil.isMaterialTag(object)) {
                 MaterialChoice materialChoice = new MaterialChoice((Tag<Material>) object);
