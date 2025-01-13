@@ -41,6 +41,7 @@ public class RecipeUtil {
      * @param object a RecipeChoice or ItemStack/ItemType/Slot that will be converted to a RecipeChoice
      * @return null if an invalid object/item or air, otherwise a RecipeChoice
      */
+    @SuppressWarnings("unchecked")
     @Nullable
     public static RecipeChoice getRecipeChoice(Object object) {
         if (object instanceof ItemStack itemStack) {
@@ -58,6 +59,8 @@ public class RecipeUtil {
             return getRecipeChoice(itemType.getRandom());
         } else if (object instanceof RecipeChoice choice) {
             return choice;
+        } else if (object instanceof Tag<?> tag && isMaterialTag(tag)) {
+            return new MaterialChoice((Tag<Material>) tag);
         }
         return null;
     }
