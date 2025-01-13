@@ -14,7 +14,6 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -75,7 +74,6 @@ import java.util.Map;
 @Since("3.0.0")
 public class SecRecipeShapeless extends Section implements SyntaxRuntimeErrorProducer {
 
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     private static final boolean HAS_CATEGORY = RecipeUtil.HAS_CATEGORY;
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>(); // TODO this will cause errors on lower versions, will fix later
     private static final EntryValidator VALIDATOR;
@@ -180,7 +178,7 @@ public class SecRecipeShapeless extends Section implements SyntaxRuntimeErrorPro
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);
         Bukkit.addRecipe(shapelessRecipe);
-        if (DEBUG) RecipeUtil.logShapelessRecipe(shapelessRecipe);
+        RecipeUtil.logShapelessRecipe(shapelessRecipe);
     }
 
     @Override

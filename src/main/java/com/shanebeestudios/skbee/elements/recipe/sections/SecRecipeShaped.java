@@ -14,7 +14,6 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.event.recipe.ShapedRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -88,7 +87,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Since("3.0.0")
 public class SecRecipeShaped extends Section implements SyntaxRuntimeErrorProducer {
 
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
     private static final EntryValidator VALIDATOR;
 
@@ -226,7 +224,7 @@ public class SecRecipeShaped extends Section implements SyntaxRuntimeErrorProduc
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);
         Bukkit.addRecipe(shapedRecipe);
-        if (DEBUG) RecipeUtil.logShapedRecipe(shapedRecipe);
+        RecipeUtil.logShapedRecipe(shapedRecipe);
     }
 
     @Override

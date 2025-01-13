@@ -13,7 +13,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.CookingRecipeType;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -83,7 +82,6 @@ public class SecRecipeCooking extends Section implements SyntaxRuntimeErrorProdu
 
     private static final EntryValidator VALIDATOR;
     private static final Map<String, CookingBookCategory> CATEGORY_MAP = new HashMap<>();
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
         SimpleEntryValidator builder = SimpleEntryValidator.builder();
@@ -200,7 +198,7 @@ public class SecRecipeCooking extends Section implements SyntaxRuntimeErrorProdu
             recipe.setGroup(recipeGroup);
         Bukkit.removeRecipe(namespacedKey);
         Bukkit.addRecipe(recipe);
-        if (DEBUG) RecipeUtil.logCookingRecipe(recipe);
+        RecipeUtil.logCookingRecipe(recipe);
     }
 
     @Override

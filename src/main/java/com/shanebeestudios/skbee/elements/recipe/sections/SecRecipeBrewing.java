@@ -12,7 +12,6 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -53,7 +52,6 @@ import java.util.List;
 public class SecRecipeBrewing extends Section implements SyntaxRuntimeErrorProducer {
 
     private static EntryValidator VALIDATOR;
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     private static PotionBrewer POTION_BREWER = null;
 
     static {
@@ -130,7 +128,7 @@ public class SecRecipeBrewing extends Section implements SyntaxRuntimeErrorProdu
         POTION_BREWER.removePotionMix(namespacedKey);
         PotionMix potionMix = new PotionMix(namespacedKey, result, input, ingredient);
         POTION_BREWER.addPotionMix(potionMix);
-        if (DEBUG) RecipeUtil.logBrewingRecipe(potionMix);
+        RecipeUtil.logBrewingRecipe(potionMix);
     }
 
     @Override

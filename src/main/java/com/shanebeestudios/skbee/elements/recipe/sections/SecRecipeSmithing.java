@@ -12,7 +12,6 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -52,7 +51,6 @@ public class SecRecipeSmithing extends Section implements SyntaxRuntimeErrorProd
 
     public static final boolean HAS_NBT_METHOD = Skript.methodExists(SmithingRecipe.class, "willCopyNbt");
     private static EntryValidator VALIDATOR;
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
         if (Skript.isRunningMinecraft(1, 20)) {
@@ -142,7 +140,7 @@ public class SecRecipeSmithing extends Section implements SyntaxRuntimeErrorProd
         // Remove duplicates on script reload
         Bukkit.removeRecipe(key);
         Bukkit.addRecipe(recipe);
-        if (DEBUG) RecipeUtil.logSmithingRecipe(recipe);
+        RecipeUtil.logSmithingRecipe(recipe);
 
     }
 
