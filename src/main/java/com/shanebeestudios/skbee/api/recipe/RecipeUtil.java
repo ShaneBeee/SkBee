@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.recipe.sections.SecRecipeSmithing;
 import io.papermc.paper.potion.PotionMix;
@@ -21,13 +22,17 @@ import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.SmithingTransformRecipe;
+import org.bukkit.inventory.TransmuteRecipe;
+import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 /**
@@ -35,7 +40,16 @@ import java.util.NoSuchElementException;
  */
 public class RecipeUtil {
 
+    private static final boolean LOG_RECIPES = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG && !TestMode.ENABLED;
     public static final boolean HAS_CATEGORY = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
+    private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
+
+    static {
+        for (CraftingBookCategory value : CraftingBookCategory.values()) {
+            String name = value.name().toLowerCase(Locale.ROOT);
+            CATEGORY_MAP.put(name, value);
+        }
+    }
 
     /**
      * @param object a RecipeChoice or ItemStack/ItemType/Slot that will be converted to a RecipeChoice
@@ -80,6 +94,10 @@ public class RecipeUtil {
             recipes.forEach(Bukkit::addRecipe);
         } catch (NoSuchElementException ignore) {
         }
+    }
+
+    public static CraftingBookCategory getCraftingBookCategory(String name) {
+        return CATEGORY_MAP.get(name);
     }
 
     /**
@@ -204,6 +222,19 @@ public class RecipeUtil {
         if (SecRecipeSmithing.HAS_NBT_METHOD) {
             String copyNbt = recipe.willCopyNbt() ? "&atrue" : "&cfalse";
             log(" - &7CopyNbt: &e%s", copyNbt);
+        }
+    }
+
+    public static void logTransmuteRecipe(TransmuteRecipe recipe) {
+        if (!LOG_RECIPES) return;
+        log("&aRegistering new transmute recipe: &7(&b%s&7)", recipe.getKey().toString());
+        log(" - &7Result: &e%s", recipe.getResult().getType().getKey());
+        log(" - &7Input: &e%s", getFancy(recipe.getInput()));
+        log(" - &7Material: &e%s", getFancy(recipe.getMaterial()));
+        log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory().name().toLowerCase(Locale.ROOT));
+        String group = recipe.getGroup();
+        if (!group.isEmpty()) {
+            log(" - &7Group: &r\"&6%s&r\"", group);
         }
     }
 

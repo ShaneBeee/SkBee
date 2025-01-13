@@ -101,3 +101,10 @@ test "SkBee - brewer recipe section":
         result: mushroom stew named "&bYummy Soup"
         ingredient: glowstone dust
         input: potion
+
+test "SkBee - Transmute recipe section":
+    register transmute recipe:
+        id: "custom:better_sword"
+        result: netherite sword
+        input: minecraft item tag "minecraft:swords"
+        material: netherite ingot
