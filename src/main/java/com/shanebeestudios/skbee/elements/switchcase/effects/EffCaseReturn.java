@@ -17,7 +17,6 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
-import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchSecEvent;
 import com.shanebeestudios.skbee.elements.switchcase.sections.SecCase;
@@ -125,7 +124,6 @@ public class EffCaseReturn extends Effect {
             if (expression != null) {
                 this.returnObject = expression;
             } else {
-                Util.log("Didnt parse: " + group);
                 return false;
             }
         }
