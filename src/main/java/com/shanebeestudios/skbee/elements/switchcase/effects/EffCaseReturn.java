@@ -1,18 +1,24 @@
 package com.shanebeestudios.skbee.elements.switchcase.effects;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.conditions.CondCompare;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.ExpressionSection;
+import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.Section;
+import ch.njol.skript.lang.SectionSkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import com.shanebeestudios.skbee.elements.switchcase.sections.SecCase;
+import com.shanebeestudios.skbee.elements.switchcase.sections.SecExprSwitchReturn;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -62,19 +68,48 @@ public class EffCaseReturn extends Effect {
     }
 
     private boolean defaultCase;
-    private Expression<?> switchedObject;
+    private Expression<?> caseObject;
     private Expression<?> returnObject;
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (matchedPattern == 0) {
-            this.switchedObject = LiteralUtils.defendExpression(exprs[0]);
-        } else {
-            this.defaultCase = true;
+        Section switchSection = null;
+        Expression<?> switchObject = null;
+        if (getParser().getCurrentStructure() instanceof SectionSkriptEvent skriptEvent) {
+//            if (skriptEvent.getSection() instanceof SecSwitch secSwitch) {
+//                switchSection = secSwitch;
+//                switchObject = secSwitch.getObjectExpression();
+//
+//            } else TODO maybe support this in the future? (`case %object% -> %effect%`)?!?!
+            if (skriptEvent.getSection() instanceof ExpressionSection expressionSection) {
+                if (expressionSection.getAsExpression() instanceof SecExprSwitchReturn secExprSwitchReturn) {
+                    switchSection = expressionSection;
+                    switchObject = secExprSwitchReturn.getObjectExpression();
+                }
+            }
+        }
+        if (switchSection == null) {
+            Skript.error("Cases returns can only be used in a switch expression section.");
+            return false;
         }
 
         this.returnObject = LiteralUtils.defendExpression(exprs[matchedPattern ^ 1]);
-        return LiteralUtils.canInitSafely(this.returnObject);
+        if (matchedPattern == 1) {
+            this.defaultCase = true;
+        } else {
+            this.caseObject = LiteralUtils.defendExpression(exprs[0]);
+            if (switchObject != null && this.caseObject instanceof Literal<?> literal) {
+                for (Object lit : literal.getArray()) {
+                    Class<?> switchReturnType = switchObject.getReturnType();
+                    if (!SecCase.canCompare(switchReturnType, lit.getClass())) {
+                        Skript.error("Can't compare " + CondCompare.f(switchObject) + " with " + CondCompare.f(literal));
+                        return false;
+                    }
+                }
+            }
+        }
+        return LiteralUtils.canInitSafely(this.returnObject) && (this.defaultCase || LiteralUtils.canInitSafely(this.caseObject));
     }
 
     @Override
@@ -85,7 +120,7 @@ public class EffCaseReturn extends Effect {
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         if (event instanceof SwitchReturnEvent switchReturnEvent) {
-            if (this.defaultCase || SecCase.compare(this.switchedObject.getArray(event), switchReturnEvent.getSwitchedObject())) {
+            if (this.defaultCase || SecCase.compare(this.caseObject.getArray(event), switchReturnEvent.getSwitchedObject())) {
                 Object returnObject = this.returnObject.getSingle(event);
                 if (returnObject != null) {
                     switchReturnEvent.setReturnedObject(returnObject);
@@ -99,7 +134,7 @@ public class EffCaseReturn extends Effect {
     @Override
     public String toString(Event e, boolean d) {
         if (this.defaultCase) return "default -> " + this.returnObject.toString(e, d);
-        return "case " + this.switchedObject.toString(e, d) + " -> " + this.returnObject.toString(e, d);
+        return "case " + this.caseObject.toString(e, d) + " -> " + this.returnObject.toString(e, d);
     }
 
 }

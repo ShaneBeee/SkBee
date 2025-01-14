@@ -53,14 +53,14 @@ public class SecSwitch extends Section {
         Skript.registerSection(SecSwitch.class, "switch %object%");
     }
 
-    private Expression<Object> object;
+    private Expression<Object> switchedObject;
     private Trigger caseSection;
     public TriggerItem dirty;
 
     @SuppressWarnings({"unchecked", "DataFlowIssue"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        this.object = LiteralUtils.defendExpression(exprs[0]);
+        this.switchedObject = LiteralUtils.defendExpression(exprs[0]);
         Class<? extends Event>[] currentEvents = getParser().getCurrentEvents();
         Class<? extends Event>[] events = new Class[currentEvents.length + 1];
         System.arraycopy(currentEvents, 0, events, 0, currentEvents.length);
@@ -73,12 +73,12 @@ public class SecSwitch extends Section {
             return false;
         }
 
-        return LiteralUtils.canInitSafely(this.object);
+        return LiteralUtils.canInitSafely(this.switchedObject);
     }
 
     @Override
     protected @Nullable TriggerItem walk(Event event) {
-        Object object = this.object.getSingle(event);
+        Object object = this.switchedObject.getSingle(event);
         if (object != null) {
             Trigger.walk(this.caseSection, new SwitchSecEvent(object, event, getNext()));
         }
@@ -89,12 +89,12 @@ public class SecSwitch extends Section {
     }
 
     public Expression<Object> getObjectExpression() {
-        return this.object;
+        return this.switchedObject;
     }
 
     @Override
     public String toString(Event e, boolean d) {
-        return "switch " + this.object.toString(e, d);
+        return "switch " + this.switchedObject.toString(e, d);
     }
 
 }

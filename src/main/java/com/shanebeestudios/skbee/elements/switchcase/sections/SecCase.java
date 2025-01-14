@@ -64,7 +64,7 @@ public class SecCase extends Section implements ReturnHandler<Object> {
         Skript.registerSection(SecCase.class, "case %objects%", "(default [case]|case default)");
     }
 
-    private Expression<Object> object;
+    private Expression<Object> caseObject;
     private boolean defaultCase;
     private ReturnableTrigger<?> caseSection;
     private Expression<?> returnObject;
@@ -93,8 +93,8 @@ public class SecCase extends Section implements ReturnHandler<Object> {
         if (matchedPattern == 1) {
             this.defaultCase = true;
         } else {
-            this.object = LiteralUtils.defendExpression(exprs[0]);
-            if (switchObject != null && this.object instanceof Literal<?> literal) {
+            this.caseObject = LiteralUtils.defendExpression(exprs[0]);
+            if (switchObject != null && this.caseObject instanceof Literal<?> literal) {
                 for (Object lit : literal.getArray()) {
                     Class<?> switchReturnType = switchObject.getReturnType();
                     if (!canCompare(switchReturnType, lit.getClass())) {
@@ -107,13 +107,13 @@ public class SecCase extends Section implements ReturnHandler<Object> {
         if (sectionNode != null) {
             this.caseSection = loadReturnableSectionCode(sectionNode, "case section", getParser().getCurrentEvents());
         }
-        return this.defaultCase || LiteralUtils.canInitSafely(this.object);
+        return this.defaultCase || LiteralUtils.canInitSafely(this.caseObject);
     }
 
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         if (event instanceof SwitchBaseEvent switchEvent) {
-            if (this.defaultCase || compare(this.object.getArray(event), switchEvent.getSwitchedObject())) {
+            if (this.defaultCase || compare(this.caseObject.getArray(event), switchEvent.getSwitchedObject())) {
                 Trigger.walk(this.caseSection, switchEvent.getParentEvent());
                 if (event instanceof SwitchReturnEvent switchReturnEvent) {
                     Object returnObject = this.returnObject.getSingle(event);
@@ -131,19 +131,16 @@ public class SecCase extends Section implements ReturnHandler<Object> {
     @Override
     public String toString(Event e, boolean d) {
         if (this.defaultCase) return "default case";
-        return "case " + this.object.toString(e, d);
+        return "case " + this.caseObject.toString(e, d);
     }
 
-    private boolean canCompare(Class<?> c1, Class<?> c2) {
+    public static boolean canCompare(Class<?> c1, Class<?> c2) {
         if (c1 == Object.class || c2 == Object.class) return true;
         return Comparators.comparatorExists(c1, c2);
     }
 
     public static boolean compare(Object[] objects1, Object o2) {
         if (objects1 == null || o2 == null) return false;
-//        if (Comparators.comparatorExists(objects1[0].getClass(), o2.getClass())) {
-//            return Comparators.compare(objects1, o2) == Relation.EQUAL;
-//        }
         for (Object object : objects1) {
             if (Comparators.comparatorExists(object.getClass(), o2.getClass())) {
                 if (Comparators.compare(object, o2) == Relation.EQUAL) {
