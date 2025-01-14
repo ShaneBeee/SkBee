@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
+import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.apache.commons.io.FileUtils;
@@ -170,6 +171,7 @@ public class BeeWorldConfig {
     }
 
     private void save() {
+        if (TestMode.ENABLED) return; // Don't save during test mode
         try {
             worldConfig.save(worldConfigFile);
         } catch (IOException e) {
