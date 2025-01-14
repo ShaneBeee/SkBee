@@ -52,6 +52,21 @@ test "SkBee - Switch and Case":
     assert parse logs contains "Can't compare a block with a biome" with "The comparisons should have failed"
     assert parse logs contains "Can't compare a block with an integer" with "The comparisons should have failed"
 
+    set {_i} to 5
+    switch {_i}:
+        case 1 -> assert {_i} = 1 to fail with "This should fail"
+        case 2 -> assert {_i} = 2 to fail with "This should fail"
+        case 5 -> assert {_i} = 5 with "This should pass"
+        default -> assert {_i} is not set to fail with "This should fail"
+
+    set {_i} to 5
+    switch {_i}: # This is a silly test (could use return) but I wanted to test effects
+        case 1 -> set {_test} to "1-%switched value%"
+        case 2 -> set {_test} to "2-%switched value%"
+        case 5 -> set {_test} to "5-%switched value%"
+        default -> set {_test} to "default-%switched value%"
+    assert {_test} = "5-5" with "The text should match"
+
     # Test Functions
     assert testSwitch(1) = "i am one" with "This should be 'i am one'"
     assert testSwitch(2) = "i am two" with "This should be 'i am two'"

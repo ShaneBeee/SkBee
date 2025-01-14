@@ -90,7 +90,7 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
         return new Object[]{returnEvent.getReturnedObject()};
     }
 
-    public Expression<?> getObjectExpression() {
+    public Expression<?> getSwitchedObjectExpression() {
         return this.switchedObject;
     }
 

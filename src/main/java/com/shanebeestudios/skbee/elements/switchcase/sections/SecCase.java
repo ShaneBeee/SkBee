@@ -77,12 +77,12 @@ public class SecCase extends Section implements ReturnHandler<Object> {
         if (getParser().getCurrentStructure() instanceof SectionSkriptEvent skriptEvent) {
             if (skriptEvent.getSection() instanceof SecSwitch secSwitch) {
                 switchSection = secSwitch;
-                switchObject = secSwitch.getObjectExpression();
+                switchObject = secSwitch.getSwitchedObjectExpression();
 
             } else if (skriptEvent.getSection() instanceof ExpressionSection expressionSection) {
                 if (expressionSection.getAsExpression() instanceof SecExprSwitchReturn secExprSwitchReturn) {
                     switchSection = expressionSection;
-                    switchObject = secExprSwitchReturn.getObjectExpression();
+                    switchObject = secExprSwitchReturn.getSwitchedObjectExpression();
                 }
             }
         }

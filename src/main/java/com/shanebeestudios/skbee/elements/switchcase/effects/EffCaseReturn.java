@@ -16,17 +16,35 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
+import com.shanebeestudios.skbee.elements.switchcase.events.SwitchSecEvent;
 import com.shanebeestudios.skbee.elements.switchcase.sections.SecCase;
 import com.shanebeestudios.skbee.elements.switchcase.sections.SecExprSwitchReturn;
+import com.shanebeestudios.skbee.elements.switchcase.sections.SecSwitch;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("SwitchCase - Case Return")
-@Description({"In a switch return expression, you can return different values based on the case matching the switched value.",
+@Name("SwitchCase - Case Inline")
+@Description({"Inline version of case section where you can return/run an effect all in one line.",
     "Multiple objects are supported in cases.",
+    "- **Switch Expression** = Return an object based on the case matching the switched value.",
+    "- **Switch Section** = Run 1 effect based on the case matching the switched value.",
     "Default will run if all other cases fail to match. Default must go last or all cases after it will be ignored."})
-@Examples({"function getRoman(i: number) :: string:",
+@Examples({"# As Effect",
+    "on damage of a sheep by a player:",
+    "\tswitch type of attacker's tool:",
+    "\t\tcase wooden sword -> give attacker yellow wool",
+    "\t\tcase stone sword -> give attacker light gray wool",
+    "\t\tcase iron sword -> give attacker gray wool",
+    "\t\tcase golden sword -> give attacker orange wool",
+    "\t\tcase diamond sword -> give attacker light blue wool",
+    "\t\tcase netherite sword -> give attacker black wool",
+    "\t\tdefault -> give attacker white wool",
+    "",
+    "# As Return",
+    "function getRoman(i: number) :: string:",
     "\treturn switch return {_i}:",
     "\t\tcase 1 -> \"I\"",
     "\t\tcase 2 -> \"II\"",
@@ -57,19 +75,20 @@ import org.jetbrains.annotations.Nullable;
     "\t\tcase zombie, drowned, husk -> 1 of rotten flesh",
     "\t\tcase skeleton, stray, wither skeleton, bogged -> 1 of bone",
     "\t\tdefault -> 1 of stick",
-    "\tgive {_item} to attacker\n"})
+    "\tgive {_item} to attacker",})
 @Since("INSERT VERSION")
 public class EffCaseReturn extends Effect {
 
     static {
         Skript.registerEffect(EffCaseReturn.class,
-            "case %objects% -> %object%",
-            "default -> %object%");
+            "case %objects% -> <.+>",
+            "default -> <.+>");
     }
 
     private boolean defaultCase;
     private Expression<?> caseObject;
     private Expression<?> returnObject;
+    private Effect effect;
 
     @SuppressWarnings("UnstableApiUsage")
     @Override
@@ -77,15 +96,14 @@ public class EffCaseReturn extends Effect {
         Section switchSection = null;
         Expression<?> switchObject = null;
         if (getParser().getCurrentStructure() instanceof SectionSkriptEvent skriptEvent) {
-//            if (skriptEvent.getSection() instanceof SecSwitch secSwitch) {
-//                switchSection = secSwitch;
-//                switchObject = secSwitch.getObjectExpression();
-//
-//            } else TODO maybe support this in the future? (`case %object% -> %effect%`)?!?!
-            if (skriptEvent.getSection() instanceof ExpressionSection expressionSection) {
+            if (skriptEvent.getSection() instanceof SecSwitch secSwitch) {
+                switchSection = secSwitch;
+                switchObject = secSwitch.getSwitchedObjectExpression();
+
+            } else if (skriptEvent.getSection() instanceof ExpressionSection expressionSection) {
                 if (expressionSection.getAsExpression() instanceof SecExprSwitchReturn secExprSwitchReturn) {
                     switchSection = expressionSection;
-                    switchObject = secExprSwitchReturn.getObjectExpression();
+                    switchObject = secExprSwitchReturn.getSwitchedObjectExpression();
                 }
             }
         }
@@ -94,7 +112,23 @@ public class EffCaseReturn extends Effect {
             return false;
         }
 
-        this.returnObject = LiteralUtils.defendExpression(exprs[matchedPattern ^ 1]);
+        String group = parseResult.regexes.getFirst().group();
+        if (switchSection instanceof SecSwitch) {
+            Effect effect = Effect.parse(group, "Cannot understand this effect: '" + group + "'");
+            if (effect != null) {
+                this.effect = effect;
+            } else {
+                return false;
+            }
+        } else {
+            Expression<?> expression = SkriptUtils.parseExpression(group);
+            if (expression != null) {
+                this.returnObject = expression;
+            } else {
+                Util.log("Didnt parse: " + group);
+                return false;
+            }
+        }
         if (matchedPattern == 1) {
             this.defaultCase = true;
         } else {
@@ -109,7 +143,14 @@ public class EffCaseReturn extends Effect {
                 }
             }
         }
-        return LiteralUtils.canInitSafely(this.returnObject) && (this.defaultCase || LiteralUtils.canInitSafely(this.caseObject));
+        if (this.defaultCase || LiteralUtils.canInitSafely(this.caseObject)) {
+            if (this.returnObject != null) {
+                return LiteralUtils.canInitSafely(this.returnObject);
+            } else if (this.effect != null) {
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
@@ -127,14 +168,27 @@ public class EffCaseReturn extends Effect {
                     return null;
                 }
             }
+        } else if (event instanceof SwitchSecEvent switchSecEvent) {
+            if (this.defaultCase || SecCase.compare(this.caseObject.getArray(event), switchSecEvent.getSwitchedObject())) {
+                if (this.effect != null) {
+                    TriggerItem.walk(this.effect, switchSecEvent.getParentEvent());
+                    return null;
+                }
+            }
         }
         return super.walk(event);
     }
 
     @Override
     public String toString(Event e, boolean d) {
-        if (this.defaultCase) return "default -> " + this.returnObject.toString(e, d);
-        return "case " + this.caseObject.toString(e, d) + " -> " + this.returnObject.toString(e, d);
+        String caseType = "broken";
+        if (this.effect != null) {
+            caseType = this.effect.toString(e, d);
+        } else if (this.returnObject != null) {
+            caseType = this.returnObject.toString(e, d);
+        }
+        if (this.defaultCase) return "default -> " + caseType;
+        return "case " + this.caseObject.toString(e, d) + " -> " + caseType;
     }
 
 }

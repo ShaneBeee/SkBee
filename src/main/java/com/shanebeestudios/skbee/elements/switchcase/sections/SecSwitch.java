@@ -53,7 +53,7 @@ public class SecSwitch extends Section {
         Skript.registerSection(SecSwitch.class, "switch %object%");
     }
 
-    private Expression<Object> switchedObject;
+    private Expression<?> switchedObject;
     private Trigger caseSection;
     public TriggerItem dirty;
 
@@ -80,7 +80,8 @@ public class SecSwitch extends Section {
     protected @Nullable TriggerItem walk(Event event) {
         Object object = this.switchedObject.getSingle(event);
         if (object != null) {
-            Trigger.walk(this.caseSection, new SwitchSecEvent(object, event, getNext()));
+            SwitchSecEvent switchSecEvent = new SwitchSecEvent(object, event, getNext());
+            Trigger.walk(this.caseSection, switchSecEvent);
         }
         if (getNext() == null) {
             return null;
@@ -88,7 +89,7 @@ public class SecSwitch extends Section {
         return super.walk(event, false);
     }
 
-    public Expression<Object> getObjectExpression() {
+    public Expression<?> getSwitchedObjectExpression() {
         return this.switchedObject;
     }
 
