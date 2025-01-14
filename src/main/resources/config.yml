@@ -76,6 +76,9 @@ elements:
     # Enable structure elements
     structure: true
 
+    # Enable switch case elements
+    switch-case: true
+
     # Enable Team elements
     team: true
 

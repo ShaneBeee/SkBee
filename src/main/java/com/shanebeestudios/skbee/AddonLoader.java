@@ -120,6 +120,7 @@ public class AddonLoader {
         loadScoreboardObjectiveElements();
         loadStatisticElements();
         loadStructureElements();
+        loadSwitchCaseElements();
         loadTagElements();
         loadTeamElements();
         loadTickManagerElements();
@@ -627,6 +628,20 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.registry");
             Util.logLoading("&5Registry Elements &asuccessfully loaded");
+        } catch (IOException ex) {
+            ex.printStackTrace();
+            pluginManager.disablePlugin(this.plugin);
+        }
+    }
+
+    private void loadSwitchCaseElements() {
+        if (!this.config.ELEMENTS_SWITCH_CASE) {
+            Util.logLoading("&5SwitchCase elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.switchcase");
+            Util.logLoading("&5SwitchCase Elements &asuccessfully loaded");
         } catch (IOException ex) {
             ex.printStackTrace();
             pluginManager.disablePlugin(this.plugin);
