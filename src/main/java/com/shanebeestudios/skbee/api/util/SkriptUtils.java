@@ -145,7 +145,7 @@ public class SkriptUtils {
      * @return An expression if it parsed correctly
      */
     public static Expression<?> parseExpression(String expr) {
-        Expression<?> mappingExpr = new SkriptParser(expr, SkriptParser.PARSE_EXPRESSIONS, ParseContext.DEFAULT)
+        Expression<?> mappingExpr = new SkriptParser(expr, SkriptParser.ALL_FLAGS, ParseContext.DEFAULT)
             .parseExpression(Object.class);
         if (LiteralUtils.hasUnparsedLiteral(mappingExpr)) {
             mappingExpr = LiteralUtils.defendExpression(mappingExpr);
