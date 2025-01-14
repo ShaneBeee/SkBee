@@ -1,0 +1,32 @@
+test "SkBee - Switch and Case":
+    set {_i} to 2
+    switch {_i}:
+        case 1:
+            set {_test} to 1
+        case 2:
+            set {_test} to 2
+        case 3:
+            set {_test} to 3
+    assert {_test} = 2 with "Case 2 should have run"
+
+    set {_i} to diamond sword named "BOB"
+    switch type of {_i}:
+        case diamond:
+            assert {_i} is a diamond with "This should be failing"
+            set {_test} to 1
+        case iron ingot:
+            assert {_i} is an iron ingot with "This should be failing"
+            set {_test} to 2
+        case diamond sword:
+            assert {_i} is a diamond sword with "This should pass"
+            set {_test} to 3
+    assert {_test} = 3 with "The 3rd case should have run"
+
+    parse:
+        switch event-block:
+            case plains:
+                set {_i} to 1
+            case 1:
+                set {_i} to 1
+    assert parse logs contains "Can't compare a block with a biome" with "The comparisons should have failed"
+    assert parse logs contains "Can't compare a block with an integer" with "The comparisons should have failed"
