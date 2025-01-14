@@ -19,6 +19,12 @@ function testItem(b: itemtype) :: string:
         case gravel, sand -> "mushy blocks"
         default -> "default blocks"
 
+function testGetItem(b: block) :: itemtype:
+    return switch return {_b}:
+        case stone, dirt, gravel -> 1 of emerald named "Natural Gem"
+        case grass block, podzol, sand -> 1 of diamond named "Ground Gem"
+        default -> 1 of stick named "Useless Gem"
+
 test "SkBee - Switch and Case":
     set {_i} to 2
     switch {_i}:
@@ -66,6 +72,13 @@ test "SkBee - Switch and Case":
         case 5 -> set {_test} to "5-%switched value%"
         default -> set {_test} to "default-%switched value%"
     assert {_test} = "5-5" with "The text should match"
+
+    set {_l} to location(1,1,1)
+    set {_data} to blockdata of block at {_l}
+    set block at {_l} to stone
+    set {_item} to testGetItem(block at {_l})
+    set block at {_l} to {_data}
+    assert {_item} = 1 of emerald named "Natural Gem" with "Should have returned the emerald"
 
     # Test Functions
     assert testSwitch(1) = "i am one" with "This should be 'i am one'"
