@@ -68,6 +68,8 @@ import org.skriptlang.skript.lang.structure.Structure;
 @Since("3.5.0")
 public class StructChunkGen extends Structure {
 
+    private static final Priority PRIORITY = new Priority(450);
+
     static {
         EntryValidator validator = EntryValidator.builder()
             .addEntryData(new LiteralEntryData<>("vanilla decor", false, true, Boolean.class))
@@ -146,6 +148,30 @@ public class StructChunkGen extends Structure {
             }
         }
         return true;
+    }
+
+    @Override
+    public Priority getPriority() {
+        //<editor-fold desc="Note on priorities" defaultstate="collapsed">
+        // NOTE FOR SELF:
+        // Load after all Skript stuff so it can be used in this structure
+        // But BEFORE events (so the world creator can be loaded after this is created)
+        // 15 - StructUsing
+        // 100 - StructOptions
+        // 150 - StructImport
+        // 200 - StructAliases
+        // 300 - StructVariables
+        // 350 - StructCustomCondition
+        // 350 - StructCustomConstant
+        // 350 - StructCustomEffect
+        // 350 - StructCustomEvent
+        // 350 - StructCustomExpression
+        // 400 - StructFunction
+        // 450 - StructChunkGen [this]
+        // 500 - StructCommand
+        // 600 - StructEvent
+        //</editor-fold>
+        return PRIORITY;
     }
 
     @Override

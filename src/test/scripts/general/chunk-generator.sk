@@ -1,0 +1,41 @@
+
+# Create our chunk generator
+register chunk generator with id "test_generator":
+    vanilla decor: false
+    vanilla structures: false
+    vanilla caves: false
+    vanilla mobs: false
+    biome gen:
+        if y coord of event-location < 60:
+            set chunkdata biome to warped forest
+        else:
+            set chunkdata biome to crimson forest
+    chunk gen:
+        loop 16 times:
+            loop 16 times:
+                set {_x} to (loop-number-1) - 1
+                set {_z} to (loop-number-2) - 1
+
+                set chunkdata blocks within vector({_x}, 0, {_z}) and vector({_x}, 64, {_z}) to stone
+                set chunkdata block at vector({_x}, 65, {_z}) to dirt
+                set chunkdata block at vector({_x}, 66, {_z}) to grass block
+
+test "SkBee - Chunk Generator":
+    set {_creator} to world creator named "test_world_gen"
+    set keep spawn loaded option of {_creator} to false
+    set chunk generator of {_creator} to chunk generator with id "test_generator"
+    load world from creator {_creator}
+    set {_w} to world("test_world_gen")
+    set world auto save of {_w} to false # hopefully prevent any saving incase of failure
+
+    load chunk at location(1,1,1, world "test_world_gen")
+    assert block at location(1,0,1, world "test_world_gen") is stone with "The block at 1,0,1 should be stone"
+    assert block at location(1,64,1, world "test_world_gen") is stone with "The block at 1,64,1 should be stone"
+    assert block at location(1,65,1, world "test_world_gen") is dirt with "The block at 1,1,1 should be dirt"
+    assert block at location(1,66,1, world "test_world_gen") is grass block with "The block at 1,1,1 should be grass block"
+    assert block at location(1,67,1, world "test_world_gen") is air with "The block at 1,1,1 should be air"
+    assert biome at location(1,5,1, world "test_world_gen") = warped forest with "The biome should have been warped forest"
+    assert biome at location(1,67,1, world "test_world_gen") = crimson forest with "The biome should have been crimson forest"
+
+    unload world {_w} and don't save
+    delete world file for "test_world_gen"
