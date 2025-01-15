@@ -1,18 +1,18 @@
 test "SkBee - ExprParseEffect":
 
-    suppress variable save warning
-    set {test_inv} to chest inventory with 3 rows
-    set {_effect} to parse effect "add a diamond to {test_inv}" from console
-    assert {_effect} = true with "This should run fine"
-    assert {test_inv} contains a diamond with "A diamond should have been added"
-    delete {_effect}
+	suppress variable save warning
+	set {test_inv} to chest inventory with 3 rows
+	set {_effect} to parse effect "add a diamond to {test_inv}" from console
+	assert {_effect} = true with "This should run fine"
+	assert {test_inv} contains a diamond with "A diamond should have been added"
+	delete {_effect}
 
-    set {_effect} to parse effect "spawn a sheep at spawn of world ""world"""
-    set {_e} to last spawned entity
-    assert {_effect} = true with "This should run fine"
-    assert {_e} is set with "Entity should have spawned"
-    delete entity within {_e}
-    delete {_effect}
+	set {_effect} to parse effect "spawn a sheep at spawn of world ""world"""
+	set {_e} to last spawned entity
+	assert {_effect} = true with "This should run fine"
+	assert {_e} is set with "Entity should have spawned"
+	delete entity within {_e}
+	delete {_effect}
 
-    set {_effect} to parse effect "Blah blah blah"
-    assert {_effect} = false with "This effect should have failed"
+	set {_effect} to parse effect "Blah blah blah"
+	assert {_effect} = false with "This effect should have failed"

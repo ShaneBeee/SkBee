@@ -1,8 +1,8 @@
 test "SkBee - CondChunkContainsBlockData":
-    set {_c} to chunk at 1,1 in world "world"
-    assert {_c} has blockdata bedrock[] with "The chunk should have bedrock"
-    assert {_c} doesn't have blockdata stripped_warped_hyphae[] with "The chunk shouldn't have stripped_warped_hyphae"
+	set {_c} to chunk at 1,1 in world "world"
+	assert {_c} has blockdata bedrock[] with "The chunk should have bedrock"
+	assert {_c} doesn't have blockdata stripped_warped_hyphae[] with "The chunk shouldn't have stripped_warped_hyphae"
 
-    # Let's really make sure these conditions work
-    assert {_c} has blockdata netherrack[] to fail with "This should fail, overworld shouldn't have netherrack"
-    assert {_c} doesn't have blockdata dirt[] to fail with "This should fail, overworld should have dirt"
+	# Let's really make sure these conditions work
+	assert {_c} has blockdata netherrack[] to fail with "This should fail, overworld shouldn't have netherrack"
+	assert {_c} doesn't have blockdata dirt[] to fail with "This should fail, overworld should have dirt"

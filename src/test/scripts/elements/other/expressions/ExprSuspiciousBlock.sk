@@ -1,15 +1,15 @@
 test "SkBee - ExprSuspiciousBlock":
-    # Setup
-    set {_l} to location(1,1,1)
-    set {_data} to blockdata of block at {_l}
+	# Setup
+	set {_l} to location(1,1,1)
+	set {_data} to blockdata of block at {_l}
 
-    # Go for it
-    set block at {_l} to suspicious sand
-    assert suspicious item of block at {_l} is not set with "The block shouldn't have a suspicious item yet"
-    set suspicious item of block at {_l} to 1 of diamond
-    assert type of suspicious item of block at {_l} = diamond with "The block should have a diamond now"
-    delete suspicious item of block at {_l}
-    assert suspicious item of block at {_l} is not set with "The block shouldn't have an item after deleting"
+	# Go for it
+	set block at {_l} to suspicious sand
+	assert suspicious item of block at {_l} is not set with "The block shouldn't have a suspicious item yet"
+	set suspicious item of block at {_l} to 1 of diamond
+	assert type of suspicious item of block at {_l} = diamond with "The block should have a diamond now"
+	delete suspicious item of block at {_l}
+	assert suspicious item of block at {_l} is not set with "The block shouldn't have an item after deleting"
 
-    # Cleanup
-    set block at {_l} to {_data}
+	# Cleanup
+	set block at {_l} to {_data}

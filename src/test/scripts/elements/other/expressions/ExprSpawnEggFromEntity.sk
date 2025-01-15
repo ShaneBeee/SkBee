@@ -1,10 +1,10 @@
 test "SkBee - ExprSpawnEggFromEntity":
-    assert spawn egg of a sheep = sheep spawn egg with "Invalid egg type"
-    assert spawn egg of a cow = cow spawn egg with "Invalid egg type"
-    assert spawn egg of a parrot = parrot spawn egg with "Invalid egg type"
-    assert spawn egg of a ender dragon = ender dragon spawn egg with "Invalid egg type"
+	assert spawn egg of a sheep = sheep spawn egg with "Invalid egg type"
+	assert spawn egg of a cow = cow spawn egg with "Invalid egg type"
+	assert spawn egg of a parrot = parrot spawn egg with "Invalid egg type"
+	assert spawn egg of a ender dragon = ender dragon spawn egg with "Invalid egg type"
 
-    assert spawn egg of an arrow is not set with "An arrow can't have a spawn egg"
-    assert spawn egg of oak boat is not set with "A boat can't have a spawn egg"
-    assert spawn egg of monster is not set with "A monster can't have a spawn egg"
-    assert spawn egg of item frame is not set with "An item frame can't have a spawn egg"
+	assert spawn egg of an arrow is not set with "An arrow can't have a spawn egg"
+	assert spawn egg of oak boat is not set with "A boat can't have a spawn egg"
+	assert spawn egg of monster is not set with "A monster can't have a spawn egg"
+	assert spawn egg of item frame is not set with "An item frame can't have a spawn egg"

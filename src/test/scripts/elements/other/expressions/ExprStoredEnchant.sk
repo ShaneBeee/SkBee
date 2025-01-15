@@ -1,11 +1,11 @@
 test "SkBee - ExprStoredEnchant":
-    set {_i} to 1 of enchanted book
-    assert stored enchants of {_i} is not set with "The book shouldn't have enchants yet"
-    add sharpness 10 to stored enchants of {_i}
-    add unbreaking 3 to stored enchants of {_i}
-    assert size of stored enchants of {_i} = 2 with "The book should have 2 stored enchants"
-    assert stored enchants of {_i} contains sharpness 10 with "The book should have sharpness 10"
-    assert stored enchants of {_i} contains unbreaking 3 with "The book should have unbreaking 3"
-    assert stored enchants of {_i} does not contain mending with "The book should not have mending"
-    clear stored enchants of {_i}
-    assert stored enchants of {_i} is not set with "The book shouldn't have enchants after clearing"
+	set {_i} to 1 of enchanted book
+	assert stored enchants of {_i} is not set with "The book shouldn't have enchants yet"
+	add sharpness 10 to stored enchants of {_i}
+	add unbreaking 3 to stored enchants of {_i}
+	assert size of stored enchants of {_i} = 2 with "The book should have 2 stored enchants"
+	assert stored enchants of {_i} contains sharpness 10 with "The book should have sharpness 10"
+	assert stored enchants of {_i} contains unbreaking 3 with "The book should have unbreaking 3"
+	assert stored enchants of {_i} does not contain mending with "The book should not have mending"
+	clear stored enchants of {_i}
+	assert stored enchants of {_i} is not set with "The book shouldn't have enchants after clearing"

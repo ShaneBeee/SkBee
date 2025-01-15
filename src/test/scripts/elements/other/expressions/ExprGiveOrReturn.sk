@@ -1,21 +1,21 @@
 test "SkBee - ExprGiveOrReturn":
-    set {_inv} to a chest inventory with 6 rows
-    add 3392 stone to {_inv}
+	set {_inv} to a chest inventory with 6 rows
+	add 3392 stone to {_inv}
 
-    #"(give|add) or return %itemtypes% to %inventories%"
-    set {_i::*} to give or return 100 diamonds to {_inv}
-    assert {_i::*} contains 36 of diamond with "Should have returned 36 diamonds"
-    delete {_i::*}
+	#"(give|add) or return %itemtypes% to %inventories%"
+	set {_i::*} to give or return 100 diamonds to {_inv}
+	assert {_i::*} contains 36 of diamond with "Should have returned 36 diamonds"
+	delete {_i::*}
 
-    set {_i::*} to give or return (10 * 64) of diamonds to {_inv}
-    assert size of {_i::*} = 10 with "The list size should have been 10"
-    delete {_i::*}
+	set {_i::*} to give or return (10 * 64) of diamonds to {_inv}
+	assert size of {_i::*} = 10 with "The list size should have been 10"
+	delete {_i::*}
 
-    clear inventory within {_inv}
-    set {_i::*} to give or return (5 * 64) of stick to {_inv}
-    assert {_i::*} is not set with "All those sticks should have fit"
-    delete {_i::*}
+	clear inventory within {_inv}
+	set {_i::*} to give or return (5 * 64) of stick to {_inv}
+	assert {_i::*} is not set with "All those sticks should have fit"
+	delete {_i::*}
 
-    clear inventory within {_inv}
-    set {_i::*} to give or return 100 water bottles to {_inv}
-    assert size of {_i::*} = 46 with "100 - (6*9) = 46, 46 water bottles shouldn't fit and should return"
+	clear inventory within {_inv}
+	set {_i::*} to give or return 100 water bottles to {_inv}
+	assert size of {_i::*} = 46 with "100 - (6*9) = 46, 46 water bottles shouldn't fit and should return"

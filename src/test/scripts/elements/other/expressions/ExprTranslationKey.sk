@@ -1,20 +1,20 @@
 function testTranslationKey(o: object, s: string):
-    assert translation key of {_o} = {_s} with "Invalid key"
+	assert translation key of {_o} = {_s} with "Invalid key"
 
 test "SkBee - ExprTranslationKey":
-    spawn a sheep at event-location:
-        set {_e} to entity
+	spawn a sheep at event-location:
+		set {_e} to entity
 
-    testTranslationKey({_e}, "entity.minecraft.sheep")
-    delete entity within {_e}
+	testTranslationKey({_e}, "entity.minecraft.sheep")
+	delete entity within {_e}
 
-    testTranslationKey(1 of diamond sword, "item.minecraft.diamond_sword")
-    testTranslationKey(oak_stairs[], "block.minecraft.oak_stairs")
-    testTranslationKey(a parrot, "entity.minecraft.parrot")
-    testTranslationKey(minecraft:sharpness, "enchantment.minecraft.sharpness")
-    testTranslationKey(minecraft:plains, "biome.minecraft.plains")
-    testTranslationKey(night vision, "effect.minecraft.night_vision")
-    testTranslationKey(minecraft:movement_speed, "attribute.name.movement_speed")
-    testTranslationKey(peaceful, "options.difficulty.peaceful")
-    testTranslationKey(creative, "gameMode.creative")
-    testTranslationKey(disableElytraMovementCheck, "gamerule.disableElytraMovementCheck")
+	testTranslationKey(1 of diamond sword, "item.minecraft.diamond_sword")
+	testTranslationKey(oak_stairs[], "block.minecraft.oak_stairs")
+	testTranslationKey(a parrot, "entity.minecraft.parrot")
+	testTranslationKey(minecraft:sharpness, "enchantment.minecraft.sharpness")
+	testTranslationKey(minecraft:plains, "biome.minecraft.plains")
+	testTranslationKey(night vision, "effect.minecraft.night_vision")
+	testTranslationKey(minecraft:movement_speed, "attribute.name.movement_speed")
+	testTranslationKey(peaceful, "options.difficulty.peaceful")
+	testTranslationKey(creative, "gameMode.creative")
+	testTranslationKey(disableElytraMovementCheck, "gamerule.disableElytraMovementCheck")

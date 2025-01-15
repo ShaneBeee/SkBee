@@ -1,45 +1,45 @@
 test "SkBee - Display entities":
 
-    # Test for TextDisplay
-    spawn text display at location(1,100,1):
-        set display text of entity to "bob"
-        add entity to {_e::*}
-    set {_e} to last spawned entity
+	# Test for TextDisplay
+	spawn text display at location(1,100,1):
+		set display text of entity to "bob"
+		add entity to {_e::*}
+	set {_e} to last spawned entity
 
-    # Test that text is set correctly
-    assert display text of {_e} = "bob" with "Text of TextDisplay should be ""bob"""
+	# Test that text is set correctly
+	assert display text of {_e} = "bob" with "Text of TextDisplay should be ""bob"""
 
-    # Test for BlockDisplay
-    spawn block display at location(1,1,1):
-        set display blockdata of entity to stone[]
-        add entity to {_e::*}
-    set {_e} to last spawned entity
+	# Test for BlockDisplay
+	spawn block display at location(1,1,1):
+		set display blockdata of entity to stone[]
+		add entity to {_e::*}
+	set {_e} to last spawned entity
 
-    # Test that blockdata is set correctly
-    assert display blockdata of {_e} = stone[] with "BlockData of BlockDisplay should be stone[]"
+	# Test that blockdata is set correctly
+	assert display blockdata of {_e} = stone[] with "BlockData of BlockDisplay should be stone[]"
 
-    # Test for ItemDisplay
-    spawn item display at location(1,1,1):
-        set display item of entity to diamond sword
-        add entity to {_e::*}
-    set {_e} to last spawned entity
+	# Test for ItemDisplay
+	spawn item display at location(1,1,1):
+		set display item of entity to diamond sword
+		add entity to {_e::*}
+	set {_e} to last spawned entity
 
-    # Test that item is set correctly
-    assert display item of {_e} = diamond sword with "Item of ItemDisplay should be diamond sword"
+	# Test that item is set correctly
+	assert display item of {_e} = diamond sword with "Item of ItemDisplay should be diamond sword"
 
-    # Test random other stuff to make sure no errors
-    set display right rotation of {_e} to quaternion(0,0,0,1)
-    set display scale of {_e} to vector(2,2,2)
-    set display billboard of {_e} to horizontal
+	# Test random other stuff to make sure no errors
+	set display right rotation of {_e} to quaternion(0,0,0,1)
+	set display scale of {_e} to vector(2,2,2)
+	set display billboard of {_e} to horizontal
 
-    # displayBrightness isn't being loaded in time for the test
-    # Shane has reported this issue to the SkriptLang team.
+	# displayBrightness isn't being loaded in time for the test
+	# Shane has reported this issue to the SkriptLang team.
 
-    # set display brightness of {_e} to displayBrightness(15,15)
+	# set display brightness of {_e} to displayBrightness(15,15)
 
-    set display width of {_e} to 3
-    set display glow color override of {_e} to bukkitColor(255,1,1,100)
-    set display interpolation start of {_e} to -1
-    set display interpolation delay of {_e} to 200
+	set display width of {_e} to 3
+	set display glow color override of {_e} to bukkitColor(255,1,1,100)
+	set display interpolation start of {_e} to -1
+	set display interpolation delay of {_e} to 200
 
-    delete entities within {_e::*}
+	delete entities within {_e::*}

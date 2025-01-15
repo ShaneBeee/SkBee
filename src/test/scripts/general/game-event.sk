@@ -1,24 +1,24 @@
 test "SkBee - GameEvents":
 
-    # Preload the chunk to make sure we can kill the entity
-    load chunk at event-location with ticket
+	# Preload the chunk to make sure we can kill the entity
+	load chunk at event-location with ticket
 
-    spawn a sheep at event-location:
-        set {_e} to entity
+	spawn a sheep at event-location:
+		set {_e} to entity
 
-    # Fire game event
-    set {test_game_event_sheep} to true
-    kill {_e}
-    assert {test_game_event_sheep} is not set with "The variable should have been removed"
-    delete all dropped items
+	# Fire game event
+	set {test_game_event_sheep} to true
+	kill {_e}
+	assert {test_game_event_sheep} is not set with "The variable should have been removed"
+	delete all dropped items
 
-    assert {_e} is not valid with "Shouldn't be valid anymore"
+	assert {_e} is not valid with "Shouldn't be valid anymore"
 
-    # Cleanup
-    delete entity within {_e} # just in case
-    unload chunk at event-location
+	# Cleanup
+	delete entity within {_e} # just in case
+	unload chunk at event-location
 
 on game event entity_die:
-    if {test_game_event_sheep} is set:
-        delete {test_game_event_sheep}
-        assert event-entity is a sheep with "We killed a sheep"
+	if {test_game_event_sheep} is set:
+		delete {test_game_event_sheep}
+		assert event-entity is a sheep with "We killed a sheep"

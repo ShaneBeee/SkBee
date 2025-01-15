@@ -1,26 +1,26 @@
 test "SkBee - memory value":
 
-    set {_l} to location(1,100,1)
-    spawn a villager at {_l}
-    set {_e} to last spawned entity
+	set {_l} to location(1,100,1)
+	spawn a villager at {_l}
+	set {_e} to last spawned entity
 
-    set home memory of {_e} to {_l}
-    assert home memory of {_e} = {_l} with "the location should have been 1,100,1"
+	set home memory of {_e} to {_l}
+	assert home memory of {_e} = {_l} with "the location should have been 1,100,1"
 
-    delete random entity of {_e}
+	delete random entity of {_e}
 
-    spawn an allay at {_l}
-    set {_e} to last spawned entity
-    set {_u} to random uuid
+	spawn an allay at {_l}
+	set {_e} to last spawned entity
+	set {_u} to random uuid
 
-    set liked player memory of {_e} to {_u}
-    assert liked player memory of {_e} = {_u} with "the liked player memory should have equaled the var"
+	set liked player memory of {_e} to {_u}
+	assert liked player memory of {_e} = {_u} with "the liked player memory should have equaled the var"
 
-    delete random entity of {_e}
+	delete random entity of {_e}
 
-    spawn a goat at {_l}
-    set {_e} to last spawned entity
+	spawn a goat at {_l}
+	set {_e} to last spawned entity
 
-    set ram_cooldown_ticks memory of {_e} to 0
-    assert ram_cooldown_ticks memory of {_e} = 0 with "ram cooldown ticks of goat should have been 0"
-    delete entity within {_e}
+	set ram_cooldown_ticks memory of {_e} to 0
+	assert ram_cooldown_ticks memory of {_e} = 0 with "ram cooldown ticks of goat should have been 0"
+	delete entity within {_e}

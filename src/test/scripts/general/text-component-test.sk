@@ -1,79 +1,79 @@
 test "SkBee - TextComponents":
 
-    # These tests are more so to check if anything fails
-    # They can't really do anything
+	# These tests are more so to check if anything fails
+	# They can't really do anything
 
-    # Create a mini message
-    set {_m} to mini message from "well who cares what is here"
-    assert {_m} is set with "Welp, I guess the mini message didn't work"
+	# Create a mini message
+	set {_m} to mini message from "well who cares what is here"
+	assert {_m} is set with "Welp, I guess the mini message didn't work"
 
-    # Component replace text effect
-    assert "%{_m}%" contains "cares" with "'cares' should be in there"
-    component replace "cares" with "" in {_m}
-    assert "%{_m}%" does not contain "cares" with "'cares' should have been removed"
+	# Component replace text effect
+	assert "%{_m}%" contains "cares" with "'cares' should be in there"
+	component replace "cares" with "" in {_m}
+	assert "%{_m}%" does not contain "cares" with "'cares' should have been removed"
 
-    # Click event
-    assert click event of {_m} is not set with "component should not have a click event yet"
-    add click event to run command "/some command" to {_m}
-    assert click event of {_m} is set with "component should have a click event"
+	# Click event
+	assert click event of {_m} is not set with "component should not have a click event yet"
+	add click event to run command "/some command" to {_m}
+	assert click event of {_m} is set with "component should have a click event"
 
-    # Hover event
-    assert hover event of {_m} is not set with "component should not have a hover event yet"
-    add hover event showing "test" to {_m}
-    assert hover event of {_m} is set with "component should have a hover event"
+	# Hover event
+	assert hover event of {_m} is not set with "component should not have a hover event yet"
+	add hover event showing "test" to {_m}
+	assert hover event of {_m} is set with "component should have a hover event"
 
-    # Component item name/lore
-    set {_i} to 1 of diamond sword
-    assert lore of {_i} is not set with "The item shouldn't have lore yet"
-    set component item lore of {_i} to {_m}
-    assert lore of {_i} is set with "The item should have lore now"
-    assert name of {_i} is not set with "The item shouldn't have a name yet"
-    set component display name of {_i} to {_m}
-    assert name of {_i} is set with "The item should have a name now"
+	# Component item name/lore
+	set {_i} to 1 of diamond sword
+	assert lore of {_i} is not set with "The item shouldn't have lore yet"
+	set component item lore of {_i} to {_m}
+	assert lore of {_i} is set with "The item should have lore now"
+	assert name of {_i} is not set with "The item shouldn't have a name yet"
+	set component display name of {_i} to {_m}
+	assert name of {_i} is set with "The item should have a name now"
 
-    # Create a text component
-    set {_t} to text component from "test"
-    assert {_t} is set with "Welp, I guess the text component didn't work"
+	# Create a text component
+	set {_t} to text component from "test"
+	assert {_t} is set with "Welp, I guess the text component didn't work"
 
-    # Component formats
-    set color format of {_t} to red
-    assert color format of {_t} = red with "The color format should be red"
-    set bold format of {_t} to true
-    assert bold format of {_t} = true with "The bold format should be true"
+	# Component formats
+	set color format of {_t} to red
+	assert color format of {_t} = red with "The color format should be red"
+	set bold format of {_t} to true
+	assert bold format of {_t} = true with "The bold format should be true"
 
-    # Merge
-    Set {_merge} to merge components {_m} and {_t} with "s"
-    assert {_merge} is set with "Merging components should return a new component"
+	# Merge
+	Set {_merge} to merge components {_m} and {_t} with "s"
+	assert {_merge} is set with "Merging components should return a new component"
 
-    # Translatable components with fallback
-    set {_trans} to translate component from "test.test" with fallback "some fallback"
-    assert fallback format of {_trans} is set with "Fallback of component should be set"
-    assert fallback format of {_trans} = "some fallback" with "Fallback of component should be 'some fallback'"
-    set fallback format of {_trans} to "a new fallback"
-    assert fallback format of {_trans} = "a new fallback" with "Fallback of component should be 'a new fallback'"
-    set {_m} to mini message from "test"
-    set fallback format of {_m} to "this is a fallback"
-    assert fallback format of {_m} is not set with "Fallback of non-translatable component should not be set"
-    delete {_trans}
-    set {_trans} to translate component from "Test.test" with args "some arg" with fallback "some fallback"
-    assert {_trans} is set with "Component with args and fallback should be set"
+	# Translatable components with fallback
+	set {_trans} to translate component from "test.test" with fallback "some fallback"
+	assert fallback format of {_trans} is set with "Fallback of component should be set"
+	assert fallback format of {_trans} = "some fallback" with "Fallback of component should be 'some fallback'"
+	set fallback format of {_trans} to "a new fallback"
+	assert fallback format of {_trans} = "a new fallback" with "Fallback of component should be 'a new fallback'"
+	set {_m} to mini message from "test"
+	set fallback format of {_m} to "this is a fallback"
+	assert fallback format of {_m} is not set with "Fallback of non-translatable component should not be set"
+	delete {_trans}
+	set {_trans} to translate component from "Test.test" with args "some arg" with fallback "some fallback"
+	assert {_trans} is set with "Component with args and fallback should be set"
 
-    # Test effects
-    parse:
-        set {_m} to mini message from "oh hi there"
-        send component {_m} to console
-        send component {_m} to all worlds
-        send component {_m} to team named "blah_team"
-        broadcast component {_m}
-        send title component "blah" with subtitle "oh hi" to all worlds for 5 seconds
-    assert parse logs are not set with "These effects should have all parsed"
+	# Test effects
+	parse:
+		set {_m} to mini message from "oh hi there"
+		send component {_m} to console
+		send component {_m} to all worlds
+		send component {_m} to team named "blah_team"
+		broadcast component {_m}
+		send title component "blah" with subtitle "oh hi" to all worlds for 5 seconds
+	assert parse logs are not set with "These effects should have all parsed"
 
-    # Computed tooltips
-    set {_t::*} to tooltip lines of 1 of stick
-    assert size of {_t::*} = 1 with "Stick should have 1 line"
-    delete {_t::*}
-    set {_t::*} to tooltip lines of 1 of diamond sword
-    assert size of {_t::*} = 5 with "Diamond sword should have 5 lines"
-    delete {_t::*}
-    set {_t::*} to advanced tooltip lines of 1 of diamond sword
-    assert size of {_t::*} = 7 with "Diamond sword should have 7 advanced lines"
+	# Computed tooltips
+	set {_t::*} to tooltip lines of 1 of stick
+	assert size of {_t::*} = 1 with "Stick should have 1 line"
+	delete {_t::*}
+	set {_t::*} to tooltip lines of 1 of diamond sword
+	assert size of {_t::*} = 5 with "Diamond sword should have 5 lines"
+	delete {_t::*}
+	set {_t::*} to advanced tooltip lines of 1 of diamond sword
+	assert size of {_t::*} = 7 with "Diamond sword should have 7 advanced lines"

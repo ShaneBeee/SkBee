@@ -1,3 +1,3 @@
 test "SkBee - block data item":
-    set {_i} to 1 of wheat seeds
-    assert item blockdata of {_i} = wheat[age=0] with "BlockData of 'wheat seeds' should have been 'wheat[age=0]'"
+	set {_i} to 1 of wheat seeds
+	assert item blockdata of {_i} = wheat[age=0] with "BlockData of 'wheat seeds' should have been 'wheat[age=0]'"

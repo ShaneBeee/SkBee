@@ -1,6 +1,6 @@
 test "SkBee - NBT - ExprItemFromNBT":
-    set {_n} to nbt from "{count:1,id:""minecraft:stick""}"
-    assert {_n} is set with "The nbt should be set"
-    set {_item} to item from nbt {_n}
-    assert {_item} is set with "The item should be set"
-    assert type of {_item} is stick with "We should have gotten a stick"
+	set {_n} to nbt from "{count:1,id:""minecraft:stick""}"
+	assert {_n} is set with "The nbt should be set"
+	set {_item} to item from nbt {_n}
+	assert {_item} is set with "The item should be set"
+	assert type of {_item} is stick with "We should have gotten a stick"

@@ -1,8 +1,8 @@
 test "SkBee - NBT - ExprTagTypeOfNBT":
-    set {_n} to nbt from "{i:1,s:""hello"",sl:[""a"",""b"",""c""],c:{a:1}, cl:[{t:1},{z:2}]}"
+	set {_n} to nbt from "{i:1,s:""hello"",sl:[""a"",""b"",""c""],c:{a:1}, cl:[{t:1},{z:2}]}"
 
-    assert tag type of tag "i" of {_n} = int tag with "Should be an int tag"
-    assert tag type of tag "s" of {_n} = string tag with "Should be an string tag"
-    assert tag type of tag "sl" of {_n} = string list tag with "Should be an string list tag"
-    assert tag type of tag "c" of {_n} = compound tag with "Should be an compound tag"
-    assert tag type of tag "cl" of {_n} = compound list tag with "Should be an compound list tag"
+	assert tag type of tag "i" of {_n} = int tag with "Should be an int tag"
+	assert tag type of tag "s" of {_n} = string tag with "Should be an string tag"
+	assert tag type of tag "sl" of {_n} = string list tag with "Should be an string list tag"
+	assert tag type of tag "c" of {_n} = compound tag with "Should be an compound tag"
+	assert tag type of tag "cl" of {_n} = compound list tag with "Should be an compound list tag"

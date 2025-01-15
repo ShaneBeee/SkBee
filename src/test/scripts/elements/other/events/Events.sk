@@ -1,41 +1,41 @@
 test "SkBee - Other/Events":
-    # Make sure the entity can actually spawn
-    load chunk at event-location with ticket
+	# Make sure the entity can actually spawn
+	load chunk at event-location with ticket
 
-    # Call 'entity added to world' event
-    set {test_added} to true
-    spawn a sheep at event-location:
-        set {_e} to entity
-    assert {_e} is set with "The entity should have spawned"
-    assert {test_added} is not set with "'entity added to world' event didn't fire"
+	# Call 'entity added to world' event
+	set {test_added} to true
+	spawn a sheep at event-location:
+		set {_e} to entity
+	assert {_e} is set with "The entity should have spawned"
+	assert {test_added} is not set with "'entity added to world' event didn't fire"
 
-    # Call 'entity teleport' event
-    set {test_tp} to true
-    teleport {_e} to location 5 above {_e}
-    assert {test_tp} is not set with "'entity teleport' event didn't fire"
+	# Call 'entity teleport' event
+	set {test_tp} to true
+	teleport {_e} to location 5 above {_e}
+	assert {test_tp} is not set with "'entity teleport' event didn't fire"
 
-    # Call
-    set {test_remove} to true
-    delete entity within {_e}
-    assert {test_remove} is not set with "'entity removed from world' event didn't fire"
+	# Call
+	set {test_remove} to true
+	delete entity within {_e}
+	assert {test_remove} is not set with "'entity removed from world' event didn't fire"
 
-    # Cleanup
-    unload chunk at event-location
+	# Cleanup
+	unload chunk at event-location
 
 on entity added to world:
-    if {test_added} is set:
-        delete {test_added}
-        assert event-entity is a sheep with "We should have added a sheep"
-        assert event-entity is a cow to fail with "This should fail, we spawned a sheep not a cow"
+	if {test_added} is set:
+		delete {test_added}
+		assert event-entity is a sheep with "We should have added a sheep"
+		assert event-entity is a cow to fail with "This should fail, we spawned a sheep not a cow"
 
 on entity teleport:
-    if {test_tp} is set:
-        delete {test_tp}
-        assert event-entity is a sheep with "We should have teleported a sheep"
-        assert event-entity is a cow to fail with "This should fail, we teleported a sheep not a cow"
+	if {test_tp} is set:
+		delete {test_tp}
+		assert event-entity is a sheep with "We should have teleported a sheep"
+		assert event-entity is a cow to fail with "This should fail, we teleported a sheep not a cow"
 
 on entity removed from world:
-    if {test_remove} is set:
-        delete {test_remove}
-        assert event-entity is a sheep with "We should have removed a sheep"
-        assert event-entity is a cow to fail with "This should fail, we removed a sheep not a cow"
+	if {test_remove} is set:
+		delete {test_remove}
+		assert event-entity is a sheep with "We should have removed a sheep"
+		assert event-entity is a cow to fail with "This should fail, we removed a sheep not a cow"

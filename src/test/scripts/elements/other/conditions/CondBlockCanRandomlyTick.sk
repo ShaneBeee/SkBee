@@ -1,17 +1,17 @@
 test "SkBee - CondBlockCanRandomlyTick":
-    assert dirt[] cannot randomly tick with "Dirt shouldn't be able to randomly tick"
-    assert stone[] cannot randomly tick with "Stone shouldn't be able to randomly tick"
-    assert water[] cannot randomly tick with "Water shouldn't be able to randomly tick"
-    assert oak_stairs[] cannot randomly tick with "Oak Stairs shouldn't be able to randomly tick"
+	assert dirt[] cannot randomly tick with "Dirt shouldn't be able to randomly tick"
+	assert stone[] cannot randomly tick with "Stone shouldn't be able to randomly tick"
+	assert water[] cannot randomly tick with "Water shouldn't be able to randomly tick"
+	assert oak_stairs[] cannot randomly tick with "Oak Stairs shouldn't be able to randomly tick"
 
-    assert oak_leaves[] can randomly tick with "Leaves should be able to randomly tick"
-    assert cactus[] can randomly tick with "Cactus should be able to randomly tick"
-    assert sugar_cane[] can randomly tick with "Sugar Cane should be able to randomly tick"
-    assert weathered_copper_bulb[] can randomly tick with "Weathered Copper Bulb should be able to randomly tick"
+	assert oak_leaves[] can randomly tick with "Leaves should be able to randomly tick"
+	assert cactus[] can randomly tick with "Cactus should be able to randomly tick"
+	assert sugar_cane[] can randomly tick with "Sugar Cane should be able to randomly tick"
+	assert weathered_copper_bulb[] can randomly tick with "Weathered Copper Bulb should be able to randomly tick"
 
-    # Let's really make sure these conditions work
-    assert dirt_path[] can randomly tick to fail with "This should fail, dirt path shouldn't be able to tick"
-    assert short_grass[] can randomly tick to fail with "This should fail, short_grass shouldn't be able to tick"
+	# Let's really make sure these conditions work
+	assert dirt_path[] can randomly tick to fail with "This should fail, dirt path shouldn't be able to tick"
+	assert short_grass[] can randomly tick to fail with "This should fail, short_grass shouldn't be able to tick"
 
-    assert chiseled_copper[] cannot randomly tick to fail with "This should fail, chiseled_copper should be able to tick"
-    assert cave_vines[] cannot randomly tick to fail with "This should fail, cave_vines should be able to tick"
+	assert chiseled_copper[] cannot randomly tick to fail with "This should fail, chiseled_copper should be able to tick"
+	assert cave_vines[] cannot randomly tick to fail with "This should fail, cave_vines should be able to tick"
