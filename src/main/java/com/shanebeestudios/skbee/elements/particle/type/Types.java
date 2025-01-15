@@ -167,6 +167,7 @@ public class Types {
                 Location origin = new Location(null, 0, 0, 0);
                 Location destination = (Location) params[0][0];
                 int arrivalTime = (int) ((Timespan) params[1][0]).getAs(Timespan.TimePeriod.TICK);
+                @SuppressWarnings("removal")
                 Vibration vibration = new Vibration(origin, new Vibration.Destination.BlockDestination(destination), arrivalTime);
                 return new Vibration[]{vibration};
             }
