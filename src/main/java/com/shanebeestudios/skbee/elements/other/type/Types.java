@@ -538,6 +538,8 @@ public class Types {
                 .description("Represents the different types of potions (not potion effect types) used in vanilla potion items.")
                 .after("potioneffecttype")
                 .since("INSERT VERSION"));
+
+            SkriptUtils.hackPotionEffectTypeClassInfoPattern();
         } else {
             Util.logLoading("It looks like another addon registered 'potiontype' already.");
             Util.logLoading("You may have to use their PotionType in SkBee's syntaxes.");
