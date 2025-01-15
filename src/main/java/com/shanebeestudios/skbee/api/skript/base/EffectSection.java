@@ -4,11 +4,9 @@ import ch.njol.skript.config.Node;
 import com.shanebeestudios.skbee.api.skript.runtime.SyntaxRuntimeErrorProducer;
 
 /**
- * Extension of Skript's SimpleExpression which implements SyntaxRuntimeErrorProducer
- *
- * @param <T> To type
+ * Extension of Skript's EffectSection which implements SyntaxRuntimeErrorProducer
  */
-public abstract class SimpleExpression<T> extends ch.njol.skript.lang.util.SimpleExpression<T> implements SyntaxRuntimeErrorProducer {
+public abstract class EffectSection extends ch.njol.skript.lang.EffectSection implements SyntaxRuntimeErrorProducer {
 
     Node node = getParser().getNode();
 

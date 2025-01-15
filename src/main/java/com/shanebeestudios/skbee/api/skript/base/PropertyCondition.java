@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.api.skript.base;
 
 import ch.njol.skript.config.Node;
-import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
+import com.shanebeestudios.skbee.api.skript.runtime.SyntaxRuntimeErrorProducer;
 
 /**
  * Extension of Skript's PropertyCondition which implements SyntaxRuntimeErrorProducer
