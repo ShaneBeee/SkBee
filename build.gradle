@@ -37,7 +37,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
 
     // Skript
-    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: 'dev~feature-SNAPSHOT') {
+    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.10.0') {
         transitive = false
     }
 
