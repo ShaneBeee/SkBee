@@ -534,7 +534,7 @@ public class Types {
                 .user("potion ?types?")
                 .name("Potion Type")
                 .description("Represents the different types of potions (not potion effect types) used in vanilla potion items.")
-                .before("potioneffecttype")
+                .after("potioneffecttype")
                 .since("INSERT VERSION"));
         } else {
             Util.logLoading("It looks like another addon registered 'potiontype' already.");
