@@ -11,8 +11,10 @@ import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;
 import org.bukkit.GameEvent;
+import org.bukkit.JukeboxSong;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
+import org.bukkit.MusicInstrument;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.Registry;
@@ -26,6 +28,7 @@ import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.EntityType;
 import org.bukkit.loot.LootTable;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -39,7 +42,7 @@ import java.util.Map;
  *
  * @param <T> {@link ClassInfo} class for conversion type
  */
-@SuppressWarnings("deprecation")
+@SuppressWarnings({"deprecation", "UnstableApiUsage", "NullableProblems"})
 public abstract class ObjectConverter<T> {
 
     private static final Map<Class<?>, ObjectConverter<?>> CONVERTERS = new HashMap<>();
@@ -120,12 +123,14 @@ public abstract class ObjectConverter<T> {
                 return null;
             }
         });
+        register(JukeboxSong.class, Registry.JUKEBOX_SONG);
         register(LootTable.class, new ObjectConverter<>() {
             @Override
             public @Nullable LootTable get(NamespacedKey key) {
                 return Bukkit.getLootTable(key);
             }
         });
+        register(MusicInstrument.class, Registry.INSTRUMENT);
         // Added in Spigot 1.20.2 (oct 20/2023)
         if (Skript.methodExists(Particle.class, "getKey")) {
             register(Particle.class, Registry.PARTICLE_TYPE);
@@ -137,6 +142,7 @@ public abstract class ObjectConverter<T> {
                 return PotionEffectType.getByKey(key);
             }
         });
+        register(PotionType.class, Registry.POTION);
         if (SkBee.getPlugin().getPluginConfig().ELEMENTS_STATISTIC)
             register(Statistic.class, Registry.STATISTIC);
         // Paper method
