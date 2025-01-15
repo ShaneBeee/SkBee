@@ -1,0 +1,12 @@
+test "SkBee - Test Sections":
+    before:
+        set {_a} to 1
+
+    test:
+        assert {_a} = 1 with "This should match"
+
+    after:
+        assert 1 = 1 with "This should be called and should pass"
+
+    after fail:
+        assert 1 = 2 with "This shouldn't be called" # "test" never failed
