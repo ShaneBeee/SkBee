@@ -19,3 +19,14 @@ test "SkBee - ExprNamespacedKeyObjectFrom":
 
     set {_b} to biome from key "holy_moly:quacamole"
     assert {_b} is not set with "Ok, that's just silly, come on man"
+
+    set {_i} to instrument from key "minecraft:admire_goat_horn"
+    assert {_i} is admire goat horn with "Should have gotten admire_goat_horn from key"
+
+    set {_j} to jukebox song from key "minecraft:mellohi"
+    assert {_j} is mellohi with "Should have gotten mellohi from key"
+    set {_j} to jukebox song from key "minecraft:not_a_thing"
+    assert {_j} is not set with "This key should return nothing"
+
+    set {_pt} to potion type from key "minecraft:long_regeneration"
+    assert {_pt} is long regeneration with "Should have gotten long regeneration from key"
