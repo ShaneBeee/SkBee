@@ -22,6 +22,8 @@ import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.Color;
 import org.bukkit.EntityEffect;
+import org.bukkit.JukeboxSong;
+import org.bukkit.MusicInstrument;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.TreeType;
@@ -52,7 +54,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.StreamCorruptedException;
 import java.util.Map;
 
-@SuppressWarnings({"removal", "deprecation"})
+@SuppressWarnings({"removal", "deprecation", "UnstableApiUsage"})
 public class Types {
 
     public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
@@ -539,6 +541,30 @@ public class Types {
         } else {
             Util.logLoading("It looks like another addon registered 'potiontype' already.");
             Util.logLoading("You may have to use their PotionType in SkBee's syntaxes.");
+        }
+
+        if (Classes.getExactClassInfo(MusicInstrument.class) == null) {
+            Classes.registerClass(RegistryClassInfo.create(Registry.INSTRUMENT, MusicInstrument.class, "instrument")
+                .user("instruments?")
+                .name("Instrument")
+                .description("Represents the instruments used by goat horns.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
+                .since("INSERT VERSION"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'instrument' already.");
+            Util.logLoading("You may have to use their Instruments in SkBee's syntaxes.");
+        }
+
+        if (Classes.getExactClassInfo(JukeboxSong.class) == null) {
+            Classes.registerClass(RegistryClassInfo.create(Registry.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
+                .user("jukebox ?songs?")
+                .name("Instrument")
+                .description("Represents the songs for jukeboxes.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
+                .since("INSERT VERSION"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'jukeboxson' already.");
+            Util.logLoading("You may have to use their JukeboxSongs in SkBee's syntaxes.");
         }
     }
 

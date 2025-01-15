@@ -125,6 +125,13 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
     reset glider component of {_i}
     assert glider component of {_i} = true with "After reset, item should have a glider"
 
+    # Instrument
+    set {_i} to 1 of goat horn
+    assert {_i} doesn't have item component minecraft:instrument with "The horn shouldn't have an instrument yet"
+    apply instrument component to {_i}:
+        instrument: admire_goat_horn
+    assert {_i} has item component minecraft:instrument with "The horn should have an instrument now"
+
     # Intangible Projectile
     set {_i} to 1 of arrow
     assert intangible projectile component of {_i} is not set with "The arrow should have the intangible projectile component yet"
@@ -142,6 +149,14 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
     assert item model of {_i} is not set with "After delete, no model should be present"
     reset item model of {_i}
     assert item model of {_i} = "minecraft:diamond_sword" with "Reset item model of a diamond sword should be 'minecraft:diamond_sword'"
+
+    # Jukebox Playable
+    set {_i} to 1 of diamond
+    assert {_i} doesn't have item component minecraft:jukebox_playable with "The diamond shouldn't have a song"
+    apply jukebox playable to {_i}:
+        song: mall
+        show_in_tooltip: false
+    assert {_i} has item component minecraft:jukebox_playable with "The diamond should now have a song"
 
     # Max Stack Size
     set {_i} to 1 of oak planks
