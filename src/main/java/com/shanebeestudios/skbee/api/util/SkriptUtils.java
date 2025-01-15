@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.command.EffectCommandEvent;
 import ch.njol.skript.lang.Effect;
@@ -9,16 +10,21 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
+import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.inventory.EquipmentSlotGroup;
+import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.ApiStatus;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.regex.Pattern;
 
 /**
  * Utility class to handle Skript things
@@ -153,6 +159,18 @@ public class SkriptUtils {
                 return null;
         }
         return mappingExpr;
+    }
+
+    /**
+     * Skript's ClassInfo for PotionEffectType has a conflicting pattern for PotionTypes
+     * <p>This is just until Skript fixes the pattern</p>
+     */
+    @ApiStatus.Internal
+    public static void hackPotionEffectTypeClassInfoPattern() {
+        ClassInfo<PotionEffectType> info = Classes.getExactClassInfo(PotionEffectType.class);
+        assert info != null;
+        Pattern[] patterns = new Pattern[]{Pattern.compile("potion ?effect ?types?")};
+        ReflectionUtils.setField("userInputPatterns", ClassInfo.class, info, patterns);
     }
 
 }
