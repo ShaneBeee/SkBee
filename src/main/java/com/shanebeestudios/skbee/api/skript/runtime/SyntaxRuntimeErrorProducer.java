@@ -23,7 +23,7 @@ public interface SyntaxRuntimeErrorProducer extends org.skriptlang.skript.log.ru
             Skript.error( message);
             return;
         }
-        org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer.super.error(message);
+        org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer.super.error(message, highlight);
     }
 
     @Override
@@ -37,7 +37,7 @@ public interface SyntaxRuntimeErrorProducer extends org.skriptlang.skript.log.ru
             Skript.error( message);
             return;
         }
-        org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer.super.warning(message);
+        org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer.super.warning(message, highlight);
     }
 
 }
