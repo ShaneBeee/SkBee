@@ -113,7 +113,7 @@ public class BlockDataUtils {
      * @param value        New value of tag
      * @return Updated BlockData with new value
      */
-    public static BlockData setBlockDataTag(BlockData oldBlockData, String tag, Object value) {
+    public static @Nullable BlockData setBlockDataTag(BlockData oldBlockData, String tag, Object value) {
         if (oldBlockData.getAsString().contains("[")) {
             String newData = oldBlockData.getMaterial().getKey() + "[" + tag.toLowerCase(Locale.ROOT) + "=" + value + "]";
             try {
@@ -123,7 +123,7 @@ public class BlockDataUtils {
                 Util.debug("Could not parse block data: %s", newData);
             }
         }
-        return oldBlockData;
+       return null;
     }
 
 }

@@ -5,3 +5,11 @@ test "SkBee - SecSpawnMinecraftEntity.sk":
     assert {_e} is set with "Entity should have spawned"
     assert {_e} is a sheep with "Entity should be a sheep"
     delete entity within {_e}
+
+    # Test runtime errors
+    try:
+        # This should throw a runtime error
+        mc spawn "minecraft:blah" at event-location:
+            set {_e} to entity
+    catch:
+        assert runtime logs contains "Couldn't get entity from 'minecraft:blah'" with "This should error"

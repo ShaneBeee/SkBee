@@ -6,11 +6,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import com.shanebeestudios.skbee.api.util.BlockDataUtils;
 import org.bukkit.Material;
 import org.bukkit.block.data.BlockData;
@@ -27,12 +27,12 @@ public class ExprBlockDataItemTag extends PropertyExpression<ItemType, Object> {
 
     static {
         PropertyExpression.register(ExprBlockDataItemTag.class, Object.class,
-                "item [block[ ]](data|state) tag %string%", "itemtypes");
+            "item [block[ ]](data|state) tag %string%", "itemtypes");
     }
 
     private Expression<String> tag;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.tag = (Expression<String>) exprs[matchedPattern];
@@ -40,7 +40,6 @@ public class ExprBlockDataItemTag extends PropertyExpression<ItemType, Object> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Object[] get(Event event, ItemType[] source) {
         return get(source, itemType -> {
@@ -55,17 +54,20 @@ public class ExprBlockDataItemTag extends PropertyExpression<ItemType, Object> {
         });
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(Object.class);
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta == null) return;
+        String tag = this.tag.getSingle(event);
+        if (tag == null) {
+            error("No tag found: " + this.tag.toString(event, true));
+            return;
+        }
         for (ItemType itemType : getExpr().getAll(event)) {
             Material blockForm = BlockDataUtils.getBlockForm(itemType.getMaterial());
             if (blockForm == null || !blockForm.isBlock()) continue;
@@ -73,7 +75,11 @@ public class ExprBlockDataItemTag extends PropertyExpression<ItemType, Object> {
             BlockDataMeta itemMeta = (BlockDataMeta) itemType.getItemMeta();
             BlockData oldBlockData = itemMeta.getBlockData(blockForm);
 
-            BlockData newBlockData = BlockDataUtils.setBlockDataTag(oldBlockData, this.tag.getSingle(event), delta[0]);
+            BlockData newBlockData = BlockDataUtils.setBlockDataTag(oldBlockData, tag, delta[0]);
+            if (newBlockData == null) {
+                tagError("Invalid tag \"" + tag + "\" for this blockdata: " + oldBlockData.getAsString());
+                continue;
+            }
             itemMeta.setBlockData(newBlockData);
             itemType.setItemMeta(itemMeta);
         }
@@ -84,10 +90,13 @@ public class ExprBlockDataItemTag extends PropertyExpression<ItemType, Object> {
         return Object.class;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "item blockdata tag " + this.tag.toString(e, d) + " of " + getExpr().toString(e, d);
+    }
+
+    private void tagError(String message) {
+        errorRegex(message, "tag \\\"\\w+\\\"");
     }
 
 }

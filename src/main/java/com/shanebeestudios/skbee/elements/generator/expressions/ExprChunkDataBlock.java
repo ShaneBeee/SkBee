@@ -10,11 +10,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
 import org.bukkit.generator.ChunkGenerator;
@@ -44,7 +44,7 @@ public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
     private Expression<Vector> vector;
     private Expression<Vector> vector2;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
 
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
@@ -61,11 +61,13 @@ public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected BlockData @Nullable [] get(Event event) {
         Vector vec = this.vector.getSingle(event);
-        if (vec == null) return null;
+        if (vec == null) {
+            error("Vector is invalid: " + this.vector.toString(event, true));
+            return null;
+        }
 
         if (event instanceof ChunkGenEvent chunkGenEvent) {
             int x = vec.getBlockX();
@@ -86,41 +88,41 @@ public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(BlockData.class);
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (mode == ChangeMode.SET && delta != null && delta[0] instanceof BlockData blockData) {
             Vector vec = this.vector.getSingle(event);
             Vector vec2 = this.vector2 != null ? this.vector2.getSingle(event) : null;
-            if (vec != null) {
-                if (event instanceof ChunkGenEvent chunkGenEvent) {
-                    int x = vec.getBlockX();
-                    int y = vec.getBlockY();
-                    int z = vec.getBlockZ();
-                    if (vec2 != null) {
-                        int x2 = vec2.getBlockX();
-                        int y2 = vec2.getBlockY();
-                        int z2 = vec2.getBlockZ();
-                        setRegion(chunkGenEvent.getChunkData(), x, y, z, x2, y2, z2, blockData);
-                    } else {
-                        chunkGenEvent.getChunkData().setBlock(x, y, z, blockData);
-                    }
-                } else if (event instanceof BlockPopulateEvent popEvent) {
-                    int x = (popEvent.getChunkX() << 4) + vec.getBlockX();
-                    int y = vec.getBlockY();
-                    int z = (popEvent.getChunkZ() << 4) + vec.getBlockZ();
-                    LimitedRegion region = popEvent.getLimitedRegion();
-                    if (region.isInRegion(x,y,z)) {
-                        // Make sure we are setting within the available region
-                        region.setBlockData(x, y, z, blockData);
-                    }
+            if (vec == null) {
+                error("Invalid vector: " + this.vector.toString(event, true));
+                return;
+            }
+            if (event instanceof ChunkGenEvent chunkGenEvent) {
+                int x = vec.getBlockX();
+                int y = vec.getBlockY();
+                int z = vec.getBlockZ();
+                if (vec2 != null) {
+                    int x2 = vec2.getBlockX();
+                    int y2 = vec2.getBlockY();
+                    int z2 = vec2.getBlockZ();
+                    setRegion(chunkGenEvent.getChunkData(), x, y, z, x2, y2, z2, blockData);
+                } else {
+                    chunkGenEvent.getChunkData().setBlock(x, y, z, blockData);
+                }
+            } else if (event instanceof BlockPopulateEvent popEvent) {
+                int x = (popEvent.getChunkX() << 4) + vec.getBlockX();
+                int y = vec.getBlockY();
+                int z = (popEvent.getChunkZ() << 4) + vec.getBlockZ();
+                LimitedRegion region = popEvent.getLimitedRegion();
+                if (region.isInRegion(x, y, z)) {
+                    // Make sure we are setting within the available region
+                    region.setBlockData(x, y, z, blockData);
                 }
             }
         }

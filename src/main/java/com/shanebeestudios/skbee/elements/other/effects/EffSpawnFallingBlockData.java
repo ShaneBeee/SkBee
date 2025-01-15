@@ -5,11 +5,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -34,7 +34,7 @@ public class EffSpawnFallingBlockData extends Effect {
     private Expression<BlockData> blockData;
     private Expression<Location> locations;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.blockData = (Expression<BlockData>) exprs[0];
@@ -42,11 +42,13 @@ public class EffSpawnFallingBlockData extends Effect {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "deprecation"})
     @Override
     protected void execute(Event event) {
         BlockData blockData = this.blockData.getSingle(event);
-        if (blockData == null) return;
+        if (blockData == null) {
+            error("Invalid block data: " + this.blockData.toString(event, true));
+            return;
+        }
 
         for (Location location : this.locations.getArray(event)) {
             World world = location.getWorld();

@@ -8,12 +8,12 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprTransferCookie;
 import org.bukkit.NamespacedKey;
@@ -81,7 +81,14 @@ public class SecTransferCookieRetrieve extends Section {
 
         Player player = this.player.getSingle(event);
         Object keyObject = this.key.getSingle(event);
-        if (player == null || keyObject == null) return next;
+        if (player == null) {
+            error("Player is not set: " + this.player.toString(event, true));
+            return null;
+        }
+        if (keyObject == null) {
+            error("Key is not set: " + this.key.toString(event, true));
+            return null;
+        }
 
         NamespacedKey key = null;
         if (keyObject instanceof String string) {
@@ -89,7 +96,10 @@ public class SecTransferCookieRetrieve extends Section {
         } else if (keyObject instanceof NamespacedKey namespacedKey) {
             key = namespacedKey;
         }
-        if (key == null) return next;
+        if (key == null) {
+            error("Key is invalid: " + keyObject);
+            return next;
+        }
 
         player.retrieveCookie(key).thenAccept(bytes -> {
             Delay.addDelayedEvent(event); // Delay event to make sure kick effect still works

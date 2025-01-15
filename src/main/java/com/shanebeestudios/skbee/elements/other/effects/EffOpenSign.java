@@ -5,11 +5,12 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -21,14 +22,14 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Open Sign")
 @Description({"Open a sign's GUI to a player, to allow them to edit it.",
-        "If it wasn't obvious, the sign must actually be placed in the world, it's NOT a virtual sign.",
-        "Requires Paper (not sure which version, but at least 1.12.x).",
-        "Spigot added support for this in MC 1.18.",
-        "Front/Back support added in MC 1.20.",
-        "\n**NOTE**: This appears to no longer work in 1.20+ with a distance of 7.5+ (client side issue)."})
+    "If it wasn't obvious, the sign must actually be placed in the world, it's NOT a virtual sign.",
+    "Requires Paper (not sure which version, but at least 1.12.x).",
+    "Spigot added support for this in MC 1.18.",
+    "Front/Back support added in MC 1.20.",
+    "\n**NOTE**: This appears to no longer work in 1.20+ with a distance of 7.5+ (client side issue)."})
 @Examples({"open sign gui of target block to player",
-        "open target block's sign gui to player",
-        "open sign back of target block to player"})
+    "open target block's sign gui to player",
+    "open sign back of target block to player"})
 @Since("1.5.2, 2.14.0 (sides)")
 public class EffOpenSign extends Effect {
 
@@ -37,8 +38,8 @@ public class EffOpenSign extends Effect {
     static {
         String side = HAS_SIDES ? "[(front|back:back)] " : "";
         Skript.registerEffect(EffOpenSign.class,
-                "open sign [gui] " + side + "[(for|of)] [%direction%] %location% to %players%",
-                "open [%direction%] %location%'[s] sign [gui] " + side + "to %players%");
+            "open sign [gui] " + side + "[(for|of)] [%direction%] %location% to %players%",
+            "open [%direction%] %location%'[s] sign [gui] " + side + "to %players%");
     }
 
     @SuppressWarnings("null")
@@ -59,7 +60,10 @@ public class EffOpenSign extends Effect {
     @Override
     protected void execute(@NotNull Event event) {
         Location location = this.locations.getSingle(event);
-        if (location == null) return;
+        if (location == null) {
+            error("Location is not set: " + this.locations.toString(event, true));
+            return;
+        }
 
         BlockState block = location.getBlock().getState();
         if (block instanceof Sign sign) {
@@ -70,6 +74,8 @@ public class EffOpenSign extends Effect {
                     player.openSign(sign);
                 }
             }
+        } else {
+            error("Block is not a sign: " + Classes.toString(location.getBlock()));
         }
     }
 

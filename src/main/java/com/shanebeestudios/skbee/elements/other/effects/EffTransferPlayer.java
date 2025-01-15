@@ -5,10 +5,10 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -34,7 +34,7 @@ public class EffTransferPlayer extends Effect {
     private Expression<String> host;
     private Expression<Number> port;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.players = (Expression<Player>) exprs[0];
@@ -43,17 +43,22 @@ public class EffTransferPlayer extends Effect {
         return true;
     }
 
-
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         String host = this.host.getSingle(event);
-        if (host == null) return;
+        if (host == null) {
+            error("Invalid server host: " + this.host.toString(event, true));
+            return;
+        }
 
         int port = 25565;
         if (this.port != null) {
             Number portNum = this.port.getSingle(event);
-            if (portNum != null) port = portNum.intValue();
+            if (portNum == null) {
+                warning("Invalid port " + this.port.toString(event, true) + ", defaulting to 25565");
+            } else {
+                port = portNum.intValue();
+            }
         }
         for (Player player : this.players.getArray(event)) {
             player.transfer(host, port);

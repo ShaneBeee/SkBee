@@ -8,12 +8,13 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.EntityUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.Attribute;
@@ -29,12 +30,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
 import java.util.UUID;
 
-@SuppressWarnings("DataFlowIssue")
+@SuppressWarnings({"DataFlowIssue", "UnstableApiUsage"})
 @Name("Attribute Modifier Apply")
 @Description({"Apply an attribute modifier to an item or living entity.",
     "If running Minecraft 1.21+ use `id`",
@@ -81,23 +81,25 @@ import java.util.UUID;
 @Since("3.5.9")
 public class SecAttributeModifier extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("attribute", null, false, Attribute.class));
+        SimpleEntryValidator builder = SimpleEntryValidator.builder();
+        builder.addRequiredEntry("attribute", Attribute.class);
         if (ItemUtils.HAS_EQUIPMENT_SLOT_GROUP) {
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("slot", null, true, EquipmentSlotGroup.class));
+            builder.addOptionalEntry("slot", EquipmentSlotGroup.class);
         } else {
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("slot", null, true, EquipmentSlot.class));
+            builder.addOptionalEntry("slot", EquipmentSlot.class);
         }
         if (ItemUtils.HAS_KEY) {
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
+            builder.addRequiredEntry("id", String.class);
         } else {
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("name", null, false, String.class));
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("uuid", null, true, String.class));
+            builder.addRequiredEntry("name", String.class);
+            builder.addOptionalEntry("uuid", String.class);
         }
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("amount", null, false, Number.class));
-        VALIDATIOR.addEntryData(new ExpressionEntryData<>("operation", null, false, Operation.class));
+        builder.addRequiredEntry("amount", Number.class);
+        builder.addRequiredEntry("operation", Operation.class);
+        VALIDATOR = builder.build();
         Skript.registerSection(SecAttributeModifier.class, "apply [:transient] attribute modifier to %itemtypes/livingentities%");
     }
 
@@ -111,10 +113,10 @@ public class SecAttributeModifier extends Section {
     private Expression<Number> amount;
     private Expression<Operation> operation;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        EntryContainer container = VALIDATIOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.trans = parseResult.hasTag("transient");
@@ -138,7 +140,7 @@ public class SecAttributeModifier extends Section {
         return this.attribute != null && this.amount != null;
     }
 
-    @SuppressWarnings({"NullableProblems", "removal"})
+    @SuppressWarnings("removal")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Attribute attribute = this.attribute.getSingle(event);
@@ -146,16 +148,32 @@ public class SecAttributeModifier extends Section {
         Operation operation = this.operation.getSingle(event);
         Object slot = this.slot != null ? this.slot.getSingle(event) : null;
 
-        if (attribute == null || amountNum == null || operation == null)
+        if (attribute == null) {
+            error("Attribute is missing");
             return super.walk(event, false);
+        }
+        if (amountNum == null) {
+            error("Amount is missing");
+            return super.walk(event, false);
+        }
+        if (operation == null) {
+            error("Operation is missing");
+            return super.walk(event, false);
+        }
 
         AttributeModifier attributeModifier;
         if (ItemUtils.HAS_KEY) {
             String id = this.id.getSingle(event);
-            if (id == null) return super.walk(event, false);
+            if (id == null) {
+                error("Invalid id: " + this.id.toString(event, true));
+                return super.walk(event, false);
+            }
 
             NamespacedKey namespacedKey = Util.getNamespacedKey(id, false);
-            if (namespacedKey == null) return super.walk(event, false);
+            if (namespacedKey == null) {
+                error("Invalid id: " + id);
+                return super.walk(event, false);
+            }
 
             EquipmentSlotGroup slotGroup = slot instanceof EquipmentSlotGroup esg ? esg : EquipmentSlotGroup.ANY;
             attributeModifier = new AttributeModifier(namespacedKey, amountNum.doubleValue(), operation, slotGroup);
