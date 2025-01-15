@@ -36,8 +36,10 @@ types:
     fishingstate: fishing state¦s
     fishhookstate: fish hook state¦s
     gameevent: game event¦s
+    instrument: instrument¦s
     itemdisplaytransform: item display transform¦s
     itemflag: item flag¦s
+    jukeboxsong: jukebox song¦s
     loottable: loot table¦s
     machine: machine¦s
     machineproperty: machine propert¦y¦ies
