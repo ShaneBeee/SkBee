@@ -6,15 +6,16 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("NBT - Item with NBT")
 @Description({"Get an item with nbt.",
@@ -30,33 +31,45 @@ import org.jetbrains.annotations.NotNull;
     "give player diamond sword with nbt from \"{\"\"minecraft:custom_data\"\":{points:10}}\"",
     "give player diamond sword with custom nbt from \"{points:10}\"",})
 @Since("1.0.0")
-public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
+public class ExprItemWithNBT extends SimpleExpression<ItemType> {
 
     static {
         Skript.registerExpression(ExprItemWithNBT.class, ItemType.class, ExpressionType.PROPERTY,
             "%itemtype% with [:custom] [[item( |-)]nbt] %nbtcompound%");
     }
 
-    @SuppressWarnings("null")
-    private Expression<Object> nbt;
+    private Expression<ItemType> item;
+    private Expression<NBTCompound> nbt;
     private boolean custom;
 
-    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        setExpr((Expression<ItemType>) exprs[0]);
-        this.nbt = (Expression<Object>) exprs[1];
+        this.item = (Expression<ItemType>) exprs[0];
+        this.nbt = (Expression<NBTCompound>) exprs[1];
         this.custom = parseResult.hasTag("custom");
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
-    protected ItemType[] get(Event event, ItemType[] source) {
-        if (this.nbt.getSingle(event) instanceof NBTCompound nbtCompound) {
-            return get(source, itemType -> NBTApi.getItemTypeWithNBT(itemType, nbtCompound, this.custom));
+    protected ItemType @Nullable [] get(Event event) {
+        ItemType item = this.item.getSingle(event);
+        NBTCompound nbt = this.nbt.getSingle(event);
+        if (item == null) {
+            error("Invalid/missing item");
+            return null;
         }
-        return source;
+        if (nbt == null) {
+            error("Invalid/missing nbt");
+            return null;
+        }
+
+        return new ItemType[]{NBTApi.getItemTypeWithNBT(item, nbt, this.custom)};
+    }
+
+    @Override
+    public boolean isSingle() {
+        return true;
     }
 
     @Override
@@ -67,7 +80,7 @@ public class ExprItemWithNBT extends PropertyExpression<ItemType, ItemType> {
     @Override
     public @NotNull String toString(Event e, boolean d) {
         String custom = this.custom ? " custom " : " ";
-        return getExpr().toString(e, d) + " with" + custom + "nbt " + this.nbt.toString(e, d);
+        return this.item.toString(e, d) + " with" + custom + "nbt " + this.nbt.toString(e, d);
     }
 
 }

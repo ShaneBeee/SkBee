@@ -8,10 +8,10 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -25,13 +25,13 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
 
     static {
         Skript.registerExpression(ExprTagTypeOfNBT.class, NBTCustomType.class, ExpressionType.COMBINED,
-                "[nbt[ ]]tag[ ]type of tag %string% of %nbtcompound%");
+            "[nbt[ ]]tag[ ]type of tag %string% of %nbtcompound%");
     }
 
     private Expression<String> tag;
     private Expression<NBTCompound> compound;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.tag = (Expression<String>) exprs[0];
@@ -39,16 +39,18 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
-    @Nullable
     @Override
     protected NBTCustomType @Nullable [] get(Event e) {
-        if (this.tag == null || this.compound == null) {
-            return null;
-        }
         String tag = this.tag.getSingle(e);
         NBTCompound compound = this.compound.getSingle(e);
-        if (tag == null || compound == null) return null;
+        if (tag == null) {
+            error("Invalid nbt tag");
+            return null;
+        }
+        if (compound == null) {
+            error("Invalid nbt compound");
+            return null;
+        }
 
         NBTCustomType tagType = NBTApi.getTagType(compound, tag);
         if (tagType == NBTCustomType.NBTTagEnd) return null;
@@ -65,9 +67,8 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
         return NBTCustomType.class;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         return "nbt tag type of tag " + this.tag.toString(e, d) + " of nbt compound " + this.compound.toString(e, d);
     }
 

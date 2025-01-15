@@ -1,0 +1,5 @@
+test "SkBee - NBT - ExprTagsOfNBT":
+    set {_n} to nbt from "{a:1,b:2,c:3}"
+    assert size of nbt tags of {_n} = 3 with "There should be 3 tags"
+    assert nbt tags of {_n} = "a", "b", "c" with "There should be the a,b,c tags"
+

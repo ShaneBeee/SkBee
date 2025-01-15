@@ -1,0 +1,22 @@
+test "SkBee - NBT - ExprTagOfNBT":
+    set {_n} to nbt from "{test:1}"
+    assert {_n} has tag "test" with "The nbt should have the tag"
+    assert {_n} does not have tag "blah" with "The nbt shouldn't have the blah tag"
+
+    # Set tag
+    set int tag "blah" of {_n} to  52
+    assert {_n} has tag "blah" with "The nbt should have the blah tag now"
+    assert int tag "blah" of {_n} = 52 with "The blah tag should be 52"
+
+    # Add/remove to/from number tag
+    add 10 to int tag "blah" of {_n}
+    assert int tag "blah" of {_n} = 62 with "The blah tag should be 62"
+    remove 12 from int tag "blah" of {_n}
+    assert int tag "blah" of {_n} = 50 with "The blah tag should be 50"
+
+    # Add to number tag list
+    set int list tag "int-list" of {_n} to 1,2,3
+    assert size of int list tag "int-list" of {_n} = 3 with "There should be 3 numbers"
+    add 4,5,6 to int list tag "int-list" of {_n}
+    assert size of int list tag "int-list" of {_n} = 6 with "There should be 6 numbers"
+    assert int list tag "int-list" of {_n} = 1,2,3,4,5,6 with "The numbers should be set"

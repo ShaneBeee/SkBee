@@ -1,0 +1,43 @@
+test "SkBee - NBT - ExprNbtCompound":
+    # Create compound
+    set {_n} to nbt from "{test:1}"
+    assert {_n} is set with "The nbt should be set"
+    assert {_n} has tag "test" with "The compound should have tag 'test'"
+    delete {_n}
+
+    # NBT of item
+    set {_i} to 1 of diamond sword
+    set {_n} to nbt of {_i}
+    assert {_n} is set with "The nbt should be set"
+    delete {_n}
+
+    # Vanilla NBT of item
+    set {_n} to vanilla nbt of {_i}
+    assert {_n} is set with "The nbt should be set"
+    assert {_n} has tag "minecraft:attribute_modifiers" with "The compound should have tag 'minecraft:attribute_modifiers'"
+    delete {_n} and {_i}
+
+    # NBT of entity
+    spawn a sheep at event-location:
+        set {_e} to entity
+    set {_n} to nbt of {_e}
+    assert {_n} is set with "The nbt should be set"
+    assert {_n} has tag "Bukkit.Aware" with "The entity should have the 'Bukkit.Aware' tag"
+    delete {_n}
+    delete entity within {_e}
+
+    # NBT of block (tile entity)
+    set {_data} to block at event-location
+    set block at event-location to a furnace
+    set {_n} to nbt of block at event-location
+    assert short tag "cooking_time_spent" of {_n} = 0 with "The furnace should have no cooking time spent"
+    delete {_n}
+    set block at event-location to {_data}
+
+    # NBT of block (non tile)
+    set {_data} to blockdata of block at location(1,1,1)
+    set block at location(1,1,1) to stone
+    set {_n} to nbt of block at location(1,1,1)
+    assert {_n} is set with "the custom block should return some nbt"
+    set block at location(1,1,1) to {_data}
+

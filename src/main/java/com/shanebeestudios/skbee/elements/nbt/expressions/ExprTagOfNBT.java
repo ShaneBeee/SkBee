@@ -10,11 +10,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -125,14 +125,24 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Object @Nullable [] get(@NotNull Event event) {
         NBTCustomType type = this.nbtType.getSingle(event);
         String tag = this.tag.getSingle(event);
         NBTCompound nbt = this.nbt.getSingle(event);
 
-        if (type == null || tag == null || nbt == null) return null;
+        if (type == null) {
+            error("Invalid nbt tag type");
+            return null;
+        }
+        if (tag == null) {
+            error("Invalid nbt tag");
+            return null;
+        }
+        if (nbt == null) {
+            error("Invalid nbt compound");
+            return null;
+        }
 
         Object object = NBTApi.getTag(tag, nbt, type);
         if (object instanceof ArrayList<?> arrayList) {
@@ -145,7 +155,6 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         return new Object[]{object};
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE) {
@@ -183,7 +192,18 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         String tag = this.tag.getSingle(event);
         NBTCompound nbt = this.nbt.getSingle(event);
 
-        if (type == null || tag == null || nbt == null) return;
+        if (type == null) {
+            error("Invalid nbt tag type");
+            return;
+        }
+        if (tag == null) {
+            error("Invalid nbt tag");
+            return;
+        }
+        if (nbt == null) {
+            error("Invalid nbt compound");
+            return;
+        }
 
         if (mode == ChangeMode.DELETE) {
             NBTApi.deleteTag(tag, nbt);

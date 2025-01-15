@@ -1,0 +1,5 @@
+test "SkBee - NBT - ExprPrettyNBT":
+    set {_nbt} to nbt from "{test:1}"
+    set {_pretty} to pretty nbt of {_nbt}
+    assert {_pretty} is set with "The pretty string should be set"
+    assert {_pretty} contains "{&btest" with "Should get that color in there"

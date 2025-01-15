@@ -6,11 +6,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.event.Event;
@@ -44,6 +44,7 @@ public class ExprItemFromNBT extends PropertyExpression<NBTCompound, ItemType> {
 
     @Override
     protected ItemType @NotNull [] get(@NotNull Event event, NBTCompound @NotNull [] source) {
+        if (source.length == 0) error("Empty nbt compound");
         return get(source, nbtCompound -> {
             if (nbtCompound.hasTag("id")) {
                 ItemStack itemStack = NBTItem.convertNBTtoItem(nbtCompound);
