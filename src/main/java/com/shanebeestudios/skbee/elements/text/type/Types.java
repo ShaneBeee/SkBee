@@ -144,7 +144,7 @@ public class Types {
             .defaultExpression(new EventValueExpression<>(CommandSender.class))
             .parser(SkriptUtils.getDefaultParser())
             .after("commandsender", "player", "livingentity", "entity")
-            .since("INSERT VERSION");
+            .since("3.8.0");
         Classes.registerClass(audienceClassInfo);
         setupUsage(audienceClassInfo);
 

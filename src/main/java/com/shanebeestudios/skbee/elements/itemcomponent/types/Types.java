@@ -57,7 +57,7 @@ public class Types {
                     return toString(consumeEffect, 0);
                 }
             })
-            .since("INSERT VERSION");
+            .since("3.8.0");
         Classes.registerClass(CONSUME_EFFECT_INFO);
 
         // Functions (ConsumeEffects)
@@ -79,7 +79,7 @@ public class Types {
             .examples("set {_p::1} to potion effect of night vision for 10 seconds",
                 "set {_p::2} to potion effect of slow mining for 5 seconds",
                 "set {_c} to apply_effects({_p::*}, 0.5)")
-            .since("INSERT VERSION"));
+            .since("3.8.0"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("remove_effects", new Parameter[]{
             new Parameter<>("potion effect types", POTION_EFFECT_TYPE, false, null)
@@ -101,7 +101,7 @@ public class Types {
                 "This will create a list of potion effect types to be removed when consumed.",
                 "This can be used in a death protection/consumable component.")
             .examples("set {_c} to remove_effects(night vision, poison)")
-            .since("INSERT VERSION"));
+            .since("3.8.0"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("clear_all_effects", new Parameter[]{
         }, CONSUME_EFFECT_INFO, true) {
@@ -114,7 +114,7 @@ public class Types {
                 "This will clear all effects when consumed.",
                 "This can be used in a death protection/consumable component.")
             .examples("set {_c} to clear_all_effects()")
-            .since("INSERT VERSION"));
+            .since("3.8.0"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("teleport_randomly", new Parameter[]{
             new Parameter<>("diameter", DefaultClasses.NUMBER, true, null)
@@ -130,7 +130,7 @@ public class Types {
                 "This will make the consumer teleport randomly when consumed.",
                 "This can be used in a death protection/consumable component.")
             .examples("set {_c} to teleport_randomly(10)")
-            .since("INSERT VERSION"));
+            .since("3.8.0"));
 
         Functions.registerFunction(new SimpleJavaFunction<>("play_sound", new Parameter[]{
             new Parameter<>("sound", DefaultClasses.STRING, true, null)
@@ -149,7 +149,7 @@ public class Types {
                 "Will play a sound when consumed.",
                 "This can be used in a death protection/consumable component.")
             .examples("set {_c} to play_sound(\"minecraft:block.stone.break\")")
-            .since("INSERT VERSION"));
+            .since("3.8.0"));
     }
 
     private static String getConsumeEffectString(ConsumeEffect consumeEffect) {

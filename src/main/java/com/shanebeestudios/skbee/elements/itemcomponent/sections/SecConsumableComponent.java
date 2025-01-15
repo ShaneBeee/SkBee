@@ -50,7 +50,7 @@ import java.util.Locale;
     "\thas_consume_particles: false",
     "\ton_consume_effects: {_effects}",
     "give {_i} to player"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class SecConsumableComponent extends EffectSection {
 

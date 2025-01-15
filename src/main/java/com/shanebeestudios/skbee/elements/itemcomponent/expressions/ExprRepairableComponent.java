@@ -56,7 +56,7 @@ import java.util.List;
     "set repairable tag of player's tool to minecraft item tag \"diamond_tool_materials\"",
     "delete repairable tag of player's tool",
     "reset repairable tag of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprRepairableComponent extends SimpleExpression<Object> {
 

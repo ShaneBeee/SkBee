@@ -38,7 +38,7 @@ import java.util.List;
     "\tstrings: \"hello\", \"yippee\"",
     "\tflags: true, true, true, false",
     "\tcolors: blue, green, rgb(1,1,1)"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class SecCustomModelDataComponent extends Section {
 
     private static final EntryValidator VALIDATOR;

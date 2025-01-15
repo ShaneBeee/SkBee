@@ -49,7 +49,7 @@ import java.util.List;
     "\tresult: netherite sword",
     "\tinput: minecraft item tag \"minecraft:swords\"",
     "\tmaterial: netherite ingot"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class SecTransmuteRecipe extends Section {
 
     private static EntryValidator VALIDATOR;

@@ -29,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set {_barrel} to crafting result of oak planks, oak slab, oak planks, oak planks, air, oak planks, oak planks, oak slab, oak planks",
     "set {_carrotOnStick} to crafting result of fishing rod, air, air, carrot",
     "set {_diamondSwordId} to crafting result id of air, diamond, air, air, diamond, air, air, stick, air"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class ExprCraftingResultFromItems extends SimpleExpression<Object> {
 
     private static final World DEFAULT_WORLD = Bukkit.getWorlds().getFirst();

@@ -36,7 +36,7 @@ if (Classes.getExactClassInfo(Spellcaster.Spell.class) == null) {
 
 ## Syntax Docs:
 - When using the since annotation, please use "INSERT VERISON" (this will be changed on release), ex:      
-  `@Since("INSERT VERSION")`       
+  `@Since("3.8.0")`       
 - Please provide detailed descriptions of what the syntax does.       
   You may also include required MC/Paper versions as well.        
   You may also insert wiki links in the following format:         

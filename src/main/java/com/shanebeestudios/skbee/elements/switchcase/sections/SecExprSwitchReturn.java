@@ -52,7 +52,7 @@ import java.util.List;
     "\t\t\t\treturn \"&a%type of switched object%\"",
     "",
     "\tsend \"Broken: %{_i}%\" to player"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class SecExprSwitchReturn extends SectionExpression<Object> {
 
     static {

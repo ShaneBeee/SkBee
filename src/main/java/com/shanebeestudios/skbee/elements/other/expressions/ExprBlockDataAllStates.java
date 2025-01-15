@@ -35,7 +35,7 @@ import java.util.List;
     "# minecraft:wall_torch[facing=south]",
     "# minecraft:wall_torch[facing=west]",
     "# minecraft:wall_torch[facing=east]"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprBlockDataAllStates extends SimpleExpression<BlockData> {
 

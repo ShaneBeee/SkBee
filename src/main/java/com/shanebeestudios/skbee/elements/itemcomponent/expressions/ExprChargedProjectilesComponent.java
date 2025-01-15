@@ -36,7 +36,7 @@ import java.util.List;
 @Examples({"set charged projectiles of player's tool to an arrow and a stick",
     "delete charged projectiles component of player's tool",
     "reset charged projectiles component of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprChargedProjectilesComponent extends SimpleExpression<Object> {
 

@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set tooltip style of {_item} to \"my_pack:some_style\"",
     "delete tooltip style of player's tool",
     "reset tooltip style of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprTooltipStyleComponent extends SimplePropertyExpression<Object, String> {
 

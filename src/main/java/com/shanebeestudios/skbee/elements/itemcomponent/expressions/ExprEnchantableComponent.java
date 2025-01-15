@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set enchantable component of player's tool to 10",
     "delete enchantable component of player's tool",
     "reset enchantable component of {_item}"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprEnchantableComponent extends SimplePropertyExpression<Object, Number> {
 

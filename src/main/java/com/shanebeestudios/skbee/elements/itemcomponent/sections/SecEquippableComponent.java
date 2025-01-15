@@ -61,7 +61,7 @@ import java.util.List;
     "\tswappable: true",
     "\tdamage_on_hurt: true",
     "\tcamera_overlay: \"my_pack:some_overlay\""})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class SecEquippableComponent extends Section {
 

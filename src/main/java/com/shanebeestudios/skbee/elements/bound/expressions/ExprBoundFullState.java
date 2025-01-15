@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Bound - Full State")
 @Description("Get/set whether this bound is a full bound (reaches from lowest to highest points of a world).")
 @Examples("set bound full state of bound with id \"home\" to true")
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class ExprBoundFullState extends SimplePropertyExpression<Bound, Boolean> {
 
     static {

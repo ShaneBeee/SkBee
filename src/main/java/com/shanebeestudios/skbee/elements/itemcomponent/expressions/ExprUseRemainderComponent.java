@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set use remainder of player's tool to 1 of glass bottle",
     "delete use remainder of {_item}",
     "reset use remainder of {_item}"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprUseRemainderComponent extends SimplePropertyExpression<Object, ItemStack> {
 

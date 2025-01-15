@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set {_tagkey} to tag key \"minecraft:wool\" from block registry",
     "set {_tagkey} to tag key \"my_pack:cool_enchantments\" from enchantment registry",
     "set {_tagkey} to item registry tag key \"minecraft:swords\""})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings({"UnstableApiUsage", "rawtypes"})
 public class ExprRegistryTagKeyFrom extends SimpleExpression<TagKey> {
 

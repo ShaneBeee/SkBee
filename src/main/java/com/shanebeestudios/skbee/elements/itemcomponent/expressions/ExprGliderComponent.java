@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
     "set glider component of player's tool to true",
     "delete glider component of {_item}",
     "reset glider component of {_item}"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprGliderComponent extends SimplePropertyExpression<Object, Boolean> {
 

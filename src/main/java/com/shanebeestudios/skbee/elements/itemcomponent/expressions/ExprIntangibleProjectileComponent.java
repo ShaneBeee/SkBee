@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set intangible projectile component of player's tool to true",
     "delete intangible projectile component of player's tool",
     "reset intangible projectile component of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprIntangibleProjectileComponent extends SimplePropertyExpression<Object, Boolean> {
 

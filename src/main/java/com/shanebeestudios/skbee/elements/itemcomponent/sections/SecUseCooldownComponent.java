@@ -39,7 +39,7 @@ import java.util.List;
 @Examples({"apply use cooldown to {_item}:",
     "\tseconds: 5 seconds",
     "\tgroup: \"blah:special_apple\""})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class SecUseCooldownComponent extends Section {
 

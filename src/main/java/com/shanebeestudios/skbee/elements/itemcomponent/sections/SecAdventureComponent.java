@@ -55,7 +55,7 @@ import java.util.List;
     "",
     "apply can place on adventure predicate to player's tool:",
     "\tblocks: minecraft block tag \"minecraft:logs\""})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings({"UnstableApiUsage", "NullableProblems"})
 public class SecAdventureComponent extends Section {
 

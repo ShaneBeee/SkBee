@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
     "set item model of {_item} to \"my_pack:some_cool_model\"",
     "reset item model of player's tool",
     "delete item model of {_item}"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprItemModel extends SimplePropertyExpression<Object, String> {
 

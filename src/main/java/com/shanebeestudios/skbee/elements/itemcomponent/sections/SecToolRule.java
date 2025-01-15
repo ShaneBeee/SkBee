@@ -61,7 +61,7 @@ import java.util.List;
     "\t\t\tspeed: 0.5",
     "\t\t\tcorrect_for_drops: false",
     "give {_i} to player"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class SecToolRule extends Section {
 
     private static final EntryValidator VALIDATOR;

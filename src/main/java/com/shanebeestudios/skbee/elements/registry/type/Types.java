@@ -23,7 +23,7 @@ public class Types {
                 "Registry names are auto-generated based on the Minecraft registry, these may change at any time.")
             .parser(RegistryHolders.createParser())
             .supplier(RegistryHolders.getSupplier())
-            .since("INSERT VERSION");
+            .since("3.8.0");
         Classes.registerClass(registryKeyClassInfo);
 
         // Run later to make sure SkBee's classes have loaded
@@ -34,7 +34,7 @@ public class Types {
             .user("tag ?keys?")
             .name("Registry - Tag Key")
             .description("Represents a key for a Minecraft tag.")
-            .since("INSERT VERSION")
+            .since("3.8.0")
             .parser(new Parser<>() {
                 @Override
                 public boolean canParse(ParseContext context) {
@@ -56,7 +56,7 @@ public class Types {
             .user("typed ?keys?")
             .name("Registry - Typed Key")
             .description("Represents the key for a value in a Minecraft registry.")
-            .since("INSERT VERSION")
+            .since("3.8.0")
             .parser(new Parser<>() {
                 @Override
                 public boolean canParse(ParseContext context) {

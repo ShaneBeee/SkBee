@@ -12,7 +12,7 @@ import org.jetbrains.annotations.NotNull;
 @Name("Bound - World")
 @Description("Get the world of a bound.")
 @Examples("set {world} to bound world of bound with id \"el-boundo\"")
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class ExprBoundWorld extends SimplePropertyExpression<Bound, World> {
 
     static {

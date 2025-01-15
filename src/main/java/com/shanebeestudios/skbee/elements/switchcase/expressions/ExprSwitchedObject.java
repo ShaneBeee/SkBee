@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
     "\t\tcase desert, savanna, badlands -> \"&e%switched value%\"",
     "\t\tcase snowy beach, frozen peaks, grove -> \"&b%switched value%\"",
     "\t\tdefault -> \"&7%switched value%\""})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class ExprSwitchedObject extends SimpleExpression<Object> {
 
     static {

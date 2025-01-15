@@ -57,7 +57,7 @@ import java.util.List;
     "\t\t\tkill attacker",
     "\t\tdefault:",
     "\t\t\tgive attacker a diamond"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class SecCase extends Section implements ReturnHandler<Object> {
 
     static {

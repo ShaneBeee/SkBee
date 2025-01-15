@@ -537,7 +537,7 @@ public class Types {
                 .name("Potion Type")
                 .description("Represents the different types of potions (not potion effect types) used in vanilla potion items.")
                 .after("potioneffecttype")
-                .since("INSERT VERSION"));
+                .since("3.8.0"));
 
             SkriptUtils.hackPotionEffectTypeClassInfoPattern();
         } else {
@@ -551,7 +551,7 @@ public class Types {
                 .name("Instrument")
                 .description("Represents the instruments used by goat horns.",
                     "NOTE: These are auto-generated and may differ between server versions.")
-                .since("INSERT VERSION"));
+                .since("3.8.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'instrument' already.");
             Util.logLoading("You may have to use their Instruments in SkBee's syntaxes.");
@@ -563,7 +563,7 @@ public class Types {
                 .name("Instrument")
                 .description("Represents the songs for jukeboxes.",
                     "NOTE: These are auto-generated and may differ between server versions.")
-                .since("INSERT VERSION"));
+                .since("3.8.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'jukeboxson' already.");
             Util.logLoading("You may have to use their JukeboxSongs in SkBee's syntaxes.");

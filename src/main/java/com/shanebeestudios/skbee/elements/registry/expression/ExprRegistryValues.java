@@ -24,7 +24,7 @@ import java.util.List;
 @Description("Get all values from a registry.")
 @Examples({"set {_biomes::*} to registry values of biome registry",
     "loop registry values of item registry:"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class ExprRegistryValues extends SimpleExpression<Object> {
 
     static {

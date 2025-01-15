@@ -32,7 +32,7 @@ import java.util.List;
     "set {_lines::*} to creative tooltip lines of player's tool",
     "set {_lines::*} to advanced and creative tooltip lines of player's tool",
     "set {_lines::*} to advanced tooltip lines of 1 of diamond sword for player"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class ExprTooltipLines extends SimpleExpression<ComponentWrapper> {
 
     static {

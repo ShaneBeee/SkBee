@@ -50,7 +50,7 @@ import java.util.List;
     "\t\t\tcolors: red, white and blue",
     "\t\t\thas_trail: false",
     "\t\t\thas_twinkle: false"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class SecFireworksComponent extends Section {
 

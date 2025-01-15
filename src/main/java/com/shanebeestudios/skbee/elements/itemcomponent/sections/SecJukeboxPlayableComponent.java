@@ -33,7 +33,7 @@ import java.util.List;
     "- `song` = A jukebox song to be played.",
     "- `show_in_tooltip` = Whether this will show in the item's tooltip."})
 @Examples("")
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class SecJukeboxPlayableComponent extends Section {
 

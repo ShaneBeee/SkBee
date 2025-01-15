@@ -75,7 +75,7 @@ import org.jetbrains.annotations.Nullable;
     "\t\tcase skeleton, stray, wither skeleton, bogged -> 1 of bone",
     "\t\tdefault -> 1 of stick",
     "\tgive {_item} to attacker",})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class EffCaseReturn extends Effect {
 
     static {

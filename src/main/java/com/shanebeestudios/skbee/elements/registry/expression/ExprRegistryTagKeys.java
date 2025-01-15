@@ -25,7 +25,7 @@ import java.util.List;
 @Description("Get all the tag keys that belong to a registry.")
 @Examples({"loop tag keys of block registry:",
     "set {_keys::*} to tag keys of biome registry"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings({"UnstableApiUsage", "rawtypes"})
 public class ExprRegistryTagKeys extends SimpleExpression<TagKey> {
 

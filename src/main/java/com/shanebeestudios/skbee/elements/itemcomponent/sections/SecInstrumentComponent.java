@@ -34,7 +34,7 @@ import java.util.List;
 @Examples({"set {_i} to 1 of goat horn",
     "apply instrument to {_i}:",
     "\tinstrument: admire_goat_horn"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class SecInstrumentComponent extends Section {
 
     private static final EntryValidator VALIDATOR;

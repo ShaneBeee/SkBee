@@ -22,7 +22,7 @@ import java.util.function.Predicate;
     "See [**Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki for more info."})
 @Examples({"if the scores of {_objective} are modifiable:",
     "if the scores of criteria with id \"some_criteria\" are modifiable:"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 public class CondObjModifiable extends Condition {
 
     static {

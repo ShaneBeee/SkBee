@@ -37,7 +37,7 @@ import java.util.List;
     "apply death protection component to {_i}:",
     "\tdeath_effects: {_effects}",
     "give {_i} to player"})
-@Since("INSERT VERSION")
+@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class SecDeathProtectionComponent extends EffectSection {
 
