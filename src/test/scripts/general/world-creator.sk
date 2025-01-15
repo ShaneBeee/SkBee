@@ -1,46 +1,49 @@
 test "SkBee - World Creator":
-    set {_creator} to world creator named "test_world"
+    before:
+        set {_creator} to world creator named "test_world"
 
-    # ExprWorldCreatorOption
-    assert environment option of {_creator} is not set with "The creator shouldn't have an environment by default"
-    set environment option of {_creator} to the end
-    assert environment option of {_creator} = the end with "The creator should have the end environment now"
+    test:
+        # ExprWorldCreatorOption
+        assert environment option of {_creator} is not set with "The creator shouldn't have an environment by default"
+        set environment option of {_creator} to the end
+        assert environment option of {_creator} = the end with "The creator should have the end environment now"
 
-    assert world type of {_creator} is not set with "The creator shouldn't have a world type by default"
-    set world type of {_creator} to flat
-    assert world type of {_creator} = flat with "The creator should have a flat type now"
+        assert world type of {_creator} is not set with "The creator shouldn't have a world type by default"
+        set world type of {_creator} to flat
+        assert world type of {_creator} = flat with "The creator should have a flat type now"
 
-    assert world seed option of {_creator} = -1 with "The creator should have a world seed of -1 by deafault"
-    set world seed option of {_creator} to 1010
-    assert world seed option of {_creator} = 1010 with "The creator should have a world seed of 1010 now"
+        assert world seed option of {_creator} = -1 with "The creator should have a world seed of -1 by deafault"
+        set world seed option of {_creator} to 1010
+        assert world seed option of {_creator} = 1010 with "The creator should have a world seed of 1010 now"
 
-    assert generator settings option of {_creator} is not set with "The creator shouldn't have gen settings by default"
-    # I'm not bothering with setting this as Mojang changes it so often
+        assert generator settings option of {_creator} is not set with "The creator shouldn't have gen settings by default"
+        # I'm not bothering with setting this as Mojang changes it so often
 
-    assert should gen structures option of {_creator} = true with "The creator should gen structures by default"
-    set should gen structures option of {_creator} to false
-    assert should gen structures option of {_creator} = false with "The creator's gen structures should now be off"
+        assert should gen structures option of {_creator} = true with "The creator should gen structures by default"
+        set should gen structures option of {_creator} to false
+        assert should gen structures option of {_creator} = false with "The creator's gen structures should now be off"
 
-    assert hardcore option of {_creator} = false with "The creator shouldn't be hardcore by default"
-    set hardcore option of {_creator} to true
-    assert hardcore option of {_creator} = true with "The creator should now be hardcore"
+        assert hardcore option of {_creator} = false with "The creator shouldn't be hardcore by default"
+        set hardcore option of {_creator} to true
+        assert hardcore option of {_creator} = true with "The creator should now be hardcore"
 
-    assert keep spawn loaded option of {_creator} = true with "By default the spawn should be kept loaded"
-    set keep spawn loaded option of {_creator} to false
-    assert keep spawn loaded option of {_creator} = false with "Keep spawn loaded should be set to false"
+        assert keep spawn loaded option of {_creator} = true with "By default the spawn should be kept loaded"
+        set keep spawn loaded option of {_creator} to false
+        assert keep spawn loaded option of {_creator} = false with "Keep spawn loaded should be set to false"
 
-    skbee log "WorldCreator Test: ABOUT TO LOAD TEST_WORLD"
-    load world from creator {_creator}
-    set {_w} to world "test_world"
-    skbee log  "WorldCreator Test: WORLD LOADED!!!"
-    assert {_w} is set with "The world should have loaded"
+        # Load test world
+        load world from creator {_creator}
+        set {_w} to world "test_world"
+        assert {_w} is set with "The world should have loaded"
 
-    assert all loaded skbee worlds contains world("test_world") with "The world should exist"
+        assert all loaded skbee worlds contains world("test_world") with "The world should exist"
 
-    skbee log  "WorldCreator Test: ABOUT TO UNLOAD TEST_WORLD"
-    unload world {_w} and don't save
-    delete world file for "test_world"
-    skbee log  "WorldCreator Test: TEST_WORLD UNLOADED_DELETED"
+    after:
+        # We run this after to make sure if a test fails, the world still gets unloaded
+        skbee log  "WorldCreator Test: ABOUT TO UNLOAD TEST_WORLD"
+        unload world {_w} and don't save
+        delete world file for "test_world"
+        skbee log  "WorldCreator Test: TEST_WORLD UNLOADED_DELETED"
 
-    assert world "test_world" is not loaded with "the world should not be loaded"
-    assert world file "test_world" doesn't exist with "The file should be deleted"
+        assert world "test_world" is not loaded with "the world should not be loaded"
+        assert world file "test_world" doesn't exist with "The file should be deleted"
