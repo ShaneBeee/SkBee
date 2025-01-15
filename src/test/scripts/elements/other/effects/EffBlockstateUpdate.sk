@@ -1,0 +1,10 @@
+test "SkBee - EffBlockstateUpdate":
+	set {_l} to location(1,1,1)
+	set block at {_l} to stone
+
+	assert type of block at {_l} = stone with "Block should be stone before we start"
+	set {_state} to blockstate of block at {_l}
+	set block at {_l} to dirt
+	assert type of block at {_l} = dirt with "Block should now be dirt"
+	force update {_state} without physics updates
+	assert type of block at {_l} = stone with "Block should have been updated back to stone"

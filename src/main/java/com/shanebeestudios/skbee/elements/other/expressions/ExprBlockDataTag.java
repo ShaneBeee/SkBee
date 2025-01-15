@@ -9,9 +9,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.util.BlockDataUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -25,22 +25,22 @@ import java.util.List;
 @Name("BlockData - Tag")
 @Description("Get/set a block data tag of BlockData or a Block.")
 @Examples({"set {_water} to block data tag \"waterlogged\" of event-block",
-        "set block data tag \"waterlogged\" of {_blockData} to true",
-        "set block data tag \"waterlogged\" of event-block to true",
-        "set blockdata tag \"waterlogged\" of event-block without updates to true"})
+    "set block data tag \"waterlogged\" of {_blockData} to true",
+    "set block data tag \"waterlogged\" of event-block to true",
+    "set blockdata tag \"waterlogged\" of event-block without updates to true"})
 @Since("1.0.0, 2.16.1 (Variable Support)")
 public class ExprBlockDataTag extends SimpleExpression<Object> {
 
     static {
         Skript.registerExpression(ExprBlockDataTag.class, Object.class, ExpressionType.COMBINED,
-                "block[ ](data|state) tag %string% of %blocks/blockdatas% [1:without updates]");
+            "block[ ](data|state) tag %string% of %blocks/blockdatas% [1:without updates]");
     }
 
     private Expression<String> tag;
     private Expression<?> object;
     private boolean applyPhysics;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.tag = (Expression<String>) exprs[0];
@@ -49,7 +49,6 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Object @Nullable [] get(Event event) {
         String tagString = this.tag.getSingle(event);
@@ -70,14 +69,12 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
         return list.toArray(new Object[0]);
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(Object.class);
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         boolean update = true;
@@ -85,12 +82,21 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
         List<BlockData> blockDataList = new ArrayList<>();
 
         for (Object object : this.object.getArray(event)) {
-            if (object instanceof BlockData oldblockData) {
-                BlockData newBlockData = BlockDataUtils.setBlockDataTag(oldblockData, tag, delta[0]);
+            if (object instanceof BlockData oldBlockData) {
+                BlockData newBlockData = BlockDataUtils.setBlockDataTag(oldBlockData, tag, delta[0]);
+                if (newBlockData == null) {
+                    tagError("Invalid tag \"" + tag + "\" for this blockdata: " + oldBlockData.getAsString());
+                    continue;
+                }
                 blockDataList.add(newBlockData);
             } else if (object instanceof Block block) {
                 update = false;
-                BlockData newBlockData = BlockDataUtils.setBlockDataTag(block.getBlockData(), tag, delta[0]);
+                BlockData oldBlockData = block.getBlockData();
+                BlockData newBlockData = BlockDataUtils.setBlockDataTag(oldBlockData, tag, delta[0]);
+                if (newBlockData == null) {
+                    tagError("Invalid tag \"" + tag + "\" for this block: " + oldBlockData.getAsString());
+                    continue;
+                }
                 block.setBlockData(newBlockData, this.applyPhysics);
             }
         }
@@ -110,11 +116,14 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
         return Object.class;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String updates = !this.applyPhysics ? " without updates" : "";
         return "block data tag " + this.tag.toString(e, d) + " of " + this.object.toString(e, d) + updates;
+    }
+
+    private void tagError(String message) {
+        errorRegex(message, "tag \\\"\\w+\\\"");
     }
 
 }

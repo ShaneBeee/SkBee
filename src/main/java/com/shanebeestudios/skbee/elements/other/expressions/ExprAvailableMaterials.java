@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -165,6 +166,11 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
     @Override
     protected @Nullable Object[] get(Event event) {
         return this.registration.getObjects();
+    }
+
+    @Override
+    public @Nullable Iterator<?> iterator(Event event) {
+        return this.registration.objects.iterator();
     }
 
     @Override

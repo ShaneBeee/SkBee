@@ -8,9 +8,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.HeightMap;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
@@ -30,18 +30,20 @@ public class ExprChunkDataHighestY extends SimpleExpression<Number> {
 
     private Expression<Vector> vector;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.vector = (Expression<Vector>) exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Number @Nullable [] get(Event event) {
         Vector vector = this.vector.getSingle(event);
-        if (vector == null) return null;
+        if (vector == null) {
+            error("Invalid vector: " + this.vector.toString(event,true));
+            return null;
+        }
         if (event instanceof BlockPopulateEvent popEvent) {
             int x = (popEvent.getChunkX() << 4) + vector.getBlockX();
             int z = (popEvent.getChunkZ() << 4) + vector.getBlockZ();

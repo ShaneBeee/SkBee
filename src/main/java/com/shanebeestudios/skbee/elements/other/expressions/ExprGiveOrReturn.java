@@ -25,9 +25,9 @@ import java.util.List;
 
 @Name("Give or Return Items")
 @Description({"Attempts to add items to an inventory and will return a list of items that did not fit in the inventory."})
-@Examples({"set {_i} to give or return diamond to player",
-    "if {_i} is set:",
-    "\tdrop {_i} at player",
+@Examples({"set {_i::*} to give or return diamond to player",
+    "if {_i::*} is set:",
+    "\tdrop {_i::*} at player",
     "",
     "set {_i::*} to add or return (a diamond and an emerald) to inventory of target block",
     "if {_i::*} is set:",
@@ -43,7 +43,7 @@ public class ExprGiveOrReturn extends SimpleExpression<ItemType> {
     private Expression<ItemType> itemTypes;
     private Expression<Inventory> inventories;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.itemTypes = (Expression<ItemType>) exprs[0];
@@ -51,7 +51,6 @@ public class ExprGiveOrReturn extends SimpleExpression<ItemType> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable ItemType[] get(Event event) {
         List<ItemStack> itemStacks = ItemUtils.addItemTypesToList(Arrays.asList(this.itemTypes.getArray(event)), null);
@@ -69,7 +68,7 @@ public class ExprGiveOrReturn extends SimpleExpression<ItemType> {
 
     @Override
     public boolean isSingle() {
-        return this.itemTypes.isSingle() && this.inventories.isSingle();
+        return false;
     }
 
     @Override

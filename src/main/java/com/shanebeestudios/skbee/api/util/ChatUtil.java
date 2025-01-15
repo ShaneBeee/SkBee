@@ -10,6 +10,7 @@ import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.translation.Translatable;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
@@ -67,6 +68,7 @@ public enum ChatUtil {
         return SkriptColor.fromBukkitColor(org.bukkit.Color.fromRGB(intValue));
     }
 
+    @SuppressWarnings("removal")
     public static @Nullable String getTranslation(Object object) {
         if (object instanceof Entity entity) {
             EntityType type = entity.getType();
@@ -78,6 +80,8 @@ public enum ChatUtil {
             return itemStack.getType().translationKey();
         } else if (object instanceof ItemType itemType) {
             return itemType.getMaterial().translationKey();
+        } else if (object instanceof BlockData blockData) {
+            return blockData.getMaterial().translationKey();
         } else if (object instanceof Slot slot) {
             if (slot.getItem() == null) return null;
             return slot.getItem().translationKey();
@@ -85,6 +89,8 @@ public enum ChatUtil {
             return string;
         } else if (object instanceof Translatable translatable) {
             return translatable.translationKey();
+        } else if (object instanceof org.bukkit.Translatable translatable) {
+            return translatable.getTranslationKey();
         }
         return null;
     }

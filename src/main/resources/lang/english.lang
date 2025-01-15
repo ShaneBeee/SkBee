@@ -6,6 +6,7 @@ types:
     armortrim: armor trim¦s
     attributemodifier: attribute modifier¦s
     attributeoperation: attribute operation¦s
+    audience: audience¦s
     blockaction: block action¦s
     blockface: blockface¦s
     blockstate: blockstate¦s
@@ -17,9 +18,11 @@ types:
     bukkitcolor: bukkit col(or|our)¦s
     bukkittreetype: bukkit tree type¦s
     chunkloadlevel: chunk load level¦s
+    consumeeffect: consume effect¦s
     criteria: criteria¦s
     damagesource: damage source¦s
     damagetype: damage type¦s
+    datacomponenttype: data component type¦s
     displaybillboard: display billboard¦s
     displaybrightness: display brightness¦es
     displayslot: display slot¦s
@@ -33,8 +36,10 @@ types:
     fishingstate: fishing state¦s
     fishhookstate: fish hook state¦s
     gameevent: game event¦s
+    instrument: instrument¦s
     itemdisplaytransform: item display transform¦s
     itemflag: item flag¦s
+    jukeboxsong: jukebox song¦s
     loottable: loot table¦s
     machine: machine¦s
     machineproperty: machine propert¦y¦ies
@@ -53,12 +58,14 @@ types:
     playerspawnchangereason: player spawn change reason¦s
     pose: pose¦s
     potioneffectcause: potion effect cause¦s
+    potiontype: potion type¦s
     profession: profession¦s
     quaternion: quaternion¦s
     quitreason: quit reason¦s
     raytraceresult: raytraceresult¦s
     recipechoice: recipe choice¦s
     recipetype: recipe type¦s
+    registrykey: registry key¦s
     rendertype: render type¦s
     respawnreason: respawn reason¦s
     spell: spell¦s
@@ -67,6 +74,7 @@ types:
     structure: structure¦s
     structurerotation: structure rotation¦s
     tagresolver: tag resolver¦s
+    tagkey: tag key¦s
     team: team¦s
     teamoption: team options¦s
     teamoptionstatus: team option status¦es
@@ -77,6 +85,7 @@ types:
     transformreason: transform reason¦s
     trimmaterial: trim material¦s
     trimpattern: trim pattern¦s
+    typedkey: typed key¦s
     vibration: vibration¦s @-
     villagertype: villager type¦s
     worldborder: world border¦s

@@ -128,6 +128,7 @@ public class StructureWrapper {
     public void delete() {
         try {
             STRUCTURE_MANAGER.deleteStructure(key, true);
+            STRUCTURE_MANAGER.unregisterStructure(key);
         } catch (IOException e) {
             Util.skriptError("Could not delete structure '%s', enable debug in SkBee config for more info.", getName());
             if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
@@ -261,12 +262,14 @@ public class StructureWrapper {
     }
 
     /**
-     * Get the size of this structure represented as a {@link BlockVector vector}
+     * Get the size of this structure represented as a {@link Vector}
      *
      * @return Size of structure
      */
-    public BlockVector getSize() {
-        return this.structure.getSize();
+    public Vector getSize() {
+        // Return a vector so users can compare with a vector
+        BlockVector size = this.structure.getSize();
+        return new Vector(size.getX(), size.getY(), size.getZ());
     }
 
     /**

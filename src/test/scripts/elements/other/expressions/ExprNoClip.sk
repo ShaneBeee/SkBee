@@ -1,0 +1,10 @@
+test "SkBee - ExprNoClip test":
+	spawn a sheep at location(0,100,0)
+	set {_e} to last spawned entity
+
+	assert no clip state of {_e} = false with "NoClip state of entity should be false"
+
+	set no clip state of {_e} to true
+
+	assert no clip state of {_e} = true with "NoClip state of entity should be true"
+	delete entity within {_e}

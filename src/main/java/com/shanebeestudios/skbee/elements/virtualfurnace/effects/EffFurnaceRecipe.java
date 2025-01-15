@@ -89,6 +89,14 @@ public class EffFurnaceRecipe extends Effect {
 
     @Override
     public String toString(@Nullable Event e, boolean d) {
+        if (this.vanilla) {
+            String type = switch (this.type) {
+                case 1 -> "smoker";
+                case 2 -> "blast furnace";
+                default -> "furnace";
+            };
+            return "register all virtual " + type + " recipes";
+        }
         return "register new virtual furnace recipe using " + this.ingredient.toString(e, d) + " with result "
                 + this.result.toString(e, d) + (this.cookTime != null ? " with cook time " + this.cookTime.toString(e, d) : "");
     }

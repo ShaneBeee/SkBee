@@ -33,7 +33,7 @@ public class SkBeeInfo implements TabExecutor {
             sendColMsg(sender, "&7--- [&bSkBee Loading Info&7] ---");
             Util.getDebugs().forEach(debug -> sendColMsg(sender, "- &7" + debug));
             sendColMsg(sender, "&7--- [&bServer Info&7] ---");
-            sendColMsg(sender, "&7Server Version: &b" + Bukkit.getVersion());
+            sendColMsg(sender, "&7Server Version: &b" + Bukkit.getName() + " " + Bukkit.getVersion());
             sendColMsg(sender, "&7Skript Version: &b" + Skript.getVersion());
             sendColMsg(sender, "&7Skript Addons:");
             Skript.getAddons().forEach(addon -> {

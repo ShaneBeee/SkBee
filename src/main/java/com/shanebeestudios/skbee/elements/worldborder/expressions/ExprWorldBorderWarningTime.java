@@ -26,7 +26,7 @@ public class ExprWorldBorderWarningTime extends SimplePropertyExpression<WorldBo
 
     @Override
     public @Nullable Timespan convert(WorldBorder worldBorder) {
-        return new Timespan(Timespan.TimePeriod.TICK, worldBorder.getWarningTime());
+        return new Timespan(Timespan.TimePeriod.SECOND, worldBorder.getWarningTime());
     }
 
     @Override

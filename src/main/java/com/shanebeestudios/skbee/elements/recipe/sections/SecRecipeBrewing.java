@@ -7,12 +7,12 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.skript.base.Section;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Bukkit;
@@ -25,44 +25,45 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
 
 @Name("Recipe - Register Brewing Recipe")
 @Description({"This section allows you to register a brewing recipe, define the ingredient and input. Requires a PaperMC server.",
-        "\n`id` = The ID of this recipe.",
-        "\n`result` = The resulting output ItemStack of this recipe (What the 3 bottle slots turn into).",
-        "\n`ingredient` = Represents the ItemStack put in the top of the brewer (Accepts an ItemStack or RecipeChoice).",
-        "\n`input` = Represents the ItemStack put in the 3 bottle slots (Accepts an ItemStack or RecipeChoice)."})
+    "\n`id` = The ID of this recipe.",
+    "\n`result` = The resulting output ItemStack of this recipe (What the 3 bottle slots turn into).",
+    "\n`ingredient` = Represents the ItemStack put in the top of the brewer (Accepts an ItemStack or RecipeChoice).",
+    "\n`input` = Represents the ItemStack put in the 3 bottle slots (Accepts an ItemStack or RecipeChoice)."})
 @Examples({"on load:",
-        "\tregister brewing recipe:",
-        "\t\tid: \"custom:brew_glow_diamond\"",
-        "\t\tresult: diamond of unbreaking with all item flags",
-        "\t\tingredient: glowstone dust",
-        "\t\tinput: potato",
-        "\t\t",
-        "\tregister brewing recipe:",
-        "\t\tid: \"custom:yummy_soup\"",
-        "\t\tresult: mushroom stew named \"&bYummy Soup\"",
-        "\t\tingredient: glowstone dust",
-        "\t\tinput: water bottle"})
+    "\tregister brewing recipe:",
+    "\t\tid: \"custom:brew_glow_diamond\"",
+    "\t\tresult: diamond of unbreaking with all item flags",
+    "\t\tingredient: glowstone dust",
+    "\t\tinput: potato",
+    "\t\t",
+    "\tregister brewing recipe:",
+    "\t\tid: \"custom:yummy_soup\"",
+    "\t\tresult: mushroom stew named \"&bYummy Soup\"",
+    "\t\tingredient: glowstone dust",
+    "\t\tinput: water bottle"})
 @Since("3.0.0")
 public class SecRecipeBrewing extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
+    private static EntryValidator VALIDATOR;
     private static PotionBrewer POTION_BREWER = null;
 
     static {
         if (Skript.classExists("io.papermc.paper.potion.PotionMix")) {
-            Skript.registerSection(SecRecipeBrewing.class,
-                    "register [a] [new] (brewing recipe|potion mix)");
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("ingredient", null, false, RecipeChoice.class));
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, RecipeChoice.class));
+            SimpleEntryValidator builder = SimpleEntryValidator.builder();
+            builder.addRequiredEntry("id", String.class);
+            builder.addRequiredEntry("result", ItemStack.class);
+            builder.addRequiredEntry("ingredient", RecipeChoice.class);
+            builder.addRequiredEntry("input", RecipeChoice.class);
             POTION_BREWER = Bukkit.getPotionBrewer();
+            VALIDATOR = builder.build();
+
+            Skript.registerSection(SecRecipeBrewing.class,
+                "register [a] [new] (brewing recipe|potion mix)");
         }
     }
 
@@ -71,10 +72,10 @@ public class SecRecipeBrewing extends Section {
     private Expression<RecipeChoice> ingredient;
     private Expression<RecipeChoice> input;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.id = (Expression<String>) container.getOptional("id", false);
@@ -88,7 +89,6 @@ public class SecRecipeBrewing extends Section {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         execute(event);
@@ -98,7 +98,7 @@ public class SecRecipeBrewing extends Section {
     private void execute(Event event) {
         String recipeId = this.id.getSingle(event);
         if (recipeId == null) {
-            RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
+            error("Missing id");
             return;
         }
         NamespacedKey namespacedKey = Util.getNamespacedKey(recipeId, false);
@@ -107,16 +107,16 @@ public class SecRecipeBrewing extends Section {
         RecipeChoice ingredient = this.ingredient.getSingle(event);
 
         if (namespacedKey == null) {
-            RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
+            error("Invalid id: " + recipeId);
             return;
         } else if (result == null || !result.getType().isItem() || result.getType().isAir()) {
-            RecipeUtil.error("Invalid/Missing recipe result: &e" + this.toString(event, DEBUG));
+            error("Inavlid result: " + result);
             return;
         } else if (input == null) {
-            RecipeUtil.error("Invalid/Missing recipe input: &e" + this.toString(event, DEBUG));
+            error("Invalid input: " + input);
             return;
         } else if (ingredient == null) {
-            RecipeUtil.error("Invalid/Missing recipe ingredient: &e" + this.toString(event, DEBUG));
+            error("Invalid ingredient: " + ingredient);
             return;
         }
 
@@ -124,7 +124,7 @@ public class SecRecipeBrewing extends Section {
         POTION_BREWER.removePotionMix(namespacedKey);
         PotionMix potionMix = new PotionMix(namespacedKey, result, input, ingredient);
         POTION_BREWER.addPotionMix(potionMix);
-        if (DEBUG) RecipeUtil.logBrewingRecipe(potionMix);
+        RecipeUtil.logBrewingRecipe(potionMix);
     }
 
     @Override

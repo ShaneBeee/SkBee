@@ -1,7 +1,5 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -9,54 +7,58 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.ItemUtils;
+import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("UnstableApiUsage")
 @Name("ItemComponent - Enchantment Glint Override")
 @Description({"Represents the enchantment glint override of an item (Requires Minecraft 1.20.5+).",
-    "Overrides the enchantment glint effect on an item. When `true`, the item will display a glint, even without enchantments.",
+    "Overrides the enchantment glint effect on an item.",
+    "When `true`, the item will display a glint, even without enchantments.",
     "When `false`, the item will not display a glint, even with enchantments.",
     "**Note**: If no override is applied, will return null.",
+    "See [**EnchantmentGlintOverride**](https://minecraft.wiki/w/Data_component_format#enchantment_glint_override) on McWiki for more details.",
+    "Requires Paper 1.21.3+",
+    "",
     "**Changers**:",
     "- `set` = Allows you to override the glint.",
-    "- `reset` = Reset back to default state."})
+    "- `reset` = Reset back to default state.",
+    "- `delete` = Will delete any value (vanilla or not)."})
 @Examples({"set glint override of player's tool to true",
     "set glint override of player's tool to false"})
 @Since("3.6.0")
-public class ExprEnchantmentGlintOverride extends SimplePropertyExpression<ItemType, Boolean> {
+public class ExprEnchantmentGlintOverride extends SimplePropertyExpression<Object, Boolean> {
 
     static {
-        if (Skript.methodExists(ItemMeta.class, "getEnchantmentGlintOverride")) {
-            register(ExprEnchantmentGlintOverride.class, Boolean.class, "[enchantment] glint [override]", "itemtypes");
+        register(ExprEnchantmentGlintOverride.class, Boolean.class,
+            "[enchantment] glint [override]", "itemstacks/itemtypes/slots");
+    }
+
+    @Override
+    public @Nullable Boolean convert(Object object) {
+        ItemStack itemStack = ItemUtils.getItemStackFromObjects(object);
+        if (itemStack != null && itemStack.hasData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE)) {
+            return itemStack.getData(DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE);
         }
-    }
-
-    @Override
-    public @Nullable Boolean convert(ItemType itemType) {
-        ItemMeta itemMeta = itemType.getItemMeta();
-        if (!itemMeta.hasEnchantmentGlintOverride()) return null;
-        return itemMeta.getEnchantmentGlintOverride();
-    }
-
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(Boolean.class);
-        else if (mode == ChangeMode.RESET) return CollectionUtils.array();
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
+    @Override
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
+        if (mode == ChangeMode.SET) return CollectionUtils.array(Boolean.class);
+        else if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE) return CollectionUtils.array();
+        return null;
+    }
+
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Boolean glint = delta != null && delta[0] instanceof Boolean bool ? bool : null;
-        for (ItemType itemType : getExpr().getArray(event)) {
-            ItemMeta itemMeta = itemType.getItemMeta();
-            itemMeta.setEnchantmentGlintOverride(glint);
-            itemType.setItemMeta(itemMeta);
-        }
+
+        ItemUtils.modifyComponent(getExpr().getArray(event),  mode, DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, glint);
     }
 
     @Override

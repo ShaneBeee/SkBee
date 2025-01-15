@@ -7,8 +7,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -20,7 +20,7 @@ import java.util.Locale;
 @Name("NBT - Tags")
 @Description("Get all tags of an NBT compound.")
 @Examples({"set {_t::*} to nbt tags of {_n}",
-        "set {_t::*} to nbt tags of nbt compound of player"})
+    "set {_t::*} to nbt tags of nbt compound of player"})
 @Since("1.14.2")
 public class ExprTagsOfNBT extends SimpleExpression<String> {
 
@@ -30,21 +30,21 @@ public class ExprTagsOfNBT extends SimpleExpression<String> {
 
     private Expression<NBTCompound> compound;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        compound = (Expression<NBTCompound>) exprs[0];
+        this.compound = (Expression<NBTCompound>) exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
-    @Nullable
     @Override
     protected String[] get(Event event) {
         NBTCompound compound = this.compound.getSingle(event);
         if (compound != null) {
             return compound.getKeys().stream().sorted(Comparator.comparing(
-                    key -> key.toLowerCase(Locale.ROOT))).toArray(String[]::new);
+                key -> key.toLowerCase(Locale.ROOT))).toArray(String[]::new);
+        } else {
+            error("Nbt compound not found");
         }
         return null;
     }

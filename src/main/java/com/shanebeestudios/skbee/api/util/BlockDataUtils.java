@@ -1,8 +1,11 @@
 package com.shanebeestudios.skbee.api.util;
 
+import ch.njol.skript.Skript;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
+import org.bukkit.Registry;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.inventory.ItemType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -10,6 +13,8 @@ import java.util.List;
 import java.util.Locale;
 
 public class BlockDataUtils {
+
+    private static final boolean HAS_ITEMTYPE = Skript.classExists("org.bukkit.inventory.ItemType");
 
     /**
      * Get an array of BlockData keys/values
@@ -49,10 +54,16 @@ public class BlockDataUtils {
      * <p>Some Items (such as POTATO) have a different block form (POTATOES)</p>
      *
      * @param material Material to convert to Block form
-     * @return Block form of Material
+     * @return Block form of Material, null if not available
      */
-    public static Material getBlockForm(Material material) {
+    @SuppressWarnings("deprecation")
+    public static @Nullable Material getBlockForm(Material material) {
         if (material.isBlock()) return material;
+        if (HAS_ITEMTYPE) {
+            ItemType itemType = Registry.ITEM.get(material.getKey());
+            if (itemType != null && itemType.hasBlockType()) return itemType.getBlockType().asMaterial();
+            return null;
+        }
         return switch (material) {
             case WHEAT_SEEDS -> Material.WHEAT;
             case POTATO -> Material.POTATOES;
@@ -102,7 +113,7 @@ public class BlockDataUtils {
      * @param value        New value of tag
      * @return Updated BlockData with new value
      */
-    public static BlockData setBlockDataTag(BlockData oldBlockData, String tag, Object value) {
+    public static @Nullable BlockData setBlockDataTag(BlockData oldBlockData, String tag, Object value) {
         if (oldBlockData.getAsString().contains("[")) {
             String newData = oldBlockData.getMaterial().getKey() + "[" + tag.toLowerCase(Locale.ROOT) + "=" + value + "]";
             try {
@@ -112,7 +123,7 @@ public class BlockDataUtils {
                 Util.debug("Could not parse block data: %s", newData);
             }
         }
-        return oldBlockData;
+       return null;
     }
 
 }

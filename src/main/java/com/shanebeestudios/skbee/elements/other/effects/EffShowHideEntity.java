@@ -5,11 +5,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -19,10 +19,10 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Show/Hide Entities")
 @Description({"Show/hide entities to/from players. Requires Minecraft 1.18+",
-        "\nNOTE: This is not persistent across server restarts and/or chunk unloading!"})
+    "NOTE: This is not persistent across server restarts and/or chunk unloading!"})
 @Examples({"make all entities disappear from player",
-        "make all mobs appear to all players",
-        "make target entity of player disappear from all players"})
+    "make all mobs appear to all players",
+    "make target entity of player disappear from all players"})
 @Since("2.10.0")
 public class EffShowHideEntity extends Effect {
 
@@ -31,7 +31,7 @@ public class EffShowHideEntity extends Effect {
     static {
         if (Skript.methodExists(Player.class, "showEntity", Plugin.class, Entity.class)) {
             Skript.registerEffect(EffShowHideEntity.class,
-                    "make %entities% (1:appear|disappear) (for|to|from) %players%");
+                "make %entities% (1:appear|disappear) (for|to|from) %players%");
         }
     }
 
@@ -39,7 +39,7 @@ public class EffShowHideEntity extends Effect {
     private Expression<Player> players;
     private boolean appear;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.entities = (Expression<Entity>) exprs[0];
@@ -48,11 +48,20 @@ public class EffShowHideEntity extends Effect {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "UnstableApiUsage"})
     @Override
     protected void execute(Event event) {
-        for (Player player : this.players.getArray(event)) {
-            for (Entity entity : this.entities.getArray(event)) {
+        Entity[] entities = this.entities.getArray(event);
+        Player[] players = this.players.getArray(event);
+        if (entities.length == 0) {
+            error("No entities found: " + this.entities.toString(event, true));
+            return;
+        }
+        if (players.length == 0) {
+            error("No players found: " + this.players.toString(event, true));
+            return;
+        }
+        for (Player player : players) {
+            for (Entity entity : entities) {
                 if (this.appear) {
                     player.showEntity(PLUGIN, entity);
                 } else {
@@ -65,7 +74,7 @@ public class EffShowHideEntity extends Effect {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String appear = this.appear ? " appear" : " disappear";
-        return "make " + this.entities.toString(e,d) + appear + " for " + this.players.toString(e,d);
+        return "make " + this.entities.toString(e, d) + appear + " for " + this.players.toString(e, d);
     }
 
 }

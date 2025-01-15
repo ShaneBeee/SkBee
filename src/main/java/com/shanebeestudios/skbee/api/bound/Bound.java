@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.api.bound;
 
 import com.google.common.base.Preconditions;
-import com.shanebeestudios.skbee.api.util.WorldUtils;
 import com.shanebeestudios.skbee.api.wrapper.LazyLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -33,46 +32,21 @@ public class Bound implements ConfigurationSerializable {
     private final String world;
     private String id;
     private final boolean temporary;
+    private boolean full;
     private List<UUID> owners = new ArrayList<>();
     private List<UUID> members = new ArrayList<>();
     private Map<String, Object> values = new HashMap<>();
     private BoundingBox boundingBox;
+    private BoundingBox fullBoundBoxCache;
 
     /**
-     * Create a new global bound in a {@link World} with ID using a {@link BoundingBox}
-     *
-     * @param world       World this bound is in
-     * @param id          ID of this bound
-     * @param boundingBox BoundingBox of this bound
-     */
-    public Bound(String world, String id, BoundingBox boundingBox) {
-        this(world, id, boundingBox, false);
-    }
-
-    /**
-     * Create a new bound in a {@link World} with ID using a {@link BoundingBox}
-     *
-     * @param world       World this bound is in
-     * @param id          ID of this bound
-     * @param boundingBox BoundingBox of this bound
-     * @param temporary   Whether this bound is temporary
+     * @hidden only used to deserialize
      */
     public Bound(String world, String id, BoundingBox boundingBox, boolean temporary) {
         this.world = world;
         this.id = id;
         this.boundingBox = boundingBox;
         this.temporary = temporary;
-    }
-
-    /**
-     * Create a new global bound between 2 locations (must be in same world)
-     *
-     * @param location  Location 1
-     * @param location2 Location 2
-     * @param id        ID of this bound
-     */
-    public Bound(Location location, Location location2, String id) {
-        this(location, location2, id, false);
     }
 
     /**
@@ -83,13 +57,17 @@ public class Bound implements ConfigurationSerializable {
      * @param id        ID of this bound
      * @param temporary Whether this bound is temporary
      */
-    public Bound(Location location, Location location2, String id, boolean temporary) {
+    public Bound(Location location, Location location2, String id, boolean temporary, boolean usingBlocks) {
         Preconditions.checkArgument(location.getWorld() == location2.getWorld(), "Worlds have to match");
         this.world = location.getWorld().getName();
         this.id = id;
-        Block block1 = location.getBlock();
-        Block block2 = location2.getBlock();
-        this.boundingBox = BoundingBox.of(block1, block2);
+        if (usingBlocks) {
+            Block block1 = location.getBlock();
+            Block block2 = location2.getBlock();
+            this.boundingBox = BoundingBox.of(block1, block2);
+        } else {
+            this.boundingBox = BoundingBox.of(location, location2);
+        }
         this.temporary = temporary;
     }
 
@@ -102,7 +80,7 @@ public class Bound implements ConfigurationSerializable {
     public boolean isInRegion(@NotNull Location loc) {
         World w = loc.getWorld();
         if (w != null && w.getName().equals(world)) {
-            return this.boundingBox.contains(loc.toVector());
+            return getCachedBoundingBox().contains(loc.toVector());
         }
         return false;
     }
@@ -115,7 +93,7 @@ public class Bound implements ConfigurationSerializable {
      */
     public boolean overlaps(Bound bound) {
         if (bound.world.equals(world)) {
-            return boundingBox.overlaps(bound.boundingBox);
+            return getCachedBoundingBox().overlaps(bound.getCachedBoundingBox());
         }
         return false;
     }
@@ -129,7 +107,7 @@ public class Bound implements ConfigurationSerializable {
      */
     public boolean overlaps(Location l1, Location l2) {
         if (l1.getWorld() != null && l1.getWorld() == l2.getWorld()) {
-            return boundingBox.overlaps(l1.toVector(), l2.toVector());
+            return getCachedBoundingBox().overlaps(l1.toVector(), l2.toVector());
         }
         return false;
     }
@@ -141,12 +119,16 @@ public class Bound implements ConfigurationSerializable {
      * @param type Type of entity to get
      * @return List of loaded entities in bound
      */
-    public @Nullable List<Entity> getEntities(Class<? extends Entity> type) {
+    public List<Entity> getEntities(Class<? extends Entity> type) {
+        List<Entity> entities = new ArrayList<>();
         World world = getWorld();
-        if (world == null) return null;
-        Collection<Entity> nearbyEntities = world.getNearbyEntities(this.boundingBox, entity ->
-            type.isAssignableFrom(entity.getClass()));
-        return new ArrayList<>(nearbyEntities);
+        if (world != null) {
+            BoundingBox box = getCachedBoundingBox();
+            Collection<Entity> nearbyEntities = world.getNearbyEntities(box, entity ->
+                type.isAssignableFrom(entity.getClass()));
+            entities.addAll(nearbyEntities);
+        }
+        return entities;
     }
 
     /**
@@ -154,25 +136,22 @@ public class Bound implements ConfigurationSerializable {
      *
      * @return List of blocks within bound
      */
-    public @Nullable List<Block> getBlocks() {
+    public @NotNull List<Block> getBlocks() {
+        List<Block> blocks = new ArrayList<>();
         World w = getWorld();
-        if (w == null) return null;
-        List<Block> array = new ArrayList<>();
-        int minX = (int) boundingBox.getMinX();
-        int minY = (int) boundingBox.getMinY();
-        int minZ = (int) boundingBox.getMinZ();
-        int maxX = (int) boundingBox.getMaxX();
-        int maxY = (int) boundingBox.getMaxY();
-        int maxZ = (int) boundingBox.getMaxZ();
-        for (int x = minX; x < maxX; x++) {
-            for (int y = minY; y < maxY; y++) {
-                for (int z = minZ; z < maxZ; z++) {
-                    Block b = w.getBlockAt(x, y, z);
-                    array.add(b);
+        if (w == null) return blocks;
+
+        Location min = getLesserCorner();
+        Location max = getGreaterCorner();
+
+        for (int x = min.getBlockX(); x < max.getBlockX(); x++) {
+            for (int y = min.getBlockY(); y < max.getBlockY(); y++) {
+                for (int z = min.getBlockZ(); z < max.getBlockZ(); z++) {
+                    blocks.add(w.getBlockAt(x, y, z));
                 }
             }
         }
-        return array;
+        return blocks;
     }
 
     /**
@@ -180,6 +159,7 @@ public class Bound implements ConfigurationSerializable {
      *
      * @return World of this bound
      */
+    @Nullable
     public World getWorld() {
         return Bukkit.getWorld(this.world);
     }
@@ -194,7 +174,7 @@ public class Bound implements ConfigurationSerializable {
      * @return Location of greater corner
      */
     public Location getGreaterCorner() {
-        Vector max = this.boundingBox.getMax();
+        Vector max = getCachedBoundingBox().getMax();
         return new Location(getWorld(), max.getX(), max.getY(), max.getZ());
     }
 
@@ -204,7 +184,7 @@ public class Bound implements ConfigurationSerializable {
      * @return Location of lesser corner
      */
     public Location getLesserCorner() {
-        Vector min = this.boundingBox.getMin();
+        Vector min = getCachedBoundingBox().getMin();
         return new Location(getWorld(), min.getX(), min.getY(), min.getZ());
     }
 
@@ -214,134 +194,40 @@ public class Bound implements ConfigurationSerializable {
      * @return The center location
      */
     public Location getCenter() {
-        Vector center = this.boundingBox.getCenter();
+        Vector center = getCachedBoundingBox().getCenter();
         return new Location(getWorld(), center.getX(), center.getY(), center.getZ());
     }
 
-    public int getLesserX() {
-        return ((int) boundingBox.getMinX());
-    }
-
-    public void setLesserX(int x) {
-        Vector min = this.boundingBox.getMin();
-        min.setX(x);
-        resize(min, this.boundingBox.getMax());
-    }
-
-    public int getLesserY() {
-        return ((int) boundingBox.getMinY());
-    }
-
-    public void setLesserY(int y) {
-        Vector min = this.boundingBox.getMin();
-        min.setY(y);
-        resize(min, this.boundingBox.getMax());
-    }
-
-    public int getLesserZ() {
-        return ((int) boundingBox.getMinZ());
-    }
-
-    public void setLesserZ(int z) {
-        Vector min = this.boundingBox.getMin();
-        min.setZ(z);
-        resize(min, this.boundingBox.getMax());
-    }
-
-    public int getGreaterX() {
-        return ((int) boundingBox.getMaxX());
-    }
-
-    public void setGreaterX(int x2) {
-        Vector max = this.boundingBox.getMax();
-        max.setX(x2);
-        resize(this.boundingBox.getMin(), max);
-    }
-
-    public int getGreaterY() {
-        return ((int) boundingBox.getMaxY());
-    }
-
-    public void setGreaterY(int y2) {
-        Vector max = this.boundingBox.getMax();
-        max.setY(y2);
-        resize(this.boundingBox.getMin(), max);
-    }
-
-    public int getGreaterZ() {
-        return ((int) boundingBox.getMaxZ());
-    }
-
-    public void setGreaterZ(int z2) {
-        Vector max = this.boundingBox.getMax();
-        max.setZ(z2);
-        resize(this.boundingBox.getMin(), max);
-    }
-
-    public void resize(Vector v1, Vector v2) {
-        this.boundingBox = this.boundingBox.resize(v1.getX(), v1.getY(), v1.getZ(), v2.getX(), v2.getY(), v2.getZ());
-    }
-
     public void resize(Location loc1, Location loc2) {
+        resize(loc1, loc2, false);
+    }
+
+    public void resize(Location loc1, Location loc2, boolean usingBlocks) {
         Preconditions.checkArgument(loc1.getWorld() == loc2.getWorld(), "Worlds have to match");
         Preconditions.checkArgument(loc1.getWorld().getName().equalsIgnoreCase(this.world), "World cannot be changed!");
-        Block block1 = loc1.getBlock();
-        Block block2 = loc2.getBlock();
-        this.boundingBox = BoundingBox.of(block1, block2);
-    }
-
-    public Bound copy(Bound bound, String id) {
-        Location lesserCorner = bound.getLesserCorner().clone();
-        Location greaterCorner = bound.getGreaterCorner().clone();
-        Bound newBound = new Bound(lesserCorner, greaterCorner, id, bound.isTemporary());
-        newBound.setOwners(bound.getOwners());
-        newBound.setMembers(bound.getMembers());
-        newBound.setBoundingBox(bound.getBoundingBox().clone());
-        newBound.values = bound.values;
-        return newBound;
+        if (usingBlocks) {
+            this.boundingBox = BoundingBox.of(loc1.getBlock(), loc2.getBlock());
+        } else {
+            this.boundingBox = BoundingBox.of(loc1, loc2);
+        }
+        // Reset full bound cache
+        this.fullBoundBoxCache = null;
     }
 
     /**
-     * Make this bound a full bound
-     * <p>Stretch from bottom to top of world</p>
+     * Create a copy of a bound
+     *
+     * @param newId ID of new bound
+     * @return New cloned bound
      */
-    public void makeFull() {
-        World world = getWorld();
-        Vector min = this.boundingBox.getMin().clone();
-        Vector max = this.boundingBox.getMax().clone();
-        min.setY(WorldUtils.getMinHeight(world));
-        max.setY(WorldUtils.getMaxHeight(world));
-        this.boundingBox = BoundingBox.of(min, max);
-    }
-
-    public void change(Axis axis, Corner corner, int amount) {
-        if (axis == Axis.X) {
-            if (corner == Corner.GREATER) {
-                setGreaterX(getGreaterX() + amount);
-            } else {
-                setLesserX(getLesserX() + amount);
-            }
-        } else if (axis == Axis.Y) {
-            if (corner == Corner.GREATER) {
-                setGreaterY(getGreaterY() + amount);
-            } else {
-                setLesserY(getLesserY() + amount);
-            }
-        } else {
-            if (corner == Corner.GREATER) {
-                setGreaterZ(getGreaterZ() + amount);
-            } else {
-                setLesserZ(getLesserZ() + amount);
-            }
-        }
-    }
-
-    public enum Axis {
-        X, Y, Z
-    }
-
-    public enum Corner {
-        GREATER, LESSER
+    public Bound copy(String newId) {
+        Location lesserCorner = this.getLesserCorner().clone();
+        Location greaterCorner = this.getGreaterCorner().clone();
+        Bound newBound = new Bound(this.world, newId, this.boundingBox.clone(), this.temporary);
+        newBound.setOwners(this.getOwners());
+        newBound.setMembers(this.getMembers());
+        newBound.values = this.values;
+        return newBound;
     }
 
     /**
@@ -512,8 +398,17 @@ public class Bound implements ConfigurationSerializable {
         return this.boundingBox;
     }
 
-    public void setBoundingBox(BoundingBox box) {
-        this.boundingBox = box;
+    private BoundingBox getCachedBoundingBox() {
+        if (this.isFull()) {
+            if (this.fullBoundBoxCache != null) return this.fullBoundBoxCache;
+            BoundingBox box = this.boundingBox.clone();
+            World world = getWorld();
+            int minY = world != null ? world.getMinHeight() : 0;
+            int maxY = world != null ? world.getMaxHeight() - 1 : 255;
+            this.fullBoundBoxCache = box.resize(box.getMinX(), minY, box.getMinZ(), box.getMaxX(), maxY, box.getMaxZ());
+            return this.fullBoundBoxCache;
+        }
+        return this.boundingBox;
     }
 
     /**
@@ -523,6 +418,24 @@ public class Bound implements ConfigurationSerializable {
      */
     public boolean isTemporary() {
         return temporary;
+    }
+
+    /**
+     * Check if this bound is full
+     *
+     * @return Whether bound is full
+     */
+    public boolean isFull() {
+        return this.full;
+    }
+
+    /**
+     * Set if this bound is full
+     *
+     * @param full Whether the bound is full
+     */
+    public void setFull(boolean full) {
+        this.full = full;
     }
 
     public String toString() {
@@ -539,9 +452,10 @@ public class Bound implements ConfigurationSerializable {
     public Map<String, Object> serialize() {
         Map<String, Object> result = new LinkedHashMap<>();
 
-        result.put("id", id);
-        result.put("world", world);
-        result.put("boundingbox", boundingBox);
+        result.put("id", this.id);
+        result.put("world", this.world);
+        result.put("boundingbox", this.boundingBox);
+        result.put("full", this.full);
 
         List<String> owners = new ArrayList<>();
         this.owners.forEach(uuid -> owners.add(uuid.toString()));
@@ -549,7 +463,7 @@ public class Bound implements ConfigurationSerializable {
         this.members.forEach(uuid -> members.add(uuid.toString()));
         result.put("owners", owners);
         result.put("members", members);
-        result.put("values", values);
+        result.put("values", this.values);
 
         return result;
     }
@@ -567,7 +481,7 @@ public class Bound implements ConfigurationSerializable {
         Bound bound;
         if (args.containsKey("boundingbox")) {
             BoundingBox box = ((BoundingBox) args.get("boundingbox"));
-            bound = new Bound(world, id, box);
+            bound = new Bound(world, id, box, false);
         } else {
             int x = ((Number) args.get("x1")).intValue();
             int y = ((Number) args.get("y1")).intValue();
@@ -576,7 +490,11 @@ public class Bound implements ConfigurationSerializable {
             int y2 = ((Number) args.get("y2")).intValue();
             int z2 = ((Number) args.get("z2")).intValue();
             BoundingBox box = new BoundingBox(x, y, z, x2, y2, z2);
-            bound = new Bound(world, id, box);
+            bound = new Bound(world, id, box, false);
+        }
+
+        if (args.containsKey("full")) {
+            bound.setFull((Boolean) args.get("full"));
         }
 
         if (args.containsKey("owners")) {

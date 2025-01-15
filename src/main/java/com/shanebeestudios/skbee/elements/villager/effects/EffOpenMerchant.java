@@ -30,7 +30,7 @@ public class EffOpenMerchant extends Effect {
     private Expression<Object> merchant;
     private Expression<Player> player;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         this.merchant = (Expression<Object>) exprs[0];
@@ -38,7 +38,7 @@ public class EffOpenMerchant extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings("deprecation") // openMerchant -> new menu api
     @Override
     protected void execute(Event event) {
         Object object = this.merchant.getSingle(event);

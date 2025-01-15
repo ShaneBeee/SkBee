@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
@@ -33,6 +34,7 @@ public class SkBee extends JavaPlugin {
     static final int[] EARLIEST_VERSION = new int[]{1, 18, 2};
 
     private static SkBee instance;
+    private boolean properlyEnabled = true;
     private Config config;
     BoundConfig boundConfig = null;
     VirtualFurnaceAPI virtualFurnaceAPI;
@@ -60,10 +62,8 @@ public class SkBee extends JavaPlugin {
 
         this.addonLoader = new AddonLoader(this);
         // Check if SkriptAddon can actually load
-        if (!addonLoader.canLoadPlugin()) {
-            pm.disablePlugin(this);
-            return;
-        }
+        this.properlyEnabled = addonLoader.canLoadPlugin();
+
         loadCommands();
         loadMetrics();
 
@@ -78,7 +78,7 @@ public class SkBee extends JavaPlugin {
         Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", version, (float) (System.currentTimeMillis() - start) / 1000);
 
         // Load custom worlds if enabled in config
-        if (this.beeWorldConfig != null) {
+        if (this.properlyEnabled && this.beeWorldConfig != null) {
             this.beeWorldConfig.loadCustomWorlds();
         }
         // Looks like we made it after all
@@ -102,12 +102,15 @@ public class SkBee extends JavaPlugin {
      */
     @Override
     public void onDisable() {
-        // Cancel tasks on stop to prevent async issues
-        SecRunTaskLater.cancelTasks();
+        if (this.properlyEnabled) {
+            // Cancel tasks on stop to prevent async issues
+            SecRunTaskLater.cancelTasks();
+        }
         if (this.virtualFurnaceAPI != null) {
             this.virtualFurnaceAPI.disableAPI();
         }
-        if (this.boundConfig != null) {
+        // Only save bounds if not in test mode
+        if (!TestMode.ENABLED && this.boundConfig != null) {
             this.boundConfig.saveAllBounds();
         }
     }

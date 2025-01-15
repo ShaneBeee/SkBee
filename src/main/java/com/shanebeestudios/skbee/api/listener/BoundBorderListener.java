@@ -233,8 +233,8 @@ public class BoundBorderListener implements Listener {
         // Skip same location and different worlds
         if (to.equals(from)) return false;
         if (ignoreWorldChange && !to.getWorld().equals(from.getWorld())) return false;
-        Collection<Bound> bounds = ignoreWorldChange ? boundConfig.getBoundsIn(from.getWorld()) : boundConfig.getBounds();
-        for (Bound bound : bounds) {
+        //Collection<Bound> bounds = ignoreWorldChange ? boundConfig.getBoundsInRegion(from) : boundConfig.getBounds();
+        for (Bound bound : boundConfig.getBoundsInRegion(from)) {
             // Exit called first, as we'd probably leave one before entering another
             if (!bound.isInRegion(to) && bound.isInRegion(from)) {
                 BoundExitEvent exitEvent = new BoundExitEvent(bound, player);
@@ -243,6 +243,9 @@ public class BoundBorderListener implements Listener {
                     return true;
                 }
             }
+
+        }
+        for (Bound bound : boundConfig.getBoundsInRegion(to)) {
             if (bound.isInRegion(to) && !bound.isInRegion(from)) {
                 BoundEnterEvent enterEvent = new BoundEnterEvent(bound, player);
                 Bukkit.getPluginManager().callEvent(enterEvent);

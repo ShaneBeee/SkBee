@@ -1,0 +1,48 @@
+test "SkBee - ExprAvailableMaterials":
+
+	set {_count} to 0
+	loop all available itemtypes:
+		add 1 to {_count}
+	assert {_count} > 0 with "Available itemtypes should have looped"
+
+	# TODO - Skript bug #7414
+	#set {_count} to 0
+	#loop all available materials:
+	#	add 1 to {_count}
+	#assert {_count} > 0 with "Available materials should have looped"
+
+	# TODO - Skript bug #7414
+	#set {_count} to 0
+	#loop all available blocktypes:
+	#	add 1 to {_count}
+	#assert {_count} > 0 with "Available blocktypes should have looped"
+
+	set {_count} to 0
+	loop all available blockdatas:
+		add 1 to {_count}
+	assert {_count} > 0 with "Available blockdatas should have looped"
+
+	set {_count} to 0
+	loop all available biomes:
+		add 1 to {_count}
+	assert {_count} > 0 with "Available biomes should have looped"
+
+	set {_count} to 0
+	loop all available entity types:
+		add 1 to {_count}
+	assert {_count} > 0 with "Available entity types should have looped"
+
+	set {_count} to 0
+	loop all available gamerules:
+		add 1 to {_count}
+	assert {_count} > 0 with "Available gamerules should have looped"
+
+	set {_count} to 0
+	loop all available potion effect types:
+		add 1 to {_count}
+	assert {_count} > 0 with "Available potion effect types should have looped"
+
+	set {_count} to 0
+	loop all available entity effects:
+		add 1 to {_count}
+	assert {_count} > 0 with "Available entity effects should have looped"

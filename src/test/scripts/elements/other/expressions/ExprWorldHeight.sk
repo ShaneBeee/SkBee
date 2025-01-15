@@ -1,0 +1,4 @@
+test "SkBee - ExprWorldHeight":
+	set {_w} to world "world"
+	assert min height of {_w} is -64 with "Min height of world should be -64"
+	assert max height of {_w} is 320 with "Max height of world should be 320"

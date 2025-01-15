@@ -1,103 +1,110 @@
 test "SkBee - shaped recipe section":
 
-    register shaped recipe:
-        id: "custom:fancy_stone"
-        result: stone named "&aFANCY STONE"
-        shape: "aaa", "aba", "aaa"
-        group: "bloop"
-        category: "building"
-        ingredients:
-            set ingredient of "a" to stone
-            set ingredient of "b" to diamond
+	register shaped recipe:
+		id: "custom:fancy_stone"
+		result: stone named "&aFANCY STONE"
+		shape: "aaa", "aba", "aaa"
+		group: "bloop"
+		category: "building"
+		ingredients:
+			set ingredient of "a" to stone
+			set ingredient of "b" to diamond
 
-    register shaped recipe:
-        id: "custom:fancy_sword"
-        result: diamond sword of unbreaking 5 named "&bStrong Sword"
-        shape: "a", "a", "b"
-        ingredients:
-            set ingredient of "a" to emerald
-            set ingredient of "b" to stick named "DOOM"
+	register shaped recipe:
+		id: "custom:fancy_sword"
+		result: diamond sword of unbreaking 5 named "&bStrong Sword"
+		shape: "a", "a", "b"
+		ingredients:
+			set ingredient of "a" to emerald
+			set ingredient of "b" to stick named "DOOM"
 
-    register shaped recipe:
-        id: "custom:string"
-        result: 4 of string
-        shape: "a"
-        ingredients:
-            set ingredient of "a" to material choice of red wool and yellow wool
+	register shaped recipe:
+		id: "custom:string"
+		result: 4 of string
+		shape: "a"
+		ingredients:
+			set ingredient of "a" to material choice of red wool and yellow wool
 
-    register shaped recipe:
-        id: "custom:bee_2"
-        result: (skull of "MHF_Bee" parsed as offline player) named "&bMr &3Bee"
-        shape: "x x", " z ", "x x"
-        ingredients:
-            set ingredient of "x" to honeycomb
-            set ingredient of "z" to honey bottle
+	register shaped recipe:
+		id: "custom:bee_2"
+		result: iron ingot named "Mr Honey"
+		shape: "x x", " z ", "x x"
+		ingredients:
+			set ingredient of "x" to honeycomb
+			set ingredient of "z" to honey bottle
 
 test "SkBee - shapeless recipe section":
-    register shapeless recipe:
-        id: "custom:string"
-        result: 4 string
-        ingredients:
-            add material choice of minecraft item tag "minecraft:wools" to ingredients
+	register shapeless recipe:
+		id: "custom:string"
+		result: 4 string
+		ingredients:
+			add material choice of minecraft item tag "minecraft:wool" to ingredients
 
-    register shapeless recipe:
-        id: "custom:totem_of_undying"
-        result: totem of undying
-        group: "custom tools"
-        category: "redstone"
-        ingredients:
-            add diamond block to ingredients
-            add material choice of minecraft item tag "minecraft:planks" to ingredients
-            add emerald block to ingredients
-            add end rod to ingredients
-            add wither skeleton skull to ingredients
+	register shapeless recipe:
+		id: "custom:totem_of_undying"
+		result: totem of undying
+		group: "custom tools"
+		category: "redstone"
+		ingredients:
+			add diamond block to ingredients
+			add material choice of minecraft item tag "minecraft:planks" to ingredients
+			add emerald block to ingredients
+			add end rod to ingredients
+			add wither skeleton skull to ingredients
 
-    register shapeless recipe:
-        id: "custom:end_rod"
-        result: end rod
-        group: "custom tools"
-        category: "redstone"
-        ingredients:
-            add diamond block to ingredients
-            add emerald block to ingredients
+	register shapeless recipe:
+		id: "custom:end_rod"
+		result: end rod
+		group: "custom tools"
+		category: "redstone"
+		ingredients:
+			add diamond block to ingredients
+			add emerald block to ingredients
 
 test "SkBee - cooking recipe section":
-    register new furnace recipe:
-        id: "sieve:gravel_to_sand"
-        result: sand
-        input: gravel
-        group: "sieve"
-        cooktime: 1 minecraft day # 20 minutes
-        experience: 6
-        category: "blocks"
+	register new furnace recipe:
+		id: "sieve:gravel_to_sand"
+		result: sand
+		input: gravel
+		group: "sieve"
+		cooktime: 1 minecraft day # 20 minutes
+		experience: 6
+		category: "blocks"
 
-    register new campfire recipe:
-        id: "sieve:cobblestone_to_gravel"
-        result: gravel
-        input: cobblestone
-        group: "sieve"
-        category: "blocks"
+	register new campfire recipe:
+		id: "sieve:cobblestone_to_gravel"
+		result: gravel
+		input: cobblestone
+		group: "sieve"
+		category: "blocks"
 
-    register new smoking recipe:
-        id: "chef:beef_jerky"
-        result: cooked mutton named "&oBeef&r Jerky"
-        input: rotten flesh
-        category: "food"
+	register new smoking recipe:
+		id: "chef:beef_jerky"
+		result: cooked mutton named "&oBeef&r Jerky"
+		input: rotten flesh
+		category: "food"
 
-    register a new blasting recipe:
-        id: "firery_sword"
-        result: diamond sword of fire aspect named "Flaming Sword"
-        input: diamond sword
+	register a new blasting recipe:
+		id: "firery_sword"
+		result: diamond sword of fire aspect named "Flaming Sword"
+		input: diamond sword
 
 test "SkBee - brewer recipe section":
-    register brewing recipe:
-        id: "custom:brew_glow_diamond"
-        result: diamond of unbreaking with item flag hide enchants
-        ingredient: glowstone dust
-        input: potato
+	register brewing recipe:
+		id: "custom:brew_glow_diamond"
+		result: diamond of unbreaking with item flag hide enchants
+		ingredient: glowstone dust
+		input: potato
 
-    register brewing recipe:
-        id: "custom:yummy_soup"
-        result: mushroom stew named "&bYummy Soup"
-        ingredient: glowstone dust
-        input: potion
+	register brewing recipe:
+		id: "custom:yummy_soup"
+		result: mushroom stew named "&bYummy Soup"
+		ingredient: glowstone dust
+		input: potion
+
+test "SkBee - Transmute recipe section":
+	register transmute recipe:
+		id: "custom:better_sword"
+		result: netherite sword
+		input: minecraft item tag "minecraft:swords"
+		material: netherite ingot

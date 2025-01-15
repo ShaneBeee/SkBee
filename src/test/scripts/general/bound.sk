@@ -1,0 +1,99 @@
+test "SkBee - Bounds":
+	assert bound with id "test_bound" is not set with "The bound shouldn't already exist"
+
+	# EffSecBoundCreate
+	set {_l::1} to location(0,0,0)
+	set {_l::2} to location(10,10,10)
+	create bound with id "test_bound" within {_l::1} and {_l::2}
+
+	# ExprBoundFromID
+	assert bound with id "test_bound" is set with "The bound should have been created"
+	set {_bound} to bound with id "test_bound"
+	assert {_bound} is set with "The variable should be set"
+
+	# ExprBoundBlocks
+	assert size of bound blocks within {_bound} = 1000 with "There should be 1000 blocks in the bound"
+
+	# ExprBoundEntities
+	# We can't really test this
+
+	# ExprBoundFullState
+	assert bound full state of {_bound} = false with "The bound should not be a full bound"
+	set bound full state of {_bound} to true
+	assert bound full state of {_bound} = true with "The bound should be a full bound now"
+
+	# ExprBoundID
+	assert bound id of {_bound} = "test_bound" with "The id should be 'test_bound'"
+
+	# ExprBoundLocations
+	assert bound lesser corner of {_bound} = location(0,-64,0) with "The lesser corner should be 0,-64,0)"
+	assert bound greater corner of {_bound} = location(10,319,10) with "The greater corner should be 10,319,10)"
+	assert bound center of {_bound} = location(5,127.5,5) with "The bound center should be 5,127.5,5"
+	set bound full state of {_bound} to false
+	assert bound lesser corner of {_bound} = {_l::1} with "The lesser corner should be 0,0,0"
+	assert bound greater corner of {_bound} = {_l::2} with "The greater corner should be 10,10,10"
+	assert bound center of {_bound} = location(5,5,5) with "The bound center should be 5,5,5"
+
+	# ExprBoundOwnerMember
+	# We can't really test this
+
+	# ExprBoundsAll
+	assert all bounds contains {_bound} with "The bound should exist in all bounds"
+
+	# ExprBoundsAtLocation
+	assert size of bounds at location(1,1,1) = 1 with "There should be only 1 bound at this location"
+
+	# ExprBoundValue
+	assert bound value "test_value" of {_bound} is not set with "The bound shouldn't have this value yet"
+	set bound value "test_value" of {_bound} to 10
+	assert bound value "test_value" of {_bound} = 10 with "The value should be 10"
+	assert size of (all bound values of {_bound}) = 1 with "There should only be 1 value"
+	delete bound value "test_value" of {_bound}
+	assert size of (all bound values of {_bound}) = 0 with "There should be no values after deletion"
+
+	# ExprBoundWorld
+	assert bound world of {_bound} = world "world" with "The bound should be in the main world"
+
+	# ExprLastCreatedBound
+	assert last created bound = {_bound} with "The last created bound should be the one we created"
+
+	# EffSecBoundCopy
+	create a copy of bound {_bound} using the id "test_bound_2"
+	set {_bound2} to last created bound
+	assert {_bound2} = bound with id "test_bound_2" with "Should have or copy now"
+
+	# CondBoundContainsLocation
+	assert location(1,1,1) is within bound {_bound} with "The location should be in this bound"
+
+	# CondBoundIntersects
+	assert {_bound} overlaps {_bound2} with "The 2 bounds should overlap"
+	assert {_bound} doesn't overlap {_bound2} to fail with "This condition should fail, they do overlap"
+
+	# CondBoundIsTemporary
+	assert {_bound} is not a temporary bound with "The bound is not a temp bound"
+	assert {_bound2} is not a temporary bound with "The 2nd bound is not a temp bound"
+	assert {_bound} is a temporary bound to fail with "This condition should fail, it's not temp"
+
+	# EFfBoundResize
+	set {_l::3} to location(100,100,100)
+	resize bound {_bound2} within {_l::1} and {_l::3}
+	assert bound lesser corner of {_bound2} = {_l::1} with "The lesser corner should not have changed"
+	assert bound greater corner of {_bound2} = {_l::3} with "The greater corner should now be 100,100,100"
+
+	resize bound {_bound2} within block at {_l::1} and block at {_l::3}
+	assert bound lesser corner of {_bound2} = {_l::1} with "The lesser corner should not have changed"
+	assert bound greater corner of {_bound2} = {_l::3} ~ vector(1,1,1) with "The greater corner should now be 101,101,101"
+
+	set {_l::4} to location(50,50,50)
+	resize full bound {_bound2} within {_l::1} and {_l::4}
+	assert bound lesser corner of {_bound2} = location(0,-64,0) with "The lesser corner should not have changed"
+	assert bound greater corner of {_bound2} = location(50,319,50) with "The greater corner should now be 50,319,50"
+
+	set {_l::5} to location(75,75,75)
+	resize full bound {_bound2} within block at {_l::1} and block at {_l::5}
+	assert bound lesser corner of {_bound2} = location(0,-64,0) with "The lesser corner should not have changed"
+	assert bound greater corner of {_bound2} = location(76,319,76) with "The greater corner should now be 76,319,76"
+
+	# Cleanup
+	delete bound with id "test_bound"
+	delete bound with id "test_bound_2"

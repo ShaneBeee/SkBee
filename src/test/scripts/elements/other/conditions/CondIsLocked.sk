@@ -1,0 +1,10 @@
+test "SkBee - CondIsLocked":
+	set {_l} to location(1,1,1)
+	set {_data} to blockdata of block at {_l}
+
+	set block at {_l} to a chest
+	assert block at {_l} is not locked with "The chest should not be locked yet"
+	apply lock to block at {_l} using 1 of stick
+	assert block at {_l} is locked with "The chest should be locked now"
+	remove lock of block at {_l}
+	assert block at {_l} is not locked with "The chest should no longer be locked"

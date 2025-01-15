@@ -7,14 +7,14 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.CookingRecipeType;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.skript.base.Section;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -31,8 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -80,24 +78,27 @@ import java.util.Map;
 @Since("3.0.0")
 public class SecRecipeCooking extends Section {
 
-    private static final EntryValidatorBuilder ENTRY_VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
     private static final Map<String, CookingBookCategory> CATEGORY_MAP = new HashMap<>();
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
 
     static {
-        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe");
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("result", null, false, ItemStack.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("input", null, false, RecipeChoice.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("group", null, true, String.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("cooktime", null, true, Timespan.class));
-        ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("experience", null, true, Number.class));
+        SimpleEntryValidator builder = SimpleEntryValidator.builder();
+        builder.addRequiredEntry("id", String.class);
+        builder.addRequiredEntry("result", ItemStack.class);
+        builder.addRequiredEntry("input", RecipeChoice.class);
+
+        builder.addOptionalEntry("group", String.class);
+        builder.addOptionalEntry("cooktime", Timespan.class);
+        builder.addOptionalEntry("experience", Number.class);
         if (RecipeUtil.HAS_CATEGORY) {
-            ENTRY_VALIDATOR.addEntryData(new ExpressionEntryData<>("category", null, true, String.class));
+            builder.addOptionalEntry("category", String.class);
             for (CookingBookCategory category : CookingBookCategory.values()) {
                 CATEGORY_MAP.put(category.toString().toLowerCase(Locale.ROOT), category);
             }
         }
+        VALIDATOR = builder.build();
+
+        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe");
     }
 
     private CookingRecipeType recipeType;
@@ -109,10 +110,10 @@ public class SecRecipeCooking extends Section {
     private Expression<Timespan> cookTime;
     private Expression<Number> experience;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        EntryContainer container = ENTRY_VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.recipeType = CookingRecipeType.values()[parseResult.mark];
@@ -138,29 +139,41 @@ public class SecRecipeCooking extends Section {
     private void execute(Event event) {
         String recipeId = this.id.getSingle(event);
         if (recipeId == null) {
-            RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
+            error("Missing id");
             return;
         }
         NamespacedKey namespacedKey = Util.getNamespacedKey(recipeId, false);
         ItemStack result = this.result.getSingle(event);
         // #getConvertedExpression() is used to prevent the famous 'UnparsedLiterals must be converted before use'
         RecipeChoice input = this.input.getSingle(event);
-        int cookTime = this.cookTime != null ? (int) this.cookTime.getSingle(event).getAs(Timespan.TimePeriod.TICK) : this.recipeType.getCookTime();
-        float experience = this.experience != null ? this.experience.getSingle(event).floatValue() : 0;
+
+        int cookTime = this.recipeType.getCookTime();
+        if (this.cookTime != null) {
+            Timespan timespan = this.cookTime.getSingle(event);
+            if (timespan != null) {
+                cookTime = (int) timespan.getAs(Timespan.TimePeriod.TICK);
+            } else {
+                warning("Invalid cooktime, defaulting to recipe default: " + new Timespan(Timespan.TimePeriod.TICK, cookTime));
+            }
+        }
+        float experience = 0;
+        if (this.experience != null) {
+            Number num = this.experience.getSingle(event);
+            if (num != null) {
+                experience = num.floatValue();
+            } else {
+                warning("Invalid experience, defaulting to 0");
+            }
+        }
 
         if (namespacedKey == null) {
-            RecipeUtil.error("Invalid/Missing recipe Id: &e" + this.toString(event, DEBUG));
+            error("Invalid id: " + recipeId);
             return;
         } else if (result == null || !result.getType().isItem() || result.getType().isAir()) {
-            RecipeUtil.error("Invalid/Missing recipe result: &e" + this.toString(event, DEBUG));
+            error("Invalid result: " + result);
             return;
         } else if (input == null) {
-            if (this.input != null) {
-                RecipeUtil.error("Invalid/Missing recipe input: &e" + this.input.toString(event, DEBUG));
-            } else {
-                // When an invalid expression like 'I AM REAL SYNTAX' is used, skript doesn't error this catches it
-                RecipeUtil.error("Invalid/Missing recipe input: &egiven recipe input is an invalid expression");
-            }
+            error("Invalid input: " + this.input.toString(event, true));
             return;
         }
 
@@ -181,7 +194,7 @@ public class SecRecipeCooking extends Section {
             recipe.setGroup(recipeGroup);
         Bukkit.removeRecipe(namespacedKey);
         Bukkit.addRecipe(recipe);
-        if (DEBUG) RecipeUtil.logCookingRecipe(recipe);
+        RecipeUtil.logCookingRecipe(recipe);
     }
 
     @Override

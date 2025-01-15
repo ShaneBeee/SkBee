@@ -14,6 +14,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.config.BoundConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
@@ -33,6 +34,8 @@ import java.util.UUID;
         "\t\tteleport loop-offline player to spawn of world \"world\""})
 @Since("1.15.0")
 public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
+
+    private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
     static {
         Skript.registerExpression(ExprBoundOwnerMember.class, OfflinePlayer.class, ExpressionType.PROPERTY,
@@ -126,7 +129,7 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
             default:
                 return;
         }
-        SkBee.getPlugin().getBoundConfig().saveBound(bound);
+        BOUND_CONFIG.saveBound(bound, false);
     }
 
     @Override

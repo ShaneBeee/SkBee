@@ -1,0 +1,47 @@
+test "SkBee - Registry Values" when running minecraft "1.21.3":
+
+	set {_biome} to random element of registry values of biome registry
+	assert {_biome} is set with "Random element of biome registry should return a biome"
+	assert class info of {_biome} is "biome" with "Type of registry value should be 'biome'"
+
+	set {_item} to random element of registry values of item registry
+	assert class info of {_item} is "item type" with "Type of registry value should be 'item type'"
+
+	set {_attribute} to random element of registry values of attribute registry
+	assert class info of {_attribute} = "attribute type" with "Type of registry value should be 'attribute type'"
+
+test "SkBee - Registry TagKeys from Registry" when running minecraft "1.21.3":
+
+	set {_keys::*} to tag keys from biome registry
+	assert {_keys::*} is set with "TagKeys from biome registry should be set"
+	assert size of {_keys::*} > 1 with "TagKeys from biome registry should be more than 1"
+	delete {_keys::*}
+
+	set {_keys::*} to tag keys from block registry
+	assert {_keys::*} is set with "TagKeys from block registry should be set"
+	assert size of {_keys::*} > 1 with "TagKeys from block registry should be more than 1"
+	delete {_keys::*}
+
+test "SkBee - Registry TagKey from Registry" when running minecraft "1.21.3":
+
+	set {_key} to tag key "minecraft:wool" from block registry
+	assert {_key} is set with "Block registry should have 'minecraft:wool' TagKey."
+	assert "%{_key}%" contains "minecraft:wool" with "The TagKey should contain 'minecraft:wool"
+	assert {_key} contains black wool with "The wool tag should contain black wool"
+	assert {_key} doesn't contain stone with "The wool tag should not contain stone"
+	delete {_key}
+
+	set {_key} to item registry tag key "minecraft:swords"
+	assert {_key} is set with "The key should be set"
+	assert {_key} contains diamond sword with "The swords tag should contain a diamond sword"
+	assert {_key} doesn't contain diamond axe with "The swords tag shouldn't contain an axe"
+	delete {_key}
+
+	set {_key} to biome registry tag key "minecraft:is_forest"
+	assert {_key} is set with "The key should be set"
+	assert {_key} contains forest with "The forests tag should contain forest"
+	assert {_key} doesn't contain desert with "The forests tag shouldn't contain desert"
+	delete {_key}
+
+	set {_key} to tag key "minecraft:blah" from block registry
+	assert {_key} is not set with "Block registry should NOT have 'minecraft:blah' TagKey."

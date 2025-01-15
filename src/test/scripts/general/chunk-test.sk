@@ -1,14 +1,14 @@
-test "SkBee - chunk stuff":
+test "SkBee - Chunk stuff":
 
-    # Test that these syntaxes don't cause errors
-    set {_l} to location(500,100,500)
+	# Test that these syntaxes don't cause errors
+	set {_l} to location(500,100,500)
 
-    load chunk at {_l} with ticket
-    assert chunk at {_l} is loaded with "Chunk at location should be loaded"
+	load chunk at {_l} with ticket
+	assert chunk at {_l} is loaded with "Chunk at location should be loaded"
 
-    # Need to revisit this test now that wait are not supported for testing
-    # https://github.com/SkriptLang/Skript/pull/7095
+	# Need to revisit this test now that wait are not supported for testing
+	# https://github.com/SkriptLang/Skript/pull/7095
 
-    # unload chunk at {_l}
-    # wait 5 ticks # Do Skript tests even support waits?!?!?
-    # assert chunk at {_l} is not loaded with "Chunk at location should have unloaded"
+	# unload chunk at {_l}
+	# wait 5 ticks # Do Skript tests even support waits?!?!?
+	# assert chunk at {_l} is not loaded with "Chunk at location should have unloaded"

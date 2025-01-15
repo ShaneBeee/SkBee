@@ -86,24 +86,22 @@ public enum NBTCustomType {
         return null;
     }
 
+    @SuppressWarnings("DataFlowIssue")
     @Nullable
     public static NBTCustomType getByTag(NBTCompound compound, String key) {
         if (compound == null) return null;
         NBTType nbtType = compound.getType(key);
         if (BY_TYPE.containsKey(nbtType)) {
             if (nbtType == NBTType.NBTTagList) {
-                if (!compound.getIntegerList(key).isEmpty())
-                    return NBTTagIntList;
-                else if (!compound.getLongList(key).isEmpty())
-                    return NBTTagLongList;
-                else if (!compound.getFloatList(key).isEmpty())
-                    return NBTTagFloatList;
-                else if (!compound.getDoubleList(key).isEmpty())
-                    return NBTTagDoubleList;
-                else if (!compound.getCompoundList(key).isEmpty())
-                    return NBTTagCompoundList;
-                else if (!compound.getStringList(key).isEmpty())
-                    return NBTTagStringList;
+                return switch (compound.getListType(key)) {
+                    case NBTTagInt -> NBTTagIntList;
+                    case NBTTagLong -> NBTTagLongList;
+                    case NBTTagFloat -> NBTTagFloatList;
+                    case NBTTagDouble -> NBTTagDoubleList;
+                    case NBTTagString -> NBTTagStringList;
+                    case NBTTagCompound -> NBTTagCompoundList;
+                    default -> null;
+                };
             }
             return BY_TYPE.get(nbtType);
         }

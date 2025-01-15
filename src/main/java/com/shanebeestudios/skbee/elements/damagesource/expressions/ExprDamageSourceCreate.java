@@ -8,8 +8,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Location;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
@@ -18,24 +18,25 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("UnstableApiUsage")
 @Name("DamageSource - Create")
 @Description({"Create a new damage source which includes a damage type and some optional values.",
-        "Optional Values:",
-        "`caused by %entity%` = The entity that caused the damage.",
-        "`directly by %entity%` = The entity that directly inflicted the damage.",
-        "`at %location%` = The source of the damage."})
+    "Optional Values:",
+    "`caused by %entity%` = The entity that caused the damage.",
+    "`directly by %entity%` = The entity that directly inflicted the damage.",
+    "`at %location%` = The source of the damage."})
 @Examples({"set {_source} to damage source from arrow directly by (random element of all entities)",
-        "set {_source} to damage source of dragon breath",
-        "set {_source} to damage source of magic",
-        "set {_source} to damage source of mob_attack_no_aggro caused by target entity of player",
-        "damage player by 100 with {_source}"})
+    "set {_source} to damage source of dragon breath",
+    "set {_source} to damage source of magic",
+    "set {_source} to damage source of mob_attack_no_aggro caused by target entity of player",
+    "damage player by 100 with {_source}"})
 @Since("3.3.0")
 public class ExprDamageSourceCreate extends SimpleExpression<DamageSource> {
 
     static {
         Skript.registerExpression(ExprDamageSourceCreate.class, DamageSource.class, ExpressionType.COMBINED,
-                "[[a] new] damage source (of|from) %damagetype% [caused by %-entity%] " +
-                        "[directly (by|from) %-entity%] [at %-location%]");
+            "[[a] new] damage source (of|from) %damagetype% [caused by %-entity%] " +
+                "[directly (by|from) %-entity%] [at %-location%]");
     }
 
     private Expression<DamageType> damageType;
@@ -43,7 +44,7 @@ public class ExprDamageSourceCreate extends SimpleExpression<DamageSource> {
     private Expression<Entity> directEntity;
     private Expression<Location> damageLocation;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.damageType = (Expression<DamageType>) exprs[0];
@@ -53,11 +54,13 @@ public class ExprDamageSourceCreate extends SimpleExpression<DamageSource> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected DamageSource @Nullable [] get(Event event) {
         DamageType damageType = this.damageType.getSingle(event);
-        if (damageType == null) return null;
+        if (damageType == null) {
+            error("Damage type is not set");
+            return null;
+        }
 
         Entity causing = this.causingEntity != null ? this.causingEntity.getSingle(event) : null;
         Entity direct = this.directEntity != null ? this.directEntity.getSingle(event) : null;

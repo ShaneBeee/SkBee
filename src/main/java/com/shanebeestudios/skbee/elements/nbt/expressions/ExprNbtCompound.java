@@ -6,10 +6,10 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
@@ -21,6 +21,7 @@ import com.shanebeestudios.skbee.api.nbt.NBTCustomItemStack;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomItemType;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomSlot;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomTileEntity;
+import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -103,7 +104,11 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     @SuppressWarnings("deprecation")
     @Override
-    protected NBTCompound @NotNull [] get(@NotNull Event e, Object @NotNull [] source) {
+    protected NBTCompound[] get(@NotNull Event e, Object @NotNull [] source) {
+        if (source.length == 0) {
+            error("Empty object");
+            return null;
+        }
         return get(source, object -> {
             NBTCompound compound = null;
             if (object instanceof TileState tileState) {
@@ -154,6 +159,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 }
                 return compound;
             }
+            error("Invalid object for NBT: " + Classes.toString(object));
             return null;
         });
     }

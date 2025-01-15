@@ -10,7 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
-import com.shanebeestudios.skbee.api.scoreboard.FastBoardWrapper;
+import com.shanebeestudios.skbee.api.scoreboard.FastBoardBase;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -32,7 +32,7 @@ public class EffScoreboardToggle extends Effect {
     private Expression<Player> player;
     private int pattern;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.player = (Expression<Player>) exprs[0];
@@ -40,11 +40,10 @@ public class EffScoreboardToggle extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         for (Player player : this.player.getArray(event)) {
-            FastBoardWrapper board = BoardManager.getBoard(player);
+            FastBoardBase<?,?> board = BoardManager.getBoard(player);
             if (board != null) {
                 switch (pattern) {
                     case 0 -> board.toggle();

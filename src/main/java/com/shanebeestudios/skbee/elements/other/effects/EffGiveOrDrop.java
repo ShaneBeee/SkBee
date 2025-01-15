@@ -6,10 +6,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -36,7 +37,7 @@ public class EffGiveOrDrop extends Effect {
     private Expression<ItemType> itemTypes;
     private Expression<Player> players;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.itemTypes = (Expression<ItemType>) exprs[0];
@@ -44,10 +45,24 @@ public class EffGiveOrDrop extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        List<ItemStack> itemStacks = ItemUtils.addItemTypesToList(Arrays.asList(this.itemTypes.getArray(event)), null);
+        ItemType[] itemTypes = this.itemTypes.getArray(event);
+        if (itemTypes.length == 0) {
+            error("No items found: " + this.itemTypes.toString(event, true));
+            return;
+        }
+        List<ItemStack> itemStacks = ItemUtils.addItemTypesToList(Arrays.asList(itemTypes), null);
+        if (itemStacks.isEmpty()) {
+            for (ItemType itemType : itemTypes) {
+                if (itemType.getMaterial().isAir() || !itemType.getMaterial().isItem()) {
+                    error(Classes.toString(itemType) + " cannot be given/dropped.");
+                    return;
+                }
+            }
+            error("Missing or invalid items: " + this.itemTypes.toString(event, true));
+            return;
+        }
         ItemStack[] itemStacksArray = itemStacks.toArray(itemStacks.toArray(new ItemStack[0]));
 
         for (Player player : this.players.getArray(event)) {

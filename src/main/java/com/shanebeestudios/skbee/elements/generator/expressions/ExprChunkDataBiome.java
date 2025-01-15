@@ -10,12 +10,12 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.generator.event.BiomeGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
@@ -49,7 +49,7 @@ public class ExprChunkDataBiome extends SimpleExpression<Biome> {
 
     private Expression<Vector> vector;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (matchedPattern == 0 && !ParserInstance.get().isCurrentEvent(BiomeGenEvent.class)) {
@@ -64,40 +64,39 @@ public class ExprChunkDataBiome extends SimpleExpression<Biome> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Biome @Nullable [] get(@NotNull Event event) {
         if (this.vector != null) {
             Vector vector = this.vector.getSingle(event);
-            if (vector != null) {
-                int x = MathUtil.clamp(vector.getBlockX(), 0, 15);
-                int y = vector.getBlockY();
-                int z = MathUtil.clamp(vector.getBlockZ(), 0, 15);
-                if (event instanceof ChunkGenEvent chunkGenEvent) {
-                    ChunkData chunkData = chunkGenEvent.getChunkData();
-                    Biome biome = chunkData.getBiome(x, y, z);
-                    return new Biome[]{biome};
-                } else if (event instanceof BlockPopulateEvent populateEvent) {
-                    int chunkX = populateEvent.getChunkX();
-                    int chunkZ = populateEvent.getChunkZ();
-                    LimitedRegion limitedRegion = populateEvent.getLimitedRegion();
-                    y = clamp(limitedRegion, y);
-                    Biome biome = limitedRegion.getBiome((chunkX << 4) + x, y, (chunkZ << 4) + z);
-                    return new Biome[]{biome};
-                }
+            if (vector == null) {
+                error("Invalid vector: " + this.vector.toString(event, true));
+                return null;
+            }
+            int x = MathUtil.clamp(vector.getBlockX(), 0, 15);
+            int y = vector.getBlockY();
+            int z = MathUtil.clamp(vector.getBlockZ(), 0, 15);
+            if (event instanceof ChunkGenEvent chunkGenEvent) {
+                ChunkData chunkData = chunkGenEvent.getChunkData();
+                Biome biome = chunkData.getBiome(x, y, z);
+                return new Biome[]{biome};
+            } else if (event instanceof BlockPopulateEvent populateEvent) {
+                int chunkX = populateEvent.getChunkX();
+                int chunkZ = populateEvent.getChunkZ();
+                LimitedRegion limitedRegion = populateEvent.getLimitedRegion();
+                y = clamp(limitedRegion, y);
+                Biome biome = limitedRegion.getBiome((chunkX << 4) + x, y, (chunkZ << 4) + z);
+                return new Biome[]{biome};
             }
         }
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET && this.vector == null) return CollectionUtils.array(Biome.class);
         return null;
     }
 
-    @SuppressWarnings({"ConstantValue", "NullableProblems"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (mode == ChangeMode.SET && delta != null && delta[0] instanceof Biome biome && event instanceof BiomeGenEvent biomeGenEvent) {

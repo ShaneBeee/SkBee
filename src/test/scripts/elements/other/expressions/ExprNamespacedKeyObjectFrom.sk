@@ -1,0 +1,32 @@
+test "SkBee - ExprNamespacedKeyObjectFrom":
+	set {_i} to itemtype from key "minecraft:stone"
+	assert {_i} is stone with "Should have gotten stone from key"
+	delete {_i}
+
+	set {_i} to itemtype from key "blah:bloop"
+	assert {_i} is not set with "Shouldn't have gotten anything from this invalid key"
+
+	set {_e} to entitytype from key "minecraft:sheep"
+	assert {_e} is a sheep with "Should have gotten a sheep from key"
+	delete {_e}
+
+	set {_e} to entitytype from key "minecraft:happy_freaking_horsey"
+	assert {_i} is not set with "Shouldn't have gotten anything from this ridiculous key"
+
+	set {_b} to biome from key "minecraft:badlands"
+	assert {_b} is badlands with "Should have gotten badlands from key"
+	delete {_b}
+
+	set {_b} to biome from key "holy_moly:quacamole"
+	assert {_b} is not set with "Ok, that's just silly, come on man"
+
+	set {_i} to instrument from key "minecraft:admire_goat_horn"
+	assert {_i} is admire goat horn with "Should have gotten admire_goat_horn from key"
+
+	set {_j} to jukebox song from key "minecraft:mellohi"
+	assert {_j} is mellohi with "Should have gotten mellohi from key"
+	set {_j} to jukebox song from key "minecraft:not_a_thing"
+	assert {_j} is not set with "This key should return nothing"
+
+	set {_pt} to potion type from key "minecraft:long_regeneration"
+	# assert {_pt} is long regeneration with "Should have gotten long regeneration from key" TODO Skript clash, see PR https://github.com/SkriptLang/Skript/pull/7440

@@ -5,11 +5,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.event.Event;
@@ -35,7 +35,7 @@ public class EffChunkDataStructurePlace extends Effect {
     private Expression<StructureWrapper> structure;
     private Expression<Vector> vector;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.structure = (Expression<StructureWrapper>) exprs[0];
@@ -43,13 +43,19 @@ public class EffChunkDataStructurePlace extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         if (!(event instanceof BlockPopulateEvent popEvent)) return;
         StructureWrapper structure = this.structure.getSingle(event);
         Vector vector = this.vector.getSingle(event);
-        if (structure == null || vector == null) return;
+        if (structure == null) {
+            error("Invalid structure: " + this.structure.toString(event, true));
+            return;
+        }
+        if (vector == null) {
+            error("Invalid vector: " + this.vector.toString(event, true));
+            return;
+        }
 
         vector.setX((popEvent.getChunkX() << 4) + MathUtil.clamp(vector.getBlockX(), 0, 15));
         vector.setZ((popEvent.getChunkZ() << 4) + MathUtil.clamp(vector.getBlockZ(), 0, 15));

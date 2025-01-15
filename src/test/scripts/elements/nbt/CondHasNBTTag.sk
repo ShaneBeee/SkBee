@@ -1,0 +1,9 @@
+test "SkBee - NBT - CondHasNBTTag":
+	set {_n} to nbt from "{test:1,blah:2,arg:{a:1,b:2}}"
+
+	assert {_n} has tag "test" with "Tag should be set"
+	assert {_n} has tag "blah" with "Tag should be set"
+	assert {_n} has tag "arg" with "Tag should be set"
+	assert {_n} has tag "arg;a" with "Tag should be set"
+	assert {_n} has tag "arg;b" with "Tag should be set"
+	assert {_n} doesn't have tag "chicken" with "Tag should not be set"

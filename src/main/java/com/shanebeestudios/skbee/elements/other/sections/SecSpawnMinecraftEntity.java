@@ -6,15 +6,16 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.EffectSection;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.sections.EffSecSpawn;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.EffectSection;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -75,7 +76,7 @@ public class SecSpawnMinecraftEntity extends EffectSection {
     private Expression<Location> location;
     private Trigger trigger;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
                         @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
@@ -94,25 +95,23 @@ public class SecSpawnMinecraftEntity extends EffectSection {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "unchecked", "rawtypes"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Consumer<? extends Entity> consumer = getConsumer(event);
-        Number numberAmount = this.amount != null ? this.amount.getSingle(event) : 1;
+        Number numberAmount = this.amount != null ? this.amount.getOptionalSingle(event).orElse(1) : 1;
 
-        if (numberAmount != null) {
-            double amount = numberAmount.doubleValue();
-            for (Location location : this.location.getArray(event)) {
-                World world = location.getWorld();
-                if (world == null) continue;
+        double amount = numberAmount.doubleValue();
+        for (Location location : this.location.getArray(event)) {
+            World world = location.getWorld();
+            if (world == null) continue;
 
-                for (Object type : this.entityType.getArray(event)) {
-                    Class<? extends Entity> entityClass = getEntityClass(type);
-                    if (entityClass == null) continue;
+            for (Object entityType : this.entityType.getArray(event)) {
+                Class<? extends Entity> entityClass = getEntityClass(entityType);
+                if (entityClass == null) continue;
 
-                    for (int i = 0; i < amount; i++) {
-                        EffSecSpawn.lastSpawned = world.spawn(location, entityClass, (Consumer) consumer);
-                    }
+                for (int i = 0; i < amount; i++) {
+                    EffSecSpawn.lastSpawned = world.spawn(location, entityClass, (Consumer) consumer);
                 }
             }
         }
@@ -147,6 +146,7 @@ public class SecSpawnMinecraftEntity extends EffectSection {
             NamespacedKey key = Util.getNamespacedKey(string, false);
             if (key != null) return getEntityClass(key);
         }
+        error("Couldn't get entity from '" + Classes.toString(object) + "'");
         return null;
     }
 

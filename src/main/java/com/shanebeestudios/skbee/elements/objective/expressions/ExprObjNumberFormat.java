@@ -41,11 +41,11 @@ import java.util.List;
     "set number format of {-obj} for player to \"{color:red,bold:true}\"",
     "set number format of {-obj} to \"{color:\"\"##0DEAE3\"\",bold:true}\"",
     "",
-    "# Format to blank",
+    "# Format to blank (will apply the 'blank' format)",
     "delete number format of {-obj}",
     "delete number format of {-obj} for player",
     "",
-    "# Reset formatting",
+    "# Reset formatting (will remove all formatting)",
     "reset number format of {-obj}",
     "reset number format of {-obj} for player"})
 @Since("3.4.0")
@@ -61,7 +61,7 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
     private Expression<Objective> objectives;
     private Expression<?> entries;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!HAS_NUMBER_FORMAT) {
@@ -73,7 +73,6 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable String[] get(Event event) {
         List<String> formats = new ArrayList<>();
@@ -81,7 +80,7 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         for (Objective objective : this.objectives.getArray(event)) {
             if (entries == null) {
                 NumberFormat numberFormat = objective.numberFormat();
-                if (numberFormat != null) formats.add(numberFormat.toString());
+                if (numberFormat != null) formats.add(ScoreboardUtils.getStringifiedNumberFormat(numberFormat));
             } else {
                 for (Object entry : entries) {
                     String stringScore = getStringScore(objective, entry);
@@ -92,7 +91,6 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         return formats.toArray(new String[0]);
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(String.class);
@@ -100,7 +98,6 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
         String format = null;
@@ -136,7 +133,6 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         return String.class;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String entries = this.entries != null ? (" for entries " + this.entries.toString(e, d)) : "";
@@ -155,7 +151,7 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         }
         if (stringEntiry != null) {
             NumberFormat numberFormat = objective.getScore(stringEntiry).numberFormat();
-            if (numberFormat != null) return numberFormat.toString();
+            if (numberFormat != null) return ScoreboardUtils.getStringifiedNumberFormat(numberFormat);
         }
         return null;
     }

@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.worldcreator.objects;
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
+import net.kyori.adventure.util.TriState;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -24,6 +25,8 @@ import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "CallToPrintStackTrace"})
 public class BeeWorldCreator implements Keyed {
+
+    private static final boolean HAS_KEEP_SPAWN_LOADED = Skript.methodExists(WorldCreator.class, "keepSpawnLoaded");
 
     private final String worldName;
     private final NamespacedKey key;
@@ -139,7 +142,7 @@ public class BeeWorldCreator implements Keyed {
     }
 
     public boolean isKeepSpawnLoaded() {
-        return keepSpawnLoaded.orElse(false);
+        return keepSpawnLoaded.orElse(true);
     }
 
     public void setKeepSpawnLoaded(boolean loaded) {
@@ -164,17 +167,17 @@ public class BeeWorldCreator implements Keyed {
 
     @SuppressWarnings({"deprecation", "CallToPrintStackTrace"})
     public CompletableFuture<World> loadWorld() {
-        CompletableFuture<WorldCreator> worldCreatorCompletableFuture = new CompletableFuture<>();
-        CompletableFuture<World> worldCompletableFuture = new CompletableFuture<>();
+        CompletableFuture<WorldCreator> creatorFuture = new CompletableFuture<>();
+        CompletableFuture<World> worldFuture = new CompletableFuture<>();
         // Copy/Clone world
         if (this.world != null) {
-            worldCreatorCompletableFuture = clone ? cloneWorld() : copyWorld();
+            creatorFuture = clone ? cloneWorld() : copyWorld();
         }
         // Create new world
         else {
-            worldCreatorCompletableFuture.complete(getWorldCreator(this.worldName, this.key));
+            creatorFuture.complete(getWorldCreator(this.worldName, this.key));
         }
-        worldCreatorCompletableFuture.thenAccept(worldCreator -> {
+        creatorFuture.thenAccept(worldCreator -> {
             World world = null;
 
             if (worldType != null) {
@@ -198,6 +201,11 @@ public class BeeWorldCreator implements Keyed {
             }
             if (biomeProvider != null) {
                 worldCreator.biomeProvider(biomeProvider);
+            }
+
+            if (this.keepSpawnLoaded.isPresent() && HAS_KEEP_SPAWN_LOADED) {
+                TriState state = this.keepSpawnLoaded.get() ? TriState.TRUE : TriState.FALSE;
+                worldCreator.keepSpawnLoaded(state);
             }
 
             genStructures.ifPresent(worldCreator::generateStructures);
@@ -229,13 +237,17 @@ public class BeeWorldCreator implements Keyed {
                 }
 
                 // Let's update the world with some other values
-                keepSpawnLoaded.ifPresent(world::setKeepSpawnInMemory);
+                if (keepSpawnLoaded.isPresent() && !HAS_KEEP_SPAWN_LOADED) {
+                    keepSpawnLoaded.ifPresent(world::setKeepSpawnInMemory);
+                }
             }
 
             SkBee.getPlugin().getBeeWorldConfig().saveWorldToFile(this);
-            worldCompletableFuture.complete(world);
+            worldFuture.complete(world);
+        }).exceptionally(t -> {
+            throw Skript.exception(t);
         });
-        return worldCompletableFuture;
+        return worldFuture;
     }
 
     private CompletableFuture<WorldCreator> copyWorld() {

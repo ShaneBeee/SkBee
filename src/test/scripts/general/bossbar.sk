@@ -1,0 +1,32 @@
+test "SkBee - Bossbars":
+	set {_size} to size of all bossbars
+	# Creation
+	set {_bar} to new bossbar with id "test_bar" with title "Test Bossbar" with color red with style segmented_6 with progress 50
+	assert bossbar players of {_bar} is not set with "The bar should have no players"
+	assert bossbar style of {_bar} = segmented_6 with "The bar's style should be segmented_6"
+	assert bossbar title of {_bar} = "Test Bossbar" with "The bar's title should be 'Test Bossbar'"
+	assert bossbar progress of {_bar} = 50 with "The bar's progress should be 50"
+	assert bossbar visibility of {_bar} = true with "The bar should be visible"
+	assert size of all bossbars = ({_size} + 1) with "Size of all bossbars should be 1 higher than before"
+
+	# Flags
+	assert bossbar flag create_fog of {_bar} = false with "The flag should be false by default"
+	assert bossbar flag darken_sky of {_bar} = false with "The flag should be false by default"
+	assert bossbar flag play_boss_music of {_bar} = false with "The flag should be false by default"
+	set bossbar flag create_fog of {_bar} to true
+	set bossbar flag darken_sky of {_bar} to true
+	set bossbar flag play_boss_music of {_bar} to true
+	assert bossbar flag create_fog of {_bar} = true with "The flag should be true after setting"
+	assert bossbar flag darken_sky of {_bar} = true with "The flag should be true after setting"
+	assert bossbar flag play_boss_music of {_bar} = true with "The flag should be true after setting"
+
+	# Entity
+	spawn a wither at event-location:
+		set {_e} to entity
+	set {_ebar} to bossbar of {_e}
+	assert {_ebar} is set with "The wither should have a bossbar"
+
+	# Cleanup
+	delete bossbar with id "test_bar"
+	delete entity within {_e}
+	assert size of all bossbars = {_size} with "Size of all bossbars should be what we started with"

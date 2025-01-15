@@ -1,20 +1,20 @@
 test "SkBee - particle":
-    # Test that these particles don't cause errors
-    set {_l} to spawn of world "world"
+	# Test that these particles don't cause errors
+	set {_l} to spawn of world "world"
 
-    make 10 of block using dirt at {_l}
-    make 10 of dust using dustOption(red, 5) at {_l} with extra 0
-    make 1 of item using diamond sword at {_l} with offset vector(1,1,1) with force
+	make 10 of block using dirt at {_l}
+	make 10 of dust using dustOption(red, 5) at {_l} with extra 0
+	make 1 of item using diamond sword at {_l} with offset vector(1,1,1) with force
 
-    set {_trans} to dustTransition(red, green, 3)
-    make 3 of dust_color_transition using {_trans} at {_l}
+	set {_trans} to dustTransition(red, green, 3)
+	make 3 of dust_color_transition using {_trans} at {_l}
 
-    set {_l2} to {_l} ~ vector(3,3,3)
-    set {_vib} to vibration({_l2}, 5 seconds)
-    make 1 of vibration using {_vib} at {_l}
+	set {_l2} to {_l} ~ vector(3,3,3)
+	set {_vib} to vibration({_l2}, 5 seconds)
+	make 1 of vibration using {_vib} at {_l}
 
 test "SkBee - particle with trail" when running minecraft "1.21.4":
-    set {_l1} to spawn of world "world"
-    set {_l2} to location 5 above {_l1}
-    set {_trail} to trail({_l1}, blue, 10 seconds)
-    make 10 of trail using {_trail} at {_l2}
+	set {_l1} to spawn of world "world"
+	set {_l2} to location 5 above {_l1}
+	set {_trail} to trail({_l1}, blue, 10 seconds)
+	make 10 of trail using {_trail} at {_l2}

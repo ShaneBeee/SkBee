@@ -12,67 +12,78 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registry.RegistryUtils;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecToolComponent.ToolComponentApplyRulesEvent;
-import org.bukkit.Material;
+import io.papermc.paper.datacomponent.item.Tool;
+import io.papermc.paper.registry.RegistryKey;
+import io.papermc.paper.registry.TypedKey;
+import io.papermc.paper.registry.set.RegistryKeySet;
+import io.papermc.paper.registry.set.RegistrySet;
+import io.papermc.paper.registry.tag.TagKey;
+import net.kyori.adventure.util.TriState;
+import org.bukkit.Registry;
 import org.bukkit.Tag;
+import org.bukkit.block.BlockType;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.meta.components.ToolComponent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("DataFlowIssue")
+@SuppressWarnings({"DataFlowIssue", "UnstableApiUsage"})
 @Name("ItemComponent - Tool Rule Apply")
 @Description({"Apply rules to a tool component. You can add as many as you'd like.",
     "See [**McWiki Tool Component**](https://minecraft.wiki/w/Data_component_format#tool) for more details.",
     "",
     "**Entries/Sections**:",
-    "NOTE: One of either `block types` or `block tag` MUST be used.",
-    "`block types` = The blocks to match for this rule to apply.",
-    "`block tag` = A Minecraft Tag to match for this rule to apply.",
+    "NOTE: One of either `block_types` or `block_tag` MUST be used.",
+    "`blocks` = The blocks to match for this rule to apply (Supports ItemTypes, BlockDatas, Minecraft Tags and TagKeys).",
     "`speed` = If the blocks match, overrides the default mining speed (Must be a positive number). [Optional]",
     "`correct for drops` = If the blocks match, overrides whether or not this tool is " +
         "considered correct to mine at its most efficient speed, and to drop items if the block's loot table requires it. [Optional]"})
 @Examples({"set {_i} to a stick",
     "apply tool component to {_i}:",
-    "\tdefault mining speed: 2.3",
-    "\tdamage per block: 2",
+    "\tdefault_mining_speed: 2.3",
+    "\tdamage_per_block: 2",
     "\trules:",
     "\t\tapply tool rule:",
-    "\t\t\tblock tag: minecraft block tag \"minecraft:dirt\"",
+    "\t\t\tblocks: minecraft block tag \"minecraft:all_signs\" # Shown as a Minecraft block tag",
     "\t\t\tspeed: 1.0",
-    "\t\t\tcorrect for drops: true",
+    "\t\t\tcorrect_for_drops: true",
     "\t\tapply tool rule:",
-    "\t\t\tblock types: granite, stone and andesite",
+    "\t\t\tblocks: stone, granite, andesite and gravel # Shown as a list of ItemTypes",
     "\t\t\tspeed: 0.5",
-    "\t\t\tcorrect for drops: false",
+    "\t\t\tcorrect_for_drops: false",
     "give {_i} to player"})
-@Since("3.5.8")
+@Since("INSERT VERSION")
 public class SecToolRule extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATIOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
-        if (Skript.classExists("org.bukkit.inventory.meta.components.ToolComponent")) {
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("block types", null, true, ItemType.class));
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("block tag", null, true, Tag.class));
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("speed", null, true, Number.class));
-            VALIDATIOR.addEntryData(new ExpressionEntryData<>("correct for drops", null, true, Boolean.class));
-            Skript.registerSection(SecToolRule.class, "apply tool rule");
-        }
+        @SuppressWarnings("unchecked")
+        Class<Object>[] classes = (Class<Object>[]) CollectionUtils.array(ItemType.class, BlockData.class,
+            Tag.class, RegistryKeySet.class, TagKey.class);
+
+        VALIDATOR = SimpleEntryValidator.builder()
+            .addOptionalEntry("blocks", classes)
+            .addOptionalEntry("speed", Number.class)
+            .addOptionalEntry("correct_for_drops", Boolean.class)
+            .build();
+        Skript.registerSection(SecToolRule.class, "apply tool rule");
     }
 
-    private Expression<ItemType> blockTypes;
-    private Expression<Tag<Material>> blockKey;
+    private Expression<?> blocks;
     private Expression<Number> speed;
     private Expression<Boolean> correctForDrops;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         if (!getParser().isCurrentEvent(ToolComponentApplyRulesEvent.class)) {
@@ -80,44 +91,65 @@ public class SecToolRule extends Section {
             return false;
         }
 
-        EntryContainer container = VALIDATIOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
-        this.blockTypes = (Expression<ItemType>) container.getOptional("block types", false);
-        this.blockKey = (Expression<Tag<Material>>) container.getOptional("block tag", false);
-        if (this.blockTypes == null && this.blockKey == null) {
-            Skript.error("Either a 'block types' or 'block tag' entry needs to be used.");
-            return false;
-        }
+        this.blocks = (Expression<ItemType>) container.getOptional("blocks", false);
         this.speed = (Expression<Number>) container.getOptional("speed", false);
         this.correctForDrops = (Expression<Boolean>) container.getOptional("correct for drops", false);
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         if (event instanceof ToolComponentApplyRulesEvent rulesEvent) {
-            ToolComponent component = rulesEvent.getComponent();
+            Tool.Builder toolBuilder = rulesEvent.getToolBuilder();
 
-            Number speedNum = this.speed != null ? this.speed.getSingle(event) : null;
-            Float speed = speedNum != null ? speedNum.floatValue() : null;
-            if (speed != null && speed <= 0) speed = null;
-            Boolean correctForDrops = this.correctForDrops != null ? this.correctForDrops.getSingle(event) : null;
+            RegistryKeySet<BlockType> registryKeySet = null;
+            if (this.blocks != null) {
+                List<TypedKey<BlockType>> typedKeys = new ArrayList<>();
 
-            if (this.blockTypes != null) {
-                List<Material> blockMaterials = new ArrayList<>();
-                for (ItemType itemType : this.blockTypes.getArray(event)) {
-                    Material material = itemType.getMaterial();
-                    if (material.isBlock()) blockMaterials.add(material);
+                for (Object object : this.blocks.getArray(event)) {
+                    if (object instanceof ItemType itemType) {
+                        TypedKey<BlockType> typedKey = TypedKey.create(RegistryKey.BLOCK, itemType.getMaterial().key());
+                        typedKeys.add(typedKey);
+                    } else if (object instanceof BlockData blockData) {
+                        TypedKey<BlockType> typedKey = TypedKey.create(RegistryKey.BLOCK, blockData.getMaterial().key());
+                        typedKeys.add(typedKey);
+                    } else if (object instanceof Tag<?> tag) {
+                        // Clear the keys in the event we have a tag
+                        // We can't have both (either a list of blocks OR 1 tag)
+                        registryKeySet = RegistryUtils.getKeySet(tag, RegistryKey.BLOCK);
+                        typedKeys.clear();
+                        break;
+                    } else if (object instanceof RegistryKeySet<?> keySet && keySet.registryKey() == RegistryKey.BLOCK) {
+                        registryKeySet = (RegistryKeySet<BlockType>) keySet;
+                        typedKeys.clear();
+                        break;
+                    } else if (object instanceof TagKey<?> tagKey && tagKey.registryKey() == RegistryKey.BLOCK) {
+                        Registry<BlockType> registry = RegistryUtils.getRegistry(RegistryKey.BLOCK);
+                        if (registry.hasTag((TagKey<BlockType>) tagKey)) {
+                            registryKeySet = registry.getTag((TagKey<BlockType>) tagKey);
+                            typedKeys.clear();
+                            break;
+                        }
+                    }
                 }
-                component.addRule(blockMaterials, speed, correctForDrops);
-            } else if (this.blockKey != null) {
-                Tag<Material> tag = this.blockKey.getSingle(event);
-                if (tag != null) {
-                    component.addRule(tag, speed, correctForDrops);
+
+                if (!typedKeys.isEmpty()) {
+                    registryKeySet = RegistrySet.keySet(RegistryKey.BLOCK, typedKeys);
                 }
             }
+            Float speed = null;
+            if (this.speed != null) {
+                Number num = this.speed.getSingle(event);
+                if (num != null) speed = num.floatValue();
+            }
+            TriState correctForDrops = this.correctForDrops == null ? TriState.NOT_SET : TriState.byBoolean(this.correctForDrops.getSingle(event));
+
+            Tool.Rule rule = Tool.rule(registryKeySet, speed, correctForDrops);
+            toolBuilder.addRule(rule);
         }
         return super.walk(event, false);
     }
@@ -126,4 +158,5 @@ public class SecToolRule extends Section {
     public @NotNull String toString(Event e, boolean d) {
         return "apply tool rule";
     }
+
 }

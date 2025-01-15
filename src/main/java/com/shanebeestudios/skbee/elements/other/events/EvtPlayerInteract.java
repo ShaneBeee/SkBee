@@ -60,7 +60,13 @@ public class EvtPlayerInteract extends SkriptEvent {
         }, EventValues.TIME_NOW);
 
         EventValues.registerEventValue(PlayerInteractEvent.class, Action.class, PlayerInteractEvent::getAction, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerInteractEvent.class, Vector.class, PlayerInteractEvent::getClickedPosition, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerInteractEvent.class, Vector.class, new Converter<>() {
+            @SuppressWarnings("deprecation")
+            @Override
+            public @Nullable Vector convert(PlayerInteractEvent from) {
+                return from.getClickedPosition(); // Deprecated, new method in paper to use later
+            }
+        }, EventValues.TIME_NOW);
         EventValues.registerEventValue(PlayerInteractEntityEvent.class, EquipmentSlot.class, PlayerInteractEntityEvent::getHand, EventValues.TIME_NOW);
         EventValues.registerEventValue(PlayerInteractAtEntityEvent.class, Location.class, event -> {
             Location location = event.getRightClicked().getLocation();
@@ -71,14 +77,12 @@ public class EvtPlayerInteract extends SkriptEvent {
 
     private int pattern;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
         this.pattern = matchedPattern;
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
         if (this.pattern == 0 && event instanceof PlayerInteractEvent) return true;

@@ -5,12 +5,12 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.Location;
 import org.bukkit.TreeType;
@@ -36,7 +36,7 @@ public class EffPopulateTree extends Effect {
     private Expression<TreeType> treeType;
     private Expression<Vector> vector;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.treeType = (Expression<TreeType>) exprs[0];
@@ -48,13 +48,15 @@ public class EffPopulateTree extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         if (!(event instanceof BlockPopulateEvent popEvent)) return;
 
         TreeType treeType = this.treeType.getSingle(event);
-        if (treeType == null) return;
+        if (treeType == null) {
+            error("Invalid tree type: " + this.treeType.toString(event, true));
+            return;
+        }
 
         LimitedRegion region = popEvent.getLimitedRegion();
         Random random = popEvent.getRandom();

@@ -12,9 +12,8 @@ import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.recipe.ShapedRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
-import org.bukkit.Material;
+import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
@@ -24,25 +23,25 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Arrays;
 
 @Name("Recipe - Ingredients")
-@Description({"Set/add the ingredients of a shaped/shapeless recipe.",
-        "This is specifically used in the ingredients section of shaped/shapeless recipe section.",
-        "\n`set ingredient` is used for shaped recipes.",
-        "\n`add ingredient` is used for shapeless recipes."})
+@Description({"Set/add to the ingredients of a shaped/shapeless recipe.",
+    "This is specifically used in the ingredients section of shaped/shapeless recipe section.",
+    "`set ingredient` is used for shaped recipes.",
+    "`add ingredient` is used for shapeless recipes."})
 @Examples("see shaped/shapeless recipe sections.")
 @Since("3.0.0")
 public class EffRecipeSetIngredient extends Effect {
 
     static {
         Skript.registerEffect(EffRecipeSetIngredient.class,
-                "set ingredient (of|for) %string% to %itemstack/recipechoice%",
-                "add %itemstack/recipechoice% to ingredients");
+            "set ingredient (of|for) %string% to %itemstack/recipechoice/minecrafttag%",
+            "add %itemstack/recipechoice/minecrafttag% to ingredients");
     }
 
     private int pattern;
     private Expression<String> key;
     private Expression<?> ingredient;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = matchedPattern;
@@ -59,12 +58,11 @@ public class EffRecipeSetIngredient extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Object ingredient = this.ingredient.getSingle(event);
 
-        RecipeChoice recipeChoice = getRecipeChoice(ingredient);
+        RecipeChoice recipeChoice = RecipeUtil.getRecipeChoice(ingredient);
         if (recipeChoice == null) return;
 
         if (this.pattern == 0 && event instanceof ShapedRecipeCreateEvent shapedEvent) {
@@ -81,25 +79,6 @@ public class EffRecipeSetIngredient extends Effect {
             ShapelessRecipe shapelessRecipe = shapelessEvent.getRecipe();
             if (shapelessRecipe.getChoiceList().size() < 9) shapelessRecipe.addIngredient(recipeChoice);
         }
-    }
-
-    @Nullable
-    private static RecipeChoice getRecipeChoice(Object ingredient) {
-        RecipeChoice recipeChoice = null;
-        if (ingredient instanceof ItemStack itemStack) {
-            Material material = itemStack.getType();
-            // Air cannot be used in recipes
-            if (material.isAir()) return null;
-
-            if (itemStack.isSimilar(new ItemStack(material))) {
-                recipeChoice = new RecipeChoice.MaterialChoice(material);
-            } else {
-                recipeChoice = new RecipeChoice.ExactChoice(itemStack);
-            }
-        } else if (ingredient instanceof RecipeChoice choice) {
-            recipeChoice = choice;
-        }
-        return recipeChoice;
     }
 
     @Override

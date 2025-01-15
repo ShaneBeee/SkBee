@@ -11,14 +11,15 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import org.bukkit.entity.Player;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("TextComponent - Send Title")
 @Description({"Send titles containing components. Supports strings as well.",
-    "If you are using variables and the title won't send, make sure to add `component`."})
+    "If you are using variables and the title won't send, make sure to add `component`.",
+    "`to %audiences%` = An audience is anything that can receieve a component (players, entities, console, worlds, server, etc)."})
 @Examples({"send title mini message from \"<rainbow>OOO RAINBOW TITLE\"",
     "send title component {_comp} for 10 seconds with fadein 5 ticks and fadeout 10 ticks"})
 @Since("2.4.0")
@@ -26,11 +27,11 @@ public class EffSendComponentTitle extends Effect {
 
     static {
         Skript.registerEffect(EffSendComponentTitle.class,
-            "send title [component] %textcomponent/string% [with subtitle [component] %-textcomponent/string%] [to %players%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]");
+            "send title [component] %textcomponent/string% [with subtitle [component] %-textcomponent/string%] [to %audiences%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]");
     }
 
     private Expression<Object> title, subtitle;
-    private Expression<Player> players;
+    private Expression<Audience> audiences;
     private Expression<Timespan> stay, fadeIn, fadeOut;
 
     @SuppressWarnings("unchecked")
@@ -38,7 +39,7 @@ public class EffSendComponentTitle extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         this.title = (Expression<Object>) exprs[0];
         this.subtitle = (Expression<Object>) exprs[1];
-        this.players = (Expression<Player>) exprs[2];
+        this.audiences = (Expression<Audience>) exprs[2];
         this.stay = (Expression<Timespan>) exprs[3];
         this.fadeIn = (Expression<Timespan>) exprs[4];
         this.fadeOut = (Expression<Timespan>) exprs[5];
@@ -51,7 +52,7 @@ public class EffSendComponentTitle extends Effect {
         if (title == null) return;
 
         Object subtitle = this.subtitle != null ? this.subtitle.getSingle(event) : null;
-        Player[] players = this.players.getArray(event);
+        Audience[] audiences = this.audiences.getArray(event);
 
         long stay = -1;
         long fadeIn = -1;
@@ -75,14 +76,14 @@ public class EffSendComponentTitle extends Effect {
                 fadeOut = fadeOutSingle.getAs(Timespan.TimePeriod.TICK);
             }
         }
-        ComponentWrapper.sendTitle(players, title, subtitle, stay, fadeIn, fadeOut);
+        ComponentWrapper.sendTitle(audiences, title, subtitle, stay, fadeIn, fadeOut);
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String title = "send title component " + this.title.toString(e, d);
         String sub = this.subtitle != null ? " with subtitle " + this.subtitle.toString(e, d) : "";
-        String play = this.players != null ? " to " + this.players.toString(e, d) : "";
+        String play = this.audiences != null ? " to " + this.audiences.toString(e, d) : "";
         String stay = this.stay != null ? " for " + this.stay.toString(e, d) : "";
         String fadeIn = this.fadeIn != null ? " with fadein " + this.fadeIn.toString(e, d) : "";
         String fadeOut = this.fadeOut != null ? " with fadeout " + this.fadeOut.toString(e, d) : "";

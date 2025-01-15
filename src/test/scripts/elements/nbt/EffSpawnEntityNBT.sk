@@ -1,0 +1,10 @@
+test "SkBee - NBT - EffSpawnEntityNBT":
+	set {_n} to nbt from "{custom:{test:1},LeftHanded:1b}"
+	spawn a sheep at event-location with nbt {_n}
+	set {_e} to last spawned entity
+
+	assert int tag "custom;test" of nbt of {_e} = 1 with "The custom tag should have been set"
+	assert byte tag "LeftHanded" of nbt of {_e} = 1 with "The left hand should be true now"
+	#broadcast pretty nbt of nbt of {_e} with split "  "
+
+	delete entity within {_e}

@@ -7,13 +7,15 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.ScoreboardUtils;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
+import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.RenderType;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class Types {
 
@@ -25,6 +27,7 @@ public class Types {
                 .description("Represents an objective in a scoreboard.",
                     "When deleting, the objective will be unregistered.")
                 .since("2.6.0")
+                .supplier(() -> Bukkit.getScoreboardManager().getMainScoreboard().getObjectives().iterator())
                 .parser(new Parser<>() {
 
                     @Override
@@ -33,17 +36,16 @@ public class Types {
                     }
 
                     @Override
-                    public @NotNull String toString(Objective o, int flags) {
-                        return "objective with id \"" + o.getName() + "\"";
+                    public @NotNull String toString(Objective objective, int flags) {
+                        return "objective '" + objective.getName() + "' with criteria '" + objective.getTrackedCriteria().getName() + "'";
                     }
 
                     @Override
-                    public @NotNull String toVariableNameString(Objective o) {
-                        return "objective{name=" + o.getName() + "}";
+                    public @NotNull String toVariableNameString(Objective objective) {
+                        return "objective{name=" + objective.getName() + "}";
                     }
                 })
                 .changer(new Changer<>() {
-                    @SuppressWarnings("NullableProblems")
                     @Override
                     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
                         if (mode == ChangeMode.DELETE) {
@@ -52,7 +54,6 @@ public class Types {
                         return null;
                     }
 
-                    @SuppressWarnings("NullableProblems")
                     @Override
                     public void change(Objective[] what, @Nullable Object[] delta, ChangeMode mode) {
                         if (mode == ChangeMode.DELETE) {
@@ -71,16 +72,16 @@ public class Types {
                 .description("Represents a criteria for a scoreboard objective.",
                     "See [**Scoreboard Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki for more details.")
                 .since("2.6.0")
+                .supplier(ScoreboardUtils.getCriteriaSupplier())
                 .parser(new Parser<>() {
-
                     @Override
                     public boolean canParse(@NotNull ParseContext context) {
                         return false;
                     }
 
                     @Override
-                    public @NotNull String toString(Criteria o, int flags) {
-                        return "criteria " + o.getName();
+                    public @NotNull String toString(Criteria criteria, int flags) {
+                        return "criteria '" + criteria.getName() + "'";
                     }
 
                     @Override
@@ -88,7 +89,7 @@ public class Types {
                         return "criteria{name=" + o.getName() + "}";
                     }
                 }));
-            }
+        }
 
         if (Classes.getExactClassInfo(RenderType.class) == null) {
             EnumWrapper<RenderType> RENDER_ENUM = new EnumWrapper<>(RenderType.class);
