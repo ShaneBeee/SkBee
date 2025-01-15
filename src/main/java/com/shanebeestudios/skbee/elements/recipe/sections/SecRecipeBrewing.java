@@ -1,18 +1,17 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.potion.PotionMix;
@@ -26,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.List;
 
@@ -49,7 +47,7 @@ import java.util.List;
     "\t\tingredient: glowstone dust",
     "\t\tinput: water bottle"})
 @Since("3.0.0")
-public class SecRecipeBrewing extends Section implements SyntaxRuntimeErrorProducer {
+public class SecRecipeBrewing extends Section {
 
     private static EntryValidator VALIDATOR;
     private static PotionBrewer POTION_BREWER = null;
@@ -69,7 +67,6 @@ public class SecRecipeBrewing extends Section implements SyntaxRuntimeErrorProdu
         }
     }
 
-    private Node node;
     private Expression<String> id;
     private Expression<ItemStack> result;
     private Expression<RecipeChoice> ingredient;
@@ -78,7 +75,6 @@ public class SecRecipeBrewing extends Section implements SyntaxRuntimeErrorProdu
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        this.node = getParser().getNode();
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
@@ -134,11 +130,6 @@ public class SecRecipeBrewing extends Section implements SyntaxRuntimeErrorProdu
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "register brewing recipe";
-    }
-
-    @Override
-    public Node getNode() {
-        return this.node;
     }
 
 }

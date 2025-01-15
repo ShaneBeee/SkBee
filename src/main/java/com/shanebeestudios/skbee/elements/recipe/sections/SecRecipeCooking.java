@@ -1,20 +1,19 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.CookingRecipeType;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
@@ -32,7 +31,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +76,7 @@ import java.util.Map;
     "\tresult: diamond sword of fire aspect named \"Flaming Sword\"",
     "\tinput: diamond sword"})
 @Since("3.0.0")
-public class SecRecipeCooking extends Section implements SyntaxRuntimeErrorProducer {
+public class SecRecipeCooking extends Section {
 
     private static final EntryValidator VALIDATOR;
     private static final Map<String, CookingBookCategory> CATEGORY_MAP = new HashMap<>();
@@ -103,7 +101,6 @@ public class SecRecipeCooking extends Section implements SyntaxRuntimeErrorProdu
         Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe");
     }
 
-    private Node node;
     private CookingRecipeType recipeType;
     private Expression<String> id;
     private Expression<ItemStack> result;
@@ -116,7 +113,6 @@ public class SecRecipeCooking extends Section implements SyntaxRuntimeErrorProdu
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        this.node = getParser().getNode();
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
@@ -204,11 +200,6 @@ public class SecRecipeCooking extends Section implements SyntaxRuntimeErrorProdu
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "register a new " + this.recipeType.toString().toLowerCase(Locale.ROOT) + " recipe";
-    }
-
-    @Override
-    public Node getNode() {
-        return this.node;
     }
 
 }

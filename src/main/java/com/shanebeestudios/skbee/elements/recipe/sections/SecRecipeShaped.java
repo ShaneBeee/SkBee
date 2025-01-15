@@ -1,14 +1,12 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
@@ -16,6 +14,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.recipe.ShapedRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -85,7 +83,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
     "\t\t\tset ingredient of \"x\" to honeycomb",
     "\t\t\tset ingredient of \"z\" to honey bottle"})
 @Since("3.0.0")
-public class SecRecipeShaped extends Section implements SyntaxRuntimeErrorProducer {
+public class SecRecipeShaped extends Section {
 
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
     private static final EntryValidator VALIDATOR;
@@ -108,7 +106,6 @@ public class SecRecipeShaped extends Section implements SyntaxRuntimeErrorProduc
         Skript.registerSection(SecRecipeShaped.class, "register [a] [new] shaped recipe");
     }
 
-    private Node node;
     private Expression<String> id;
     private Expression<ItemStack> result;
     private Expression<String> shape;
@@ -119,7 +116,6 @@ public class SecRecipeShaped extends Section implements SyntaxRuntimeErrorProduc
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        this.node = getParser().getNode();
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
@@ -230,11 +226,6 @@ public class SecRecipeShaped extends Section implements SyntaxRuntimeErrorProduc
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "register shaped recipe";
-    }
-
-    @Override
-    public Node getNode() {
-        return this.node;
     }
 
 }

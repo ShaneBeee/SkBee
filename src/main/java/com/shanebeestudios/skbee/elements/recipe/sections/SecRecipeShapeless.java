@@ -1,14 +1,12 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
@@ -16,6 +14,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
@@ -28,7 +27,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.HashMap;
 import java.util.List;
@@ -72,7 +70,7 @@ import java.util.Map;
     "\t\t\tadd diamond block to ingredients",
     "\t\t\tadd emerald block to ingredients"})
 @Since("3.0.0")
-public class SecRecipeShapeless extends Section implements SyntaxRuntimeErrorProducer {
+public class SecRecipeShapeless extends Section {
 
     private static final boolean HAS_CATEGORY = RecipeUtil.HAS_CATEGORY;
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>(); // TODO this will cause errors on lower versions, will fix later
@@ -96,7 +94,6 @@ public class SecRecipeShapeless extends Section implements SyntaxRuntimeErrorPro
         Skript.registerSection(SecRecipeShapeless.class, "register [a] [new] shapeless recipe");
     }
 
-    private Node node;
     private Expression<String> id;
     private Expression<ItemStack> result;
     private Expression<String> group;
@@ -106,7 +103,6 @@ public class SecRecipeShapeless extends Section implements SyntaxRuntimeErrorPro
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        this.node = getParser().getNode();
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
@@ -184,11 +180,6 @@ public class SecRecipeShapeless extends Section implements SyntaxRuntimeErrorPro
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "register shapeless recipe";
-    }
-
-    @Override
-    public Node getNode() {
-        return this.node;
     }
 
 }

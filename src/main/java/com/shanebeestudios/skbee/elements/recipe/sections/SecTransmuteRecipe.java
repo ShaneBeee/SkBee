@@ -2,18 +2,17 @@ package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
@@ -25,7 +24,6 @@ import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.List;
 
@@ -52,7 +50,7 @@ import java.util.List;
     "\tinput: minecraft item tag \"minecraft:swords\"",
     "\tmaterial: netherite ingot"})
 @Since("INSERT VERSION")
-public class SecTransmuteRecipe extends Section implements SyntaxRuntimeErrorProducer {
+public class SecTransmuteRecipe extends Section {
 
     private static EntryValidator VALIDATOR;
 
@@ -71,7 +69,6 @@ public class SecTransmuteRecipe extends Section implements SyntaxRuntimeErrorPro
         }
     }
 
-    private Node node;
     private Expression<String> id;
     private Expression<ItemType> result;
     private Expression<RecipeChoice> input;
@@ -82,7 +79,6 @@ public class SecTransmuteRecipe extends Section implements SyntaxRuntimeErrorPro
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        this.node = getParser().getNode();
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
@@ -156,11 +152,6 @@ public class SecTransmuteRecipe extends Section implements SyntaxRuntimeErrorPro
     @Override
     public String toString(@Nullable Event event, boolean debug) {
         return "register transmute recipe";
-    }
-
-    @Override
-    public Node getNode() {
-        return this.node;
     }
 
 }

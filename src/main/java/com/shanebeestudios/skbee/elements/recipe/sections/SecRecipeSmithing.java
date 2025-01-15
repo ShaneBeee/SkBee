@@ -1,18 +1,17 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
@@ -26,7 +25,6 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer;
 
 import java.util.List;
 
@@ -47,7 +45,7 @@ import java.util.List;
     "\t\tbase: diamond",
     "\t\taddition: blaze powder"})
 @Since("3.0.0")
-public class SecRecipeSmithing extends Section implements SyntaxRuntimeErrorProducer {
+public class SecRecipeSmithing extends Section {
 
     public static final boolean HAS_NBT_METHOD = Skript.methodExists(SmithingRecipe.class, "willCopyNbt");
     private static EntryValidator VALIDATOR;
@@ -66,7 +64,6 @@ public class SecRecipeSmithing extends Section implements SyntaxRuntimeErrorProd
         }
     }
 
-    private Node node;
     private Expression<String> id;
     private Expression<ItemStack> result;
     private Expression<RecipeChoice> template;
@@ -77,7 +74,6 @@ public class SecRecipeSmithing extends Section implements SyntaxRuntimeErrorProd
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        this.node = getParser().getNode();
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
@@ -147,11 +143,6 @@ public class SecRecipeSmithing extends Section implements SyntaxRuntimeErrorProd
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "register smithing recipe";
-    }
-
-    @Override
-    public Node getNode() {
-        return this.node;
     }
 
 }
