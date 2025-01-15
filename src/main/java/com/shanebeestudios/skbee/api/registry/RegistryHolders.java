@@ -23,6 +23,7 @@ import org.bukkit.generator.structure.Structure;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.comparator.Comparator;
@@ -69,6 +70,7 @@ public class RegistryHolders {
         register(RegistryKey.GAME_EVENT, GameEvent.class);
         register(RegistryKey.ITEM, ItemType.class, itemType -> new ItemType(itemType.asMaterial()));
         register(RegistryKey.MOB_EFFECT, PotionEffectType.class);
+        register(RegistryKey.POTION, PotionType.class);
         register(RegistryKey.PARTICLE_TYPE, Particle.class);
         register(RegistryKey.SOUND_EVENT, String.class, soundEvent -> soundEvent.key().toString());
         register(RegistryKey.STRUCTURE, Structure.class);

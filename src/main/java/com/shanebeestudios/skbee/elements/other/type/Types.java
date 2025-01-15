@@ -45,6 +45,7 @@ import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.loot.LootTable;
+import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -526,6 +527,18 @@ public class Types {
         } else {
             Util.logLoading("It looks like another addon registered 'attributeOperation' already.");
             Util.logLoading("You may have to use their AttributeModifier Operation in SkBee's syntaxes.");
+        }
+
+        if (Classes.getExactClassInfo(PotionType.class) == null) {
+            Classes.registerClass(RegistryClassInfo.create(Registry.POTION, PotionType.class, "potiontype")
+                .user("potion ?types?")
+                .name("Potion Type")
+                .description("Represents the different types of potions (not potion effect types) used in vanilla potion items.")
+                .before("potioneffecttype")
+                .since("INSERT VERSION"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'potiontype' already.");
+            Util.logLoading("You may have to use their PotionType in SkBee's syntaxes.");
         }
     }
 
