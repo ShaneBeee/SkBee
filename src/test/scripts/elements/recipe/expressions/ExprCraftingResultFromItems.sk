@@ -1,6 +1,7 @@
 test "SkBee - ExprCraftingResultFromItems":
 
-    # 3x3 Grid
+    # Items
+    ## 3x3 Grid
     set {_i::*} to air, diamond, air, air, diamond, air, air, stick, air
     assert crafting result from {_i::*} = 1 of diamond sword with "Diamond sword should be crafted"
 
@@ -10,7 +11,7 @@ test "SkBee - ExprCraftingResultFromItems":
     set {_i::*} to oak planks, oak slab, oak planks, oak planks, air, oak planks, oak planks, oak slab, oak planks
     assert crafting result from {_i::*} = 1 of barrel with "Barrel should be crafted"
 
-    # 2x2 Grid
+    ## 2x2 Grid
     set {_i::*} to oak log, air, air, air
     assert crafting result from {_i::*} = 4 of oak planks with "Oak planks should be crafted"
 
@@ -20,8 +21,21 @@ test "SkBee - ExprCraftingResultFromItems":
     set {_i::*} to fishing rod, air, air, carrot
     assert crafting result from {_i::*} = 1 of carrot on a stick with "Carrot on a stick should be crafted"
 
-    # Failures
+    ## Failures
     set {_i::*} to stick, stick, stick, stick
     assert crafting result from {_i::*} is not set with "The sticks should do nothing"
     set {_i::*} to air, stick, air, stick
     assert crafting result from {_i::*} is not set with "The sticks and air should do nothing"
+
+    # IDs
+    set {_i::*} to air, diamond, air, air, diamond, air, air, stick, air
+    assert crafting result id from {_i::*} = "minecraft:diamond_sword" with "Diamond sword should be crafted"
+
+    set {_i::*} to oak planks, oak planks, air, oak planks, oak planks, air, oak planks, oak planks, air
+    assert crafting result id from {_i::*} = "minecraft:oak_door" with "Oak door should be crafted"
+
+    set {_i::*} to oak planks, oak slab, oak planks, oak planks, air, oak planks, oak planks, oak slab, oak planks
+    assert crafting result id from {_i::*} = "minecraft:barrel" with "Barrel should be crafted"
+
+    set {_i::*} to oak log, air, air, air
+    assert crafting result id from {_i::*} = "minecraft:oak_planks" with "Oak planks should be crafted"

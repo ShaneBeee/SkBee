@@ -16,41 +16,45 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.event.Event;
+import org.bukkit.inventory.CraftingRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Recipe - Crafting Result from Items")
-@Description({"Get the resulting item which would be crafted with a list of items.",
+@Description({"Get the resulting item/id which would be crafted with a list of items.",
     "This requires either 4 or 9 items, to follow the 2x2 and 3x3 crafting grids respectively.",
     "Use `air` to represent blank slots in the crafting grid.",
     "I have no clue what the world is for since recipes are not per world, but Bukkit offers it so here we are."})
 @Examples({"set {_barrel} to crafting result of oak planks, oak slab, oak planks, oak planks, air, oak planks, oak planks, oak slab, oak planks",
-    "set {_carrotOnStick} to crafting result of fishing rod, air, air, carrot"})
+    "set {_carrotOnStick} to crafting result of fishing rod, air, air, carrot",
+    "set {_diamondSwordId} to crafting result id of air, diamond, air, air, diamond, air, air, stick, air"})
 @Since("INSERT VERSION")
-public class ExprCraftingResultFromItems extends SimpleExpression<ItemStack> {
+public class ExprCraftingResultFromItems extends SimpleExpression<Object> {
 
     private static final World DEFAULT_WORLD = Bukkit.getWorlds().getFirst();
     private static final ItemStack AIR = new ItemStack(Material.AIR);
 
     static {
-        Skript.registerExpression(ExprCraftingResultFromItems.class, ItemStack.class, ExpressionType.COMBINED,
-            "crafting result (of|from) [items] %itemtypes% [in %-world%]");
+        Skript.registerExpression(ExprCraftingResultFromItems.class, Object.class, ExpressionType.COMBINED,
+            "crafting result [item|:id] (of|from) [items] %itemtypes% [in %-world%]");
     }
 
+    private boolean id;
     private Expression<ItemType> items;
     private Expression<World> world;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        this.id = parseResult.hasTag("id");
         this.items = (Expression<ItemType>) exprs[0];
         this.world = (Expression<World>) exprs[1];
         return true;
     }
 
     @Override
-    protected ItemStack @Nullable [] get(Event event) {
+    protected Object @Nullable [] get(Event event) {
         World world = this.world != null ? this.world.getOptionalSingle(event).orElse(DEFAULT_WORLD) : DEFAULT_WORLD;
         ItemStack[] itemStacks = new ItemStack[9];
 
@@ -68,10 +72,15 @@ public class ExprCraftingResultFromItems extends SimpleExpression<ItemStack> {
         } else {
             return null;
         }
-        Recipe craftingRecipe = Bukkit.getCraftingRecipe(itemStacks, world);
-        if (craftingRecipe != null) {
-            ItemStack itemStack = craftingRecipe.getResult();
-            if (itemStack.getType() != Material.AIR) return new ItemStack[]{itemStack};
+        Recipe recipe = Bukkit.getCraftingRecipe(itemStacks, world);
+        if (recipe != null) {
+            if (this.id) {
+                if (recipe instanceof CraftingRecipe craftingRecipe)
+                    return new String[]{craftingRecipe.getKey().toString()};
+            } else {
+                ItemStack itemStack = recipe.getResult();
+                if (itemStack.getType() != Material.AIR) return new ItemStack[]{itemStack};
+            }
         }
         return null;
     }
@@ -82,14 +91,16 @@ public class ExprCraftingResultFromItems extends SimpleExpression<ItemStack> {
     }
 
     @Override
-    public Class<? extends ItemStack> getReturnType() {
-        return ItemStack.class;
+    public Class<?> getReturnType() {
+        return this.id ? String.class : ItemStack.class;
     }
 
     @Override
     public String toString(Event e, boolean d) {
         SyntaxStringBuilder builder = new SyntaxStringBuilder(e, d);
-        builder.append("crafting result from", this.items);
+        builder.append("crafting result");
+        builder.append(this.id ? "id" : "item");
+        builder.append("from", this.items);
         if (this.world != null) {
             builder.append("in world", this.world);
         }
