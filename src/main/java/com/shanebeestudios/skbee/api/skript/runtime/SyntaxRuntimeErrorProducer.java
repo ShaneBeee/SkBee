@@ -20,7 +20,7 @@ public interface SyntaxRuntimeErrorProducer extends org.skriptlang.skript.log.ru
     @Override
     default void error(String message, String highlight) {
         if (TestMode.ENABLED) {
-            Skript.error("runtime error: " + message);
+            Skript.error( message);
             return;
         }
         org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer.super.error(message);
@@ -34,7 +34,7 @@ public interface SyntaxRuntimeErrorProducer extends org.skriptlang.skript.log.ru
     @Override
     default void warning(String message, String highlight) {
         if (TestMode.ENABLED) {
-            Skript.error("runtime warning: " + message);
+            Skript.error( message);
             return;
         }
         org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer.super.warning(message);
