@@ -566,7 +566,7 @@ public class Types {
 
         if (Skript.classExists("org.bukkit.JukeboxSong")) {
             if (Classes.getExactClassInfo(JukeboxSong.class) == null) {
-                if (BukkitUtils.registryExists("JUKEBOX")) {
+                if (BukkitUtils.registryExists("JUKEBOX_SONG")) {
                     Classes.registerClass(RegistryClassInfo.create(Registry.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
                         .user("jukebox ?songs?")
                         .name("Instrument")
