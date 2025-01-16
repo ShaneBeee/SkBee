@@ -1,12 +1,17 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -17,13 +22,14 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
 @Name("ItemComponent - Enchantment Glint Override")
-@Description({"Represents the enchantment glint override of an item (Requires Minecraft 1.20.5+).",
+@Description({"Represents the enchantment glint override of an item. ",
+    "Requires Minecraft 1.20.5+ and `item_component` feature.",
     "Overrides the enchantment glint effect on an item.",
     "When `true`, the item will display a glint, even without enchantments.",
     "When `false`, the item will not display a glint, even with enchantments.",
     "**Note**: If no override is applied, will return null.",
     "See [**EnchantmentGlintOverride**](https://minecraft.wiki/w/Data_component_format#enchantment_glint_override) on McWiki for more details.",
-    "Requires Paper 1.21.3+",
+    "Requires Paper 1.21.3+ and `item_component` feature.",
     "",
     "**Changers**:",
     "- `set` = Allows you to override the glint.",
@@ -37,6 +43,15 @@ public class ExprEnchantmentGlintOverride extends SimplePropertyExpression<Objec
     static {
         register(ExprEnchantmentGlintOverride.class, Boolean.class,
             "[enchantment] glint [override]", "itemstacks/itemtypes/slots");
+    }
+
+    @Override
+    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
+            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
+            return false;
+        }
+        return super.init(expressions, matchedPattern, isDelayed, parseResult);
     }
 
     @Override

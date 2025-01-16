@@ -14,6 +14,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.registrations.Feature;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -32,7 +33,7 @@ import java.util.List;
 @Name("ItemComponent - Death Protection Component Apply")
 @Description({"Apply a death protection component to an item.",
     "If present, this item protects the holder from dying by restoring a single health point.",
-    "Requires Paper 1.21.3+",
+    "Requires Paper 1.21.3+ and `item_component` feature.",
     "See [**Death Protection Component**](https://minecraft.wiki/w/Data_component_format#death_protection) on McWiki for more info.",
     "`death_effect` = A `consume effect` to by applied to the component (supports a list) [Optional].",
     "`death_effects` = A section to apply `consume effects` [Optional]."})
@@ -94,6 +95,10 @@ public class SecDeathProtectionComponent extends EffectSection {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
+            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
+            return false;
+        }
         if (sectionNode == null) return false;
         this.items = (Expression<Object>) exprs[0];
         EntryContainer container = VALIDATOR.validate(sectionNode);

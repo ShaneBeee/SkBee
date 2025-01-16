@@ -15,6 +15,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
+import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.block.BlockPredicate;
@@ -40,7 +41,7 @@ import java.util.List;
 
 @Name("ItemComponent - Adventure Predicate Apply")
 @Description({"Apply an adventure can break/can place on predicate to items.",
-    "Requires Paper 1.21.3+",
+    "Requires Paper 1.21.3+ and `item_component` feature.",
     "See [**Can Break**](https://minecraft.wiki/w/Data_component_format#can_break)/" +
         "[**Can Place On**](https://minecraft.wiki/w/Data_component_format#can_place_on) components on McWiki for more info.",
     "",
@@ -82,6 +83,10 @@ public class SecAdventureComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
+            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
+            return false;
+        }
         if (sectionNode == null) return false;
         EntryContainer validate = VALIDATOR.validate(sectionNode);
         if (validate == null) {

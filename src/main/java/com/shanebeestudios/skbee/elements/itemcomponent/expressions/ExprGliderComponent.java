@@ -1,12 +1,17 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
+import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.event.Event;
@@ -17,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"If applied, allows players to glide (as with elytra) when equipped.",
     "If the item does not have a glider, it will return null, not false.",
     "See [**Glider Component**](https://minecraft.wiki/w/Data_component_format#glider) on McWiki for more details.",
-    "Requires Paper 1.21.3+",
+    "Requires Paper 1.21.3+ and `item_component` feature.",
     "",
     "**Changers**:",
     "- `set` = If set to true, a glider will be applied, otherwise removed.",
@@ -35,6 +40,15 @@ public class ExprGliderComponent extends SimplePropertyExpression<Object, Boolea
     static {
         register(ExprGliderComponent.class, Boolean.class,
             "glider component", "itemstacks/itemtypes/slots");
+    }
+
+    @Override
+    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
+            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
+            return false;
+        }
+        return super.init(expressions, matchedPattern, isDelayed, parseResult);
     }
 
     @Override

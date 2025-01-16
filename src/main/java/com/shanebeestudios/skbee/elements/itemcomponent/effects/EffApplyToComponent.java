@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
+import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecConsumableComponent.ConsumeEffectsEvent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecPotionContentsComponent.PotionContentsEvent;
@@ -67,6 +68,10 @@ public class EffApplyToComponent extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
+            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
+            return false;
+        }
         this.pattern = matchedPattern;
         if (this.pattern == 0 && !getParser().isCurrentEvent(PotionContentsEvent.class)) {
             Skript.error("'apply effect -> potion effects' can only be used in a potion contents section.");

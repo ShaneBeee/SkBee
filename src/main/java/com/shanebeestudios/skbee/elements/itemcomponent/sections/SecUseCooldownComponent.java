@@ -13,6 +13,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
+import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -28,7 +29,7 @@ import java.util.List;
 
 @Name("ItemComponent - Use Cooldown")
 @Description({"Apply a cooldown to all items of the same type when it has been used.",
-    "Requires Paper 1.21.3+",
+    "Requires Paper 1.21.3+ and `item_component` feature.",
     "See [**Use Cooldown Component**](https://minecraft.wiki/w/Data_component_format#use_cooldown) on McWiki for more details.",
     "",
     "**Entries**:",
@@ -60,6 +61,10 @@ public class SecUseCooldownComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
+            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
+            return false;
+        }
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
