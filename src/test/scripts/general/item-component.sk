@@ -168,6 +168,23 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 	reset max stack size component of {_i}
 	assert max stack size component of {_i} = 64 with "Reset max stack size component should be 64 for oak planks"
 
+	# Potion Contents
+	set {_i} to 1 of potion
+	assert active potion effects of {_i} is not set with "Shouldn't have any effects yet"
+	apply potion contents to {_i}:
+		potion: swiftness
+		custom_color: blue
+	assert active potion effects of {_i} is set with "Should have an effects now"
+	assert type of (active potion effects of {_i}) contains swiftness with "Should have swiftness"
+	delete {_i}
+	set {_i} to 1 of tipped arrow
+	apply potion contents to {_i}:
+		custom_color: rgb(1,1,1)
+		custom_effects:
+			apply -> potion effect of night vision for 3 minutes
+			apply -> potion effect of slowness for 10 days
+	assert type of (active potion effects of {_i}) contains slowness and night vision with "Should have slowness and night vision"
+
 	# Repairable
 	set {_i} to 1 of stick
 	assert repairable items of {_i} is not set with "A stick should not have any repairable items"
