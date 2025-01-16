@@ -37,7 +37,7 @@ test "SkBee - ClassInfos":
 	assert class info with codename "instrument" is registered with "should be registered"
 	assert class info with codename "itemdisplaytransform" is registered with "should be registered"
 	assert class info with codename "itemflag" is registered with "should be registered"
-	assert class info with codename "jukeboxsong" is registered with "should be registered" #TODO investigate
+	assert class info with codename "jukeboxsong" is registered with "should be registered"
 	assert class info with codename "machine" is registered with "should be registered"
 	assert class info with codename "machineproperty" is registered with "should be registered"
 	assert class info with codename "memory" is registered with "should be registered"
