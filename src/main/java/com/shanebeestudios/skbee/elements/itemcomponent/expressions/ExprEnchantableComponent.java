@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Enchantable;
@@ -60,7 +61,7 @@ public class ExprEnchantableComponent extends SimplePropertyExpression<Object, N
         int value = delta != null && delta[0] instanceof Number number ? number.intValue() : 0;
         Enchantable enchantable = Enchantable.enchantable(Math.max(1, value));
 
-        ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.ENCHANTABLE, enchantable);
+        ItemComponentUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.ENCHANTABLE, enchantable);
     }
 
     @Override

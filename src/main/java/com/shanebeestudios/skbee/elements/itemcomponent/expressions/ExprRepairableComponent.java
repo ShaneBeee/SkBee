@@ -13,6 +13,7 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -149,7 +150,7 @@ public class ExprRepairableComponent extends SimpleExpression<Object> {
             }
         }
 
-        ItemUtils.modifyComponent(this.items.getArray(event), mode, DataComponentTypes.REPAIRABLE, repairable);
+        ItemComponentUtils.modifyComponent(this.items.getArray(event), mode, DataComponentTypes.REPAIRABLE, repairable);
     }
 
     @Override

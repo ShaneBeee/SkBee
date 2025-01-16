@@ -8,6 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
+import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.key.Key;
@@ -60,7 +61,7 @@ public class ExprTooltipStyleComponent extends SimplePropertyExpression<Object, 
         String string = delta != null && delta[0] instanceof String s ? s : null;
         Key key = KeyUtils.getKey(string);
 
-        ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.TOOLTIP_STYLE, key);
+        ItemComponentUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.TOOLTIP_STYLE, key);
     }
 
     @Override
