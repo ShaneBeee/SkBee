@@ -405,29 +405,6 @@ public class OtherEvents extends SimpleEvent {
             }
         }, EventValues.TIME_NOW);
 
-        // Bell Ring Event
-        if (!Util.IS_RUNNING_SKRIPT_2_9 && Skript.classExists("org.bukkit.event.block.BellRingEvent")) {
-            Skript.registerEvent("Bell Ring", OtherEvents.class, BellRingEvent.class, "bell ring")
-                .description("Called when a bell is being rung. Requires Minecraft 1.19.4+")
-                .examples("on bell ring:",
-                    "\tkill all mobs in radius 5 of event-block")
-                .since("2.16.0");
-
-            EventValues.registerEventValue(BellRingEvent.class, Entity.class, new Getter<>() {
-                @Override
-                public @Nullable Entity get(BellRingEvent event) {
-                    return event.getEntity();
-                }
-            }, EventValues.TIME_NOW);
-
-            EventValues.registerEventValue(BellRingEvent.class, BlockFace.class, new Getter<>() {
-                @Override
-                public @NotNull BlockFace get(BellRingEvent event) {
-                    return event.getDirection();
-                }
-            }, EventValues.TIME_NOW);
-        }
-
         // Entity Teleport Event
         Skript.registerEvent("Entity Teleport", OtherEvents.class, EntityTeleportEvent.class, "entity teleport")
             .description("Thrown when a non-player entity is teleported from one location to another.",
