@@ -46,7 +46,7 @@ import static com.shanebeestudios.skbee.elements.itemcomponent.sections.SecDeath
         "Used to apply a `teleport randomly` consume effect in a death protection/consumable section.",
     "- `play sound %string/typedkey%` - Used to apply a `play sound` consume effect in a death protection/consumable section."})
 @Examples("See examples of the respective sections that use this effect.")
-@Since("INSERT VERSION")
+@Since("3.8.1")
 public class EffApplyToComponent extends Effect {
 
     static {

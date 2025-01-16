@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set potion type of player's tool to strong_leaping",
     "if potion type of player's tool = strong leaping:",
     "delete potion type of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.8.1")
 public class ExprPotionTypeItem extends SimplePropertyExpression<Object, PotionType> {
 
     private static final boolean HAS_COMPONENTS = Skript.classExists("io.papermc.paper.datacomponent.DataComponentType");

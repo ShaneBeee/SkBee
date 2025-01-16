@@ -58,7 +58,7 @@ import java.util.List;
     "\tcustom_effects:",
     "\t\tapply effects {_pe::*}",
     "give {_i} to player"})
-@Since("INSERT VERSION")
+@Since("3.8.1")
 @SuppressWarnings("UnstableApiUsage")
 public class SecPotionContentsComponent extends Section {
 
