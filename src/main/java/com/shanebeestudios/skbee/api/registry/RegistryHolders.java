@@ -115,11 +115,11 @@ public class RegistryHolders {
 
     public static String getDocUsage() {
         List<String> docNames = new ArrayList<>();
-        REGISTRY_HOLDERS_BY_NAME.forEach((key, holder) -> {
+        REGISTRY_HOLDERS_BY_REGISTRY_KEY.forEach((key, holder) -> {
             docNames.add(holder.getDocString());
         });
         Collections.sort(docNames);
-        return String.join("<br>", docNames);
+        return String.join("\n", docNames);
     }
 
     @SuppressWarnings("rawtypes")
