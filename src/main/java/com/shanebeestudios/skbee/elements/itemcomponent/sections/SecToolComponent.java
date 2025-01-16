@@ -15,6 +15,7 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -31,7 +32,7 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 @Name("ItemComponent - Tool Component Apply")
 @Description({"Apply a tool component to any item making it usable tool.",
-    "Requires Paper 1.21.3+",
+    "Requires Paper 1.21.3+ and `item_component` feature.",
     "See [**Tool Component**](https://minecraft.wiki/w/Data_component_format#tool) on McWiki for more details.",
     "",
     "**Entries/Sections**:",
@@ -92,6 +93,10 @@ public class SecToolComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
+            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
+            return false;
+        }
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 

@@ -14,6 +14,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ChargedProjectiles;
@@ -27,7 +28,7 @@ import java.util.List;
 @Name("ItemComponent - Charged Projectiles")
 @Description({"The items loaded as projectiles into a crossbow. If not present, the crossbow is not charged.",
     "See [**Charged Projectiles Component**](https://minecraft.wiki/w/Data_component_format#charged_projectiles) on McWiki for more details.",
-    "Requires Paper 1.21.3+",
+    "Requires Paper 1.21.3+ and `item_component` feature.",
     "",
     "**Changers**:",
     "- `set` = Set the items to be loaded by the crossbow.",
@@ -50,6 +51,10 @@ public class ExprChargedProjectilesComponent extends SimpleExpression<Object> {
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
+            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
+            return false;
+        }
         this.items = exprs[0];
         return true;
     }

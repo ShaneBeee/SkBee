@@ -1,0 +1,8 @@
+test "SkBee - ExprPotionTypeItem":
+
+	set {_i} to 1 of potion
+	assert potion type of {_i} is not set with "Shouldnt have a potion type"
+	set potion type of {_i} to strong slowness
+	assert potion type of {_i} = strong slowness with "It should now be strong slowness"
+	delete potion type of {_i}
+	assert potion type of {_i} is not set with "Shouldnt have a potion type after deleting"

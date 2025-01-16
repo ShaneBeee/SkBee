@@ -1,3 +1,4 @@
+using item_component
 test "SkBee - Item Component test" when running minecraft "1.21.3":
 
 	# Can Break/Can Place On section
@@ -30,15 +31,41 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 		animation: "brush"
 		sound: "block.stone.break"
 		has_consume_particles: false
-		on_consume_effects: {_effects}
+		on_consume_effect: {_effects}
 	assert {_i} has item component minecraft:consumable with "The stick should have a consumable component"
+	set {_i} to 1 of stone
+	apply consumable component to {_i}:
+		consume_seconds: 3.2 seconds
+		animation: "brush"
+		sound: "block.stone.break"
+		has_consume_particles: false
+		on_consume_effects:
+			apply -> potion effect of slowness for 10 seconds with probability 0.5
+			apply -> clear all effects
+			apply -> remove effects night vision
+			apply -> play sound "blah.blah"
+			apply -> teleport randomly within 15
+			apply -> teleport randomly within 20 meters
+			apply -> teleport randomly within 100 blocks
+	assert {_i} has item component minecraft:consumable with "The stone should have a consumable component"
 
 	# Death Protection Section
 	set {_i} to 1 of diamond sword
 	set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)
 	apply death protection component to {_i}:
-		death_effects: {_effects}
+		death_effect: {_effects}
 	assert {_i} has item component minecraft:death_protection with "The diamond sword should have a death protection component"
+	set {_i} to 1 of stick
+	apply death protection to {_i}:
+		death_effects:
+			apply -> potion effect of slowness for 10 seconds with probability 0.5
+			apply -> clear all effects
+			apply -> remove effects night vision
+			apply -> play sound "blah.blah"
+			apply -> teleport randomly within 15
+			apply -> teleport randomly within 20 meters
+			apply -> teleport randomly within 100 blocks
+	assert {_i} has item component minecraft:death_protection with "The stick should have a death protection component"
 
 	# Enchantable
 	set {_i} to 1 of diamond sword
@@ -167,6 +194,23 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 	assert max stack size component of {_i} is not set with "Deleting component should result in no return"
 	reset max stack size component of {_i}
 	assert max stack size component of {_i} = 64 with "Reset max stack size component should be 64 for oak planks"
+
+	# Potion Contents
+	set {_i} to 1 of potion
+	assert active potion effects of {_i} is not set with "Shouldn't have any effects yet"
+	apply potion contents to {_i}:
+		potion: swiftness
+		custom_color: blue
+	assert active potion effects of {_i} is set with "Should have an effects now"
+	assert type of (active potion effects of {_i}) contains swiftness with "Should have swiftness"
+	delete {_i}
+	set {_i} to 1 of tipped arrow
+	apply potion contents to {_i}:
+		custom_color: rgb(1,1,1)
+		custom_effects:
+			apply -> potion effect of night vision for 3 minutes
+			apply -> potion effect of slowness for 10 days
+	assert type of (active potion effects of {_i}) contains slowness and night vision with "Should have slowness and night vision"
 
 	# Repairable
 	set {_i} to 1 of stick

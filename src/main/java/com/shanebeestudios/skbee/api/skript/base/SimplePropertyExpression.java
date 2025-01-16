@@ -1,7 +1,10 @@
 package com.shanebeestudios.skbee.api.skript.base;
 
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.config.Node;
 import com.shanebeestudios.skbee.api.skript.runtime.SyntaxRuntimeErrorProducer;
+import org.bukkit.event.Event;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Extension of Skript's SimplePropertyExpression which implements SyntaxRuntimeErrorProducer
@@ -18,6 +21,16 @@ public abstract class SimplePropertyExpression<F, T>
     @Override
     public Node getNode() {
         return this.node;
+    }
+
+    @Override
+    public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+        for (F f : getExpr().getArray(event)) {
+            change(f, delta, mode);
+        }
+    }
+
+    public void change(F from, Object @Nullable [] delta, ChangeMode mode) {
     }
 
 }
