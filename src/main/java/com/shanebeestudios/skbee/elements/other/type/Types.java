@@ -461,35 +461,36 @@ public class Types {
         }
 
         if (Skript.classExists("org.bukkit.inventory.EquipmentSlotGroup")) {
-            // This class is not an enum, and does not have a registry
-            Map<String, EquipmentSlotGroup> equipmentSlotGroups = SkriptUtils.getEquipmentSlotGroups();
-            Classes.registerClass(new ClassInfo<>(EquipmentSlotGroup.class, "equipmentslotgroup")
-                .user("equipment ?slot ?groups?")
-                .name("Equipment Slot Group")
-                .description("Represents different groups of equipment slots.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .usage(StringUtils.join(equipmentSlotGroups.keySet().stream().sorted().toList(), ", "))
-                .parser(new Parser<>() {
+            if (Classes.getExactClassInfo(EquipmentSlotGroup.class) == null) {
+                // This class is not an enum, and does not have a registry
+                Map<String, EquipmentSlotGroup> equipmentSlotGroups = SkriptUtils.getEquipmentSlotGroups();
+                Classes.registerClass(new ClassInfo<>(EquipmentSlotGroup.class, "equipmentslotgroup")
+                    .user("equipment ?slot ?groups?")
+                    .name("Equipment Slot Group")
+                    .description("Represents different groups of equipment slots.",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .usage(StringUtils.join(equipmentSlotGroups.keySet().stream().sorted().toList(), ", "))
+                    .parser(new Parser<>() {
+                        @Override
+                        public @Nullable EquipmentSlotGroup parse(String string, ParseContext context) {
+                            string = string.replace(" ", "_");
+                            return equipmentSlotGroups.get(string);
+                        }
 
-                    @Override
-                    public @Nullable EquipmentSlotGroup parse(String string, ParseContext context) {
-                        string = string.replace(" ", "_");
-                        return equipmentSlotGroups.get(string);
-                    }
+                        @Override
+                        public @NotNull String toString(EquipmentSlotGroup slot, int flags) {
+                            return slot.toString();
+                        }
 
-                    @Override
-                    public @NotNull String toString(EquipmentSlotGroup slot, int flags) {
-                        return slot.toString();
-                    }
-
-                    @Override
-                    public @NotNull String toVariableNameString(EquipmentSlotGroup slot) {
-                        return slot.toString();
-                    }
-                }));
-        } else {
-            Util.logLoading("It looks like another addon registered 'equipmentSlotGroup' already.");
-            Util.logLoading("You may have to use their EquipmentSlotGroup in SkBee's syntaxes.");
+                        @Override
+                        public @NotNull String toVariableNameString(EquipmentSlotGroup slot) {
+                            return slot.toString();
+                        }
+                    }));
+            } else {
+                Util.logLoading("It looks like another addon registered 'equipmentSlotGroup' already.");
+                Util.logLoading("You may have to use their EquipmentSlotGroup in SkBee's syntaxes.");
+            }
         }
 
 
