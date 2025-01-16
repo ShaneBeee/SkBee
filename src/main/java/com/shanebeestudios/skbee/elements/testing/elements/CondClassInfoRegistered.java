@@ -52,7 +52,8 @@ public class CondClassInfoRegistered extends Condition implements VerboseAssert 
     public String toString(@Nullable Event event, boolean debug) {
         return new SyntaxStringBuilder(event, debug)
             .append("class info")
-            .append(this.codename ? "with codename" : "by class")
+            .append(this.codename ? "with codename" : "by class", this.name)
+            .append(isNegated() ? "isn't" : "is", "registered")
             .toString();
     }
 
