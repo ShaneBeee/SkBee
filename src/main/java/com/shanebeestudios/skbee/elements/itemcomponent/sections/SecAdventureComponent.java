@@ -82,6 +82,7 @@ public class SecAdventureComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        if (sectionNode == null) return false;
         EntryContainer validate = VALIDATOR.validate(sectionNode);
         if (validate == null) {
             return false;
