@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.UseRemainder;
@@ -59,7 +60,7 @@ public class ExprUseRemainderComponent extends SimplePropertyExpression<Object, 
         ItemStack transformInto = delta != null && delta[0] instanceof ItemStack is ? is : null;
         UseRemainder remainder = transformInto != null ? UseRemainder.useRemainder(transformInto) : null;
 
-        ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.USE_REMAINDER, remainder);
+        ItemComponentUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.USE_REMAINDER, remainder);
     }
 
     @Override

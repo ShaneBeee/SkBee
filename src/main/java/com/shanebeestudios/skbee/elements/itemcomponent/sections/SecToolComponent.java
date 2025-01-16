@@ -15,7 +15,7 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Tool;
@@ -130,7 +130,7 @@ public class SecToolComponent extends Section {
 
         Tool tool = toolBuilder.build();
 
-        ItemUtils.modifyComponent(this.items.getArray(event), ChangeMode.SET, DataComponentTypes.TOOL, tool);
+        ItemComponentUtils.modifyComponent(this.items.getArray(event), ChangeMode.SET, DataComponentTypes.TOOL, tool);
 
         return super.walk(event, false);
     }

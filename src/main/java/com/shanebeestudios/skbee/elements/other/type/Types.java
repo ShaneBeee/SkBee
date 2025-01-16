@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.other.type;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.bukkitutil.BukkitUtils;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
@@ -460,35 +461,36 @@ public class Types {
         }
 
         if (Skript.classExists("org.bukkit.inventory.EquipmentSlotGroup")) {
-            // This class is not an enum, and does not have a registry
-            Map<String, EquipmentSlotGroup> equipmentSlotGroups = SkriptUtils.getEquipmentSlotGroups();
-            Classes.registerClass(new ClassInfo<>(EquipmentSlotGroup.class, "equipmentslotgroup")
-                .user("equipment ?slot ?groups?")
-                .name("Equipment Slot Group")
-                .description("Represents different groups of equipment slots.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .usage(StringUtils.join(equipmentSlotGroups.keySet().stream().sorted().toList(), ", "))
-                .parser(new Parser<>() {
+            if (Classes.getExactClassInfo(EquipmentSlotGroup.class) == null) {
+                // This class is not an enum, and does not have a registry
+                Map<String, EquipmentSlotGroup> equipmentSlotGroups = SkriptUtils.getEquipmentSlotGroups();
+                Classes.registerClass(new ClassInfo<>(EquipmentSlotGroup.class, "equipmentslotgroup")
+                    .user("equipment ?slot ?groups?")
+                    .name("Equipment Slot Group")
+                    .description("Represents different groups of equipment slots.",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .usage(StringUtils.join(equipmentSlotGroups.keySet().stream().sorted().toList(), ", "))
+                    .parser(new Parser<>() {
+                        @Override
+                        public @Nullable EquipmentSlotGroup parse(String string, ParseContext context) {
+                            string = string.replace(" ", "_");
+                            return equipmentSlotGroups.get(string);
+                        }
 
-                    @Override
-                    public @Nullable EquipmentSlotGroup parse(String string, ParseContext context) {
-                        string = string.replace(" ", "_");
-                        return equipmentSlotGroups.get(string);
-                    }
+                        @Override
+                        public @NotNull String toString(EquipmentSlotGroup slot, int flags) {
+                            return slot.toString();
+                        }
 
-                    @Override
-                    public @NotNull String toString(EquipmentSlotGroup slot, int flags) {
-                        return slot.toString();
-                    }
-
-                    @Override
-                    public @NotNull String toVariableNameString(EquipmentSlotGroup slot) {
-                        return slot.toString();
-                    }
-                }));
-        } else {
-            Util.logLoading("It looks like another addon registered 'equipmentSlotGroup' already.");
-            Util.logLoading("You may have to use their EquipmentSlotGroup in SkBee's syntaxes.");
+                        @Override
+                        public @NotNull String toVariableNameString(EquipmentSlotGroup slot) {
+                            return slot.toString();
+                        }
+                    }));
+            } else {
+                Util.logLoading("It looks like another addon registered 'equipmentSlotGroup' already.");
+                Util.logLoading("You may have to use their EquipmentSlotGroup in SkBee's syntaxes.");
+            }
         }
 
 
@@ -532,41 +534,51 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(PotionType.class) == null) {
-            Classes.registerClass(RegistryClassInfo.create(Registry.POTION, PotionType.class, "potiontype")
-                .user("potion ?types?")
-                .name("Potion Type")
-                .description("Represents the different types of potions (not potion effect types) used in vanilla potion items.")
-                .after("potioneffecttype")
-                .since("3.8.0"));
+            if (BukkitUtils.registryExists("POTION")) {
+                Classes.registerClass(RegistryClassInfo.create(Registry.POTION, PotionType.class, "potiontype")
+                    .user("potion ?types?")
+                    .name("Potion Type")
+                    .description("Represents the different types of potions (not potion effect types) used in vanilla potion items.")
+                    .after("potioneffecttype")
+                    .since("3.8.0"));
 
-            SkriptUtils.hackPotionEffectTypeClassInfoPattern();
+                SkriptUtils.hackPotionEffectTypeClassInfoPattern();
+            }
         } else {
             Util.logLoading("It looks like another addon registered 'potiontype' already.");
             Util.logLoading("You may have to use their PotionType in SkBee's syntaxes.");
         }
 
         if (Classes.getExactClassInfo(MusicInstrument.class) == null) {
-            Classes.registerClass(RegistryClassInfo.create(Registry.INSTRUMENT, MusicInstrument.class, "instrument")
-                .user("instruments?")
-                .name("Instrument")
-                .description("Represents the instruments used by goat horns.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .since("3.8.0"));
+            if (BukkitUtils.registryExists("INSTRUMENT")) {
+                Classes.registerClass(RegistryClassInfo.create(Registry.INSTRUMENT, MusicInstrument.class, "instrument")
+                    .user("instruments?")
+                    .name("Instrument")
+                    .description("Represents the instruments used by goat horns.",
+                        "Requires Minecraft 1.20.6+",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .since("3.8.0"));
+            }
         } else {
             Util.logLoading("It looks like another addon registered 'instrument' already.");
             Util.logLoading("You may have to use their Instruments in SkBee's syntaxes.");
         }
 
-        if (Classes.getExactClassInfo(JukeboxSong.class) == null) {
-            Classes.registerClass(RegistryClassInfo.create(Registry.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
-                .user("jukebox ?songs?")
-                .name("Instrument")
-                .description("Represents the songs for jukeboxes.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .since("3.8.0"));
-        } else {
-            Util.logLoading("It looks like another addon registered 'jukeboxson' already.");
-            Util.logLoading("You may have to use their JukeboxSongs in SkBee's syntaxes.");
+        if (Skript.classExists("org.bukkit.JukeboxSong")) {
+            if (Classes.getExactClassInfo(JukeboxSong.class) == null) {
+                if (BukkitUtils.registryExists("JUKEBOX_SONG")) {
+                    Classes.registerClass(RegistryClassInfo.create(Registry.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
+                        .user("jukebox ?songs?")
+                        .name("Instrument")
+                        .description("Represents the songs for jukeboxes.",
+                            "Requires Minecraft 1.21+",
+                            "NOTE: These are auto-generated and may differ between server versions.")
+                        .since("3.8.0"));
+                }
+            } else {
+                Util.logLoading("It looks like another addon registered 'jukeboxson' already.");
+                Util.logLoading("You may have to use their JukeboxSongs in SkBee's syntaxes.");
+            }
         }
     }
 

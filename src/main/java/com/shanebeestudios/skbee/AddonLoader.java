@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAddon;
-import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
@@ -28,12 +27,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Team;
 
-import java.io.IOException;
-
 /**
  * @hidden
  */
-@SuppressWarnings("CallToPrintStackTrace")
 public class AddonLoader {
 
     private final SkBee plugin;
@@ -144,16 +140,6 @@ public class AddonLoader {
         for (int i = 0; i < finish.length; i++) {
             Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
         }
-
-        if (this.config.SETTINGS_DEBUG) {
-            // Print names of ClassInfos with missing lang entry
-            Bukkit.getScheduler().runTaskLater(this.plugin, () -> Classes.getClassInfos().forEach(classInfo -> {
-                Noun name = classInfo.getName();
-                if (name.toString().contains("types.")) {
-                    Util.log("ClassInfo missing lang entry for: &c%s", name);
-                }
-            }), 1);
-        }
     }
 
     private void loadNBTElements() {
@@ -171,12 +157,11 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.nbt");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.nbt");
             new NBTListener(this.plugin);
             Util.logLoading("&5NBT Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("NBT", ex);
         }
     }
 
@@ -186,11 +171,10 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.recipe");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.recipe");
             Util.logLoading("&5Recipe Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Recipe", ex);
         }
     }
 
@@ -200,13 +184,12 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.scoreboard");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.scoreboard");
             pluginManager.registerEvents(new BoardManager(), this.plugin);
             String type = BoardManager.HAS_ADVENTURE ? "Adventure" : "Legacy";
             Util.logLoading("&5Scoreboard&7[&b%s&7] &5Elements &asuccessfully loaded", type);
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Scoreboard", ex);
         }
     }
 
@@ -222,11 +205,10 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.objective");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.objective");
             Util.logLoading("&5Scoreboard Objective Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Scoreboard Objective", ex);
         }
     }
 
@@ -242,29 +224,27 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.team");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.team");
             Util.logLoading("&5Team Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Team", ex);
         }
     }
 
     private void loadTickManagerElements() {
         if (!this.config.ELEMENTS_TICK_MANAGER) {
-            Util.logLoading("&5Tick Manager elements &cdisabled via config");
+            Util.logLoading("&5Tick Manager Elements &cdisabled via config");
             return;
         }
         if (!Skript.classExists("org.bukkit.ServerTickManager")) {
-            Util.logLoading("&5Tick Manager elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
+            Util.logLoading("&5Tick Manager Elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.tickmanager");
-            Util.logLoading("&5Tick Manager elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.tickmanager");
+            Util.logLoading("&5Tick Manager Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Tick Manager", ex);
         }
     }
 
@@ -275,11 +255,10 @@ public class AddonLoader {
         }
         try {
             this.plugin.boundConfig = new BoundConfig(this.plugin);
-            addon.loadClasses("com.shanebeestudios.skbee.elements.bound");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.bound");
             Util.logLoading("&5Bound Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Bound", ex);
         }
     }
 
@@ -300,12 +279,11 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.text");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.text");
             Util.logLoading("&5Text Component Elements &asuccessfully loaded");
             this.textComponentEnabled = true;
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Text Component", ex);
         }
     }
 
@@ -317,11 +295,10 @@ public class AddonLoader {
 
         this.plugin.structureManager = new StructureManager();
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.structure");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.structure");
             Util.logLoading("&5Structure Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Structure", ex);
         }
     }
 
@@ -339,21 +316,19 @@ public class AddonLoader {
         try {
             this.plugin.virtualFurnaceAPI = new VirtualFurnaceAPI(this.plugin, true);
             pluginManager.registerEvents(new VirtualFurnaceListener(), this.plugin);
-            addon.loadClasses("com.shanebeestudios.skbee.elements.virtualfurnace");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.virtualfurnace");
             Util.logLoading("&5Virtual Furnace Elements &asuccessfully loaded");
-        } catch (IOException e) {
-            e.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Virtual Furnace", ex);
         }
     }
 
     private void loadOtherElements() {
         try {
             pluginManager.registerEvents(new EntityListener(), this.plugin);
-            addon.loadClasses("com.shanebeestudios.skbee.elements.other");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.other");
+        } catch (Exception ex) {
+            logFailure("Other", ex);
         }
     }
 
@@ -364,11 +339,10 @@ public class AddonLoader {
         }
         try {
             this.plugin.beeWorldConfig = new BeeWorldConfig(this.plugin);
-            addon.loadClasses("com.shanebeestudios.skbee.elements.worldcreator");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.worldcreator");
             Util.logLoading("&5World Creator Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("World Creator", ex);
         }
     }
 
@@ -382,11 +356,10 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.generator");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.generator");
             Util.logLoading("&5Chunk Generator Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Chunk Generator", ex);
         }
     }
 
@@ -396,11 +369,10 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.gameevent");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.gameevent");
             Util.logLoading("&5Game Event Elements &asuccessfully loaded");
-        } catch (IOException e) {
-            e.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Game Event", ex);
         }
 
     }
@@ -417,11 +389,10 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.bossbar");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.bossbar");
             Util.logLoading("&5BossBar Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("BossBar", ex);
         }
 
     }
@@ -438,11 +409,10 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.statistic");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.statistic");
             Util.logLoading("&5Statistic Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Statistic", ex);
         }
     }
 
@@ -452,11 +422,10 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.villager");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.villager");
             Util.logLoading("&5Villager Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Villager", ex);
         }
     }
 
@@ -466,11 +435,10 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.advancement");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.advancement");
             Util.logLoading("&5Advancement Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Advancement", ex);
         }
     }
 
@@ -480,11 +448,10 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.worldborder");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.worldborder");
             Util.logLoading("&5World Border Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("World Border", ex);
         }
     }
 
@@ -494,127 +461,119 @@ public class AddonLoader {
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.particle");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.particle");
             Util.logLoading("&5Particle Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Particle", ex);
         }
     }
 
     private void loadTagElements() {
         if (Util.IS_RUNNING_SKRIPT_2_10) {
-            Util.logLoading("&5Minecraft Tag elements &cdisabled &r(&7now in Skript&r)");
+            Util.logLoading("&5Minecraft Tag Elements &cdisabled &r(&7now in Skript&r)");
             return;
         }
         if (!this.config.ELEMENTS_MINECRAFT_TAG) {
-            Util.logLoading("&5Minecraft Tag elements &cdisabled via config");
+            Util.logLoading("&5Minecraft Tag Elements &cdisabled via config");
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.tag");
-            Util.logLoading("&5Minecraft Tag elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.tag");
+            Util.logLoading("&5Minecraft Tag Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Minecraft Tag", ex);
         }
     }
 
     private void loadRayTraceElements() {
         if (!this.config.ELEMENTS_RAYTRACE) {
-            Util.logLoading("&5RayTrace elements &cdisabled via config");
+            Util.logLoading("&5RayTrace Elements &cdisabled via config");
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.raytrace");
-            Util.logLoading("&5RayTrace elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.raytrace");
+            Util.logLoading("&5RayTrace Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("RayTrace", ex);
         }
     }
 
     private void loadFishingElements() {
         if (!this.config.ELEMENTS_FISHING) {
-            Util.logLoading("&5Fishing elements &cdisabled via config");
+            Util.logLoading("&5Fishing Elements &cdisabled via config");
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.fishing");
-            Util.logLoading("&5Fishing elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.fishing");
+            Util.logLoading("&5Fishing Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Fishing", ex);
         }
     }
 
     private void loadDisplayEntityElements() {
         if (!this.config.ELEMENTS_DISPLAY) {
-            Util.logLoading("&5Display Entity elements &cdisabled via config");
+            Util.logLoading("&5Display Entity Elements &cdisabled via config");
             return;
         }
         if (!Skript.isRunningMinecraft(1, 19, 4)) {
-            Util.logLoading("&5Display Entity elements &cdisabled &7(&eRequires Minecraft 1.19.4+&7)");
+            Util.logLoading("&5Display Entity Elements &cdisabled &7(&eRequires Minecraft 1.19.4+&7)");
             return;
         }
         if (!Skript.classExists("org.bukkit.entity.TextDisplay$TextAlignment")) {
-            Util.logLoading("&5Display Entity elements &cdisabled due to a Bukkit API change!");
+            Util.logLoading("&5Display Entity Elements &cdisabled due to a Bukkit API change!");
             Util.logLoading("&7- &eYou need to update your server to fix this issue!");
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.display");
-            Util.logLoading("&5Display Entity elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.display");
+            Util.logLoading("&5Display Entity Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Display Entity", ex);
         }
     }
 
     private void loadDamageSourceElements() {
         if (!this.config.ELEMENTS_DAMAGE_SOURCE) {
-            Util.logLoading("&5Damage Source elements &cdisabled via config");
+            Util.logLoading("&5Damage Source Elements &cdisabled via config");
             return;
         }
         if (!Skript.classExists("org.bukkit.damage.DamageSource")) {
-            Util.logLoading("&5Damage Source elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
+            Util.logLoading("&5Damage Source Elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.damagesource");
-            Util.logLoading("&5Damage Source elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.damagesource");
+            Util.logLoading("&5Damage Source Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Damage Source", ex);
         }
     }
 
     private void loadItemComponentElements() {
         if (!this.config.ELEMENTS_ITEM_COMPONENT) {
-            Util.logLoading("&5Item Component elements &cdisabled via config");
+            Util.logLoading("&5Item Component Elements &cdisabled via config");
             return;
         }
         if (!Skript.classExists("io.papermc.paper.datacomponent.DataComponentTypes")) {
-            Util.logLoading("&5Item Component elements &cdisabled &7(&eRequires Paper 1.21.3+&7)");
+            Util.logLoading("&5Item Component Elements &cdisabled &7(&eRequires Paper 1.21.3+&7)");
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.itemcomponent");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.itemcomponent");
             Util.logLoading("&5Item Component Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Item Component", ex);
         }
     }
 
     private void loadTestingElements() {
         if (!TestMode.ENABLED) return;
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.testing");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.testing");
             Util.logLoading("&5Testing Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Testing", ex);
         }
     }
 
@@ -623,29 +582,34 @@ public class AddonLoader {
         // Not sure which truly came last
         if (!Skript.classExists("io.papermc.paper.registry.tag.TagKey") ||
             !Skript.classExists("io.papermc.paper.registry.RegistryKey")) {
-            Util.logLoading("&5Registry elements &cdisabled &7(&eRequires Paper 1.21+&7)");
+            Util.logLoading("&5Registry Elements &cdisabled &7(&eRequires Paper 1.21+&7)");
+            return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.registry");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.registry");
             Util.logLoading("&5Registry Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("Registry", ex);
         }
     }
 
     private void loadSwitchCaseElements() {
         if (!this.config.ELEMENTS_SWITCH_CASE) {
-            Util.logLoading("&5SwitchCase elements &cdisabled via config");
+            Util.logLoading("&5SwitchCase Elements &cdisabled via config");
             return;
         }
         try {
-            addon.loadClasses("com.shanebeestudios.skbee.elements.switchcase");
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.switchcase");
             Util.logLoading("&5SwitchCase Elements &asuccessfully loaded");
-        } catch (IOException ex) {
-            ex.printStackTrace();
-            pluginManager.disablePlugin(this.plugin);
+        } catch (Exception ex) {
+            logFailure("SwitchCase", ex);
         }
+    }
+
+    @SuppressWarnings("ThrowableNotThrown")
+    private void logFailure(String element, Exception ex) {
+        Skript.exception(ex);
+        Util.logLoading("&e%s Elements &7failed to load due to &r'&c%s&r'", element, ex.getCause().getMessage());
     }
 
     public boolean isTextComponentEnabled() {

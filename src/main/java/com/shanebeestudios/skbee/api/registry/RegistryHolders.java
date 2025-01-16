@@ -101,6 +101,10 @@ public class RegistryHolders {
         name = name + " registry";
         RegistryHolder<F, T> registryHolder = new RegistryHolder<>(key, returnType, name, converter);
         REGISTRY_HOLDERS_BY_NAME.put(name, registryHolder);
+        String nameNoUnderscore = name.replace("_", " ");
+        if (!REGISTRY_HOLDERS_BY_NAME.containsKey(nameNoUnderscore)) {
+            REGISTRY_HOLDERS_BY_NAME.put(nameNoUnderscore, registryHolder);
+        }
         REGISTRY_HOLDERS_BY_REGISTRY_KEY.put(key, registryHolder);
 
         Class<TagKey> tkc = TagKey.class;
@@ -111,11 +115,11 @@ public class RegistryHolders {
 
     public static String getDocUsage() {
         List<String> docNames = new ArrayList<>();
-        REGISTRY_HOLDERS_BY_NAME.forEach((key, holder) -> {
+        REGISTRY_HOLDERS_BY_REGISTRY_KEY.forEach((key, holder) -> {
             docNames.add(holder.getDocString());
         });
         Collections.sort(docNames);
-        return String.join("<br>", docNames);
+        return String.join("\n", docNames);
     }
 
     @SuppressWarnings("rawtypes")
@@ -129,6 +133,7 @@ public class RegistryHolders {
         return new Parser<>() {
             @Override
             public @Nullable RegistryKey<?> parse(String string, ParseContext context) {
+                string = string.replace("minecraft:", "");
                 RegistryHolder registryHolder = REGISTRY_HOLDERS_BY_NAME.get(string);
                 if (registryHolder != null) return registryHolder.getRegistryKey();
                 return null;
