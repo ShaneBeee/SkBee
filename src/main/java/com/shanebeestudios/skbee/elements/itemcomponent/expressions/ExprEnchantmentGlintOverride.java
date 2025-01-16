@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.event.Event;
@@ -58,7 +59,7 @@ public class ExprEnchantmentGlintOverride extends SimplePropertyExpression<Objec
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Boolean glint = delta != null && delta[0] instanceof Boolean bool ? bool : null;
 
-        ItemUtils.modifyComponent(getExpr().getArray(event),  mode, DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, glint);
+        ItemComponentUtils.modifyComponent(getExpr().getArray(event),  mode, DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, glint);
     }
 
     @Override

@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
+import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.key.Key;
@@ -59,7 +60,7 @@ public class ExprItemModel extends SimplePropertyExpression<Object, String> {
         String string = delta != null && delta[0] instanceof String s ? s : null;
         Key key = KeyUtils.getKey(string);
 
-        ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.ITEM_MODEL, key);
+        ItemComponentUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.ITEM_MODEL, key);
     }
 
     @Override

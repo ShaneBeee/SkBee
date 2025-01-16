@@ -624,6 +624,7 @@ public class AddonLoader {
         if (!Skript.classExists("io.papermc.paper.registry.tag.TagKey") ||
             !Skript.classExists("io.papermc.paper.registry.RegistryKey")) {
             Util.logLoading("&5Registry elements &cdisabled &7(&eRequires Paper 1.21+&7)");
+            return;
         }
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.registry");

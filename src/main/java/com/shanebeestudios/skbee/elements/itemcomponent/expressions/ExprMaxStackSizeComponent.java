@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -55,7 +56,7 @@ public class ExprMaxStackSizeComponent extends SimplePropertyExpression<Object, 
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Integer maxStackSize = delta != null && delta[0] instanceof Number num ? MathUtil.clamp(num.intValue(), 1, 99) : null;
 
-        ItemUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.MAX_STACK_SIZE, maxStackSize);
+        ItemComponentUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.MAX_STACK_SIZE, maxStackSize);
     }
 
     @Override

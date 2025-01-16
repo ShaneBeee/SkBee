@@ -7,7 +7,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.ScoreboardUtils;
+import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.scoreboard.Criteria;
@@ -17,9 +17,23 @@ import org.bukkit.scoreboard.RenderType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+
 public class Types {
 
+    private static final List<Criteria> CRITERIAS = new ArrayList<>();
+
     static {
+        Class<?> craftCriteriaClass = ReflectionUtils.getOBCClass("scoreboard.CraftCriteria");
+        assert craftCriteriaClass != null;
+        Object defaults = ReflectionUtils.getField("DEFAULTS", craftCriteriaClass, null);
+        @SuppressWarnings("unchecked") Map<String, Criteria> map = (Map<String, Criteria>) defaults;
+        assert map != null;
+        CRITERIAS.addAll(map.values());
+
         if (Classes.getExactClassInfo(Objective.class) == null) {
             Classes.registerClass(new ClassInfo<>(Objective.class, "objective")
                 .user("objectives?")
@@ -72,7 +86,7 @@ public class Types {
                 .description("Represents a criteria for a scoreboard objective.",
                     "See [**Scoreboard Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki for more details.")
                 .since("2.6.0")
-                .supplier(ScoreboardUtils.getCriteriaSupplier())
+                .supplier(() -> CRITERIAS.stream().sorted(Comparator.comparing(Criteria::getName)).iterator())
                 .parser(new Parser<>() {
                     @Override
                     public boolean canParse(@NotNull ParseContext context) {
