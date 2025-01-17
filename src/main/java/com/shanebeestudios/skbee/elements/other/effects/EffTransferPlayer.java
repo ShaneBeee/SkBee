@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.NotNull;
 public class EffTransferPlayer extends Effect {
 
     static {
-        if (Skript.methodExists(Player.class, "isTransferred")) {
+        if (Skript.methodExists(Player.class, "isTransferred") && !Util.IS_RUNNING_SKRIPT_2_10) {
             Skript.registerEffect(EffTransferPlayer.class,
                 "transfer %players% to [server] %string% [(on|with) port %-number%]");
         }
