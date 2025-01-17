@@ -76,10 +76,10 @@ import org.jetbrains.annotations.Nullable;
     "\t\tdefault -> 1 of stick",
     "\tgive {_item} to attacker",})
 @Since("3.8.0")
-public class EffCaseReturn extends Effect {
+public class EffCase extends com.shanebeestudios.skbee.api.skript.base.Effect {
 
     static {
-        Skript.registerEffect(EffCaseReturn.class,
+        Skript.registerEffect(EffCase.class,
             "case %objects% -> <.+>",
             "default -> <.+>");
     }
@@ -174,7 +174,15 @@ public class EffCaseReturn extends Effect {
                 }
             }
         }
-        return super.walk(event);
+        TriggerItem next = getActualNext();
+        if (next != null) {
+            if (next instanceof SecCase || next instanceof EffCase) {
+                return super.walk(event);
+            } else {
+                error("Cannot walk non-case element '" + next + "' in a switch section.");
+            }
+        }
+        return null;
     }
 
     @Override

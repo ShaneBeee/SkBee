@@ -80,6 +80,34 @@ test "SkBee - Switch and Case":
 	set block at {_l} to {_data}
 	assert {_item} = 1 of emerald named "Natural Gem" with "Should have returned the emerald"
 
+	# Test using normal and inline cases together
+	loop 5 times:
+		set {_i} to switch return loop-number:
+			case 1:
+				return "1"
+			case 2:
+				return "2"
+			case 3 -> "3"
+			case 4 -> "4"
+			default:
+				return "5"
+		assert {_i} = "%loop-number%" with "Switch should work with both normal and inline cases together"
+
+	# Test other elements in switch sections
+	try:
+		set {_i} to switch return 5:
+			case 1:
+				return "1"
+			case 2:
+				return "2"
+			broadcast "MIDDLE"
+			case 3 -> "3"
+			case 4 -> "4"
+			default:
+				return "5"
+	catch:
+		assert runtime logs contains "Cannot walk non-case element 'broadcast ""MIDDLE""' in a switch section." with "Should have caught that broadcast"
+
 	# Test Functions
 	assert testSwitch(1) = "i am one" with "This should be 'i am one'"
 	assert testSwitch(2) = "i am two" with "This should be 'i am two'"

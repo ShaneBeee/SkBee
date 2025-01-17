@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.elements.switchcase.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.conditions.CondCompare;
+import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -19,6 +20,7 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.elements.switchcase.effects.EffCase;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchBaseEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import org.bukkit.event.Event;
@@ -58,7 +60,7 @@ import java.util.List;
     "\t\tdefault:",
     "\t\t\tgive attacker a diamond"})
 @Since("3.8.0")
-public class SecCase extends Section implements ReturnHandler<Object> {
+public class SecCase extends com.shanebeestudios.skbee.api.skript.base.Section implements ReturnHandler<Object> {
 
     static {
         Skript.registerSection(SecCase.class, "case %objects%", "(default [case]|case default)");
@@ -113,6 +115,7 @@ public class SecCase extends Section implements ReturnHandler<Object> {
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         if (event instanceof SwitchBaseEvent switchEvent) {
+            TriggerItem next = getActualNext();
             if (this.defaultCase || compare(this.caseObject.getArray(event), switchEvent.getSwitchedObject())) {
                 Trigger.walk(this.caseSection, switchEvent.getParentEvent());
                 if (event instanceof SwitchReturnEvent switchReturnEvent) {
@@ -121,8 +124,12 @@ public class SecCase extends Section implements ReturnHandler<Object> {
                 }
                 // TODO somehow handle functions?!?!
                 return null;
-            } else if (getActualNext() instanceof SecCase) {
-                return super.walk(event, false);
+            } else if (next != null) {
+                if (next instanceof SecCase || next instanceof EffCase) {
+                    return super.walk(event, false);
+                } else {
+                    error("Cannot walk non-case element '" + next + "' in a switch section.");
+                }
             }
         }
         return null;
