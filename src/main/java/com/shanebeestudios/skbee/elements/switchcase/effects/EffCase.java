@@ -160,7 +160,7 @@ public class EffCase extends Effect {
     protected @Nullable TriggerItem walk(Event event) {
         if (event instanceof SwitchReturnEvent switchReturnEvent) {
             if (this.defaultCase || SecCase.compare(this.caseObject.getArray(event), switchReturnEvent.getSwitchedObject())) {
-                Object returnObject = this.returnObject.getSingle(event);
+                Object returnObject = this.returnObject.getSingle(switchReturnEvent.getParentEvent());
                 if (returnObject != null) {
                     switchReturnEvent.setReturnedObject(returnObject);
                     return null;

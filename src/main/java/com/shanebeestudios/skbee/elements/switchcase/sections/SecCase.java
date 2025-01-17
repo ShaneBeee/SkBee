@@ -67,7 +67,7 @@ public class SecCase extends Section implements ReturnHandler<Object> {
     private Expression<Object> caseObject;
     private boolean defaultCase;
     private ReturnableTrigger<?> caseSection;
-    private Expression<?> returnObject;
+    private Object returnObject;
 
     @SuppressWarnings("UnstableApiUsage")
     @Override
@@ -116,8 +116,7 @@ public class SecCase extends Section implements ReturnHandler<Object> {
             if (this.defaultCase || compare(this.caseObject.getArray(event), switchEvent.getSwitchedObject())) {
                 Trigger.walk(this.caseSection, switchEvent.getParentEvent());
                 if (event instanceof SwitchReturnEvent switchReturnEvent) {
-                    Object returnObject = this.returnObject.getSingle(event);
-                    if (returnObject != null) switchReturnEvent.setReturnedObject(returnObject);
+                    if (this.returnObject != null) switchReturnEvent.setReturnedObject(this.returnObject);
                 }
                 // TODO somehow handle functions?!?!
                 return null;
@@ -154,7 +153,7 @@ public class SecCase extends Section implements ReturnHandler<Object> {
 
     @Override
     public void returnValues(Event event, Expression<?> value) {
-        this.returnObject = value;
+        this.returnObject = value.getSingle(event);
     }
 
     @Override

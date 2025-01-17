@@ -67,10 +67,10 @@ test "SkBee - Switch and Case":
 
 	set {_i} to 5
 	switch {_i}: # This is a silly test (could use return) but I wanted to test effects
-		case 1 -> set {_test} to "1-%switched value%"
-		case 2 -> set {_test} to "2-%switched value%"
-		case 5 -> set {_test} to "5-%switched value%"
-		default -> set {_test} to "default-%switched value%"
+		case 1 -> set {_test} to "1-%{_i}%"
+		case 2 -> set {_test} to "2-%{_i}%"
+		case 5 -> set {_test} to "5-%{_i}%"
+		default -> set {_test} to "default-%{_i}%"
 	assert {_test} = "5-5" with "The text should match"
 
 	set {_l} to location(1,1,1)
@@ -117,7 +117,6 @@ test "SkBee - Switch and Case":
 			default -> "5"
 	assert parse logs contains "Only cases can be used in a switch section but found this:" with "Should have caught that broadcast"
 
-
 	# Test Functions
 	assert testSwitch(1) = "i am one" with "This should be 'i am one'"
 	assert testSwitch(2) = "i am two" with "This should be 'i am two'"
@@ -131,3 +130,43 @@ test "SkBee - Switch and Case":
 	assert testItem(gravel) = "mushy blocks" with "This should be 'mushy blocks'"
 	assert testItem(sand) = "mushy blocks" with "This should be 'mushy blocks'"
 	assert testItem(pink wool) = "default blocks" with "This should be 'default blocks'"
+
+	# Test with event-values
+	set {test_spawn_switch_return_case_inline} to true
+	set {test_spawn_switch_return_case_normal} to true
+	set {test_spawn_switch_sec_case_normal} to true
+	set {test_spawn_switch_sec_case_inline} to true
+	spawn a sheep at event-location:
+		set {_e} to entity
+	assert {test_spawn_switch_return_case_inline} is "sheep: sheep" with "The switch return should have set this"
+	assert {test_spawn_switch_return_case_normal} is "sheep: sheep" with "The switch return should have set this"
+	assert {test_spawn_switch_sec_case_normal} is "sheep: sheep" with "The switch should have set this"
+	assert {test_spawn_switch_sec_case_inline} is "sheep: sheep" with "The switch should have set this"
+	delete {test_spawn_switch_return_case_inline}
+	delete {test_spawn_switch_return_case_normal}
+	delete {test_spawn_switch_sec_case_normal}
+	delete {test_spawn_switch_sec_case_inline}
+
+	delete entity within {_e}
+
+on spawn:
+	if {test_spawn_switch_return_case_inline} is true:
+		set {test_spawn_switch_return_case_inline} to switch return type of event-entity:
+			case a sheep -> "sheep: %type of event-entity%"
+			default -> "blah blah: %type of event-entity%"
+	if {test_spawn_switch_return_case_normal} is true:
+		set {test_spawn_switch_return_case_normal} to switch return type of event-entity:
+			case a sheep:
+				return "sheep: %type of event-entity%"
+			default:
+				return "blah blah: %type of event-entity%"
+	if {test_spawn_switch_sec_case_normal} is true:
+		switch type of event-entity:
+			case a sheep:
+				set {test_spawn_switch_sec_case_normal} to "sheep: sheep"
+			default:
+				set {test_spawn_switch_sec_case_normal} to "default"
+	if {test_spawn_switch_sec_case_inline} is true:
+		switch type of event-entity:
+			case a sheep -> set {test_spawn_switch_sec_case_inline} to "sheep: sheep"
+			default -> set {test_spawn_switch_sec_case_inline} to "default"
