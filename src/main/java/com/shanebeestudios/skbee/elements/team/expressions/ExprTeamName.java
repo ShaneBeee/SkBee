@@ -5,11 +5,12 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
@@ -17,11 +18,11 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Team - Name")
 @Description({"Represents the name and display name of a team.",
-        "\nNOTE: Display name can be set, name cannot be set."})
+    "\nNOTE: Display name can be set, name cannot be set."})
 @Examples({"set team display name of {_team} to \"The Warriors\"",
-        "set team display name of team of player to \"The Rednecks\"",
-        "set team display name of team named \"blue-team\" to \"Blue Team\"",
-        "set {_name} to team name of team of player"})
+    "set team display name of team of player to \"The Rednecks\"",
+    "set team display name of team named \"blue-team\" to \"Blue Team\"",
+    "set {_name} to team name of team of player"})
 @Since("2.10.0")
 @SuppressWarnings("deprecation")
 public class ExprTeamName extends SimplePropertyExpression<Team, String> {
@@ -32,7 +33,6 @@ public class ExprTeamName extends SimplePropertyExpression<Team, String> {
 
     private boolean display;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.display = parseResult.hasTag("display");
@@ -44,21 +44,24 @@ public class ExprTeamName extends SimplePropertyExpression<Team, String> {
         return this.display ? team.getDisplayName() : team.getName();
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (this.display && mode == ChangeMode.SET) return CollectionUtils.array(String.class);
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (!this.display) return;
-        if (delta != null && delta[0] instanceof String name) {
-            for (Team team : getExpr().getArray(event)) {
-                team.setDisplayName(name);
-            }
+        if (delta == null) {
+            error("Team name cannot be empty");
+            return;
+        }
+        if (!(delta[0] instanceof String name)) {
+            error("Team name has to be a string: " + Classes.toString(delta[0]));
+            return;
+        }
+        for (Team team : getExpr().getArray(event)) {
+            team.setDisplayName(name);
         }
     }
 

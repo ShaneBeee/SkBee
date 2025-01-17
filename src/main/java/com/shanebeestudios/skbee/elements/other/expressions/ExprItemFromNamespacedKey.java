@@ -9,8 +9,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -48,11 +49,16 @@ public class ExprItemFromNamespacedKey extends SimpleExpression<ItemType> {
         for (Object object : this.objects.getArray(event)) {
             if (object instanceof NamespacedKey namespacedKey) {
                 Material material = Registry.MATERIAL.get(namespacedKey);
-                if (material == null) continue;
+                if (material == null) {
+                    error("Unknown material " + namespacedKey);
+                    continue;
+                }
                 itemTypes.add(new ItemType(material));
             } else if (object instanceof BlockData blockData) {
                 Material material = blockData.getMaterial();
                 itemTypes.add(new ItemType(material));
+            } else {
+                error("Invalid object: " + Classes.toString(object));
             }
         }
 

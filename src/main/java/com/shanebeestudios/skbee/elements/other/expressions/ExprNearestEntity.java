@@ -10,8 +10,8 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.entity.Entity;
@@ -37,7 +37,6 @@ import java.util.stream.Collectors;
     "damage 10 nearest entity in radius 10 around player by 2",
     "set {_p} to nearest player around player excluding (all player's where [input doesn't have permission \"some.perm\"])"})
 @Since("2.7.2")
-@SuppressWarnings("NullableProblems")
 public class ExprNearestEntity extends SimpleExpression<Entity> {
 
     private static final int MAX_TARGET_BLOCK_DISTANCE = SkriptConfig.maxTargetBlockDistance.value();
@@ -57,7 +56,7 @@ public class ExprNearestEntity extends SimpleExpression<Entity> {
     private Expression<Entity> excluding;
     private boolean isSingle;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.number = (Expression<Number>) exprs[0];
@@ -75,7 +74,22 @@ public class ExprNearestEntity extends SimpleExpression<Entity> {
         EntityData<?> entityData = this.entityData.getSingle(event);
         Number radius = this.radius != null ? this.radius.getSingle(event) : MAX_TARGET_BLOCK_DISTANCE;
         Object object = this.location.getSingle(event);
-        if (number == null || entityData == null || radius == null || object == null) return null;
+        if (number == null) {
+            error("Invalid number: " + this.number.toString(event, true));
+            return null;
+        }
+        if (entityData == null) {
+            error("Invalid entity data: " + this.entityData.toString(event, true));
+            return null;
+        }
+        if (radius == null) {
+            error("Invalid radius: " + this.radius.toString(event, true));
+            return null;
+        }
+        if (object == null) {
+            error("Invalid location: " + this.location.toString(event, true));
+            return null;
+        }
         double rad = radius.doubleValue();
 
         List<Entity> excluding = new ArrayList<>();

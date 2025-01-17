@@ -5,16 +5,18 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ChatUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Arrays;
 
 @SuppressWarnings("deprecation")
 @Name("Team - Color")
@@ -33,7 +35,6 @@ public class ExprTeamColor extends SimplePropertyExpression<Team, SkriptColor> {
         return ChatUtil.getSkriptColorByBungee(team.getColor().asBungee());
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {
@@ -42,17 +43,23 @@ public class ExprTeamColor extends SimplePropertyExpression<Team, SkriptColor> {
         };
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        SkriptColor color = delta != null && delta[0] instanceof SkriptColor skriptColor ? skriptColor : null;
+        ChatColor chatColor;
+        if (delta != null && delta[0] instanceof SkriptColor skriptColor) {
+            chatColor = skriptColor.asChatColor();
+        } else {
+            error("Invalid color " + Arrays.toString(delta));
+            return;
+        }
 
-        for (Team team : getExpr().getArray(event)) {
-            if (color != null) {
-                team.setColor(color.asChatColor());
-            } else {
-                team.setColor(ChatColor.WHITE);
-            }
+        Team[] teams = getExpr().getArray(event);
+        if (teams == null || teams.length == 0) {
+            error("Invalid team: " + getExpr().toString(event, true));
+            return;
+        }
+        for (Team team : teams) {
+            team.setColor(chatColor);
         }
     }
 

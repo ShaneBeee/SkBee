@@ -5,14 +5,13 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,16 +20,16 @@ import java.util.UUID;
 @Name("Resource Pack Remove")
 @Description("Remove all resource packs from a player or remove resource packs from uuids. Requires Minecraft 1.20.4+")
 @Examples({"remove all resource packs from player",
-        "remove resource pack with uuid {pack::1} from player",
-        "remove resource packs with uuids {pack::*} from player"})
+    "remove resource pack with uuid {pack::1} from player",
+    "remove resource packs with uuids {pack::*} from player"})
 @Since("3.4.0")
 public class EffResourcePackRemove extends Effect {
 
     static {
         if (Skript.methodExists(Player.class, "removeResourcePacks")) {
             Skript.registerEffect(EffResourcePackRemove.class,
-                    "remove all resource packs from %players%",
-                    "remove resource pack[s] with (uuid|id)[s] %strings% from %players%");
+                "remove all resource packs from %players%",
+                "remove resource pack[s] with (uuid|id)[s] %strings% from %players%");
         }
     }
 
@@ -38,7 +37,7 @@ public class EffResourcePackRemove extends Effect {
     private Expression<Player> players;
     private Expression<String> uuids;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.removeAll = matchedPattern == 0;
@@ -51,7 +50,6 @@ public class EffResourcePackRemove extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         List<UUID> uuids = new ArrayList<>();
@@ -60,21 +58,25 @@ public class EffResourcePackRemove extends Effect {
                 try {
                     UUID u = UUID.fromString(uuid);
                     uuids.add(u);
-                } catch (IllegalArgumentException ignore) {
-
+                } catch (IllegalArgumentException ex) {
+                    error("Invalid UUID: '" + uuid + "' // " + ex.getMessage());
                 }
             }
         }
 
-        for (Player player : this.players.getArray(event)) {
+        Player[] players = this.players.getArray(event);
+        if (players == null || players.length == 0) {
+            error("Players is empty: " + this.players.toString(event, true));
+            return;
+        }
+        for (Player player : players) {
             if (this.removeAll) player.removeResourcePacks();
             else uuids.forEach(player::removeResourcePack);
         }
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String players = this.players.toString(e, d);
         if (this.removeAll) return "remove all resource packs from " + players;
 

@@ -6,17 +6,16 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 @Name("Send Equipment Change")
 @Description("Send an equipment change for an entity. This will not actually change the entity's equipment in any way.")
@@ -35,7 +34,7 @@ public class EffEquipmentChange extends Effect {
     private Expression<LivingEntity> entities;
     private Expression<ItemType> itemtype;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.players = (Expression<Player>) exprs[0];
@@ -45,25 +44,41 @@ public class EffEquipmentChange extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         ItemType itemType = this.itemtype.getSingle(event);
-        if (itemType == null) return;
+        if (itemType == null) {
+            error("Item is not set: " + this.itemtype.toString(event, true));
+            return;
+        }
         ItemStack itemStack = itemType.getRandom();
 
-        for (Player player : this.players.getArray(event)) {
-            for (LivingEntity livingEntity : this.entities.getArray(event)) {
-                for (EquipmentSlot slot : this.slots.getArray(event)) {
+        Player[] players = this.players.getArray(event);
+        if (players.length == 0) {
+            error("Players are not set: " + this.players.toString(event, true));
+            return;
+        }
+        LivingEntity[] entities = this.entities.getArray(event);
+        if (entities.length == 0) {
+            error("Entities are not set: " + this.entities.toString(event, true));
+            return;
+        }
+        EquipmentSlot[] slots = this.slots.getArray(event);
+        if (slots.length == 0) {
+            error("Slots are not set: " + this.slots.toString(event, true));
+            return;
+        }
+        for (Player player : players) {
+            for (LivingEntity livingEntity : entities) {
+                for (EquipmentSlot slot : slots) {
                     player.sendEquipmentChange(livingEntity, slot, itemStack);
                 }
             }
         }
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String players = this.players.toString(e, d);
         String slot = this.slots.toString(e, d);
         String entities = this.entities.toString(e, d);
