@@ -131,6 +131,15 @@ test "SkBee - Switch and Case":
 	assert testItem(sand) = "mushy blocks" with "This should be 'mushy blocks'"
 	assert testItem(pink wool) = "default blocks" with "This should be 'default blocks'"
 
+	# Test with tags
+	set {_logs::*} to oak log, birch log, spruce log, oak wood, stripped spruce wood, warped stem
+	loop {_logs::*}:
+		set {_l} to loop-value
+		set {_return} to switch return loop-value:
+			case minecraft block tag "minecraft:logs" -> "yay a log"
+			default -> "booo what are you: %{_l}%"
+		assert {_return} = "yay a log" with "Should have been tagged as a log"
+
 	# Test with event-values
 	set {test_spawn_switch_return_case_inline} to true
 	set {test_spawn_switch_return_case_normal} to true
