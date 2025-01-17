@@ -26,8 +26,6 @@ import org.bukkit.inventory.TransmuteRecipe;
 import org.bukkit.inventory.recipe.CraftingBookCategory;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -74,7 +72,7 @@ public class RecipeUtil {
             return getRecipeChoice(itemType.getRandom());
         } else if (object instanceof RecipeChoice choice) {
             return choice;
-        } else if (object instanceof Tag<?> tag && isMaterialTag(tag)) {
+        } else if (object instanceof Tag<?> tag && Util.isMaterialTag(tag)) {
             return new MaterialChoice((Tag<Material>) tag);
         }
         return null;
@@ -249,22 +247,6 @@ public class RecipeUtil {
             joiner.add(exactChoice.toString());
         }
         return joiner.toString();
-    }
-
-    /**
-     * Check if a {@link Tag} is a Material Tag
-     *
-     * @param object Object to check
-     * @return True if material tag
-     */
-    public static boolean isMaterialTag(Object object) {
-        if (object instanceof Tag<?> tag) {
-            ParameterizedType superC = (ParameterizedType) tag.getClass().getGenericSuperclass();
-            for (Type arg : superC.getActualTypeArguments()) {
-                if (arg.equals(Material.class)) return true;
-            }
-        }
-        return false;
     }
 
     /**
