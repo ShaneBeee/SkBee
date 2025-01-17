@@ -76,7 +76,7 @@ import org.jetbrains.annotations.Nullable;
     "\t\tdefault -> 1 of stick",
     "\tgive {_item} to attacker",})
 @Since("3.8.0")
-public class EffCase extends com.shanebeestudios.skbee.api.skript.base.Effect {
+public class EffCase extends Effect {
 
     static {
         Skript.registerEffect(EffCase.class,
@@ -174,11 +174,7 @@ public class EffCase extends com.shanebeestudios.skbee.api.skript.base.Effect {
                 }
             }
         }
-        TriggerItem next = getActualNext();
-        if (next != null) {
-            return super.walk(event);
-        }
-        return null;
+        return super.walk(event);
     }
 
     @Override

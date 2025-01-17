@@ -58,7 +58,7 @@ import java.util.List;
     "\t\tdefault:",
     "\t\t\tgive attacker a diamond"})
 @Since("3.8.0")
-public class SecCase extends com.shanebeestudios.skbee.api.skript.base.Section implements ReturnHandler<Object> {
+public class SecCase extends Section implements ReturnHandler<Object> {
 
     static {
         Skript.registerSection(SecCase.class, "case %objects%", "(default [case]|case default)");
@@ -113,7 +113,6 @@ public class SecCase extends com.shanebeestudios.skbee.api.skript.base.Section i
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         if (event instanceof SwitchBaseEvent switchEvent) {
-            TriggerItem next = getActualNext();
             if (this.defaultCase || compare(this.caseObject.getArray(event), switchEvent.getSwitchedObject())) {
                 Trigger.walk(this.caseSection, switchEvent.getParentEvent());
                 if (event instanceof SwitchReturnEvent switchReturnEvent) {
@@ -122,7 +121,7 @@ public class SecCase extends com.shanebeestudios.skbee.api.skript.base.Section i
                 }
                 // TODO somehow handle functions?!?!
                 return null;
-            } else if (next != null) {
+            } else if (getActualNext() != null) {
                 return super.walk(event, false);
             }
         }
