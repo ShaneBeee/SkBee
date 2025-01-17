@@ -176,11 +176,7 @@ public class EffCase extends com.shanebeestudios.skbee.api.skript.base.Effect {
         }
         TriggerItem next = getActualNext();
         if (next != null) {
-            if (next instanceof SecCase || next instanceof EffCase) {
-                return super.walk(event);
-            } else {
-                error("Cannot walk non-case element '" + next + "' in a switch section.");
-            }
+            return super.walk(event);
         }
         return null;
     }

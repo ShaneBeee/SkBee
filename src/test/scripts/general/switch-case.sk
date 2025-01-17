@@ -94,7 +94,7 @@ test "SkBee - Switch and Case":
 		assert {_i} = "%loop-number%" with "Switch should work with both normal and inline cases together"
 
 	# Test other elements in switch sections
-	try:
+	parse:
 		set {_i} to switch return 5:
 			case 1:
 				return "1"
@@ -105,8 +105,18 @@ test "SkBee - Switch and Case":
 			case 4 -> "4"
 			default:
 				return "5"
-	catch:
-		assert runtime logs contains "Cannot walk non-case element 'broadcast ""MIDDLE""' in a switch section." with "Should have caught that broadcast"
+	assert parse logs contains "Only cases can be used in a switch section but found this:" with "Should have caught that broadcast"
+
+	parse:
+		set {_i} to switch return 5:
+			case 1 -> "one"
+			broadcast "MIDDLE"
+			case 2 -> "two"
+			case 3 -> "three"
+			case 4 -> "4"
+			default -> "5"
+	assert parse logs contains "Only cases can be used in a switch section but found this:" with "Should have caught that broadcast"
+
 
 	# Test Functions
 	assert testSwitch(1) = "i am one" with "This should be 'i am one'"

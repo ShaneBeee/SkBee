@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.elements.switchcase.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.conditions.CondCompare;
-import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -20,7 +19,6 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.elements.switchcase.effects.EffCase;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchBaseEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import org.bukkit.event.Event;
@@ -125,11 +123,7 @@ public class SecCase extends com.shanebeestudios.skbee.api.skript.base.Section i
                 // TODO somehow handle functions?!?!
                 return null;
             } else if (next != null) {
-                if (next instanceof SecCase || next instanceof EffCase) {
-                    return super.walk(event, false);
-                } else {
-                    error("Cannot walk non-case element '" + next + "' in a switch section.");
-                }
+                return super.walk(event, false);
             }
         }
         return null;
