@@ -13,6 +13,7 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -32,7 +33,12 @@ import java.util.List;
 @Name("Tag Aliases")
 @Description({"Create item/block aliases that use Minecraft tags.",
     "Supports paper and datapack tags as well.",
-    "Custom Skript tags will not work here as they're registered after this structure loads."})
+    "Custom Skript tags will not work here as they're registered after this structure loads.",
+    "",
+    "**Global vs Local**:",
+    "Global will add your aliases to Skript's aliases and can be used in any script/effect commands.",
+    "Local will add your aliases to the aliases of that specific script.",
+    "Will default to local if not specified."})
 @Examples({"item tag aliases:",
     "\t[any] tool[s] = minecraft:axes, minecraft:pickaxes, minecraft:shovels, minecraft:hoes, minecraft:bundles, paper:buckets",
     "\t[any] enchantable[s] = paper:enchantable",
@@ -64,7 +70,7 @@ public class StructTagAliases extends Structure {
     public static final Priority PRIORITY = new Priority(201);
 
     static {
-        Skript.registerStructure(StructTagAliases.class, "[(:block|item)] tag aliases");
+        Skript.registerStructure(StructTagAliases.class, "[:global|local] [(:block|item)] tag aliases");
     }
 
     private TagType<Material> tagType;
@@ -78,13 +84,14 @@ public class StructTagAliases extends Structure {
         this.tagType = parseResult.hasTag("block") ? TagType.BLOCKS : TagType.ITEMS;
 
         // Initialize and load script aliases
-        Script script = getParser().getCurrentScript();
-        ScriptAliases scriptAliases = Aliases.getScriptAliases(script);
-        if (scriptAliases == null)
-            scriptAliases = Aliases.createScriptAliases(script);
+        AliasesParser parser = getAliasesParser(parseResult.hasTag("global"));
+        if (parser == null) {
+            Skript.error("Couldn't load the aliases parser");
+            return false;
+        }
         for (Node node : rootNode) {
             if (node instanceof EntryNode entryNode) {
-                if (!loadAlias(rootNode, scriptAliases.parser, entryNode.getKey(), entryNode.getValue(), node.getLine())) {
+                if (!loadAlias(rootNode, parser, entryNode.getKey(), entryNode.getValue(), node.getLine())) {
                     return false;
                 }
             }
@@ -134,6 +141,23 @@ public class StructTagAliases extends Structure {
     @Override
     public String toString(@Nullable Event event, boolean debug) {
         return this.tagType.toString() + " tag aliases";
+    }
+
+    private AliasesParser getAliasesParser(boolean global) {
+        if (global) {
+            // Skript doesn't provide public access to this... but that never stopped me before!
+            Object parser = ReflectionUtils.getField("parser", Aliases.class, null);
+            if (parser instanceof AliasesParser aliasesParser) {
+                return aliasesParser;
+            }
+        } else {
+            Script script = getParser().getCurrentScript();
+            ScriptAliases scriptAliases = Aliases.getScriptAliases(script);
+            if (scriptAliases == null)
+                scriptAliases = Aliases.createScriptAliases(script);
+            return scriptAliases.parser;
+        }
+        return null;
     }
 
 }
