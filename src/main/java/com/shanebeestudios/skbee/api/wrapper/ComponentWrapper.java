@@ -637,6 +637,7 @@ public class ComponentWrapper {
     }
 
     public String toString() {
+        if (this.component == null) return "";
         return LegacyComponentSerializer.legacySection().serialize(this.component);
     }
 
@@ -646,6 +647,7 @@ public class ComponentWrapper {
      * @return Serialized json string
      */
     public String toJsonString() {
+        if (this.component == null) return "{}";
         return JSONComponentSerializer.json().serialize(this.component);
     }
 
