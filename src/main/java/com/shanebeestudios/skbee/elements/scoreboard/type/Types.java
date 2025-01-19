@@ -10,7 +10,6 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
-import ch.njol.yggdrasil.YggdrasilException;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import com.shanebeestudios.skbee.api.scoreboard.ScoreboardUtils;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
@@ -56,7 +55,8 @@ public class Types {
                 .description("Represents the vanilla scoreboard of the server/players.",
                     "This can be the main server scoreboard, or a custom scoreboard.",
                     "Do note custom scoreboards are not persistent (do not save to the server).",
-                    "Multiple players can share a custom scoreboard.")
+                    "Multiple players can share a custom scoreboard.",
+                    "See [**Scoreboard**](https://minecraft.wiki/w/Scoreboard) on McWiki for more info.")
                 .since("INSERT VERSION")
                 .defaultExpression(new SimpleLiteral<>(ScoreboardUtils.getMainScoreboard(), true))
                 .parser(new Parser<>() {
@@ -91,7 +91,8 @@ public class Types {
                 .user("objectives?")
                 .name("Scoreboard - Objective")
                 .description("Represents an objective in a scoreboard.",
-                    "When deleting, the objective will be unregistered.")
+                    "When deleting, the objective will be unregistered.",
+                    "See [**Objectives**](https://minecraft.wiki/w/Scoreboard#Objectives) on McWiki for more info.")
                 .since("2.6.0")
                 .supplier(() -> Bukkit.getScoreboardManager().getMainScoreboard().getObjectives().iterator())
                 .parser(new Parser<>() {
@@ -139,7 +140,7 @@ public class Types {
                 .user("criterias?")
                 .name("Scoreboard - Criteria")
                 .description("Represents a criteria for a scoreboard objective.",
-                    "See [**Scoreboard Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki for more details.")
+                    "See [**Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki for more info.")
                 .since("2.6.0")
                 .supplier(() -> CRITERIAS.stream().sorted(Comparator.comparing(Criteria::getName)).iterator())
                 .parser(new Parser<>() {
@@ -187,7 +188,8 @@ public class Types {
                 .name("Team")
                 .description("Represents a scoreboard team. Teams can be deleted (unregistered).",
                     "Players, entities and strings can be added to and removed from teams.",
-                    "Teams off the main scoreboard cannot be serialized/saved to variables.")
+                    "Teams off the main scoreboard cannot be serialized/saved to variables.",
+                    "See [**Teams**](https://minecraft.wiki/w/Scoreboard#Teams) on McWiki for more info.")
                 .examples("add all players to team of player",
                     "add all players to team named \"a-team\"",
                     "remove all entities from team named \"the-mobs\"",
