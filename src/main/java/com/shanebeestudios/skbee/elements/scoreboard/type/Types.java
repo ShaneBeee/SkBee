@@ -24,7 +24,6 @@ import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.RenderType;
 import org.bukkit.scoreboard.Scoreboard;
-import org.bukkit.scoreboard.ScoreboardManager;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +36,6 @@ import java.util.Map;
 
 public class Types {
 
-    private static final ScoreboardManager MANAGER = Bukkit.getScoreboardManager();
     private static final List<Criteria> CRITERIAS = new ArrayList<>();
 
     static {
@@ -68,7 +66,7 @@ public class Types {
                     @Override
                     public String toString(Scoreboard scoreboard, int flags) {
                         String name;
-                        if (scoreboard.equals(MANAGER.getMainScoreboard())) {
+                        if (scoreboard.equals(ScoreboardUtils.getMainScoreboard())) {
                             name = "Main Scoreboard";
                         } else {
                             name = "Custom Scoreboard";
