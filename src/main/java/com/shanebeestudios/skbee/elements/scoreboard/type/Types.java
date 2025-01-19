@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.scoreboard.type;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
@@ -9,6 +10,7 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
+import ch.njol.yggdrasil.YggdrasilException;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import com.shanebeestudios.skbee.api.scoreboard.ScoreboardUtils;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
@@ -213,11 +215,16 @@ public class Types {
                     public @NotNull Fields serialize(Team team) {
                         Fields fields = new Fields();
                         try {
-                            if (team != null && team.getScoreboard().equals(ScoreboardUtils.getMainScoreboard())) {
+                            if (team == null) {
+                                Skript.error("Team is null!");
+                            } else if (!team.getScoreboard().equals(ScoreboardUtils.getMainScoreboard())) {
+                                Skript.error("Team '" + team.getName() + "' is off the main scoreboard and cannot be serialized!");
+                            } else {
                                 // If the team was unregistered, this will throw IllegalStateException
                                 fields.putObject("name", team.getName());
                             }
                         } catch (IllegalStateException ignore) {
+                            Skript.error("Team was unregistered");
                         }
                         return fields;
                     }
