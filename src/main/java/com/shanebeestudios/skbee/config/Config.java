@@ -40,7 +40,6 @@ public class Config {
     public boolean BOUND_EVENTS_VEHICLE_MOVE;
     public boolean ELEMENTS_FASTBOARD;
     public boolean ELEMENTS_SCOREBOARD;
-    public boolean ELEMENTS_TEAM;
     public boolean ELEMENTS_RECIPE;
     public boolean ELEMENTS_STRUCTURE;
     public boolean ELEMENTS_VIRTUAL_FURNACE;
@@ -158,7 +157,6 @@ public class Config {
 
         this.ELEMENTS_FASTBOARD = getElement("fastboard");
         this.ELEMENTS_SCOREBOARD = getElement("scoreboard");
-        this.ELEMENTS_TEAM = getElement("team");
         this.ELEMENTS_RECIPE = getElement("recipe");
         this.ELEMENTS_STRUCTURE = getElement("structure");
         this.ELEMENTS_VIRTUAL_FURNACE = getElement("virtual-furnace");

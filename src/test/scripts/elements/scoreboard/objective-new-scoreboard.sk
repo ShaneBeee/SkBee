@@ -1,0 +1,121 @@
+test "SkBee - Objectives New Scoreboard":
+	before:
+		delete all objectives
+		suppress variable save warning
+		set {test_scoreboard} to new scoreboard
+	test:
+		# ExprCriteriaCreate
+		set {_criteria} to criteria with id "dummy"
+		assert {_criteria} is set with "Should have retrieved criteria 'dummy'"
+
+		# ExprObjCreate
+		set {_obj} to objective with id "my_obj" with criteria {_criteria} named "My Objective" for {test_scoreboard} with render type integer in display slot player_list
+		assert {_obj} is set with "The objective should have been created"
+
+		# ExprDisplaySlot
+		assert display slot of {_obj} = player_list with "The display slot should have been 'player_list'"
+		set display slot of {_obj} to below_name
+		assert display slot of {_obj} = below_name with "The display slot should be 'below_name' after changing"
+
+		# ExprObjGet
+		assert objective with id "my_obj" from {test_scoreboard} = {_obj} with "The get objective should match the variable"
+
+		# ExprObjName
+		assert objective display name of {_obj} = "My Objective" with "The name should be 'My Objective'"
+		set objective display name of {_obj} to "Changed Name"
+		assert objective display name of {_obj} = "Changed Name" with "The name should now be 'Changed Name'"
+
+		parse:
+			set objective name of {_obj} to "blah"
+		assert parse logs = "Cannot change the name of an objective." with "This should throw an error"
+
+		# ExprObjNumberFormat
+		assert number format of {_obj} is not set with "The format shouldn't be set yet"
+		## String
+		set number format of {_obj} to "test format"
+		assert number format of {_obj} is "test format" with "The format should be 'test format' now"
+		## Blank
+		delete number format of {_obj} # This actually sets it to "blank"
+		assert number format of {_obj} is "blank" with "It should have blank format now"
+		## Styled
+		set number format of {_obj} to "{""bold"":true,""color"":""#0DEAE3""}"
+		assert number format of {_obj} = "{""bold"":true,""color"":""#0DEAE3""}" with "The format should have a style now"
+		## Reset
+		reset number format of {_obj}
+		assert number format of {_obj} is not set with "There should be no style after reset"
+
+		# ExprObjScore
+		assert score of "bob" for {_obj} is not set with "'bob' should not have a score"
+		set score of "bob" for {_obj} to 10
+		assert score of "bob" for {_obj} is 10 with "'bob' should now have a score of 10"
+		add 2 to score of "bob" for {_obj}
+		assert score of "bob" for {_obj} is 12 with "'bob' should now have a score of 12 after adding"
+		subtract 7 from score of "bob" for {_obj}
+		assert score of "bob" for {_obj} is 5 with "'bob' should now have a score of 5 after subtracting"
+
+		# Cleanup
+		delete objective within {_obj}
+		assert objective with id "my_obj" of {test_scoreboard} is not set with "The objective should be unregistered"
+
+		# Test setting non-modifiable criteria
+		set {_obj} to objective with id "test_obj" with criteria "health" named "Second Test" for {test_scoreboard}
+		set score of "bob" for {_obj} to 10
+		assert score of "bob" for {_obj} is not set with "This shouldn't have been able to modify"
+		assert the scores of {_obj} aren't modifiable with "This objective shouldn't be modifiable"
+		assert the scores of criteria with id "dummy" are modifiable with "Dummy scores should be modifiable"
+		assert the scores of criteria with id "health" are not modifiable with "Health scores should not be modifiable"
+
+		delete objective within {_obj}
+
+		# Test setting custom score name
+		set {_obj} to objective with id "test_name" with criteria "dummy" named "Testing Names" for {test_scoreboard}
+		assert custom score name of "test" for {_obj} is not set with "The custom score name should not be set yet"
+		set custom score name of "test" for {_obj} to "test"
+		assert custom score name of "test" for {_obj} is set with "The custom score name should now be set"
+		assert custom score name of "test" for {_obj} = "test" with "The custom score name should now be 'test'"
+		delete custom score name of "test" for {_obj}
+		assert custom score name of "test" for {_obj} is set with "The custom score name should be blank but set"
+		assert custom score name of "test" for {_obj} = "" with "The custom score name should now be an empty string"
+		reset custom score name of "test" for {_obj}
+		assert custom score name of "test" for {_obj} is not set with "The custom score name should not be set after reset"
+
+		set component custom score name of "test" for {_obj} to mini message from "mini"
+		assert component custom score name of "test" for {_obj} is set with "The mini message should set too"
+		delete objective within {_obj}
+
+		# Criterias from statistics
+		set {_c} to criteria from sprint_one_cm
+		assert {_c} is set with "Criteria should be set"
+		delete {_c}
+
+		set {_c} to criteria from mob_kills
+		assert {_c} is set with "Criteria should be set"
+		delete {_c}
+
+		set {_c} to criteria from mine_block using diamond ore
+		assert {_c} is set with "Criteria should be set"
+		delete {_c}
+
+		set {_c} to criteria from break_item using diamond
+		assert {_c} is set with "Criteria should not be set"
+		delete {_c}
+
+		set {_c} to criteria from entity_killed_by using a sheep
+		assert {_c} is set with "Criteria should be set"
+		delete {_c}
+
+		set {_c} to criteria from time_since_rest using a stick
+		assert {_c} is not set with "Criteria should not be set, requires no object"
+		delete {_c}
+
+		set {_c} to criteria from mine_block using diamond
+		assert {_c} is not set with "Criteria should not be set, requires a block"
+		delete {_c}
+
+		set {_c} to criteria from craft_item using nether portal
+		assert {_c} is not set with "Criteria should not be set, requires an item"
+		delete {_c}
+
+		set {_c} to criteria from kill_entity using a stick
+		assert {_c} is not set with "Criteria should not be set, requires an entitytype"
+		delete {_c}

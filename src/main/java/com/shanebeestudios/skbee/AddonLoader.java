@@ -26,7 +26,6 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Team;
 
 /**
  * @hidden
@@ -119,7 +118,6 @@ public class AddonLoader {
         loadStructureElements();
         loadSwitchCaseElements();
         loadTagElements();
-        loadTeamElements();
         loadTickManagerElements();
         loadVillagerElements();
         loadVirtualFurnaceElements();
@@ -212,25 +210,6 @@ public class AddonLoader {
             Util.logLoading("&5Scoreboard Elements &asuccessfully loaded");
         } catch (Exception ex) {
             logFailure("Scoreboard", ex);
-        }
-    }
-
-    private void loadTeamElements() {
-        if (!this.config.ELEMENTS_TEAM) {
-            Util.logLoading("&5Team Elements &cdisabled via config");
-            return;
-        }
-        if (Classes.getClassInfoNoError("team") != null || Classes.getExactClassInfo(Team.class) != null) {
-            Util.logLoading("&5Team Elements &cdisabled");
-            Util.logLoading("&7It appears another Skript addon may have registered Team syntax.");
-            Util.logLoading("&7To use SkBee Teams, please remove the addon which has registered Teams already.");
-            return;
-        }
-        try {
-            this.addon.loadClasses("com.shanebeestudios.skbee.elements.team");
-            Util.logLoading("&5Team Elements &asuccessfully loaded");
-        } catch (Exception ex) {
-            logFailure("Team", ex);
         }
     }
 

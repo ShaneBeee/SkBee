@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.ScoreboardUtils;
+import com.shanebeestudios.skbee.api.scoreboard.NumberFormatUtils;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -80,7 +80,7 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         for (Objective objective : this.objectives.getArray(event)) {
             if (entries == null) {
                 NumberFormat numberFormat = objective.numberFormat();
-                if (numberFormat != null) formats.add(ScoreboardUtils.getStringifiedNumberFormat(numberFormat));
+                if (numberFormat != null) formats.add(NumberFormatUtils.getStringifiedNumberFormat(numberFormat));
             } else {
                 for (Object entry : entries) {
                     String stringScore = getStringScore(objective, entry);
@@ -151,7 +151,7 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         }
         if (stringEntiry != null) {
             NumberFormat numberFormat = objective.getScore(stringEntiry).numberFormat();
-            if (numberFormat != null) return ScoreboardUtils.getStringifiedNumberFormat(numberFormat);
+            if (numberFormat != null) return NumberFormatUtils.getStringifiedNumberFormat(numberFormat);
         }
         return null;
     }
@@ -170,13 +170,13 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         if (score == null) {
             numberFormat = null;
         } else if (score.equalsIgnoreCase("$blank")) {
-            numberFormat = ScoreboardUtils.getNumberFormatBlank();
+            numberFormat = NumberFormatUtils.getNumberFormatBlank();
         } else {
             if (score.startsWith("{") && score.endsWith("}")) {
                 score = score.replace("}", "") + ",\"text\":\"\"}";
-                numberFormat = ScoreboardUtils.getJsonFormat(score);
+                numberFormat = NumberFormatUtils.getJsonFormat(score);
             } else {
-                numberFormat = ScoreboardUtils.getNumberFormatFixed(score);
+                numberFormat = NumberFormatUtils.getNumberFormatFixed(score);
             }
         }
 

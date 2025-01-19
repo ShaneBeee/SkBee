@@ -68,7 +68,7 @@ elements:
     # Enable custom recipe elements
     recipe: true
 
-    # Enable Scoreboard/Objective elements
+    # Enable Scoreboard/Objective/Team elements
     scoreboard: true
 
     # Enable statistic elements
@@ -79,9 +79,6 @@ elements:
 
     # Enable switch case elements
     switch-case: true
-
-    # Enable Team elements
-    team: true
 
     # Enable Text Component elements
     text-component: true

@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.util;
+package com.shanebeestudios.skbee.api.scoreboard;
 
 import com.google.gson.JsonParseException;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
  * Utility methods for Scoreboard stuff
  * <p>Javadocs copied from AdventureAPI</p>
  */
-public class ScoreboardUtils {
+public class NumberFormatUtils {
 
     /**
      * Creates a scoreboard number format that applies a custom formatting to the score number.
