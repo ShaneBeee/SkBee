@@ -20,6 +20,12 @@ test "SkBee - Objectives":
 			set display slot of {_obj} to below_name
 			assert display slot of {_obj} = below_name with "The display slot should be 'below_name' after changing"
 
+			# ExprObjFromCriteria
+			assert (objectives by criteria {_criteria} of {_board}) is set with "Should be able to get objectives from criteria"
+
+			# EXprObjFromDisplaySlot
+			assert (objective from slot below_name of {_board}) is set with "Should be able to get objectives from display slot"
+
 			# ExprObjGet
 			assert objective with id "my_obj" from {_board} = {_obj} with "The get objective should match the variable"
 
