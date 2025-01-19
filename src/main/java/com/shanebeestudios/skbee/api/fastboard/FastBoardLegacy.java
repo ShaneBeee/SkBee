@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.scoreboard;
+package com.shanebeestudios.skbee.api.fastboard;
 
 import fr.mrmicky.fastboard.FastBoard;
 import org.bukkit.entity.Player;

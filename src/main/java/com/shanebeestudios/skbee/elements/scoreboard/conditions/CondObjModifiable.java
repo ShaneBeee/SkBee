@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.objective.conditions;
+package com.shanebeestudios.skbee.elements.scoreboard.conditions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;

@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.scoreboard.conditions;
+package com.shanebeestudios.skbee.elements.fastboard.conditions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
@@ -9,25 +9,25 @@ import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.scoreboard.FastBoardBase;
-import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
+import com.shanebeestudios.skbee.api.fastboard.FastBoardBase;
+import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Scoreboard - Is On")
-@Description("Check if a player's scoreboard is currently toggled on/off.")
-@Examples({"if scoreboard of player is on:",
+@Name("FastBoard - Is On")
+@Description("Check if a player's fastboard is currently toggled on/off.")
+@Examples({"if fastboard of player is on:",
         "\tsend \"Your scoreboard is on!\""})
 @Since("1.16.0")
-public class CondScoreboardOn extends Condition {
+public class CondFastBoardOn extends Condition {
 
     static {
-        Skript.registerCondition(CondScoreboardOn.class,
-                "[score]board of %player% is (on|true)",
-                "[score]board of %player% is(n't| not) on",
-                "[score]board of %player% is (off|false)");
+        Skript.registerCondition(CondFastBoardOn.class,
+                "[:score|fast]board of %player% is (on|true)",
+                "[:score|fast]board of %player% is(n't| not) on",
+                "[:score|fast]board of %player% is (off|false)");
     }
 
     private Expression<Player> player;
@@ -37,6 +37,9 @@ public class CondScoreboardOn extends Condition {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.player = (Expression<Player>) exprs[0];
         setNegated(matchedPattern >= 1);
+        if (parseResult.hasTag("score")) {
+            Skript.warning("'scoreboard' is deprecated, please use 'fastboard' instead.");
+        }
         return true;
     }
 
@@ -45,7 +48,7 @@ public class CondScoreboardOn extends Condition {
     public boolean check(Event event) {
         Player player = this.player.getSingle(event);
         if (player != null) {
-            FastBoardBase<?,?> board = BoardManager.getBoard(player);
+            FastBoardBase<?,?> board = FastBoardManager.getBoard(player);
             if (board == null) return false;
             return board.isOn() ^ isNegated();
         }
@@ -55,7 +58,7 @@ public class CondScoreboardOn extends Condition {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "scoreboard of " + this.player.toString(e, d) + " is " + (isNegated() ? "off" : "on");
+        return "fastboard of " + this.player.toString(e, d) + " is " + (isNegated() ? "off" : "on");
     }
 
 }

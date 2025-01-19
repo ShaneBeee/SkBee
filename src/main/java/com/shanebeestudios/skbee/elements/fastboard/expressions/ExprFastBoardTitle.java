@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.scoreboard.expressions;
+package com.shanebeestudios.skbee.elements.fastboard.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
@@ -11,8 +11,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
-import com.shanebeestudios.skbee.api.scoreboard.FastBoardBase;
+import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
+import com.shanebeestudios.skbee.api.fastboard.FastBoardBase;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -22,25 +22,25 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Scoreboard - Title")
-@Description({"Get/set the title of a scoreboard.",
-    "When running Paper, text components are support."})
-@Examples({"set title of player's scoreboard to \"Le Title\"",
-    "set {_title} to title of scoreboard of player",
+@Name("FastBoard - Title")
+@Description({"Get/set the title of a fastboard.",
+    "When running Paper, text components are supported."})
+@Examples({"set title of player's fastboard to \"Le Title\"",
+    "set {_title} to title of fastboard of player",
     "",
     "# Component Support",
-    "set title of player's scoreboard to mini message from \"<rainbow>Le Title\"",
-    "set title of player's scoreboard to mini message from \"<font:uniform>Le Title\""})
+    "set title of player's fastboard to mini message from \"<rainbow>Le Title\"",
+    "set title of player's fastboard to mini message from \"<font:uniform>Le Title\""})
 @Since("1.16.0")
-public class ExprScoreboardTitle extends SimpleExpression<Object> {
+public class ExprFastBoardTitle extends SimpleExpression<Object> {
 
-    private static final Class<?>[] CHANGE_TYPES = BoardManager.HAS_ADVENTURE ?
+    private static final Class<?>[] CHANGE_TYPES = FastBoardManager.HAS_ADVENTURE ?
         new Class<?>[]{ComponentWrapper.class, String.class} : new Class<?>[]{String.class};
 
     static {
-        Skript.registerExpression(ExprScoreboardTitle.class, Object.class, ExpressionType.PROPERTY,
-            "title of %players%'[s] [score]board[s]",
-            "title of [score]board of %players%");
+        Skript.registerExpression(ExprFastBoardTitle.class, Object.class, ExpressionType.PROPERTY,
+            "title of %players%'[s] [:score|fast]board[s]",
+            "title of [:score|fast]board of %players%");
     }
 
     private Expression<Player> player;
@@ -49,6 +49,9 @@ public class ExprScoreboardTitle extends SimpleExpression<Object> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.player = (Expression<Player>) exprs[0];
+        if (parseResult.hasTag("score")) {
+            Skript.warning("'scoreboard' is deprecated, please use 'fastboard' instead.");
+        }
         return true;
     }
 
@@ -56,7 +59,7 @@ public class ExprScoreboardTitle extends SimpleExpression<Object> {
     protected @Nullable Object[] get(Event event) {
         List<Object> titles = new ArrayList<>();
         for (Player player : this.player.getArray(event)) {
-            FastBoardBase<?, ?> board = BoardManager.getBoard(player);
+            FastBoardBase<?, ?> board = FastBoardManager.getBoard(player);
             if (board == null) continue;
             titles.add(board.getTitle());
         }
@@ -73,7 +76,7 @@ public class ExprScoreboardTitle extends SimpleExpression<Object> {
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Object title = delta != null ? delta[0] : null;
         for (Player player : this.player.getArray(event)) {
-            FastBoardBase<?, ?> board = BoardManager.getBoard(player);
+            FastBoardBase<?, ?> board = FastBoardManager.getBoard(player);
             if (board != null) {
                 board.setTitle(title);
             }
@@ -87,12 +90,12 @@ public class ExprScoreboardTitle extends SimpleExpression<Object> {
 
     @Override
     public @NotNull Class<?> getReturnType() {
-        return BoardManager.HAS_ADVENTURE ? ComponentWrapper.class : String.class;
+        return FastBoardManager.HAS_ADVENTURE ? ComponentWrapper.class : String.class;
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "title of scoreboard of " + this.player.toString(e, d);
+        return "title of fastboard of " + this.player.toString(e, d);
     }
 
 }

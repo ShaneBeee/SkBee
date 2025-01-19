@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.scoreboard;
+package com.shanebeestudios.skbee.api.fastboard;
 
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import fr.mrmicky.fastboard.adventure.FastBoard;

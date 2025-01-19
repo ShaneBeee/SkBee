@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.objective.expressions;
+package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;

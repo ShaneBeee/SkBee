@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.scoreboard;
+package com.shanebeestudios.skbee.api.fastboard;
 
 import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.entity.Player;
@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class FastBoardBase<T, B> {
 
-    protected static final boolean REVERSE = SkBee.getPlugin().getPluginConfig().SETTINGS_SCOREBOARD_LINES;
+    protected static final boolean REVERSE = SkBee.getPlugin().getPluginConfig().SETTINGS_FASTBOARD_LINES;
 
     protected final Player player;
     protected fr.mrmicky.fastboard.FastBoardBase<B> fastBoard;

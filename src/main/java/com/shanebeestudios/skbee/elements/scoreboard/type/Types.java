@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.elements.objective.type;
+package com.shanebeestudios.skbee.elements.scoreboard.type;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;

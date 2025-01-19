@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.scoreboard;
+package com.shanebeestudios.skbee.api.fastboard;
 
 import com.shanebeestudios.skbee.SkBee;
 import org.bukkit.Bukkit;
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
-public class BoardManager implements Listener {
+public class FastBoardManager implements Listener {
 
     public static final boolean HAS_ADVENTURE = SkBee.getPlugin().getAddonLoader().isTextComponentEnabled();
 
@@ -39,10 +39,10 @@ public class BoardManager implements Listener {
     }
 
     public static void reload() {
-        Bukkit.getOnlinePlayers().forEach(BoardManager::getBoard);
+        Bukkit.getOnlinePlayers().forEach(FastBoardManager::getBoard);
     }
 
-    public BoardManager() {
+    public FastBoardManager() {
         reload();
     }
 
