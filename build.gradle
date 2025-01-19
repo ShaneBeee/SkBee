@@ -90,7 +90,7 @@ shadowJar {
     archiveFileName = project.name + "-" + project.version + ".jar"
     relocate("de.tr7zw.changeme.nbtapi", "com.shanebeestudios.skbee.api.nbt")
     relocate("de.tr7zw.annotations", "com.shanebeestudios.skbee.api.nbt.annotations")
-    relocate("fr.mrmicky.fastboard", "com.shanebeestudios.skbee.api.fastboard")
+    relocate("fr.mrmicky.fastboard", "com.shanebeestudios.skbee.api.fastboard.base")
     relocate("com.shanebeestudios.vf", "com.shanebeestudios.skbee.api.virtualfurnace")
     relocate("org.bstats", "com.shanebeestudios.skbee.metrics")
     exclude('META-INF/**', 'LICENSE')
