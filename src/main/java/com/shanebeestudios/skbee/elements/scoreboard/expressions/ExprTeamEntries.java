@@ -9,10 +9,11 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -23,10 +24,10 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Team - Entries")
 @Description({"Get the entries of a team. Entries can be entities/players or strings.",
-    "\nNOTE: When returning as entities, if the entity isn't currently loaded in a world it wont return.",
+    "**NOTE**: When returning as entities, if the entity isn't currently loaded in a world it won't return.",
     "OfflinePlayers will also not return. Use strings intead.",
-    "\nNOTE: When returning as strings this will return the list how Minecraft stores it, player names and entity UUIDs.",
-    "\nNOTE: adding/removing to/from team entries is now deprecated. Please directly add/remove to/from the team itself.",
+    "**NOTE**: When returning as strings this will return the list how Minecraft stores it, player names and entity UUIDs.",
+    "**NOTE**: adding/removing to/from team entries is now deprecated. Please directly add/remove to/from the team itself.",
     "See Team type docs for more info!"})
 @Examples({"set {_team} to team named \"my-team\"",
     "clear team entries of {_team}",
@@ -38,6 +39,8 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
 
     static {
         Skript.registerExpression(ExprTeamEntries.class, Object.class, ExpressionType.PROPERTY,
+            "(:string|entity) team entries of %teams%",
+            "%teams%'[s] (:string|entity) team entries",
             "[all] team entries [string:as strings] of %team%",
             "[all] team entries of %team% [string:as strings]",
             "%team%'[s] team entries [string:as strings]");
@@ -46,7 +49,7 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
     private Expression<Team> team;
     private boolean strings;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.team = (Expression<Team>) exprs[0];
@@ -54,7 +57,6 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Object[] get(Event event) {
         Team team = this.team.getSingle(event);
@@ -64,11 +66,12 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
             } else {
                 return TeamUtils.getEntries(team).toArray(new Entity[0]);
             }
+        } else {
+            error("Team is not set: " + this.team.toString(event, true));
+            return null;
         }
-        return new Entity[0];
     }
 
-    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
@@ -88,7 +91,6 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Team team = this.team.getSingle(event);
@@ -106,7 +108,10 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
                 } else if (object instanceof String string) {
                     entry = string;
                 }
-                if (entry == null) continue;
+                if (entry == null) {
+                    error("Invalid entry for a team: " + Classes.toString(object));
+                    continue;
+                }
 
                 if (mode == ChangeMode.ADD) {
                     team.addEntry(entry);
@@ -114,6 +119,8 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
                     team.removeEntry(entry);
                 }
             }
+        } else {
+            error("Team is not set: " + this.team.toString(event, true));
         }
     }
 
@@ -129,8 +136,8 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
-        String string = this.strings ? " as strings " : " ";
-        return "team entries" + string + "of " + this.team.toString(e, d);
+        String string = this.strings ? "string" : "entity";
+        return string + " entries of " + this.team.toString(e, d);
     }
 
 }
