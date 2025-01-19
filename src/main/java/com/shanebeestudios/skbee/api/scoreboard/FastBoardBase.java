@@ -10,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 public abstract class FastBoardBase<T, B> {
 
     protected static final boolean REVERSE = SkBee.getPlugin().getPluginConfig().SETTINGS_SCOREBOARD_LINES;
-    private final Scoreboard DUMMY_BOARD = Bukkit.getScoreboardManager().getNewScoreboard();
+    private static final Scoreboard DUMMY_BOARD = Bukkit.getScoreboardManager().getNewScoreboard();
 
     protected final Player player;
     protected fr.mrmicky.fastboard.FastBoardBase<B> fastBoard;
