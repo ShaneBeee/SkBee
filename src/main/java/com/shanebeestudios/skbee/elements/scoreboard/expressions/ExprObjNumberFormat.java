@@ -12,7 +12,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.scoreboard.NumberFormatUtils;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -33,9 +35,10 @@ import java.util.List;
     "`reset` = Will reset back to its original format.",
     "See [**Json Formatting**](https://minecraft.wiki/w/Raw_JSON_text_format) on McWiki for more details.",
     "Requires Paper 1.20.4+"})
-@Examples({"# Format to a string",
+@Examples({"# Format to a string/text component",
     "set number format of {-obj} to \"Look Im Fancy!!\"",
     "set number format of {-obj} for player to \"Im a lil less fancy!\"",
+    "set number format of {-obj} for player to mini message from \"<rainbow>Im a lil more fancy!\"",
     "",
     "# Format the number with color/style",
     "set number format of {-obj} for player to \"{color:red,bold:true}\"",
@@ -52,8 +55,15 @@ import java.util.List;
 public class ExprObjNumberFormat extends SimpleExpression<String> {
 
     private static final boolean HAS_NUMBER_FORMAT = Skript.methodExists(Objective.class, "numberFormat");
+    private static final boolean HAS_COMP = SkBee.getPlugin().getAddonLoader().isTextComponentEnabled();
+    private static final Class<?>[] CHANGE_TYPES;
 
     static {
+        if (HAS_COMP) {
+            CHANGE_TYPES = CollectionUtils.array(ComponentWrapper.class, String.class);
+        } else {
+            CHANGE_TYPES = CollectionUtils.array(String.class);
+        }
         Skript.registerExpression(ExprObjNumberFormat.class, String.class, ExpressionType.COMBINED,
             "number format of %objective% [for %-entities/strings%]");
     }
@@ -93,17 +103,21 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
 
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(String.class);
+        if (mode == ChangeMode.SET) return CHANGE_TYPES;
         else if (mode == ChangeMode.DELETE || mode == ChangeMode.RESET) return CollectionUtils.array();
         return null;
     }
 
     @Override
     public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-        String format = null;
+        Object format = null;
 
-        if (delta != null && delta[0] instanceof String string) {
-            format = string;
+        if (delta != null) {
+            if (delta[0] instanceof String string) {
+                format = string;
+            } else if (delta[0] instanceof ComponentWrapper cw) {
+                format = cw;
+            }
         } else if (mode == ChangeMode.DELETE) {
             format = "$blank";
         }
@@ -156,7 +170,7 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
         return null;
     }
 
-    private static void setStringScore(Objective objective, @Nullable Object entry, @Nullable String score) {
+    private static void setStringScore(Objective objective, @Nullable Object entry, @Nullable Object score) {
         String stringEntiry = null;
         if (entry instanceof Player player) {
             stringEntiry = player.getName();
@@ -166,18 +180,18 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
             stringEntiry = string;
         }
 
-        NumberFormat numberFormat;
-        if (score == null) {
-            numberFormat = null;
-        } else if (score.equalsIgnoreCase("$blank")) {
+        NumberFormat numberFormat = null;
+        if (score instanceof String stringScore && stringScore.equalsIgnoreCase("$blank")) {
             numberFormat = NumberFormatUtils.getNumberFormatBlank();
-        } else {
-            if (score.startsWith("{") && score.endsWith("}")) {
-                score = score.replace("}", "") + ",\"text\":\"\"}";
-                numberFormat = NumberFormatUtils.getJsonFormat(score);
+        } else if (score instanceof String stringScore) {
+            if (stringScore.startsWith("{") && stringScore.endsWith("}")) {
+                stringScore = stringScore.replace("}", "") + ",\"text\":\"\"}";
+                numberFormat = NumberFormatUtils.getJsonFormat(stringScore);
             } else {
-                numberFormat = NumberFormatUtils.getNumberFormatFixed(score);
+                numberFormat = NumberFormatUtils.getNumberFormatFixed(stringScore);
             }
+        } else if (HAS_COMP && score instanceof ComponentWrapper cw) {
+            numberFormat = NumberFormatUtils.getNumberFormatFixed(cw);
         }
 
         if (stringEntiry != null) {

@@ -43,6 +43,9 @@ test "SkBee - Objectives":
 			## String
 			set number format of {_obj} to "test format"
 			assert number format of {_obj} is "test format" with "The format should be 'test format' now"
+			## Text Component
+			set number format of {_obj} to mini message from "mini test"
+			assert number format of {_obj} is "mini test" with "The format should be 'mini test' now"
 			## Blank
 			delete number format of {_obj} # This actually sets it to "blank"
 			assert number format of {_obj} is "blank" with "It should have blank format now"

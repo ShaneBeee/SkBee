@@ -39,12 +39,22 @@ public class NumberFormatUtils {
     /**
      * Creates a scoreboard number format that replaces the score number with a chat component.
      *
-     * @param score the score to replace the number with
+     * @param score String to replace the number with
      * @return a fixed number format
      */
     public static NumberFormat getNumberFormatFixed(String score) {
         ComponentWrapper comp = ComponentWrapper.fromText(score);
         return NumberFormat.fixed(comp.getComponent());
+    }
+
+    /**
+     * Creates a scoreboard number format that replaces the score number with a chat component.
+     *
+     * @param score Component to replace the number with
+     * @return a fixed number format
+     */
+    public static NumberFormat getNumberFormatFixed(ComponentWrapper score) {
+        return NumberFormat.fixed(score.getComponent());
     }
 
     @Nullable
