@@ -71,7 +71,10 @@ test "SkBee - Objectives":
 
 			# Test setting non-modifiable criteria
 			set {_obj} to objective with id "test_obj" with criteria "health" named "Second Test" for {_board}
-			set score of "bob" for {_obj} to 10
+			try:
+				set score of "bob" for {_obj} to 10
+			catch:
+				assert last runtime logs contains "Objective 'test_obj' has no modifiable score" with "Shouldn't be able to set a score for a health obj"
 			assert score of "bob" for {_obj} is not set with "This shouldn't have been able to modify"
 			assert the scores of {_obj} aren't modifiable with "This objective shouldn't be modifiable"
 			assert the scores of criteria with id "dummy" are modifiable with "Dummy scores should be modifiable"
