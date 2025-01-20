@@ -88,6 +88,7 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
         }
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Team team = this.team.getSingle(event);
