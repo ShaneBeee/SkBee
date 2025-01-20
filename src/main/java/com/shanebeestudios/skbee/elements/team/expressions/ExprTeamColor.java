@@ -33,6 +33,7 @@ public class ExprTeamColor extends SimplePropertyExpression<Team, SkriptColor> {
         return ChatUtil.getSkriptColorByBungee(team.getColor().asBungee());
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {

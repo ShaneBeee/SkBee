@@ -8,7 +8,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import org.bukkit.event.Event;
@@ -18,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Team - Name")
 @Description({"Represents the name and display name of a team.",
-    "\nNOTE: Display name can be set, name cannot be set."})
+        "\nNOTE: Display name can be set, name cannot be set."})
 @Examples({"set team display name of {_team} to \"The Warriors\"",
         "set team display name of team of player to \"The Rednecks\"",
         "set team display name of team named \"blue-team\" to \"Blue Team\"",

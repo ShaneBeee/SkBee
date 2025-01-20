@@ -68,6 +68,7 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
         return new Entity[0];
     }
 
+    @SuppressWarnings("NullableProblems")
     @Nullable
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
@@ -95,7 +96,6 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
                 team.getEntries().forEach(team::removeEntry);
                 return;
             }
-
             for (Object object : delta) {
                 String entry = null;
                 if (object instanceof OfflinePlayer player) {
