@@ -44,7 +44,6 @@ public class ExprItemFromNBT extends PropertyExpression<NBTCompound, ItemType> {
 
     @Override
     protected ItemType @NotNull [] get(@NotNull Event event, NBTCompound @NotNull [] source) {
-        if (source.length == 0) error("Empty nbt compound");
         return get(source, nbtCompound -> {
             if (nbtCompound.hasTag("id")) {
                 ItemStack itemStack = NBTItem.convertNBTtoItem(nbtCompound);

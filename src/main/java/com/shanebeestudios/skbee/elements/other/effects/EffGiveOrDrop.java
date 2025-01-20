@@ -52,11 +52,9 @@ public class EffGiveOrDrop extends Effect {
         if (itemStacks.isEmpty()) {
             for (ItemType itemType : itemTypes) {
                 if (itemType.getMaterial().isAir() || !itemType.getMaterial().isItem()) {
-                    error(Classes.toString(itemType) + " cannot be given/dropped.");
                     return;
                 }
             }
-            error("Missing or invalid items: " + this.itemTypes.toString(event, true));
             return;
         }
         ItemStack[] itemStacksArray = itemStacks.toArray(itemStacks.toArray(new ItemStack[0]));

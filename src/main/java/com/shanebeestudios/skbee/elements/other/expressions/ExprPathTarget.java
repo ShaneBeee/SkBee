@@ -60,8 +60,6 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
                 PathResult result = pathfinder.getCurrentPath();
                 return result != null ? result.getFinalPoint() : null;
             }
-        } else {
-            error("Entity is not a mob: " + Classes.toString(livingEntity));
         }
         return null;
     }
@@ -80,7 +78,7 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
         Number number = this.speed != null ? this.speed.getSingle(e) : 0;
         for (LivingEntity entity : getExpr().getArray(e)) {
             if (!(entity instanceof Mob mob)) {
-                error("Entity is not a mob: " + Classes.toString(entity));
+                error("Entity is not a pathfindable mob: " + Classes.toString(entity));
                 continue;
             }
 

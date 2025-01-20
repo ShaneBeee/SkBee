@@ -48,23 +48,15 @@ public class EffTransferCookieStore extends Effect {
     protected void execute(Event event) {
         String cookie = this.cookie.getSingle(event);
         Object keyObject = this.key.getSingle(event);
-        if (cookie == null) {
-            error("Missing \uD83C\uDF6A: " + this.cookie.toString(event, true));
-            return;
-        }
-        if (keyObject == null) {
-            error("Missing key: " + this.key.toString(event, true));
+        if (cookie == null || keyObject == null) {
             return;
         }
 
-        NamespacedKey key;
+        NamespacedKey key = null;
         if (keyObject instanceof String string) {
             key = Util.getNamespacedKey(string, false);
         } else if (keyObject instanceof NamespacedKey namespacedKey) {
             key = namespacedKey;
-        } else {
-            error("Invalid object for key: " + this.key.toString(event, true));
-            return;
         }
         if (key == null) {
             error("Invalid key: " + this.key.toString(event, true));
@@ -74,7 +66,7 @@ public class EffTransferCookieStore extends Effect {
         byte[] cookieBytes = cookie.getBytes();
         // Minecraft limit
         if (cookieBytes.length >= 5120) {
-            error("Your \uD83C\uDF6A is too big. Minecraft limits to 5120 characters.");
+            error("Your cookie \uD83C\uDF6A is too big. Minecraft limits to 5120 characters.");
             return;
         }
 

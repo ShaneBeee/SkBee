@@ -48,7 +48,6 @@ public class EffEquipmentChange extends Effect {
     protected void execute(Event event) {
         ItemType itemType = this.itemtype.getSingle(event);
         if (itemType == null) {
-            error("Item is not set: " + this.itemtype.toString(event, true));
             return;
         }
         ItemStack itemStack = itemType.getRandom();

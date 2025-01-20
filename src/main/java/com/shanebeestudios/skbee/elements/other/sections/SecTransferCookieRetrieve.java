@@ -81,12 +81,7 @@ public class SecTransferCookieRetrieve extends Section {
 
         Player player = this.player.getSingle(event);
         Object keyObject = this.key.getSingle(event);
-        if (player == null) {
-            error("Player is not set: " + this.player.toString(event, true));
-            return null;
-        }
-        if (keyObject == null) {
-            error("Key is not set: " + this.key.toString(event, true));
+        if (player == null || keyObject == null) {
             return null;
         }
 

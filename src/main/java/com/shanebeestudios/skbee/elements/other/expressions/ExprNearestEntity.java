@@ -74,20 +74,7 @@ public class ExprNearestEntity extends SimpleExpression<Entity> {
         EntityData<?> entityData = this.entityData.getSingle(event);
         Number radius = this.radius != null ? this.radius.getSingle(event) : MAX_TARGET_BLOCK_DISTANCE;
         Object object = this.location.getSingle(event);
-        if (number == null) {
-            error("Invalid number: " + this.number.toString(event, true));
-            return null;
-        }
-        if (entityData == null) {
-            error("Invalid entity data: " + this.entityData.toString(event, true));
-            return null;
-        }
-        if (radius == null) {
-            error("Invalid radius: " + this.radius.toString(event, true));
-            return null;
-        }
-        if (object == null) {
-            error("Invalid location: " + this.location.toString(event, true));
+        if (number == null || entityData == null || radius == null || object == null) {
             return null;
         }
         double rad = radius.doubleValue();

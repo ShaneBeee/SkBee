@@ -60,12 +60,7 @@ public class EffResourcePackSend extends Effect {
         String uuidString = this.uuid.getSingle(event);
         String prompt = this.prompt != null ? this.prompt.getSingle(event) : null;
 
-        if (url == null) {
-            error("Missing URL: " + this.url.toString(event, true));
-            return;
-        }
-        if (uuidString == null) {
-            error("Missing UUID: " + this.uuid.toString(event, true));
+        if (url == null || uuidString == null) {
             return;
         }
 

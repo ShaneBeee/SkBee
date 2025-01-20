@@ -8,7 +8,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.entity.Pathfinder.PathResult;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
@@ -53,8 +52,6 @@ public class ExprPath extends SimpleExpression<Location> {
             if (entity instanceof Mob mob) {
                 PathResult result = mob.getPathfinder().getCurrentPath();
                 if (result != null) locations.addAll(result.getPoints());
-            } else {
-                error("Entity is not a mob: " + Classes.toString(entity));
             }
         }
         return locations.toArray(new Location[0]);

@@ -60,16 +60,7 @@ public class EffChunkRefresh extends Effect {
             Number x = this.x.getSingle(event);
             Number z = this.z.getSingle(event);
             World world = this.world.getSingle(event);
-            if (x == null) {
-                error("X is not set: " + this.x.toString(event, true));
-                return;
-            }
-            if (z == null) {
-                error("Z is not set: " + this.z.toString(event, true));
-                return;
-            }
-            if (world == null) {
-                error("World is not set: " + this.world.toString(event, true));
+            if (x == null || z == null || world == null) {
                 return;
             }
             world.refreshChunk(x.intValue(), z.intValue());

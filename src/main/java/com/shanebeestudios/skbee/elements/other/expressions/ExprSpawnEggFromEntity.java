@@ -43,11 +43,9 @@ public class ExprSpawnEggFromEntity extends SimplePropertyExpression<Object, Ite
         } else if (object instanceof EntityData<?> entityData) {
             entityType = EntityUtils.toBukkitEntityType(entityData);
         } else {
-            error("Cannot convert " + Classes.toString(object) + " to EntityType");
             return null;
         }
         if (entityType == null) {
-            error("Invalid entity type: " + Classes.toString(entityType));
             return null;
         }
         Object spawnEggObject = ITEM_FACTORY.getSpawnEgg(entityType);

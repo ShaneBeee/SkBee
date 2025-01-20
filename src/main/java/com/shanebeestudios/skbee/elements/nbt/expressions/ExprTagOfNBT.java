@@ -132,15 +132,10 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         NBTCompound nbt = this.nbt.getSingle(event);
 
         if (type == null) {
-            error("Invalid nbt tag type");
+            error("Invalid nbt tag type: " + this.nbtType.toString(event, true));
             return null;
         }
-        if (tag == null) {
-            error("Invalid nbt tag");
-            return null;
-        }
-        if (nbt == null) {
-            error("Invalid nbt compound");
+        if (tag == null || nbt == null) {
             return null;
         }
 
@@ -193,15 +188,10 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         NBTCompound nbt = this.nbt.getSingle(event);
 
         if (type == null) {
-            error("Invalid nbt tag type");
+            error("Invalid nbt tag type: " + this.nbtType.toString(event, true));
             return;
         }
-        if (tag == null) {
-            error("Invalid nbt tag");
-            return;
-        }
-        if (nbt == null) {
-            error("Invalid nbt compound");
+        if (tag == null || nbt == null) {
             return;
         }
 

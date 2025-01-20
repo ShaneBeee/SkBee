@@ -53,16 +53,7 @@ public class ExprChunkAt extends SimpleExpression<Chunk> {
         Number x = this.chunkX.getSingle(event);
         Number z = this.chunkZ.getSingle(event);
 
-        if (world == null) {
-            error("World is not set: " + this.world.toString(event, true));
-            return null;
-        }
-        if (x == null) {
-            error("X is not set: " + this.chunkX.toString(event, true));
-            return null;
-        }
-        if (z == null) {
-            error("Z is not set: " + this.chunkZ.toString(event, true));
+        if (world == null || x == null || z == null) {
             return null;
         }
 

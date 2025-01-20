@@ -46,12 +46,7 @@ public class ExprChunksWithinCuboid extends SimpleExpression<Chunk> {
     protected Chunk @Nullable [] get(Event event) {
         Location loc1 = this.loc1.getSingle(event);
         Location loc2 = this.loc2.getSingle(event);
-        if (loc1 == null) {
-            error("First location is not set: " + this.loc1.toString(event, true));
-            return null;
-        }
-        if (loc2 == null) {
-            error("Second location is not set: " + this.loc2.toString(event, true));
+        if (loc1 == null || loc2 == null) {
             return null;
         }
 

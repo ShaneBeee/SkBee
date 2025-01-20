@@ -7,7 +7,6 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.block.Block;
@@ -50,8 +49,6 @@ public class EffOpenContainerAnimation extends Effect {
                 } else {
                     lidded.close();
                 }
-            } else {
-                error("Block is not a lidded block: " + Classes.toString(block));
             }
         }
     }

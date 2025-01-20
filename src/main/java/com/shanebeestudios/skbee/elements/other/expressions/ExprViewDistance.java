@@ -8,7 +8,6 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
@@ -84,13 +83,11 @@ public class ExprViewDistance extends SimplePropertyExpression<Object, Number> {
     private void setViewDistance(Object object, int changeValue) {
         if (object instanceof World world) world.setViewDistance(changeValue);
         else if (object instanceof Player player) player.setViewDistance(changeValue);
-        else error("View distance cannot be set for: " + Classes.toString(object));
     }
 
     private int getViewDistance(Object object) {
         if (object instanceof World world) return world.getViewDistance();
         else if (object instanceof Player player) return player.getViewDistance();
-        error("Cannot get view distance for: " + Classes.toString(object));
         return 0;
     }
 

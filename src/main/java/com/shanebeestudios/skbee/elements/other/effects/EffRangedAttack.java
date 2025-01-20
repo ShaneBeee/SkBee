@@ -49,7 +49,6 @@ public class EffRangedAttack extends Effect {
     protected void execute(Event event) {
         LivingEntity entity = this.entity.getSingle(event);
         if (!(entity instanceof RangedEntity rangedEntity)) {
-            error("Entity " + Classes.toString(entity) + " is not a RangedEntity");
             return;
         }
 

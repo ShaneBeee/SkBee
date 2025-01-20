@@ -65,7 +65,6 @@ public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
     protected BlockData @Nullable [] get(Event event) {
         Vector vec = this.vector.getSingle(event);
         if (vec == null) {
-            error("Vector is invalid: " + this.vector.toString(event, true));
             return null;
         }
 
@@ -100,7 +99,6 @@ public class ExprChunkDataBlock extends SimpleExpression<BlockData> {
             Vector vec = this.vector.getSingle(event);
             Vector vec2 = this.vector2 != null ? this.vector2.getSingle(event) : null;
             if (vec == null) {
-                error("Invalid vector: " + this.vector.toString(event, true));
                 return;
             }
             if (event instanceof ChunkGenEvent chunkGenEvent) {

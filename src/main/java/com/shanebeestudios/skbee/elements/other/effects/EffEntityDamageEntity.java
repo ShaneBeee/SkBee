@@ -46,7 +46,6 @@ public class EffEntityDamageEntity extends Effect {
 
         Entity attacker = this.attacker.getSingle(event);
         if (attacker == null) {
-            error("Attacker is not set: " + this.attacker.toString(event, true));
             return;
         }
 
