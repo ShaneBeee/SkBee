@@ -41,12 +41,7 @@ public class EffBlockRandomlyTick extends Effect {
 
     @Override
     protected void execute(@NotNull Event event) {
-        Block[] blocks = this.blocks.getArray(event);
-        if (blocks == null) {
-            error("Blocks is empty: " + this.blocks.toString(event, true));
-            return;
-        }
-        for (Block block : blocks) {
+        for (Block block : this.blocks.getArray(event)) {
             block.randomTick();
         }
     }

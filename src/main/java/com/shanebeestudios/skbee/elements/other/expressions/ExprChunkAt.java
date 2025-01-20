@@ -9,8 +9,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -53,7 +53,9 @@ public class ExprChunkAt extends SimpleExpression<Chunk> {
         Number x = this.chunkX.getSingle(event);
         Number z = this.chunkZ.getSingle(event);
 
-        if (world == null || x == null || z == null) return null;
+        if (world == null || x == null || z == null) {
+            return null;
+        }
 
         Chunk chunkAt = world.getChunkAt(x.intValue(), z.intValue(), this.generate);
         return new Chunk[]{chunkAt};
