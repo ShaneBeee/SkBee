@@ -50,18 +50,8 @@ public class EffShowHideEntity extends Effect {
 
     @Override
     protected void execute(Event event) {
-        Entity[] entities = this.entities.getArray(event);
-        Player[] players = this.players.getArray(event);
-        if (entities.length == 0) {
-            error("No entities found: " + this.entities.toString(event, true));
-            return;
-        }
-        if (players.length == 0) {
-            error("No players found: " + this.players.toString(event, true));
-            return;
-        }
-        for (Player player : players) {
-            for (Entity entity : entities) {
+        for (Player player : this.players.getArray(event)) {
+            for (Entity entity : this.entities.getArray(event)) {
                 if (this.appear) {
                     player.showEntity(PLUGIN, entity);
                 } else {

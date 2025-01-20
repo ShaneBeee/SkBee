@@ -59,12 +59,8 @@ public class EffRangedAttack extends Effect {
             if (chargeNum != null) charge = chargeNum.floatValue();
         }
         charge = MathUtil.clamp(charge, 0, 1);
-        LivingEntity[] targets = this.targets.getArray(event);
-        if (targets == null || targets.length == 0) {
-            error("Targets is empty: " + this.targets.toString(event, true));
-            return;
-        }
-        for (LivingEntity livingEntity : targets) {
+
+        for (LivingEntity livingEntity : this.targets.getArray(event)) {
             rangedEntity.rangedAttack(livingEntity, charge);
         }
     }

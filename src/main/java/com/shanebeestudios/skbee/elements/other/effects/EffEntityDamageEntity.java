@@ -50,12 +50,7 @@ public class EffEntityDamageEntity extends Effect {
             return;
         }
 
-        LivingEntity[] victims = this.victims.getArray(event);
-        if (victims.length == 0) {
-            error("Victims is not set: " + this.victims.toString(event, true));
-            return;
-        }
-        for (LivingEntity victim : victims) {
+        for (LivingEntity victim : this.victims.getArray(event)) {
             victim.damage(damageAmount, attacker);
         }
     }

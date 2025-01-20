@@ -48,10 +48,6 @@ public class EffGiveOrDrop extends Effect {
     @Override
     protected void execute(Event event) {
         ItemType[] itemTypes = this.itemTypes.getArray(event);
-        if (itemTypes.length == 0) {
-            error("No items found: " + this.itemTypes.toString(event, true));
-            return;
-        }
         List<ItemStack> itemStacks = ItemUtils.addItemTypesToList(Arrays.asList(itemTypes), null);
         if (itemStacks.isEmpty()) {
             for (ItemType itemType : itemTypes) {

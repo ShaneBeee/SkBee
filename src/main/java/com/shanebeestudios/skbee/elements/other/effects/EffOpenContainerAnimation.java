@@ -43,12 +43,7 @@ public class EffOpenContainerAnimation extends Effect {
 
     @Override
     protected void execute(Event event) {
-        Block[] blocks = this.blocks.getArray(event);
-        if (blocks.length == 0) {
-            error("Blocks are empty: " + this.blocks.toString(event, true));
-            return;
-        }
-        for (Block block : blocks) {
+        for (Block block : this.blocks.getArray(event)) {
             if (block.getState() instanceof Lidded lidded) {
                 if (open) {
                     lidded.open();

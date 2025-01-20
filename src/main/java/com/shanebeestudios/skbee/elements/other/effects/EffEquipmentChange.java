@@ -53,24 +53,9 @@ public class EffEquipmentChange extends Effect {
         }
         ItemStack itemStack = itemType.getRandom();
 
-        Player[] players = this.players.getArray(event);
-        if (players.length == 0) {
-            error("Players are not set: " + this.players.toString(event, true));
-            return;
-        }
-        LivingEntity[] entities = this.entities.getArray(event);
-        if (entities.length == 0) {
-            error("Entities are not set: " + this.entities.toString(event, true));
-            return;
-        }
-        EquipmentSlot[] slots = this.slots.getArray(event);
-        if (slots.length == 0) {
-            error("Slots are not set: " + this.slots.toString(event, true));
-            return;
-        }
-        for (Player player : players) {
-            for (LivingEntity livingEntity : entities) {
-                for (EquipmentSlot slot : slots) {
+        for (Player player : this.players.getArray(event)) {
+            for (LivingEntity livingEntity : this.entities.getArray(event)) {
+                for (EquipmentSlot slot : this.slots.getArray(event)) {
                     player.sendEquipmentChange(livingEntity, slot, itemStack);
                 }
             }

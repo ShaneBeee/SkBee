@@ -64,12 +64,7 @@ public class EffResourcePackRemove extends Effect {
             }
         }
 
-        Player[] players = this.players.getArray(event);
-        if (players == null || players.length == 0) {
-            error("Players is empty: " + this.players.toString(event, true));
-            return;
-        }
-        for (Player player : players) {
+        for (Player player : this.players.getArray(event)) {
             if (this.removeAll) player.removeResourcePacks();
             else uuids.forEach(player::removeResourcePack);
         }
