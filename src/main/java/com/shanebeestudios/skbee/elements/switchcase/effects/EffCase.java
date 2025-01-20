@@ -76,10 +76,10 @@ import org.jetbrains.annotations.Nullable;
     "\t\tdefault -> 1 of stick",
     "\tgive {_item} to attacker",})
 @Since("3.8.0")
-public class EffCaseReturn extends Effect {
+public class EffCase extends Effect {
 
     static {
-        Skript.registerEffect(EffCaseReturn.class,
+        Skript.registerEffect(EffCase.class,
             "case %objects% -> <.+>",
             "default -> <.+>");
     }
@@ -160,7 +160,7 @@ public class EffCaseReturn extends Effect {
     protected @Nullable TriggerItem walk(Event event) {
         if (event instanceof SwitchReturnEvent switchReturnEvent) {
             if (this.defaultCase || SecCase.compare(this.caseObject.getArray(event), switchReturnEvent.getSwitchedObject())) {
-                Object returnObject = this.returnObject.getSingle(event);
+                Object returnObject = this.returnObject.getSingle(switchReturnEvent.getParentEvent());
                 if (returnObject != null) {
                     switchReturnEvent.setReturnedObject(returnObject);
                     return null;

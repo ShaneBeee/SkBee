@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.switchcase.sections;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -55,7 +56,6 @@ public class SecSwitch extends Section {
 
     private Expression<?> switchedObject;
     private Trigger caseSection;
-    public TriggerItem dirty;
 
     @SuppressWarnings({"unchecked", "DataFlowIssue"})
     @Override
@@ -68,9 +68,14 @@ public class SecSwitch extends Section {
 
         this.caseSection = loadCode(sectionNode, "switch case", events);
 
-        if (this.dirty != null) {
-            Skript.error("Only cases can be used in a switch section but found this: \n    ==> '" + this.dirty + "'");
-            return false;
+        // Search through the section and see if the lines are cases
+        for (Node node : sectionNode) {
+            String key = node.getKey();
+            if (!key.startsWith("case") && !key.startsWith("default")) {
+                Skript.error("Only cases can be used in a switch section but found this:");
+                this.caseSection = null;
+                break;
+            }
         }
 
         return LiteralUtils.canInitSafely(this.switchedObject);
