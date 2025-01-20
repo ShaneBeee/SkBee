@@ -6,11 +6,16 @@ import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.SkBee;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
+import org.bukkit.Tag;
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
@@ -139,6 +144,34 @@ public class Util {
         long most = uuid.getMostSignificantBits();
         long least = uuid.getLeastSignificantBits();
         return new int[]{(int) (most >> 32), (int) most, (int) (least >> 32), (int) least};
+    }
+
+    /**
+     * Check if a {@link Tag} is a {@link Material} Tag
+     *
+     * @param tag tag to check
+     * @return True if material tag
+     */
+    public static boolean isMaterialTag(Tag<?> tag) {
+        ParameterizedType superC = (ParameterizedType) tag.getClass().getGenericSuperclass();
+        for (Type arg : superC.getActualTypeArguments()) {
+            if (arg.equals(Material.class)) return true;
+        }
+        return false;
+    }
+
+    /**
+     * Check if a {@link Tag} is an {@link EntityType} Tag
+     *
+     * @param tag tag to check
+     * @return True if EntityType tag
+     */
+    public static boolean isEntityTypeTag(Tag<?> tag) {
+        ParameterizedType superC = (ParameterizedType) tag.getClass().getGenericSuperclass();
+        for (Type arg : superC.getActualTypeArguments()) {
+            if (arg.equals(EntityType.class)) return true;
+        }
+        return false;
     }
 
 }
