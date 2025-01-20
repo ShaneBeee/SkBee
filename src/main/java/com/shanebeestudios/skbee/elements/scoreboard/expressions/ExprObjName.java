@@ -60,7 +60,6 @@ public class ExprObjName extends SimpleExpression<Object> {
     protected @Nullable Object[] get(Event event) {
         Objective objective = this.objective.getSingle(event);
         if (objective == null) {
-            error("Objective is not set: " + this.objective.toString(event, true));
             return null;
         }
         if (this.display) {

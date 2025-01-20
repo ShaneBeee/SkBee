@@ -9,9 +9,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -119,7 +119,7 @@ public class ExprObjScore extends SimpleExpression<Number> {
             if (objective.isModifiable()) {
                 objective.getScore(stringEntiry).setScore(score);
             } else {
-                Skript.debug("Objective '" + objective.getName() + "' has no modifiable score");
+                error("Objective '" + objective.getName() + "' has no modifiable score");
             }
         }
     }

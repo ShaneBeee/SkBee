@@ -42,18 +42,9 @@ public class ExprObjFromCriteria extends SimpleExpression<Objective> {
     @Override
     protected Objective @Nullable [] get(Event event) {
         List<Objective> objectives = new ArrayList<>();
-        Scoreboard[] scoreboards = this.scoreboards.getArray(event);
-        if (scoreboards == null || scoreboards.length == 0) {
-            error("Scoreboard is not set: " + this.scoreboards.toString(event, true));
-            return null;
-        }
-        Criteria[] criterias = this.criterias.getArray(event);
-        if (criterias == null || criterias.length == 0) {
-            error("Criteria is not set: " + this.criterias.toString(event, true));
-            return null;
-        }
-        for (Scoreboard scoreboard : scoreboards) {
-            for (Criteria criteria : criterias) {
+
+        for (Scoreboard scoreboard : this.scoreboards.getArray(event)) {
+            for (Criteria criteria : this.criterias.getArray(event)) {
                 Set<Objective> objectivesByCriteria = scoreboard.getObjectivesByCriteria(criteria);
                 objectives.addAll(objectivesByCriteria);
             }

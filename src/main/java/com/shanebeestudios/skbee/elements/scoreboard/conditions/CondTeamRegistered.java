@@ -45,7 +45,6 @@ public class CondTeamRegistered extends Condition {
     public boolean check(Event event) {
         Scoreboard scoreboard = this.scoreboard.getSingle(event);
         if (scoreboard == null) {
-            error("Scoreboard is not set: " + this.scoreboard.toString(event, true));
             return false;
         }
 

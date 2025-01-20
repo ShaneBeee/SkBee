@@ -55,7 +55,6 @@ public class ExprTeam extends SimpleExpression<Team> {
     protected Team @Nullable [] get(Event event) {
         Scoreboard scoreboard = this.scoreboard.getSingle(event);
         if (scoreboard == null) {
-            error("Scoreboard is not set: " + this.scoreboard.toString(event, true));
             return null;
         }
         switch (pattern) {

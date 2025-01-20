@@ -50,18 +50,8 @@ public class ExprObjFromDisplaySlot extends SimpleExpression<Objective> {
     @Override
     protected Objective @Nullable [] get(Event event) {
         List<Objective> objectives = new ArrayList<>();
-        Scoreboard[] scoreboards = this.scoreboards.getArray(event);
-        if (scoreboards == null || scoreboards.length == 0) {
-            error("Scoreboard is not set: " + this.scoreboards.toString(event, true));
-            return null;
-        }
-        DisplaySlot[] displaySlots = this.displaySlots.getArray(event);
-        if (displaySlots == null || displaySlots.length == 0) {
-            error("Display slot is not set: " + this.displaySlots.toString(event, true));
-            return null;
-        }
-        for (Scoreboard scoreboard : scoreboards) {
-            for (DisplaySlot displaySlot : displaySlots) {
+        for (Scoreboard scoreboard : this.scoreboards.getArray(event)) {
+            for (DisplaySlot displaySlot : this.displaySlots.getArray(event)) {
                 Objective objective = scoreboard.getObjective(displaySlot);
                 if (objective != null) objectives.add(objective);
             }
@@ -78,18 +68,8 @@ public class ExprObjFromDisplaySlot extends SimpleExpression<Objective> {
 
     @Override
     public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
-        Scoreboard[] scoreboards = this.scoreboards.getArray(event);
-        if (scoreboards == null || scoreboards.length == 0) {
-            error("Scoreboard is not set: " + this.scoreboards.toString(event, true));
-            return;
-        }
-        DisplaySlot[] displaySlots = this.displaySlots.getArray(event);
-        if (displaySlots == null || displaySlots.length == 0) {
-            error("Display slot is not set: " + this.displaySlots.toString(event, true));
-            return;
-        }
-        for (Scoreboard scoreboard : scoreboards) {
-            for (DisplaySlot displaySlot : displaySlots) {
+        for (Scoreboard scoreboard : this.scoreboards.getArray(event)) {
+            for (DisplaySlot displaySlot : this.displaySlots.getArray(event)) {
                 scoreboard.clearSlot(displaySlot);
             }
         }

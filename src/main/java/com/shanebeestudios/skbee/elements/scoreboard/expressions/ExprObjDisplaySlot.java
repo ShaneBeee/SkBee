@@ -43,7 +43,6 @@ public class ExprObjDisplaySlot extends SimpleExpression<DisplaySlot> {
     protected @Nullable DisplaySlot[] get(Event event) {
         Objective objective = this.objective.getSingle(event);
         if (objective == null) {
-            error("Objective is not set: " + this.objective.toString(event, true));
             return null;
         }
         return new DisplaySlot[]{objective.getDisplaySlot()};
@@ -60,14 +59,12 @@ public class ExprObjDisplaySlot extends SimpleExpression<DisplaySlot> {
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Objective objective = this.objective.getSingle(event);
         if (objective == null) {
-            error("Objective is not set: " + this.objective.toString(event, true));
             return;
         }
         if (mode == ChangeMode.DELETE) {
             objective.setDisplaySlot(null);
         } else if (mode == ChangeMode.SET) {
             if (delta == null) {
-                error("Change value is not set");
                 return;
             }
             if (delta[0] instanceof DisplaySlot displaySlot) {

@@ -44,14 +44,11 @@ public class ExprObjGet extends SimpleExpression<Objective> {
     protected @Nullable Objective[] get(Event event) {
         Scoreboard scoreboard = this.scoreboard.getSingle(event);
         if (scoreboard == null) {
-            error("Scoreboard is not set: " + this.scoreboard.toString(event, true));
             return null;
         }
         String id = this.id.getSingle(event);
         if (id != null) {
             return new Objective[]{scoreboard.getObjective(id)};
-        } else {
-            error("Id was not set: " + this.id.toString(event, true));
         }
         return null;
     }

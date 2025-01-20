@@ -9,7 +9,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
@@ -67,7 +66,6 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
                 return TeamUtils.getEntries(team).toArray(new Entity[0]);
             }
         } else {
-            error("Team is not set: " + this.team.toString(event, true));
             return null;
         }
     }
@@ -109,7 +107,6 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
                     entry = string;
                 }
                 if (entry == null) {
-                    error("Invalid entry for a team: " + Classes.toString(object));
                     continue;
                 }
 
@@ -119,8 +116,6 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
                     team.removeEntry(entry);
                 }
             }
-        } else {
-            error("Team is not set: " + this.team.toString(event, true));
         }
     }
 

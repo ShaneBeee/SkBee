@@ -49,7 +49,6 @@ public class ExprScoreboardPlayer extends SimplePropertyExpression<Player, Score
         for (Player player : getExpr().getArray(event)) {
             if (mode == ChangeMode.SET) {
                 if (scoreboard == null) {
-                    error("Scoreboard is not set: " + Arrays.toString(delta));
                     continue;
                 }
                 player.setScoreboard(scoreboard);

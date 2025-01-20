@@ -67,7 +67,6 @@ public class ExprObjCreate extends SimpleExpression<Objective> {
     protected Objective @Nullable [] get(Event event) {
         Scoreboard scoreboard = this.scoreboard.getSingle(event);
         if (scoreboard == null) {
-            error("Scoreboard is not set: " + this.scoreboard.toString(event, true));
             return null;
         }
         String id = this.id.getSingle(event);
