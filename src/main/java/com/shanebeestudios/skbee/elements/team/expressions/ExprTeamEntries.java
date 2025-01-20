@@ -9,9 +9,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.elements.team.type.TeamManager;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
@@ -46,7 +46,7 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
     private Expression<Team> team;
     private boolean strings;
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.team = (Expression<Team>) exprs[0];
@@ -54,18 +54,18 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
         return true;
     }
 
+    @SuppressWarnings("NullableProblems")
     @Override
     protected Object[] get(Event event) {
         Team team = this.team.getSingle(event);
-        if (team == null) {
-            error("Team is not set: " + this.team.toString(event, true));
-            return null;
+        if (team != null) {
+            if (this.strings) {
+                return team.getEntries().toArray(new String[0]);
+            } else {
+                return TeamManager.getEntries(team).toArray(new Entity[0]);
+            }
         }
-        if (this.strings) {
-            return team.getEntries().toArray(new String[0]);
-        } else {
-            return TeamManager.getEntries(team).toArray(new Entity[0]);
-        }
+        return new Entity[0];
     }
 
     @Nullable
@@ -90,33 +90,28 @@ public class ExprTeamEntries extends SimpleExpression<Object> {
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Team team = this.team.getSingle(event);
-        if (team == null) {
-            error("Team is not set: " + this.team.toString(event, true));
-            return;
-        }
-        if (mode == ChangeMode.DELETE) {
-            team.getEntries().forEach(team::removeEntry);
-            return;
-        }
-        if (delta == null || delta.length == 0) {
-            error("Change value is missing");
-            return;
-        }
-        for (Object object : delta) {
-            String entry = null;
-            if (object instanceof OfflinePlayer player) {
-                entry = player.getName();
-            } else if (object instanceof Entity entity) {
-                entry = entity.getUniqueId().toString();
-            } else if (object instanceof String string) {
-                entry = string;
+        if (team != null) {
+            if (mode == ChangeMode.DELETE) {
+                team.getEntries().forEach(team::removeEntry);
+                return;
             }
-            if (entry == null) continue;
 
-            if (mode == ChangeMode.ADD) {
-                team.addEntry(entry);
-            } else {
-                team.removeEntry(entry);
+            for (Object object : delta) {
+                String entry = null;
+                if (object instanceof OfflinePlayer player) {
+                    entry = player.getName();
+                } else if (object instanceof Entity entity) {
+                    entry = entity.getUniqueId().toString();
+                } else if (object instanceof String string) {
+                    entry = string;
+                }
+                if (entry == null) continue;
+
+                if (mode == ChangeMode.ADD) {
+                    team.addEntry(entry);
+                } else {
+                    team.removeEntry(entry);
+                }
             }
         }
     }

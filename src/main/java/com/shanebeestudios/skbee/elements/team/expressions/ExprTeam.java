@@ -8,8 +8,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.elements.team.type.TeamManager;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -53,16 +53,12 @@ public class ExprTeam extends SimpleExpression<Team> {
                 String name = this.name.getSingle(event);
                 if (name != null) {
                     return new Team[]{TeamManager.getTeam(name)};
-                } else {
-                    error("Invalid team name: " + this.name.toString(event, true));
                 }
             }
             case 1 -> {
                 Entity entity = this.entity.getSingle(event);
                 if (entity != null) {
                     return new Team[]{TeamManager.getTeam(entity)};
-                } else {
-                    error("Invalid entity: " + this.entity.toString(event, true));
                 }
             }
             case 2 -> {
