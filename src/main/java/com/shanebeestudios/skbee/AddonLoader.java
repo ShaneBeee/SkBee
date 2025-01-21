@@ -143,6 +143,12 @@ public class AddonLoader {
         for (int i = 0; i < finish.length; i++) {
             Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
         }
+        if (this.config.RUNTIME_DISABLE_ERRORS) {
+            Util.logLoading("&eRuntime Errors have been disabled via config!");
+        }
+        if (this.config.RUNTIME_DISABLE_WARNINGS) {
+            Util.logLoading("&eRuntime Warnings have been disabled via config!");
+        }
     }
 
     private void loadNBTElements() {
