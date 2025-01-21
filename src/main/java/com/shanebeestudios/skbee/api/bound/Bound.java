@@ -442,6 +442,12 @@ public class Bound implements ConfigurationSerializable {
         return this.id;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof Bound other)) return false;
+        return this.world.equals(other.world) && this.id.equals(other.id);
+    }
+
     /**
      * Serialize this bound into yaml configuration
      *
