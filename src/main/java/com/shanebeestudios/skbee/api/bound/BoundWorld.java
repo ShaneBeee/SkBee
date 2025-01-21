@@ -103,8 +103,8 @@ public class BoundWorld {
         BoundingBox box = bound.getBoundingBox();
         Vector min = box.getMin();
         Vector max = box.getMax();
-        for (int x = min.getBlockX(); x < max.getBlockX(); x += (1 << SHIFT_VALUE)) {
-            for (int z = min.getBlockZ(); z < max.getBlockZ(); z += (1 << SHIFT_VALUE)) {
+        for (int x = min.getBlockX(); x <= (max.getBlockX() + (1 << SHIFT_VALUE)); x += (1 << SHIFT_VALUE)) {
+            for (int z = min.getBlockZ(); z <= (max.getBlockZ() + (1 << SHIFT_VALUE)); z += (1 << SHIFT_VALUE)) {
                 locations.add(new Location(this.world, x, 0, z));
             }
         }

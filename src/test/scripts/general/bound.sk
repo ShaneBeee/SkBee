@@ -97,3 +97,22 @@ test "SkBee - Bounds":
 	# Cleanup
 	delete bound with id "test_bound"
 	delete bound with id "test_bound_2"
+
+test "SkBee - Bound Regions":
+	# Test to make sure bounds on the brink of a region are actually getting regionalized
+	test:
+		loop 50 times:
+			set {_x} to random integer between -1000000 and 1000000
+			set {_z} to random integer between -1000000 and 1000000
+			set {_loc} to location({_x}, 64, {_z})
+			set {_l1} to {_loc} ~ vector(-20,-20,-20)
+			set {_l2} to {_loc} ~ vector(20,20,20)
+			create temporary bound with id "test-bound-temp-%loop-number%" within {_l1} and {_l2}
+			set {_bound} to last created bound
+			assert {_bound} is set with "The bound should have been created"
+			assert bounds at {_loc} contains {_bound} with "The location should contain the bound"
+
+			delete {_bound}, {_loc}, {_l1} and {_l2}
+	after:
+		# Ensure cleanup for re-run if need be
+		delete all temporary bounds
