@@ -111,6 +111,8 @@ test "SkBee - Bound Regions":
 			set {_bound} to last created bound
 			assert {_bound} is set with "The bound should have been created"
 			assert bounds at {_loc} contains {_bound} with "The location should contain the bound"
+			assert bounds at {_l1} contains {_bound} with "The location should contain the bound"
+			assert bounds at ({_l2} ~ vector(-1,-1,-1)) contains {_bound} with "The location should contain the bound"
 
 			delete {_bound}, {_loc}, {_l1} and {_l2}
 	after:
