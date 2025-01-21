@@ -3,7 +3,6 @@ package com.shanebeestudios.skbee.api.bound;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -101,12 +100,14 @@ public class BoundWorld {
         List<Location> locations = new ArrayList<>();
 
         BoundingBox box = bound.getBoundingBox();
-        Vector min = box.getMin();
-        Vector max = box.getMax();
+        int minBlockX = box.getMin().getBlockX();
+        int minBlockZ = box.getMin().getBlockZ();
+        int maxBlockX = box.getMax().getBlockX();
+        int maxBlockZ = box.getMax().getBlockZ();
         int shift = 1 << SHIFT_VALUE;
-        for (int x = min.getBlockX(); x <= (max.getBlockX() + shift); x += shift) {
-            for (int z = min.getBlockZ(); z <= (max.getBlockZ() + shift); z += shift) {
-                locations.add(new Location(this.world, x, 0, z));
+        for (int x = minBlockX; x <= (maxBlockX + shift); x += shift) {
+            for (int z = minBlockZ; z <= (maxBlockZ + shift); z += shift) {
+                locations.add(new Location(this.world, Math.min(x, maxBlockX), 0, Math.min(z, maxBlockZ)));
             }
         }
 
