@@ -1,4 +1,4 @@
-test "SkBee - TextComponent ItemName":
+test "SkBee - Text/ExprItemName":
 	set {_i} to 1 of apple
 	assert component item name of {_i} = "Apple" with "Vanilla name should be 'Apple'"
 

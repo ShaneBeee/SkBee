@@ -1,0 +1,3 @@
+test "SkBee - Text/ExprComponentToJson":
+	set {_text} to mini message from "<red>Something"
+	assert serialized json string of {_text} = "{""color"":""red"",""text"":""Something""}" with "Should match"

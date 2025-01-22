@@ -1,0 +1,16 @@
+test "SkBee - Text/ExprSignLines":
+
+	before:
+		set {_data} to blockdata of event-block
+		set event-block to oak sign
+	test:
+		assert front sign line 1 of event-block is not set with "Shouldn't be set"
+		set front sign line 1 of event-block to mini message from "Line 1"
+		assert front sign line 1 of event-block = "Line 1" with "Should now be set"
+
+		assert back sign line 2 of event-block is not set with "Shouldn't be set"
+		set back sign line 2 of event-block to mini message from "Line 2"
+		assert back sign line 2 of event-block = "Line 2" with "Should now be set"
+
+	after:
+		set event-block to {_data}

@@ -1,0 +1,10 @@
+test "SkBee - Text/ExprChestInventory":
+	#"[a [new]] chest inventory with component name %textcomponent% [with %-number% row[s]]",
+
+	set {_text} to mini message from "Mr Inventory"
+	set {_chest} to chest inventory with component name {_text} with 4 rows
+	assert {_chest} is set with "Should have created the inventory"
+	assert rows of {_chest} = 4 with "Should have 4 rows"
+	assert items in {_chest} is not set with "Should have no items"
+	add a diamond to {_chest}
+	assert size of items in {_chest} = 1 with "Should have 1 item in the inv"
