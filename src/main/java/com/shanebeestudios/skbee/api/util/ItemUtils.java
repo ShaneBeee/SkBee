@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
+import java.util.function.Function;
 
 public class ItemUtils {
 
@@ -192,6 +193,16 @@ public class ItemUtils {
         } else if (object instanceof Slot slot && slot instanceof InventorySlot) {
             slot.setItem(itemStack);
         }
+    }
+
+    public static  <T> @Nullable T getValue(Object object, Function<ItemStack,T> itemFunction) {
+        ItemStack itemStack = null;
+        if (object instanceof ItemStack i) itemStack = i;
+        else if (object instanceof ItemType itemType) itemStack = itemType.getRandom();
+        else if (object instanceof Slot slot) itemStack = slot.getItem();
+
+        if (itemStack == null) return null;
+        return itemFunction.apply(itemStack);
     }
 
 }
