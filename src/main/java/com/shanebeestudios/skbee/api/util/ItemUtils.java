@@ -9,6 +9,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -144,19 +145,8 @@ public class ItemUtils {
      * @param itemConsumer ItemStack consumer to modify
      */
     public static void modifyItems(Object[] objects, Consumer<ItemStack> itemConsumer) {
-        modifyItems(objects, itemConsumer, true);
-    }
-
-    /**
-     * Quick method to modify an array of objects which can be {@link ItemStack}, {@link ItemType} or {@link Slot}
-     *
-     * @param objects      Array of Item based objects to modify
-     * @param itemConsumer ItemStack consumer to modify
-     * @param update       Whether to update the passed through ItemType/Slot
-     */
-    public static void modifyItems(Object[] objects, Consumer<ItemStack> itemConsumer, boolean update) {
         for (Object object : objects) {
-            modifyItems(object, itemConsumer, update);
+            modifyItems(object, itemConsumer);
         }
     }
 
@@ -167,17 +157,6 @@ public class ItemUtils {
      * @param itemConsumer ItemStack consumer to modify
      */
     public static void modifyItems(Object object, Consumer<ItemStack> itemConsumer) {
-        modifyItems(object, itemConsumer, true);
-    }
-
-    /**
-     * Quick method to modify an object which can be {@link ItemStack}, {@link ItemType} or {@link Slot}
-     *
-     * @param object       Item based object to modify
-     * @param itemConsumer ItemStack consumer to modify
-     * @param update       Whether to update the passed through ItemType/Slot
-     */
-    public static void modifyItems(Object object, Consumer<ItemStack> itemConsumer, boolean update) {
         ItemStack itemStack = null;
         if (object instanceof ItemStack i) itemStack = i;
         else if (object instanceof ItemType itemType) itemStack = itemType.getRandom();
@@ -186,8 +165,6 @@ public class ItemUtils {
         if (itemStack == null) return;
         itemConsumer.accept(itemStack);
 
-        if (!update) return;
-
         if (object instanceof ItemType itemType) {
             itemType.setItemMeta(itemStack.getItemMeta());
         } else if (object instanceof Slot slot && slot instanceof InventorySlot) {
@@ -195,14 +172,39 @@ public class ItemUtils {
         }
     }
 
-    public static  <T> @Nullable T getValue(Object object, Function<ItemStack,T> itemFunction) {
+    /**
+     * Get a specific value from an Item
+     *
+     * @param itemObject   Item based object to get value from
+     * @param itemFunction Function run to return a value
+     * @param <T>          Type of value to return
+     * @return Returned value from item
+     */
+    public static <T> @Nullable T getValue(Object itemObject, Function<ItemStack, T> itemFunction) {
         ItemStack itemStack = null;
-        if (object instanceof ItemStack i) itemStack = i;
-        else if (object instanceof ItemType itemType) itemStack = itemType.getRandom();
-        else if (object instanceof Slot slot) itemStack = slot.getItem();
+        if (itemObject instanceof ItemStack i) itemStack = i;
+        else if (itemObject instanceof ItemType itemType) itemStack = itemType.getRandom();
+        else if (itemObject instanceof Slot slot) itemStack = slot.getItem();
 
         if (itemStack == null) return null;
         return itemFunction.apply(itemStack);
+    }
+
+    /**
+     * Get a list of specific values from a an array of Items
+     *
+     * @param itemObjects  Item based objects to get values from
+     * @param itemFunction Function run to return a value
+     * @param <T>          Type of value to return
+     * @return List of returned values from item
+     */
+    public static <T> @NotNull List<T> getValues(Object[] itemObjects, Function<ItemStack, T> itemFunction) {
+        List<T> values = new ArrayList<>();
+        for (Object itemObject : itemObjects) {
+            T value = getValue(itemObject, itemFunction);
+            if (value != null) values.add(value);
+        }
+        return values;
     }
 
 }
