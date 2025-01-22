@@ -12,6 +12,7 @@ import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
+import ch.njol.skript.util.Timespan;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
@@ -609,6 +610,41 @@ public class Types {
                 "Number values must be between 0 and 255.")
             .examples("set {_color} to bukkitColor(50,155,100,10)")
             .since("2.8.0"));
+    }
+
+    static {
+        ClassInfo<Timespan.TimePeriod> timePeriodInfo = Classes.getExactClassInfo(Timespan.TimePeriod.class);
+        if (timePeriodInfo == null) {
+            timePeriodInfo = new EnumWrapper<>(Timespan.TimePeriod.class, true)
+                .getClassInfo("timespanperiod")
+                .user("time ?span ?periods?")
+                .name("Timespan Period")
+                .description("Represents the time periods of a Timespan.")
+                .since("INSERT VERSION");
+            Classes.registerClass(timePeriodInfo);
+        }
+
+        // Temporary until Skript (maybe) adds this.
+        Functions.registerFunction(new SimpleJavaFunction<>("timespan", new Parameter[]{
+            new Parameter<>("time", DefaultClasses.NUMBER, true, null),
+            new Parameter<>("timeperiod", timePeriodInfo, true, null),
+        }, DefaultClasses.TIMESPAN, true) {
+            @Override
+            public Timespan @Nullable [] executeSimple(Object[][] params) {
+                long time = ((Number) params[0][0]).longValue();
+                Timespan.TimePeriod timePeriod = ((Timespan.TimePeriod) params[1][0]);
+                if (time >= 0) {
+                    return new Timespan[]{new Timespan(timePeriod, time)};
+                }
+                return null;
+            }
+        }
+            .description("Create a new Timespan.")
+            .examples("set {_time} to timespan(1, minute)",
+                "set {_time} to timespan(10, minutes)",
+                "set {_time} to timespan(3, ticks)",
+                "set {_time} to timespan(1, hour) + timespan(10, minutes)")
+            .since("INSERT VERSION"));
     }
 
 }
