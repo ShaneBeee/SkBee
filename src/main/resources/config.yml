@@ -40,6 +40,10 @@ elements:
   # This is specifically for Minecraft 1.19.4+
   display-entity: true
 
+  # Enable Fastboard elements
+  # This refers to packet based scoreboards
+  fastboard: true
+
   # Enable fishing elements
   fishing: true
 
@@ -64,11 +68,8 @@ elements:
   # Enable custom recipe elements
   recipe: true
 
-  # Enable Scoreboard elements
+  # Enable Scoreboard/Objective elements
   scoreboard: true
-
-  # Enable Scoreboard Objective elements
-  scoreboard-objective: true
 
   # Enable statistic elements
   statistic: true
@@ -78,9 +79,6 @@ elements:
 
   # Enable switch case elements
   switch-case: true
-
-  # Enable Team elements
-  team: true
 
   # Enable Text Component elements
   text-component: true
