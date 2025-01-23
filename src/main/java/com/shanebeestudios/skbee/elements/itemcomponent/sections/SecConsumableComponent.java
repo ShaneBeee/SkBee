@@ -120,7 +120,7 @@ public class SecConsumableComponent extends EffectSection {
             return false;
         }
         this.items = (Expression<Object>) exprs[0];
-        if (sectionNode == null) return false;
+        if (sectionNode == null) return true;
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) {
             return false;

@@ -1,0 +1,15 @@
+test "SkBee - Text/ExprComponentFormat":
+	#"(color|1:bold|2:italic|3:(obfuscate[d]|magic)|4:strikethrough|5:underline[d]|6:font|7:insert[ion]|8:fallback) format",
+
+	set {_m} to mini message from "oh hi there"
+	assert color format of {_m} is not set with "Shouldn't have color yet"
+	assert bold format of {_m} = false with "Shouldn't be bold yet"
+	assert italic format of {_m} = false with "Shouldn't be italic yet"
+
+	set color format of {_m} to blue
+	set bold format of {_m} to true
+	set italic format of {_m} to true
+
+	assert color format of {_m} is blue with "Should be blue now"
+	assert bold format of {_m} = true with "Should be bold now"
+	assert italic format of {_m} = true with "Should be italic now"

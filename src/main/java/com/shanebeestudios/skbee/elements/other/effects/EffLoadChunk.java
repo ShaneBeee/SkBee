@@ -97,7 +97,6 @@ public class EffLoadChunk extends Effect {
             if (this.x != null) {
                 Number xSingle = this.x.getSingle(event);
                 if (xSingle == null) {
-                    error("X is not set: " + this.x.toString(event, true));
                     return next;
                 }
                 x = xSingle.intValue();
@@ -105,7 +104,6 @@ public class EffLoadChunk extends Effect {
             if (this.z != null) {
                 Number zSingle = this.z.getSingle(event);
                 if (zSingle == null) {
-                    error("Z is not set: " + this.z.toString(event, true));
                     return next;
                 }
                 z = zSingle.intValue();
@@ -113,7 +111,6 @@ public class EffLoadChunk extends Effect {
             if (this.world != null) {
                 world = this.world.getSingle(event);
                 if (world == null) {
-                    error("World is not set: " + this.world.toString(event, true));
                     return next;
                 }
             }

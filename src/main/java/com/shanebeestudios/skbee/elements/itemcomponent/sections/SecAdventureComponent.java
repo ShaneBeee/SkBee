@@ -102,7 +102,10 @@ public class SecAdventureComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
-        boolean showInTooltip = this.showInTooltip != null && this.showInTooltip.getOptionalSingle(event).orElse(true);
+        boolean showInTooltip = true;
+        if (this.showInTooltip != null) {
+            showInTooltip = this.showInTooltip.getOptionalSingle(event).orElse(true);
+        }
 
         List<TypedKey<BlockType>> blockTypes = new ArrayList<>();
         ItemAdventurePredicate.Builder builder = ItemAdventurePredicate.itemAdventurePredicate();

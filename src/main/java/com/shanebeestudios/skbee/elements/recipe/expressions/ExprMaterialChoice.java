@@ -12,7 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.event.Event;
@@ -59,8 +59,8 @@ public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
                     if (!materials.contains(material) && material.isItem() && !material.isAir())
                         materials.add(material);
                 });
-            } else if (RecipeUtil.isMaterialTag(object)) {
-                MaterialChoice materialChoice = new MaterialChoice((Tag<Material>) object);
+            } else if (object instanceof Tag<?> tag && Util.isMaterialTag(tag)) {
+                MaterialChoice materialChoice = new MaterialChoice((Tag<Material>) tag);
                 materialChoice.getChoices().forEach(material -> {
                     if (!materials.contains(material)) materials.add(material);
                 });

@@ -14,7 +14,6 @@ import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
-import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
@@ -27,6 +26,8 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.comparator.Comparators;
+import org.skriptlang.skript.lang.comparator.Relation;
 import org.skriptlang.skript.lang.converter.Converters;
 
 import java.util.ArrayList;
@@ -38,6 +39,7 @@ public class Types {
     static {
         // Allow components to be used anywhere a string can
         Converters.registerConverter(ComponentWrapper.class, String.class, ComponentWrapper::toString);
+        Comparators.registerComparator(ComponentWrapper.class, ComponentWrapper.class, (o1, o2) -> Relation.get(o1.equals(o2)));
 
         Changer<ComponentWrapper> COMP_CHANGER = new Changer<>() {
             @Override

@@ -1,0 +1,5 @@
+test "SkBee - Text/ExprHoverEvent":
+	set {_text} to text component from "hi mom"
+	assert hover event of {_text} is not set with "Shouldn't have a hover event yet"
+	add hover event showing 1 of diamond sword to {_text}
+	assert hover event of {_text} is set with "Should have a hover event now"

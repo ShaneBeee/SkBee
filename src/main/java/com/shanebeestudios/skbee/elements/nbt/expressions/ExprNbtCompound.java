@@ -105,10 +105,6 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
     @SuppressWarnings("deprecation")
     @Override
     protected NBTCompound[] get(@NotNull Event e, Object @NotNull [] source) {
-        if (source.length == 0) {
-            error("Empty object");
-            return null;
-        }
         return get(source, object -> {
             NBTCompound compound = null;
             if (object instanceof TileState tileState) {

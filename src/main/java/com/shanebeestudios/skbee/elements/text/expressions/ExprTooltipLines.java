@@ -57,16 +57,18 @@ public class ExprTooltipLines extends SimpleExpression<ComponentWrapper> {
 
     @Override
     protected ComponentWrapper @Nullable [] get(Event event) {
-        List<ComponentWrapper> components = new ArrayList<>();
         Player player = this.player != null ? this.player.getOptionalSingle(event).orElse(null) : null;
 
         TooltipContext tooltipContext = TooltipContext.create(this.isAdvanced, this.isCreative);
 
-        ItemUtils.modifyItems(this.items.getSingle(event), itemStack -> {
+        List<ComponentWrapper> components = ItemUtils.getValue(this.items.getSingle(event), itemStack -> {
+            List<ComponentWrapper> list = new ArrayList<>();
             for (Component component : itemStack.computeTooltipLines(tooltipContext, player)) {
-                components.add(ComponentWrapper.fromComponent(component));
+                list.add(ComponentWrapper.fromComponent(component));
             }
-        }, false);
+            return list;
+        });
+        if (components == null) return null;
         return components.toArray(new ComponentWrapper[0]);
     }
 

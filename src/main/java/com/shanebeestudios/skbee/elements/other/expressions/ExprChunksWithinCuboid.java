@@ -8,18 +8,16 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 @Name("Chunks Within Locations")
@@ -36,7 +34,7 @@ public class ExprChunksWithinCuboid extends SimpleExpression<Chunk> {
 
     private Expression<Location> loc1, loc2;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.loc1 = (Expression<Location>) exprs[0];
@@ -44,15 +42,21 @@ public class ExprChunksWithinCuboid extends SimpleExpression<Chunk> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Chunk @Nullable [] get(Event event) {
         Location loc1 = this.loc1.getSingle(event);
         Location loc2 = this.loc2.getSingle(event);
-        if (loc1 == null || loc2 == null) return null;
+        if (loc1 == null || loc2 == null) {
+            return null;
+        }
 
         World world = loc1.getWorld();
-        if (world != loc2.getWorld()) return null;
+        if (world != loc2.getWorld()) {
+            String w1 = loc1.getWorld().getName();
+            String w2 = loc2.getWorld().getName();
+            error("Both locations have to be in the same world but got " + w1 + " and " + w2);
+            return null;
+        }
 
         List<Chunk> chunks = new ArrayList<>();
         int minX = Math.min(loc1.getBlockX(), loc2.getBlockX()) >> 4;
@@ -64,8 +68,6 @@ public class ExprChunksWithinCuboid extends SimpleExpression<Chunk> {
                 chunks.add(world.getChunkAt(x, z, false));
             }
         }
-
-        Iterator<Entity> e;
 
         return chunks.toArray(new Chunk[0]);
     }

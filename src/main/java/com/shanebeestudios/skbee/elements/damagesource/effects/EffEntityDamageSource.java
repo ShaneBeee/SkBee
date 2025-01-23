@@ -51,12 +51,7 @@ public class EffEntityDamageSource extends Effect {
     protected void execute(Event event) {
         DamageSource damageSource = this.damageSource.getSingle(event);
         Number amountNum = this.amount.getSingle(event);
-        if (damageSource == null) {
-            error("Damage source is not set");
-            return;
-        }
-        if (amountNum == null) {
-            error("Amount is not set");
+        if (damageSource == null || amountNum == null) {
             return;
         }
 
