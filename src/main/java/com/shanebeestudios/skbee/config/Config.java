@@ -62,6 +62,8 @@ public class Config {
     public boolean ELEMENTS_CHUNK_GEN;
     public boolean ELEMENTS_SWITCH_CASE;
     public boolean AUTO_LOAD_WORLDS;
+    public boolean RUNTIME_DISABLE_ERRORS;
+    public boolean RUNTIME_DISABLE_WARNINGS;
 
     /**
      * @hidden
@@ -179,6 +181,9 @@ public class Config {
         this.ELEMENTS_ITEM_COMPONENT = getElement("item-component");
         this.ELEMENTS_SWITCH_CASE = getElement("switch-case");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
+
+        this.RUNTIME_DISABLE_ERRORS = this.config.getBoolean("runtime.disable-errors");
+        this.RUNTIME_DISABLE_WARNINGS = this.config.getBoolean("runtime.disable-warnings");
     }
 
 }

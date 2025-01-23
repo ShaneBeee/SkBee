@@ -48,14 +48,7 @@ public class EffChunkDataStructurePlace extends Effect {
         if (!(event instanceof BlockPopulateEvent popEvent)) return;
         StructureWrapper structure = this.structure.getSingle(event);
         Vector vector = this.vector.getSingle(event);
-        if (structure == null) {
-            error("Invalid structure: " + this.structure.toString(event, true));
-            return;
-        }
-        if (vector == null) {
-            error("Invalid vector: " + this.vector.toString(event, true));
-            return;
-        }
+        if (structure == null || vector == null) return;
 
         vector.setX((popEvent.getChunkX() << 4) + MathUtil.clamp(vector.getBlockX(), 0, 15));
         vector.setZ((popEvent.getChunkZ() << 4) + MathUtil.clamp(vector.getBlockZ(), 0, 15));

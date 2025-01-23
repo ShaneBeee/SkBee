@@ -8,9 +8,9 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.entity.Pathfinder.PathResult;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -29,7 +29,7 @@ public class ExprPath extends SimpleExpression<Location> {
 
     static {
         Skript.registerExpression(ExprPath.class, Location.class, ExpressionType.COMBINED,
-                "path [points] of %livingentities%");
+            "path [points] of %livingentities%");
     }
 
     private Expression<LivingEntity> entities;
@@ -45,15 +45,13 @@ public class ExprPath extends SimpleExpression<Location> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Location[] get(@NotNull Event e) {
         List<Location> locations = new ArrayList<>();
         for (LivingEntity entity : entities.getArray(e)) {
-            if (entity instanceof Mob) {
-                PathResult result = ((Mob) entity).getPathfinder().getCurrentPath();
-                if (result != null)
-                    locations.addAll(result.getPoints());
+            if (entity instanceof Mob mob) {
+                PathResult result = mob.getPathfinder().getCurrentPath();
+                if (result != null) locations.addAll(result.getPoints());
             }
         }
         return locations.toArray(new Location[0]);

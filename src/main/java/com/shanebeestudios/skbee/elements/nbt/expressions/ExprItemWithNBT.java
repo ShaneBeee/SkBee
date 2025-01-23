@@ -9,10 +9,12 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import org.bukkit.Material;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -55,12 +57,16 @@ public class ExprItemWithNBT extends SimpleExpression<ItemType> {
     protected ItemType @Nullable [] get(Event event) {
         ItemType item = this.item.getSingle(event);
         NBTCompound nbt = this.nbt.getSingle(event);
-        if (item == null) {
-            error("Invalid/missing item");
+        if (item == null || nbt == null) {
             return null;
         }
-        if (nbt == null) {
-            error("Invalid/missing nbt");
+        Material material = item.getMaterial();
+        if (!material.isItem()) {
+            warning("Cannot add nbt to a non-item (block only) itemtype: " + Classes.toString(item));
+            return null;
+        }
+        if (material == Material.AIR || item.getAmount() < 1) {
+            warning("Cannot add nbt to an empty/air item: " + Classes.toString(item));
             return null;
         }
 

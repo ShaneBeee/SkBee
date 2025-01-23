@@ -1,0 +1,6 @@
+test "SkBee - Text/ExprMergeComponents":
+	set {_m::1} to mini message from "hi mom"
+	set {_m::2} to mini message from "im in minecraft"
+
+	set {_merge} to merge components {_m::*} using " "
+	assert {_merge} = "hi mom im in minecraft" with "Should match"

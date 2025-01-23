@@ -20,7 +20,6 @@ import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnace
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
-import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
@@ -68,8 +67,7 @@ public class AddonLoader {
             // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
             // We need to find the route of this issue, so far the only plugin I know that does this is PlugMan
             Util.logLoading("&cSkript is no longer accepting registrations, addons can no longer be loaded!");
-            Plugin plugMan = Bukkit.getPluginManager().getPlugin("PlugMan");
-            if (plugMan != null && plugMan.isEnabled()) {
+            if (isPlugmanReloaded()) {
                 Util.logLoading("&cIt appears you're running PlugMan.");
                 Util.logLoading("&cIf you're trying to reload/enable SkBee with PlugMan.... you can't.");
                 Util.logLoading("&ePlease restart your server!");
@@ -140,6 +138,12 @@ public class AddonLoader {
         Util.log("Loaded (%s) elements:", total);
         for (int i = 0; i < finish.length; i++) {
             Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
+        }
+        if (this.config.RUNTIME_DISABLE_ERRORS) {
+            Util.logLoading("&eRuntime Errors have been disabled via config!");
+        }
+        if (this.config.RUNTIME_DISABLE_WARNINGS) {
+            Util.logLoading("&eRuntime Warnings have been disabled via config!");
         }
     }
 
@@ -596,6 +600,15 @@ public class AddonLoader {
 
     public boolean isTextComponentEnabled() {
         return this.textComponentEnabled;
+    }
+
+    private boolean isPlugmanReloaded() {
+        for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
+            if (stackTraceElement.toString().contains("rylinaux.plugman.command.")) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

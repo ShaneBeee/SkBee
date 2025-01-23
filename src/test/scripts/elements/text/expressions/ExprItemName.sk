@@ -1,0 +1,17 @@
+test "SkBee - Text/ExprItemName":
+	set {_i} to 1 of apple
+	assert component item name of {_i} = "Apple" with "Vanilla name should be 'Apple'"
+
+	set component item name of {_i} to mini message from "Mr Apple"
+	assert component item name of {_i} = "Mr Apple" with "Changed name should be 'Mr Apple'"
+
+	reset component item name of {_i}
+	assert component item name of {_i} = "Apple" with "Vanilla name should be reset to 'Apple'"
+
+	set {_i} to 1 of stick
+	assert component custom name of {_i} is not set with "The item shouldn't have a custom name yet"
+	set component custom name of {_i} to mini message from "Mr Sticky"
+	assert component custom name of {_i} = "Mr Sticky" with "Should have a custom name now"
+	assert component item name of {_i} = "Stick" with "Vanilla name should not have been modified by custom name"
+	reset component custom name of {_i}
+	assert component custom name of {_i} is not set with "The item's custom name should have been removed"

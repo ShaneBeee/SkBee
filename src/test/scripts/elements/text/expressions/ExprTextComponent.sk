@@ -1,0 +1,33 @@
+test "SkBee - Text/ExprTextComponent":
+	# Text component
+	set {_text} to text component from "&bHI MOM"
+	assert {_text} = "&bHI MOM" with "Should have set"
+	set {_text} to rawtext component from "&aHI DAD"
+	assert raw {_text} = raw "&aHI DAD" with "Should match"
+
+	# Keybind component
+	set {_key} to keybind component of "key.jump"
+	assert {_key} is set with "Should have set" # We can't test this server side
+
+	# Translate component
+	set {_t} to translate component from 1 of diamond sword
+	assert {_t} = "Diamond Sword" with "Should match"
+	set {_t} to translate component from 1 of hay block
+	assert {_t} = "Hay Bale" with "Should match"
+
+	# Translatable components with fallback
+	set {_trans} to translate component from "test.test" with fallback "some fallback"
+	assert fallback format of {_trans} is set with "Fallback of component should be set"
+	assert fallback format of {_trans} = "some fallback" with "Fallback of component should be 'some fallback'"
+	set fallback format of {_trans} to "a new fallback"
+	assert fallback format of {_trans} = "a new fallback" with "Fallback of component should be 'a new fallback'"
+	set {_m} to mini message from "test"
+	set fallback format of {_m} to "this is a fallback"
+	assert fallback format of {_m} is not set with "Fallback of non-translatable component should not be set"
+	delete {_trans}
+	set {_trans} to translate component from "Test.test" with args "some arg" with fallback "some fallback"
+	assert {_trans} is set with "Component with args and fallback should be set"
+
+	# Json component
+	set {_t} to json component from "{""color"":""aqua"",""text"":""hello"",""bold"":true}"
+	assert {_t} = "&b&lhello" with "Should match"
