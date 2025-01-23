@@ -523,7 +523,9 @@ public class ComponentWrapper {
             } else {
                 lineComponent = sign.line(line);
             }
-            return ComponentWrapper.fromComponent(lineComponent);
+            if (!lineComponent.equals(Component.empty())) {
+                return ComponentWrapper.fromComponent(lineComponent);
+            }
         }
         return null;
     }
@@ -532,14 +534,14 @@ public class ComponentWrapper {
      * Set the name of an entity
      *
      * @param entity        Entity to change name
-     * @param alwaysVisible Whether or not always visible
+     * @param display Whether or not always visible
      */
-    public void setEntityName(Entity entity, boolean alwaysVisible) {
-        if (entity instanceof Player player && alwaysVisible) {
+    public void setEntityName(Entity entity, boolean display) {
+        if (entity instanceof Player player) {
             player.displayName(this.component);
         } else {
             entity.customName(this.component);
-            entity.setCustomNameVisible(alwaysVisible);
+            entity.setCustomNameVisible(display);
         }
     }
 
@@ -636,7 +638,14 @@ public class ComponentWrapper {
         }
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (!(obj instanceof ComponentWrapper cw)) return false;
+        return cw.toString().equals(this.toString());
+    }
+
     public String toString() {
+        if (this.component == null) return "";
         return LegacyComponentSerializer.legacySection().serialize(this.component);
     }
 

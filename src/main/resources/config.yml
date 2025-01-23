@@ -19,132 +19,138 @@ settings:
 
 # Disable elements you do not plan to use.
 elements:
-    # Enable advancement elements
-    advancement: true
+  # Enable advancement elements
+  advancement: true
 
-    # Enable boss bar elements
-    boss-bar: true
+  # Enable boss bar elements
+  boss-bar: true
 
-    # Enable bound elements
-    # Bounds are like custom world guard regions
-    bound: true
+  # Enable bound elements
+  # Bounds are like custom world guard regions
+  bound: true
 
-    # Enable Chunk Generator elements
-    chunk-generator: true
+  # Enable Chunk Generator elements
+  chunk-generator: true
 
-    # Enable Damage Source elements
-    # This is specifically for Minecraft 1.20.4+
-    damage-source: true
+  # Enable Damage Source elements
+  # This is specifically for Minecraft 1.20.4+
+  damage-source: true
 
-    # Enable display entity elements
-    # This is specifically for Minecraft 1.19.4+
-    display-entity: true
+  # Enable display entity elements
+  # This is specifically for Minecraft 1.19.4+
+  display-entity: true
 
-    # Enable fishing elements
-    fishing: true
+  # Enable fishing elements
+  fishing: true
 
-    # Enable Minecraft GameEvent elements
-    game-event: true
+  # Enable Minecraft GameEvent elements
+  game-event: true
 
-    # Enable different Item Component elements
-    item-component: true
+  # Enable different Item Component elements
+  item-component: true
 
-    # Enable MinecraftTag Elements
-    minecraft-tag: true
+  # Enable MinecraftTag Elements
+  minecraft-tag: true
 
-    # Enable NBT elements
-    nbt: true
+  # Enable NBT elements
+  nbt: true
 
-    # Enable particle elements
-    particle: true
+  # Enable particle elements
+  particle: true
 
-    # Enable RayTrace elements
-    raytrace: true
+  # Enable RayTrace elements
+  raytrace: true
 
-    # Enable custom recipe elements
-    recipe: true
+  # Enable custom recipe elements
+  recipe: true
 
-    # Enable Scoreboard elements
-    scoreboard: true
+  # Enable Scoreboard elements
+  scoreboard: true
 
-    # Enable Scoreboard Objective elements
-    scoreboard-objective: true
+  # Enable Scoreboard Objective elements
+  scoreboard-objective: true
 
-    # Enable statistic elements
-    statistic: true
+  # Enable statistic elements
+  statistic: true
 
-    # Enable structure elements
-    structure: true
+  # Enable structure elements
+  structure: true
 
-    # Enable switch case elements
-    switch-case: true
+  # Enable switch case elements
+  switch-case: true
 
-    # Enable Team elements
-    team: true
+  # Enable Team elements
+  team: true
 
-    # Enable Text Component elements
-    text-component: true
+  # Enable Text Component elements
+  text-component: true
 
-    # Enable Server Tick Manager elements
-    # These elements are based around Minecraft's tick command
-    # This is specifically for Minecraft 1.20.4+
-    tick-manager: true
+  # Enable Server Tick Manager elements
+  # These elements are based around Minecraft's tick command
+  # This is specifically for Minecraft 1.20.4+
+  tick-manager: true
 
-    # Enable villager/merchant elements
-    villager: true
+  # Enable villager/merchant elements
+  villager: true
 
-    # Enable VirtualFurnace elements
-    # This feature is semi-experimental, please use with caution
-    virtual-furnace: false
+  # Enable VirtualFurnace elements
+  # This feature is semi-experimental, please use with caution
+  virtual-furnace: false
 
-    # Enable world border elements
-    world-border: true
+  # Enable world border elements
+  world-border: true
 
-    # Enable world creator elements
-    world-creator: true
-    # Whether or not custom worlds should automatically load on server start
-    # If disabled, you will need to load worlds with the load world effect
-    auto-load-custom-worlds: true
+  # Enable world creator elements
+  world-creator: true
+  # Whether or not custom worlds should automatically load on server start
+  # If disabled, you will need to load worlds with the load world effect
+  auto-load-custom-worlds: true
 
 # Enable different event listeners for NBT
 nbt-events:
-    # Whether breaking a block should remove NBT
-    block-break: true
-    # Whether pistons pushing blocks should remove NBT
-    piston-extend: true
-    # Whether an entity changing a block should remove NBT
-    # Examples would be rabbit breaking carrots or enderman picking up blocks
-    entity-change-block: true
-    # Whether a block exploding should remove NBT
-    block-explode: true
-    # Whether an entity exploding should remove NBT from broken blocks
-    entity-explode: true
+  # Whether breaking a block should remove NBT
+  block-break: true
+  # Whether pistons pushing blocks should remove NBT
+  piston-extend: true
+  # Whether an entity changing a block should remove NBT
+  # Examples would be rabbit breaking carrots or enderman picking up blocks
+  entity-change-block: true
+  # Whether a block exploding should remove NBT
+  block-explode: true
+  # Whether an entity exploding should remove NBT from broken blocks
+  entity-explode: true
 
 # Enable different event listeners for Bounds
 bound-events:
-    # Whether a player moving should be checked
-    player-move: true
-    # Whether a player teleporting should be checked
-    # Examples would be teleporting using ender pearls or commands
-    player-teleport: true
-    # Whether a player respawning should be checked
-    # Examples would be respawn anchors and player beds
-    player-respawn: true
-    # Whether a player entering a bed should be checked
-    player-bed-enter: true
-    # Whether a player leaving a bed should be checked
-    player-bed-leave: true
-    # Whether a player mounting an entity should be checked
-    # Entities like riding an ender pearl or arrows using special methods
-    entity-mount: true
-    # Whether a player dismounting an entity should be checked
-    entity-dismount: true
-    # Whether a player entering a vehicle should be checked
-    # Similar to entity mount but only for boats, minecarts, ect...
-    vehicle-enter: true
-    # Whether a player existing a vehicle should be checked
-    vehicle-exit: true
-    # Whether a player moving in a vehicle should be checked
-    vehicle-move: true
-    # Whether breaking a vehicle should be checked
-    vehicle-destroy: true
+  # Whether a player moving should be checked
+  player-move: true
+  # Whether a player teleporting should be checked
+  # Examples would be teleporting using ender pearls or commands
+  player-teleport: true
+  # Whether a player respawning should be checked
+  # Examples would be respawn anchors and player beds
+  player-respawn: true
+  # Whether a player entering a bed should be checked
+  player-bed-enter: true
+  # Whether a player leaving a bed should be checked
+  player-bed-leave: true
+  # Whether a player mounting an entity should be checked
+  # Entities like riding an ender pearl or arrows using special methods
+  entity-mount: true
+  # Whether a player dismounting an entity should be checked
+  entity-dismount: true
+  # Whether a player entering a vehicle should be checked
+  # Similar to entity mount but only for boats, minecarts, ect...
+  vehicle-enter: true
+  # Whether a player existing a vehicle should be checked
+  vehicle-exit: true
+  # Whether a player moving in a vehicle should be checked
+  vehicle-move: true
+  # Whether breaking a vehicle should be checked
+  vehicle-destroy: true
+
+runtime:
+    # Disable SkBee's runtime errors if you find them overbearing
+    disable-errors: false
+    # Disable SkBee's runtime warnings if you find them overbearing
+    disable-warnings: false

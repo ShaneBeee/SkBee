@@ -61,7 +61,6 @@ public class EffOpenSign extends Effect {
     protected void execute(@NotNull Event event) {
         Location location = this.locations.getSingle(event);
         if (location == null) {
-            error("Location is not set: " + this.locations.toString(event, true));
             return;
         }
 

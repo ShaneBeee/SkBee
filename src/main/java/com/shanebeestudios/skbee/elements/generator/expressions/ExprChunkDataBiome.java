@@ -69,7 +69,6 @@ public class ExprChunkDataBiome extends SimpleExpression<Biome> {
         if (this.vector != null) {
             Vector vector = this.vector.getSingle(event);
             if (vector == null) {
-                error("Invalid vector: " + this.vector.toString(event, true));
                 return null;
             }
             int x = MathUtil.clamp(vector.getBlockX(), 0, 15);

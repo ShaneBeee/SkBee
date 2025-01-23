@@ -6,13 +6,14 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.entity.Pathfinder;
 import com.destroystokyo.paper.entity.Pathfinder.PathResult;
+import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Mob;
@@ -22,17 +23,17 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Pathfinding - Path Target")
 @Description({"Set the path of an entity to target a specific location, with an optional speed",
-        "Get the location of the paths end. Delete will stop the entity from pathfinding. Requires Paper 1.13+"})
+    "Get the location of the paths end. Delete will stop the entity from pathfinding. Requires Paper 1.13+"})
 @Examples({"set path target of event-entity to player",
-        "set path target with speed 1.5 of last spawned entity to location above player",
-        "set path targets of all entities to location of player",
-        "delete path target of event-entity"})
+    "set path target with speed 1.5 of last spawned entity to location above player",
+    "set path targets of all entities to location of player",
+    "delete path target of event-entity"})
 @Since("1.5.0")
 public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Location> {
 
     static {
         register(ExprPathTarget.class, Location.class,
-                "[final] path target[s] [with speed %-number%]", "livingentities");
+            "[final] path target[s] [with speed %-number%]", "livingentities");
     }
 
     @Nullable
@@ -63,7 +64,6 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         return switch (mode) {
@@ -72,13 +72,15 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
         };
     }
 
-    @SuppressWarnings("ConstantValue")
     @Override
-    public void change(@NotNull Event e, Object @NotNull [] delta, @NotNull ChangeMode mode) {
+    public void change(@NotNull Event e, Object[] delta, @NotNull ChangeMode mode) {
         Location location = delta != null ? (Location) delta[0] : null;
         Number number = this.speed != null ? this.speed.getSingle(e) : 0;
         for (LivingEntity entity : getExpr().getArray(e)) {
-            if (!(entity instanceof Mob mob)) return;
+            if (!(entity instanceof Mob mob)) {
+                error("Entity is not a pathfindable mob: " + Classes.toString(entity));
+                continue;
+            }
 
             switch (mode) {
                 case SET:
@@ -104,9 +106,8 @@ public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Locat
         return "path target";
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
-    public @NotNull String toString(@Nullable Event e, boolean d) {
+    public @NotNull String toString(Event e, boolean d) {
         String speed = this.speed != null ? " with speed " + this.speed.toString(e, d) : "";
         return "path target" + speed + " of " + getExpr().toString(e, d);
     }

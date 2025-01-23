@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.switchcase.sections;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -61,18 +62,29 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
     }
 
     private Expression<?> switchedObject;
-    private Trigger section;
+    private Trigger caseSection;
 
     @SuppressWarnings({"unchecked", "DataFlowIssue"})
     @Override
-    public boolean init(Expression<?>[] exprs, int pattern, Kleenean delayed, ParseResult result, @Nullable SectionNode node, @Nullable List<TriggerItem> triggerItems) {
+    public boolean init(Expression<?>[] exprs, int pattern, Kleenean delayed, ParseResult result, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
         this.switchedObject = LiteralUtils.defendExpression(exprs[0]);
 
         Class<? extends Event>[] currentEvents = getParser().getCurrentEvents();
         Class<? extends Event>[] events = new Class[currentEvents.length + 1];
         System.arraycopy(currentEvents, 0, events, 0, currentEvents.length);
         events[currentEvents.length] = SwitchSecEvent.class;
-        this.section = loadCode(node, "switch section expression", null, events);
+        this.caseSection = loadCode(sectionNode, "switch section expression", null, events);
+
+        // Search through the section and see if the lines are cases
+        for (Node node : sectionNode) {
+            String key = node.getKey();
+            if (!key.startsWith("case") && !key.startsWith("default")) {
+                Skript.error("Only cases can be used in a switch section but found this:");
+                this.caseSection = null;
+                break;
+            }
+        }
+
         return LiteralUtils.canInitSafely(this.switchedObject);
     }
 
@@ -84,7 +96,7 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
         Object variables = Variables.copyLocalVariables(event);
         SwitchReturnEvent returnEvent = new SwitchReturnEvent(object, event);
         Variables.setLocalVariables(returnEvent, variables);
-        Trigger.walk(this.section, returnEvent);
+        Trigger.walk(this.caseSection, returnEvent);
         Variables.setLocalVariables(event, Variables.copyLocalVariables(returnEvent));
 
         return new Object[]{returnEvent.getReturnedObject()};

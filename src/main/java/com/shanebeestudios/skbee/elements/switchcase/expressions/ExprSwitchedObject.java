@@ -21,13 +21,9 @@ import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
 @Name("SwitchCase - Switched Value")
-@Description("Represents the object that was 'switched' in a switch section/expression.")
-@Examples({"function getBiome(b: biome) :: string:",
-    "\treturn switch return {_b}:",
-    "\t\tcase plains, sunflower plains, beach -> \"&a%switched value%\"",
-    "\t\tcase desert, savanna, badlands -> \"&e%switched value%\"",
-    "\t\tcase snowy beach, frozen peaks, grove -> \"&b%switched value%\"",
-    "\t\tdefault -> \"&7%switched value%\""})
+@Description({"Represents the object that was 'switched' in a switch section/expression.",
+    "**DEPRECATED** - This is no longer needed (was originally a bandaid for an issue with event-values)."})
+@Examples("")
 @Since("3.8.0")
 public class ExprSwitchedObject extends SimpleExpression<Object> {
 
@@ -40,6 +36,7 @@ public class ExprSwitchedObject extends SimpleExpression<Object> {
 
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        Skript.warning("Deprecated");
         if (getParser().getCurrentStructure() instanceof SectionSkriptEvent skriptEvent) {
             if (skriptEvent.getSection() instanceof SecSwitch secSwitch) {
                 this.switchSection = secSwitch;

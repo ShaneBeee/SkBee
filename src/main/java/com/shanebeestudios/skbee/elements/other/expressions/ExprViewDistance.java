@@ -6,11 +6,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
@@ -35,7 +35,6 @@ public class ExprViewDistance extends SimplePropertyExpression<Object, Number> {
                 "view distance", "players/worlds");
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!Skript.methodExists(Player.class, "setViewDistance", int.class)) {
@@ -50,7 +49,6 @@ public class ExprViewDistance extends SimplePropertyExpression<Object, Number> {
         return getViewDistance(object);
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(Changer.ChangeMode mode) {
         return switch (mode) {
@@ -59,10 +57,13 @@ public class ExprViewDistance extends SimplePropertyExpression<Object, Number> {
         };
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
     @Override
     public void change(Event event, @Nullable Object[] delta, Changer.ChangeMode mode) {
         Number num = delta != null ? (Number) delta[0] : 0;
+        if (num == null) {
+            error("Number is not set: " + num);
+            return;
+        }
         int changeValue = num.intValue();
 
         for (Object object : getExpr().getArray(event)) {

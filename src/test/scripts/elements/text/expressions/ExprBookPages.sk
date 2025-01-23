@@ -1,0 +1,7 @@
+test "SkBee - Text/ExprBookPages":
+	set {_i} to 1 of written book
+	assert page 1 of book {_i} is not set with "Shouldn't have a page yet"
+	set {_text} to text component from "test page"
+	set page 1 of book {_i} to {_text}
+	assert page 1 of book {_i} is set with "Should now be set"
+	assert page 1 of book {_i} = {_text} with "Should match the comp"
