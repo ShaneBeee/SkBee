@@ -105,6 +105,10 @@ public class Util {
         return DEBUGS;
     }
 
+    public static void clearDebugs() {
+        DEBUGS.clear();
+    }
+
     /**
      * Gets a Minecraft NamespacedKey from string
      * <p>If a namespace is not provided, it will default to "minecraft:" namespace</p>
