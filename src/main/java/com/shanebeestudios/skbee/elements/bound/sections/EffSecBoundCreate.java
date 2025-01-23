@@ -138,7 +138,7 @@ public class EffSecBoundCreate extends EffectSection {
         Bound bound = new Bound(lesser, greater, id, this.isTemporary, usingBlocks);
         bound.setFull(this.isFull);
         BoundingBox box = bound.getBoundingBox();
-        if (box.getWidthX() < 1 || box.getWidthZ() < 1 || box.getHeight() < 1) {
+        if (box.getWidthX() < 1 || box.getWidthZ() < 1 || (box.getHeight() < 1 && !this.isFull)) {
             Util.skriptError("&cBound must have a size of at least 2x2x2 &7(&6%s&7)", toString(event, true));
             return super.walk(event, false);
         }
