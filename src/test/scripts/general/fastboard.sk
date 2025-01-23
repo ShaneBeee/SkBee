@@ -1,0 +1,14 @@
+test "SkBee - FastBoard":
+	# These tests are redundant but just want to make sure old/new syntax parse as they should
+
+	parse:
+		set {_p} to random element of all players # This really does nothing
+		set title of scoreboard of {_p} to "This is a title"
+		set title of fastboard of {_p} to "This is a title"
+		set title of fastboard of {_p} to mini message from "This is a title"
+		set line 1 of scoreboard of {_p} to "This is line 1"
+		set line 1 of fastboard of {_p} to "This is line 1"
+		set line 1 of fastboard of {_p} to mini message from "This is line 1"
+
+	assert last parse logs contains "'scoreboard' is deprecated, please use 'fastboard' instead." with "Should get the warning"
+	assert size of last parse logs = 2 with "Should only be the 2 warnings"

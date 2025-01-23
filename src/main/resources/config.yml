@@ -12,10 +12,10 @@ settings:
         # Whether or not the update check should be done on another thread
         async: false
 
-    # Whether scoreboard lines should be in normal order or reversed
+    # Whether fastboard lines should be in normal order or reversed
     # False = Line 1 at the top, line 15 at the bottom (default)
     # True = Line 15 at the top, line 1 at the bottom
-    scoreboard-reverse-lines: false
+    fastboard-reverse-lines: false
 
 # Disable elements you do not plan to use.
 elements:
