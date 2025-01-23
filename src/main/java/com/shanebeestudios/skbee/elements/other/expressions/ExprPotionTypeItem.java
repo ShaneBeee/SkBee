@@ -36,15 +36,12 @@ public class ExprPotionTypeItem extends SimplePropertyExpression<Object, PotionT
     public @Nullable PotionType convert(Object from) {
         ItemStack itemStack = ItemUtils.getItemStackFromObjects(from);
         if (itemStack == null) {
-            error("Invalid item: " + Classes.toString(from));
             return null;
         }
         if (HAS_COMPONENTS) {
             return ItemComponentUtils.getPotionType(itemStack);
         } else if (itemStack.getItemMeta() instanceof PotionMeta potionMeta) {
             return potionMeta.getBasePotionType();
-        } else {
-            error("Item doesn't have an attached potion type: " + Classes.toString(itemStack));
         }
         return null;
     }

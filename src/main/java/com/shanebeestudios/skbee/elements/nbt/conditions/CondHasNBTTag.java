@@ -44,7 +44,6 @@ public class CondHasNBTTag extends Condition {
     public boolean check(Event event) {
         String tag = this.tag.getSingle(event);
         if (tag == null) {
-            error("No tag found");
             return false;
         }
         return compounds.check(event, compound -> NBTApi.hasTag(compound, tag), isNegated());

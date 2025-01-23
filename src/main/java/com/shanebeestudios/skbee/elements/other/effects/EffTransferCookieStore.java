@@ -5,10 +5,10 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
@@ -34,7 +34,7 @@ public class EffTransferCookieStore extends Effect {
     private Expression<?> key;
     private Expression<Player> players;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.cookie = (Expression<String>) exprs[0];
@@ -44,26 +44,31 @@ public class EffTransferCookieStore extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         String cookie = this.cookie.getSingle(event);
         Object keyObject = this.key.getSingle(event);
-        if (cookie == null || keyObject == null) return;
+        if (cookie == null || keyObject == null) {
+            return;
+        }
 
-        NamespacedKey key;
+        NamespacedKey key = null;
         if (keyObject instanceof String string) {
             key = Util.getNamespacedKey(string, false);
         } else if (keyObject instanceof NamespacedKey namespacedKey) {
             key = namespacedKey;
-        } else {
+        }
+        if (key == null) {
+            error("Invalid key: " + this.key.toString(event, true));
             return;
         }
-        if (key == null) return;
 
         byte[] cookieBytes = cookie.getBytes();
         // Minecraft limit
-        if (cookieBytes.length >= 5120) return;
+        if (cookieBytes.length >= 5120) {
+            error("Your cookie \uD83C\uDF6A is too big. Minecraft limits to 5120 characters.");
+            return;
+        }
 
         for (Player player : this.players.getArray(event)) {
             player.storeCookie(key, cookieBytes);

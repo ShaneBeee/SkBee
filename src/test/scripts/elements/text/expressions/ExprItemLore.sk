@@ -1,0 +1,19 @@
+test "SkBee - Text/ExprItemLore":
+	set {_i} to 1 of diamond sword
+	assert component item lore of {_i} is not set with "Shouldn't be set"
+
+	set {_i} to diamond sword with lore "Some Lore"
+	assert component item lore of {_i} is set with "Should be set"
+	delete component item lore of {_i}
+	assert component item lore of {_i} is not set with "Shouldn't be set after deleting"
+
+	set {_i} to 1 of stick
+	assert component item lore of {_i} is not set with "Shouldn't be set"
+	set component item lore of {_i} to mini message from "oh hi, im lore now"
+	assert size of component item lore of {_i} = 1 with "Should have 1 line now"
+	add mini message from "hi mom" to component item lore of {_i}
+	add mini message from "oh yeah, dad too" to component item lore of {_i}
+	assert size of component item lore of {_i} = 3 with "Should have 3 lines now"
+	delete component item lore of {_i}
+	assert component item lore of {_i} is not set with "Shouldn't be set after deleting"
+

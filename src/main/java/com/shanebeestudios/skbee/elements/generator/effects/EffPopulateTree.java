@@ -54,7 +54,6 @@ public class EffPopulateTree extends Effect {
 
         TreeType treeType = this.treeType.getSingle(event);
         if (treeType == null) {
-            error("Invalid tree type: " + this.treeType.toString(event, true));
             return;
         }
 

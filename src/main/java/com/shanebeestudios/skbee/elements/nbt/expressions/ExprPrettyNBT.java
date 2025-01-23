@@ -45,7 +45,6 @@ public class ExprPrettyNBT extends PropertyExpression<Object, String> {
 
     @Override
     protected String[] get(Event event, Object[] source) {
-        if (source.length == 0) error("Empty nbt compound");
         String split = this.split != null ? this.split.getSingle(event) : null;
         return get(source, object -> {
             if (object instanceof NBTCompound compound) return ChatReflection.getPrettyNBT(compound, split);

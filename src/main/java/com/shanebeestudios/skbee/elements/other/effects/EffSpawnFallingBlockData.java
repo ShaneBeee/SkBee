@@ -46,7 +46,6 @@ public class EffSpawnFallingBlockData extends Effect {
     protected void execute(Event event) {
         BlockData blockData = this.blockData.getSingle(event);
         if (blockData == null) {
-            error("Invalid block data: " + this.blockData.toString(event, true));
             return;
         }
 

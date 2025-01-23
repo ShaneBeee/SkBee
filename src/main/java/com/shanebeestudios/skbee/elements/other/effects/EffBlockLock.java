@@ -5,10 +5,11 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Lockable;
@@ -48,8 +49,6 @@ public class EffBlockLock extends Effect {
     @SuppressWarnings("UnstableApiUsage")
     @Override
     protected void execute(Event event) {
-        if (this.blocks == null) return;
-
         ItemStack itemStack = this.item != null ? this.item.getSingle(event) : null;
 
         for (Block block : this.blocks.getArray(event)) {
@@ -57,6 +56,8 @@ public class EffBlockLock extends Effect {
             if (state instanceof Lockable lockable) {
                 lockable.setLockItem(itemStack);
                 state.update(true);
+            } else {
+                error("Block is not lockable: " + Classes.toString(block.getType()));
             }
         }
     }

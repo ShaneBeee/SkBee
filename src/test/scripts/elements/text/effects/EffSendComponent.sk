@@ -1,0 +1,10 @@
+test "SkBee - Text/EffSendComponent":
+	# Test effects
+	parse:
+		set {_m} to mini message from "oh hi there"
+		send component {_m} to console
+		send component {_m} to all worlds
+		send component {_m} to team named "blah_team"
+		broadcast component {_m}
+		send title component "blah" with subtitle "oh hi" to all worlds for 5 seconds
+	assert parse logs are not set with "These effects should have all parsed"
