@@ -30,7 +30,7 @@ public class FastBoardLegacy extends FastBoardBase<String, String> {
     @Override
     public void setLine(int lineNumber, Object line, @Nullable Object lineFormat) {
         if (lineNumber > 15 || lineNumber < 1) return;
-        if (!(line instanceof String stringLine)) return;
+        String stringLine = line instanceof String s ? s : null;
         String stringFormat = lineFormat instanceof String s ? s : null;
 
         String previousLine = this.lines[REVERSE ? 15 - lineNumber : lineNumber - 1];
