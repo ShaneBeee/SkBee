@@ -30,6 +30,7 @@ public class BiomeGenEvent extends BaseGenEvent {
     }
 
     public Biome getBiome() {
+        if (biome == null) return Biome.PLAINS;
         return this.biome;
     }
 
