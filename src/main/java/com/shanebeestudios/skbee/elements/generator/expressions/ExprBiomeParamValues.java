@@ -77,6 +77,12 @@ public class ExprBiomeParamValues extends SimplePropertyExpression<BiomeParamete
                 };
             }
         },
+        PEAKS_AND_VALLEYS("peaks and valleys", "(peaks and valleys|pv)") {
+            @Override
+            public double getPoint(int minMax, BiomeParameterPoint point) {
+                return -(Math.abs(Math.abs(point.getWeirdness()) - 0.6666667F) - 0.33333334F) * 3.0F;
+            }
+        },
         TEMPERATURE("temperature", "temp[erature]") {
             @Override
             public double getPoint(int minMax, BiomeParameterPoint point) {
