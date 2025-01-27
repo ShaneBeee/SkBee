@@ -103,38 +103,44 @@ public class StructChunkGen extends Structure {
         SectionNode blockNode = this.entryContainer.getOptional("block pop", SectionNode.class, false);
 
         Script currentScript = getParser().getCurrentScript();
-        ChunkGen chunkGen = ChunkGenManager.registerOrGetGenerator(this.id.getSingle(), chunkNode != null, biomeNode != null);
+        ChunkGen chunkGen = ChunkGenManager.registerOrGetGenerator(this.id.getSingle(), biomeNode != null);
 
-        if (chunkNode != null) {
-            ChunkGenerator chunkGenerator = chunkGen.getChunkGenerator();
-            if (chunkGenerator != null) {
-                boolean vanillaDecor = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla decor", Boolean.class, true));
-                chunkGenerator.setVanillaDecor(vanillaDecor);
-                boolean vanillaCaves = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla caves", Boolean.class, true));
-                chunkGenerator.setVanillaCaves(vanillaCaves);
-                boolean vanillaStructures = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla structures", Boolean.class, true));
-                chunkGenerator.setVanillaStructures(vanillaStructures);
-                boolean vanillaMobs = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla mobs", Boolean.class, true));
-                chunkGenerator.setVanillaMobs(vanillaMobs);
+        ChunkGenerator chunkGenerator = chunkGen.getChunkGenerator();
+        if (chunkGenerator != null) {
+            boolean vanillaDecor = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla decor", Boolean.class, true));
+            chunkGenerator.setVanillaDecor(vanillaDecor);
+            boolean vanillaCaves = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla caves", Boolean.class, true));
+            chunkGenerator.setVanillaCaves(vanillaCaves);
+            boolean vanillaStructures = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla structures", Boolean.class, true));
+            chunkGenerator.setVanillaStructures(vanillaStructures);
+            boolean vanillaMobs = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla mobs", Boolean.class, true));
+            chunkGenerator.setVanillaMobs(vanillaMobs);
 
+            if (chunkNode != null) {
                 getParser().setCurrentEvent("ChunkGenSection", ChunkGenEvent.class);
                 Trigger chunkTrigger = new Trigger(currentScript, "chunk gen", new SimpleEvent(), ScriptLoader.loadItems(chunkNode));
                 chunkTrigger.setLineNumber(chunkNode.getLine());
                 chunkGenerator.setChunkGenTrigger(chunkTrigger);
+            } else {
+                chunkGenerator.setChunkGenTrigger(null);
+            }
 
-                if (blockNode != null) {
-                    getParser().setCurrentEvent("BlockPopulateSection", BlockPopulateEvent.class);
-                    Trigger blockTrigger = new Trigger(currentScript, "block pop", new SimpleEvent(), ScriptLoader.loadItems(blockNode));
-                    blockTrigger.setLineNumber(blockNode.getLine());
-                    chunkGenerator.setBlockPopTrigger(blockTrigger);
-                }
+            if (blockNode != null) {
+                getParser().setCurrentEvent("BlockPopulateSection", BlockPopulateEvent.class);
+                Trigger blockTrigger = new Trigger(currentScript, "block pop", new SimpleEvent(), ScriptLoader.loadItems(blockNode));
+                blockTrigger.setLineNumber(blockNode.getLine());
+                chunkGenerator.setBlockPopTrigger(blockTrigger);
+            } else {
+                chunkGenerator.setBlockPopTrigger(null);
+            }
 
-                if (heightNode != null) {
-                    getParser().setCurrentEvent("HeightGenSection", HeightGenEvent.class);
-                    Trigger heightTrigger = new Trigger(currentScript, "height gen", new SimpleEvent(), ScriptLoader.loadItems(heightNode));
-                    heightTrigger.setLineNumber(heightTrigger.getLineNumber());
-                    chunkGenerator.setHeightGenTrigger(heightTrigger);
-                }
+            if (heightNode != null) {
+                getParser().setCurrentEvent("HeightGenSection", HeightGenEvent.class);
+                Trigger heightTrigger = new Trigger(currentScript, "height gen", new SimpleEvent(), ScriptLoader.loadItems(heightNode));
+                heightTrigger.setLineNumber(heightTrigger.getLineNumber());
+                chunkGenerator.setHeightGenTrigger(heightTrigger);
+            } else {
+                chunkGenerator.setHeightGenTrigger(null);
             }
         }
 

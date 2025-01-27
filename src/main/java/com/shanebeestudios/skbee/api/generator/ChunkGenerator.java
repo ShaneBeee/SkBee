@@ -75,7 +75,7 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
             this.heightGenTrigger.execute(heightGenEvent);
             return heightGenEvent.getHeight();
         }
-        return 0;
+        return super.getBaseHeight(worldInfo, random, x, z, heightMap);
     }
 
     @Override
@@ -96,6 +96,16 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
     @Override
     public boolean shouldGenerateMobs() {
         return this.vanillaMobs;
+    }
+
+    @Override
+    public boolean shouldGenerateSurface() {
+        return this.chunkGenTrigger == null;
+    }
+
+    @Override
+    public boolean shouldGenerateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ) {
+        return this.chunkGenTrigger == null;
     }
 
     @Override
