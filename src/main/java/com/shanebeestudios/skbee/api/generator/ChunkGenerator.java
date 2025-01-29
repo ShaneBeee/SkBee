@@ -13,6 +13,7 @@ import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,7 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
     private boolean vanillaCaves = false;
     private boolean vanillaStructures = false;
     private boolean vanillaMobs = false;
+    private Location fixedSpawnLocation = null;
 
     public void setVanillaDecor(boolean vanillaDecor) {
         this.vanillaDecor = vanillaDecor;
@@ -57,6 +59,10 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
 
     public void setVanillaMobs(boolean vanillaMobs) {
         this.vanillaMobs = vanillaMobs;
+    }
+
+    public void setFixedSpawnLocation(Location fixedSpawnLocation) {
+        this.fixedSpawnLocation = fixedSpawnLocation;
     }
 
     // GENERATOR
@@ -113,6 +119,16 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
         Block block = world.getHighestBlockAt(x, z, HeightMap.MOTION_BLOCKING_NO_LEAVES);
         Material material = block.getType();
         return material == Material.SAND || material == Material.GRASS_BLOCK || material == Material.GRANITE;
+    }
+
+    @Override
+    public @Nullable Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
+        if (this.fixedSpawnLocation != null) {
+            Location clone = this.fixedSpawnLocation.clone();
+            clone.setWorld(world);
+            return clone;
+        }
+        return null;
     }
 
     @Override
