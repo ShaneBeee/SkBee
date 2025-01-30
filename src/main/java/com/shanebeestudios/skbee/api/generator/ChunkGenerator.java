@@ -6,9 +6,7 @@ import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.HeightGenEvent;
 import org.bukkit.HeightMap;
 import org.bukkit.Location;
-import org.bukkit.Material;
 import org.bukkit.World;
-import org.bukkit.block.Block;
 import org.bukkit.generator.BlockPopulator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
@@ -22,9 +20,19 @@ import java.util.Random;
 public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
 
     // SKRIPT STUFF
+    private Trigger noiseGenTrigger;
+    private Trigger surfaceGenTrigger;
     private Trigger chunkGenTrigger;
     private Trigger heightGenTrigger;
     private Trigger blockPopTrigger;
+
+    public void setNoiseGenTrigger(Trigger noiseGenTrigger) {
+        this.noiseGenTrigger = noiseGenTrigger;
+    }
+
+    public void setSurfaceGenTrigger(Trigger surfaceGenTrigger) {
+        this.surfaceGenTrigger = surfaceGenTrigger;
+    }
 
     public void setChunkGenTrigger(Trigger chunkGenTrigger) {
         this.chunkGenTrigger = chunkGenTrigger;
@@ -66,9 +74,21 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
     }
 
     // GENERATOR
+
+    @Override
+    public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        if (this.noiseGenTrigger != null) {
+            ChunkGenEvent chunkGenEvent = new ChunkGenEvent(chunkData, chunkX, chunkZ);
+            this.noiseGenTrigger.execute(chunkGenEvent);
+        }
+    }
+
     @Override
     public void generateSurface(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
-        if (this.chunkGenTrigger != null) {
+        if (this.surfaceGenTrigger != null) {
+            ChunkGenEvent chunkGenEvent = new ChunkGenEvent(chunkData, chunkX, chunkZ, this);
+            this.surfaceGenTrigger.execute(chunkGenEvent);
+        } else if (this.chunkGenTrigger != null) {
             ChunkGenEvent chunkGenEvent = new ChunkGenEvent(chunkData, chunkX, chunkZ);
             this.chunkGenTrigger.execute(chunkGenEvent);
         }
@@ -85,13 +105,23 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
     }
 
     @Override
-    public boolean shouldGenerateDecorations() {
-        return this.vanillaDecor;
+    public boolean shouldGenerateNoise() {
+        return this.chunkGenTrigger == null && this.noiseGenTrigger == null;
+    }
+
+    @Override
+    public boolean shouldGenerateSurface() {
+        return this.chunkGenTrigger == null && this.surfaceGenTrigger == null;
     }
 
     @Override
     public boolean shouldGenerateCaves() {
         return this.vanillaCaves;
+    }
+
+    @Override
+    public boolean shouldGenerateDecorations() {
+        return this.vanillaDecor;
     }
 
     @Override
@@ -102,23 +132,6 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
     @Override
     public boolean shouldGenerateMobs() {
         return this.vanillaMobs;
-    }
-
-    @Override
-    public boolean shouldGenerateSurface() {
-        return this.chunkGenTrigger == null;
-    }
-
-    @Override
-    public boolean shouldGenerateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ) {
-        return this.chunkGenTrigger == null;
-    }
-
-    @Override
-    public boolean canSpawn(@NotNull World world, int x, int z) {
-        Block block = world.getHighestBlockAt(x, z, HeightMap.MOTION_BLOCKING_NO_LEAVES);
-        Material material = block.getType();
-        return material == Material.SAND || material == Material.GRASS_BLOCK || material == Material.GRANITE;
     }
 
     @Override
