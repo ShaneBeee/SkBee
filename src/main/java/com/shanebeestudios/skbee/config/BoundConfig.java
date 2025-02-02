@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.config;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
@@ -137,7 +138,11 @@ public class BoundConfig {
      * Save all bounds to file
      * <br>This is only used when the server stops
      */
-    public void saveAllBounds() {
+    public void saveAllBoundsOnShutdown() {
+        if (!this.scheduledToRemove.isEmpty()) {
+            this.scheduledToRemove.forEach(id -> this.boundConfig.set("bounds." + id, null));
+            this.scheduledToRemove.clear();
+        }
         for (Bound bound : this.boundsMap.values()) {
             if (bound.isTemporary()) continue;
             this.boundConfig.set("bounds." + bound.getId(), bound);
@@ -145,12 +150,11 @@ public class BoundConfig {
         saveConfig();
     }
 
-    @SuppressWarnings("CallToPrintStackTrace")
     private void saveConfig() {
         try {
             this.boundConfig.save(this.boundFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Skript.exception(e);
         }
     }
 
