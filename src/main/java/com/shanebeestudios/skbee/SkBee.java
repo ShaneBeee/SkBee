@@ -107,7 +107,7 @@ public class SkBee extends JavaPlugin {
         }
         // Only save bounds if not in test mode
         if (!TestMode.ENABLED && this.boundConfig != null) {
-            this.boundConfig.saveAllBounds();
+            this.boundConfig.saveAllBoundsOnShutdown();
         }
         // Clear debugs in case of some kind of reload
         Util.clearDebugs();
