@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.bound;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
@@ -18,10 +19,11 @@ public class BoundWorld {
 
     private static final long SHIFT_VALUE = 8;
 
-    private final World world;
+    private final @NotNull World world;
     private final Map<Long, BoundRegion> regions = new HashMap<>();
 
-    public BoundWorld(World world) {
+    public BoundWorld(@NotNull World world) {
+        Preconditions.checkArgument(world != null, "World cannot be null");
         this.world = world;
     }
 
