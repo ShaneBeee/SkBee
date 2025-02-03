@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.api.bound;
 
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.BoundConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;

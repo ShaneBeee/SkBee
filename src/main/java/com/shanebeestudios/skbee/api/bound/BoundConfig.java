@@ -1,11 +1,8 @@
-package com.shanebeestudios.skbee.config;
+package com.shanebeestudios.skbee.api.bound;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.bound.Bound;
-import com.shanebeestudios.skbee.api.bound.BoundPostponing;
-import com.shanebeestudios.skbee.api.bound.BoundWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;

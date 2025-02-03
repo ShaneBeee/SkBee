@@ -8,7 +8,7 @@ import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.LazyLocation;
-import com.shanebeestudios.skbee.config.BoundConfig;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;

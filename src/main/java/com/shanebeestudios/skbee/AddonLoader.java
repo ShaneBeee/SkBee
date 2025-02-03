@@ -14,7 +14,7 @@ import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.BoundConfig;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
