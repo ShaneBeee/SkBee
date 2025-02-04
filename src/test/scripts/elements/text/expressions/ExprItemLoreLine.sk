@@ -1,0 +1,14 @@
+test "SkBee - Text/ExprItemLoreLine":
+	set {_i} to 1 of diamond sword
+	set line 1 of component lore of {_i} to mini message from "hi mom"
+	assert lore of {_i} = "hi mom" with "Should just be the one line"
+
+	set line 3 of component lore of {_i} to mini message from "line 3"
+	assert size of lore of {_i} = 3 with "Should be 3 lines"
+
+	delete line 2 of component lore of {_i}
+	assert size of lore of {_i} = 2 with "Should be 2 lines after deleting one"
+	assert lore of {_i} = "hi mom" and "line 3" with "Should match these 2 lines"
+
+	set line 4 of component lore of {_i} to mini message from "line 4"
+	assert lore of {_i} = "hi mom", "line 3", "" and "line 4" with "Should match these 4 lines"
