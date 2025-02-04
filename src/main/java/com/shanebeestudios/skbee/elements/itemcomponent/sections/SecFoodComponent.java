@@ -77,7 +77,7 @@ public class SecFoodComponent extends Section {
         this.items = (Expression<Object>) exprs[0];
         this.nutrition = (Expression<Number>) container.getOptional("nutrition", false);
         this.saturation = (Expression<Number>) container.getOptional("saturation", false);
-        this.canAlwaysEat = (Expression<Boolean>) container.getOptional("can always eat", false);
+        this.canAlwaysEat = (Expression<Boolean>) container.getOptional("can_always_eat", false);
         return true;
     }
 
