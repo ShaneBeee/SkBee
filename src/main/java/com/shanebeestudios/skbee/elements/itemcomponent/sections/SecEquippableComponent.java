@@ -16,7 +16,6 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -99,10 +98,6 @@ public class SecEquippableComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         this.items = (Expression<Object>) exprs[0];
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;

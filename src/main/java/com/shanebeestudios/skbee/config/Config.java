@@ -19,7 +19,7 @@ public class Config {
     public boolean SETTINGS_DEBUG;
     public boolean SETTINGS_UPDATE_CHECKER_ENABLED;
     public boolean SETTINGS_UPDATE_CHECKER_ASYNC;
-    public boolean SETTINGS_SCOREBOARD_LINES;
+    public boolean SETTINGS_FASTBOARD_LINES;
     public boolean ELEMENTS_NBT;
     public boolean NBT_EVENTS_BREAK_BLOCK;
     public boolean NBT_EVENTS_PISTON_EXTEND;
@@ -38,9 +38,8 @@ public class Config {
     public boolean BOUND_EVENTS_VEHICLE_EXIT;
     public boolean BOUND_EVENTS_VEHICLE_DESTROY;
     public boolean BOUND_EVENTS_VEHICLE_MOVE;
-    public boolean ELEMENTS_BOARD;
-    public boolean ELEMENTS_OBJECTIVE;
-    public boolean ELEMENTS_TEAM;
+    public boolean ELEMENTS_FASTBOARD;
+    public boolean ELEMENTS_SCOREBOARD;
     public boolean ELEMENTS_RECIPE;
     public boolean ELEMENTS_STRUCTURE;
     public boolean ELEMENTS_VIRTUAL_FURNACE;
@@ -63,6 +62,8 @@ public class Config {
     public boolean ELEMENTS_CHUNK_GEN;
     public boolean ELEMENTS_SWITCH_CASE;
     public boolean AUTO_LOAD_WORLDS;
+    public boolean RUNTIME_DISABLE_ERRORS;
+    public boolean RUNTIME_DISABLE_WARNINGS;
 
     /**
      * @hidden
@@ -134,8 +135,7 @@ public class Config {
         this.SETTINGS_UPDATE_CHECKER_ENABLED = getSetting("update-checker.enabled");
         this.SETTINGS_UPDATE_CHECKER_ASYNC = getSetting("update-checker.async");
 
-        String namespace = this.config.getString("settings.namespace");
-        this.SETTINGS_SCOREBOARD_LINES = getSetting("scoreboard-reverse-lines");
+        this.SETTINGS_FASTBOARD_LINES = getSetting("fastboard-reverse-lines");
 
         this.ELEMENTS_NBT = getElement("nbt");
         this.NBT_EVENTS_BREAK_BLOCK = getNBTEvent("block-break");
@@ -157,9 +157,8 @@ public class Config {
         this.BOUND_EVENTS_VEHICLE_MOVE = getBoundEvent("vehicle-move");
         this.BOUND_EVENTS_VEHICLE_DESTROY = getBoundEvent("vehicle-destroy");
 
-        this.ELEMENTS_BOARD = getElement("scoreboard");
-        this.ELEMENTS_OBJECTIVE = getElement("scoreboard-objective");
-        this.ELEMENTS_TEAM = getElement("team");
+        this.ELEMENTS_FASTBOARD = getElement("fastboard");
+        this.ELEMENTS_SCOREBOARD = getElement("scoreboard");
         this.ELEMENTS_RECIPE = getElement("recipe");
         this.ELEMENTS_STRUCTURE = getElement("structure");
         this.ELEMENTS_VIRTUAL_FURNACE = getElement("virtual-furnace");
@@ -182,6 +181,9 @@ public class Config {
         this.ELEMENTS_ITEM_COMPONENT = getElement("item-component");
         this.ELEMENTS_SWITCH_CASE = getElement("switch-case");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
+
+        this.RUNTIME_DISABLE_ERRORS = this.config.getBoolean("runtime.disable-errors");
+        this.RUNTIME_DISABLE_WARNINGS = this.config.getBoolean("runtime.disable-warnings");
     }
 
 }

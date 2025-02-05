@@ -25,6 +25,7 @@ import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
+import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
@@ -105,8 +106,8 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
     @SuppressWarnings("deprecation")
     @Override
     protected NBTCompound[] get(@NotNull Event e, Object @NotNull [] source) {
-        if (source.length == 0) {
-            error("Empty object");
+        if (!Bukkit.isPrimaryThread()) {
+            error("NBT cannot be retrieved off the main thread.");
             return null;
         }
         return get(source, object -> {

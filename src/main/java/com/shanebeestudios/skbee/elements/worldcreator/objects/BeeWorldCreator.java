@@ -7,6 +7,7 @@ import net.kyori.adventure.util.TriState;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
+import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.World.Environment;
@@ -21,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.Objects;
 import java.util.Optional;
+import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "CallToPrintStackTrace"})
@@ -40,6 +42,7 @@ public class BeeWorldCreator implements Keyed {
     Optional<Boolean> hardcore;
     Optional<Boolean> keepSpawnLoaded;
     Optional<Boolean> loadOnStart = Optional.empty();
+    private Location fixedSpawnLocation;
     boolean isLoaded;
     long seed = -1;
 
@@ -149,6 +152,10 @@ public class BeeWorldCreator implements Keyed {
         this.keepSpawnLoaded = Optional.of(loaded);
     }
 
+    public void setFixedSpawnLocation(Location fixedSpawnLocation) {
+        this.fixedSpawnLocation = fixedSpawnLocation;
+    }
+
     public boolean isLoadOnStart() {
         return loadOnStart.orElse(true);
     }
@@ -183,9 +190,11 @@ public class BeeWorldCreator implements Keyed {
             if (worldType != null) {
                 worldCreator.type(worldType);
             }
+
             if (environment != null) {
                 worldCreator.environment(environment);
             }
+
             if (seed != -1) {
                 worldCreator.seed(seed);
             }
@@ -193,12 +202,25 @@ public class BeeWorldCreator implements Keyed {
             if (generatorSettings != null) {
                 worldCreator.generatorSettings(generatorSettings);
             }
+
             if (generator != null) {
                 worldCreator.generator(generator);
             }
+
+            if (this.fixedSpawnLocation != null) {
+                if (this.chunkGenerator != null) {
+                    if (this.chunkGenerator instanceof com.shanebeestudios.skbee.api.generator.ChunkGenerator customChunkGenerator) {
+                        customChunkGenerator.setFixedSpawnLocation(this.fixedSpawnLocation);
+                    }
+                } else {
+                    this.chunkGenerator = getDummyGenerator(this.fixedSpawnLocation);
+                }
+            }
+
             if (chunkGenerator != null) {
                 worldCreator.generator(chunkGenerator);
             }
+
             if (biomeProvider != null) {
                 worldCreator.biomeProvider(biomeProvider);
             }
@@ -318,6 +340,55 @@ public class BeeWorldCreator implements Keyed {
         sb.append(", clone=").append(clone);
         sb.append('}');
         return sb.toString();
+    }
+
+    /**
+     * This is used to set the fixed spawn location of a WorldCreator
+     * Currently Bukkit/Paper APIs don't actually have any other method for this.
+     * Setting this will GREATLY speed up world creation
+     *
+     * @param fixedSpawnLocation Spawn location
+     * @return New dummy chunk generator
+     */
+    private static ChunkGenerator getDummyGenerator(Location fixedSpawnLocation) {
+        return new ChunkGenerator() {
+            @Override
+            public Location getFixedSpawnLocation(@NotNull World world, @NotNull Random random) {
+                Location clone = fixedSpawnLocation.clone();
+                clone.setWorld(world);
+                return clone;
+            }
+
+            @Override
+            public boolean shouldGenerateNoise() {
+                return true;
+            }
+
+            @Override
+            public boolean shouldGenerateSurface() {
+                return true;
+            }
+
+            @Override
+            public boolean shouldGenerateCaves() {
+                return true;
+            }
+
+            @Override
+            public boolean shouldGenerateMobs() {
+                return true;
+            }
+
+            @Override
+            public boolean shouldGenerateDecorations() {
+                return true;
+            }
+
+            @Override
+            public boolean shouldGenerateStructures() {
+                return true;
+            }
+        };
     }
 
 }

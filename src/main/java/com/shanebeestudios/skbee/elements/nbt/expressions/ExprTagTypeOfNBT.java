@@ -43,12 +43,7 @@ public class ExprTagTypeOfNBT extends SimpleExpression<NBTCustomType> {
     protected NBTCustomType @Nullable [] get(Event e) {
         String tag = this.tag.getSingle(e);
         NBTCompound compound = this.compound.getSingle(e);
-        if (tag == null) {
-            error("Invalid nbt tag");
-            return null;
-        }
-        if (compound == null) {
-            error("Invalid nbt compound");
+        if (tag == null || compound == null) {
             return null;
         }
 

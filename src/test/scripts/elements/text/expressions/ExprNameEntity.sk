@@ -1,0 +1,14 @@
+test "SkBee - Text/ExprNameEntity":
+	spawn a sheep at event-location:
+		set {_e} to entity
+
+	assert component entity name of {_e} = "Sheep" with "Should match"
+	assert component entity display name of {_e} is not set with "Shouldn't have a display name yet"
+	set component entity display name of {_e} to mini message from "Mr Sheepy"
+	assert component entity display name of {_e} = "Mr Sheepy" with "Should be 'Mr Sheepy' now"
+
+	parse:
+		set component entity name of {_e} to mini message from "test"
+	assert parse logs contains "'name' cannot be set, rather use custom/display name." with "Should have error'd"
+
+	delete entity within {_e}

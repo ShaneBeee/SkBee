@@ -13,7 +13,6 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -61,10 +60,6 @@ public class SecUseCooldownComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 

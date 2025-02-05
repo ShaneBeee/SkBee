@@ -11,7 +11,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
@@ -39,15 +38,6 @@ public class ExprMaxStackSizeComponent extends SimplePropertyExpression<Object, 
     static {
         register(ExprMaxStackSizeComponent.class, Number.class,
             "max stack size component", "itemstacks/itemtypes/slots");
-    }
-
-    @Override
-    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
-        return super.init(expressions, matchedPattern, isDelayed, parseResult);
     }
 
     @Override

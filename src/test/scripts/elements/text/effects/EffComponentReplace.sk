@@ -1,0 +1,6 @@
+test "SkBee - Text/EffComponentReplace":
+
+	set {_m} to mini message from "look mom im on tv"
+	assert {_m} = "look mom im on tv" with "Should be the same"
+	component replace "mom" with "dad" in {_m}
+	assert {_m} = "look dad im on tv" with "Should have changed"

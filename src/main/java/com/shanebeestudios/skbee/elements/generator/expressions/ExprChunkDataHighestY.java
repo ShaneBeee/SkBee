@@ -41,7 +41,6 @@ public class ExprChunkDataHighestY extends SimpleExpression<Number> {
     protected Number @Nullable [] get(Event event) {
         Vector vector = this.vector.getSingle(event);
         if (vector == null) {
-            error("Invalid vector: " + this.vector.toString(event,true));
             return null;
         }
         if (event instanceof BlockPopulateEvent popEvent) {

@@ -10,7 +10,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -56,10 +55,6 @@ public class SecJukeboxPlayableComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         this.items = exprs[0];
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;

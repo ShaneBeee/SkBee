@@ -5,7 +5,7 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
 import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
-import com.shanebeestudios.skbee.config.BoundConfig;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -28,8 +28,6 @@ import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.event.vehicle.VehicleMoveEvent;
 import org.bukkit.plugin.PluginManager;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.Collection;
 
 public class BoundBorderListener implements Listener {
 

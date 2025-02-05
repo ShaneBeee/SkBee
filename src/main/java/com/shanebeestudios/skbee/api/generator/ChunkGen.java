@@ -8,9 +8,9 @@ public class ChunkGen {
     private final ChunkGenerator chunkGenerator;
     private final BiomeGenerator biomeGenerator;
 
-    public ChunkGen(String id, boolean chunk, boolean biome) {
+    public ChunkGen(String id, boolean biome) {
         this.id = id;
-        this.chunkGenerator = chunk ? new ChunkGenerator() : null;
+        this.chunkGenerator = new ChunkGenerator();
         this.biomeGenerator = biome ? new BiomeGenerator() : null;
     }
 
@@ -18,7 +18,6 @@ public class ChunkGen {
         return this.id;
     }
 
-    @Nullable
     public ChunkGenerator getChunkGenerator() {
         return this.chunkGenerator;
     }

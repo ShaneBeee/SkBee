@@ -1,0 +1,5 @@
+test "SkBee - Text/ExprClickEvent":
+	set {_text} to text component of "i like cheese"
+	assert click event of {_text} is not set with "Shouldn't have a click event yet"
+	add click event to open link "some url" to {_text}
+	assert click event of {_text} is set with "Should now have a click event"

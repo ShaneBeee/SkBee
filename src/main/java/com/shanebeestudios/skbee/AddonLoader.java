@@ -8,25 +8,22 @@ import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
-import com.shanebeestudios.skbee.api.scoreboard.BoardManager;
-import com.shanebeestudios.skbee.api.skript.Experiments;
+import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.BoundConfig;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
-import org.bukkit.Bukkit;
 import org.bukkit.Statistic;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.Objective;
-import org.bukkit.scoreboard.Team;
 
 /**
  * @hidden
@@ -69,8 +66,7 @@ public class AddonLoader {
             // If a plugin is delaying SkBee's loading, this causes issues with registrations and no longer works
             // We need to find the route of this issue, so far the only plugin I know that does this is PlugMan
             Util.logLoading("&cSkript is no longer accepting registrations, addons can no longer be loaded!");
-            Plugin plugMan = Bukkit.getPluginManager().getPlugin("PlugMan");
-            if (plugMan != null && plugMan.isEnabled()) {
+            if (isPlugmanReloaded()) {
                 Util.logLoading("&cIt appears you're running PlugMan.");
                 Util.logLoading("&cIf you're trying to reload/enable SkBee with PlugMan.... you can't.");
                 Util.logLoading("&ePlease restart your server!");
@@ -107,6 +103,7 @@ public class AddonLoader {
         loadBoundElements();
         loadDamageSourceElements();
         loadDisplayEntityElements();
+        loadFastboardElements();
         loadFishingElements();
         loadGameEventElements();
         loadItemComponentElements();
@@ -114,12 +111,10 @@ public class AddonLoader {
         loadRayTraceElements();
         loadRecipeElements();
         loadScoreboardElements();
-        loadScoreboardObjectiveElements();
         loadStatisticElements();
         loadStructureElements();
         loadSwitchCaseElements();
         loadTagElements();
-        loadTeamElements();
         loadTickManagerElements();
         loadVillagerElements();
         loadVirtualFurnaceElements();
@@ -127,8 +122,6 @@ public class AddonLoader {
         loadWorldCreatorElements();
         loadChunkGenElements();
         loadTestingElements();
-
-        Experiments.init(this.addon);
 
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
@@ -142,6 +135,12 @@ public class AddonLoader {
         Util.log("Loaded (%s) elements:", total);
         for (int i = 0; i < finish.length; i++) {
             Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
+        }
+        if (this.config.RUNTIME_DISABLE_ERRORS) {
+            Util.logLoading("&eRuntime Errors have been disabled via config!");
+        }
+        if (this.config.RUNTIME_DISABLE_WARNINGS) {
+            Util.logLoading("&eRuntime Warnings have been disabled via config!");
         }
     }
 
@@ -181,56 +180,37 @@ public class AddonLoader {
         }
     }
 
+    private void loadFastboardElements() {
+        if (!this.config.ELEMENTS_FASTBOARD) {
+            Util.logLoading("&5Fastboard Elements &cdisabled via config");
+            return;
+        }
+        try {
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.fastboard");
+            pluginManager.registerEvents(new FastBoardManager(), this.plugin);
+            String type = FastBoardManager.HAS_ADVENTURE ? "Adventure" : "Legacy";
+            Util.logLoading("&5Fastboard&7[&b%s&7] &5Elements &asuccessfully loaded", type);
+        } catch (Exception ex) {
+            logFailure("Fastboard", ex);
+        }
+    }
+
     private void loadScoreboardElements() {
-        if (!this.config.ELEMENTS_BOARD) {
+        if (!this.config.ELEMENTS_SCOREBOARD) {
             Util.logLoading("&5Scoreboard Elements &cdisabled via config");
+            return;
+        }
+        if (Classes.getClassInfoNoError("objective") != null || Classes.getExactClassInfo(Objective.class) != null) {
+            Util.logLoading("&5Scoreboard Elements &cdisabled");
+            Util.logLoading("&7It appears another Skript addon may have registered Scoreboard syntax.");
+            Util.logLoading("&7To use SkBee Scoreboards, please remove the addon which has registered Scoreboard already.");
             return;
         }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.scoreboard");
-            pluginManager.registerEvents(new BoardManager(), this.plugin);
-            String type = BoardManager.HAS_ADVENTURE ? "Adventure" : "Legacy";
-            Util.logLoading("&5Scoreboard&7[&b%s&7] &5Elements &asuccessfully loaded", type);
+            Util.logLoading("&5Scoreboard Elements &asuccessfully loaded");
         } catch (Exception ex) {
             logFailure("Scoreboard", ex);
-        }
-    }
-
-    private void loadScoreboardObjectiveElements() {
-        if (!this.config.ELEMENTS_OBJECTIVE) {
-            Util.logLoading("&5Scoreboard Objective Elements &cdisabled via config");
-            return;
-        }
-        if (Classes.getClassInfoNoError("objective") != null || Classes.getExactClassInfo(Objective.class) != null) {
-            Util.logLoading("&5Scoreboard Objective Elements &cdisabled");
-            Util.logLoading("&7It appears another Skript addon may have registered Scoreboard Objective syntax.");
-            Util.logLoading("&7To use SkBee Scoreboard Objectives, please remove the addon which has registered Scoreboard Objective already.");
-            return;
-        }
-        try {
-            this.addon.loadClasses("com.shanebeestudios.skbee.elements.objective");
-            Util.logLoading("&5Scoreboard Objective Elements &asuccessfully loaded");
-        } catch (Exception ex) {
-            logFailure("Scoreboard Objective", ex);
-        }
-    }
-
-    private void loadTeamElements() {
-        if (!this.config.ELEMENTS_TEAM) {
-            Util.logLoading("&5Team Elements &cdisabled via config");
-            return;
-        }
-        if (Classes.getClassInfoNoError("team") != null || Classes.getExactClassInfo(Team.class) != null) {
-            Util.logLoading("&5Team Elements &cdisabled");
-            Util.logLoading("&7It appears another Skript addon may have registered Team syntax.");
-            Util.logLoading("&7To use SkBee Teams, please remove the addon which has registered Teams already.");
-            return;
-        }
-        try {
-            this.addon.loadClasses("com.shanebeestudios.skbee.elements.team");
-            Util.logLoading("&5Team Elements &asuccessfully loaded");
-        } catch (Exception ex) {
-            logFailure("Team", ex);
         }
     }
 
@@ -617,6 +597,15 @@ public class AddonLoader {
 
     public boolean isTextComponentEnabled() {
         return this.textComponentEnabled;
+    }
+
+    private boolean isPlugmanReloaded() {
+        for (StackTraceElement stackTraceElement : Thread.currentThread().getStackTrace()) {
+            if (stackTraceElement.toString().contains("rylinaux.plugman.command.")) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

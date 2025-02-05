@@ -6,6 +6,7 @@ import org.bukkit.Location;
 import org.bukkit.Registry;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
+import org.bukkit.generator.BiomeParameterPoint;
 import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
@@ -23,10 +24,17 @@ public class BiomeGenerator extends BiomeProvider {
     }
 
     // CLASS STUFF
+    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
+        // Never actually called
+        return null;
+    }
+
+    @Override
+    public @NotNull Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z, @NotNull BiomeParameterPoint param) {
         Location location = new Location((World) worldInfo, x, y, z);
-        BiomeGenEvent biomeGenEvent = new BiomeGenEvent(location);
+        BiomeGenEvent biomeGenEvent = new BiomeGenEvent(location, param);
         this.trigger.execute(biomeGenEvent);
         return biomeGenEvent.getBiome();
     }

@@ -1,0 +1,14 @@
+test "SkBee - Other Types":
+
+	# Test timespan function
+	set {_time} to timespan(10, minutes)
+	assert {_time} = 10 minutes with "Should be ten minutes"
+	set {_time} to timespan(1, hour)
+	assert {_time} = 1 hour with "Should be 1 hour"
+	set {_time} to timespan(1, hour) + timespan(10, minutes)
+	assert {_time} = 1 hour and 10 minutes with "Should be 1 hour, 10 min"
+	add 20 minutes to {_time}
+	assert {_time} = 1 hour and 30 minutes with "Should be 1 hour, 30 min"
+	assert minutes of {_time} = 90 with "Should be 90 minutes"
+	assert seconds of {_time} = 5400 with "Should be 5400 seconds"
+	assert ticks of {_time} = 108000 with "Should be 108000 ticks"

@@ -11,7 +11,6 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -67,17 +66,13 @@ public class SecFoodComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.items = (Expression<Object>) exprs[0];
         this.nutrition = (Expression<Number>) container.getOptional("nutrition", false);
         this.saturation = (Expression<Number>) container.getOptional("saturation", false);
-        this.canAlwaysEat = (Expression<Boolean>) container.getOptional("can always eat", false);
+        this.canAlwaysEat = (Expression<Boolean>) container.getOptional("can_always_eat", false);
         return true;
     }
 

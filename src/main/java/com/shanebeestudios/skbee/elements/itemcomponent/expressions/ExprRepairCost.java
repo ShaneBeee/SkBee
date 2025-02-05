@@ -12,7 +12,6 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.event.Event;
@@ -35,15 +34,6 @@ public class ExprRepairCost extends SimplePropertyExpression<Object, Number> {
 
     static {
         register(ExprRepairCost.class, Number.class, "repair cost component", "itemstacks/itemtypes/slots");
-    }
-
-    @Override
-    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
-        return super.init(expressions, matchedPattern, isDelayed, parseResult);
     }
 
     @Override

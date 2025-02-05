@@ -1,9 +1,9 @@
 package com.shanebeestudios.skbee.api.bound;
 
+import com.google.common.base.Preconditions;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
-import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -19,10 +19,11 @@ public class BoundWorld {
 
     private static final long SHIFT_VALUE = 8;
 
-    private final World world;
+    private final @NotNull World world;
     private final Map<Long, BoundRegion> regions = new HashMap<>();
 
-    public BoundWorld(World world) {
+    public BoundWorld(@NotNull World world) {
+        Preconditions.checkArgument(world != null, "World cannot be null");
         this.world = world;
     }
 
@@ -101,11 +102,14 @@ public class BoundWorld {
         List<Location> locations = new ArrayList<>();
 
         BoundingBox box = bound.getBoundingBox();
-        Vector min = box.getMin();
-        Vector max = box.getMax();
-        for (int x = min.getBlockX(); x < max.getBlockX(); x += (1 << SHIFT_VALUE)) {
-            for (int z = min.getBlockZ(); z < max.getBlockZ(); z += (1 << SHIFT_VALUE)) {
-                locations.add(new Location(this.world, x, 0, z));
+        int minBlockX = box.getMin().getBlockX();
+        int minBlockZ = box.getMin().getBlockZ();
+        int maxBlockX = box.getMax().getBlockX();
+        int maxBlockZ = box.getMax().getBlockZ();
+        int shift = 1 << SHIFT_VALUE;
+        for (int x = minBlockX; x <= (maxBlockX + shift); x += shift) {
+            for (int z = minBlockZ; z <= (maxBlockZ + shift); z += shift) {
+                locations.add(new Location(this.world, Math.min(x, maxBlockX), 0, Math.min(z, maxBlockZ)));
             }
         }
 

@@ -43,8 +43,6 @@ public class ExprTagsOfNBT extends SimpleExpression<String> {
         if (compound != null) {
             return compound.getKeys().stream().sorted(Comparator.comparing(
                 key -> key.toLowerCase(Locale.ROOT))).toArray(String[]::new);
-        } else {
-            error("Nbt compound not found");
         }
         return null;
     }

@@ -8,16 +8,14 @@ import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.LazyLocation;
-import com.shanebeestudios.skbee.config.BoundConfig;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
-import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -58,8 +56,6 @@ public class SkBee extends JavaPlugin {
         long start = System.currentTimeMillis();
         instance = this;
         this.config = new Config(this);
-        PluginManager pm = Bukkit.getPluginManager();
-
         this.addonLoader = new AddonLoader(this);
         // Check if SkriptAddon can actually load
         this.properlyEnabled = addonLoader.canLoadPlugin();
@@ -111,8 +107,10 @@ public class SkBee extends JavaPlugin {
         }
         // Only save bounds if not in test mode
         if (!TestMode.ENABLED && this.boundConfig != null) {
-            this.boundConfig.saveAllBounds();
+            this.boundConfig.saveAllBoundsOnShutdown();
         }
+        // Clear debugs in case of some kind of reload
+        Util.clearDebugs();
     }
 
     /**

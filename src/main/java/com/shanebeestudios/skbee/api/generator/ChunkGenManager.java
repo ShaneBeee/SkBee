@@ -9,9 +9,9 @@ public class ChunkGenManager {
 
     private static final Map<String,ChunkGen> generators = new HashMap<>();
 
-    public static ChunkGen registerOrGetGenerator(String id, boolean chunk, boolean biome) {
+    public static ChunkGen registerOrGetGenerator(String id, boolean biome) {
         if (generators.containsKey(id)) return generators.get(id);
-        ChunkGen chunkGen = new ChunkGen(id, chunk, biome);
+        ChunkGen chunkGen = new ChunkGen(id, biome);
         generators.put(id, chunkGen);
         return chunkGen;
     }

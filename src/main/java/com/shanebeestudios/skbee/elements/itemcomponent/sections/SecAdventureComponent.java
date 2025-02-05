@@ -15,7 +15,6 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.block.BlockPredicate;
@@ -83,10 +82,6 @@ public class SecAdventureComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         if (sectionNode == null) return false;
         EntryContainer validate = VALIDATOR.validate(sectionNode);
         if (validate == null) {
@@ -102,7 +97,10 @@ public class SecAdventureComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
-        boolean showInTooltip = this.showInTooltip != null && this.showInTooltip.getOptionalSingle(event).orElse(true);
+        boolean showInTooltip = true;
+        if (this.showInTooltip != null) {
+            showInTooltip = this.showInTooltip.getOptionalSingle(event).orElse(true);
+        }
 
         List<TypedKey<BlockType>> blockTypes = new ArrayList<>();
         ItemAdventurePredicate.Builder builder = ItemAdventurePredicate.itemAdventurePredicate();

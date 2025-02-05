@@ -1,0 +1,20 @@
+test "SkBee - Text/ExprTooltipLines":
+	set {_i} to 1 of diamond sword of unbreaking 3
+
+	set {_lines::*} to advanced tooltip lines of {_i}
+	assert uncolored {_lines::1} = "Diamond Sword" with "Should have matched"
+	assert uncolored {_lines::2} = "Unbreaking III" with "Should have matched"
+	assert uncolored {_lines::3} = "" with "Should be a blank line"
+	assert uncolored {_lines::4} = "When in Main Hand:" with "Should have matched"
+	assert uncolored {_lines::5} = "+6 Attack Damage" with "Should have matched"
+	assert uncolored {_lines::6} = "-2.4 Attack Speed" with "Should have matched"
+	assert uncolored {_lines::7} = "minecraft:diamond_sword" with "Should have matched"
+
+	set {_t::*} to tooltip lines of 1 of stick
+	assert size of {_t::*} = 1 with "Stick should have 1 line"
+	delete {_t::*}
+	set {_t::*} to tooltip lines of 1 of diamond sword
+	assert size of {_t::*} = 5 with "Diamond sword should have 5 lines"
+	delete {_t::*}
+	set {_t::*} to advanced tooltip lines of 1 of diamond sword
+	assert size of {_t::*} = 7 with "Diamond sword should have 7 advanced lines"
