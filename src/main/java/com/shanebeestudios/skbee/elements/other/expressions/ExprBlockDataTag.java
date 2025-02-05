@@ -123,7 +123,7 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
     }
 
     private void tagError(String message) {
-        errorRegex(message, "tag \\\"\\w+\\\"");
+        warningRegex(message, "tag \\\"\\w+\\\"");
     }
 
 }

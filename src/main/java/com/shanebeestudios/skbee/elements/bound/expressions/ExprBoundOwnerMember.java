@@ -14,7 +14,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
-import com.shanebeestudios.skbee.config.BoundConfig;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;

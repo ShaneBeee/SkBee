@@ -11,7 +11,7 @@ import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
-import com.shanebeestudios.skbee.config.BoundConfig;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

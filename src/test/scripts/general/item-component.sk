@@ -1,4 +1,3 @@
-using item_component
 test "SkBee - Item Component test" when running minecraft "1.21.3":
 
 	# Can Break/Can Place On section

@@ -14,7 +14,6 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ChargedProjectiles;
@@ -51,10 +50,6 @@ public class ExprChargedProjectilesComponent extends SimpleExpression<Object> {
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         this.items = exprs[0];
         return true;
     }

@@ -1,15 +1,15 @@
-package com.shanebeestudios.skbee.config;
+package com.shanebeestudios.skbee.api.bound;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.bound.Bound;
-import com.shanebeestudios.skbee.api.bound.BoundWorld;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.event.Listener;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -22,10 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class BoundConfig {
+@SuppressWarnings("FieldCanBeLocal")
+public class BoundConfig implements Listener {
 
     private final File boundFile;
     private final FileConfiguration boundConfig;
+    private final BoundPostponing boundPostponing;
     private final Map<String, Bound> boundsMap = new HashMap<>();
     private final Map<World, BoundWorld> boundWorldMap = new HashMap<>();
 
@@ -37,6 +39,7 @@ public class BoundConfig {
      * @hidden
      */
     public BoundConfig(SkBee plugin) {
+        this.boundPostponing = new BoundPostponing(this);
         // Load config
         this.boundFile = new File(plugin.getDataFolder(), "bounds.yml");
         if (!this.boundFile.exists()) {
@@ -50,10 +53,15 @@ public class BoundConfig {
             for (String key : section.getKeys(true)) {
                 Object object = section.get(key);
                 if (object instanceof Bound bound) {
-                    addBoundToRegionAndMap(bound);
+                    if (bound.getWorld() == null) {
+                        this.boundPostponing.postponeLoading(bound);
+                    } else {
+                        addBoundToRegionAndMap(bound);
+                    }
                 }
             }
         }
+        this.boundPostponing.print();
         // Only start save timer if not in test mode
         if (!TestMode.ENABLED) startSaveTimer(plugin);
     }
@@ -137,7 +145,11 @@ public class BoundConfig {
      * Save all bounds to file
      * <br>This is only used when the server stops
      */
-    public void saveAllBounds() {
+    public void saveAllBoundsOnShutdown() {
+        if (!this.scheduledToRemove.isEmpty()) {
+            this.scheduledToRemove.forEach(id -> this.boundConfig.set("bounds." + id, null));
+            this.scheduledToRemove.clear();
+        }
         for (Bound bound : this.boundsMap.values()) {
             if (bound.isTemporary()) continue;
             this.boundConfig.set("bounds." + bound.getId(), bound);
@@ -145,12 +157,11 @@ public class BoundConfig {
         saveConfig();
     }
 
-    @SuppressWarnings("CallToPrintStackTrace")
     private void saveConfig() {
         try {
             this.boundConfig.save(this.boundFile);
         } catch (IOException e) {
-            e.printStackTrace();
+            throw Skript.exception(e);
         }
     }
 

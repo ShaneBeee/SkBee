@@ -40,7 +40,7 @@ public class FastBoardAdventure extends FastBoardBase<ComponentWrapper, Componen
         ComponentWrapper lineComp;
         if (line instanceof ComponentWrapper cw) lineComp = cw;
         else if (line instanceof String s) lineComp = ComponentWrapper.fromText(s);
-        else return;
+        else lineComp = null;
 
         ComponentWrapper formatComp = null;
         if (lineFormat instanceof ComponentWrapper cw) formatComp = cw;
