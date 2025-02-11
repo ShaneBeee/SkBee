@@ -540,7 +540,7 @@ public class Types {
                     .user("potion ?types?")
                     .name("Potion Type")
                     .description("Represents the different types of potions (not potion effect types) used in vanilla potion items.")
-                    .after("potioneffecttype")
+                    .after("potioneffecttype", "itemtype")
                     .since("3.8.0"));
 
                 SkriptUtils.hackPotionEffectTypeClassInfoPattern();
