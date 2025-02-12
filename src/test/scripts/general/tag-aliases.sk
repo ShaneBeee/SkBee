@@ -1,0 +1,32 @@
+item tag aliases:
+	[any] tool[s] = minecraft:axes, minecraft:pickaxes, minecraft:shovels, minecraft:hoes, minecraft:bundles, paper:buckets
+	[any] enchantable[s] = paper:enchantable
+	[any] ground covering[s] = minecraft:dirt, minecraft:sand
+
+test "SkBee - Tag Aliases":
+	assert any tool contains diamond axe with "Should contain the sword"
+	assert any tool contains wooden shovel with "Should contain the shovel"
+	assert any tool contains pufferfish bucket with "Should contain the bucket"
+	assert any tool contains purple bundle with "Should contain the bundle"
+
+	assert any tool doesn't contain diamond sword with "Shouldn't contain a sword"
+	assert any tool doesn't contain oak log with "Shouldn't contain the log"
+
+	assert any enchantable contains shears with "Should contain the shears"
+	assert any enchantable contains crossbow with "Should contain the crossbow"
+
+	assert any enchantable doesn't contain oak log with "Shouldn't contain the log"
+	assert any enchantable doesn't contain cooked chicken with "Shouldn't contain the chicken"
+
+	assert any ground covering contains dirt with "Should contain dirt"
+	assert any ground covering contains grass block with "Should contain grass"
+	assert any ground covering contains sand with "Should contain sand"
+	assert any ground covering contains red sand with "Should contain red sand"
+	assert any ground covering contains dirt with "Should contain dirt"
+	assert any ground covering contains podzol with "Should contain podzol"
+	assert any ground covering contains moss block with "Should contain moss block"
+
+	assert any ground covering doesn't contain stone with "Should contain stone"
+	assert any ground covering doesn't contain water with "Should contain water"
+
+

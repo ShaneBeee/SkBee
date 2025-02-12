@@ -20,6 +20,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -469,6 +470,7 @@ public class Bound implements ConfigurationSerializable {
         this.members.forEach(uuid -> members.add(uuid.toString()));
         result.put("owners", owners);
         result.put("members", members);
+        this.values.values().removeIf(Objects::isNull);
         result.put("values", this.values);
 
         return result;

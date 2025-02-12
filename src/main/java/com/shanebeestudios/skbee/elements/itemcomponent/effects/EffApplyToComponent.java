@@ -9,7 +9,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecConsumableComponent.ConsumeEffectsEvent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecPotionContentsComponent.PotionContentsEvent;
@@ -68,10 +67,6 @@ public class EffApplyToComponent extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         this.pattern = matchedPattern;
         if (this.pattern == 0 && !getParser().isCurrentEvent(PotionContentsEvent.class)) {
             Skript.error("'apply effect -> potion effects' can only be used in a potion contents section.");
@@ -123,12 +118,12 @@ public class EffApplyToComponent extends Effect {
     private ConsumeEffect createEffect(Event event) {
         return switch (this.pattern) {
             case 1 -> {
-                float prob = this.numberExp != null ? this.numberExp.getOptionalSingle(event).orElse(16f).floatValue() : 16f;
+                float prob = this.numberExp != null ? this.numberExp.getOptionalSingle(event).orElse(1.0f).floatValue() : 1.0f;
                 List<PotionEffect> effects = new ArrayList<>();
                 for (Object object : this.effects.getArray(event)) {
                     if (object instanceof PotionEffect potionEffect) effects.add(potionEffect);
                 }
-                yield ConsumeEffect.applyStatusEffects(effects, prob);
+                yield ConsumeEffect.applyStatusEffects(effects, Math.clamp(prob, 0f, 1.0f));
             }
             case 2 -> {
                 List<TypedKey<PotionEffectType>> keys = new ArrayList<>();
@@ -144,7 +139,7 @@ public class EffApplyToComponent extends Effect {
             }
             case 3 -> ConsumeEffect.clearAllStatusEffects();
             case 4 -> {
-                float diameter = this.numberExp != null ? this.numberExp.getOptionalSingle(event).orElse(1f).floatValue() : 1f;
+                float diameter = this.numberExp != null ? this.numberExp.getOptionalSingle(event).orElse(16f).floatValue() : 16f;
                 yield ConsumeEffect.teleportRandomlyEffect(diameter);
             }
             case 5 -> {

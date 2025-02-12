@@ -13,7 +13,6 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -31,7 +30,7 @@ import java.util.List;
 
 @Name("ItemComponent - Potion Contents Component Apply")
 @Description({"Apply a potion contents component to an item (can be used on a potion/arrow or any consumable item).",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Potion Contents Component**](https://minecraft.wiki/w/Data_component_format#potion_contents) on McWiki for more info.",
     "Note: `potion` and `custom_effects` entries cannot be used together.",
     "",
@@ -103,10 +102,6 @@ public class SecPotionContentsComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) {
             return false;

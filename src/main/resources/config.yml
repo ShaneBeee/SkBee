@@ -12,10 +12,10 @@ settings:
         # Whether or not the update check should be done on another thread
         async: false
 
-    # Whether scoreboard lines should be in normal order or reversed
+    # Whether fastboard lines should be in normal order or reversed
     # False = Line 1 at the top, line 15 at the bottom (default)
     # True = Line 15 at the top, line 1 at the bottom
-    scoreboard-reverse-lines: false
+    fastboard-reverse-lines: false
 
 # Disable elements you do not plan to use.
 elements:
@@ -39,6 +39,10 @@ elements:
   # Enable display entity elements
   # This is specifically for Minecraft 1.19.4+
   display-entity: true
+
+  # Enable Fastboard elements
+  # This refers to packet based scoreboards
+  fastboard: true
 
   # Enable fishing elements
   fishing: true
@@ -64,11 +68,8 @@ elements:
   # Enable custom recipe elements
   recipe: true
 
-  # Enable Scoreboard elements
+  # Enable Scoreboard/Objective elements
   scoreboard: true
-
-  # Enable Scoreboard Objective elements
-  scoreboard-objective: true
 
   # Enable statistic elements
   statistic: true
@@ -78,9 +79,6 @@ elements:
 
   # Enable switch case elements
   switch-case: true
-
-  # Enable Team elements
-  team: true
 
   # Enable Text Component elements
   text-component: true

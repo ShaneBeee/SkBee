@@ -98,6 +98,7 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
         Variables.setLocalVariables(returnEvent, variables);
         Trigger.walk(this.caseSection, returnEvent);
         Variables.setLocalVariables(event, Variables.copyLocalVariables(returnEvent));
+        Variables.removeLocals(returnEvent);
 
         return new Object[]{returnEvent.getReturnedObject()};
     }

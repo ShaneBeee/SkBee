@@ -14,6 +14,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.function.Consumer;
 
 /**
  * Wrapper class for wrapping Enums to be used in Skript
@@ -30,25 +31,45 @@ public final class EnumWrapper<E extends Enum<E>> {
     private final String[] names;
     private final HashMap<String, E> parseMap = new HashMap<>();
 
-    public EnumWrapper(@NotNull Class<E> c, @Nullable String prefix, @Nullable String suffix) {
-        assert c.isEnum();
-        this.enumClass = c;
-        this.names = new String[c.getEnumConstants().length];
+    /**
+     * Create a new EnumWrapper.
+     *
+     * @param enumClass Enum class
+     * @param prefix    Optional prefix to prepend to names
+     * @param suffix    Optional suffix to append to names
+     * @param plurals   Whether to automatically include plurals
+     */
+    public EnumWrapper(@NotNull Class<E> enumClass, @Nullable String prefix, @Nullable String suffix, boolean plurals) {
+        assert enumClass.isEnum();
+        this.enumClass = enumClass;
+        this.names = new String[enumClass.getEnumConstants().length];
 
-        for (E enumConstant : c.getEnumConstants()) {
+        for (E enumConstant : enumClass.getEnumConstants()) {
             String name = enumConstant.name().toLowerCase(Locale.ROOT);
+            String namePlural = plurals ? name + "s" : null;
             if (prefix != null && !name.startsWith(prefix))
                 name = prefix + "_" + name;
             if (suffix != null && !name.endsWith(suffix))
                 name = name + "_" + suffix;
             parseMap.put(name, enumConstant);
+            if (namePlural != null) {
+                parseMap.put(namePlural, enumConstant);
+            }
             names[enumConstant.ordinal()] = name;
         }
-        registerComparator(c);
+        registerComparator(enumClass);
+    }
+
+    public EnumWrapper(@NotNull Class<E> c, @Nullable String prefix, @Nullable String suffix) {
+        this(c, prefix, suffix, false);
+    }
+
+    public EnumWrapper(@NotNull Class<E> c, boolean plurals) {
+        this(c, null, null, plurals);
     }
 
     public EnumWrapper(@NotNull Class<E> c) {
-        this(c, null, null);
+        this(c, null, null, false);
     }
 
     @Nullable
@@ -117,19 +138,27 @@ public final class EnumWrapper<E extends Enum<E>> {
      * @param codeName Name for class info
      * @return ClassInfo with default parser and usage
      */
-    public ClassInfo<E> getClassInfo(String codeName) {
+    public @NotNull ClassInfo<E> getClassInfo(String codeName) {
         return new ClassInfo<>(this.enumClass, codeName).usage(getAllNames()).parser(new EnumParser<>(this));
     }
 
     /**
      * Create ClassInfo with default parser and usage
-     * <p>If using `.usage()` use this method to prevent double call/assertion error</p>
      *
      * @param codeName Name for class info
+     * @param consumer Consumer to modify the classinfo before returning
      * @return ClassInfo with default parser and usage
      */
-    public ClassInfo<E> getClassInfoWithoutUsage(String codeName) {
-        return new ClassInfo<>(this.enumClass, codeName).parser(new EnumParser<>(this));
+    public @NotNull ClassInfo<E> getClassInfo(String codeName, Consumer<ClassInfo<E>> consumer) {
+        ClassInfo<E> classInfo = new ClassInfo<>(this.enumClass, codeName);
+        consumer.accept(classInfo);
+        if (classInfo.getUsage() == null) {
+            classInfo.usage(getAllNames());
+        }
+        if (classInfo.getParser() == null) {
+            classInfo.parser(new EnumParser<>(this));
+        }
+        return classInfo;
     }
 
     private void registerComparator(Class<E> c) {

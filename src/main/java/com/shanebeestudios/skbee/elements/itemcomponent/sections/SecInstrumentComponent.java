@@ -10,7 +10,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -27,7 +26,7 @@ import java.util.List;
 @Description({"Apply an instrument component to an item that supports it (such as a goat horn).",
     "It may seem silly that this is a section with only 1 value, " +
         "but I'm hoping that Paper updates the API to support all the features Minecraft has for this.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Instrument Component**](https://minecraft.wiki/w/Data_component_format#instrument) on McWiki for more info.",
     "",
     "**Entries**:",
@@ -54,10 +53,6 @@ public class SecInstrumentComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         this.items = exprs[0];
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;

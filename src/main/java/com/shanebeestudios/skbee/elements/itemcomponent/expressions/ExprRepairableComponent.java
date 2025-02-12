@@ -13,7 +13,6 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -42,7 +41,7 @@ import java.util.List;
 @Name("ItemComponent - Repairable")
 @Description({"Represents the items/tags that will be used to repair an item in an anvil.",
     "See [**Repairable Component**](https://minecraft.wiki/w/Data_component_format#repairable) on McWiki for more details.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "",
     "**Patterns**:",
     "`repairable items` = A list of items that are used.",
@@ -78,10 +77,6 @@ public class ExprRepairableComponent extends SimpleExpression<Object> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         this.items = (Expression<Object>) exprs[0];
         this.tag = matchedPattern == 1;
         return true;

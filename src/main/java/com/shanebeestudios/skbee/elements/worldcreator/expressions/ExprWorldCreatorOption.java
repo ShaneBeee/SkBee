@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
+import org.bukkit.Location;
 import org.bukkit.World.Environment;
 import org.bukkit.WorldType;
 import org.bukkit.event.Event;
@@ -20,21 +21,24 @@ import javax.annotation.Nullable;
 
 @Name("World Creator Options")
 @Description({"Set different options for world creators. See SkBee wiki for more details.",
-        "\nNOTE: 'load on start' will bypass 'auto-load-custom-worlds' in SkBee config."})
+    "NOTE: 'load on start' will bypass 'auto-load-custom-worlds' in SkBee config.",
+    "`fixed spawn location` = This is used to override Minecraft attempting to find a spawn location (Which takes a LONG time), " +
+        "this option can greatly speed up world creation."})
 @Examples({"set {_w} to a new world creator named \"my-world\"",
-        "set environment option of {_w} to nether",
-        "set world type option of {_w} to flat",
-        "set should generate structures option of {_w} to true",
-        "set load on start option of {_w} to false",
-        "load world from creator {_w}"})
+    "set environment option of {_w} to nether",
+    "set world type option of {_w} to flat",
+    "set should generate structures option of {_w} to true",
+    "set load on start option of {_w} to false",
+    "set fixed spawn location option of {_w} to location(1,100,1)",
+    "load world from creator {_w}"})
 @Since("1.8.0")
 public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCreator, Object> {
 
     static {
         register(ExprWorldCreatorOption.class, Object.class,
-                "(environment|1:world type|2:world seed|3:gen[erator] settings|4:generator" +
-                        "|5:should gen[erate] structures|6:[is] hardcore|7:keep spawn loaded|8:load on start) [option]",
-                "worldcreator");
+            "(environment|1:world type|2:world seed|3:gen[erator] settings|4:generator" +
+                "|5:should gen[erate] structures|6:[is] hardcore|7:keep spawn loaded|8:load on start|9:fixed spawn location) [option]",
+            "worldcreator");
     }
 
     private int pattern;
@@ -59,11 +63,11 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
             case 6 -> creator.isHardcore();
             case 7 -> creator.isKeepSpawnLoaded();
             case 8 -> creator.isLoadOnStart();
+            case 9 -> null;
             default -> creator.getEnvironment();
         };
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET) {
@@ -72,6 +76,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
                 case 2 -> CollectionUtils.array(Number.class);
                 case 3, 4 -> CollectionUtils.array(String.class);
                 case 5, 6, 7, 8 -> CollectionUtils.array(Boolean.class);
+                case 9 -> CollectionUtils.array(Location.class);
                 default -> CollectionUtils.array(Environment.class);
             };
         }
@@ -124,6 +129,12 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
                 if (object instanceof Boolean loadOnStart) {
                     creator.setLoadOnStart(loadOnStart);
                 }
+                break;
+            case 9:
+                if (object instanceof Location location) {
+                    creator.setFixedSpawnLocation(location);
+                }
+                break;
             default:
                 if (object instanceof Environment) {
                     creator.setEnvironment((Environment) object);
@@ -153,6 +164,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
             case 6 -> "hardcore";
             case 7 -> "keep spawn loaded";
             case 8 -> "load on start";
+            case 9 -> "fixed spawn location";
             default -> "environment";
         };
         return option + " option";

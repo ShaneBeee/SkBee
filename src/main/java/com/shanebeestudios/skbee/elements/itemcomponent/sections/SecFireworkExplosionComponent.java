@@ -12,7 +12,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecFireworksComponent.FireworksExplosionsSectionEvent;
@@ -29,7 +28,7 @@ import java.util.List;
 @Name("ItemComponent - Firework Explosion Component Apply")
 @Description({"Apply a firework explosion effect to a firework star.",
     "This can also be used within the Fireworks Component's `explosions:` section.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Firework Explosion Component**](https://minecraft.wiki/w/Data_component_format#firework_explosion) on McWiki for more info.",
     "",
     "**Entries**:",
@@ -90,10 +89,6 @@ public class SecFireworkExplosionComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         EntryContainer validate = VALIDATOR.validate(sectionNode);
         if (validate == null) {
             return false;

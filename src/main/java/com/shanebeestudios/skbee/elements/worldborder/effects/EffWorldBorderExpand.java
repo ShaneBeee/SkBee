@@ -59,7 +59,7 @@ public class EffWorldBorderExpand extends Effect {
             if (timeSpan != null) speed = timeSpan.getAs(Timespan.TimePeriod.TICK) / 20;
         }
 
-        int size = sizeNum.intValue();
+        double size = sizeNum.doubleValue();
         for (WorldBorder border : this.worldBorders.getArray(event)) {
             if (pattern == 0) {
                 expand(border, size, speed);

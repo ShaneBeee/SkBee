@@ -69,6 +69,7 @@ types:
     rendertype: render type¦s
     respawnreason: respawn reason¦s
     spell: spell¦s
+    scoreboard: scoreboard¦s
     signedmessage: signed message¦s
     statistic: statistic¦s
     structure: structure¦s

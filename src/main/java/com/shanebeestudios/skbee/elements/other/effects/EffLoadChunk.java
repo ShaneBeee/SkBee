@@ -146,7 +146,7 @@ public class EffLoadChunk extends Effect {
                     });
                     return null;
                 } else {
-                    world.loadChunk(x, z);
+                    world.getChunkAt(x,z);
                     if (this.ticket) world.addPluginChunkTicket(x, z, PLUGIN);
                 }
             }

@@ -14,7 +14,6 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -30,7 +29,7 @@ import java.util.List;
 
 @Name("ItemComponent - Fireworks Component Apply")
 @Description({"Apply a fireworks component to a firework rocket.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Fireworks Component**](https://minecraft.wiki/w/Data_component_format#fireworks) on McWiki for more info.",
     "",
     "**Entries**:",
@@ -92,10 +91,6 @@ public class SecFireworksComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         EntryContainer validate = VALIDATOR.validate(sectionNode);
         if (validate == null) {
             return false;

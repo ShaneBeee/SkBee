@@ -54,7 +54,8 @@ public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
             "[a] [new] (text|:rawtext) component[s] (from|of) %strings%",
             "[a] [new] key[ ]bind component[s] (from|of) %strings%",
             "[a] [new] translate component[s] (from|of) %objects% [args:(with|using) arg[ument]s %-objects%] [fallback:with fallback %-string%]",
-            "[a] [new] json component (from|of) %strings%");
+            "[a] [new] json component (from|of) %strings%",
+            "[a] [new] empty [text] component");
     }
 
     private int pattern;
@@ -62,10 +63,15 @@ public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
     private Expression<Object> objects;
     private Expression<String> fallback;
     private boolean raw;
+    private boolean empty;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
+        if (matchedPattern == 4) {
+            this.empty = true;
+            return true;
+        }
         this.pattern = matchedPattern;
         this.translation = LiteralUtils.defendExpression(exprs[0]);
         this.objects = pattern == 2 && parseResult.hasTag("args") ? LiteralUtils.defendExpression(exprs[1]) : null;
@@ -77,9 +83,11 @@ public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
         return LiteralUtils.canInitSafely(this.translation);
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected ComponentWrapper[] get(@NotNull Event e) {
+        if (this.empty) {
+            return new ComponentWrapper[]{ComponentWrapper.empty()};
+        }
         List<ComponentWrapper> components = new ArrayList<>();
 
         for (Object object : this.translation.getArray(e)) {
@@ -107,7 +115,7 @@ public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
 
     @Override
     public boolean isSingle() {
-        return this.translation.isSingle();
+        return this.empty || this.translation.isSingle();
     }
 
     @Override
@@ -117,6 +125,7 @@ public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
+        if (this.empty) return "empty text component";
         String comp = switch (this.pattern) {
             case 1 -> "keybind";
             case 2 -> "translate";

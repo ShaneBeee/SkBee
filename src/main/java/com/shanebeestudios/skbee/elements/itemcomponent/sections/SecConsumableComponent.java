@@ -15,7 +15,6 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -36,7 +35,7 @@ import java.util.Locale;
 @Name("ItemComponent - Consumable Component Apply")
 @Description({"Apply a consumable component to an item.",
     "If present, this item can be consumed by the player.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Consumable Component**](https://minecraft.wiki/w/Data_component_format#consumable) on McWiki for more info.",
     "**Entries**:",
     "- `consume_seconds` = The amount of time it takes for a player to consume the item. Defaults to 1.6 seconds. [Optional]",
@@ -115,10 +114,6 @@ public class SecConsumableComponent extends EffectSection {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         this.items = (Expression<Object>) exprs[0];
         if (sectionNode == null) return true;
         EntryContainer container = VALIDATOR.validate(sectionNode);

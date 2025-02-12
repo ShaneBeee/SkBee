@@ -655,6 +655,7 @@ public class ComponentWrapper {
      * @return Serialized json string
      */
     public String toJsonString() {
+        if (this.component == null) return "{}";
         return JSONComponentSerializer.json().serialize(this.component);
     }
 

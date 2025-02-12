@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.nbt.types;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
@@ -13,6 +14,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTFile;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
+import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -103,6 +105,10 @@ public class SkriptTypes {
 
                 @Override
                 public String toString(@NotNull NBTCompound nbt, int flags) {
+                    if (!Bukkit.isPrimaryThread()) {
+                        Skript.error("NBT cannot be converted to a string off the main thread.");
+                        return null;
+                    }
                     return getNBTString(nbt);
                 }
 
