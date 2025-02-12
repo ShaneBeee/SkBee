@@ -8,7 +8,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Color;
-import ch.njol.skript.util.SkriptColor;
+import ch.njol.skript.util.ColorRGB;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
@@ -55,13 +55,10 @@ public class ExprDyedColorComponent extends SimplePropertyExpression<Object, Col
     @Override
     public @Nullable Color convert(Object from) {
         ItemStack itemStack = ItemUtils.getItemStackFromObjects(from);
-        if (itemStack != null) {
-            if (itemStack.hasData(DataComponentTypes.DYED_COLOR)) {
-                DyedItemColor data = itemStack.getData(DataComponentTypes.DYED_COLOR);
-                if (data != null) {
-                    org.bukkit.Color color = data.color();
-                    return SkriptColor.fromBukkitColor(color);
-                }
+        if (itemStack != null && itemStack.hasData(DataComponentTypes.DYED_COLOR)) {
+            DyedItemColor data = itemStack.getData(DataComponentTypes.DYED_COLOR);
+            if (data != null) {
+                return ColorRGB.fromBukkitColor(data.color());
             }
         }
         return null;
