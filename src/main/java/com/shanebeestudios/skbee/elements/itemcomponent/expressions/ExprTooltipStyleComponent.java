@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("ItemComponent - Tooltip Style")
 @Description({"The key of the custom sprites for the tooltip background and frame which references textures.",
     "See [**Tooltip Style Component**](https://minecraft.wiki/w/Data_component_format#tooltip_style) on McWiki for more details.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "",
     "**Changers**:",
     "- `set` = Set the key of the texture to use.",

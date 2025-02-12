@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 @Description({"If applied, allows players to glide (as with elytra) when equipped.",
     "If the item does not have a glider, it will return null, not false.",
     "See [**Glider Component**](https://minecraft.wiki/w/Data_component_format#glider) on McWiki for more details.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "",
     "**Changers**:",
     "- `set` = If set to true, a glider will be applied, otherwise removed.",

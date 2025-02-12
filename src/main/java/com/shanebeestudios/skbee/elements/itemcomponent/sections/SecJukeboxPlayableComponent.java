@@ -26,7 +26,7 @@ import java.util.List;
 @Name("ItemComponent - JukeboxPlayable Component Apply")
 @Description({"Apply an jukebox playable component to an item.",
     "When applied, the item can be inserted into a jukebox and plays the specified song.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**JukeboxPlayable Component**](https://minecraft.wiki/w/Data_component_format#jukebox_playable) on McWiki for more info.",
     "",
     "**Entries**:",

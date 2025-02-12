@@ -39,7 +39,7 @@ import java.util.List;
 
 @Name("ItemComponent - Equippable Component Apply")
 @Description({"Apply an equippable component to any item so it can be equipped in the specified slot.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Equippable Component**](https://minecraft.wiki/w/Data_component_format#equippable) on McWiki for more info.",
     "",
     "**Entries**:",

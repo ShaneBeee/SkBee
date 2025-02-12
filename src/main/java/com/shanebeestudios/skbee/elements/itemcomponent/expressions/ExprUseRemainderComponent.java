@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("ItemComponent - Use Remainder")
 @Description({"If present, replaces the item with a remainder item if its stack count has decreased after use.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Use Remainder Component**](https://minecraft.wiki/w/Data_component_format#use_remainder) on McWiki for more details.",
     "",
     "**Changers**:",

@@ -15,7 +15,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 @Name("ItemComponent - Clear Components")
-@Description({"Clear components of an item. Requires Minecraft 1.21+ and `item_component` feature.",
+@Description({"Clear components of an item. Requires Minecraft 1.21+",
     "**NOTE**: This will **NOT** clear vanilla components, it will only clear custom added components."})
 @Examples({"clear food component of player's tool",
     "clear tool component of player's tool",

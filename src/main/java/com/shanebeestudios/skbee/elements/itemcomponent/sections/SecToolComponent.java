@@ -31,7 +31,7 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 @Name("ItemComponent - Tool Component Apply")
 @Description({"Apply a tool component to any item making it usable tool.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Tool Component**](https://minecraft.wiki/w/Data_component_format#tool) on McWiki for more details.",
     "",
     "**Entries/Sections**:",

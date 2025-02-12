@@ -30,7 +30,7 @@ import java.util.List;
 @Name("ItemComponent - Death Protection Component Apply")
 @Description({"Apply a death protection component to an item.",
     "If present, this item protects the holder from dying by restoring a single health point.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Death Protection Component**](https://minecraft.wiki/w/Data_component_format#death_protection) on McWiki for more info.",
     "`death_effect` = A `consume effect` to by applied to the component (supports a list) [Optional].",
     "`death_effects` = A section to apply `consume effects` [Optional]."})

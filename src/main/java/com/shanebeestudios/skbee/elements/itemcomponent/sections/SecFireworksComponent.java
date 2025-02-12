@@ -29,7 +29,7 @@ import java.util.List;
 
 @Name("ItemComponent - Fireworks Component Apply")
 @Description({"Apply a fireworks component to a firework rocket.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Fireworks Component**](https://minecraft.wiki/w/Data_component_format#fireworks) on McWiki for more info.",
     "",
     "**Entries**:",

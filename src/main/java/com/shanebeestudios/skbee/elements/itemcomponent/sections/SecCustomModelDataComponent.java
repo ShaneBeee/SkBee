@@ -25,7 +25,7 @@ import java.util.List;
 
 @Name("ItemComponent - CustomModelData Component Apply")
 @Description({"Apply a custom model data component to items.",
-    "Requires Paper 1.21.4+ and `item_component` feature.",
+    "Requires Paper 1.21.4+",
     "See [**CustomModelData Component**](https://minecraft.wiki/w/Data_component_format#custom_model_data) on McWiki for more info.",
     "",
     "**Entries**:",

@@ -35,7 +35,7 @@ import java.util.Locale;
 @Name("ItemComponent - Consumable Component Apply")
 @Description({"Apply a consumable component to an item.",
     "If present, this item can be consumed by the player.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Consumable Component**](https://minecraft.wiki/w/Data_component_format#consumable) on McWiki for more info.",
     "**Entries**:",
     "- `consume_seconds` = The amount of time it takes for a player to consume the item. Defaults to 1.6 seconds. [Optional]",

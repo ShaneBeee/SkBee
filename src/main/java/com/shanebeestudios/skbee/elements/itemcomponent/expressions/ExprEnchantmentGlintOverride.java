@@ -22,13 +22,13 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("UnstableApiUsage")
 @Name("ItemComponent - Enchantment Glint Override")
 @Description({"Represents the enchantment glint override of an item. ",
-    "Requires Minecraft 1.20.5+ and `item_component` feature.",
+    "Requires Minecraft 1.20.5+",
     "Overrides the enchantment glint effect on an item.",
     "When `true`, the item will display a glint, even without enchantments.",
     "When `false`, the item will not display a glint, even with enchantments.",
     "**Note**: If no override is applied, will return null.",
     "See [**EnchantmentGlintOverride**](https://minecraft.wiki/w/Data_component_format#enchantment_glint_override) on McWiki for more details.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "",
     "**Changers**:",
     "- `set` = Allows you to override the glint.",

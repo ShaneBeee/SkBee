@@ -27,7 +27,7 @@ import java.util.List;
 @Name("ItemComponent - Charged Projectiles")
 @Description({"The items loaded as projectiles into a crossbow. If not present, the crossbow is not charged.",
     "See [**Charged Projectiles Component**](https://minecraft.wiki/w/Data_component_format#charged_projectiles) on McWiki for more details.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "",
     "**Changers**:",
     "- `set` = Set the items to be loaded by the crossbow.",

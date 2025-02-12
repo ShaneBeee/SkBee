@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("ItemComponent - Item Model")
 @Description({"Represents the item model component of an item.",
     "See [**ItemModel**](https://minecraft.wiki/w/Data_component_format#item_model) on McWiki for more details.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "",
     "**Changers**:",
     "`set` = Will set the item model of the item.",

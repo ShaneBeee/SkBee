@@ -41,7 +41,7 @@ import java.util.List;
 @Name("ItemComponent - Repairable")
 @Description({"Represents the items/tags that will be used to repair an item in an anvil.",
     "See [**Repairable Component**](https://minecraft.wiki/w/Data_component_format#repairable) on McWiki for more details.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "",
     "**Patterns**:",
     "`repairable items` = A list of items that are used.",

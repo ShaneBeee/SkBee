@@ -26,7 +26,7 @@ import java.util.List;
 @Description({"Apply an instrument component to an item that supports it (such as a goat horn).",
     "It may seem silly that this is a section with only 1 value, " +
         "but I'm hoping that Paper updates the API to support all the features Minecraft has for this.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Instrument Component**](https://minecraft.wiki/w/Data_component_format#instrument) on McWiki for more info.",
     "",
     "**Entries**:",

@@ -30,7 +30,7 @@ import java.util.List;
 
 @Name("ItemComponent - Potion Contents Component Apply")
 @Description({"Apply a potion contents component to an item (can be used on a potion/arrow or any consumable item).",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Potion Contents Component**](https://minecraft.wiki/w/Data_component_format#potion_contents) on McWiki for more info.",
     "Note: `potion` and `custom_effects` entries cannot be used together.",
     "",

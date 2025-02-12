@@ -28,7 +28,7 @@ import java.util.List;
 @Name("ItemComponent - Firework Explosion Component Apply")
 @Description({"Apply a firework explosion effect to a firework star.",
     "This can also be used within the Fireworks Component's `explosions:` section.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Firework Explosion Component**](https://minecraft.wiki/w/Data_component_format#firework_explosion) on McWiki for more info.",
     "",
     "**Entries**:",

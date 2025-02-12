@@ -27,7 +27,7 @@ import java.util.List;
 @Name("ItemComponent - Food Component Apply")
 @Description({"Apply a food component to any item giving it food properties.",
     "You will also require a `consumable` component to actually make the item consumable.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Food Component**](https://minecraft.wiki/w/Data_component_format#food) on McWiki for more details.",
     "",
     "**Entries/Sections**:",

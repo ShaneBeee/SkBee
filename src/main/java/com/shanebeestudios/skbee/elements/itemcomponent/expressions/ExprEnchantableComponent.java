@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("ItemComponent - Enchantable")
 @Description({"If present, and applicable enchantments are available, items with the component can be enchanted in an enchanting table.",
     "Positive integer representing the item's enchantability. A higher value allows enchantments with a higher cost to be picked.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Enchantable Component**](https://minecraft.wiki/w/Data_component_format#enchantable) on McWiki for more details.",
     "",
     "**Changers**:",

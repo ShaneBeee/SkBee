@@ -28,7 +28,7 @@ import java.util.List;
 
 @Name("ItemComponent - Use Cooldown")
 @Description({"Apply a cooldown to all items of the same type when it has been used.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "See [**Use Cooldown Component**](https://minecraft.wiki/w/Data_component_format#use_cooldown) on McWiki for more details.",
     "",
     "**Entries**:",
