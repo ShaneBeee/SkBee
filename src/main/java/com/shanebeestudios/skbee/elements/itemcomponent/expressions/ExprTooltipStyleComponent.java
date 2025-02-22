@@ -12,7 +12,6 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -24,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("ItemComponent - Tooltip Style")
 @Description({"The key of the custom sprites for the tooltip background and frame which references textures.",
     "See [**Tooltip Style Component**](https://minecraft.wiki/w/Data_component_format#tooltip_style) on McWiki for more details.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "",
     "**Changers**:",
     "- `set` = Set the key of the texture to use.",
@@ -40,15 +39,6 @@ public class ExprTooltipStyleComponent extends SimplePropertyExpression<Object, 
     static {
         register(ExprTooltipStyleComponent.class, String.class,
             "tool[ ]tip style [component]", "itemstacks/itemtypes/slots");
-    }
-
-    @Override
-    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
-        return super.init(expressions, matchedPattern, isDelayed, parseResult);
     }
 
     @Override

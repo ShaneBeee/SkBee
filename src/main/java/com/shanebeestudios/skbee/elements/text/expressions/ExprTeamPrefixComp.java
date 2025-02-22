@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, ComponentWrapper> {
 
     static {
-        if (SkBee.getPlugin().getPluginConfig().ELEMENTS_TEAM) {
+        if (SkBee.getPlugin().getPluginConfig().ELEMENTS_SCOREBOARD) {
             register(ExprTeamPrefixComp.class, ComponentWrapper.class, "component team (prefix|1:suffix)", "teams");
         }
     }

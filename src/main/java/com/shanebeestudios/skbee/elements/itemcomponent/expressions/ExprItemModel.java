@@ -11,7 +11,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -23,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("ItemComponent - Item Model")
 @Description({"Represents the item model component of an item.",
     "See [**ItemModel**](https://minecraft.wiki/w/Data_component_format#item_model) on McWiki for more details.",
-    "Requires Paper 1.21.3+ and `item_component` feature.",
+    "Requires Paper 1.21.3+",
     "",
     "**Changers**:",
     "`set` = Will set the item model of the item.",
@@ -40,15 +39,6 @@ public class ExprItemModel extends SimplePropertyExpression<Object, String> {
 
     static {
         register(ExprItemModel.class, String.class, "item model", "itemstacks/itemtypes/slots");
-    }
-
-    @Override
-    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
-        return super.init(expressions, matchedPattern, isDelayed, parseResult);
     }
 
     @Override

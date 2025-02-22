@@ -7,6 +7,7 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -19,11 +20,10 @@ import com.shanebeestudios.skbee.api.generator.event.BiomeGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.HeightGenEvent;
+import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.entry.EntryContainer;
-import org.skriptlang.skript.lang.entry.EntryValidator;
-import org.skriptlang.skript.lang.entry.util.LiteralEntryData;
 import org.skriptlang.skript.lang.script.Script;
 import org.skriptlang.skript.lang.structure.Structure;
 
@@ -37,8 +37,10 @@ import org.skriptlang.skript.lang.structure.Structure;
     "`vanilla mobs` = Whether Minecraft will spawn mobs based on biomes.",
     "SECTIONS:",
     "(These are all optional, but some do rely on others. `height gen` and `block pop` require `chunk gen`)",
-    "`biome gen` = Generate the biomes to be placed in the world.",
-    "`chunk gen` = Generate your surface layer of your world.",
+    "`noise gen` = Generate the base terrain of a chunk.",
+    "`surface gen` = Generate the surface above the terrain of the chunk.",
+    "`chunk gen` = A combination of noise and surface gen (Cannot be used WITH noise/surface gen).",
+    "`biome gen` = Generate the biomes to be placed in a chunk.",
     "`height gen` = Tell Minecraft where the highest block in a chunk is for generating structures.",
     "`block pop` = Used to decorate after initial surface is generated (Structures can be placed during this stage).",
     "NOTES:",
@@ -71,80 +73,124 @@ public class StructChunkGen extends Structure {
     private static final Priority PRIORITY = new Priority(450);
 
     static {
-        EntryValidator validator = EntryValidator.builder()
-            .addEntryData(new LiteralEntryData<>("vanilla decor", false, true, Boolean.class))
-            .addEntryData(new LiteralEntryData<>("vanilla caves", false, true, Boolean.class))
-            .addEntryData(new LiteralEntryData<>("vanilla structures", false, true, Boolean.class))
-            .addEntryData(new LiteralEntryData<>("vanilla mobs", false, true, Boolean.class))
-            .addSection("chunk gen", true)
-            .addSection("biome gen", true)
-            .addSection("height gen", true)
-            .addSection("block pop", true)
-            .build();
-        Skript.registerStructure(StructChunkGen.class, validator, "register chunk generator with id %string%");
+        SimpleEntryValidator builder = SimpleEntryValidator.builder();
+        builder.addOptionalEntry("vanilla decor", Boolean.class);
+        builder.addOptionalEntry("vanilla caves", Boolean.class);
+        builder.addOptionalEntry("vanilla structures", Boolean.class);
+        builder.addOptionalEntry("vanilla mobs", Boolean.class);
+        builder.addOptionalSection("noise gen");
+        builder.addOptionalSection("surface gen");
+        builder.addOptionalSection("chunk gen");
+        builder.addOptionalSection("biome gen");
+        builder.addOptionalSection("height gen");
+        builder.addOptionalSection("block pop");
+        Skript.registerStructure(StructChunkGen.class, builder.build(), "register chunk generator with id %string%");
     }
 
     private Literal<String> id;
+
     private EntryContainer entryContainer;
+    private Expression<Boolean> vanillaDecor;
+    private Expression<Boolean> vanillaCaves;
+    private Expression<Boolean> vanillaStructures;
+    private Expression<Boolean> vanillaMobs;
+    private Trigger noiseGenSection;
+    private Trigger surfaceGenSection;
+    private Trigger chunkGenSection;
+    private Trigger biomeGenSection;
+    private Trigger heightGenSection;
+    private Trigger blockPopSection;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, EntryContainer entryContainer) {
         this.id = (Literal<String>) args[0];
+        if (entryContainer == null) return false;
         this.entryContainer = entryContainer;
+        return true;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public boolean preLoad() {
+        this.vanillaDecor = (Expression<Boolean>) this.entryContainer.getOptional("vanilla decor", false);
+        this.vanillaCaves = (Expression<Boolean>) this.entryContainer.getOptional("vanilla caves", false);
+        this.vanillaStructures = (Expression<Boolean>) this.entryContainer.getOptional("vanilla structures", false);
+        this.vanillaMobs = (Expression<Boolean>) this.entryContainer.getOptional("vanilla mobs", false);
+
+        Script currentScript = getParser().getCurrentScript();
+        SectionNode noiseNode = this.entryContainer.getOptional("noise gen", SectionNode.class, false);
+        if (noiseNode != null) {
+            getParser().setCurrentEvent("noise gen section", ChunkGenEvent.class);
+            this.noiseGenSection = new Trigger(currentScript, "noise gen", new SimpleEvent(), ScriptLoader.loadItems(noiseNode));
+        }
+        SectionNode surfaceNode = this.entryContainer.getOptional("surface gen", SectionNode.class, false);
+        if (surfaceNode != null) {
+            getParser().setCurrentEvent("surface gen section", ChunkGenEvent.class);
+            this.surfaceGenSection = new Trigger(currentScript, "surface gen", new SimpleEvent(), ScriptLoader.loadItems(surfaceNode));
+        }
+
+        SectionNode chunkNode = this.entryContainer.getOptional("chunk gen", SectionNode.class, false);
+        if (chunkNode != null) {
+            if (noiseNode != null) {
+                Skript.error("Cannot use a 'chunk gen' section with a 'noise gen' section");
+                return false;
+            }
+            if (surfaceNode != null) {
+                Skript.error("Cannot use a 'chunk gen' section with a 'surface gen' section");
+                return false;
+            }
+            getParser().setCurrentEvent("chunk gen section", ChunkGenEvent.class);
+            this.chunkGenSection = new Trigger(currentScript, "chunk gen", new SimpleEvent(), ScriptLoader.loadItems(chunkNode));
+        }
+
+        SectionNode biomeNode = this.entryContainer.getOptional("biome gen", SectionNode.class, false);
+        if (biomeNode != null) {
+            getParser().setCurrentEvent("biome gen section", BiomeGenEvent.class);
+            this.biomeGenSection = new Trigger(currentScript, "biome gen", new SimpleEvent(), ScriptLoader.loadItems(biomeNode));
+        }
+
+        SectionNode heightNode = this.entryContainer.getOptional("height gen", SectionNode.class, false);
+        if (heightNode != null) {
+            getParser().setCurrentEvent("height gen section", HeightGenEvent.class);
+            this.heightGenSection = new Trigger(currentScript, "height gen", new SimpleEvent(), ScriptLoader.loadItems(heightNode));
+        }
+
+        SectionNode blockPopNode = this.entryContainer.getOptional("block pop", SectionNode.class, false);
+        if (blockPopNode != null) {
+            getParser().setCurrentEvent("block pop section", BlockPopulateEvent.class);
+            this.blockPopSection = new Trigger(currentScript, "block pop", new SimpleEvent(), ScriptLoader.loadItems(blockPopNode));
+        }
+
         return true;
     }
 
     @Override
     public boolean load() {
-        SectionNode chunkNode = this.entryContainer.getOptional("chunk gen", SectionNode.class, false);
-        SectionNode biomeNode = this.entryContainer.getOptional("biome gen", SectionNode.class, false);
-        SectionNode heightNode = this.entryContainer.getOptional("height gen", SectionNode.class, false);
-        SectionNode blockNode = this.entryContainer.getOptional("block pop", SectionNode.class, false);
+        ChunkGen chunkGen = ChunkGenManager.registerOrGetGenerator(this.id.getSingle(), biomeGenSection != null);
 
-        Script currentScript = getParser().getCurrentScript();
-        ChunkGen chunkGen = ChunkGenManager.registerOrGetGenerator(this.id.getSingle(), chunkNode != null, biomeNode != null);
+        ChunkGenerator chunkGenerator = chunkGen.getChunkGenerator();
+        if (chunkGenerator != null) {
+            boolean vanillaDecor = this.vanillaDecor != null && this.vanillaDecor.getOptionalSingle(null).orElse(false);
+            chunkGenerator.setVanillaDecor(vanillaDecor);
+            boolean vanillaCaves = this.vanillaCaves != null && this.vanillaCaves.getOptionalSingle(null).orElse(false);
+            chunkGenerator.setVanillaCaves(vanillaCaves);
+            boolean vanillaStructures = this.vanillaStructures != null && this.vanillaStructures.getOptionalSingle(null).orElse(false);
+            chunkGenerator.setVanillaStructures(vanillaStructures);
+            boolean vanillaMobs = this.vanillaMobs != null && this.vanillaMobs.getOptionalSingle(null).orElse(false);
+            chunkGenerator.setVanillaMobs(vanillaMobs);
 
-        if (chunkNode != null) {
-            ChunkGenerator chunkGenerator = chunkGen.getChunkGenerator();
-            if (chunkGenerator != null) {
-                boolean vanillaDecor = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla decor", Boolean.class, true));
-                chunkGenerator.setVanillaDecor(vanillaDecor);
-                boolean vanillaCaves = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla caves", Boolean.class, true));
-                chunkGenerator.setVanillaCaves(vanillaCaves);
-                boolean vanillaStructures = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla structures", Boolean.class, true));
-                chunkGenerator.setVanillaStructures(vanillaStructures);
-                boolean vanillaMobs = Boolean.TRUE.equals(this.entryContainer.getOptional("vanilla mobs", Boolean.class, true));
-                chunkGenerator.setVanillaMobs(vanillaMobs);
-
-                getParser().setCurrentEvent("ChunkGenSection", ChunkGenEvent.class);
-                Trigger chunkTrigger = new Trigger(currentScript, "chunk gen", new SimpleEvent(), ScriptLoader.loadItems(chunkNode));
-                chunkTrigger.setLineNumber(chunkNode.getLine());
-                chunkGenerator.setChunkGenTrigger(chunkTrigger);
-
-                if (blockNode != null) {
-                    getParser().setCurrentEvent("BlockPopulateSection", BlockPopulateEvent.class);
-                    Trigger blockTrigger = new Trigger(currentScript, "block pop", new SimpleEvent(), ScriptLoader.loadItems(blockNode));
-                    blockTrigger.setLineNumber(blockNode.getLine());
-                    chunkGenerator.setBlockPopTrigger(blockTrigger);
-                }
-
-                if (heightNode != null) {
-                    getParser().setCurrentEvent("HeightGenSection", HeightGenEvent.class);
-                    Trigger heightTrigger = new Trigger(currentScript, "height gen", new SimpleEvent(), ScriptLoader.loadItems(heightNode));
-                    heightTrigger.setLineNumber(heightTrigger.getLineNumber());
-                    chunkGenerator.setHeightGenTrigger(heightTrigger);
-                }
-            }
+            chunkGenerator.setNoiseGenTrigger(this.noiseGenSection);
+            chunkGenerator.setSurfaceGenTrigger(this.surfaceGenSection);
+            chunkGenerator.setChunkGenTrigger(this.chunkGenSection);
+            chunkGenerator.setBlockPopTrigger(this.blockPopSection);
+            chunkGenerator.setHeightGenTrigger(this.heightGenSection);
         }
 
-        if (biomeNode != null) {
+        if (this.biomeGenSection != null) {
             BiomeGenerator biomeGenerator = chunkGen.getBiomeGenerator();
             if (biomeGenerator != null) {
-                getParser().setCurrentEvent("BiomeGenSection", BiomeGenEvent.class);
-                Trigger biomeTrigger = new Trigger(currentScript, "biome gen", new SimpleEvent(), ScriptLoader.loadItems(biomeNode));
-                biomeTrigger.setLineNumber(biomeTrigger.getLineNumber());
-                biomeGenerator.setTrigger(biomeTrigger);
+                biomeGenerator.setTrigger(this.biomeGenSection);
             }
         }
         return true;

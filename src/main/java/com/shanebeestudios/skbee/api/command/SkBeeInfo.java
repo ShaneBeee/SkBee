@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.api.command;
 
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
@@ -12,11 +11,8 @@ import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.skriptlang.skript.lang.experiment.Experiment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Comparator;
 import java.util.List;
 
 import static com.shanebeestudios.skbee.api.util.Util.sendColMsg;
@@ -48,17 +44,11 @@ public class SkBeeInfo implements TabExecutor {
             });
             sendColMsg(sender, "&7SkBee Version: &b" + desc.getVersion());
             sendColMsg(sender, "&7SkBee Website: &b" + desc.getWebsite());
-        } else if (args.length > 0 && args[0].equalsIgnoreCase("experiments")) {
-            sendColMsg(sender, "&7--- [&bExperiments Info&7] ---");
-            for (Experiment experiment : Arrays.stream(Skript.experiments().registered()).sorted(Comparator.comparing(experiment -> experiment.codeName())).toList()) {
-                String owner = experiment instanceof Experiments ? "&bSkBee" : "&eSkript";
-                sendColMsg(sender, "&7- Experiment &r'&a%s&r' &7[%s&7]", experiment.codeName(), owner);
-            }
         }
         return true;
     }
 
-    private static final List<String> commands = List.of("info", "experiments");
+    private static final List<String> commands = List.of("info");
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {

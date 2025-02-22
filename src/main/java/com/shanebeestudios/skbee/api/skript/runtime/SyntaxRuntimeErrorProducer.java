@@ -29,11 +29,13 @@ public interface SyntaxRuntimeErrorProducer extends org.skriptlang.skript.log.ru
             Skript.error(message);
             return;
         }
-        String fullLine = getNode().save().trim();
-        Pattern pattern = Pattern.compile("(" + regex + ")");
-        Matcher matcher = pattern.matcher(fullLine);
-        if (matcher.find()) {
-            regex = matcher.group(1);
+        if (regex != null && getNode() != null) {
+            String fullLine = getNode().save().trim();
+            Pattern pattern = Pattern.compile("(" + regex + ")");
+            Matcher matcher = pattern.matcher(fullLine);
+            if (matcher.find()) {
+                regex = matcher.group(1);
+            }
         }
         org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer.super.error(message, regex);
     }
@@ -59,11 +61,13 @@ public interface SyntaxRuntimeErrorProducer extends org.skriptlang.skript.log.ru
             Skript.error(message);
             return;
         }
-        String fullLine = getNode().save().trim();
-        Pattern pattern = Pattern.compile("(" + regex + ")");
-        Matcher matcher = pattern.matcher(fullLine);
-        if (matcher.find()) {
-            regex = matcher.group(1);
+        if (regex != null && getNode() != null) {
+            String fullLine = getNode().save().trim();
+            Pattern pattern = Pattern.compile("(" + regex + ")");
+            Matcher matcher = pattern.matcher(fullLine);
+            if (matcher.find()) {
+                regex = matcher.group(1);
+            }
         }
         org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer.super.warning(message, regex);
     }

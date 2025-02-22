@@ -27,7 +27,7 @@ test "SkBee - NBT - ExprNbtCompound":
 	delete entity within {_e}
 
 	# NBT of block (tile entity)
-	set {_data} to block at event-location
+	set {_data} to blockdata of block at event-location
 	set block at event-location to a furnace
 	set {_n} to nbt of block at event-location
 	assert short tag "cooking_time_spent" of {_n} = 0 with "The furnace should have no cooking time spent"

@@ -1,0 +1,6 @@
+test "SkBee - Other/SecWhileRunnable":
+	parse:
+		while 1 = 2 repeating every 5 seconds:
+			set {_a} to {_a}
+
+	assert parse logs is not set with "This should have parsed fine"

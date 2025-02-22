@@ -12,7 +12,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -26,7 +25,7 @@ import java.util.List;
 
 @Name("ItemComponent - CustomModelData Component Apply")
 @Description({"Apply a custom model data component to items.",
-    "Requires Paper 1.21.4+ and `item_component` feature.",
+    "Requires Paper 1.21.4+",
     "See [**CustomModelData Component**](https://minecraft.wiki/w/Data_component_format#custom_model_data) on McWiki for more info.",
     "",
     "**Entries**:",
@@ -68,10 +67,6 @@ public class SecCustomModelDataComponent extends Section {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         if (!HAS_SUPPORT) {
             Skript.error("CustomModelData with fields requires Minecraft 1.21.4+");
-            return false;
-        }
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
             return false;
         }
         EntryContainer validate = VALIDATOR.validate(sectionNode);

@@ -10,13 +10,12 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.skript.Experiments;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 
 @Name("ItemComponent - Clear Components")
-@Description({"Clear components of an item. Requires Minecraft 1.21+ and `item_component` feature.",
+@Description({"Clear components of an item. Requires Minecraft 1.21+",
     "**NOTE**: This will **NOT** clear vanilla components, it will only clear custom added components."})
 @Examples({"clear food component of player's tool",
     "clear tool component of player's tool",
@@ -34,10 +33,6 @@ public class EffClearComponent extends Effect {
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (!getParser().hasExperiment(Experiments.ITEM_COMPONENT)) {
-            Skript.error("requires '" + Experiments.ITEM_COMPONENT.codeName() + "' feature.");
-            return false;
-        }
         this.type = parseResult.hasTag("food") ? 0 : parseResult.hasTag("tool") ? 1 : 2;
         this.itemTypes = (Expression<ItemType>) exprs[0];
         return true;
