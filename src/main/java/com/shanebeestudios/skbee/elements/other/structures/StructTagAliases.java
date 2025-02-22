@@ -64,7 +64,7 @@ import java.util.List;
     "on break of any wall:",
     "on break of any leaves:",
     "on break of any logs:"})
-@Since("INSERT VERSION")
+@Since("3.9.0")
 public class StructTagAliases extends Structure {
 
     public static final Priority PRIORITY = new Priority(201);

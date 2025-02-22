@@ -31,7 +31,7 @@ import java.util.List;
 @Examples({"set {_lore} to line 3 of component lore of {_item}",
     "set line 1 of component lore of player's tool to mini message from \"Look Mah, I'm in Minecraft!\"",
     "delete line 6 of component lore of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.9.0")
 public class ExprItemLoreLine extends SimpleExpression<ComponentWrapper> {
 
     static {

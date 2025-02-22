@@ -41,7 +41,7 @@ import java.util.StringJoiner;
     "\t\t\t\tset chunkdata biome to plains",
     "\t\t\telse:",
     "\t\t\t\tset chunkdata biome to snowy taiga"})
-@Since("INSERT VERSION")
+@Since("3.9.0")
 public class ExprBiomeParamValues extends SimplePropertyExpression<BiomeParameterPoint, Number> {
 
     private enum ParamPoints {

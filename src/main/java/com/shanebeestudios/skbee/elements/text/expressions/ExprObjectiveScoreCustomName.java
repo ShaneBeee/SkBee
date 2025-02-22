@@ -36,7 +36,7 @@ import java.util.List;
     "set custom score name of player for {_someObjective} to \"Some Name\"",
     "delete custom score name of \"bob\" for {_someObjective}",
     "reset custom score name of all entities for {_someObjective}"})
-@Since("INSERT VERSION")
+@Since("3.9.0")
 public class ExprObjectiveScoreCustomName extends SimpleExpression<Object> {
 
     static {

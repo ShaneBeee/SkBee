@@ -27,7 +27,7 @@ public class GenEventValues {
             .name("ChunkGenerator - Biome Parameter Point")
             .description("The parameter points of a biome during chunk generation.",
                 "See [**World Generation/Biomes**](https://minecraft.wiki/w/World_generation#Biomes) on McWiki for more details.")
-            .since("INSERT VERSION")
+            .since("3.9.0")
             .parser(SkriptUtils.getDefaultParser()));
 
         Functions.registerFunction(new SimpleJavaFunction<>("peaksAndValleys", new Parameter[]{
@@ -44,7 +44,7 @@ public class GenEventValues {
                 "set {_pv} to peaksAndValleys({_weird})",
                 "if {_pv} < -0.85:",
                 "\tset {_biome} to river")
-            .since("INSERT VERSION");
+            .since("3.9.0");
     }
 
 }

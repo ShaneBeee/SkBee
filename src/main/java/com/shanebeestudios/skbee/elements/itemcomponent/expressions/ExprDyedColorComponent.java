@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
     "set hidden dyed color of player's tool to yellow",
     "delete dyed color of player's tool",
     "reset dyed color of {_item}"})
-@Since("INSERT VERSION")
+@Since("3.9.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprDyedColorComponent extends SimplePropertyExpression<Object, Color> {
 

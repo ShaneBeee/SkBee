@@ -28,7 +28,7 @@ import java.util.List;
     "set {_obj} to objectives from slot player list",
     "set {_obj} to objectives from slot below name from main scoreboard",
     "clear objectives from slot player list of main scoreboard"})
-@Since("INSERT VERSION")
+@Since("3.9.0")
 public class ExprObjFromDisplaySlot extends SimpleExpression<Objective> {
 
     static {

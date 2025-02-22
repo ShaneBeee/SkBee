@@ -24,7 +24,7 @@ import java.util.Arrays;
     "set scoreboard of player to a new scoreboard",
     "set scoreboard of player to the vanilla scoreboard",
     "reset scoreboard of player"})
-@Since("INSERT VERSION")
+@Since("3.9.0")
 public class ExprScoreboardPlayer extends SimplePropertyExpression<Player, Scoreboard> {
 
     static {

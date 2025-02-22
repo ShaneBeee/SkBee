@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
     "\t\t\tset {_p} to nearest player in radius 15 around event-entity",
     "\t\t\tif {_p} is set:",
     "\t\t\t\tset target of event-entity to {_p}\n"})
-@Since("INSERT VERSION")
+@Since("3.9.0")
 public class SecWhileRunnable extends Section {
 
     static {

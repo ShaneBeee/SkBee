@@ -55,7 +55,7 @@ public class Types {
                     "Do note custom scoreboards are not persistent (do not save to the server).",
                     "Multiple players can share a custom scoreboard.",
                     "See [**Scoreboard**](https://minecraft.wiki/w/Scoreboard) on McWiki for more info.")
-                .since("INSERT VERSION")
+                .since("3.9.0")
                 .defaultExpression(new SimpleLiteral<>(ScoreboardUtils.getMainScoreboard(), true))
                 .parser(new Parser<>() {
                     @Override

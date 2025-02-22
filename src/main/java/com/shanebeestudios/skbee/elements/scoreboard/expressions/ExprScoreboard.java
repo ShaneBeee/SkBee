@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
     "set scoreboard of player to a new scoreboard",
     "set scoreboard of player to the vanilla scoreboard",
     "reset scoreboard of player"})
-@Since("INSERT VERSION")
+@Since("3.9.0")
 public class ExprScoreboard extends SimpleExpression<Scoreboard> {
 
     static {

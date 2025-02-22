@@ -620,7 +620,7 @@ public class Types {
                 .user("time ?span ?periods?")
                 .name("Timespan Period")
                 .description("Represents the time periods of a Timespan.")
-                .since("INSERT VERSION");
+                .since("3.9.0");
             Classes.registerClass(timePeriodInfo);
         }
 
@@ -644,7 +644,7 @@ public class Types {
                 "set {_time} to timespan(10, minutes)",
                 "set {_time} to timespan(3, ticks)",
                 "set {_time} to timespan(1, hour) + timespan(10, minutes)")
-            .since("INSERT VERSION"));
+            .since("3.9.0"));
     }
 
 }
