@@ -15,8 +15,9 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.changeme.nbtapi.utils.DataFixerUtil;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
-import de.tr7zw.changeme.nbtapi.utils.nmsmappings.ReflectionMethod;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -860,15 +861,23 @@ public class NBTApi {
 
     /**
      * Convert NBT to an ItemStack
-     * <p>This is a copy of {@link NBTItem#convertNBTtoItem(NBTCompound)} but with extra DataFixerUpper steps</p>
-     * <p>This is a temp solution until NBT-API adds this</p>
+     * <p>Will pass the NBT thru DataFixerUpper if need be,
+     * This is a temp solution until NBT-API adds this</p>
      *
      * @param nbtcompound NBT to convert to ItemStack
      * @return ItemStack from NBT
      */
     public static ItemStack convertNBTtoItem(@NotNull NBTCompound nbtcompound) {
-        return (ItemStack) ReflectionMethod.ITEMSTACK_BUKKITMIRROR.run(null,
-            NBTReflection.convertNBTCompoundtoNMSItem(nbtcompound));
+        if (!nbtcompound.hasTag("DataVersion") || nbtcompound.getInteger("DataVersion") != NBTReflection.getDataVersion()) {
+            int dataVersion = nbtcompound.hasTag("DataVersion") ? nbtcompound.getInteger("DataVersion") : DataFixerUtil.VERSION1_20_4;
+            try {
+                ReadWriteNBT fixedItemNBT = DataFixerUtil.fixUpItemData(nbtcompound, dataVersion, NBTReflection.getDataVersion());
+                return NBTItem.convertNBTtoItem((NBTCompound) fixedItemNBT);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return NBTItem.convertNBTtoItem(nbtcompound);
     }
 
 }
