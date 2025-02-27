@@ -16,6 +16,7 @@ import de.tr7zw.changeme.nbtapi.NBTList;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import de.tr7zw.changeme.nbtapi.utils.nmsmappings.ReflectionMethod;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
@@ -855,6 +856,19 @@ public class NBTApi {
     public static void addNBTToEntity(Entity entity, NBTCompound compound) {
         NBTCustomEntity nbtEntity = new NBTCustomEntity(entity);
         nbtEntity.mergeCompound(compound);
+    }
+
+    /**
+     * Convert NBT to an ItemStack
+     * <p>This is a copy of {@link NBTItem#convertNBTtoItem(NBTCompound)} but with extra DataFixerUpper steps</p>
+     * <p>This is a temp solution until NBT-API adds this</p>
+     *
+     * @param nbtcompound NBT to convert to ItemStack
+     * @return ItemStack from NBT
+     */
+    public static ItemStack convertNBTtoItem(@NotNull NBTCompound nbtcompound) {
+        return (ItemStack) ReflectionMethod.ITEMSTACK_BUKKITMIRROR.run(null,
+            NBTReflection.convertNBTCompoundtoNMSItem(nbtcompound));
     }
 
 }

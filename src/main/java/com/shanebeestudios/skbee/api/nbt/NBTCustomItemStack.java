@@ -39,7 +39,13 @@ public class NBTCustomItemStack extends NBTContainer {
     }
 
     private static NBTCompound getContainer(NBTCompound itemContainer, boolean isCustomData, boolean isFull) {
-        if (isFull) return itemContainer;
+        if (isFull) {
+            // TODO temp solution until NBT API handles this
+            // DataVersion is used for deserializing and running thru DataFixerUpper
+            itemContainer.setInteger("DataVersion", NBTReflection.getDataVersion());
+            // TODO end
+            return itemContainer;
+        }
         NBTCompound componentsContainer = itemContainer.getOrCreateCompound(NBTApi.TAG_NAME);
         if (isCustomData) {
             return componentsContainer.getOrCreateCompound("minecraft:custom_data");

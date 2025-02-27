@@ -5,6 +5,12 @@ import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBTReflectionUtil;
+import de.tr7zw.changeme.nbtapi.NbtApiException;
+import de.tr7zw.changeme.nbtapi.utils.DataFixerUtil;
+import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import de.tr7zw.changeme.nbtapi.utils.nmsmappings.ObjectCreator;
+import de.tr7zw.changeme.nbtapi.utils.nmsmappings.ReflectionMethod;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
 
@@ -16,13 +22,15 @@ import java.lang.reflect.Method;
 public class NBTReflection {
 
     private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
+    @SuppressWarnings("deprecation")
+    private static final int DATA_VERSION = Bukkit.getUnsafe().getDataVersion();
 
     // Classes
     private static Class<?> CRAFT_ITEM_STACK_CLASS;
 
     // Fields/Objects
     private static Object CODEC;
-    private static Object REGISTERY_ACCESS;
+    private static Object REGISTRY_ACCESS;
     private static Object NBT_OPS_INSTANCE;
 
     // Methods
@@ -52,7 +60,7 @@ public class NBTReflection {
             // Fields/Objects
             CODEC = ReflectionUtils.getField("CODEC", dataComponentMap, null);
             Object nmsWorld = craftWorld.getDeclaredMethod("getHandle").invoke(Bukkit.getWorlds().get(0));
-            REGISTERY_ACCESS = level.getDeclaredMethod("registryAccess").invoke(nmsWorld);
+            REGISTRY_ACCESS = level.getDeclaredMethod("registryAccess").invoke(nmsWorld);
             NBT_OPS_INSTANCE = ReflectionUtils.getField("INSTANCE", nbtOps, null);
 
             // Methods
@@ -70,6 +78,15 @@ public class NBTReflection {
     }
 
     /**
+     * Get the Minecraft DataVersion
+     *
+     * @return DataVersion from MC
+     */
+    public static int getDataVersion() {
+        return DATA_VERSION;
+    }
+
+    /**
      * Get the vanilla version of NBT of an item
      * <br>This will show components which don't normally show in NBT
      *
@@ -81,7 +98,7 @@ public class NBTReflection {
         try {
             Object nmsItem = ReflectionUtils.getField("handle", CRAFT_ITEM_STACK_CLASS, itemStack);
             Object components = GET_COMPONENTS_METHOD.invoke(nmsItem);
-            Object serial = CREATE_SERIALIZER_METHOD.invoke(REGISTERY_ACCESS, NBT_OPS_INSTANCE);
+            Object serial = CREATE_SERIALIZER_METHOD.invoke(REGISTRY_ACCESS, NBT_OPS_INSTANCE);
             Object newNBTCompound = NBT_COMPOUND_CONSTRUCTOR.newInstance();
 
             Object encoded = ENCODE_METHOD.invoke(CODEC, components, serial, newNBTCompound);
@@ -92,6 +109,33 @@ public class NBTReflection {
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
             if (DEBUG) e.printStackTrace();
             return new NBTContainer();
+        }
+    }
+
+    /**
+     * Copied from {@link NBTReflectionUtil#convertNBTCompoundtoNMSItem(NBTCompound)}
+     * but with extra DataFixerUpper steps
+     *
+     * @hidden
+     */
+    public static Object convertNBTCompoundtoNMSItem(NBTCompound nbtcompound) {
+        try {
+            Object nmsComp = NBTReflectionUtil.getToCompount(nbtcompound.getCompound(), nbtcompound);
+            if (MinecraftVersion.isAtLeastVersion(MinecraftVersion.MC1_20_R4)) {
+                if (nbtcompound.hasTag("tag") || nbtcompound.hasTag("Count")) {
+                    nmsComp = DataFixerUtil.fixUpRawItemData(nmsComp, DataFixerUtil.VERSION1_20_4, DataFixerUtil.getCurrentVersion());
+                } else if (!nbtcompound.hasTag("DataVersion") || nbtcompound.getInteger("DataVersion") != DATA_VERSION) {
+                    int v = nbtcompound.hasTag("DataVersion") ? nbtcompound.getInteger("DataVersion") : DataFixerUtil.VERSION1_20_4;
+                    nmsComp = DataFixerUtil.fixUpRawItemData(nmsComp, v, DATA_VERSION);
+                }
+                return ReflectionMethod.NMSITEM_LOAD.run(null, REGISTRY_ACCESS, nmsComp);
+            } else if (MinecraftVersion.getVersion().getVersionId() >= MinecraftVersion.MC1_11_R1.getVersionId()) {
+                return ObjectCreator.NMS_COMPOUNDFROMITEM.getInstance(nmsComp);
+            } else {
+                return ReflectionMethod.NMSITEM_CREATESTACK.run(null, nmsComp);
+            }
+        } catch (Exception e) {
+            throw new NbtApiException("Exception while converting NBTCompound to NMS ItemStack!", e);
         }
     }
 
