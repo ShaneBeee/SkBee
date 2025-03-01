@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Name("Task - Run Task Later")
 @Description({"Run a task later. Similar to Skript's delay effect, with the difference being everything in the",
@@ -49,6 +50,7 @@ import java.util.List;
 public class SecRunTaskLater extends LoopSection {
 
     private static final Plugin PLUGIN = SkBee.getPlugin();
+    private static final BukkitScheduler SCHEDULER = Bukkit.getScheduler();
 
     static {
         Skript.registerSection(SecRunTaskLater.class,
@@ -76,7 +78,6 @@ public class SecRunTaskLater extends LoopSection {
 
     @Override
     protected @Nullable TriggerItem walk(Event event) {
-        Object localVars = Variables.copyLocalVariables(event);
         Timespan timespan = this.timespan.getSingle(event);
         long delay = timespan != null ? timespan.getAs(Timespan.TimePeriod.TICK) : 0;
 
@@ -86,23 +87,22 @@ public class SecRunTaskLater extends LoopSection {
             if (repeatingTimespan != null) repeat = repeatingTimespan.getAs(Timespan.TimePeriod.TICK);
         }
 
-        BukkitScheduler scheduler = Bukkit.getScheduler();
+        AtomicReference<Object> previousLocalVars = new AtomicReference<>(Variables.copyLocalVariables(event));
         Runnable runnable = () -> {
-            Variables.setLocalVariables(event, localVars);
-            assert first != null;
-            TriggerItem.walk(first, event);
-            Variables.setLocalVariables(event, Variables.copyLocalVariables(event));
-            Variables.removeLocals(event);
+            Variables.setLocalVariables(event, previousLocalVars.get());
+            assert this.first != null;
+            TriggerItem.walk(this.first, event);
+            previousLocalVars.set(Variables.copyLocalVariables(event));
         };
 
-        if (repeat > 0 && async) {
-            this.bukkitTask = scheduler.runTaskTimerAsynchronously(PLUGIN, runnable, delay, repeat);
+        if (repeat > 0 && this.async) {
+            this.bukkitTask = SCHEDULER.runTaskTimerAsynchronously(PLUGIN, runnable, delay, repeat);
         } else if (repeat > 0) {
-            this.bukkitTask = scheduler.runTaskTimer(PLUGIN, runnable, delay, repeat);
-        } else if (async) {
-            this.bukkitTask = scheduler.runTaskLaterAsynchronously(PLUGIN, runnable, delay);
+            this.bukkitTask = SCHEDULER.runTaskTimer(PLUGIN, runnable, delay, repeat);
+        } else if (this.async) {
+            this.bukkitTask = SCHEDULER.runTaskLaterAsynchronously(PLUGIN, runnable, delay);
         } else {
-            this.bukkitTask = scheduler.runTaskLater(PLUGIN, runnable, delay);
+            this.bukkitTask = SCHEDULER.runTaskLater(PLUGIN, runnable, delay);
         }
         if (last != null) last.setNext(null);
         return super.walk(event, false);
