@@ -7,7 +7,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
+import ch.njol.skript.lang.LoopSection;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
@@ -44,15 +44,11 @@ import java.util.List;
     "run 0 ticks later repeating every second:",
     "\tadd 1 to {_a}",
     "\tif {_a} > 10:",
-    "\t\tstop current task"})
+    "\t\texit loop"})
 @Since("3.0.0")
-public class SecRunTaskLater extends Section {
+public class SecRunTaskLater extends LoopSection {
 
     private static final Plugin PLUGIN = SkBee.getPlugin();
-
-    public static void cancelTasks() {
-        Bukkit.getScheduler().cancelTasks(PLUGIN);
-    }
 
     static {
         Skript.registerSection(SecRunTaskLater.class,
@@ -62,7 +58,7 @@ public class SecRunTaskLater extends Section {
     private boolean async;
     private Expression<Timespan> timespan;
     private Expression<Timespan> repeating;
-    private int currentTaskId;
+    private BukkitTask bukkitTask;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -99,27 +95,27 @@ public class SecRunTaskLater extends Section {
             Variables.removeLocals(event);
         };
 
-        BukkitTask task;
         if (repeat > 0 && async) {
-            task = scheduler.runTaskTimerAsynchronously(PLUGIN, runnable, delay, repeat);
+            this.bukkitTask = scheduler.runTaskTimerAsynchronously(PLUGIN, runnable, delay, repeat);
         } else if (repeat > 0) {
-            task = scheduler.runTaskTimer(PLUGIN, runnable, delay, repeat);
+            this.bukkitTask = scheduler.runTaskTimer(PLUGIN, runnable, delay, repeat);
         } else if (async) {
-            task = scheduler.runTaskLaterAsynchronously(PLUGIN, runnable, delay);
+            this.bukkitTask = scheduler.runTaskLaterAsynchronously(PLUGIN, runnable, delay);
         } else {
-            task = scheduler.runTaskLater(PLUGIN, runnable, delay);
+            this.bukkitTask = scheduler.runTaskLater(PLUGIN, runnable, delay);
         }
-        this.currentTaskId = task.getTaskId();
         if (last != null) last.setNext(null);
         return super.walk(event, false);
     }
 
+    @Deprecated(forRemoval = true, since = "March 1/2025")
     public void stopCurrentTask() {
-        Bukkit.getScheduler().cancelTask(this.currentTaskId);
+        this.bukkitTask.cancel();
     }
 
     public int getCurrentTaskId() {
-        return this.currentTaskId;
+        if (this.bukkitTask.isCancelled()) return -1;
+        return this.bukkitTask.getTaskId();
     }
 
     @Override
@@ -127,6 +123,16 @@ public class SecRunTaskLater extends Section {
         String async = this.async ? "async " : "";
         String repeat = this.repeating != null ? (" repeating every " + this.repeating.toString(e, d)) : "";
         return async + "run task " + this.timespan.toString(e, d) + " later" + repeat;
+    }
+
+    @Override
+    public TriggerItem getActualNext() {
+        return null;
+    }
+
+    @Override
+    public void exit(Event event) {
+        this.bukkitTask.cancel();
     }
 
 }

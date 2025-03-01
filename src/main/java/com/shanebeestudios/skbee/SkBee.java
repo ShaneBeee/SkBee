@@ -15,6 +15,7 @@ import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -100,7 +101,7 @@ public class SkBee extends JavaPlugin {
     public void onDisable() {
         if (this.properlyEnabled) {
             // Cancel tasks on stop to prevent async issues
-            SecRunTaskLater.cancelTasks();
+            Bukkit.getScheduler().cancelTasks(this);
         }
         if (this.virtualFurnaceAPI != null) {
             this.virtualFurnaceAPI.disableAPI();
