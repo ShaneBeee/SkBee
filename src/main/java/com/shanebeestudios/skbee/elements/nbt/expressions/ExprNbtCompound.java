@@ -13,6 +13,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.nbt.NBTCustom;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomBlock;
@@ -78,6 +79,8 @@ import org.jetbrains.annotations.NotNull;
 @Since("1.6.0")
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
+    private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().NBT_ALLOW_UNSAFE_OPERATIONS;
+
     static {
         Skript.registerExpression(ExprNbtCompound.class, NBTCompound.class, ExpressionType.PROPERTY,
             "[:full] [:vanilla] [:custom] nbt [compound] [:copy] (of|from) %objects%",
@@ -106,7 +109,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
     @SuppressWarnings("deprecation")
     @Override
     protected NBTCompound[] get(@NotNull Event e, Object @NotNull [] source) {
-        if (!Bukkit.isPrimaryThread()) {
+        if (!Bukkit.isPrimaryThread() && !ALLOW_UNSAFE_OPERATIONS) {
             error("NBT cannot be retrieved off the main thread.");
             return null;
         }

@@ -15,7 +15,6 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -30,7 +29,7 @@ import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.SmokingRecipe;
 
-@SuppressWarnings({"NullableProblems", "ConstantConditions"})
+@SuppressWarnings({"ConstantConditions"})
 @Name("Recipe - Cooking")
 @Description({"Register new cooking recipes. On 1.13+ you can register recipes for furnaces.",
         "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires.",
@@ -45,8 +44,6 @@ import org.bukkit.inventory.SmokingRecipe;
 @RequiredPlugins("1.13+ for furnaces. 1.14+ for smokers, blast furnaces and campfires.")
 @Since("1.0.0")
 public class EffCookingRecipe extends Effect {
-
-    private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
         Skript.registerEffect(EffCookingRecipe.class,
@@ -139,7 +136,7 @@ public class EffCookingRecipe extends Effect {
 
         recipe.setGroup(group);
         Bukkit.addRecipe(recipe);
-        if (config.SETTINGS_DEBUG) {
+        if (SkBee.isDebug()) {
             RecipeUtil.logCookingRecipe(recipe);
         }
     }

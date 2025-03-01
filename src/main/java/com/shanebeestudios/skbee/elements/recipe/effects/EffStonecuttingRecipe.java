@@ -12,9 +12,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -25,7 +24,7 @@ import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
 
-@SuppressWarnings({"ConstantConditions", "NullableProblems"})
+@SuppressWarnings({"ConstantConditions"})
 @Name("Recipe - StoneCutting")
 @Description({"Register a new stone cutting recipe.",
         "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
@@ -37,8 +36,6 @@ import org.bukkit.inventory.StonecuttingRecipe;
 @RequiredPlugins("1.14+")
 @Since("1.0.0")
 public class EffStonecuttingRecipe extends Effect {
-
-    private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
         Skript.registerEffect(EffStonecuttingRecipe.class,
@@ -107,7 +104,7 @@ public class EffStonecuttingRecipe extends Effect {
         Bukkit.removeRecipe(key);
 
         Bukkit.addRecipe(recipe);
-        if (config.SETTINGS_DEBUG) {
+        if (SkBee.isDebug()) {
             RecipeUtil.logRecipe(recipe, recipe.getInputChoice());
         }
     }

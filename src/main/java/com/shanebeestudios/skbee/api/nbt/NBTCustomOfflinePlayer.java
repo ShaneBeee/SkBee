@@ -115,7 +115,7 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
             }
             return compound;
         } catch (NbtApiException ex) {
-            if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+            if (SkBee.isDebug()) {
                 ex.printStackTrace();
             }
             return new NBTContainer();

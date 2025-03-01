@@ -14,7 +14,6 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -49,8 +48,6 @@ import java.util.List;
 @RequiredPlugins("1.13+")
 @Since("1.0.0")
 public class EffCraftingRecipe extends Effect {
-
-    private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
         Skript.registerEffect(EffCraftingRecipe.class,
@@ -176,7 +173,7 @@ public class EffCraftingRecipe extends Effect {
                 recipe.setIngredient(keyChar[i], recipeChoice);
             }
         }
-        if (config.SETTINGS_DEBUG) {
+        if (SkBee.isDebug()) {
             RecipeUtil.logShapedRecipe(recipe);
         }
         Bukkit.addRecipe(recipe);
@@ -201,7 +198,7 @@ public class EffCraftingRecipe extends Effect {
                         recipe.addIngredient(new ExactChoice(itemStack));
                     }
                 } else {
-                    if (config.SETTINGS_DEBUG) {
+                    if (SkBee.isDebug()) {
                         RecipeUtil.warn("ERROR LOADING RECIPE: &7(&b" + key.getKey() + "&7)");
                         RecipeUtil.warn("Non item &b" + ((ItemType) ingredient).toString(0) + "&e found, this item will be removed from the recipe.");
                     }
@@ -211,7 +208,7 @@ public class EffCraftingRecipe extends Effect {
             }
         }
         Bukkit.addRecipe(recipe);
-        if (config.SETTINGS_DEBUG) {
+        if (SkBee.isDebug()) {
             RecipeUtil.logShapelessRecipe(recipe);
         }
     }

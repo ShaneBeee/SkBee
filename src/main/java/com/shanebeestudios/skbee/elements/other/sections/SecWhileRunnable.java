@@ -9,14 +9,13 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.LoopSection;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.skript.base.Section;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.scheduler.BukkitTask;
@@ -35,7 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
     "\t\t\tif {_p} is set:",
     "\t\t\t\tset target of event-entity to {_p}\n"})
 @Since("3.9.0")
-public class SecWhileRunnable extends Section {
+public class SecWhileRunnable extends LoopSection {
 
     static {
         Skript.registerSection(SecWhileRunnable.class, "while <.+> repeating every %timespan%");
@@ -43,8 +42,8 @@ public class SecWhileRunnable extends Section {
 
     private Condition condition;
     private Expression<Timespan> timespan;
-    private Trigger section;
     private BukkitTask bukkitTask;
+    private TriggerItem next;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -58,16 +57,15 @@ public class SecWhileRunnable extends Section {
                 Skript.warning("You cannot repeat less than 1 tick, defaulting to 1 tick.");
             }
         }
-        this.section = loadCode(sectionNode, "while loop", getParser().getCurrentEvents());
-        if (this.section == null) return false;
+        loadCode(sectionNode);
         return true;
     }
 
     @Override
     protected @Nullable TriggerItem walk(Event event) {
-        TriggerItem next = getNext();
+        this.next = getNext();
         Timespan timespan = this.timespan.getSingle(event);
-        if (timespan == null) return next;
+        if (timespan == null) return this.next;
 
         long ticks = timespan.getAs(Timespan.TimePeriod.TICK);
         if (ticks < 1) ticks = 1;
@@ -76,19 +74,30 @@ public class SecWhileRunnable extends Section {
         this.bukkitTask = Bukkit.getScheduler().runTaskTimer(SkBee.getPlugin(), () -> {
             Variables.setLocalVariables(event, originalVars.get());
             if (this.condition.check(event)) {
-                TriggerItem.walk(this.section, event);
+                TriggerItem.walk(this.first, event);
                 originalVars.set(Variables.copyLocalVariables(event));
             } else {
-                this.bukkitTask.cancel();
-                TriggerItem.walk(next, event);
+                exit(event);
+                TriggerItem.walk(this.next, event);
             }
         }, 0, ticks);
+        if (this.last != null) this.last.setNext(null);
         return null;
     }
 
     @Override
     public String toString(Event e, boolean d) {
         return "while " + this.condition.toString(e, d) + " repeating every " + this.timespan.toString(e, d);
+    }
+
+    @Override
+    public TriggerItem getActualNext() {
+        return this.next;
+    }
+
+    @Override
+    public void exit(Event event) {
+        this.bukkitTask.cancel();
     }
 
 }

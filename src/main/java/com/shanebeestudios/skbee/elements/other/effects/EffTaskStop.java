@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
@@ -20,13 +21,13 @@ import java.util.List;
 @Name("Task - Cancel Task")
 @Description({"Stop tasks.",
     "`stop all tasks` = Will stop all currently running tasks created with a task section.",
-    "`stop current task` = Will stop the task section this effect is in.",
+    "`stop current task` = Will stop the task section this effect is in (DEPRECATED: You can now use Skript's `(stop|exit) [loop]`).",
     "`stop task with id` = Will stop any task from an ID."})
 @Examples({"run 0 ticks later repeating every second:",
     "\tset {-id} to current task id",
     "\tadd 1 to {_a}",
     "\tif {_a} > 10:",
-    "\t\tstop current task",
+    "\t\texit loop",
     "",
     "on unload:",
     "\tstop all tasks",
@@ -39,6 +40,7 @@ public class EffTaskStop extends Effect {
     private static final BukkitScheduler SCHEDULER = Bukkit.getScheduler();
 
     static {
+        // TODO "(stop|cancel) current task" deprecated Mar 1/2025
         Skript.registerEffect(EffTaskStop.class,
             "(stop|cancel) all tasks", "(stop|cancel) current task", "(stop|cancel) task[s] with id[s] %numbers%");
     }
@@ -47,7 +49,7 @@ public class EffTaskStop extends Effect {
     private Expression<Number> ids;
     private SecRunTaskLater currentTask;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = matchedPattern;
@@ -59,16 +61,16 @@ public class EffTaskStop extends Effect {
                 Skript.error("'" + parseResult.expr + "' can only be used in a run task section.");
                 return false;
             }
+            Skript.warning("Deprecated, you can now use `stop` or `stop loop` to stop this task.");
             this.currentTask = currentSections.getLast();
         }
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         switch (this.pattern) {
-            case 0 -> SecRunTaskLater.cancelTasks();
+            case 0 -> Bukkit.getScheduler().cancelTasks(SkBee.getPlugin());
             case 1 -> this.currentTask.stopCurrentTask();
             case 2 -> {
                 for (Number id : this.ids.getArray(event)) {

@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.config;
 
 import ch.njol.skript.test.runner.TestMode;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import com.shanebeestudios.skbee.SkBee;
@@ -16,11 +17,12 @@ public class Config {
     private File configFile;
 
     // Config stuff
-    public boolean SETTINGS_DEBUG;
+    public boolean settings_debug;
     public boolean SETTINGS_UPDATE_CHECKER_ENABLED;
     public boolean SETTINGS_UPDATE_CHECKER_ASYNC;
     public boolean SETTINGS_FASTBOARD_LINES;
     public boolean ELEMENTS_NBT;
+    public boolean NBT_ALLOW_UNSAFE_OPERATIONS;
     public boolean NBT_EVENTS_BREAK_BLOCK;
     public boolean NBT_EVENTS_PISTON_EXTEND;
     public boolean NBT_EVENTS_ENTITY_CHANGE_BLOCK;
@@ -131,13 +133,17 @@ public class Config {
     }
 
     private void loadConfigs() {
-        this.SETTINGS_DEBUG = getSetting("debug");
+        this.settings_debug = getSetting("debug");
         this.SETTINGS_UPDATE_CHECKER_ENABLED = getSetting("update-checker.enabled");
         this.SETTINGS_UPDATE_CHECKER_ASYNC = getSetting("update-checker.async");
 
         this.SETTINGS_FASTBOARD_LINES = getSetting("fastboard-reverse-lines");
 
         this.ELEMENTS_NBT = getElement("nbt");
+        this.NBT_ALLOW_UNSAFE_OPERATIONS = getSetting("allow-unsafe-nbt-operations");
+        if (this.NBT_ALLOW_UNSAFE_OPERATIONS) {
+            Util.logLoading("&eAllow Unsafe NBT Operations enabled!");
+        }
         this.NBT_EVENTS_BREAK_BLOCK = getNBTEvent("block-break");
         this.NBT_EVENTS_PISTON_EXTEND = getNBTEvent("piston-extend");
         this.NBT_EVENTS_ENTITY_CHANGE_BLOCK = getNBTEvent("entity-change-block");

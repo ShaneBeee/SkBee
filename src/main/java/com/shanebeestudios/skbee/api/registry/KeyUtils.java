@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.api.registry;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
 import net.kyori.adventure.key.Key;
 import org.jetbrains.annotations.Nullable;
@@ -10,8 +9,6 @@ import org.jetbrains.annotations.Nullable;
  * Utility methods for {@link Key}
  */
 public class KeyUtils {
-
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG && !TestMode.ENABLED;
 
     /**
      * Get a {@link Key Minecraft Key} from string
@@ -22,7 +19,7 @@ public class KeyUtils {
      * @return new Minecraft NamespacedKey
      */
     public static Key getKey(@Nullable String key) {
-        return getKey(key, DEBUG);
+        return getKey(key, SkBee.isDebug());
     }
 
     /**

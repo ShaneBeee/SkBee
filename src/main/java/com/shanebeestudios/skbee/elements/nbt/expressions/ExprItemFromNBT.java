@@ -10,14 +10,13 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-@SuppressWarnings("deprecation")
 @Name("NBT - Item from NBT")
 @Description({"This expression allows you to grab an item from NBT compounds.",
     "This can be useful when wanting to grab items from file nbt, or nbt of an entity or an inventory holding block (like a chest or furnace).",
@@ -46,7 +45,7 @@ public class ExprItemFromNBT extends PropertyExpression<NBTCompound, ItemType> {
     protected ItemType @NotNull [] get(@NotNull Event event, NBTCompound @NotNull [] source) {
         return get(source, nbtCompound -> {
             if (nbtCompound.hasTag("id")) {
-                ItemStack itemStack = NBTItem.convertNBTtoItem(nbtCompound);
+                ItemStack itemStack = NBTApi.convertNBTtoItem(nbtCompound); // TODO temp solution to use data fixer upper
                 if (itemStack != null) return new ItemType(itemStack);
             }
             return null;

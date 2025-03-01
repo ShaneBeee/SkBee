@@ -42,7 +42,6 @@ import java.util.Random;
 @Since("3.4.0")
 public class ExprLootTableItems extends SimpleExpression<ItemStack> {
 
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     private static final Location BASE_LOCATION = new Location(Bukkit.getWorlds().get(0), 1, 1, 1);
 
     static {
@@ -103,7 +102,7 @@ public class ExprLootTableItems extends SimpleExpression<ItemStack> {
             itemStacks = lootTable.populateLoot(random, builder.build());
         } catch (IllegalArgumentException ex) {
             // Minecraft throws errors when things are missing on certain loot tables
-            if (DEBUG) {
+            if (SkBee.isDebug()) {
                 ex.printStackTrace();
             }
             return null;

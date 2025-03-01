@@ -15,6 +15,8 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
+import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
+import de.tr7zw.changeme.nbtapi.utils.DataFixerUtil;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.OfflinePlayer;
@@ -40,7 +42,6 @@ public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")
     private static boolean ENABLED;
-    private static boolean DEBUG;
     public static final boolean HAS_ITEM_COMPONENTS = Skript.isRunningMinecraft(1, 20, 5);
     static final String TAG_NAME = HAS_ITEM_COMPONENTS ? "components" : "tag";
 
@@ -64,7 +65,6 @@ public class NBTApi {
             ENABLED = true;
         }
         Config pluginConfig = SkBee.getPlugin().getPluginConfig();
-        DEBUG = pluginConfig.SETTINGS_DEBUG;
     }
 
     /**
@@ -95,7 +95,7 @@ public class NBTApi {
         } catch (Exception ex) {
             Util.skriptError("&cInvalid NBT: &7'&b%s&7'&c", nbtString);
 
-            if (DEBUG) {
+            if (SkBee.isDebug()) {
                 ex.printStackTrace();
             } else {
                 // 3 deep to get the Mojang CommandSyntaxException
@@ -816,7 +816,7 @@ public class NBTApi {
                 return new ArrayList<>(compound.getLongList(tag));
             }
             default -> {
-                if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG)
+                if (SkBee.isDebug())
                     throw new IllegalArgumentException("Unknown tag type, please let the dev know -> type: " + type);
             }
         }
@@ -855,6 +855,27 @@ public class NBTApi {
     public static void addNBTToEntity(Entity entity, NBTCompound compound) {
         NBTCustomEntity nbtEntity = new NBTCustomEntity(entity);
         nbtEntity.mergeCompound(compound);
+    }
+
+    /**
+     * Convert NBT to an ItemStack
+     * <p>Will pass the NBT thru DataFixerUpper if need be,
+     * This is a temp solution until NBT-API adds this</p>
+     *
+     * @param nbtcompound NBT to convert to ItemStack
+     * @return ItemStack from NBT
+     */
+    public static ItemStack convertNBTtoItem(@NotNull NBTCompound nbtcompound) {
+        if (!nbtcompound.hasTag("DataVersion") || nbtcompound.getInteger("DataVersion") != NBTReflection.getDataVersion()) {
+            int dataVersion = nbtcompound.hasTag("DataVersion") ? nbtcompound.getInteger("DataVersion") : DataFixerUtil.VERSION1_20_4;
+            try {
+                ReadWriteNBT fixedItemNBT = DataFixerUtil.fixUpItemData(nbtcompound, dataVersion, NBTReflection.getDataVersion());
+                return NBTItem.convertNBTtoItem((NBTCompound) fixedItemNBT);
+            } catch (NoSuchFieldException | IllegalAccessException e) {
+                throw new RuntimeException(e);
+            }
+        }
+        return NBTItem.convertNBTtoItem(nbtcompound);
     }
 
 }

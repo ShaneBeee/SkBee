@@ -25,7 +25,7 @@ import java.util.List;
     "\tset {-id} to current task id",
     "\tadd 1 to {_a}",
     "\tif {_a} > 10:",
-    "\t\tstop current task",
+    "\t\texit loop",
     "",
     "on unload:",
     "\tstop all tasks",

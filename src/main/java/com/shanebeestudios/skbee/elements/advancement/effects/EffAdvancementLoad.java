@@ -36,7 +36,7 @@ public class EffAdvancementLoad extends Effect {
     private Expression<String> advancement;
     private Expression<String> key;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         this.advancement = (Expression<String>) exprs[0];
@@ -44,7 +44,7 @@ public class EffAdvancementLoad extends Effect {
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "deprecation"})
+    @SuppressWarnings({"deprecation"})
     @Override
     protected void execute(Event event) {
         String key = this.key.getSingle(event);
@@ -56,7 +56,7 @@ public class EffAdvancementLoad extends Effect {
             try {
                 Bukkit.getUnsafe().loadAdvancement(namespacedKey, advancement);
             } catch (Exception ex) {
-                if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+                if (SkBee.isDebug()) {
                     ex.printStackTrace();
                 } else {
                     Util.skriptError("Unable to load advancement with key: '%s'", namespacedKey);

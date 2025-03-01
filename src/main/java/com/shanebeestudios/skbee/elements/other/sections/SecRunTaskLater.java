@@ -7,7 +7,7 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
+import ch.njol.skript.lang.LoopSection;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
@@ -24,6 +24,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 
 @Name("Task - Run Task Later")
 @Description({"Run a task later. Similar to Skript's delay effect, with the difference being everything in the",
@@ -44,15 +45,12 @@ import java.util.List;
     "run 0 ticks later repeating every second:",
     "\tadd 1 to {_a}",
     "\tif {_a} > 10:",
-    "\t\tstop current task"})
+    "\t\texit loop"})
 @Since("3.0.0")
-public class SecRunTaskLater extends Section {
+public class SecRunTaskLater extends LoopSection {
 
     private static final Plugin PLUGIN = SkBee.getPlugin();
-
-    public static void cancelTasks() {
-        Bukkit.getScheduler().cancelTasks(PLUGIN);
-    }
+    private static final BukkitScheduler SCHEDULER = Bukkit.getScheduler();
 
     static {
         Skript.registerSection(SecRunTaskLater.class,
@@ -62,7 +60,7 @@ public class SecRunTaskLater extends Section {
     private boolean async;
     private Expression<Timespan> timespan;
     private Expression<Timespan> repeating;
-    private int currentTaskId;
+    private BukkitTask bukkitTask;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -80,7 +78,6 @@ public class SecRunTaskLater extends Section {
 
     @Override
     protected @Nullable TriggerItem walk(Event event) {
-        Object localVars = Variables.copyLocalVariables(event);
         Timespan timespan = this.timespan.getSingle(event);
         long delay = timespan != null ? timespan.getAs(Timespan.TimePeriod.TICK) : 0;
 
@@ -90,36 +87,35 @@ public class SecRunTaskLater extends Section {
             if (repeatingTimespan != null) repeat = repeatingTimespan.getAs(Timespan.TimePeriod.TICK);
         }
 
-        BukkitScheduler scheduler = Bukkit.getScheduler();
+        AtomicReference<Object> previousLocalVars = new AtomicReference<>(Variables.copyLocalVariables(event));
         Runnable runnable = () -> {
-            Variables.setLocalVariables(event, localVars);
-            assert first != null;
-            TriggerItem.walk(first, event);
-            Variables.setLocalVariables(event, Variables.copyLocalVariables(event));
-            Variables.removeLocals(event);
+            Variables.setLocalVariables(event, previousLocalVars.get());
+            assert this.first != null;
+            TriggerItem.walk(this.first, event);
+            previousLocalVars.set(Variables.copyLocalVariables(event));
         };
 
-        BukkitTask task;
-        if (repeat > 0 && async) {
-            task = scheduler.runTaskTimerAsynchronously(PLUGIN, runnable, delay, repeat);
+        if (repeat > 0 && this.async) {
+            this.bukkitTask = SCHEDULER.runTaskTimerAsynchronously(PLUGIN, runnable, delay, repeat);
         } else if (repeat > 0) {
-            task = scheduler.runTaskTimer(PLUGIN, runnable, delay, repeat);
-        } else if (async) {
-            task = scheduler.runTaskLaterAsynchronously(PLUGIN, runnable, delay);
+            this.bukkitTask = SCHEDULER.runTaskTimer(PLUGIN, runnable, delay, repeat);
+        } else if (this.async) {
+            this.bukkitTask = SCHEDULER.runTaskLaterAsynchronously(PLUGIN, runnable, delay);
         } else {
-            task = scheduler.runTaskLater(PLUGIN, runnable, delay);
+            this.bukkitTask = SCHEDULER.runTaskLater(PLUGIN, runnable, delay);
         }
-        this.currentTaskId = task.getTaskId();
         if (last != null) last.setNext(null);
         return super.walk(event, false);
     }
 
+    @Deprecated(forRemoval = true, since = "March 1/2025")
     public void stopCurrentTask() {
-        Bukkit.getScheduler().cancelTask(this.currentTaskId);
+        this.bukkitTask.cancel();
     }
 
     public int getCurrentTaskId() {
-        return this.currentTaskId;
+        if (this.bukkitTask.isCancelled()) return -1;
+        return this.bukkitTask.getTaskId();
     }
 
     @Override
@@ -127,6 +123,16 @@ public class SecRunTaskLater extends Section {
         String async = this.async ? "async " : "";
         String repeat = this.repeating != null ? (" repeating every " + this.repeating.toString(e, d)) : "";
         return async + "run task " + this.timespan.toString(e, d) + " later" + repeat;
+    }
+
+    @Override
+    public TriggerItem getActualNext() {
+        return null;
+    }
+
+    @Override
+    public void exit(Event event) {
+        this.bukkitTask.cancel();
     }
 
 }

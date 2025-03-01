@@ -12,10 +12,14 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTEntity;
+import de.tr7zw.changeme.nbtapi.NBTTileEntity;
+import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -102,6 +106,9 @@ import java.util.ArrayList;
 @Since("1.0.0")
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 
+    private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().NBT_ALLOW_UNSAFE_OPERATIONS;
+
+
     static {
         Skript.registerExpression(ExprTagOfNBT.class, Object.class, ExpressionType.COMBINED,
             "%nbttype% %string% of %nbtcompound%");
@@ -131,11 +138,16 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         String tag = this.tag.getSingle(event);
         NBTCompound nbt = this.nbt.getSingle(event);
 
-        if (type == null) {
-            error("Invalid nbt tag type: " + this.nbtType.toString(event, true));
+        if (type == null || tag == null || nbt == null) {
             return null;
         }
-        if (tag == null || nbt == null) {
+
+        if (nbt instanceof NBTEntity && !Bukkit.isPrimaryThread() && !ALLOW_UNSAFE_OPERATIONS) {
+            error("NBT of an entity cannot be retrieved off the main thread");
+            return null;
+        }
+        if (nbt instanceof NBTTileEntity && !Bukkit.isPrimaryThread() && !ALLOW_UNSAFE_OPERATIONS) {
+            error("NBT of a block cannot be retrieved off the main thread");
             return null;
         }
 
@@ -187,11 +199,16 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         String tag = this.tag.getSingle(event);
         NBTCompound nbt = this.nbt.getSingle(event);
 
-        if (type == null) {
-            error("Invalid nbt tag type: " + this.nbtType.toString(event, true));
+        if (type == null || tag == null || nbt == null) {
             return;
         }
-        if (tag == null || nbt == null) {
+
+        if (nbt instanceof NBTEntity && !Bukkit.isPrimaryThread() && !ALLOW_UNSAFE_OPERATIONS) {
+            error("NBT of an entity cannot be modified off the main thread");
+            return;
+        }
+        if (nbt instanceof NBTTileEntity && !Bukkit.isPrimaryThread() && !ALLOW_UNSAFE_OPERATIONS) {
+            error("NBT of a block cannot be modified off the main thread");
             return;
         }
 

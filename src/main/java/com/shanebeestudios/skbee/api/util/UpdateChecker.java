@@ -114,7 +114,7 @@ public class UpdateChecker implements Listener {
             String tag_name = jsonObject.get("tag_name").getAsString();
             return new Version(tag_name);
         } catch (IOException e) {
-            if (this.plugin.getPluginConfig().SETTINGS_DEBUG) {
+            if (SkBee.isDebug()) {
                 e.printStackTrace();
             } else {
                 Util.logLoading("&cChecking for update failed!");

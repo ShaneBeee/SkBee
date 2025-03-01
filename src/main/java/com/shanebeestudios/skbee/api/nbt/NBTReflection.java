@@ -15,14 +15,15 @@ import java.lang.reflect.Method;
 @SuppressWarnings({"SequencedCollectionMethodCanBeUsed", "CallToPrintStackTrace", "DataFlowIssue"})
 public class NBTReflection {
 
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
+    @SuppressWarnings("deprecation")
+    private static final int DATA_VERSION = Bukkit.getUnsafe().getDataVersion();
 
     // Classes
     private static Class<?> CRAFT_ITEM_STACK_CLASS;
 
     // Fields/Objects
     private static Object CODEC;
-    private static Object REGISTERY_ACCESS;
+    private static Object REGISTRY_ACCESS;
     private static Object NBT_OPS_INSTANCE;
 
     // Methods
@@ -52,7 +53,7 @@ public class NBTReflection {
             // Fields/Objects
             CODEC = ReflectionUtils.getField("CODEC", dataComponentMap, null);
             Object nmsWorld = craftWorld.getDeclaredMethod("getHandle").invoke(Bukkit.getWorlds().get(0));
-            REGISTERY_ACCESS = level.getDeclaredMethod("registryAccess").invoke(nmsWorld);
+            REGISTRY_ACCESS = level.getDeclaredMethod("registryAccess").invoke(nmsWorld);
             NBT_OPS_INSTANCE = ReflectionUtils.getField("INSTANCE", nbtOps, null);
 
             // Methods
@@ -65,8 +66,17 @@ public class NBTReflection {
             NBT_COMPOUND_CONSTRUCTOR = compoundTag.getDeclaredConstructor();
 
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            if (DEBUG) e.printStackTrace();
+            if (SkBee.isDebug()) e.printStackTrace();
         }
+    }
+
+    /**
+     * Get the Minecraft DataVersion
+     *
+     * @return DataVersion from MC
+     */
+    public static int getDataVersion() {
+        return DATA_VERSION;
     }
 
     /**
@@ -81,7 +91,7 @@ public class NBTReflection {
         try {
             Object nmsItem = ReflectionUtils.getField("handle", CRAFT_ITEM_STACK_CLASS, itemStack);
             Object components = GET_COMPONENTS_METHOD.invoke(nmsItem);
-            Object serial = CREATE_SERIALIZER_METHOD.invoke(REGISTERY_ACCESS, NBT_OPS_INSTANCE);
+            Object serial = CREATE_SERIALIZER_METHOD.invoke(REGISTRY_ACCESS, NBT_OPS_INSTANCE);
             Object newNBTCompound = NBT_COMPOUND_CONSTRUCTOR.newInstance();
 
             Object encoded = ENCODE_METHOD.invoke(CODEC, components, serial, newNBTCompound);
@@ -90,7 +100,7 @@ public class NBTReflection {
             itemNbt.getOrCreateCompound("components").mergeCompound(new NBTContainer(nmsNbt));
             return itemNbt;
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            if (DEBUG) e.printStackTrace();
+            if (SkBee.isDebug()) e.printStackTrace();
             return new NBTContainer();
         }
     }

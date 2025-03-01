@@ -116,7 +116,7 @@ public class StructureWrapper {
             STRUCTURE_MANAGER.saveStructure(key, structure);
         } catch (IOException e) {
             Util.skriptError("Could not save structure '%s', enable debug in SkBee config for more info.", getName());
-            if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+            if (SkBee.isDebug()) {
                 e.printStackTrace();
             }
         }
@@ -131,7 +131,7 @@ public class StructureWrapper {
             STRUCTURE_MANAGER.unregisterStructure(key);
         } catch (IOException e) {
             Util.skriptError("Could not delete structure '%s', enable debug in SkBee config for more info.", getName());
-            if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+            if (SkBee.isDebug()) {
                 e.printStackTrace();
             }
         }
