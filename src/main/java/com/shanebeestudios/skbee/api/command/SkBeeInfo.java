@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.command;
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -20,40 +21,61 @@ import static com.shanebeestudios.skbee.api.util.Util.sendColMsg;
 public class SkBeeInfo implements TabExecutor {
 
     private final PluginDescriptionFile desc;
+    private final Config config;
 
     @SuppressWarnings("deprecation")
     public SkBeeInfo(SkBee plugin) {
         this.desc = plugin.getDescription();
+        this.config = plugin.getPluginConfig();
     }
 
     @SuppressWarnings("deprecation")
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
-        if (args.length > 0 && args[0].equalsIgnoreCase("info")) {
-            sendColMsg(sender, "&7--- [&bSkBee Loading Info&7] ---");
-            Util.getDebugs().forEach(debug -> sendColMsg(sender, "- &7" + debug));
-            sendColMsg(sender, "&7--- [&bServer Info&7] ---");
-            sendColMsg(sender, "&7Server Version: &b" + Bukkit.getName() + " " + Bukkit.getVersion());
-            sendColMsg(sender, "&7Skript Version: &b" + Skript.getVersion());
-            sendColMsg(sender, "&7Skript Addons:");
-            Skript.getAddons().forEach(addon -> {
-                String name = addon.getName();
-                if (!name.contains("SkBee")) {
-                    sendColMsg(sender, "&7- &b" + name + " v" + addon.plugin.getDescription().getVersion());
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
+        if (args.length > 0) {
+            // INFO COMMAND
+            if (args[0].equalsIgnoreCase("info")) {
+                sendColMsg(sender, "&7--- [&bSkBee Loading Info&7] ---");
+                Util.getDebugs().forEach(debug -> sendColMsg(sender, "- &7" + debug));
+                sendColMsg(sender, "&7--- [&bServer Info&7] ---");
+                sendColMsg(sender, "&7Server Version: &b" + Bukkit.getName() + " " + Bukkit.getVersion());
+                sendColMsg(sender, "&7Skript Version: &b" + Skript.getVersion());
+                sendColMsg(sender, "&7Skript Addons:");
+                Skript.getAddons().forEach(addon -> {
+                    String name = addon.getName();
+                    if (!name.contains("SkBee")) {
+                        sendColMsg(sender, "&7- &b" + name + " v" + addon.plugin.getDescription().getVersion());
+                    }
+                });
+                sendColMsg(sender, "&7SkBee Version: &b" + desc.getVersion());
+                sendColMsg(sender, "&7SkBee Website: &b" + desc.getWebsite());
+            }
+            // DEBUG COMMAND
+            else if (args[0].equalsIgnoreCase("debug")) {
+                if (args.length > 1 && args[1].equalsIgnoreCase("enable")) {
+                    Util.sendColMsg(sender, "Debug mode is now &aenabled!");
+                    this.config.settings_debug = true;
+                } else if (args.length > 1 && args[1].equalsIgnoreCase("disable")) {
+                    Util.sendColMsg(sender, "Debug mode is now &cdisabled!");
+                    this.config.settings_debug = false;
+                } else {
+                    String enabled = this.config.settings_debug ? "&aenabled" : "&cdisabled";
+                    Util.sendColMsg(sender, "Debug mode is currently %s", enabled);
                 }
-            });
-            sendColMsg(sender, "&7SkBee Version: &b" + desc.getVersion());
-            sendColMsg(sender, "&7SkBee Website: &b" + desc.getWebsite());
+            }
         }
         return true;
     }
 
-    private static final List<String> commands = List.of("info");
+    private static final List<String> commands = List.of("info", "debug");
+    private static final List<String> debugs = List.of("enable", "disable");
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, @NotNull String[] args) {
+    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
         if (args.length == 1) {
             return StringUtil.copyPartialMatches(args[0], commands, new ArrayList<>());
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("debug")) {
+            return StringUtil.copyPartialMatches(args[1], debugs, new ArrayList<>());
         }
         return null;
     }

@@ -42,7 +42,6 @@ public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")
     private static boolean ENABLED;
-    private static boolean DEBUG;
     public static final boolean HAS_ITEM_COMPONENTS = Skript.isRunningMinecraft(1, 20, 5);
     static final String TAG_NAME = HAS_ITEM_COMPONENTS ? "components" : "tag";
 
@@ -66,7 +65,6 @@ public class NBTApi {
             ENABLED = true;
         }
         Config pluginConfig = SkBee.getPlugin().getPluginConfig();
-        DEBUG = pluginConfig.SETTINGS_DEBUG;
     }
 
     /**
@@ -97,7 +95,7 @@ public class NBTApi {
         } catch (Exception ex) {
             Util.skriptError("&cInvalid NBT: &7'&b%s&7'&c", nbtString);
 
-            if (DEBUG) {
+            if (SkBee.isDebug()) {
                 ex.printStackTrace();
             } else {
                 // 3 deep to get the Mojang CommandSyntaxException
@@ -818,7 +816,7 @@ public class NBTApi {
                 return new ArrayList<>(compound.getLongList(tag));
             }
             default -> {
-                if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG)
+                if (SkBee.isDebug())
                     throw new IllegalArgumentException("Unknown tag type, please let the dev know -> type: " + type);
             }
         }

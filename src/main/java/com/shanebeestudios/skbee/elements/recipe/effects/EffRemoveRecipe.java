@@ -12,12 +12,10 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
 
-@SuppressWarnings({"NullableProblems"})
 @Name("Recipe - Remove")
 @Description({"Remove a recipe from your server. Recipes can be removed at any time ",
         "but it is best to do so during a server load event. If a recipe is removed whilst a player is online ",
@@ -34,8 +32,6 @@ import org.bukkit.event.Event;
         "remove recipe \"some_plugin:some_recipe\""})
 @Since("1.0.0")
 public class EffRemoveRecipe extends Effect {
-
-    private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
         Skript.registerEffect(EffRemoveRecipe.class,
@@ -62,12 +58,12 @@ public class EffRemoveRecipe extends Effect {
         if (all) {
             if (minecraft) {
                 RecipeUtil.removeAllMCRecipes();
-                if (config.SETTINGS_DEBUG) {
+                if (SkBee.isDebug()) {
                     RecipeUtil.log("&aRemoving all Minecraft recipes.");
                 }
             } else {
                 Bukkit.clearRecipes();
-                if (config.SETTINGS_DEBUG) {
+                if (SkBee.isDebug()) {
                     RecipeUtil.log("&aRemoving all recipes.");
                 }
             }
@@ -78,7 +74,7 @@ public class EffRemoveRecipe extends Effect {
             NamespacedKey key = Util.getNamespacedKey(recipe, false);
             if (key != null) {
                 Bukkit.removeRecipe(key);
-                if (config.SETTINGS_DEBUG) {
+                if (SkBee.isDebug()) {
                     RecipeUtil.log("&aRemoving recipe: " + recipe);
                 }
             }

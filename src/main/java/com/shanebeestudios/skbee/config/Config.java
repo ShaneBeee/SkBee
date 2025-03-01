@@ -17,7 +17,7 @@ public class Config {
     private File configFile;
 
     // Config stuff
-    public boolean SETTINGS_DEBUG;
+    public boolean settings_debug;
     public boolean SETTINGS_UPDATE_CHECKER_ENABLED;
     public boolean SETTINGS_UPDATE_CHECKER_ASYNC;
     public boolean SETTINGS_FASTBOARD_LINES;
@@ -133,7 +133,7 @@ public class Config {
     }
 
     private void loadConfigs() {
-        this.SETTINGS_DEBUG = getSetting("debug");
+        this.settings_debug = getSetting("debug");
         this.SETTINGS_UPDATE_CHECKER_ENABLED = getSetting("update-checker.enabled");
         this.SETTINGS_UPDATE_CHECKER_ASYNC = getSetting("update-checker.async");
 

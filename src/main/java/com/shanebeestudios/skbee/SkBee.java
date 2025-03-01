@@ -175,4 +175,17 @@ public class SkBee extends JavaPlugin {
         return addonLoader;
     }
 
+    /**
+     * Check if SkBee's debugger is enabled
+     *
+     * @return True if debugger enabled
+     */
+    public static boolean isDebug() {
+        Config config = SkBee.instance.config;
+        if (config != null) {
+            return config.settings_debug;
+        }
+        return false;
+    }
+
 }

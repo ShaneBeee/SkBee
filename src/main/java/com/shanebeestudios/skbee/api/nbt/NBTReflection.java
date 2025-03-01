@@ -15,7 +15,6 @@ import java.lang.reflect.Method;
 @SuppressWarnings({"SequencedCollectionMethodCanBeUsed", "CallToPrintStackTrace", "DataFlowIssue"})
 public class NBTReflection {
 
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     @SuppressWarnings("deprecation")
     private static final int DATA_VERSION = Bukkit.getUnsafe().getDataVersion();
 
@@ -67,7 +66,7 @@ public class NBTReflection {
             NBT_COMPOUND_CONSTRUCTOR = compoundTag.getDeclaredConstructor();
 
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            if (DEBUG) e.printStackTrace();
+            if (SkBee.isDebug()) e.printStackTrace();
         }
     }
 
@@ -101,7 +100,7 @@ public class NBTReflection {
             itemNbt.getOrCreateCompound("components").mergeCompound(new NBTContainer(nmsNbt));
             return itemNbt;
         } catch (IllegalAccessException | InvocationTargetException | InstantiationException e) {
-            if (DEBUG) e.printStackTrace();
+            if (SkBee.isDebug()) e.printStackTrace();
             return new NBTContainer();
         }
     }

@@ -5,16 +5,14 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -39,8 +37,6 @@ import javax.annotation.Nullable;
         "\tregister new smithing recipe for diamond chestplate using an iron chestplate and a diamond with id \"smith_diamond_chestplate\""})
 @Since("1.4.2")
 public class EffSmithingRecipe extends Effect {
-
-    private final Config config = SkBee.getPlugin().getPluginConfig();
 
     static {
         Skript.registerEffect(EffSmithingRecipe.class,
@@ -109,7 +105,7 @@ public class EffSmithingRecipe extends Effect {
                 choiceBase,
                 choiceAddition);
         Bukkit.addRecipe(recipe);
-        if (config.SETTINGS_DEBUG) {
+        if (SkBee.isDebug()) {
             RecipeUtil.logRecipe(recipe, recipe.getBase(), recipe.getAddition());
         }
     }

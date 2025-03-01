@@ -57,7 +57,6 @@ public class ComponentWrapper {
 
     // STATIC
     private static final boolean HAS_SIDES = Skript.classExists("org.bukkit.block.sign.SignSide");
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     /**
      * Check if ItemMeta supports 'itemName' ('item_name' component
      */
@@ -442,7 +441,7 @@ public class ComponentWrapper {
         try {
             this.component = this.component.replaceText(c -> c.match(text).replacement(replacement.component));
         } catch (PatternSyntaxException ex) {
-            if (DEBUG) ex.printStackTrace();
+            if (SkBee.isDebug()) ex.printStackTrace();
         }
     }
 
@@ -457,7 +456,7 @@ public class ComponentWrapper {
         try {
             this.component = this.component.replaceText(c -> c.match(text).replacement(replacement));
         } catch (PatternSyntaxException ex) {
-            if (DEBUG) ex.printStackTrace();
+            if (SkBee.isDebug()) ex.printStackTrace();
         }
     }
 

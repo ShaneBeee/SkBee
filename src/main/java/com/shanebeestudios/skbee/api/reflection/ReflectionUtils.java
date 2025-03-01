@@ -17,7 +17,6 @@ import java.lang.reflect.Method;
 public class ReflectionUtils {
 
     private static final String CRAFTBUKKIT_PACKAGE = Bukkit.getServer().getClass().getPackage().getName();
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
     private static final boolean MAPPED_SERVER = Skript.classExists("net.minecraft.world.level.Level");
 
     /**
@@ -60,7 +59,7 @@ public class ReflectionUtils {
         try {
             return Class.forName(className);
         } catch (ClassNotFoundException e) {
-            if (DEBUG) {
+            if (SkBee.isDebug()) {
                 e.printStackTrace();
             }
             return null;
@@ -78,7 +77,7 @@ public class ReflectionUtils {
             Method getHandle = entity.getClass().getMethod("getHandle");
             return getHandle.invoke(entity);
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
-            if (DEBUG) {
+            if (SkBee.isDebug()) {
                 e.printStackTrace();
             }
             return null;
@@ -99,7 +98,7 @@ public class ReflectionUtils {
             f.setAccessible(true);
             return f.get(object);
         } catch (IllegalAccessException | NoSuchFieldException ex) {
-            if (DEBUG) {
+            if (SkBee.isDebug()) {
                 ex.printStackTrace();
             }
             return null;
@@ -120,7 +119,7 @@ public class ReflectionUtils {
             f.setAccessible(true);
             f.set(object, toSet);
         } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException ex) {
-            if (DEBUG) {
+            if (SkBee.isDebug()) {
                 ex.printStackTrace();
             }
         }
@@ -139,7 +138,7 @@ public class ReflectionUtils {
             f.setAccessible(true);
             f.set(object, toSet);
         } catch (IllegalAccessException | IllegalArgumentException | NoSuchFieldException ex) {
-            if (DEBUG) {
+            if (SkBee.isDebug()) {
                 ex.printStackTrace();
             }
         }

@@ -39,7 +39,6 @@ import java.util.StringJoiner;
  */
 public class RecipeUtil {
 
-    private static final boolean LOG_RECIPES = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG && !TestMode.ENABLED;
     public static final boolean HAS_CATEGORY = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
 
@@ -107,7 +106,7 @@ public class RecipeUtil {
      * @param ingredients Ingredients of recipe to log
      */
     public static void logRecipe(Recipe recipe, RecipeChoice... ingredients) {
-        if (!LOG_RECIPES) return;
+        if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         if (!(recipe instanceof Keyed)) return;
         log("&aRegistered new recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
@@ -125,7 +124,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logCookingRecipe(CookingRecipe<?> recipe) {
-        if (!LOG_RECIPES) return;
+        if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         String type = recipe.getClass().getSimpleName().replace("Recipe", "").toLowerCase(Locale.ROOT);
         log("&aRegistered new %s recipe: &7(&b%s&7)", type, ((Keyed) recipe).getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
@@ -147,7 +146,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logShapelessRecipe(ShapelessRecipe recipe) {
-        if (!LOG_RECIPES) return;
+        if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         log("&aRegistered new shapeless recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         String group = recipe.getGroup();
@@ -168,7 +167,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logShapedRecipe(ShapedRecipe recipe) {
-        if (!LOG_RECIPES) return;
+        if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         log("&aRegistered new shaped recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
 
@@ -200,7 +199,7 @@ public class RecipeUtil {
      * @param potionMix PotionMix to log
      */
     public static void logBrewingRecipe(PotionMix potionMix) {
-        if (!LOG_RECIPES) return;
+        if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         log("&aRegistered new shaped recipe: &7(&b%s&7)", potionMix.getKey().toString());
         log(" - &7Result: &e%s", potionMix.getResult());
         log(" - &7Ingredient: %s", getFancy(potionMix.getIngredient()));
@@ -213,7 +212,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logSmithingRecipe(SmithingTransformRecipe recipe) {
-        if (!LOG_RECIPES) return;
+        if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         log("&aRegistered new smithing recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
         log(" - &7Template: %s", getFancy(recipe.getTemplate()));
@@ -226,7 +225,7 @@ public class RecipeUtil {
     }
 
     public static void logTransmuteRecipe(TransmuteRecipe recipe) {
-        if (!LOG_RECIPES) return;
+        if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         log("&aRegistering new transmute recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult().getType().getKey());
         log(" - &7Input: &e%s", getFancy(recipe.getInput()));

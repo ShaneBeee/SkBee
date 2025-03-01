@@ -87,7 +87,7 @@ public class Util {
     }
 
     public static void debug(String format, Object... objects) {
-        if (SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG) {
+        if (SkBee.isDebug()) {
             String debug = String.format(format, objects);
             Bukkit.getConsoleSender().sendMessage(getColString(PREFIX_ERROR + debug));
         }

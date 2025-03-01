@@ -41,8 +41,6 @@ import java.util.Random;
 @Since("3.4.0")
 public class EffLootTableFillInv extends Effect {
 
-    private static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
-
     static {
         Skript.registerEffect(EffLootTableFillInv.class,
             "fill %inventories% from %loottable% [with seed %-number%] [with looting modifier %-number%] " +
@@ -106,7 +104,7 @@ public class EffLootTableFillInv extends Effect {
                 lootTable.fillInventory(inventory, random, builder.build());
             } catch (IllegalArgumentException ex) {
                 // Minecraft likes to throw errors if things are missing, suck as killer's tool
-                if (DEBUG) {
+                if (SkBee.isDebug()) {
                     ex.printStackTrace();
                 }
             }

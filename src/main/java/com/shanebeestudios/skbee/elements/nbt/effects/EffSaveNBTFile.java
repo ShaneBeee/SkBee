@@ -28,8 +28,6 @@ import java.io.IOException;
 @Since("1.14.0")
 public class EffSaveNBTFile extends Effect {
 
-    public static final boolean DEBUG = SkBee.getPlugin().getPluginConfig().SETTINGS_DEBUG;
-
     static {
         Skript.registerEffect(EffSaveNBTFile.class, "save nbt file[s] (from|for|of) %nbtcompounds%");
     }
@@ -50,7 +48,7 @@ public class EffSaveNBTFile extends Effect {
                 try {
                     nbtFile.save();
                 } catch (IOException ex) {
-                    if (DEBUG) {
+                    if (SkBee.isDebug()) {
                         throw new SkriptAPIException(ex.getMessage(), ex);
                     } else {
                         error("Could not save file: '" + nbtFile.getName() + "', got error '" + ex.getMessage() + "'. Enable debug in SkBee config for more detailed error.");
