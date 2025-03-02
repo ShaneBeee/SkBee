@@ -25,6 +25,8 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.Objective;
 
+import java.io.IOException;
+
 /**
  * @hidden
  */
@@ -108,6 +110,7 @@ public class AddonLoader {
         loadGameEventElements();
         loadItemComponentElements();
         loadParticleElements();
+        loadPropertyElements();
         loadRayTraceElements();
         loadRecipeElements();
         loadScoreboardElements();
@@ -586,6 +589,19 @@ public class AddonLoader {
             Util.logLoading("&5SwitchCase Elements &asuccessfully loaded");
         } catch (Exception ex) {
             logFailure("SwitchCase", ex);
+        }
+    }
+
+    private void loadPropertyElements() {
+        if (!this.config.ELEMENTS_PROPERTY) {
+            Util.logLoading("&5Property elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.property");
+            Util.logLoading("&5Property Elements &asuccessfully loaded");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
