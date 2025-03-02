@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.command;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptUpdater;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
@@ -36,10 +37,25 @@ public class SkBeeInfo implements TabExecutor {
             // INFO COMMAND
             if (args[0].equalsIgnoreCase("info")) {
                 sendColMsg(sender, "&7--- [&bSkBee Loading Info&7] ---");
+
+                // SkBee element info
                 Util.getDebugs().forEach(debug -> sendColMsg(sender, "- &7" + debug));
                 sendColMsg(sender, "&7--- [&bServer Info&7] ---");
+
+                // Server version
                 sendColMsg(sender, "&7Server Version: &b" + Bukkit.getName() + " " + Bukkit.getVersion());
-                sendColMsg(sender, "&7Skript Version: &b" + Skript.getVersion());
+
+                // Skript version
+                SkriptUpdater updater = Skript.getInstance().getUpdater();
+                String flavor = "&cunknown-flavor";
+                if (updater != null) {
+                    flavor = updater.getCurrentRelease().flavor;
+                    if (flavor.equalsIgnoreCase("skriptlang-github")) flavor = "&a" + flavor;
+                    else flavor = "&e" + flavor;
+                }
+                sendColMsg(sender, "&7Skript Version: &b%s &7(%s&7)", Skript.getVersion(), flavor);
+
+                // Addon versions
                 sendColMsg(sender, "&7Skript Addons:");
                 Skript.getAddons().forEach(addon -> {
                     String name = addon.getName();
@@ -47,6 +63,8 @@ public class SkBeeInfo implements TabExecutor {
                         sendColMsg(sender, "&7- &b" + name + " v" + addon.plugin.getDescription().getVersion());
                     }
                 });
+
+                // SkBee info
                 sendColMsg(sender, "&7SkBee Version: &b" + desc.getVersion());
                 sendColMsg(sender, "&7SkBee Website: &b" + desc.getWebsite());
             }
