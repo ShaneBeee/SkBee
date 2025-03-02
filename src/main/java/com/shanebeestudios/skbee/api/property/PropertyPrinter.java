@@ -21,7 +21,7 @@ public class PropertyPrinter {
         Map<Class<?>, List<Property<?, ?>>> mapByClass = new HashMap<>();
         List<Holder> holderList = new ArrayList<>();
 
-        PropertyRegistry.PROPERTIES.forEach((name, property) -> {
+        PropertyRegistry.properties().forEach((name, property) -> {
             Class<?> fromType = property.getPropertyHolder();
             if (!mapByClass.containsKey(fromType)) {
                 mapByClass.put(fromType, new ArrayList<>());

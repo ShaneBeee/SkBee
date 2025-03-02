@@ -9,6 +9,7 @@ import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
+import com.shanebeestudios.skbee.api.property.PropertyRegistry;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
@@ -138,6 +139,10 @@ public class AddonLoader {
         Util.log("Loaded (%s) elements:", total);
         for (int i = 0; i < finish.length; i++) {
             Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
+        }
+        if (this.config.ELEMENTS_PROPERTY) {
+            int size = PropertyRegistry.properties().size();
+            Util.log(" - %s properties",size);
         }
         if (this.config.RUNTIME_DISABLE_ERRORS) {
             Util.logLoading("&eRuntime Errors have been disabled via config!");

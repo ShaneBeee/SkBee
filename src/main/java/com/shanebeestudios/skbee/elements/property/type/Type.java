@@ -17,8 +17,8 @@ public class Type {
             .name("Property")
             .description("Represents the diffrent kinds of properties.",
                 "See [**Property Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Properties) for available properties.")
+            .supplier(PropertyRegistry.supplier())
             .parser(new Parser<>() {
-
                 @Override
                 public boolean canParse(ParseContext context) {
                     return context == ParseContext.DEFAULT;
@@ -27,7 +27,7 @@ public class Type {
                 @Override
                 @Nullable
                 public Property<?, ?> parse(String string, ParseContext context) {
-                    return PropertyRegistry.PROPERTIES.get(string);
+                    return PropertyRegistry.properties().get(string);
                 }
 
                 @Override
