@@ -60,6 +60,7 @@ types:
     potioneffectcause: potion effect cause¦s
     potiontype: potion type¦s
     profession: profession¦s
+    property: propert¦y¦ies
     quaternion: quaternion¦s
     quitreason: quit reason¦s
     raytraceresult: raytraceresult¦s
