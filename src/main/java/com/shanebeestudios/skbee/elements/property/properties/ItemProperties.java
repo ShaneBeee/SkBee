@@ -21,7 +21,7 @@ public class ItemProperties {
                     return itemType.getMaterial().getBlastResistance();
                 }
             })
-            .description("Repersents the blast resistance of a block.")
+            .description("Represents the blast resistance of a block.")
             .examples("if blast resistance property of target block > 1:")
             .since("INSERT VERSION");
 
