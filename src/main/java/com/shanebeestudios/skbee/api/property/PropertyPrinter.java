@@ -46,7 +46,7 @@ public class PropertyPrinter {
         try {
             PrintWriter writer = new PrintWriter("plugins/SkBee/properties/all.txt", StandardCharsets.UTF_8);
             writer.println("# Properties");
-            writer.println("Properties are simplied versions of full expression, which are used in the [Property Expression](LINK HERE)"); // TODO link
+            writer.println("Properties are simplied versions of full expression, which are used in the [Property Expression](https://skripthub.net/docs/?id=13236)");
             writer.println();
             writer.println("Table of contents:");
 
