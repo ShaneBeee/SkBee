@@ -106,6 +106,7 @@ public class ExprProperty<F, T> extends SimpleExpression<T> {
                 case ADD -> property.add(object, property.isArray() ? (T) delta : (T) change);
                 case REMOVE -> property.remove(object, property.isArray() ? (T) delta : (T) change);
                 case DELETE -> property.delete(object);
+                case RESET -> property.reset(object);
             }
         }
     }

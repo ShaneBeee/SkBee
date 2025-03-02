@@ -3,6 +3,10 @@ package com.shanebeestudios.skbee.elements.property.properties;
 import ch.njol.skript.aliases.ItemType;
 import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
+import com.shanebeestudios.skbee.api.util.Util;
+import org.bukkit.attribute.Attributable;
+import org.bukkit.attribute.Attribute;
+import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -60,6 +64,21 @@ public class EntityProperties {
                         double health = damageable.getHealth();
                         health -= value.doubleValue();
                         damageable.setHealth(Math.max(health, 0));
+                    }
+                }
+
+                @Override
+                public void reset(Entity entity) {
+                    if (entity instanceof Damageable damageable && entity instanceof Attributable attributable) {
+                        AttributeInstance instance = attributable.getAttribute(Attribute.MAX_HEALTH);
+                        if (instance != null) {
+                            double baseValue = instance.getBaseValue();
+                            damageable.setHealth(baseValue);
+                        } else {
+                            Util.log("NULL???");
+                        }
+                    } else {
+                        Util.log("Not instance?!?!?!");
                     }
                 }
             })

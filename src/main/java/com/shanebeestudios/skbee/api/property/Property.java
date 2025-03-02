@@ -15,7 +15,7 @@ public abstract class Property<F, T> {
     private String[] examples;
     private final Class<F> fromType;
     private final Class<T> toType;
-    private Boolean canSet, canAdd, canRemove, canDelete;
+    private Boolean canSet, canAdd, canRemove, canDelete, canReset;
 
     public Property(Class<F> fromType, Class<T> toType) {
         this.fromType = fromType;
@@ -81,6 +81,9 @@ public abstract class Property<F, T> {
     public void delete(F object) {
     }
 
+    public void reset(F object) {
+    }
+
     @SuppressWarnings("ConstantValue")
     public String getChangeModes() {
         List<String> modes = new ArrayList<>();
@@ -129,6 +132,17 @@ public abstract class Property<F, T> {
                 if (this.canDelete) {
                     modes.add("delete/clear");
                 }
+            } else if (mode == ChangeMode.RESET) {
+                if (this.canReset == null) {
+                    try {
+                        this.canReset = this.getClass().getDeclaredMethod("reset", Object.class) != null;
+                    } catch (NoSuchMethodException ignore) {
+                        this.canReset = false;
+                    }
+                }
+                if (this.canReset) {
+                    modes.add("reset");
+                }
             }
         }
         if (modes.isEmpty()) return "*Cannot be changed*";
@@ -143,6 +157,8 @@ public abstract class Property<F, T> {
         } else if (mode == ChangeMode.REMOVE && this.canRemove) {
             return CollectionUtils.array(this.toType);
         } else if (mode == ChangeMode.DELETE && this.canDelete) {
+            return CollectionUtils.array();
+        } else if (mode == ChangeMode.RESET && this.canReset) {
             return CollectionUtils.array();
         }
         return null;

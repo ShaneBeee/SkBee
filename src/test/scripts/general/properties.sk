@@ -7,6 +7,8 @@ test "SkBee - Properties":
 	assert health property of {_e} = 8 with "Should be 8"
 	set health property of {_e} to 5
 	assert health property of {_e} = 5 with "Should now be 5"
+	reset health property of {_e}
+	assert health property of {_e} = 8 with "Should be reset back to 8"
 
 	# Name
 	assert name property of {_e} = "Sheep" with "Should be 'Sheep'"
