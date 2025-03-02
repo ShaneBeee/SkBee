@@ -22,7 +22,7 @@ public class PropertyPrinter {
         List<Holder> holderList = new ArrayList<>();
 
         PropertyRegistry.PROPERTIES.forEach((name, property) -> {
-            Class<?> fromType = property.getFromType();
+            Class<?> fromType = property.getPropertyHolder();
             if (!mapByClass.containsKey(fromType)) {
                 mapByClass.put(fromType, new ArrayList<>());
             }

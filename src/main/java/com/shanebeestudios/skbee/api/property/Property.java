@@ -13,13 +13,13 @@ public abstract class Property<F, T> {
     private String[] description;
     private String since;
     private String[] examples;
-    private final Class<F> fromType;
-    private final Class<T> toType;
+    private final Class<F> propertyHolder;
+    private final Class<T> propertyValueType;
     private Boolean canSet, canAdd, canRemove, canDelete, canReset;
 
-    public Property(Class<F> fromType, Class<T> toType) {
-        this.fromType = fromType;
-        this.toType = toType;
+    public Property(Class<F> propertyHolder, Class<T> propertyValueType) {
+        this.propertyHolder = propertyHolder;
+        this.propertyValueType = propertyValueType;
         // Initialize changers
         getChangeModes();
     }
@@ -55,33 +55,33 @@ public abstract class Property<F, T> {
         return this.name;
     }
 
-    public Class<F> getFromType() {
-        return this.fromType;
+    public Class<F> getPropertyHolder() {
+        return this.propertyHolder;
     }
 
     public Class<T> getReturnType() {
-        return this.toType;
+        return this.propertyValueType;
     }
 
     public boolean isArray() {
-        return this.toType.isArray();
+        return this.propertyValueType.isArray();
     }
 
-    public abstract T get(F object);
+    public abstract T get(F holder);
 
-    public void set(F object, T value) {
+    public void set(F holder, T value) {
     }
 
-    public void add(F object, T value) {
+    public void add(F holder, T value) {
     }
 
-    public void remove(F object, T value) {
+    public void remove(F holder, T value) {
     }
 
-    public void delete(F object) {
+    public void delete(F holder) {
     }
 
-    public void reset(F object) {
+    public void reset(F holder) {
     }
 
     @SuppressWarnings("ConstantValue")
@@ -151,11 +151,11 @@ public abstract class Property<F, T> {
 
     public Class<T> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET && this.canSet) {
-            return CollectionUtils.array(this.toType);
+            return CollectionUtils.array(this.propertyValueType);
         } else if (mode == ChangeMode.ADD && this.canAdd) {
-            return CollectionUtils.array(this.toType);
+            return CollectionUtils.array(this.propertyValueType);
         } else if (mode == ChangeMode.REMOVE && this.canRemove) {
-            return CollectionUtils.array(this.toType);
+            return CollectionUtils.array(this.propertyValueType);
         } else if (mode == ChangeMode.DELETE && this.canDelete) {
             return CollectionUtils.array();
         } else if (mode == ChangeMode.RESET && this.canReset) {

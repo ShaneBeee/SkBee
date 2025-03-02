@@ -47,12 +47,12 @@ public class ExprProperty<F, T> extends SimpleExpression<T> {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.property = (Literal<Property<F, T>>) exprs[matchedPattern];
         this.objects = LiteralUtils.defendExpression( exprs[matchedPattern == 0 ? 1 : 0]);
-        if (this.objects.getReturnType().isAssignableFrom(this.property.getSingle().getFromType())) return true;
-        if (this.property.getSingle().getFromType().isAssignableFrom(this.objects.getReturnType())) return true;
-        if (Converters.converterExists(this.objects.getReturnType(), this.property.getSingle().getFromType()))
+        if (this.objects.getReturnType().isAssignableFrom(this.property.getSingle().getPropertyHolder())) return true;
+        if (this.property.getSingle().getPropertyHolder().isAssignableFrom(this.objects.getReturnType())) return true;
+        if (Converters.converterExists(this.objects.getReturnType(), this.property.getSingle().getPropertyHolder()))
             return true;
 
-        ClassInfo<F> propertyInfo = Classes.getExactClassInfo(this.property.getSingle().getFromType());
+        ClassInfo<F> propertyInfo = Classes.getExactClassInfo(this.property.getSingle().getPropertyHolder());
         ClassInfo<? extends F> found = Classes.getExactClassInfo(this.objects.getReturnType());
 
         Skript.error("Property '" + this.property.getSingle().getName() + "' can only be used on '" + propertyInfo + "' but found '" + found + "'");
@@ -67,10 +67,10 @@ public class ExprProperty<F, T> extends SimpleExpression<T> {
         if (property == null) return null;
 
         for (F from : this.objects.getArray(event)) {
-            if (!property.getFromType().isAssignableFrom(from.getClass())) {
+            if (!property.getPropertyHolder().isAssignableFrom(from.getClass())) {
                 // If the object types don't match, let's try convert
-                from = Converters.convert(from, property.getFromType());
-                if (from != null && !property.getFromType().isAssignableFrom(from.getClass())) continue;
+                from = Converters.convert(from, property.getPropertyHolder());
+                if (from != null && !property.getPropertyHolder().isAssignableFrom(from.getClass())) continue;
             }
             T propertyReturn = property.get(from);
             if (property.isArray()) {
@@ -96,10 +96,10 @@ public class ExprProperty<F, T> extends SimpleExpression<T> {
         if (property == null) return;
 
         for (F object : this.objects.getArray(event)) {
-            if (!property.getFromType().isAssignableFrom(object.getClass())) {
+            if (!property.getPropertyHolder().isAssignableFrom(object.getClass())) {
                 // If the object types don't match, let's try convert
-                object = Converters.convert(object, property.getFromType());
-                if (object != null && !property.getFromType().isAssignableFrom(object.getClass())) continue;
+                object = Converters.convert(object, property.getPropertyHolder());
+                if (object != null && !property.getPropertyHolder().isAssignableFrom(object.getClass())) continue;
             }
             switch (mode) {
                 case SET -> property.set(object, property.isArray() ? (T) delta : (T) change);
