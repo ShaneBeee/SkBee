@@ -12,6 +12,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
@@ -45,7 +46,7 @@ public class ExprProperty<F, T> extends SimpleExpression<T> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.property = (Literal<Property<F, T>>) exprs[matchedPattern];
-        this.objects = (Expression<F>) exprs[matchedPattern == 0 ? 1 : 0];
+        this.objects = LiteralUtils.defendExpression( exprs[matchedPattern == 0 ? 1 : 0]);
         if (this.objects.getReturnType().isAssignableFrom(this.property.getSingle().getFromType())) return true;
         if (this.property.getSingle().getFromType().isAssignableFrom(this.objects.getReturnType())) return true;
         if (Converters.converterExists(this.objects.getReturnType(), this.property.getSingle().getFromType()))
