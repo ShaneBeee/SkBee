@@ -131,6 +131,7 @@ public abstract class Property<F, T> {
                 }
             }
         }
+        if (modes.isEmpty()) return "*Cannot be changed*";
         return String.join(", ", modes);
     }
 
