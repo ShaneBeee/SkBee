@@ -15,6 +15,16 @@ import java.util.Locale;
 public class ItemProperties {
 
     static {
+        PropertyRegistry.registerProperty("blast resistance", new Property<>(ItemType.class, Float.class) {
+                @Override
+                public Float get(ItemType itemType) {
+                    return itemType.getMaterial().getBlastResistance();
+                }
+            })
+            .description("Repersents the blast resistance of a block.")
+            .examples("if blast resistance property of target block > 1:")
+            .since("INSERT VERSION");
+
         PropertyRegistry.registerProperty("fire resistant", new Property<>(ItemType.class, Boolean.class) {
                 @Override
                 public Boolean get(ItemType itemType) {

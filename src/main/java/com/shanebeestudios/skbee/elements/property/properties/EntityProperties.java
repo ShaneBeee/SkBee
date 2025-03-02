@@ -5,6 +5,9 @@ import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Mob;
+import org.bukkit.entity.Sittable;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
@@ -17,6 +20,21 @@ import java.util.List;
 public class EntityProperties {
 
     static {
+        PropertyRegistry.registerProperty("aggressive", new Property<>(Mob.class, Boolean.class) {
+                @Override
+                public Boolean get(Mob mob) {
+                    return mob.isAggressive();
+                }
+
+                @Override
+                public void set(Mob mob, Boolean value) {
+                    mob.setAggressive(value);
+                }
+            })
+            .description("Whether the mob is aggressive. This will not work on all mobs, only mobs that can actually be aggressive.")
+            .examples("set aggressive property of event-mob to true")
+            .since("INSERT VERSION");
+
         PropertyRegistry.registerProperty("health", new Property<>(Entity.class, Number.class) {
                 @Override
                 public Number get(Entity entity) {
@@ -116,6 +134,40 @@ public class EntityProperties {
                 }
             })
             .description("Represents the name of an entity.")
+            .since("INSERT VERSION");
+
+        PropertyRegistry.registerProperty("persistence required",  new Property<>(LivingEntity.class, Boolean.class) {
+            @Override
+            public Boolean get(LivingEntity livingEntity) {
+                return !livingEntity.getRemoveWhenFarAway();
+            }
+
+                @Override
+                public void set(LivingEntity livingEntity, Boolean value) {
+                    livingEntity.setRemoveWhenFarAway(!value);
+                }
+            })
+            .description("Prevent mobs from despawning naturally.",
+                "See the [Despawning](https://minecraft.wiki/w/Mob_spawning#Despawning) section McWiki for further details about despawning.",
+                "A silly side effect of this is that some mobs (such as sheep) will stop their random stroll goal when more than " +
+                    "32 blocks away from a player, setting this to true will prevent that and the mob will forever roam the lands.")
+            .examples("set persistence required property of all mobs to true")
+            .since("INSERT VERSION");
+
+        PropertyRegistry.registerProperty("sitting", new Property<>(Sittable.class, Boolean.class) {
+                @Override
+                public Boolean get(Sittable sittable) {
+                    return sittable.isSitting();
+                }
+
+                @Override
+                public void set(Sittable sittable, Boolean value) {
+                    sittable.setSitting(value);
+                }
+            })
+            .description("Whether an entity is sitting. Currently supports Camel, Cat, Fox, Panda, Parrot, Wolf.")
+            .examples("set sitting property of target entity to true",
+                "if sitting property of event-mob is false:")
             .since("INSERT VERSION");
     }
 
