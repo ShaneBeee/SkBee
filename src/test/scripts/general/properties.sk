@@ -1,0 +1,30 @@
+test "SkBee - Properties":
+	# ENTITY PROPERTIES
+	spawn a sheep at event-location:
+		set {_e} to entity
+
+	# Health
+	assert health property of {_e} = 8 with "Should be 8"
+	set health property of {_e} to 5
+	assert health property of {_e} = 5 with "Should now be 5"
+
+	# Name
+	assert name property of {_e} = "Sheep" with "Should be 'Sheep'"
+	set name property of {_e} to "Bob"
+	assert name property of {_e} = "Bob" with "Should now be 'Bob'"
+
+	# Persistence Required
+	assert persistence required property of {_e} = false with "Shouldn't have persistence yet"
+	set persistence required property of {_e} to true
+	assert persistence required property of {_e} = true with "Should now have persistence yet"
+
+	delete entity within {_e}
+
+	# ITEM PROPERTIES
+	# Blast resistance
+	assert blast resistance property of stone = 6 with "Should be 6"
+
+	set {_i} to 1 of diamond sword
+	assert unbreakable property of {_i} = false with "Should not be true yet"
+	set unbreakable property of {_i} to true
+	assert unbreakable property of {_i} = true with "Should now be true"
