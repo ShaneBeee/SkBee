@@ -241,7 +241,7 @@ public class NBTApi {
      * @param compound Compound to remove tag from
      */
     public static void deleteTag(@NotNull String tag, @NotNull NBTCompound compound) {
-        if (tag.equalsIgnoreCase("custom") && compound instanceof NBTCustom nbtCustom) {
+        if (tag.equalsIgnoreCase("custom") && compound instanceof NBTCustom nbtCustom && !(compound instanceof NBTCustomItemStack)) {
             nbtCustom.deleteCustomNBT();
             return;
         }

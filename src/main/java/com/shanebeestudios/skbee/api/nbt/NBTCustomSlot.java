@@ -12,8 +12,8 @@ public class NBTCustomSlot extends NBTCustomItemStack {
 
     private final Slot slot;
 
-    public NBTCustomSlot(Slot slot, boolean isCustomData, boolean isVanilla, boolean isFull) {
-        super(Objects.requireNonNull(slot.getItem()), isCustomData, isVanilla, isFull);
+    public NBTCustomSlot(Slot slot, boolean isVanilla, boolean isFull) {
+        super(Objects.requireNonNull(slot.getItem()), isVanilla, isFull);
         this.slot = slot;
     }
 

@@ -32,7 +32,8 @@ import org.jetbrains.annotations.Nullable;
 @Since("3.8.0")
 public class ExprCraftingResultFromItems extends SimpleExpression<Object> {
 
-    private static final World DEFAULT_WORLD = Bukkit.getWorlds().getFirst();
+    // note: usage of `get(0)` is used instead of `getFirst` as it's a java 21 feature
+    private static final World DEFAULT_WORLD = Bukkit.getWorlds().get(0);
     private static final ItemStack AIR = new ItemStack(Material.AIR);
 
     static {

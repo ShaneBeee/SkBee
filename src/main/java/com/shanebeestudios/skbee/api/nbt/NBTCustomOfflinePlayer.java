@@ -30,7 +30,7 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
     @Override
     public NBTCompound getOrCreateCompound(String name) {
         if (name.equals("custom")) {
-            return getPersistentDataContainer();
+            return getCustomNBT();
         }
         return super.getOrCreateCompound(name);
     }
@@ -38,7 +38,7 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
     @Override
     public NBTCompound getCompound(String name) {
         if (name.equals("custom")) {
-            return getPersistentDataContainer();
+            return getCustomNBT();
         }
         return super.getCompound(name);
     }
@@ -56,7 +56,7 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
         super.mergeCompound(comp);
         if (comp.hasTag("custom")) {
             NBTCompound custom = comp.getCompound("custom");
-            getPersistentDataContainer().mergeCompound(custom);
+            getCustomNBT().mergeCompound(custom);
         }
     }
 
@@ -80,8 +80,13 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
     @Override
     public void deleteCustomNBT() {
         if (hasTag("BukkitValues")) {
-            getCompound("BukkitValues").removeKey(KEY);
+            getOrCreateCompound("BukkitValues").removeKey(KEY);
         }
+    }
+
+    @Override
+    public @NotNull NBTCompound getCustomNBT() {
+        return super.getOrCreateCompound("BukkitValues").getOrCreateCompound(KEY);
     }
 
     @Override
@@ -102,7 +107,7 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
                 assert persist != null;
                 persist.removeKey("__nbtapi"); // this is just a placeholder one, so we don't need it
                 if (persist.hasTag(KEY)) {
-                    custom = getPersistentDataContainer().getCompound(KEY);
+                    custom = getCustomNBT();
                     persist.removeKey(KEY);
                 }
                 if (persist.getKeys().isEmpty()) {
@@ -120,11 +125,6 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
             }
             return new NBTContainer();
         }
-    }
-
-    private NBTCompound getPersistentDataContainer() {
-        NBTCompound bukkitValues = super.getOrCreateCompound("BukkitValues");
-        return bukkitValues.getOrCreateCompound(KEY);
     }
 
 }

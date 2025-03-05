@@ -14,4 +14,6 @@ public interface NBTCustom {
 
     @NotNull NBTCompound getCopy();
 
+    @NotNull NBTCompound getCustomNBT();
+
 }

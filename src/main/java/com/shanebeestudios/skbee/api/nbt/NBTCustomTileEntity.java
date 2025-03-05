@@ -31,6 +31,11 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     }
 
     @Override
+    public @NotNull NBTCompound getCustomNBT() {
+        return getPersistentDataContainer().getOrCreateCompound(KEY);
+    }
+
+    @Override
     public NBTCompound getOrCreateCompound(String name) {
         if (name.equals("custom")) {
             return getPersistentDataContainer().getOrCreateCompound(KEY);
