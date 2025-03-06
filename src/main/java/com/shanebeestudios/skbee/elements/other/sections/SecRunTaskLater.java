@@ -14,12 +14,12 @@ import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
-import org.bukkit.Bukkit;
+import com.shanebeestudios.skbee.api.scheduler.Scheduler;
+import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
+import com.shanebeestudios.skbee.api.scheduler.task.Task;
+import org.bukkit.Location;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.scheduler.BukkitScheduler;
-import org.bukkit.scheduler.BukkitTask;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,7 +34,13 @@ import java.util.concurrent.atomic.AtomicReference;
     "You can optionally run your code async/on another thread.",
     "\nNOTE: A good chunk of Bukkit/Minecraft stuff can NOT be run async. It may throw console errors.",
     "Please be careful when running async, this is generally reserved for heavy math/functions that could cause lag.",
-    "Simply waiting a tick, or running a new non-async section will put your code back on the main thread."})
+    "Simply waiting a tick, or running a new non-async section will put your code back on the main thread.",
+    "",
+    "**Patterns**:",
+    "The 2nd and 3rd pattern are only of concern if you are running Folia. If you're not running Folia, just use the first pattern.",
+    "- `globally` = Will run this task on the global scheduler.",
+    "- `for %entity` = Will run this task for an entity, and will follow the entity around.",
+    "- `at %location%` = Will run this task at a specific location (Use this for block changes in this section)."})
 @Examples({"on explode:",
     "\tloop exploded blocks:",
     "\t\tset {_loc} to location of loop-block",
@@ -49,25 +55,33 @@ import java.util.concurrent.atomic.AtomicReference;
 @Since("3.0.0")
 public class SecRunTaskLater extends LoopSection {
 
-    private static final Plugin PLUGIN = SkBee.getPlugin();
-    private static final BukkitScheduler SCHEDULER = Bukkit.getScheduler();
-
     static {
         Skript.registerSection(SecRunTaskLater.class,
-            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%]");
+            "[:async] (run|execute) [task] %timespan% later [globally] [repeating every %-timespan%]",
+            "[:async] (run|execute) [task] %timespan% later [for %-entity%] [repeating every %-timespan%]",
+            "[:async] (run|execute) [task] %timespan% later [at %-location%] [repeating every %-timespan%]");
     }
 
+    private int pattern;
     private boolean async;
     private Expression<Timespan> timespan;
+    private Expression<Entity> entity;
+    private Expression<Location> location;
     private Expression<Timespan> repeating;
-    private BukkitTask bukkitTask;
+    private Task<?> task;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        this.pattern = matchedPattern;
         this.async = parseResult.hasTag("async");
         this.timespan = (Expression<Timespan>) exprs[0];
-        this.repeating = (Expression<Timespan>) exprs[1];
+        if (matchedPattern == 1) {
+            this.entity = (Expression<Entity>) exprs[1];
+        } else if (matchedPattern == 2) {
+            this.location = (Expression<Location>) exprs[1];
+        }
+        this.repeating = (Expression<Timespan>) exprs[matchedPattern == 0 ? 1 : 2];
         ParserInstance parserInstance = ParserInstance.get();
         Kleenean hasDelayBefore = parserInstance.getHasDelayBefore();
         parserInstance.setHasDelayBefore(Kleenean.TRUE);
@@ -95,14 +109,26 @@ public class SecRunTaskLater extends LoopSection {
             previousLocalVars.set(Variables.copyLocalVariables(event));
         };
 
-        if (repeat > 0 && this.async) {
-            this.bukkitTask = SCHEDULER.runTaskTimerAsynchronously(PLUGIN, runnable, delay, repeat);
-        } else if (repeat > 0) {
-            this.bukkitTask = SCHEDULER.runTaskTimer(PLUGIN, runnable, delay, repeat);
-        } else if (this.async) {
-            this.bukkitTask = SCHEDULER.runTaskLaterAsynchronously(PLUGIN, runnable, delay);
+        Scheduler<?> scheduler = null;
+        if (this.entity != null) {
+            Entity entity = this.entity.getSingle(event);
+            if (entity != null) scheduler = TaskUtils.getEntityScheduler(entity);
+        } else if (this.location != null) {
+            Location location = this.location.getSingle(event);
+            if (location != null) scheduler = TaskUtils.getRegionalScheduler(location);
         } else {
-            this.bukkitTask = SCHEDULER.runTaskLater(PLUGIN, runnable, delay);
+            scheduler = TaskUtils.getGlobalScheduler();
+        }
+        if (scheduler == null) return super.walk(event, false);
+
+        if (repeat > 0 && this.async) {
+            this.task = scheduler.runTaskTimerAsync(runnable, delay, repeat);
+        } else if (repeat > 0) {
+            this.task = scheduler.runTaskTimer(runnable, delay, repeat);
+        } else if (this.async) {
+            this.task = scheduler.runTaskLaterAsync(runnable, delay);
+        } else {
+            this.task = scheduler.runTaskLater(runnable, delay);
         }
         if (last != null) last.setNext(null);
         return super.walk(event, false);
@@ -110,19 +136,24 @@ public class SecRunTaskLater extends LoopSection {
 
     @Deprecated(forRemoval = true, since = "March 1/2025")
     public void stopCurrentTask() {
-        this.bukkitTask.cancel();
+        this.task.cancel();
     }
 
     public int getCurrentTaskId() {
-        if (this.bukkitTask.isCancelled()) return -1;
-        return this.bukkitTask.getTaskId();
+        if (this.task.isCancelled()) return -1;
+        return this.task.getTaskId();
     }
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String async = this.async ? "async " : "";
+        String type = switch (this.pattern) {
+            case 1 -> " for " + this.entity.toString(e,d);
+            case 2 -> " at " + this.location.toString(e,d);
+            default -> " globally";
+        };
         String repeat = this.repeating != null ? (" repeating every " + this.repeating.toString(e, d)) : "";
-        return async + "run task " + this.timespan.toString(e, d) + " later" + repeat;
+        return async + "run task " + this.timespan.toString(e, d) + " later" + type + repeat;
     }
 
     @Override
@@ -132,7 +163,7 @@ public class SecRunTaskLater extends LoopSection {
 
     @Override
     public void exit(Event event) {
-        this.bukkitTask.cancel();
+        this.task.cancel();
     }
 
 }
