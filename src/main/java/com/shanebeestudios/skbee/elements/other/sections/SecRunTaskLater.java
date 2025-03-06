@@ -134,11 +134,6 @@ public class SecRunTaskLater extends LoopSection {
         return super.walk(event, false);
     }
 
-    @Deprecated(forRemoval = true, since = "March 1/2025")
-    public void stopCurrentTask() {
-        this.task.cancel();
-    }
-
     public int getCurrentTaskId() {
         if (this.task.isCancelled()) return -1;
         return this.task.getTaskId();
