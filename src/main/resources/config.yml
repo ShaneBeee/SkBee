@@ -12,6 +12,11 @@ settings:
         # Whether or not the update check should be done on another thread
         async: false
 
+    # Enable Paper schedulers
+    # This will have no effect on Folia
+    # If you don't know what this does, leave it false
+    use-paper-schedulers: false
+
     # Whether fastboard lines should be in normal order or reversed
     # False = Line 1 at the top, line 15 at the bottom (default)
     # True = Line 15 at the top, line 1 at the bottom

@@ -13,18 +13,20 @@ import org.bukkit.entity.Entity;
  */
 public class TaskUtils {
 
+    private static final boolean USE_PAPER_SCHEDULERS = Util.IS_RUNNING_FOLIA || SkBee.getPlugin().getPluginConfig().settings_use_paper_schedulers;
+
     public static Scheduler<?> getGlobalScheduler() {
-        if (Util.IS_RUNNING_FOLIA) return FoliaScheduler.getGlobalScheduler();
+        if (USE_PAPER_SCHEDULERS) return FoliaScheduler.getGlobalScheduler();
         return new SpigotScheduler();
     }
 
     public static Scheduler<?> getRegionalScheduler(Location location) {
-        if (Util.IS_RUNNING_FOLIA) return FoliaScheduler.getRegionalScheduler(location);
+        if (USE_PAPER_SCHEDULERS) return FoliaScheduler.getRegionalScheduler(location);
         return new SpigotScheduler();
     }
 
     public static Scheduler<?> getEntityScheduler(Entity entity) {
-        if (Util.IS_RUNNING_FOLIA) return FoliaScheduler.getEntityScheduler(entity);
+        if (USE_PAPER_SCHEDULERS) return FoliaScheduler.getEntityScheduler(entity);
         return new SpigotScheduler();
     }
 
@@ -33,7 +35,7 @@ public class TaskUtils {
      */
     public static void cancelTasks() {
         SkBee plugin = SkBee.getPlugin();
-        if (Util.IS_RUNNING_FOLIA) {
+        if (USE_PAPER_SCHEDULERS) {
             Bukkit.getGlobalRegionScheduler().cancelTasks(plugin);
             Bukkit.getAsyncScheduler().cancelTasks(plugin);
         } else {
