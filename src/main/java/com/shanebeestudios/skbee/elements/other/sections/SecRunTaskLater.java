@@ -37,9 +37,11 @@ import java.util.concurrent.atomic.AtomicReference;
     "Simply waiting a tick, or running a new non-async section will put your code back on the main thread.",
     "",
     "**Patterns**:",
-    "The 2nd and 3rd pattern are only of concern if you are running Folia. If you're not running Folia, just use the first pattern.",
+    "The 2nd and 3rd patterns are only of concern if you are running Folia or have Paper schedulers enabled in the config, " +
+        "otherwise just use the first pattern.",
     "- `globally` = Will run this task on the global scheduler.",
-    "- `for %entity` = Will run this task for an entity, and will follow the entity around.",
+    "- `for %entity` = Will run this task for an entity, will follow the entity around (region wise)" +
+        "and will cancel itself when the entity is no longer valid.",
     "- `at %location%` = Will run this task at a specific location (Use this for block changes in this section)."})
 @Examples({"on explode:",
     "\tloop exploded blocks:",
@@ -57,9 +59,9 @@ public class SecRunTaskLater extends LoopSection {
 
     static {
         Skript.registerSection(SecRunTaskLater.class,
-            "[:async] (run|execute) [task] %timespan% later [globally] [repeating every %-timespan%]",
-            "[:async] (run|execute) [task] %timespan% later [for %-entity%] [repeating every %-timespan%]",
-            "[:async] (run|execute) [task] %timespan% later [at %-location%] [repeating every %-timespan%]");
+            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [globally]",
+            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(on|for) %-entity%]",
+            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [at %-location%]");
     }
 
     private int pattern;
@@ -77,11 +79,11 @@ public class SecRunTaskLater extends LoopSection {
         this.async = parseResult.hasTag("async");
         this.timespan = (Expression<Timespan>) exprs[0];
         if (matchedPattern == 1) {
-            this.entity = (Expression<Entity>) exprs[1];
+            this.entity = (Expression<Entity>) exprs[2];
         } else if (matchedPattern == 2) {
             this.location = (Expression<Location>) exprs[1];
         }
-        this.repeating = (Expression<Timespan>) exprs[matchedPattern == 0 ? 1 : 2];
+        this.repeating = (Expression<Timespan>) exprs[1];
         ParserInstance parserInstance = ParserInstance.get();
         Kleenean hasDelayBefore = parserInstance.getHasDelayBefore();
         parserInstance.setHasDelayBefore(Kleenean.TRUE);
@@ -143,8 +145,8 @@ public class SecRunTaskLater extends LoopSection {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String async = this.async ? "async " : "";
         String type = switch (this.pattern) {
-            case 1 -> " for " + this.entity.toString(e,d);
-            case 2 -> " at " + this.location.toString(e,d);
+            case 1 -> " for " + this.entity.toString(e, d);
+            case 2 -> " at " + this.location.toString(e, d);
             default -> " globally";
         };
         String repeat = this.repeating != null ? (" repeating every " + this.repeating.toString(e, d)) : "";

@@ -31,9 +31,11 @@ import java.util.concurrent.atomic.AtomicReference;
     "It is recommended to NOT use a wait within these sections, as the section will repeat regardless.",
     "",
     "**Patterns**:",
-    "The 2nd and 3rd pattern are only of concern if you are running Folia. If you're not running Folia, just use the first pattern.",
+    "The 2nd and 3rd patterns are only of concern if you are running Folia or have Paper schedulers enabled in the config, " +
+        "otherwise just use the first pattern.",
     "- `globally` = Will run this loop on the global scheduler (Use this for non entity/block related tasks).",
-    "- `for %entity` = Will run this loop for an entity, and will follow the entity around.",
+    "- `for %entity` = Will run this task for an entity, will follow the entity around (region wise)" +
+        "and will cancel itself when the entity is no longer valid.",
     "- `at %location%` = Will run this loop at a specific location (Use this for block related tasks)."})
 @Examples({"on entity added to world:",
     "\tif event-entity is a wolf:",
@@ -112,7 +114,7 @@ public class SecWhileRunnable extends LoopSection {
                 exit(event);
                 TriggerItem.walk(this.next, event);
             }
-        }, 0, ticks);
+        }, 1, ticks);
         if (this.last != null) this.last.setNext(null);
         return null;
     }
