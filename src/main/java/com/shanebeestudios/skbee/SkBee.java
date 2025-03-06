@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
+import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -101,7 +102,7 @@ public class SkBee extends JavaPlugin {
     public void onDisable() {
         if (this.properlyEnabled) {
             // Cancel tasks on stop to prevent async issues
-            Bukkit.getScheduler().cancelTasks(this);
+            TaskUtils.cancelTasks();
         }
         if (this.virtualFurnaceAPI != null) {
             this.virtualFurnaceAPI.disableAPI();

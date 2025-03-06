@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
@@ -24,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, ComponentWrapper> {
 
     static {
-        if (SkBee.getPlugin().getPluginConfig().ELEMENTS_SCOREBOARD) {
+        if (!Util.IS_RUNNING_FOLIA && SkBee.getPlugin().getPluginConfig().ELEMENTS_SCOREBOARD) {
             register(ExprTeamPrefixComp.class, ComponentWrapper.class, "component team (prefix|1:suffix)", "teams");
         }
     }

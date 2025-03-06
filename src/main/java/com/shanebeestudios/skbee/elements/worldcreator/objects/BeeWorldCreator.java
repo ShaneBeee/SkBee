@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import net.kyori.adventure.util.TriState;
 import org.apache.commons.io.FileUtils;
@@ -290,7 +291,7 @@ public class BeeWorldCreator implements Keyed {
 
         // Let's clone files on another thread
         CompletableFuture<WorldCreator> worldCompletableFuture = new CompletableFuture<>();
-        Bukkit.getScheduler().runTaskAsynchronously(SkBee.getPlugin(), () -> {
+        TaskUtils.getGlobalScheduler().runTaskAsync(() -> {
             File cloneDirectory = new File(worldContainer, cloneName);
             if (worldDirectorToClone.exists()) {
                 try {
@@ -303,7 +304,7 @@ public class BeeWorldCreator implements Keyed {
                         }
                     }
                     WorldCreator creator = getWorldCreator(cloneName, this.key);
-                    Bukkit.getScheduler().runTaskLater(SkBee.getPlugin(), () -> {
+                    TaskUtils.getGlobalScheduler().runTaskLater(() -> {
                         // Let's head back to the main thread
                         worldCompletableFuture.complete(creator);
                     }, 0);

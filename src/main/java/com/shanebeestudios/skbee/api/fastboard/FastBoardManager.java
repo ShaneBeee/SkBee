@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.fastboard;
 
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -17,7 +18,6 @@ public class FastBoardManager implements Listener {
     public static final boolean HAS_ADVENTURE = SkBee.getPlugin().getAddonLoader().isTextComponentEnabled();
 
     private static final Map<UUID, FastBoardBase<?, ?>> BOARDS = new HashMap<>();
-    private static final SkBee PLUGIN = SkBee.getPlugin();
 
     @Nullable
     public static FastBoardBase<?, ?> getBoard(Player player) {
@@ -49,7 +49,7 @@ public class FastBoardManager implements Listener {
     @EventHandler
     private void onQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        Bukkit.getScheduler().runTaskLater(PLUGIN, () -> removeBoard(uuid), 1);
+        TaskUtils.getEntityScheduler(event.getPlayer()).runTaskLater(() -> removeBoard(uuid), 1);
     }
 
 }

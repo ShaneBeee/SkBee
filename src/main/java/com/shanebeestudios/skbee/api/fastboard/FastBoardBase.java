@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.fastboard;
 
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.Scoreboard;
@@ -10,7 +11,8 @@ import org.jetbrains.annotations.Nullable;
 public abstract class FastBoardBase<T, B> {
 
     protected static final boolean REVERSE = SkBee.getPlugin().getPluginConfig().SETTINGS_FASTBOARD_LINES;
-    private static final Scoreboard DUMMY_BOARD = Bukkit.getScoreboardManager().getNewScoreboard();
+    // Folia has currently removed vanilla scoreboards
+    private static final Scoreboard DUMMY_BOARD = Util.IS_RUNNING_FOLIA ? null : Bukkit.getScoreboardManager().getNewScoreboard();
 
     protected final Player player;
     protected fr.mrmicky.fastboard.FastBoardBase<B> fastBoard;
@@ -49,10 +51,12 @@ public abstract class FastBoardBase<T, B> {
         if (this.fastBoard == null) return;
         this.fastBoard.delete();
         this.fastBoard = null;
-        // This force resends the vanilla scoreboard to the client
-        Scoreboard previous = this.player.getScoreboard();
-        this.player.setScoreboard(DUMMY_BOARD);
-        this.player.setScoreboard(previous);
+        if (DUMMY_BOARD != null) {
+            // This force resends the vanilla scoreboard to the client
+            Scoreboard previous = this.player.getScoreboard();
+            this.player.setScoreboard(DUMMY_BOARD);
+            this.player.setScoreboard(previous);
+        }
     }
 
     public abstract void show();

@@ -3,14 +3,14 @@ package com.shanebeestudios.skbee.api.bound;
 import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
-import org.bukkit.Bukkit;
+import com.shanebeestudios.skbee.api.scheduler.Scheduler;
+import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.event.Listener;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -63,13 +63,12 @@ public class BoundConfig implements Listener {
         }
         this.boundPostponing.print();
         // Only start save timer if not in test mode
-        if (!TestMode.ENABLED) startSaveTimer(plugin);
+        if (!TestMode.ENABLED) startSaveTimer();
     }
 
-    private void startSaveTimer(SkBee plugin) {
-        BukkitScheduler scheduler = Bukkit.getScheduler();
-
-        scheduler.runTaskTimer(plugin, () -> {
+    private void startSaveTimer() {
+        Scheduler<?> globalScheduler = TaskUtils.getGlobalScheduler();
+        globalScheduler.runTaskTimer(() -> {
             // Skip saving if maps are empty
             if (this.scheduledToSave.isEmpty() && this.scheduledToRemove.isEmpty()) return;
 
@@ -82,7 +81,7 @@ public class BoundConfig implements Listener {
             this.scheduledToSave.clear();
 
             // Async save yaml to file
-            scheduler.runTaskAsynchronously(plugin, this::saveConfig);
+            globalScheduler.runTaskAsync(this::saveConfig);
         }, 6000, 6000); // Every 5 minutes
     }
 
