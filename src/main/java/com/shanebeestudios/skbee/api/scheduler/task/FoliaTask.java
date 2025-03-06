@@ -15,4 +15,15 @@ public class FoliaTask implements Task<ScheduledTask> {
         this.scheduledTask.cancel();
     }
 
+    @Override
+    public boolean isCancelled() {
+        return this.scheduledTask.isCancelled();
+    }
+
+    @Override
+    public int getTaskId() {
+        // ScheduledTask doesn't have an ID?!?!?
+        return -1;
+    }
+
 }

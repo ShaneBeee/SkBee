@@ -4,4 +4,8 @@ public interface Task<T> {
 
     void cancel();
 
+    boolean isCancelled();
+
+    int getTaskId();
+
 }

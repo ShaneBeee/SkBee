@@ -15,4 +15,14 @@ public class SpigotTask implements Task<BukkitTask> {
         this.bukkitTask.cancel();
     }
 
+    @Override
+    public boolean isCancelled() {
+        return this.bukkitTask.isCancelled();
+    }
+
+    @Override
+    public int getTaskId() {
+        return this.bukkitTask.getTaskId();
+    }
+
 }
