@@ -2,6 +2,9 @@ package com.shanebeestudios.skbee.api.scheduler.task;
 
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 
+/**
+ * Task wrapper for Folia's {@link ScheduledTask}
+ */
 public class FoliaTask implements Task<ScheduledTask> {
 
     private final ScheduledTask scheduledTask;

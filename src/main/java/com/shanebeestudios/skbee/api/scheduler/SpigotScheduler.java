@@ -7,6 +7,9 @@ import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
+/**
+ * A {@link Scheduler} using the {@link BukkitScheduler}
+ */
 public class SpigotScheduler implements Scheduler<BukkitTask> {
 
     private static final SkBee PLUGIN = SkBee.getPlugin();

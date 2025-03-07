@@ -10,9 +10,13 @@ import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.concurrent.TimeUnit;
 
+/**
+ * A {@link Scheduler} based on Folia/Paper regionalized schedulers
+ */
 public class FoliaScheduler implements Scheduler<ScheduledTask> {
 
     private static final SkBee PLUGIN = SkBee.getPlugin();
@@ -21,23 +25,24 @@ public class FoliaScheduler implements Scheduler<ScheduledTask> {
     private static final AsyncScheduler ASYNC_SCHEDULER = Bukkit.getAsyncScheduler();
 
     public static FoliaScheduler getGlobalScheduler() {
-        return new FoliaScheduler();
+        return new FoliaScheduler(null, null);
     }
 
     public static FoliaScheduler getRegionalScheduler(Location location) {
-        FoliaScheduler foliaScheduler = new FoliaScheduler();
-        foliaScheduler.location = location;
-        return foliaScheduler;
+        return new FoliaScheduler(null, location);
     }
 
     public static FoliaScheduler getEntityScheduler(Entity entity) {
-        FoliaScheduler foliaScheduler = new FoliaScheduler();
-        foliaScheduler.entity = entity;
-        return foliaScheduler;
+        return new FoliaScheduler(entity, null);
     }
 
-    private Entity entity = null;
-    private Location location = null;
+    private final @Nullable Entity entity;
+    private final @Nullable Location location;
+
+    public FoliaScheduler(@Nullable Entity entity, @Nullable Location location) {
+        this.entity = entity;
+        this.location = location;
+    }
 
     @Override
     public FoliaTask runTask(Runnable task) {

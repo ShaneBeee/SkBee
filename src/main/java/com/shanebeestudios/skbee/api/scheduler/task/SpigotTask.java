@@ -2,6 +2,9 @@ package com.shanebeestudios.skbee.api.scheduler.task;
 
 import org.bukkit.scheduler.BukkitTask;
 
+/**
+ * Task wrapper for Bukkit's {@link BukkitTask}
+ */
 public class SpigotTask implements Task<BukkitTask> {
 
     private final BukkitTask bukkitTask;
