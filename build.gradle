@@ -117,7 +117,7 @@ publishing {
 javadoc {
     destinationDir = file("${projectDir}/build/javadoc")
     options {
-        links('https://hub.spigotmc.org/javadocs/spigot/')
+        links('https://jd.papermc.io/paper/1.21.4/')
         links('https://docs.skriptlang.org/javadocs/')
         links('https://tr7zw.github.io/Item-NBT-API/v2-api/')
         links('https://jd.advntr.dev/api/4.14.0/')
