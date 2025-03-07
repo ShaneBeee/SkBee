@@ -81,7 +81,7 @@ public class SecRunTaskLater extends LoopSection {
         if (matchedPattern == 1) {
             this.entity = (Expression<Entity>) exprs[2];
         } else if (matchedPattern == 2) {
-            this.location = (Expression<Location>) exprs[1];
+            this.location = (Expression<Location>) exprs[2];
         }
         this.repeating = (Expression<Timespan>) exprs[1];
         ParserInstance parserInstance = ParserInstance.get();
