@@ -17,7 +17,9 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
 import com.shanebeestudios.skbee.api.scheduler.task.Task;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -37,12 +39,12 @@ import java.util.concurrent.atomic.AtomicReference;
     "Simply waiting a tick, or running a new non-async section will put your code back on the main thread.",
     "",
     "**Patterns**:",
-    "The 2nd and 3rd patterns are only of concern if you are running Folia or have Paper schedulers enabled in the config, " +
+    "The 2nd pattern is only of concern if you are running Folia or have Paper schedulers enabled in the config, " +
         "otherwise just use the first pattern.",
     "- `globally` = Will run this task on the global scheduler.",
     "- `for %entity` = Will run this task for an entity, will follow the entity around (region wise)" +
         "and will cancel itself when the entity is no longer valid.",
-    "- `at %location%` = Will run this task at a specific location (Use this for block changes in this section)."})
+    "- `at %block/location%` = Will run this task at a specific location (Use this for block changes in this section)."})
 @Examples({"on explode:",
     "\tloop exploded blocks:",
     "\t\tset {_loc} to location of loop-block",
@@ -60,28 +62,22 @@ public class SecRunTaskLater extends LoopSection {
     static {
         Skript.registerSection(SecRunTaskLater.class,
             "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [globally]",
-            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(on|for) %-entity%]",
-            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [at %-location%]");
+            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(at|on|for) %-entity/block/location%]");
     }
 
-    private int pattern;
     private boolean async;
     private Expression<Timespan> timespan;
-    private Expression<Entity> entity;
-    private Expression<Location> location;
+    private Expression<?> taskObject;
     private Expression<Timespan> repeating;
     private Task<?> task;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        this.pattern = matchedPattern;
         this.async = parseResult.hasTag("async");
         this.timespan = (Expression<Timespan>) exprs[0];
         if (matchedPattern == 1) {
-            this.entity = (Expression<Entity>) exprs[2];
-        } else if (matchedPattern == 2) {
-            this.location = (Expression<Location>) exprs[2];
+            this.taskObject = exprs[2];
         }
         this.repeating = (Expression<Timespan>) exprs[1];
         ParserInstance parserInstance = ParserInstance.get();
@@ -96,6 +92,7 @@ public class SecRunTaskLater extends LoopSection {
     protected @Nullable TriggerItem walk(Event event) {
         Timespan timespan = this.timespan.getSingle(event);
         long delay = timespan != null ? timespan.getAs(Timespan.TimePeriod.TICK) : 0;
+        Util.log("Delay: " + delay);
 
         long repeat = 0;
         if (this.repeating != null) {
@@ -111,13 +108,14 @@ public class SecRunTaskLater extends LoopSection {
             previousLocalVars.set(Variables.copyLocalVariables(event));
         };
 
-        Scheduler<?> scheduler = null;
-        if (this.entity != null) {
-            Entity entity = this.entity.getSingle(event);
-            if (entity != null) scheduler = TaskUtils.getEntityScheduler(entity);
-        } else if (this.location != null) {
-            Location location = this.location.getSingle(event);
-            if (location != null) scheduler = TaskUtils.getRegionalScheduler(location);
+        Scheduler<?> scheduler;
+        if (this.taskObject != null) {
+            Object object = this.taskObject.getSingle(event);
+            //noinspection IfCanBeSwitch // requires java 21+
+            if (object instanceof Entity entity) scheduler = TaskUtils.getEntityScheduler(entity);
+            else if (object instanceof Block block) scheduler = TaskUtils.getRegionalScheduler(block.getLocation());
+            else if (object instanceof Location location) scheduler = TaskUtils.getRegionalScheduler(location);
+            else scheduler = TaskUtils.getGlobalScheduler();
         } else {
             scheduler = TaskUtils.getGlobalScheduler();
         }
@@ -130,6 +128,7 @@ public class SecRunTaskLater extends LoopSection {
         } else if (this.async) {
             this.task = scheduler.runTaskLaterAsync(runnable, delay);
         } else {
+            Util.log("Running delated:  " + delay);
             this.task = scheduler.runTaskLater(runnable, delay);
         }
         if (last != null) last.setNext(null);
@@ -144,13 +143,9 @@ public class SecRunTaskLater extends LoopSection {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String async = this.async ? "async " : "";
-        String type = switch (this.pattern) {
-            case 1 -> " for " + this.entity.toString(e, d);
-            case 2 -> " at " + this.location.toString(e, d);
-            default -> " globally";
-        };
+        String type = this.taskObject != null ? (" for " + this.taskObject.toString(e, d)) : " globally";
         String repeat = this.repeating != null ? (" repeating every " + this.repeating.toString(e, d)) : "";
-        return async + "run task " + this.timespan.toString(e, d) + " later" + type + repeat;
+        return async + "run task " + this.timespan.toString(e, d) + " later" + repeat + type;
     }
 
     @Override

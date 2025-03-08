@@ -19,6 +19,7 @@ import com.shanebeestudios.skbee.api.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
 import com.shanebeestudios.skbee.api.scheduler.task.Task;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -31,12 +32,12 @@ import java.util.concurrent.atomic.AtomicReference;
     "It is recommended to NOT use a wait within these sections, as the section will repeat regardless.",
     "",
     "**Patterns**:",
-    "The 2nd and 3rd patterns are only of concern if you are running Folia or have Paper schedulers enabled in the config, " +
+    "The 2nd pattern is only of concern if you are running Folia or have Paper schedulers enabled in the config, " +
         "otherwise just use the first pattern.",
     "- `globally` = Will run this loop on the global scheduler (Use this for non entity/block related tasks).",
     "- `for %entity` = Will run this task for an entity, will follow the entity around (region wise)" +
         "and will cancel itself when the entity is no longer valid.",
-    "- `at %location%` = Will run this loop at a specific location (Use this for block related tasks)."})
+    "- `at %block/location%` = Will run this loop at a specific location (Use this for block related tasks)."})
 @Examples({"on entity added to world:",
     "\tif event-entity is a wolf:",
     "\t\twhile event-entity is valid repeating every 1 seconds:",
@@ -49,22 +50,18 @@ public class SecWhileRunnable extends LoopSection {
     static {
         Skript.registerSection(SecWhileRunnable.class,
             "while <.+> repeating every %timespan% [globally]",
-            "while <.+> repeating every %timespan% [for %-entity%]",
-            "while <.+> repeating every %timespan% [at %-location%]");
+            "while <.+> repeating every %timespan% [(at|on|for) %-entity/block/location%]");
     }
 
-    private int pattern;
     private Condition condition;
     private Expression<Timespan> timespan;
-    private Expression<Entity> entity;
-    private Expression<Location> location;
+    private Expression<?> taskObject;
     private Task<?> task;
     private TriggerItem next;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        this.pattern = matchedPattern;
         String group = parseResult.regexes.getFirst().group();
         this.condition = Condition.parse(group, "some error");
         if (this.condition == null) return false;
@@ -75,9 +72,7 @@ public class SecWhileRunnable extends LoopSection {
             }
         }
         if (matchedPattern == 1) {
-            this.entity = (Expression<Entity>) exprs[1];
-        } else if (matchedPattern == 2) {
-            this.location = (Expression<Location>) exprs[1];
+            this.taskObject = exprs[1];
         }
         loadCode(sectionNode);
         return true;
@@ -92,13 +87,14 @@ public class SecWhileRunnable extends LoopSection {
         long ticks = timespan.getAs(Timespan.TimePeriod.TICK);
         if (ticks < 1) ticks = 1;
 
-        Scheduler<?> scheduler = null;
-        if (this.entity != null) {
-            Entity entity = this.entity.getSingle(event);
-            if (entity != null) scheduler = TaskUtils.getEntityScheduler(entity);
-        } else if (this.location != null) {
-            Location location = this.location.getSingle(event);
-            if (location != null) scheduler = TaskUtils.getRegionalScheduler(location);
+        Scheduler<?> scheduler;
+        if (this.taskObject != null) {
+            Object object = this.taskObject.getSingle(event);
+            //noinspection IfCanBeSwitch // requires java 21+
+            if (object instanceof Entity entity) scheduler = TaskUtils.getEntityScheduler(entity);
+            else if (object instanceof Block block) scheduler = TaskUtils.getRegionalScheduler(block.getLocation());
+            else if (object instanceof Location location) scheduler = TaskUtils.getRegionalScheduler(location);
+            else scheduler = TaskUtils.getGlobalScheduler();
         } else {
             scheduler = TaskUtils.getGlobalScheduler();
         }
@@ -121,11 +117,7 @@ public class SecWhileRunnable extends LoopSection {
 
     @Override
     public String toString(Event e, boolean d) {
-        String type = switch (this.pattern) {
-            case 1 -> " for " + this.entity.toString(e, d);
-            case 2 -> " at " + this.location.toString(e, d);
-            default -> " globally";
-        };
+        String type = this.taskObject != null ? (" for " + this.taskObject.toString(e, d)) : " globally";
         return "while " + this.condition.toString(e, d) + " repeating every " + this.timespan.toString(e, d) + type;
     }
 
