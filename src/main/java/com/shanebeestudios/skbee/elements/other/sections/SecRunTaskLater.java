@@ -17,9 +17,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
 import com.shanebeestudios.skbee.api.scheduler.task.Task;
-import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -44,7 +42,7 @@ import java.util.concurrent.atomic.AtomicReference;
     "- `globally` = Will run this task on the global scheduler.",
     "- `for %entity` = Will run this task for an entity, will follow the entity around (region wise)" +
         "and will cancel itself when the entity is no longer valid.",
-    "- `at %block/location%` = Will run this task at a specific location (Use this for block changes in this section)."})
+    "- `at %location%` = Will run this task at a specific location (Use this for block changes in this section)."})
 @Examples({"on explode:",
     "\tloop exploded blocks:",
     "\t\tset {_loc} to location of loop-block",
@@ -62,7 +60,7 @@ public class SecRunTaskLater extends LoopSection {
     static {
         Skript.registerSection(SecRunTaskLater.class,
             "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [globally]",
-            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(at|on|for) %-entity/block/location%]");
+            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(at|on|for) %-entity/location%]");
     }
 
     private boolean async;
@@ -92,7 +90,6 @@ public class SecRunTaskLater extends LoopSection {
     protected @Nullable TriggerItem walk(Event event) {
         Timespan timespan = this.timespan.getSingle(event);
         long delay = timespan != null ? timespan.getAs(Timespan.TimePeriod.TICK) : 0;
-        Util.log("Delay: " + delay);
 
         long repeat = 0;
         if (this.repeating != null) {
@@ -113,7 +110,6 @@ public class SecRunTaskLater extends LoopSection {
             Object object = this.taskObject.getSingle(event);
             //noinspection IfCanBeSwitch // requires java 21+
             if (object instanceof Entity entity) scheduler = TaskUtils.getEntityScheduler(entity);
-            else if (object instanceof Block block) scheduler = TaskUtils.getRegionalScheduler(block.getLocation());
             else if (object instanceof Location location) scheduler = TaskUtils.getRegionalScheduler(location);
             else scheduler = TaskUtils.getGlobalScheduler();
         } else {
@@ -128,7 +124,6 @@ public class SecRunTaskLater extends LoopSection {
         } else if (this.async) {
             this.task = scheduler.runTaskLaterAsync(runnable, delay);
         } else {
-            Util.log("Running delated:  " + delay);
             this.task = scheduler.runTaskLater(runnable, delay);
         }
         if (last != null) last.setNext(null);

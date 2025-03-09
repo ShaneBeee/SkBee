@@ -19,7 +19,6 @@ import com.shanebeestudios.skbee.api.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
 import com.shanebeestudios.skbee.api.scheduler.task.Task;
 import org.bukkit.Location;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -37,7 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
     "- `globally` = Will run this loop on the global scheduler (Use this for non entity/block related tasks).",
     "- `for %entity` = Will run this task for an entity, will follow the entity around (region wise)" +
         "and will cancel itself when the entity is no longer valid.",
-    "- `at %block/location%` = Will run this loop at a specific location (Use this for block related tasks)."})
+    "- `at %location%` = Will run this loop at a specific location (Use this for block related tasks)."})
 @Examples({"on entity added to world:",
     "\tif event-entity is a wolf:",
     "\t\twhile event-entity is valid repeating every 1 seconds:",
@@ -50,7 +49,7 @@ public class SecWhileRunnable extends LoopSection {
     static {
         Skript.registerSection(SecWhileRunnable.class,
             "while <.+> repeating every %timespan% [globally]",
-            "while <.+> repeating every %timespan% [(at|on|for) %-entity/block/location%]");
+            "while <.+> repeating every %timespan% [(at|on|for) %-entity/location%]");
     }
 
     private Condition condition;
@@ -92,7 +91,6 @@ public class SecWhileRunnable extends LoopSection {
             Object object = this.taskObject.getSingle(event);
             //noinspection IfCanBeSwitch // requires java 21+
             if (object instanceof Entity entity) scheduler = TaskUtils.getEntityScheduler(entity);
-            else if (object instanceof Block block) scheduler = TaskUtils.getRegionalScheduler(block.getLocation());
             else if (object instanceof Location location) scheduler = TaskUtils.getRegionalScheduler(location);
             else scheduler = TaskUtils.getGlobalScheduler();
         } else {
