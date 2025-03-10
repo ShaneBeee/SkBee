@@ -9,7 +9,6 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
@@ -49,9 +48,12 @@ import org.jetbrains.annotations.NotNull;
     "\\- (MC 1.20.5+) This will return the 'components' portion of an item's full NBT.",
     "- `custom nbt of %item%` = Returns the 'minecraft:custom_data' component of an item's NBT. Modifying this will modify the original item. (This is an MC 1.20.5+ feature).",
     "Please see [**Data Component Format**](https://minecraft.wiki/w/Data_component_format) on McWiki for more information on item NBT components.",
+    "Minecraft versions below 1.20.5, this will just return the NBT of the item.",
     "- `[full] vanilla nbt of %item%` = Will return the same as above except it will include vanilla components which don't normally show in NBT.",
     "- `nbt copy of %objects%` = Returns a copy of the original NBT compound. This way you can modify it without",
     "actually modifying the original NBT compound, for example when grabbing the compound from an entity, modifying it and applying to other entities.",
+    "- `custom nbt of %object%` = Returns the custom portion of the NBT of the object " +
+        "(Minecraft doesn't natively allow custom NBT, so this is stored in varies spots based on the object).",
     "",
     "NBT from a file will need to be saved manually using",
     "the 'NBT - Save File' effect. If the file does not yet exist, a new file will be created.",
@@ -100,7 +102,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
         setExpr(expr);
         this.isFullItem = parseResult.hasTag("full");
         this.isVanilla = parseResult.hasTag("vanilla") && NBTApi.HAS_ITEM_COMPONENTS;
-        this.isCustom = parseResult.hasTag("custom") && NBTApi.HAS_ITEM_COMPONENTS;
+        this.isCustom = parseResult.hasTag("custom");
         this.isCopy = parseResult.hasTag("copy");
         this.isFile = matchedPattern == 1;
         return LiteralUtils.canInitSafely(expr);
@@ -133,14 +135,14 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 compound = new NBTCustomEntity(entity);
             } else if (object instanceof ItemType itemType) {
                 if (itemType.getMaterial() == Material.AIR) return null;
-                compound = new NBTCustomItemType(itemType, this.isCustom, this.isVanilla, this.isFullItem);
+                compound = new NBTCustomItemType(itemType, this.isVanilla, this.isFullItem);
             } else if (object instanceof ItemStack itemStack) {
                 if (itemStack.getType() == Material.AIR) return null;
-                compound = new NBTCustomItemStack(itemStack, this.isCustom, this.isVanilla, this.isFullItem);
+                compound = new NBTCustomItemStack(itemStack, this.isVanilla, this.isFullItem);
             } else if (object instanceof Slot slot) {
                 ItemStack stack = slot.getItem();
                 if (stack == null || stack.getType() == Material.AIR) return null;
-                compound = new NBTCustomSlot(slot, this.isCustom, this.isVanilla, this.isFullItem);
+                compound = new NBTCustomSlot(slot, this.isVanilla, this.isFullItem);
             } else if (object instanceof String nbtString) {
                 if (this.isFile) {
                     compound = NBTApi.getNBTFile(nbtString);
@@ -153,6 +155,9 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 compound = comp;
             }
             if (compound != null) {
+                if (this.isCustom && !this.isFullItem && compound instanceof NBTCustom nbtCustom) {
+                    compound = nbtCustom.getCustomNBT();
+                }
                 if (this.isCopy) {
                     if (compound instanceof NBTCustom nbtCustom) {
                         return nbtCustom.getCopy();
@@ -163,7 +168,6 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
                 }
                 return compound;
             }
-            error("Invalid object for NBT: " + Classes.toString(object));
             return null;
         });
     }

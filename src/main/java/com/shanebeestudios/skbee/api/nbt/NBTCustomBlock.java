@@ -5,11 +5,12 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import org.bukkit.block.Block;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents the NBT of a non tile entity block
  */
-public class NBTCustomBlock extends NBTContainer {
+public class NBTCustomBlock extends NBTContainer implements NBTCustom{
 
     private final Block block;
     private final String blockTag;
@@ -62,6 +63,24 @@ public class NBTCustomBlock extends NBTContainer {
         tag.setInteger("y", this.block.getY());
         tag.setInteger("z", this.block.getZ());
         return tag.toString();
+    }
+
+    @Override
+    public void deleteCustomNBT() {
+        this.removeKey("custom");
+    }
+
+    @SuppressWarnings("deprecation")
+    @Override
+    public @NotNull NBTCompound getCopy() {
+        NBTContainer emptyContainer = new NBTContainer();
+        emptyContainer.mergeCompound(this);
+        return emptyContainer;
+    }
+
+    @Override
+    public @NotNull NBTCompound getCustomNBT() {
+        return this.getOrCreateCompound("custom");
     }
 
 }

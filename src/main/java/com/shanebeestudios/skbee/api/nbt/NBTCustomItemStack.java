@@ -4,6 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Wrapper class for {@link NBTItem} using a Bukkit {@link ItemStack}
@@ -11,20 +12,18 @@ import org.bukkit.inventory.ItemStack;
  * as well as funny changes in NBT-API due to MC 1.20.5</p>
  */
 @SuppressWarnings("deprecation")
-public class NBTCustomItemStack extends NBTContainer {
+public class NBTCustomItemStack extends NBTContainer implements NBTCustom {
 
     private final ItemStack originalItemStack;
-    private final boolean isCustomData;
     private final boolean isFull;
 
-    public NBTCustomItemStack(ItemStack itemStack, boolean isCustomData, boolean isVanilla, boolean isFull) {
-        super(getInitialContainer(itemStack, isCustomData, isVanilla, isFull).getCompound());
+    public NBTCustomItemStack(ItemStack itemStack, boolean isVanilla, boolean isFull) {
+        super(getInitialContainer(itemStack, isVanilla, isFull).getCompound());
         this.originalItemStack = itemStack;
-        this.isCustomData = isCustomData;
         this.isFull = isFull;
     }
 
-    private static NBTCompound getInitialContainer(ItemStack itemStack, boolean isCustomData, boolean isVanilla, boolean isFull) {
+    private static NBTCompound getInitialContainer(ItemStack itemStack, boolean isVanilla, boolean isFull) {
         NBTCompound nbtContainer;
         if (isVanilla) {
             nbtContainer = NBTReflection.getVanillaNBT(itemStack);
@@ -34,11 +33,11 @@ public class NBTCustomItemStack extends NBTContainer {
         if (nbtContainer == null) nbtContainer = new NBTContainer();
         // Create a clone (Minecraft seems to freak out without doing this)
         NBTCompound clone = new NBTContainer();
-        clone.mergeCompound(getContainer(nbtContainer, isCustomData, isFull));
+        clone.mergeCompound(getContainer(nbtContainer, isFull));
         return clone;
     }
 
-    private static NBTCompound getContainer(NBTCompound itemContainer, boolean isCustomData, boolean isFull) {
+    private static NBTCompound getContainer(NBTCompound itemContainer, boolean isFull) {
         if (isFull) {
             // TODO temp solution until NBT API handles this
             // DataVersion is used for deserializing and running thru DataFixerUpper
@@ -46,12 +45,7 @@ public class NBTCustomItemStack extends NBTContainer {
             // TODO end
             return itemContainer;
         }
-        NBTCompound componentsContainer = itemContainer.getOrCreateCompound(NBTApi.TAG_NAME);
-        if (isCustomData) {
-            return componentsContainer.getOrCreateCompound("minecraft:custom_data");
-        } else {
-            return componentsContainer;
-        }
+        return itemContainer.getOrCreateCompound(NBTApi.TAG_NAME);
     }
 
     @Override
@@ -59,7 +53,7 @@ public class NBTCustomItemStack extends NBTContainer {
         super.saveCompound();
         if (this.isFull) return;
         NBTContainer originalItemContainer = NBTItem.convertItemtoNBT(this.originalItemStack.clone());
-        NBTCompound components = getContainer(originalItemContainer, this.isCustomData, false);
+        NBTCompound components = getContainer(originalItemContainer, false);
         components.clearNBT();
         components.mergeCompound(this);
         ItemStack itemStack = NBTItem.convertNBTtoItem(originalItemContainer);
@@ -69,6 +63,28 @@ public class NBTCustomItemStack extends NBTContainer {
 
     public ItemStack getItem() {
         return this.originalItemStack.clone();
+    }
+
+    @Override
+    public void deleteCustomNBT() {
+        // Unused
+    }
+
+    @Override
+    public @NotNull NBTCompound getCopy() {
+        NBTContainer nbtContainer = new NBTContainer();
+        nbtContainer.mergeCompound(this);
+        return nbtContainer;
+    }
+
+    @Override
+    public @NotNull NBTCompound getCustomNBT() {
+        if (NBTApi.HAS_ITEM_COMPONENTS) {
+            return this.getOrCreateCompound("minecraft:custom_data");
+        }
+        // Prior to 1.20.5, the "tag" compound could store any custom data
+        // After 1.20.5 this is merged into the "minecraft:custom_data" component
+        return this;
     }
 
 }

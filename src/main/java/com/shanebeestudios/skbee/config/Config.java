@@ -66,6 +66,7 @@ public class Config {
     public boolean AUTO_LOAD_WORLDS;
     public boolean RUNTIME_DISABLE_ERRORS;
     public boolean RUNTIME_DISABLE_WARNINGS;
+    public boolean on_the_flip_side;
 
     /**
      * @hidden
@@ -190,6 +191,7 @@ public class Config {
 
         this.RUNTIME_DISABLE_ERRORS = this.config.getBoolean("runtime.disable-errors");
         this.RUNTIME_DISABLE_WARNINGS = this.config.getBoolean("runtime.disable-warnings");
+        this.on_the_flip_side = this.config.getBoolean("special.on-the-flip-side");
     }
 
 }
