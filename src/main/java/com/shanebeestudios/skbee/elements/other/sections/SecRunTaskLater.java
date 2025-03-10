@@ -15,7 +15,7 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
-import com.shanebeestudios.skbee.api.region.scheduler.TaskUtils;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.region.scheduler.task.Task;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

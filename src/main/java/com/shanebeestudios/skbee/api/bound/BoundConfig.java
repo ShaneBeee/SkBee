@@ -4,7 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
-import com.shanebeestudios.skbee.api.region.scheduler.TaskUtils;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;

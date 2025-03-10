@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.region.scheduler.TaskUtils;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import net.kyori.adventure.util.TriState;
 import org.apache.commons.io.FileUtils;

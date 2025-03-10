@@ -1,5 +1,8 @@
-package com.shanebeestudios.skbee.api.region.scheduler;
+package com.shanebeestudios.skbee.api.region;
 
+import com.shanebeestudios.skbee.api.region.scheduler.FoliaScheduler;
+import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
+import com.shanebeestudios.skbee.api.region.scheduler.SpigotScheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
