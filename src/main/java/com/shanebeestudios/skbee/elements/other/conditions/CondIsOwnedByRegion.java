@@ -9,12 +9,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.region.RegionUtils;
 import com.shanebeestudios.skbee.api.skript.base.Condition;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -59,17 +56,12 @@ public class CondIsOwnedByRegion extends Condition {
     @Override
     public boolean check(Event event) {
         if (this.pattern == 0) {
-            return this.objects.check(event, object -> {
-                if (object instanceof Entity entity) return Bukkit.isOwnedByCurrentRegion(entity);
-                else if (object instanceof Block block) return Bukkit.isOwnedByCurrentRegion(block);
-                else if (object instanceof Location location) return Bukkit.isOwnedByCurrentRegion(location);
-                return false;
-            }, isNegated());
+            return this.objects.check(event, RegionUtils::isOwnedByCurrentRegion, isNegated());
         } else {
             Integer x = this.x.getSingle(event);
             Integer z = this.z.getSingle(event);
             if (x == null || z == null) return false;
-            return this.world.check(event, world -> Bukkit.isOwnedByCurrentRegion(world, x, z), isNegated());
+            return this.world.check(event, world -> RegionUtils.isOwnedByCurrentRegion(world, x, z), isNegated());
         }
     }
 
