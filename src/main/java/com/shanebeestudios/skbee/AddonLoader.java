@@ -7,6 +7,7 @@ import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
+import com.shanebeestudios.skbee.api.listener.OnTheFlipSide;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
@@ -316,6 +317,9 @@ public class AddonLoader {
 
     private void loadOtherElements() {
         try {
+            if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityAddToWorldEvent")) {
+                this.pluginManager.registerEvents(new OnTheFlipSide(), this.plugin);
+            }
             pluginManager.registerEvents(new EntityListener(), this.plugin);
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.other");
         } catch (Exception ex) {
