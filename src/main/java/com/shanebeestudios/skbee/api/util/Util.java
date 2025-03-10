@@ -31,8 +31,7 @@ public class Util {
     private static final String PREFIX_ERROR = "&7[&bSk&3Bee &cERROR&7] ";
     private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f\\d]){6}>");
     private static final boolean SKRIPT_IS_THERE = Bukkit.getPluginManager().getPlugin("Skript") != null;
-    // TODO figure out a better way to support this, as someone may run a fork and change the brand
-    public static final boolean IS_RUNNING_FOLIA = Bukkit.getServer().getName().equalsIgnoreCase("Folia");
+    public static final boolean IS_RUNNING_FOLIA = Skript.classExists("io.papermc.paper.threadedregions.FoliaWatchdogThread");
 
     // QuickLinks
     public static final String MCWIKI_TICK_COMMAND = "See [**Tick Command**](https://minecraft.wiki/w/Commands/tick) on McWiki for more details.";
