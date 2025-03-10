@@ -1,7 +1,7 @@
-package com.shanebeestudios.skbee.api.scheduler;
+package com.shanebeestudios.skbee.api.region.scheduler;
 
-import com.shanebeestudios.skbee.api.scheduler.task.SpigotTask;
-import com.shanebeestudios.skbee.api.scheduler.task.Task;
+import com.shanebeestudios.skbee.api.region.scheduler.task.SpigotTask;
+import com.shanebeestudios.skbee.api.region.scheduler.task.Task;
 import org.bukkit.Bukkit;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;

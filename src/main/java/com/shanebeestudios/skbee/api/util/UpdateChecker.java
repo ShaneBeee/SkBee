@@ -4,7 +4,7 @@ import ch.njol.skript.util.Version;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
+import com.shanebeestudios.skbee.api.region.scheduler.TaskUtils;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;

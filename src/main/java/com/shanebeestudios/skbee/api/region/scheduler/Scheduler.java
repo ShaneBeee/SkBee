@@ -1,6 +1,6 @@
-package com.shanebeestudios.skbee.api.scheduler;
+package com.shanebeestudios.skbee.api.region.scheduler;
 
-import com.shanebeestudios.skbee.api.scheduler.task.Task;
+import com.shanebeestudios.skbee.api.region.scheduler.task.Task;
 
 /**
  * Scheduler for scheduling tasks

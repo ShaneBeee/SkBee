@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.scheduler.task;
+package com.shanebeestudios.skbee.api.region.scheduler.task;
 
 import org.bukkit.scheduler.BukkitTask;
 

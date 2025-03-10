@@ -1,7 +1,7 @@
-package com.shanebeestudios.skbee.api.scheduler;
+package com.shanebeestudios.skbee.api.region.scheduler;
 
-import com.shanebeestudios.skbee.api.scheduler.task.FoliaTask;
-import com.shanebeestudios.skbee.api.scheduler.task.Task;
+import com.shanebeestudios.skbee.api.region.scheduler.task.FoliaTask;
+import com.shanebeestudios.skbee.api.region.scheduler.task.Task;
 import io.papermc.paper.threadedregions.scheduler.AsyncScheduler;
 import io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler;
 import io.papermc.paper.threadedregions.scheduler.RegionScheduler;

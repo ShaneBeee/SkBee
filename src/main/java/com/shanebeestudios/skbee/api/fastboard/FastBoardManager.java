@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.api.fastboard;
 
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
+import com.shanebeestudios.skbee.api.region.scheduler.TaskUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;

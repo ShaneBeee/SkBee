@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.scheduler;
+package com.shanebeestudios.skbee.api.region.scheduler;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

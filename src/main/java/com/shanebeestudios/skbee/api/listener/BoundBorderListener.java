@@ -6,7 +6,7 @@ import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
 import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
-import com.shanebeestudios.skbee.api.scheduler.TaskUtils;
+import com.shanebeestudios.skbee.api.region.scheduler.TaskUtils;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

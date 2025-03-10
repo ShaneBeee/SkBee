@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.scheduler.task;
+package com.shanebeestudios.skbee.api.region.scheduler.task;
 
 /**
  * Base task to be implemented by server tasks
