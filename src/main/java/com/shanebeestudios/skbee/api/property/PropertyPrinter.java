@@ -2,7 +2,9 @@ package com.shanebeestudios.skbee.api.property;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.registrations.Classes;
+import com.shanebeestudios.skbee.api.util.Util;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.charset.StandardCharsets;
@@ -18,6 +20,7 @@ import java.util.Map;
 public class PropertyPrinter {
 
     public static void printAll() {
+        long start = System.currentTimeMillis();
         Map<Class<?>, List<Property<?, ?>>> mapByClass = new HashMap<>();
         List<Holder> holderList = new ArrayList<>();
 
@@ -44,7 +47,25 @@ public class PropertyPrinter {
         });
 
         try {
-            PrintWriter writer = new PrintWriter("plugins/SkBee/properties/all.txt", StandardCharsets.UTF_8);
+            File file = new File("plugins/SkBee/properties/all-properties.md");
+            if (!file.exists()) {
+                File parentFile = file.getParentFile();
+                if (!parentFile.exists()) {
+                    if (!parentFile.mkdirs()) {
+                        Util.skriptError("Unable to create properties directory.");
+                        return;
+                    } else {
+                        Util.log("Created properties directory.");
+                    }
+                }
+                if (!file.createNewFile()) {
+                    Util.skriptError("Unable to create properties file.");
+                    return;
+                } else {
+                    Util.log("Created properties file.");
+                }
+            }
+            PrintWriter writer = new PrintWriter(file, StandardCharsets.UTF_8);
             writer.println("# Properties");
             writer.println("Properties are simplied versions of full expression, which are used in the [Property Expression](https://skripthub.net/docs/?id=13236)");
             writer.println();
@@ -62,6 +83,8 @@ public class PropertyPrinter {
                 holder.properties.forEach(property -> printProperty(writer, property));
             });
             writer.close();
+            long fin = System.currentTimeMillis() - start;
+            Util.log("Properties written to file in %s ms.", fin);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
