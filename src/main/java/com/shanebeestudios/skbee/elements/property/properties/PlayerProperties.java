@@ -23,6 +23,8 @@ public class PlayerProperties {
                 })
                 .description("Represents the \"Score\" the player sees in their death screen.",
                     "Requires Paper 1.21.4+")
+                .examples("set {_score} to death screen score property of player",
+                    "set death screen score property of player to 150")
                 .since("INSERT VERSION");
         }
     }
