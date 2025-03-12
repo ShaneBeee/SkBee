@@ -5,7 +5,6 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Experience;
-import ch.njol.skript.util.Timespan;
 import com.destroystokyo.paper.event.block.BeaconEffectEvent;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
@@ -312,17 +311,22 @@ public class PaperEvents extends SimpleEvent {
 
             Skript.registerEvent("Tick End Event", PaperEvents.class, ServerTickEndEvent.class, "server tick end")
                 .description("Called when the server has finished ticking the main loop.",
-                    "`event-number` = The current tick number.",
-                    "`event-timespans` = Tick duration and Time remaining.")
+                    "There may be time left after this event is called, and before the next tick starts.",
+                    "`event-numbers` = Represents different numbers in this event, in this order:",
+                    "- Current tick number (starts from 0 when the server starts and counts up).",
+                    "- Tick duration (in milliseconds) (How long the tick took to tick).",
+                    "- Time remaining (in milliseconds) (How long til the next tick executes).",
+                    "- Time remaining (in nanoseconds) (How long til the next tick executes).")
                 .examples("")
                 .since("INSERT VERSION");
 
             EventValues.registerEventValue(ServerTickStartEvent.class, Integer.class, ServerTickStartEvent::getTickNumber);
-            EventValues.registerEventValue(ServerTickEndEvent.class, Integer.class, ServerTickEndEvent::getTickNumber);
-            EventValues.registerEventValue(ServerTickEndEvent.class, Timespan[].class,
-                from -> new Timespan[]{
-                    new Timespan((long) from.getTickDuration()),
-                    new Timespan(from.getTimeRemaining())
+            EventValues.registerEventValue(ServerTickEndEvent.class, Number[].class,
+                from -> new Number[]{
+                    from.getTickNumber(),
+                    from.getTickDuration(),
+                    from.getTimeRemaining() / 1_000_000,
+                    from.getTimeRemaining()
                 });
         }
     }
