@@ -5,6 +5,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Experience;
+import ch.njol.skript.util.Timespan;
 import com.destroystokyo.paper.event.block.BeaconEffectEvent;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
@@ -16,6 +17,8 @@ import com.destroystokyo.paper.event.entity.SlimePathfindEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
+import com.destroystokyo.paper.event.server.ServerTickEndEvent;
+import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.event.block.BeaconActivatedEvent;
 import io.papermc.paper.event.block.BeaconDeactivatedEvent;
@@ -298,6 +301,30 @@ public class PaperEvents extends SimpleEvent {
             EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, PlayerTrackEntityEvent::getEntity, EventValues.TIME_NOW);
         }
 
+        // SERVER EVENTS
+        // Tick Start/End Event
+        if (Skript.classExists("com.destroystokyo.paper.event.server.ServerTickStartEvent")) {
+            Skript.registerEvent("Tick Start Event", PaperEvents.class, ServerTickStartEvent.class, "server tick start")
+                .description("Called each time the server starts its main tick loop.",
+                    "`event-number` = The current tick number.")
+                .examples("")
+                .since("INSERT VERSION");
+
+            Skript.registerEvent("Tick End Event", PaperEvents.class, ServerTickEndEvent.class, "server tick end")
+                .description("Called when the server has finished ticking the main loop.",
+                    "`event-number` = The current tick number.",
+                    "`event-timespans` = Tick duration and Time remaining.")
+                .examples("")
+                .since("INSERT VERSION");
+
+            EventValues.registerEventValue(ServerTickStartEvent.class, Integer.class, ServerTickStartEvent::getTickNumber);
+            EventValues.registerEventValue(ServerTickEndEvent.class, Integer.class, ServerTickEndEvent::getTickNumber);
+            EventValues.registerEventValue(ServerTickEndEvent.class, Timespan[].class,
+                from -> new Timespan[]{
+                    new Timespan((long) from.getTickDuration()),
+                    new Timespan(from.getTimeRemaining())
+                });
+        }
     }
 
 }
