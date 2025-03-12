@@ -17,6 +17,7 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.data.BlockData;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
@@ -24,12 +25,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.Event;
-import org.bukkit.event.block.BellRingEvent;
 import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.MoistureChangeEvent;
+import org.bukkit.event.command.UnknownCommandEvent;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
@@ -607,6 +608,18 @@ public class OtherEvents extends SimpleEvent {
                     return event.getNewSpawn();
                 }
             }, EventValues.TIME_FUTURE);
+        }
+
+        if (Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) {
+            Skript.registerEvent("Unknown Command", OtherEvents.class, UnknownCommandEvent.class, "unknown command")
+                .description("This event is fired when a player executes a command that is not defined.",
+                    "`event-string` = The command that was sent.",
+                    "`event-sender/player` = Who sent the command.")
+                .examples("")
+                .since("INSERT VERSION");
+
+            EventValues.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
+            EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);
         }
     }
 
