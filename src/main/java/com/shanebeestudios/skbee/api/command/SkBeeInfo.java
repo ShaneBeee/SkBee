@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.command;
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptUpdater;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.property.PropertyPrinter;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
@@ -80,6 +81,10 @@ public class SkBeeInfo implements TabExecutor {
                     String enabled = this.config.settings_debug ? "&aenabled" : "&cdisabled";
                     Util.sendColMsg(sender, "Debug mode is currently %s", enabled);
                 }
+            }
+            // PROPERTY PRINTER
+            else if (args[0].equalsIgnoreCase("properties")) {
+                PropertyPrinter.printAll();
             }
         }
         return true;

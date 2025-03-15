@@ -10,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -17,42 +18,42 @@ import org.jetbrains.annotations.NotNull;
 @Name("Bound - Contains Location")
 @Description("Check if a location is within the bounds of a bounding box.")
 @Examples({"on break:",
-        "\tif location of event-block is within bound with id \"spawn.bound\":",
-        "\t\tcancel event", "",
-        "on damage of a player:",
-        "\tif victim is within bound {spawn}:",
-        "\t\tcancel event"})
+    "\tif location of event-block is within bound with id \"spawn.bound\":",
+    "\t\tcancel event", "",
+    "on damage of a player:",
+    "\tif victim is within bound {spawn}:",
+    "\t\tcancel event"})
 @Since("1.0.0")
 public class CondBoundContainsLocation extends Condition {
 
     static {
-        PropertyCondition.register(CondBoundContainsLocation.class, "[with]in [bound] %bound%", "locations");
+        PropertyCondition.register(CondBoundContainsLocation.class, "[with]in [bound[s]] %bounds%", "locations");
     }
 
-    private Expression<Bound> bound;
+    private Expression<Bound> bounds;
     private Expression<Location> locations;
 
-    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
-        bound = (Expression<Bound>) exprs[1];
-        locations = (Expression<Location>) exprs[0];
+        this.bounds = (Expression<Bound>) exprs[1];
+        this.locations = (Expression<Location>) exprs[0];
         setNegated(matchedPattern == 1);
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
-        Bound bound = this.bound.getSingle(event);
-        if (bound == null) return false;
-        return locations.check(event, bound::isInRegion, isNegated());
+        Location[] locs = this.locations.getArray(event);
+        boolean and = this.locations.getAnd();
+        return this.bounds.check(event, bound ->
+            SimpleExpression.check(locs, bound::isInRegion, isNegated(), and));
     }
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
         return PropertyCondition.toString(this, PropertyCondition.PropertyType.BE, e, d, locations,
-                "in the bound " + bound.toString(e, d));
+            "in the bound[s] " + this.bounds.toString(e, d));
     }
 
 }

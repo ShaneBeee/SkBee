@@ -15,9 +15,6 @@ import java.lang.reflect.Method;
 @SuppressWarnings({"SequencedCollectionMethodCanBeUsed", "CallToPrintStackTrace", "DataFlowIssue"})
 public class NBTReflection {
 
-    @SuppressWarnings("deprecation")
-    private static final int DATA_VERSION = Bukkit.getUnsafe().getDataVersion();
-
     // Classes
     private static Class<?> CRAFT_ITEM_STACK_CLASS;
 
@@ -68,15 +65,6 @@ public class NBTReflection {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             if (SkBee.isDebug()) e.printStackTrace();
         }
-    }
-
-    /**
-     * Get the Minecraft DataVersion
-     *
-     * @return DataVersion from MC
-     */
-    public static int getDataVersion() {
-        return DATA_VERSION;
     }
 
     /**

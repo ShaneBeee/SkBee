@@ -9,6 +9,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -105,7 +106,7 @@ public class SkriptTypes {
 
                 @Override
                 public String toString(@NotNull NBTCompound nbt, int flags) {
-                    if (!Bukkit.isPrimaryThread()) {
+                    if (!Bukkit.isPrimaryThread() && !SkBee.getPlugin().getPluginConfig().NBT_ALLOW_UNSAFE_OPERATIONS) {
                         Skript.error("NBT cannot be converted to a string off the main thread.");
                         return null;
                     }

@@ -19,6 +19,7 @@ import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
 import de.tr7zw.changeme.nbtapi.utils.DataFixerUtil;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.apache.commons.lang3.ArrayUtils;
+import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -44,6 +45,8 @@ public class NBTApi {
     private static boolean ENABLED;
     public static final boolean HAS_ITEM_COMPONENTS = Skript.isRunningMinecraft(1, 20, 5);
     static final String TAG_NAME = HAS_ITEM_COMPONENTS ? "components" : "tag";
+    @SuppressWarnings("deprecation")
+    private static final int DATA_VERSION = Bukkit.getUnsafe().getDataVersion();
 
     /**
      * Initialize this NBT API
@@ -866,16 +869,25 @@ public class NBTApi {
      * @return ItemStack from NBT
      */
     public static ItemStack convertNBTtoItem(@NotNull NBTCompound nbtcompound) {
-        if (!nbtcompound.hasTag("DataVersion") || nbtcompound.getInteger("DataVersion") != NBTReflection.getDataVersion()) {
+        if (!nbtcompound.hasTag("DataVersion") || nbtcompound.getInteger("DataVersion") != getDataVersion()) {
             int dataVersion = nbtcompound.hasTag("DataVersion") ? nbtcompound.getInteger("DataVersion") : DataFixerUtil.VERSION1_20_4;
             try {
-                ReadWriteNBT fixedItemNBT = DataFixerUtil.fixUpItemData(nbtcompound, dataVersion, NBTReflection.getDataVersion());
+                ReadWriteNBT fixedItemNBT = DataFixerUtil.fixUpItemData(nbtcompound, dataVersion, getDataVersion());
                 return NBTItem.convertNBTtoItem((NBTCompound) fixedItemNBT);
             } catch (NoSuchFieldException | IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
         }
         return NBTItem.convertNBTtoItem(nbtcompound);
+    }
+
+    /**
+     * Get the Minecraft DataVersion
+     *
+     * @return DataVersion from MC
+     */
+    public static int getDataVersion() {
+        return NBTApi.DATA_VERSION;
     }
 
 }

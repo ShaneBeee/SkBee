@@ -33,23 +33,27 @@ public class ExprBoundFromID extends SimpleExpression<Bound> {
     private Expression<String> ids;
     private static final BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
         this.ids = (Expression<String>) exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Bound[] get(Event event) {
         List<Bound> bounds = new ArrayList<>();
-        for (String id : this.ids.getArray(event)) {
+        for (String id : this.ids.getAll(event)) {
             Bound bound = boundConfig.getBoundFromID(id);
             if (bounds.contains(bound)) continue;
             bounds.add(bound);
         }
         return bounds.toArray(new Bound[0]);
+    }
+
+    @Override
+    public boolean getAnd() {
+        return this.ids.getAnd();
     }
 
     @Override
@@ -64,7 +68,7 @@ public class ExprBoundFromID extends SimpleExpression<Bound> {
 
     @Override
     public @NotNull String toString(Event event, boolean debug) {
-        return "bound from id " + this.ids.toString(event, debug);
+        return "bound[s] from id " + this.ids.toString(event, debug);
     }
 
 }
