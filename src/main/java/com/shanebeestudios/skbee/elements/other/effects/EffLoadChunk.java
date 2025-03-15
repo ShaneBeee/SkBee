@@ -22,14 +22,13 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Chunk - Load/Unload")
-@Description({"Load or unload a chunk. When loading you have an option to add a ticket.",
-    "This will prevent the chunk from unloading until you explicitly unload it, or the server stops.",
-    "The two numbers represent a chunk's X/Y coords, NOT a location. A chunk's X/Y coords are basically",
-    "a location divided by 16. Ex: Chunk 1/1 would be at X=16, Z=16.",
-    "Async loading (requires PaperMC) will prevent freezing the main thread, your code will continue once",
-    "the chunk has finished loading/generating.",
-    "NOTE: If no ticket is added, and the chunk has no players to keep it active, it will immediately unload.",
-    "NOTE: When adding a ticket, a bunch of chunks will load in a radius around said chunk."})
+@Description({"Load or unload a chunk.",
+    "**Options**:",
+    "- `%number%,[ ]%number%` = Represents the X/Z coords of a chunk. Not to be confused with a location. " +
+        "Chunk coords are essentially a location divided by 16, example: Chunk 1/1 = Location 16/16",
+    "- `async` = Will load the chunk off the main thread (Requires PaperMC). Your code will halt whilst waiting for the chunk to load.",
+    "- `with ticket` = Will add a ticket to the chunk, preventing it from unloading until you explicitly unload it or the server stops.",
+    "- `without saving` = Will prevent the chunk from saving when unloading."})
 @Examples({"load chunk at 1,1 in world \"world\"",
     "load chunk at location(1,1,1, world \"world\")",
     "load chunk at 150,150 in world \"world\"",
@@ -45,15 +44,23 @@ public class EffLoadChunk extends Effect {
 
     static {
         Skript.registerEffect(EffLoadChunk.class,
-            "([:async ]load|:unload) chunk at %number%,[ ]%number% (in|of) [world] %world% [ticket:with ticket]",
-            "([:async ]load|:unload) chunk at %location% [ticket:with ticket]",
-            "unload %chunks%");
+            // Chunk coords
+            "[:async] load chunk at %number%,[ ]%number% (in|of) [world] %world% [ticket:with ticket]",
+            "unload chunk at %number%,[ ]%number% (in|of) [world] %world%",
+
+            // Location
+            "[:async] load chunk at %location% [ticket:with ticket]",
+            "unload chunk at %location% [nosave:without saving]",
+
+            // Chunk
+            "unload %chunks% [nosave:without saving]");
     }
 
     private int pattern;
     private boolean ticket;
     private boolean unload;
     private boolean isAsync;
+    private boolean save;
     private Expression<Number> x;
     private Expression<Number> z;
     private Expression<World> world;
@@ -64,15 +71,16 @@ public class EffLoadChunk extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int pattern, Kleenean kleenean, ParseResult parseResult) {
         this.pattern = pattern;
-        this.unload = parseResult.hasTag("unload");
+        this.unload = pattern != 0 && pattern != 2;
         this.ticket = parseResult.hasTag("ticket");
         this.isAsync = parseResult.hasTag("async");
+        this.save = !parseResult.hasTag("nosave");
 
-        if (pattern == 0) {
+        if (pattern <= 1) {
             this.x = (Expression<Number>) exprs[0];
             this.z = (Expression<Number>) exprs[1];
             this.world = (Expression<World>) exprs[2];
-        } else if (pattern == 1) {
+        } else if (pattern <= 3) {
             this.location = (Expression<Location>) exprs[0];
         } else {
             this.chunks = (Expression<Chunk>) exprs[0];
@@ -88,7 +96,7 @@ public class EffLoadChunk extends Effect {
     protected @Nullable TriggerItem walk(Event event) {
         TriggerItem next = getNext();
 
-        if (pattern < 2) {
+        if (pattern < 4) {
             int x = 0;
             int z = 0;
 
@@ -123,11 +131,11 @@ public class EffLoadChunk extends Effect {
                 }
             }
 
-            if (unload) {
+            if (this.unload) {
                 world.removePluginChunkTicket(x, z, PLUGIN);
-                world.unloadChunk(x, z);
+                world.unloadChunk(x, z, this.save);
             } else {
-                if (isAsync) {
+                if (this.isAsync) {
                     // Let's save you guys for later after the chunk has loaded
                     Object localVars = Variables.removeLocals(event);
 
@@ -146,14 +154,14 @@ public class EffLoadChunk extends Effect {
                     });
                     return null;
                 } else {
-                    world.getChunkAt(x,z);
+                    world.getChunkAt(x, z);
                     if (this.ticket) world.addPluginChunkTicket(x, z, PLUGIN);
                 }
             }
         } else {
             for (Chunk chunk : this.chunks.getArray(event)) {
                 chunk.removePluginChunkTicket(PLUGIN);
-                chunk.unload();
+                chunk.unload(this.save);
             }
         }
         return next;
@@ -163,11 +171,11 @@ public class EffLoadChunk extends Effect {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String load = this.unload ? "unload" : ((this.isAsync ? "async " : "") + "load");
         String chunk = switch (pattern) {
-            case 1 -> "at " + this.location.toString(e, d);
-            case 2 -> this.chunks.toString(e, d);
+            case 2, 3 -> "at " + this.location.toString(e, d);
+            case 4 -> this.chunks.toString(e, d);
             default -> "at " + this.x.toString(e, d) + "," + this.z.toString(e, d);
         };
-        String ticket = this.ticket ? " with ticket" : "";
+        String ticket = this.ticket ? " with ticket" : !this.save ? " witout saving" : "";
         return String.format("%s chunk %s %s", load, chunk, ticket);
     }
 
