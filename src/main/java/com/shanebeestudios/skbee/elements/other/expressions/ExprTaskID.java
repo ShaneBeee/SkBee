@@ -18,7 +18,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 @Name("Task - ID")
-@Description({"Get the current task ID. This will only be tasks created with the task section."})
+@Description({"Get the current task ID. This will only be tasks created with the task section.",
+    "If running Folia, tasks do not have IDs and this will always return `-1`."})
 @Examples({"set {_id} to current task id",
     "",
     "run 0 ticks later repeating every second:",

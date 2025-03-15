@@ -27,8 +27,9 @@ public class Types {
         Classes.registerClass(registryKeyClassInfo);
 
         // Run later to make sure SkBee's classes have loaded
-        Bukkit.getScheduler().runTaskLater(SkBee.getPlugin(), () ->
-            registryKeyClassInfo.usage(RegistryHolders.getDocUsage()), 1);
+        Bukkit.getGlobalRegionScheduler().runDelayed(SkBee.getPlugin(), scheduledTask -> {
+            registryKeyClassInfo.usage(RegistryHolders.getDocUsage());
+        }, 1);
 
         Classes.registerClass(new ClassInfo<>(TagKey.class, "tagkey")
             .user("tag ?keys?")

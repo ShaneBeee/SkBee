@@ -14,6 +14,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
@@ -40,7 +41,7 @@ import java.util.List;
 public class ExprObjectiveScoreCustomName extends SimpleExpression<Object> {
 
     static {
-        if (SkBee.getPlugin().getPluginConfig().ELEMENTS_SCOREBOARD && Skript.methodExists(Score.class, "customName")) {
+        if (!Util.IS_RUNNING_FOLIA && SkBee.getPlugin().getPluginConfig().ELEMENTS_SCOREBOARD && Skript.methodExists(Score.class, "customName")) {
             Skript.registerExpression(ExprObjectiveScoreCustomName.class, Object.class, ExpressionType.COMBINED,
                 "[:component] custom score name of %entities/strings% for %objective%");
         }

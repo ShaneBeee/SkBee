@@ -12,16 +12,15 @@ import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
@@ -193,7 +192,7 @@ public class Types {
     @SuppressWarnings("DataFlowIssue")
     private static void setupUsage(ClassInfo<Audience> audienceClassInfo) {
         // Make sure all class infos are created before creating usage
-        Bukkit.getScheduler().runTaskLater(SkBee.getPlugin(), () -> {
+        TaskUtils.getGlobalScheduler().runTaskLater(() -> {
             List<String> names = new ArrayList<>();
             Classes.getExactClassInfo(ClassInfo.class).getSupplier().get().forEachRemaining(classInfo -> {
                 if (Audience.class.isAssignableFrom(classInfo.getC()) && classInfo.getC() != Audience.class) {
