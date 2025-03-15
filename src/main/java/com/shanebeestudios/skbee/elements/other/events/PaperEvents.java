@@ -16,6 +16,8 @@ import com.destroystokyo.paper.event.entity.SlimePathfindEvent;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
+import com.destroystokyo.paper.event.server.ServerTickEndEvent;
+import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.event.block.BeaconActivatedEvent;
 import io.papermc.paper.event.block.BeaconDeactivatedEvent;
@@ -298,6 +300,35 @@ public class PaperEvents extends SimpleEvent {
             EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, PlayerTrackEntityEvent::getEntity, EventValues.TIME_NOW);
         }
 
+        // SERVER EVENTS
+        // Tick Start/End Event
+        if (Skript.classExists("com.destroystokyo.paper.event.server.ServerTickStartEvent")) {
+            Skript.registerEvent("Tick Start Event", PaperEvents.class, ServerTickStartEvent.class, "server tick start")
+                .description("Called each time the server starts its main tick loop.",
+                    "`event-number` = The current tick number.")
+                .examples("")
+                .since("INSERT VERSION");
+
+            Skript.registerEvent("Tick End Event", PaperEvents.class, ServerTickEndEvent.class, "server tick end")
+                .description("Called when the server has finished ticking the main loop.",
+                    "There may be time left after this event is called, and before the next tick starts.",
+                    "`event-numbers` = Represents different numbers in this event, in this order:",
+                    "- Current tick number (starts from 0 when the server starts and counts up).",
+                    "- Tick duration (in milliseconds) (How long the tick took to tick).",
+                    "- Time remaining (in milliseconds) (How long til the next tick executes).",
+                    "- Time remaining (in nanoseconds) (How long til the next tick executes).")
+                .examples("")
+                .since("INSERT VERSION");
+
+            EventValues.registerEventValue(ServerTickStartEvent.class, Integer.class, ServerTickStartEvent::getTickNumber);
+            EventValues.registerEventValue(ServerTickEndEvent.class, Number[].class,
+                from -> new Number[]{
+                    from.getTickNumber(),
+                    from.getTickDuration(),
+                    from.getTimeRemaining() / 1_000_000,
+                    from.getTimeRemaining()
+                });
+        }
     }
 
 }

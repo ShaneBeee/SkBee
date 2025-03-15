@@ -21,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
@@ -32,7 +33,7 @@ public class BeeWorldCreator implements Keyed {
     private static final boolean HAS_KEEP_SPAWN_LOADED = Skript.methodExists(WorldCreator.class, "keepSpawnLoaded");
 
     private final String worldName;
-    private final NamespacedKey key;
+    private NamespacedKey key;
     private WorldType worldType;
     private Environment environment;
     private String generatorSettings;
@@ -78,7 +79,11 @@ public class BeeWorldCreator implements Keyed {
     }
 
     public @NotNull NamespacedKey getKey() {
-        return this.key != null ? this.key : NamespacedKey.minecraft(this.worldName);
+        if (this.key == null) {
+            String key = this.worldName.toLowerCase(Locale.ROOT).replaceAll(" ", "_");
+            this.key = NamespacedKey.minecraft(key);
+        }
+        return this.key;
     }
 
     public void setWorldType(WorldType worldType) {
