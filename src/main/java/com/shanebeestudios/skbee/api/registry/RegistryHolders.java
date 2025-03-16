@@ -115,9 +115,7 @@ public class RegistryHolders {
 
     public static String getDocUsage() {
         List<String> docNames = new ArrayList<>();
-        REGISTRY_HOLDERS_BY_REGISTRY_KEY.forEach((key, holder) -> {
-            docNames.add(holder.getDocString());
-        });
+        REGISTRY_HOLDERS_BY_REGISTRY_KEY.forEach((key, holder) -> docNames.add(holder.getDocString()));
         Collections.sort(docNames);
         return String.join("\n", docNames);
     }
@@ -125,7 +123,7 @@ public class RegistryHolders {
     @SuppressWarnings("rawtypes")
     public static Supplier<Iterator<RegistryKey>> getSupplier() {
         List<RegistryKey> keys = new ArrayList<>();
-        REGISTRY_HOLDERS_BY_NAME.forEach((key, holder) -> keys.add(holder.getRegistryKey()));
+        REGISTRY_HOLDERS_BY_REGISTRY_KEY.keySet().stream().sorted(java.util.Comparator.comparing(Object::toString)).forEach(keys::add);
         return keys::iterator;
     }
 
