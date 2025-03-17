@@ -3,19 +3,18 @@ package com.shanebeestudios.skbee;
 import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.LazyLocation;
-import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.config.Config;
-import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -57,6 +56,7 @@ public class SkBee extends JavaPlugin {
         long start = System.currentTimeMillis();
         instance = this;
         this.config = new Config(this);
+        TaskUtils.initialize(this, Util.IS_RUNNING_FOLIA || this.config.settings_use_paper_schedulers);
         this.addonLoader = new AddonLoader(this);
         // Check if SkriptAddon can actually load
         this.properlyEnabled = addonLoader.canLoadPlugin();
@@ -101,7 +101,7 @@ public class SkBee extends JavaPlugin {
     public void onDisable() {
         if (this.properlyEnabled) {
             // Cancel tasks on stop to prevent async issues
-            Bukkit.getScheduler().cancelTasks(this);
+            TaskUtils.cancelTasks();
         }
         if (this.virtualFurnaceAPI != null) {
             this.virtualFurnaceAPI.disableAPI();

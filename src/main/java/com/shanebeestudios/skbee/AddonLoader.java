@@ -215,6 +215,10 @@ public class AddonLoader {
             Util.logLoading("&7To use SkBee Scoreboards, please remove the addon which has registered Scoreboard already.");
             return;
         }
+        if (Util.IS_RUNNING_FOLIA) {
+            Util.logLoading("&5Scoreboard Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
+            return;
+        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.scoreboard");
             Util.logLoading("&5Scoreboard Elements &asuccessfully loaded");
@@ -332,6 +336,10 @@ public class AddonLoader {
             Util.logLoading("&5World Creator Elements &cdisabled via config");
             return;
         }
+        if (Util.IS_RUNNING_FOLIA) {
+            Util.logLoading("&5World Creator Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
+            return;
+        }
         try {
             this.plugin.beeWorldConfig = new BeeWorldConfig(this.plugin);
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.worldcreator");
@@ -348,6 +356,10 @@ public class AddonLoader {
         }
         if (!this.config.ELEMENTS_WORLD_CREATOR) {
             Util.logLoading("&5Chunk Generator &cdisabled via World Creator config");
+            return;
+        }
+        if (Util.IS_RUNNING_FOLIA) {
+            Util.logLoading("&5Chunk Generator Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
             return;
         }
         try {

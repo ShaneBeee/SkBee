@@ -4,6 +4,7 @@ import ch.njol.skript.util.Version;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -48,7 +49,7 @@ public class UpdateChecker implements Listener {
                 Player player = event.getPlayer();
                 if (!player.hasPermission("skbee.update.check")) return;
 
-                Bukkit.getScheduler().runTaskLater(UpdateChecker.this.plugin, () -> getUpdateVersion(true).thenApply(version -> {
+                TaskUtils.getEntityScheduler(player).runTaskLater(() -> getUpdateVersion(true).thenApply(version -> {
                     Util.sendColMsg(player, "&7[&bSk&3Bee&7] update available: &a" + version);
                     Util.sendColMsg(player, "&7[&bSk&3Bee&7] download at &bhttps://github.com/ShaneBeee/SkBee/releases");
                     return true;
@@ -92,7 +93,7 @@ public class UpdateChecker implements Listener {
     private CompletableFuture<Version> getLatestReleaseVersion(boolean async) {
         CompletableFuture<Version> future = new CompletableFuture<>();
         if (async) {
-            Bukkit.getScheduler().runTaskAsynchronously(this.plugin, () -> {
+            TaskUtils.getGlobalScheduler().runTaskAsync( () -> {
                 Version lastest = getLastestVersionFromGitHub();
                 if (lastest == null) future.cancel(true);
                 future.complete(lastest);
