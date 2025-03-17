@@ -10,6 +10,7 @@ import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.listener.OnTheFlipSide;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
+import com.shanebeestudios.skbee.api.property.PropertyRegistry;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
@@ -25,6 +26,8 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.Objective;
+
+import java.io.IOException;
 
 /**
  * @hidden
@@ -109,6 +112,7 @@ public class AddonLoader {
         loadGameEventElements();
         loadItemComponentElements();
         loadParticleElements();
+        loadPropertyElements();
         loadRayTraceElements();
         loadRecipeElements();
         loadScoreboardElements();
@@ -136,6 +140,10 @@ public class AddonLoader {
         Util.log("Loaded (%s) elements:", total);
         for (int i = 0; i < finish.length; i++) {
             Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
+        }
+        if (this.config.ELEMENTS_PROPERTY) {
+            int size = PropertyRegistry.properties().size();
+            Util.log(" - %s properties",size);
         }
         if (this.config.RUNTIME_DISABLE_ERRORS) {
             Util.logLoading("&eRuntime Errors have been disabled via config!");
@@ -205,6 +213,10 @@ public class AddonLoader {
             Util.logLoading("&5Scoreboard Elements &cdisabled");
             Util.logLoading("&7It appears another Skript addon may have registered Scoreboard syntax.");
             Util.logLoading("&7To use SkBee Scoreboards, please remove the addon which has registered Scoreboard already.");
+            return;
+        }
+        if (Util.IS_RUNNING_FOLIA) {
+            Util.logLoading("&5Scoreboard Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
             return;
         }
         try {
@@ -324,6 +336,10 @@ public class AddonLoader {
             Util.logLoading("&5World Creator Elements &cdisabled via config");
             return;
         }
+        if (Util.IS_RUNNING_FOLIA) {
+            Util.logLoading("&5World Creator Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
+            return;
+        }
         try {
             this.plugin.beeWorldConfig = new BeeWorldConfig(this.plugin);
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.worldcreator");
@@ -340,6 +356,10 @@ public class AddonLoader {
         }
         if (!this.config.ELEMENTS_WORLD_CREATOR) {
             Util.logLoading("&5Chunk Generator &cdisabled via World Creator config");
+            return;
+        }
+        if (Util.IS_RUNNING_FOLIA) {
+            Util.logLoading("&5Chunk Generator Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
             return;
         }
         try {
@@ -590,6 +610,19 @@ public class AddonLoader {
             Util.logLoading("&5SwitchCase Elements &asuccessfully loaded");
         } catch (Exception ex) {
             logFailure("SwitchCase", ex);
+        }
+    }
+
+    private void loadPropertyElements() {
+        if (!this.config.ELEMENTS_PROPERTY) {
+            Util.logLoading("&5Property elements &cdisabled via config");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.property");
+            Util.logLoading("&5Property Elements &asuccessfully loaded");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 

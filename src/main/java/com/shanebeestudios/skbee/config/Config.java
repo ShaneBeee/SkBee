@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.config;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -18,6 +19,7 @@ public class Config {
 
     // Config stuff
     public boolean settings_debug;
+    public boolean settings_use_paper_schedulers;
     public boolean SETTINGS_UPDATE_CHECKER_ENABLED;
     public boolean SETTINGS_UPDATE_CHECKER_ASYNC;
     public boolean SETTINGS_FASTBOARD_LINES;
@@ -63,6 +65,7 @@ public class Config {
     public boolean ELEMENTS_ITEM_COMPONENT;
     public boolean ELEMENTS_CHUNK_GEN;
     public boolean ELEMENTS_SWITCH_CASE;
+    public boolean ELEMENTS_PROPERTY;
     public boolean AUTO_LOAD_WORLDS;
     public boolean RUNTIME_DISABLE_ERRORS;
     public boolean RUNTIME_DISABLE_WARNINGS;
@@ -135,6 +138,10 @@ public class Config {
 
     private void loadConfigs() {
         this.settings_debug = getSetting("debug");
+        this.settings_use_paper_schedulers = getSetting("use-paper-schedulers") && Skript.classExists("io.papermc.paper.threadedregions.scheduler.RegionScheduler");
+        if (this.settings_use_paper_schedulers) {
+            Util.logLoading("&eUsing Paper schedulers.");
+        }
         this.SETTINGS_UPDATE_CHECKER_ENABLED = getSetting("update-checker.enabled");
         this.SETTINGS_UPDATE_CHECKER_ASYNC = getSetting("update-checker.async");
 
@@ -187,6 +194,7 @@ public class Config {
         this.ELEMENTS_CHUNK_GEN = getElement("chunk-generator");
         this.ELEMENTS_ITEM_COMPONENT = getElement("item-component");
         this.ELEMENTS_SWITCH_CASE = getElement("switch-case");
+        this.ELEMENTS_PROPERTY = getElement("property");
         this.AUTO_LOAD_WORLDS = getElement("auto-load-custom-worlds");
 
         this.RUNTIME_DISABLE_ERRORS = this.config.getBoolean("runtime.disable-errors");

@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.elements.worldcreator.objects;
 
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import net.kyori.adventure.util.TriState;
 import org.apache.commons.io.FileUtils;
@@ -20,6 +21,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Random;
@@ -31,7 +33,7 @@ public class BeeWorldCreator implements Keyed {
     private static final boolean HAS_KEEP_SPAWN_LOADED = Skript.methodExists(WorldCreator.class, "keepSpawnLoaded");
 
     private final String worldName;
-    private final NamespacedKey key;
+    private NamespacedKey key;
     private WorldType worldType;
     private Environment environment;
     private String generatorSettings;
@@ -77,7 +79,11 @@ public class BeeWorldCreator implements Keyed {
     }
 
     public @NotNull NamespacedKey getKey() {
-        return this.key != null ? this.key : NamespacedKey.minecraft(this.worldName);
+        if (this.key == null) {
+            String key = this.worldName.toLowerCase(Locale.ROOT).replaceAll(" ", "_");
+            this.key = NamespacedKey.minecraft(key);
+        }
+        return this.key;
     }
 
     public void setWorldType(WorldType worldType) {
@@ -290,7 +296,7 @@ public class BeeWorldCreator implements Keyed {
 
         // Let's clone files on another thread
         CompletableFuture<WorldCreator> worldCompletableFuture = new CompletableFuture<>();
-        Bukkit.getScheduler().runTaskAsynchronously(SkBee.getPlugin(), () -> {
+        TaskUtils.getGlobalScheduler().runTaskAsync(() -> {
             File cloneDirectory = new File(worldContainer, cloneName);
             if (worldDirectorToClone.exists()) {
                 try {
@@ -303,7 +309,7 @@ public class BeeWorldCreator implements Keyed {
                         }
                     }
                     WorldCreator creator = getWorldCreator(cloneName, this.key);
-                    Bukkit.getScheduler().runTaskLater(SkBee.getPlugin(), () -> {
+                    TaskUtils.getGlobalScheduler().runTaskLater(() -> {
                         // Let's head back to the main thread
                         worldCompletableFuture.complete(creator);
                     }, 0);
