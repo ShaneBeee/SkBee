@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"on break:",
     "\tif block at location(1,1,1) is owned by current region:",
     "\t\tset block at location(1,1,1) to stone"})
-@Since("INSERT VERSION")
+@Since("3.10.0")
 public class CondIsOwnedByRegion extends Condition {
 
     static {

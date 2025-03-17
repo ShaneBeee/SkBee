@@ -29,7 +29,7 @@ import java.util.List;
 @Description({"Represents different properties of an object.",
     "See [**Property Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Properties) for available properties and examples."})
 @Examples("")
-@Since("INSERT VERSION")
+@Since("3.10.0")
 @SuppressWarnings("unchecked")
 public class ExprProperty<F, T> extends SimpleExpression<T> {
 

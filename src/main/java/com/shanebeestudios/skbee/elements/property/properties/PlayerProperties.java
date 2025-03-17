@@ -25,7 +25,7 @@ public class PlayerProperties {
                     "Requires Paper 1.21.4+")
                 .examples("set {_score} to death screen score property of player",
                     "set death screen score property of player to 150")
-                .since("INSERT VERSION");
+                .since("3.10.0");
         }
     }
 

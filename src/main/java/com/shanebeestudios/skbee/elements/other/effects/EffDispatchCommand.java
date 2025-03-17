@@ -22,7 +22,7 @@ import org.jetbrains.annotations.Nullable;
     "The attached permission will only last for 1 tick, and automatically remove. This is not persistent."})
 @Examples({"dispatch player command \"give %player% stick\" with permission \"minecraft.command.give\"",
     "dispatch (random element of all mobs) command \"/tell %player% hi\""})
-@Since("INSERT VERSION")
+@Since("3.10.0")
 public class EffDispatchCommand extends Effect {
 
     private static final SkBee PLUGIN = SkBee.getPlugin();

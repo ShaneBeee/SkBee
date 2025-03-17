@@ -23,7 +23,7 @@ public class ItemProperties {
             })
             .description("Represents the blast resistance of a block.")
             .examples("if blast resistance property of target block > 1:")
-            .since("INSERT VERSION");
+            .since("3.10.0");
 
         PropertyRegistry.registerProperty("fire resistant", new Property<>(ItemType.class, Boolean.class) {
                 @Override
@@ -40,7 +40,7 @@ public class ItemProperties {
             })
             .description("Represents if an item is fire resistant. If true, it will not burn in fire or lava.")
             .examples("set fire resistant property of {_i} to true")
-            .since("INSERT VERSION");
+            .since("3.10.0");
 
         if (Skript.classExists("org.bukkit.inventory.ItemRarity")) {
             List<String> rarityNames = new ArrayList<>();
@@ -87,7 +87,7 @@ public class ItemProperties {
                 .examples("set item rarity property of player's tool to \"uncommon\"",
                     "set {_rarity} to item rarity property of player's tool",
                     "if item rarity property of player's tool = \"epic\":")
-                .since("INSERT VERSION");
+                .since("3.10.0");
         }
 
         PropertyRegistry.registerProperty("unbreakable", new Property<>(ItemType.class, Boolean.class) {
@@ -106,7 +106,7 @@ public class ItemProperties {
             .description("Represents if the item is unbreakable.")
             .examples("set unbreakable property of player's tool to true",
                 "set unbreakable property of player's tool to false")
-            .since("INSERT VERSION");
+            .since("3.10.0");
     }
 
 }

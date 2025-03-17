@@ -37,7 +37,7 @@ public class EntityProperties {
             })
             .description("Whether the mob is aggressive. This will not work on all mobs, only mobs that can actually be aggressive.")
             .examples("set aggressive property of event-mob to true")
-            .since("INSERT VERSION");
+            .since("3.10.0");
 
         PropertyRegistry.registerProperty("health", new Property<>(Entity.class, Number.class) {
                 @Override
@@ -87,7 +87,7 @@ public class EntityProperties {
                 "set health property of player to 10",
                 "add 1 to health property of player",
                 "remove 1 from health property of target entity")
-            .since("INSERT VERSION");
+            .since("3.10.0");
 
         PropertyRegistry.registerProperty("inventory contents", new Property<>(InventoryHolder.class, ItemType[].class) {
                 @Override
@@ -134,7 +134,7 @@ public class EntityProperties {
             .examples("set {_i::*} to inventory contents property of player",
                 "add an apple to inventory contents property of player",
                 "remove all diamonds from inventory contents property of player")
-            .since("INSERT VERSION");
+            .since("3.10.0");
 
         PropertyRegistry.registerProperty("name", new Property<>(Entity.class, String.class) {
                 @Override
@@ -153,7 +153,7 @@ public class EntityProperties {
                 }
             })
             .description("Represents the name of an entity.")
-            .since("INSERT VERSION");
+            .since("3.10.0");
 
         PropertyRegistry.registerProperty("persistence required",  new Property<>(LivingEntity.class, Boolean.class) {
             @Override
@@ -171,7 +171,7 @@ public class EntityProperties {
                 "A silly side effect of this is that some mobs (such as sheep) will stop their random stroll goal when more than " +
                     "32 blocks away from a player, setting this to true will prevent that and the mob will forever roam the lands.")
             .examples("set persistence required property of all mobs to true")
-            .since("INSERT VERSION");
+            .since("3.10.0");
 
         PropertyRegistry.registerProperty("sitting", new Property<>(Sittable.class, Boolean.class) {
                 @Override
@@ -187,7 +187,7 @@ public class EntityProperties {
             .description("Whether an entity is sitting. Currently supports Camel, Cat, Fox, Panda, Parrot, Wolf.")
             .examples("set sitting property of target entity to true",
                 "if sitting property of event-mob is false:")
-            .since("INSERT VERSION");
+            .since("3.10.0");
     }
 
 }

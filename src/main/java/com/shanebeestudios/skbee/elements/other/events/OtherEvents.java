@@ -616,7 +616,7 @@ public class OtherEvents extends SimpleEvent {
                     "`event-string` = The command that was sent.",
                     "`event-sender/player` = Who sent the command.")
                 .examples("")
-                .since("INSERT VERSION");
+                .since("3.10.0");
 
             EventValues.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
             EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);

@@ -307,7 +307,7 @@ public class PaperEvents extends SimpleEvent {
                 .description("Called each time the server starts its main tick loop.",
                     "`event-number` = The current tick number.")
                 .examples("")
-                .since("INSERT VERSION");
+                .since("3.10.0");
 
             Skript.registerEvent("Tick End Event", PaperEvents.class, ServerTickEndEvent.class, "server tick end")
                 .description("Called when the server has finished ticking the main loop.",
@@ -318,7 +318,7 @@ public class PaperEvents extends SimpleEvent {
                     "- Time remaining (in milliseconds) (How long til the next tick executes).",
                     "- Time remaining (in nanoseconds) (How long til the next tick executes).")
                 .examples("")
-                .since("INSERT VERSION");
+                .since("3.10.0");
 
             EventValues.registerEventValue(ServerTickStartEvent.class, Integer.class, ServerTickStartEvent::getTickNumber);
             EventValues.registerEventValue(ServerTickEndEvent.class, Number[].class,
