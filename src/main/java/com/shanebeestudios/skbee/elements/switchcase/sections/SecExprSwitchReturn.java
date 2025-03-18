@@ -67,6 +67,7 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
     @SuppressWarnings({"unchecked", "DataFlowIssue"})
     @Override
     public boolean init(Expression<?>[] exprs, int pattern, Kleenean delayed, ParseResult result, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+        if (sectionNode == null) return false;
         this.switchedObject = LiteralUtils.defendExpression(exprs[0]);
 
         Class<? extends Event>[] currentEvents = getParser().getCurrentEvents();
