@@ -453,6 +453,10 @@ public class AddonLoader {
             Util.logLoading("&5World Border Elements &cdisabled via config");
             return;
         }
+        if (Util.IS_RUNNING_SKRIPT_2_11) {
+            Util.log("&5World Border Elements &cdisabled &7(&enow in Skript&7)");
+            return;
+        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.worldborder");
             Util.logLoading("&5World Border Elements &asuccessfully loaded");
