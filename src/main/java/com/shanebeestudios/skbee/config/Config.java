@@ -56,7 +56,6 @@ public class Config {
     public boolean ELEMENTS_ADVANCEMENT;
     public boolean ELEMENTS_WORLD_BORDER;
     public boolean ELEMENTS_PARTICLE;
-    public boolean ELEMENTS_MINECRAFT_TAG;
     public boolean ELEMENTS_RAYTRACE;
     public boolean ELEMENTS_FISHING;
     public boolean ELEMENTS_DISPLAY;
@@ -185,7 +184,6 @@ public class Config {
         this.ELEMENTS_ADVANCEMENT = getElement("advancement");
         this.ELEMENTS_WORLD_BORDER = getElement("world-border");
         this.ELEMENTS_PARTICLE = getElement("particle");
-        this.ELEMENTS_MINECRAFT_TAG = getElement("minecraft-tag");
         this.ELEMENTS_RAYTRACE = getElement("raytrace");
         this.ELEMENTS_FISHING = getElement("fishing");
         this.ELEMENTS_DISPLAY = getElement("display-entity");
