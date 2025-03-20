@@ -12,6 +12,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.MathUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -31,8 +32,10 @@ import org.jetbrains.annotations.Nullable;
 public class ExprViewDistance extends SimplePropertyExpression<Object, Number> {
 
     static {
-        register(ExprViewDistance.class, Number.class,
+        if (!Util.IS_RUNNING_SKRIPT_2_11) {
+            register(ExprViewDistance.class, Number.class,
                 "view distance", "players/worlds");
+        }
     }
 
     @Override
