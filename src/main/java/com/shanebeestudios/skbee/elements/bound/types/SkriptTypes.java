@@ -123,7 +123,7 @@ public class SkriptTypes {
         double x = location.getX();
         double y = location.getY();
         double z = location.getZ();
-        return String.format("location(%s, %s, %s)", x, y, z);
+        return String.format("location(%.2f, %.2f, %.2f)", x, y, z);
     }
 
 }
