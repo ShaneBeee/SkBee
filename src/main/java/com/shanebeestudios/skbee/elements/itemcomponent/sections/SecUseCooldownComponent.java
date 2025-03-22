@@ -76,6 +76,8 @@ public class SecUseCooldownComponent extends Section {
             Timespan timespan = this.seconds.getSingle(event);
             if (timespan != null) seconds = (float) timespan.getAs(Timespan.TimePeriod.MILLISECOND) / 1000;
         }
+        // Minecraft requires > 0, so lowest we'll go is 1 tick
+        seconds = Math.clamp(seconds, 0.05f, Float.MAX_VALUE);
 
         UseCooldown.Builder builder = UseCooldown.useCooldown(seconds);
 

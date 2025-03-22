@@ -283,6 +283,12 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 		group: "blah:special_apple"
 	assert {_i} has item component minecraft:use_cooldown with "The apple should have a use cooldown component"
 
+	set {_i} to 1 of stick
+	apply use cooldown to {_i}:
+		seconds: 0 seconds # Testing a previous bug
+		group: "sovde_found_this_bug_so_he_gets_a_custom_group"
+	assert {_i} has item component minecraft:use_cooldown with "The apple should have a use cooldown component"
+
 	# Use Remainder
 	set {_i} to 1 of honey bottle
 	assert use remainder component of {_i} is glass bottle with "Default use remainder of a honey bottle should be a glass bottle"
