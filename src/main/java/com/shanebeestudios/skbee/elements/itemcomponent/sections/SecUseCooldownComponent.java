@@ -7,12 +7,14 @@ import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.Section;
+import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
+import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -32,7 +34,7 @@ import java.util.List;
     "See [**Use Cooldown Component**](https://minecraft.wiki/w/Data_component_format#use_cooldown) on McWiki for more details.",
     "",
     "**Entries**:",
-    "- `seconds` = The cooldown duration (timespan).",
+    "- `seconds` = The cooldown duration (timespan, must be >= 1 tick).",
     "- `group` = The unique key to identify this cooldown group. " +
         "If present, the item is included in a cooldown group and no longer shares cooldowns with its base item type, " +
         "but instead with any other items that are part of the same cooldown group. [Optional]"})
@@ -66,18 +68,29 @@ public class SecUseCooldownComponent extends Section {
         this.items = (Expression<Object>) exprs[0];
         this.seconds = (Expression<Timespan>) container.getOptional("seconds", false);
         this.group = (Expression<String>) container.getOptional("group", false);
+        if (this.seconds instanceof Literal<Timespan> timespan) {
+            if (timespan.getSingle().getAs(Timespan.TimePeriod.MILLISECOND) / 1000 <= 0) {
+                Skript.error("Timespan '" + timespan + "' too low, defaulting to 1 tick.");
+                this.seconds = new SimpleLiteral<>(new Timespan(50), false);
+            }
+        }
         return true;
     }
 
     @Override
     protected @Nullable TriggerItem walk(Event event) {
-        float seconds = 0;
+        float seconds = 0.05f;
         if (this.seconds != null) {
             Timespan timespan = this.seconds.getSingle(event);
-            if (timespan != null) seconds = (float) timespan.getAs(Timespan.TimePeriod.MILLISECOND) / 1000;
+            if (timespan != null) {
+                seconds = (float) timespan.getAs(Timespan.TimePeriod.MILLISECOND) / 1000;
+                // Minecraft requires > 0, so lowest we'll go is 1 tick
+                if (seconds <= 0) {
+                    warning("Timespan '" + timespan + "' too low, defaulting to 1 tick.");
+                    seconds = 0.05f;
+                }
+            }
         }
-        // Minecraft requires > 0, so lowest we'll go is 1 tick
-        seconds = Math.clamp(seconds, 0.05f, Float.MAX_VALUE);
 
         UseCooldown.Builder builder = UseCooldown.useCooldown(seconds);
 
