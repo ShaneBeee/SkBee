@@ -63,23 +63,6 @@ public class Types {
     public static boolean HAS_CHUNK_LOAD_LEVEL = Skript.classExists("org.bukkit.Chunk$LoadLevel");
 
     static {
-        if (!Util.IS_RUNNING_SKRIPT_2_10) {
-            if (Classes.getExactClassInfo(ItemFlag.class) == null) {
-                EnumWrapper<ItemFlag> ITEM_FLAGS = new EnumWrapper<>(ItemFlag.class);
-                Classes.registerClass(ITEM_FLAGS.getClassInfo("itemflag")
-                    .user("item ?flags?")
-                    .name("ItemFlag")
-                    .description("Represents the different ItemFlags that can be applied to an item.",
-                        "Removed if running Skript 2.10+ (now included in Skript).",
-                        "NOTE: Underscores aren't required, you CAN use spaces.",
-                        "NOTE: These are auto-generated and may differ between server versions.")
-                    .since("3.4.0"));
-            } else {
-                Util.logLoading("It looks like another addon registered 'itemflag' already.");
-                Util.logLoading("You may have to use their ItemFlags in SkBee's 'Item Flags' expressions.");
-            }
-        }
-
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Spellcaster.Spell.class) == null) {
             EnumWrapper<Spellcaster.Spell> SPELL_ENUM = new EnumWrapper<>(Spellcaster.Spell.class);
@@ -95,22 +78,6 @@ public class Types {
         }
 
         // Only register if no other addons have registered this class
-        // EntityPotionEffectEvent.Cause
-        if (!Util.IS_RUNNING_SKRIPT_2_10) {
-            if (Classes.getExactClassInfo(Cause.class) == null) {
-                EnumWrapper<Cause> POTION_EFFECT_EVENT_CAUSE = new EnumWrapper<>(Cause.class, "", "effect");
-                Classes.registerClass(POTION_EFFECT_EVENT_CAUSE.getClassInfo("potioneffectcause")
-                    .user("potion ?effect ?causes?")
-                    .name("Potion Effect Cause")
-                    .description("Represents the different causes of an entity potion effect event.",
-                        "Removed if running Skript 2.10+ (now included in Skript).",
-                        "NOTE: These are auto-generated and may differ between server versions.")
-                    .since("1.17.0"));
-            } else {
-                Util.logLoading("It looks like another addon registered 'potioneffectcause' already.");
-                Util.logLoading("You may have to use their potion effect causes in SkBee's 'Entity Potion Effect' event.");
-            }
-        }
 
         if (Classes.getExactClassInfo(NamespacedKey.class) == null) {
             Classes.registerClass(new ClassInfo<>(NamespacedKey.class, "namespacedkey")
@@ -328,36 +295,6 @@ public class Types {
         } else {
             Util.logLoading("It looks like another addon registered 'blockaction' already.");
             Util.logLoading("You may have to use their BlockAction in SkBee's syntaxes.");
-        }
-
-        if (!Util.IS_RUNNING_SKRIPT_2_10) {
-            if (Classes.getExactClassInfo(LootTable.class) == null) {
-                Classes.registerClass(new ClassInfo<>(LootTable.class, "loottable")
-                    .user("loot ?tables?")
-                    .name("LootTable")
-                    .description("Represents a LootTable.")
-                    .examples("set {_table} to loottable from key \"minecraft:chests/ancient_city\"")
-                    .since("3.4.0")
-                    .parser(new Parser<>() {
-                        @Override
-                        public @Nullable LootTable parse(String string, ParseContext context) {
-                            return null;
-                        }
-
-                        @Override
-                        public @NotNull String toString(LootTable lootTable, int flags) {
-                            return lootTable.getKey().toString();
-                        }
-
-                        @Override
-                        public @NotNull String toVariableNameString(LootTable lootTable) {
-                            return "loottable:" + lootTable.getKey();
-                        }
-                    }));
-            } else {
-                Util.logLoading("It looks like another addon registered 'loottable' already.");
-                Util.logLoading("You may have to use their LootTable in SkBee's syntaxes.");
-            }
         }
 
         if (Skript.classExists("org.bukkit.event.entity.EntityRemoveEvent") && Classes.getExactClassInfo(EntityRemoveEvent.Cause.class) == null) {

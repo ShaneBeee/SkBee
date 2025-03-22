@@ -1,0 +1,12 @@
+test "SkBee - Text/ExprNameBlock":
+	set {_loc} to event-location
+	set {_data} to blockdata of block at {_loc}
+
+	set block at {_loc} to a player head
+	assert component block name of block at {_loc} is not set with "Should not have a name yet"
+	set component block name of block at {_loc} to mini message from "test"
+	assert component block name of block at {_loc} = mini message from "test" with "Name should now be 'test'"
+	delete component block name of block at {_loc}
+	assert component block name of block at {_loc} is not set with "Should no longer have a name after reset"
+
+	set block at {_loc} to {_data}

@@ -7,12 +7,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
-import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
-import org.bukkit.Registry;
 import org.bukkit.entity.AbstractVillager;
-import org.bukkit.entity.Villager.Profession;
-import org.bukkit.entity.Villager.Type;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantInventory;
@@ -25,40 +20,6 @@ import java.util.List;
 public class Types {
 
     static {
-        if (!Util.IS_RUNNING_SKRIPT_2_10) {
-            // VILLAGER PROFESSION
-            // Only register if no other addons have registered this class
-            if (Classes.getExactClassInfo(Profession.class) == null) {
-                Classes.registerClass(RegistryClassInfo.create(Registry.VILLAGER_PROFESSION,
-                        Profession.class, "profession", "", "profession")
-                    .user("professions?")
-                    .name("Villager Profession")
-                    .description("Represent the types of professions for villagers.",
-                        "Removed if running Skript 2.10+ (now included in Skript).",
-                        "Due to not parsing correctly, the professions are suffixed with 'profession'.")
-                    .since("1.17.0"));
-            } else {
-                Util.logLoading("It looks like another addon registered 'profession' already.");
-                Util.logLoading("You may have to use their profession in SkBee's 'Villager Profession' expression.");
-            }
-
-            // VILLAGER TYPE
-            // Only register if no other addons have registered this class
-            if (Classes.getExactClassInfo(Type.class) == null) {
-                Classes.registerClass(RegistryClassInfo.create(Registry.VILLAGER_TYPE,
-                        Type.class, "villagertype", "", "villager")
-                    .user("villager ?types?")
-                    .name("Villager Type")
-                    .description("Represents the types of villagers.",
-                        "Removed if running Skript 2.10+ (now included in Skript).",
-                        "Due to possible overlaps with biomes, types are suffixed with 'villager'.")
-                    .since("1.17.0"));
-            } else {
-                Util.logLoading("It looks like another addon registered 'villagertype' already.");
-                Util.logLoading("You may have to use their villagertype in SkBee's 'Villager Type' expression.");
-            }
-        }
-
         // MERCHANT
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Merchant.class) == null) {

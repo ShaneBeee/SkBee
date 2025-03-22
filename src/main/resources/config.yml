@@ -65,9 +65,6 @@ elements:
   # Enable different Item Component elements
   item-component: true
 
-  # Enable MinecraftTag Elements
-  minecraft-tag: true
-
   # Enable NBT elements
   nbt: true
 

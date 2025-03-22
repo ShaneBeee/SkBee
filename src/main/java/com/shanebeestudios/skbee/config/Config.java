@@ -2,16 +2,19 @@ package com.shanebeestudios.skbee.config;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import com.shanebeestudios.skbee.SkBee;
 
 import java.io.File;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class Config {
+
+    private static Boolean IS_TESTING = null;
 
     private final SkBee plugin;
     private FileConfiguration config;
@@ -56,7 +59,6 @@ public class Config {
     public boolean ELEMENTS_ADVANCEMENT;
     public boolean ELEMENTS_WORLD_BORDER;
     public boolean ELEMENTS_PARTICLE;
-    public boolean ELEMENTS_MINECRAFT_TAG;
     public boolean ELEMENTS_RAYTRACE;
     public boolean ELEMENTS_FISHING;
     public boolean ELEMENTS_DISPLAY;
@@ -124,7 +126,7 @@ public class Config {
     }
 
     private boolean getElement(String element) {
-        if (TestMode.ENABLED) return true;
+        if (isTestingEnabled()) return true;
         return this.config.getBoolean("elements." + element);
     }
 
@@ -185,7 +187,6 @@ public class Config {
         this.ELEMENTS_ADVANCEMENT = getElement("advancement");
         this.ELEMENTS_WORLD_BORDER = getElement("world-border");
         this.ELEMENTS_PARTICLE = getElement("particle");
-        this.ELEMENTS_MINECRAFT_TAG = getElement("minecraft-tag");
         this.ELEMENTS_RAYTRACE = getElement("raytrace");
         this.ELEMENTS_FISHING = getElement("fishing");
         this.ELEMENTS_DISPLAY = getElement("display-entity");
@@ -200,6 +201,18 @@ public class Config {
         this.RUNTIME_DISABLE_ERRORS = this.config.getBoolean("runtime.disable-errors");
         this.RUNTIME_DISABLE_WARNINGS = this.config.getBoolean("runtime.disable-warnings");
         this.on_the_flip_side = this.config.getBoolean("special.on-the-flip-side");
+    }
+
+    // Prevents NoClassDefFoundError error when using outdated Skript version before AddonLoader checks version
+    private static boolean isTestingEnabled() {
+        if (IS_TESTING == null) {
+            if (Bukkit.getPluginManager().getPlugin("Skript") != null && Skript.classExists("ch.njol.skript.test.runner.TestMode")) {
+                IS_TESTING = TestMode.ENABLED;
+            } else {
+                IS_TESTING = false;
+            }
+        }
+        return IS_TESTING;
     }
 
 }

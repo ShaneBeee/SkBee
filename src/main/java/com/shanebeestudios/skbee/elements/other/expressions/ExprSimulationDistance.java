@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
@@ -30,8 +31,10 @@ import org.jetbrains.annotations.Nullable;
 public class ExprSimulationDistance extends SimplePropertyExpression<Object, Number> {
 
     static {
-        register(ExprSimulationDistance.class, Number.class,
+        if (!Util.IS_RUNNING_SKRIPT_2_11) {
+            register(ExprSimulationDistance.class, Number.class,
                 "simulation distance", "players/worlds");
+        }
     }
 
     @SuppressWarnings("NullableProblems")
