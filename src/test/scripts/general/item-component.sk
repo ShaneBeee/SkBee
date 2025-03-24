@@ -4,12 +4,10 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 	set {_i} to 1 of diamond axe
 	apply can break predicate to {_i}:
 		blocks: diamond ore, emerald ore, iron ore
-		show_in_tooltip: false
 	assert {_i} has item component minecraft:can_break with "The axe should have a can break component"
 	set {_i} to 1 of oak stairs
 	apply can place on predicate to {_i}:
 		blocks: minecraft block tag "minecraft:dirt"
-		show_in_tooltip: false
 	assert {_i} has item component minecraft:can_place_on with "The axe should have a can place on component"
 	delete {_i}
 
@@ -191,7 +189,6 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 	assert {_i} doesn't have item component minecraft:jukebox_playable with "The diamond shouldn't have a song"
 	apply jukebox playable to {_i}:
 		song: mall
-		show_in_tooltip: false
 	assert {_i} has item component minecraft:jukebox_playable with "The diamond should now have a song"
 
 	# Max Stack Size
