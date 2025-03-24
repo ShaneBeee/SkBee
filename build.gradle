@@ -33,7 +33,7 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.5-R0.1-SNAPSHOT")
 
     // Skript
     compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.10.0') {
