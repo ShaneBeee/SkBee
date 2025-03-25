@@ -210,45 +210,7 @@ public class PaperEvents extends SimpleEvent {
 
         // == BLOCK EVENTS == //
 
-        // Beacon Effect Event
-        if (!Util.IS_RUNNING_SKRIPT_2_10) {
-            if (Skript.classExists("com.destroystokyo.paper.event.block.BeaconEffectEvent")) {
-                Skript.registerEvent("Beacon Effect", PaperEvents.class, BeaconEffectEvent.class, "beacon effect")
-                    .description("Called when a beacon effect is being applied to a player.",
-                        "Removed if running Skript 2.10+ (now included in Skript).",
-                        "Requires Paper 1.9+")
-                    .examples("on beacon effect:",
-                        "\tif event-player does not have permission \"my.server.beacons\":",
-                        "\t\tcancel event")
-                    .since("1.8.4");
-                EventValues.registerEventValue(BeaconEffectEvent.class, Player.class, BeaconEffectEvent::getPlayer, EventValues.TIME_NOW);
-
-                EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffectType.class, beaconEffectEvent -> beaconEffectEvent.getEffect().getType(), EventValues.TIME_NOW);
-                EventValues.registerEventValue(BeaconEffectEvent.class, PotionEffect.class, BeaconEffectEvent::getEffect, EventValues.TIME_NOW);
-            }
-
-
-            // Beacon Deactivated Event
-            if (Skript.classExists("io.papermc.paper.event.block.BeaconDeactivatedEvent")) {
-                Skript.registerEvent("Beacon Deactivation", PaperEvents.class, BeaconDeactivatedEvent.class, "beacon (deactivate|deactivation)")
-                    .description("Called when a beacon is deactivated from breaking or losing required amount blocks.",
-                        "Removed if running Skript 2.10+ (now included in Skript).")
-                    .examples("on beacon deactivation:",
-                        "\tbroadcast \"%event-block% is no longer activated, :cry:\"");
-
-            }
-
-            // Beacon Activated Event
-            if (Skript.classExists("io.papermc.paper.event.block.BeaconActivatedEvent")) {
-                Skript.registerEvent("Beacon Activation", PaperEvents.class, BeaconActivatedEvent.class, "beacon (activate|activation)")
-                    .description("Called when a beacon is successfully activated by having correct amount of blocks.",
-                        "Removed if running Skript 2.10+ (now included in Skript).")
-                    .examples("on beacon activation",
-                        "\tset primary effect of event-block to strength")
-                    .since("2.16.0");
-            }
-        }
-
+        // EntityInsideBlockEvent
         if (Skript.classExists("io.papermc.paper.event.entity.EntityInsideBlockEvent")) {
             Skript.registerEvent("Entity Inside Block", PaperEvents.class, EntityInsideBlockEvent.class, "entity inside block")
                 .description("Called when an entity enters the hitbox of a block.",

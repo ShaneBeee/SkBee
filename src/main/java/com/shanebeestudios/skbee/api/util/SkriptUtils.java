@@ -167,6 +167,8 @@ public class SkriptUtils {
      */
     @ApiStatus.Internal
     public static void hackPotionEffectTypeClassInfoPattern() {
+        // Fixed in Skript 2.11
+        if (Util.IS_RUNNING_SKRIPT_2_11) return;
         ClassInfo<PotionEffectType> info = Classes.getExactClassInfo(PotionEffectType.class);
         assert info != null;
         Pattern[] patterns = new Pattern[]{Pattern.compile("potion ?effect ?types?")};

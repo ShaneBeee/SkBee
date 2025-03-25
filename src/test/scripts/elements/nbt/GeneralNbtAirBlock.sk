@@ -1,0 +1,21 @@
+test "SkBee - NBT - Air Block":
+	set {_b} to block at location 20 above event-location
+	set block at {_b} to stone
+
+	set int tag "custom;test" of nbt of {_b} to 1
+	assert int tag "custom;test" of nbt of {_b} = 1 with "The tag should be 1"
+
+	set block at {_b} to air
+	assert int tag "custom;test" of nbt of {_b} is not set with "The nbt should be cleared now"
+	assert nbt of {_b} does not have tag "custom;test" with "The nbt should be cleared now"
+	assert nbt of {_b} does not have tag "custom" with "The nbt should be cleared now"
+
+	set {_n} to nbt of {_b}
+	set int tag "test" of {_n} to 1
+	assert int tag "test" of nbt of {_b} is not set with "The nbt shouldn't set if the block is air"
+	assert {_n} does not have tag "test" with "The nbt shouldn't set if the block is air"
+
+	set int tag "custom;test" of {_n} to 1
+	assert int tag "custom;test" of nbt of {_b} is not set with "The nbt shouldn't set if the block is air"
+	assert {_n} does not have tag "custom;test" with "The nbt shouldn't set if the block is air"
+	assert {_n} does not have tag "custom" with "The nbt shouldn't set if the block is air"

@@ -10,13 +10,13 @@ import org.jetbrains.annotations.NotNull;
 /**
  * Represents the NBT of a non tile entity block
  */
-public class NBTCustomBlock extends NBTContainer implements NBTCustom{
+public class NBTCustomBlock extends NBTContainer implements NBTCustom {
 
     private final Block block;
     private final String blockTag;
     private final String blockID;
     private final NBTCompound chunkData;
-    private final boolean canSave;
+    private boolean canSave;
 
     @SuppressWarnings("deprecation")
     public NBTCustomBlock(Block block) {
@@ -24,11 +24,20 @@ public class NBTCustomBlock extends NBTContainer implements NBTCustom{
         this.blockTag = String.format("%s_%s_%s", block.getX(), block.getY(), block.getZ());
         this.blockID = block.getType().getKey().toString();
         this.chunkData = new NBTChunk(block.getChunk()).getPersistentDataContainer();
-        if (this.chunkData.hasTag("blocks")) {
-            NBTCompound blocksCompound = this.chunkData.getOrCreateCompound("blocks");
-            if (blocksCompound.hasTag(this.blockTag)) {
-                NBTCompound blockCompound = blocksCompound.getOrCreateCompound(this.blockTag);
-                this.mergeCompound(blockCompound);
+        if (this.chunkData.hasTag("blocks", NBTType.NBTTagCompound)) {
+            NBTCompound blocksInChunk = this.chunkData.getOrCreateCompound("blocks");
+            if (this.block.getType().isAir()) {
+                // If the block is air, let's clear any saved data
+                this.canSave = true;
+                blocksInChunk.removeKey(this.blockTag);
+                if (blocksInChunk.getKeys().isEmpty()) {
+                    this.chunkData.removeKey("blocks");
+                }
+            } else {
+                if (blocksInChunk.hasTag(this.blockTag)) {
+                    NBTCompound blockCompound = blocksInChunk.getOrCreateCompound(this.blockTag);
+                    this.mergeCompound(blockCompound);
+                }
             }
         }
         this.canSave = true;
@@ -37,18 +46,24 @@ public class NBTCustomBlock extends NBTContainer implements NBTCustom{
     @Override
     protected void saveCompound() {
         // Skip saving when we're loading the NBT in the constructor
-        if (!canSave) return;
+        if (!this.canSave) return;
+        if (this.block.getType().isAir()) {
+            // If the block is air, let's clear out anything stored
+            clearNBT();
+        }
         if (getKeys().isEmpty()) {
+            // If this compound is empty, let's clear empty compounds from the chunk
             if (this.chunkData.hasTag("blocks", NBTType.NBTTagCompound)) {
-                NBTCompound blocksCompound = this.chunkData.getOrCreateCompound("blocks");
-                blocksCompound.removeKey(this.blockTag);
-                if (blocksCompound.getKeys().isEmpty()) {
+                NBTCompound blocksInChunk = this.chunkData.getOrCreateCompound("blocks");
+                blocksInChunk.removeKey(this.blockTag);
+                if (blocksInChunk.getKeys().isEmpty()) {
                     this.chunkData.removeKey("blocks");
                 }
             }
             return;
         }
-        NBTCompound blockCompound = this.chunkData.getOrCreateCompound("blocks").getOrCreateCompound(this.blockTag);
+        NBTCompound blocksInChunk = this.chunkData.getOrCreateCompound("blocks");
+        NBTCompound blockCompound = blocksInChunk.getOrCreateCompound(this.blockTag);
         blockCompound.clearNBT();
         blockCompound.mergeCompound(this);
     }

@@ -119,7 +119,6 @@ public class AddonLoader {
         loadStatisticElements();
         loadStructureElements();
         loadSwitchCaseElements();
-        loadTagElements();
         loadTickManagerElements();
         loadVillagerElements();
         loadVirtualFurnaceElements();
@@ -454,6 +453,10 @@ public class AddonLoader {
             Util.logLoading("&5World Border Elements &cdisabled via config");
             return;
         }
+        if (Util.IS_RUNNING_SKRIPT_2_11) {
+            Util.log("&5World Border Elements &cdisabled &7(&enow in Skript&7)");
+            return;
+        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.worldborder");
             Util.logLoading("&5World Border Elements &asuccessfully loaded");
@@ -472,23 +475,6 @@ public class AddonLoader {
             Util.logLoading("&5Particle Elements &asuccessfully loaded");
         } catch (Exception ex) {
             logFailure("Particle", ex);
-        }
-    }
-
-    private void loadTagElements() {
-        if (Util.IS_RUNNING_SKRIPT_2_10) {
-            Util.logLoading("&5Minecraft Tag Elements &cdisabled &r(&7now in Skript&r)");
-            return;
-        }
-        if (!this.config.ELEMENTS_MINECRAFT_TAG) {
-            Util.logLoading("&5Minecraft Tag Elements &cdisabled via config");
-            return;
-        }
-        try {
-            this.addon.loadClasses("com.shanebeestudios.skbee.elements.tag");
-            Util.logLoading("&5Minecraft Tag Elements &asuccessfully loaded");
-        } catch (Exception ex) {
-            logFailure("Minecraft Tag", ex);
         }
     }
 
