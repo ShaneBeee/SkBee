@@ -19,6 +19,7 @@ import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
 import de.tr7zw.changeme.nbtapi.NBTTileEntity;
+import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -218,12 +219,16 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         }
         if (delta == null) return;
 
-        if (mode == ChangeMode.SET) {
-            NBTApi.setTag(tag, nbt, delta, type);
-        } else if (mode == ChangeMode.ADD) {
-            NBTApi.addToTag(tag, nbt, delta, type);
-        } else if (mode == ChangeMode.REMOVE) {
-            NBTApi.removeFromTag(tag, nbt, delta, type);
+        try {
+            if (mode == ChangeMode.SET) {
+                NBTApi.setTag(tag, nbt, delta, type);
+            } else if (mode == ChangeMode.ADD) {
+                NBTApi.addToTag(tag, nbt, delta, type);
+            } else if (mode == ChangeMode.REMOVE) {
+                NBTApi.removeFromTag(tag, nbt, delta, type);
+            }
+        } catch (NbtApiException ignore) {
+            // Errors may occur when sub compounds don't exist
         }
     }
 

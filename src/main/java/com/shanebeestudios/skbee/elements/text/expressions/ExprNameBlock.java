@@ -24,7 +24,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"set {_name} to component block name of target block",
     "set component block name of target block to mini message from \"<rainbow>Mr Potato Head!\"",
     "delete component block name of target block"})
-@Since("INSERT VERSION")
+@Since("3.10.1")
 public class ExprNameBlock extends SimplePropertyExpression<Block, ComponentWrapper> {
 
     private static final boolean HAS_SKULL_NAME = Skript.methodExists(Skull.class, "customName");
