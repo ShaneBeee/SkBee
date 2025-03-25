@@ -33,7 +33,11 @@ import java.util.List;
     "**Entries/Sections**:",
     "- `hide_tooltip` = If true, the item will have no tooltip when hovered (optional, boolean).",
     "- `hidden_components` = The tooltips provided by any component in this list will be hidden. If that component provides no tooltip, it will have no effect (optional, data component types)."})
-@Examples("") // TODO examples after I can actually test this
+@Examples({"apply tooltip display component to {_i}:",
+    "\thide_tooltip: false",
+    "\thidden_components: minecraft:attribute_modifiers, minecraft:enchantments",
+    "apply tooltip display component to {_i}:",
+    "\thide_tooltip: true"})
 @Since("INSERT VERSION")
 public class SecTooltipDisplayComponent extends Section {
 
@@ -42,8 +46,8 @@ public class SecTooltipDisplayComponent extends Section {
     static {
         if (Skript.isRunningMinecraft(1, 21, 5)) {
             VALIDATOR = SimpleEntryValidator.builder()
-                .addRequiredEntry("hide_tooltip", Boolean.class)
-                .addRequiredEntry("hidden_components", DataComponentType.class)
+                .addOptionalEntry("hide_tooltip", Boolean.class)
+                .addOptionalEntry("hidden_components", DataComponentType.class)
                 .build();
             Skript.registerSection(SecTooltipDisplayComponent.class, "apply tooltip display [component] to %itemstacks/itemtypes/slots%");
         } else {

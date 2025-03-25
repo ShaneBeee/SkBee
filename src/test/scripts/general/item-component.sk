@@ -265,6 +265,14 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 				correct_for_drops: false
 	assert {_i} has item component minecraft:tool with "The stick should have a tool component"
 
+	# Tooltip Display
+	## Not much I can do here other than checking that this doesnt error
+	set {_i} to 1 of diamond sword of unbreaking 3
+	apply tooltip display component to {_i}:
+		hide_tooltip: false
+		hidden_components: minecraft:attribute_modifiers, minecraft:enchantments
+	assert {_i} has item component minecraft:tooltip_display with "The sword should have a tooltip display component"
+
 	# Tooltip Style
 	set {_i} to 1 of stick
 	assert tooltip style of {_i} is not set with "Default stick should not have a tooltip style"
