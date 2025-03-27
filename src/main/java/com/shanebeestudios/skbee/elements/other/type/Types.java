@@ -261,7 +261,8 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(MemoryKey.class) == null) {
-            Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, MemoryKey.class, "memory")
+            //noinspection unchecked
+            Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, (Class)MemoryKey.class, "memory")
                 .user("memor(y|ies)")
                 .name("Memory")
                 .description("Represents the different memories of an entity.",
