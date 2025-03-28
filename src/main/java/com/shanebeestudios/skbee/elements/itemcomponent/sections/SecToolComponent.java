@@ -37,11 +37,13 @@ import java.util.List;
     "**Entries/Sections**:",
     "- `default_mining_speed` = The default mining speed of this tool, used if no rules override it. Defaults to 1.0. [Optional]",
     "- `damage_per_block` = The amount of durability to remove each time a block is broken with this tool. Must be a non-negative integer. [Optional]",
+    "- `can_destroy_blocks_in_creative` = Whether players can break blocks while holding this tool in Creative mode. Defaults to true. [Optional] (Requires MC 1.21.5+)",
     "- `rules:` =  A list of rules for the blocks that this tool has a special behavior with."})
 @Examples({"set {_i} to a stick",
     "apply tool component to {_i}:",
     "\tdefault_mining_speed: 2.3",
     "\tdamage_per_block: 2",
+    "\tcan_destroy_blocks_in_creative: false",
     "\trules:",
     "\t\tapply tool rule:",
     "\t\t\tblocks: minecraft block tag \"minecraft:all_signs\" # Shown as a Minecraft block tag",
@@ -73,12 +75,14 @@ public class SecToolComponent extends Section {
         }
     }
 
+    private static final boolean HAS_CAN_DESTROY = Skript.methodExists(Tool.class, "canDestroyBlocksInCreative");
     private static final EntryValidator VALIDATOR;
 
     static {
         VALIDATOR = SimpleEntryValidator.builder()
             .addOptionalEntry("default_mining_speed", Number.class)
             .addOptionalEntry("damage_per_block", Number.class)
+            .addOptionalEntry("can_destroy_blocks_in_creative", Boolean.class)
             .addOptionalSection("rules")
             .build();
         Skript.registerSection(SecToolComponent.class, "apply tool component to %itemstacks/itemtypes/slots%");
@@ -87,6 +91,7 @@ public class SecToolComponent extends Section {
     private Expression<ItemType> items;
     private Expression<Number> defaultMiningSpeed;
     private Expression<Number> damagePerBlock;
+    private Expression<Boolean> canDestroyBlocksInCreative;
     private Trigger rulesSection;
 
     @SuppressWarnings("unchecked")
@@ -98,6 +103,10 @@ public class SecToolComponent extends Section {
         this.items = (Expression<ItemType>) exprs[0];
         this.defaultMiningSpeed = (Expression<Number>) container.getOptional("default_mining_speed", false);
         this.damagePerBlock = (Expression<Number>) container.getOptional("damage_per_block", false);
+        this.canDestroyBlocksInCreative = (Expression<Boolean>) container.getOptional("can_destroy_blocks_in_creative", false);
+        if (this.canDestroyBlocksInCreative != null && !HAS_CAN_DESTROY) {
+            Skript.error("'can_destroy_blocks_in_creative' requires MC 1.21.5+");
+        }
 
         SectionNode rulesNode = container.getOptional("rules", SectionNode.class, false);
         if (rulesNode != null) {
@@ -118,6 +127,11 @@ public class SecToolComponent extends Section {
         if (this.damagePerBlock != null) {
             int damage = this.damagePerBlock.getOptionalSingle(event).orElse(1).intValue();
             toolBuilder.damagePerBlock(damage);
+        }
+
+        if (this.canDestroyBlocksInCreative != null && HAS_CAN_DESTROY) {
+            boolean destroy = this.canDestroyBlocksInCreative.getOptionalSingle(event).orElse(true);
+            toolBuilder.canDestroyBlocksInCreative(destroy);
         }
 
         if (this.rulesSection != null) {
