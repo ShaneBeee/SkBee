@@ -6,7 +6,6 @@ import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Pair;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.config.Config;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -15,11 +14,8 @@ import de.tr7zw.changeme.nbtapi.NBTItem;
 import de.tr7zw.changeme.nbtapi.NBTList;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
-import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
-import de.tr7zw.changeme.nbtapi.utils.DataFixerUtil;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.apache.commons.lang3.ArrayUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -45,8 +41,6 @@ public class NBTApi {
     private static boolean ENABLED;
     public static final boolean HAS_ITEM_COMPONENTS = Skript.isRunningMinecraft(1, 20, 5);
     static final String TAG_NAME = HAS_ITEM_COMPONENTS ? "components" : "tag";
-    @SuppressWarnings("deprecation")
-    private static final int DATA_VERSION = Bukkit.getUnsafe().getDataVersion();
 
     /**
      * Initialize this NBT API
@@ -67,7 +61,6 @@ public class NBTApi {
             new NBTContainer("{a:1}").toString();
             ENABLED = true;
         }
-        Config pluginConfig = SkBee.getPlugin().getPluginConfig();
     }
 
     /**
@@ -858,36 +851,6 @@ public class NBTApi {
     public static void addNBTToEntity(Entity entity, NBTCompound compound) {
         NBTCustomEntity nbtEntity = new NBTCustomEntity(entity);
         nbtEntity.mergeCompound(compound);
-    }
-
-    /**
-     * Convert NBT to an ItemStack
-     * <p>Will pass the NBT thru DataFixerUpper if need be,
-     * This is a temp solution until NBT-API adds this</p>
-     *
-     * @param nbtcompound NBT to convert to ItemStack
-     * @return ItemStack from NBT
-     */
-    public static ItemStack convertNBTtoItem(@NotNull NBTCompound nbtcompound) {
-//        if (!nbtcompound.hasTag("DataVersion") || nbtcompound.getInteger("DataVersion") != getDataVersion()) {
-//            int dataVersion = nbtcompound.hasTag("DataVersion") ? nbtcompound.getInteger("DataVersion") : DataFixerUtil.VERSION1_20_4;
-//            try {
-//                ReadWriteNBT fixedItemNBT = DataFixerUtil.fixUpItemData(nbtcompound, dataVersion, getDataVersion());
-//                return NBTItem.convertNBTtoItem((NBTCompound) fixedItemNBT);
-//            } catch (NoSuchFieldException | IllegalAccessException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }
-        return NBTItem.convertNBTtoItem(nbtcompound);
-    }
-
-    /**
-     * Get the Minecraft DataVersion
-     *
-     * @return DataVersion from MC
-     */
-    public static int getDataVersion() {
-        return NBTApi.DATA_VERSION;
     }
 
 }
