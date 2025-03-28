@@ -263,12 +263,17 @@ public class PaperEvents extends SimpleEvent {
         if (Skript.classExists("io.papermc.paper.event.player.PlayerFailMoveEvent")) {
             Skript.registerEvent("Player Fail Move", PaperEvents.class, PlayerFailMoveEvent.class, "player fail move")
                 .description("Called when a player attempts to move, but is prevented from doing so by the server.",
+                    "Requires PaperMC.",
                     "`event-failmovereason` = The reason they failed to move.",
                     "`event-location` = The location they moved from.",
                     "`future event-location` = The location they moved to.",
                     "`event-boolean` = Whether the player is allowed to move (can be set).",
                     "`future event-boolean` = Whether to log warning to console (can be set).")
-                .examples("")
+                .examples("on player fail move:",
+                    "\tset event-boolean to true",
+                    "\tset future event-boolean to false",
+                    "\tif event-failmovereason = clipped_into_block:",
+                    "\t\tpush player up with speed 1")
                 .since("INSERT VERSION");
 
             EventValues.registerEventValue(PlayerFailMoveEvent.class, PlayerFailMoveEvent.FailReason.class, PlayerFailMoveEvent::getFailReason);
