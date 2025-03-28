@@ -33,6 +33,7 @@ types:
     environment: environment type¦s @an
     equipmentslot: equipment slot¦s
     equipmentslotgroup: equipment slot group¦s
+    failmovereason: fail move reason¦s
     fishingstate: fishing state¦s
     fishhookstate: fish hook state¦s
     gameevent: game event¦s

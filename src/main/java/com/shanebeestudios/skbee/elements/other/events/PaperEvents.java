@@ -3,9 +3,9 @@ package com.shanebeestudios.skbee.elements.other.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
+import ch.njol.skript.registrations.EventConverter;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Experience;
-import com.destroystokyo.paper.event.block.BeaconEffectEvent;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
@@ -18,13 +18,11 @@ import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
-import com.shanebeestudios.skbee.api.util.Util;
-import io.papermc.paper.event.block.BeaconActivatedEvent;
-import io.papermc.paper.event.block.BeaconDeactivatedEvent;
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
+import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import io.papermc.paper.event.player.PlayerTrackEntityEvent;
 import org.bukkit.Location;
@@ -33,8 +31,7 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+import org.jetbrains.annotations.Nullable;
 
 
 @SuppressWarnings({"unused", "unchecked"})
@@ -260,6 +257,45 @@ public class PaperEvents extends SimpleEvent {
                 .since("3.5.1");
 
             EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, PlayerTrackEntityEvent::getEntity, EventValues.TIME_NOW);
+        }
+
+        // PlayerFailMoveEvent
+        if (Skript.classExists("io.papermc.paper.event.player.PlayerFailMoveEvent")) {
+            Skript.registerEvent("Player Fail Move", PaperEvents.class, PlayerFailMoveEvent.class, "player fail move")
+                .description("Called when a player attempts to move, but is prevented from doing so by the server.",
+                    "`event-failmovereason` = The reason they failed to move.",
+                    "`event-location` = The location they moved from.",
+                    "`future event-location` = The location they moved to.",
+                    "`event-boolean` = Whether the player is allowed to move (can be set).",
+                    "`future event-boolean` = Whether to log warning to console (can be set).")
+                .examples("")
+                .since("INSERT VERSION");
+
+            EventValues.registerEventValue(PlayerFailMoveEvent.class, PlayerFailMoveEvent.FailReason.class, PlayerFailMoveEvent::getFailReason);
+            EventValues.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getFrom, EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getTo, EventValues.TIME_FUTURE);
+            EventValues.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
+                @Override
+                public void set(PlayerFailMoveEvent event, @Nullable Boolean allowed) {
+                    event.setAllowed(Boolean.TRUE.equals(allowed));
+                }
+
+                @Override
+                public Boolean convert(PlayerFailMoveEvent event) {
+                    return event.isAllowed();
+                }
+            }, EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
+                @Override
+                public void set(PlayerFailMoveEvent event, @Nullable Boolean allowed) {
+                    event.setLogWarning(Boolean.TRUE.equals(allowed));
+                }
+
+                @Override
+                public Boolean convert(PlayerFailMoveEvent event) {
+                    return event.getLogWarning();
+                }
+            }, EventValues.TIME_FUTURE);
         }
 
         // SERVER EVENTS
