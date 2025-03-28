@@ -869,15 +869,15 @@ public class NBTApi {
      * @return ItemStack from NBT
      */
     public static ItemStack convertNBTtoItem(@NotNull NBTCompound nbtcompound) {
-        if (!nbtcompound.hasTag("DataVersion") || nbtcompound.getInteger("DataVersion") != getDataVersion()) {
-            int dataVersion = nbtcompound.hasTag("DataVersion") ? nbtcompound.getInteger("DataVersion") : DataFixerUtil.VERSION1_20_4;
-            try {
-                ReadWriteNBT fixedItemNBT = DataFixerUtil.fixUpItemData(nbtcompound, dataVersion, getDataVersion());
-                return NBTItem.convertNBTtoItem((NBTCompound) fixedItemNBT);
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-        }
+//        if (!nbtcompound.hasTag("DataVersion") || nbtcompound.getInteger("DataVersion") != getDataVersion()) {
+//            int dataVersion = nbtcompound.hasTag("DataVersion") ? nbtcompound.getInteger("DataVersion") : DataFixerUtil.VERSION1_20_4;
+//            try {
+//                ReadWriteNBT fixedItemNBT = DataFixerUtil.fixUpItemData(nbtcompound, dataVersion, getDataVersion());
+//                return NBTItem.convertNBTtoItem((NBTCompound) fixedItemNBT);
+//            } catch (NoSuchFieldException | IllegalAccessException e) {
+//                throw new RuntimeException(e);
+//            }
+//        }
         return NBTItem.convertNBTtoItem(nbtcompound);
     }
 
