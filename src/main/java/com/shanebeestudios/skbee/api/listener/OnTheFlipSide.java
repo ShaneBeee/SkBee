@@ -15,7 +15,7 @@ import java.util.Calendar;
  */
 public class OnTheFlipSide implements Listener {
 
-    private static final boolean FLIP_SIDE = SkBee.getPlugin().getPluginConfig().on_the_flip_side;
+    private static final boolean FLIP_SIDE = false;
 
     @SuppressWarnings("deprecation")
     @EventHandler
