@@ -45,8 +45,7 @@ import java.util.List;
         "[**Can Place On**](https://minecraft.wiki/w/Data_component_format#can_place_on) components on McWiki for more info.",
     "",
     "**Entries**:",
-    "- `blocks` = The blocks this item can place on/can break. (Accepts ItemTypes, BlockDatas, Tags, TagKeys and RegistryKeySets(soon™))",
-    "- `show_in_tooltip` = Show or hide the \"Can break/Can Place On\" line on this item's tooltip. (Optional, defaults to true)"})
+    "- `blocks` = The blocks this item can place on/can break. (Accepts ItemTypes, BlockDatas, Tags, TagKeys and RegistryKeySets(soon™))"})
 @Examples({"apply can break adventure predicate to player's tool:",
     "\tblocks: grass block, dirt, stone, gravel",
     "",
@@ -68,7 +67,6 @@ public class SecAdventureComponent extends Section {
 
         VALIDATOR = SimpleEntryValidator.builder()
             .addRequiredEntry("blocks", classes)
-            .addOptionalEntry("show_in_tooltip", Boolean.class)
             .build();
         Skript.registerSection(SecAdventureComponent.class,
             "apply (place:can place on|can break) [adventure] predicate to %itemstacks/itemtypes/slots%");
@@ -76,10 +74,8 @@ public class SecAdventureComponent extends Section {
 
     private Expression<?> items;
     private Expression<?> blocks;
-    private Expression<Boolean> showInTooltip;
     private DataComponentType.Valued<ItemAdventurePredicate> dataType;
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         if (sectionNode == null) return false;
@@ -89,7 +85,6 @@ public class SecAdventureComponent extends Section {
         }
         this.items = exprs[0];
         this.blocks = validate.getOptional("blocks", Object.class, false);
-        this.showInTooltip = (Expression<Boolean>) validate.getOptional("show_in_tooltip", false);
         this.dataType = parseResult.hasTag("place") ? DataComponentTypes.CAN_PLACE_ON : DataComponentTypes.CAN_BREAK;
         return true;
     }
@@ -97,11 +92,6 @@ public class SecAdventureComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
-        boolean showInTooltip = true;
-        if (this.showInTooltip != null) {
-            showInTooltip = this.showInTooltip.getOptionalSingle(event).orElse(true);
-        }
-
         List<TypedKey<BlockType>> blockTypes = new ArrayList<>();
         ItemAdventurePredicate.Builder builder = ItemAdventurePredicate.itemAdventurePredicate();
 
@@ -134,7 +124,7 @@ public class SecAdventureComponent extends Section {
             builder.addPredicate(BlockPredicate.predicate().blocks(keySet).build());
         }
 
-        ItemAdventurePredicate predicate = builder.showInTooltip(showInTooltip).build();
+        ItemAdventurePredicate predicate = builder.build();
 
         ItemUtils.modifyItems(this.items.getArray(event), itemStack ->
             itemStack.setData(this.dataType, predicate));
