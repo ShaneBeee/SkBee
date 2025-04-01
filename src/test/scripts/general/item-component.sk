@@ -95,7 +95,7 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 	# Equippable Section
 	set {_i} to 1 of stick
 	apply equippable component to {_i}:
-		slot: hand_slot
+		slot: hand slot
 		equip_sound: "entity.player.burp"
 		asset_id: "my_pack:some_asset"
 		allowed_entities: player, evoker, zombie
@@ -108,7 +108,7 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 
 	set {_i} to 1 of stick
 	apply equippable component to {_i}:
-		slot: hand_slot
+		slot: hand slot
 		allowed_entities: minecraft entity tag "minecraft:undead"
 	assert {_i} has item component minecraft:equippable with "The stick should have an equippable component"
 	delete {_i}

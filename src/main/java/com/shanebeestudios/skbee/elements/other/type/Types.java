@@ -271,13 +271,15 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(EquipmentSlot.class) == null) {
-            EnumWrapper<EquipmentSlot> SLOT_ENUM = new EnumWrapper<>(EquipmentSlot.class, null, "slot");
-            Classes.registerClass(SLOT_ENUM.getClassInfo("equipmentslot")
-                .user("equipment ?slots?")
-                .name("Equipment Slot")
-                .description("Represents different slots of an entity.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .since("3.4.0"));
+            if (!Util.IS_RUNNING_SKRIPT_2_11) {
+                EnumWrapper<EquipmentSlot> SLOT_ENUM = new EnumWrapper<>(EquipmentSlot.class, null, "slot");
+                Classes.registerClass(SLOT_ENUM.getClassInfo("equipmentslot")
+                    .user("equipment ?slots?")
+                    .name("Equipment Slot")
+                    .description("Represents different slots of an entity.",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .since("3.4.0"));
+            }
         } else {
             Util.logLoading("It looks like another addon registered 'slot' already.");
             Util.logLoading("You may have to use their EquipmentSlot in SkBee's syntaxes.");
