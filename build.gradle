@@ -22,7 +22,7 @@ repositories {
     maven { url 'https://repo.papermc.io/repository/maven-public/' }
 
     // Skript
-    //maven { url 'https://repo.skriptlang.org/releases' } TODO this repo doesn't have snapshots, revert when Skript 2.11 comes out
+    maven { url 'https://repo.skriptlang.org/releases' }
 
     // JitPack
     maven { url 'https://jitpack.io' }
@@ -36,7 +36,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.5-R0.1-SNAPSHOT")
 
     // Skript
-    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: 'dev~feature-SNAPSHOT') { // TODO Update to Skript 2.11 when it comes out
+    compileOnly("com.github.SkriptLang:Skript:2.11.0-pre1") {
         transitive = false
     }
 
