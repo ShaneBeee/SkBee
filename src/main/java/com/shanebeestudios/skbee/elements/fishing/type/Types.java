@@ -10,17 +10,18 @@ public class Types {
 
     static {
         // Only register if no other addons have registered this class
-        if (Classes.getExactClassInfo(PlayerFishEvent.State.class) == null) {
-            if (!Util.IS_RUNNING_SKRIPT_2_11) {
+        if (!Util.IS_RUNNING_SKRIPT_2_11) {
+            if (Classes.getExactClassInfo(PlayerFishEvent.State.class) == null) {
+
                 EnumWrapper<PlayerFishEvent.State> FISH_STATE_ENUM = new EnumWrapper<>(PlayerFishEvent.State.class);
                 Classes.registerClass(FISH_STATE_ENUM.getClassInfo("fishingstate")
                     .user("fish(ing)? ?states?")
                     .name("Fish Event State")
                     .since("1.15.2"));
+            } else {
+                Util.logLoading("It looks like another addon registered 'fishingstate' already.");
+                Util.logLoading("You may have to use their fishing states in SkBee's 'Fish Event State' expression.");
             }
-        } else {
-            Util.logLoading("It looks like another addon registered 'fishingstate' already.");
-            Util.logLoading("You may have to use their fishing states in SkBee's 'Fish Event State' expression.");
         }
 
         if (Classes.getExactClassInfo(HookState.class) == null) {
