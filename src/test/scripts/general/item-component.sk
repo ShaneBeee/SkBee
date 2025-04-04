@@ -295,6 +295,12 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 		apply use cooldown to {_i}:
 			seconds: 0 seconds # Testing a previous bug
 			group: "sovde_found_this_bug_so_he_gets_a_custom_group"
+
+		set {_i} to 1 of stick
+		apply use cooldown to {_i}:
+			seconds: 1 tick # Testing a previous bug #784
+			group: "another_bug_784"
+	assert size of parse logs = 1 with "Should only be 1 error"
 	assert parse logs = "Timespan '0 seconds' too low, defaulting to 1 tick." with "This should error"
 
 	# Use Remainder
