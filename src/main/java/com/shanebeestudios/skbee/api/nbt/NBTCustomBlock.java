@@ -93,9 +93,16 @@ public class NBTCustomBlock extends NBTContainer implements NBTCustom {
         return emptyContainer;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     public @NotNull NBTCompound getCustomNBT() {
-        return this.getOrCreateCompound("custom");
+        NBTCompound custom = this.getOrCreateCompound("custom");
+        // Verify the innards haven't been removed
+        // If the block is air, the NBT is removed
+        if (hasTag("custom")) {
+            return custom;
+        }
+        return new NBTContainer();
     }
 
 }
