@@ -30,8 +30,7 @@ import java.util.List;
     "See [**JukeboxPlayable Component**](https://minecraft.wiki/w/Data_component_format#jukebox_playable) on McWiki for more info.",
     "",
     "**Entries**:",
-    "- `song` = A jukebox song to be played.",
-    "- `show_in_tooltip` = Whether this will show in the item's tooltip."})
+    "- `song` = A jukebox song to be played."})
 @Examples("")
 @Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
@@ -42,7 +41,6 @@ public class SecJukeboxPlayableComponent extends Section {
     static {
         VALIDATOR = SimpleEntryValidator.builder()
             .addRequiredEntry("song", JukeboxSong.class)
-            .addOptionalEntry("show_in_tooltip", Boolean.class)
             .build();
         Skript.registerSection(SecJukeboxPlayableComponent.class,
             "apply jukebox playable [component] to %itemstacks/itemtypes/slots%");
@@ -50,7 +48,6 @@ public class SecJukeboxPlayableComponent extends Section {
 
     private Expression<?> items;
     private Expression<JukeboxSong> jukeboxSong;
-    private Expression<Boolean> showInTooltip;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -60,7 +57,6 @@ public class SecJukeboxPlayableComponent extends Section {
         if (container == null) return false;
 
         this.jukeboxSong = (Expression<JukeboxSong>) container.getOptional("song", false);
-        this.showInTooltip = (Expression<Boolean>) container.getOptional("show_in_tooltip", false);
         return true;
     }
 
@@ -71,11 +67,7 @@ public class SecJukeboxPlayableComponent extends Section {
             error("No jukebox song found");
             return super.walk(event, false);
         }
-        boolean showInTooltip = true;
-        if (this.showInTooltip != null) {
-            showInTooltip = this.showInTooltip.getOptionalSingle(event).orElse(true);
-        }
-        JukeboxPlayable jukeboxPlayable = JukeboxPlayable.jukeboxPlayable(jukeboxSong).showInTooltip(showInTooltip).build();
+        JukeboxPlayable jukeboxPlayable = JukeboxPlayable.jukeboxPlayable(jukeboxSong).build();
         ItemUtils.modifyItems(this.items.getArray(event), itemStack ->
             itemStack.setData(DataComponentTypes.JUKEBOX_PLAYABLE, jukeboxPlayable));
         return super.walk(event, false);

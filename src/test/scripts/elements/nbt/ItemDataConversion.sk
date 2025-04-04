@@ -1,0 +1,20 @@
+test "SkBee - NBT - Item Data Conversion":
+	# Testing that older item NBT is converted to the current version
+	# NBT-API runs outdated NBT thru DataFixerUpper
+
+	# 1.16 NBT - Testing item id change
+	set {_n} to nbt from "{DataVersion:2586,id:""minecraft:grass_path"",Count:1b}"
+	set {_i} to 1 of nbt item from {_n}
+	assert {_i} = dirt path with "The type should have been converted"
+
+	# 1.20.4 NBT - Testing change to components
+	set {_n} to nbt from "{DataVersion:3700,id:""minecraft:diamond_axe"",Count:1,tag:{Enchantments:[{lvl:3,id:fortune}]}}"
+	set {_i} to 1 of nbt item from {_n}
+	assert enchantments of {_i} contains fortune 3 with "Item should be enchanted ith 'fortune 3'"
+	delete {_i}
+
+	# 1.21.4 NBT - Testing removal of 'levels' from 'enchantments'
+	set {_n} to nbt from "{DataVersion:4189,id:""minecraft:diamond_sword"",Count:1,components:{""minecraft:enchantments"":{levels:{""minecraft:sharpness"":10}}}}"
+	set {_i} to 1 of nbt item from {_n}
+	assert enchantments of {_i} contains sharpness 10 with "Item should be enchanted with 'sharpness 10'"
+

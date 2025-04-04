@@ -1,0 +1,17 @@
+test "SkBee - NBT - Errors":
+	set {_l} to location(1,250,1)
+	set block at {_l} to air
+
+	set int tag "custom;test" of nbt of block at {_l} to 1
+	assert int tag "custom;test" of nbt of block at {_l} is not set with "This shouldn't set, it's air"
+
+	set int tag "test" of custom nbt of block at {_l} to 2
+	assert int tag "test" of custom nbt of block at {_l} is not set with "This shouldn't be set, it's air"
+
+	set block at {_l} to stone
+	set int tag "custom;test" of nbt of block at {_l} to 3
+	assert int tag "custom;test" of nbt of block at {_l} = 3 with "The tag should be set to 3"
+
+	set block at {_l} to air
+	assert int tag "custom;test" of nbt of block at {_l} is not set with "This shouldn't be set, it's air"
+	assert int tag "test" of custom nbt of block at {_l} is not set with "This shouldn't be set, it's air"

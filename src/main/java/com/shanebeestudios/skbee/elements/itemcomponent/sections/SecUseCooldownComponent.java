@@ -69,7 +69,7 @@ public class SecUseCooldownComponent extends Section {
         this.seconds = (Expression<Timespan>) container.getOptional("seconds", false);
         this.group = (Expression<String>) container.getOptional("group", false);
         if (this.seconds instanceof Literal<Timespan> timespan) {
-            if (timespan.getSingle().getAs(Timespan.TimePeriod.MILLISECOND) / 1000 <= 0) {
+            if (timespan.getSingle().getAs(Timespan.TimePeriod.MILLISECOND) < 50) {
                 Skript.error("Timespan '" + timespan + "' too low, defaulting to 1 tick.");
                 this.seconds = new SimpleLiteral<>(new Timespan(50), false);
             }
@@ -85,7 +85,7 @@ public class SecUseCooldownComponent extends Section {
             if (timespan != null) {
                 seconds = (float) timespan.getAs(Timespan.TimePeriod.MILLISECOND) / 1000;
                 // Minecraft requires > 0, so lowest we'll go is 1 tick
-                if (seconds <= 0) {
+                if (seconds < 0.05f) {
                     warning("Timespan '" + timespan + "' too low, defaulting to 1 tick.");
                     seconds = 0.05f;
                 }

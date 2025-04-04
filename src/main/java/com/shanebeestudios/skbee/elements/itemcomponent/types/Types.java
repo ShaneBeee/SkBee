@@ -10,6 +10,8 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.Math2;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
+import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
+import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect.ApplyStatusEffects;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect.ClearAllStatusEffects;
@@ -20,6 +22,7 @@ import io.papermc.paper.registry.TypedKey;
 import io.papermc.paper.registry.set.RegistryKeySet;
 import io.papermc.paper.registry.set.RegistrySet;
 import net.kyori.adventure.key.Key;
+import org.bukkit.Registry;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.Nullable;
@@ -59,6 +62,13 @@ public class Types {
             })
             .since("3.8.0");
         Classes.registerClass(CONSUME_EFFECT_INFO);
+
+        Classes.registerClass(RegistryClassInfo.create(Registry.DATA_COMPONENT_TYPE, DataComponentType.class,
+                false, "datacomponenttype")
+            .user("data ?component ?types?")
+            .name("Data Component Type")
+            .description("Represents the different types of data components.")
+            .since("INSERT VERSION"));
 
         // Functions (ConsumeEffects)
         Functions.registerFunction(new SimpleJavaFunction<>("apply_effects", new Parameter[]{

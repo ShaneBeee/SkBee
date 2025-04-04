@@ -33,7 +33,13 @@ public class ExprEntityVisibility extends PropertyExpression<Entity, Boolean> {
 
     static {
         ITEM_FRAME = Skript.methodExists(ItemFrame.class, "setVisible", boolean.class);
-        LIVING_ENTITY = Skript.methodExists(LivingEntity.class, "setInvisible", boolean.class);
+        if (Skript.methodExists(LivingEntity.class, "setInvisible", boolean.class)) {
+            LIVING_ENTITY = true;
+        } else if (Skript.methodExists(Entity.class, "setInvisible", boolean.class)) {
+            LIVING_ENTITY = true;
+        } else {
+            LIVING_ENTITY = false;
+        }
         register(ExprEntityVisibility.class, Boolean.class, "visibility", "entities");
     }
 

@@ -1,0 +1,55 @@
+test "SkBee - NBT - SecModifyNBT":
+	# Block
+	set {_data} to blockdata of block at event-location
+	set block at event-location to furnace[]
+
+	assert short tag "cooking_total_time" of nbt of block at event-location = 0 with "Cooking time should be 0 when new"
+	modify nbt of block at event-location:
+		set short tag "cooking_total_time" of nbt to 5
+	assert short tag "cooking_total_time" of nbt of block at event-location = 5 with "Cooking time should be 5 after changing"
+
+	# Block - Custom
+	assert nbt of block at event-location does not have tag "custom;test" with "Block shouldn't have custom tag yet"
+	modify custom nbt of block at event-location:
+		set string tag "test" of nbt to "hi mom"
+	assert nbt of block at event-location has tag "custom;test" with "Block should have custom tag now"
+	assert custom nbt of block at event-location has tag "test" with "Block should have custom tag now"
+	assert string tag "test" of custom nbt of block at event-location = "hi mom" with "Tag should match"
+
+	set block at event-location to {_data}
+
+	# Entity
+	spawn a sheep at event-location:
+		set {_e} to entity
+
+	assert byte tag "Sheared" of nbt of {_e} = 0 with "The sheared tag should be 0 at stat"
+	modify nbt of {_e}:
+		set byte tag "Sheared" of nbt to 1
+	assert byte tag "Sheared" of nbt of {_e} = 1 with "The sheared tag should be 1 after changing"
+
+	# Entity - Custom
+	assert nbt of {_e} does not have tag "custom;test" with "Entity shouldn't have custom tag yet"
+	modify custom nbt of {_e}:
+		set string tag "test" of nbt to "this is a test"
+	assert nbt of {_e} has tag "custom;test" with "Entity should have custom tag now"
+	assert custom nbt of {_e} has tag "test" with "Entity should have custom tag now"
+	assert string tag "custom;test" of nbt of {_e} = "this is a test" with "Tag should match"
+	assert string tag "test" of custom nbt of {_e} = "this is a test" with "Tag should match"
+
+	delete entity within {_e}
+
+	# Item
+	set {_i} to 1 of diamond axe
+	assert nbt of {_i} does not have tag "!minecraft:item_name" with "Item shouldn't have component yet"
+	modify nbt of {_i}:
+		set compound tag "!minecraft:item_name" of nbt to nbt from "{}"
+	assert nbt of {_i} has tag "!minecraft:item_name" with "Item should have component now"
+
+	# Item - Custom
+	set {_i} to 1 of diamond sword of unbreaking 3
+	assert custom nbt of {_i} does not have tag "test" with "Shouldn't have the tag yet"
+	modify custom nbt of {_i}:
+		set short tag "test" of nbt to 1
+	assert custom nbt of {_i} has tag "test" with "Should have tag now"
+	assert short tag "minecraft:custom_data;test" of nbt of {_i} = 1 with "Test tag should = 1"
+	assert short tag "test" of custom nbt of {_i} = 1 with "Test tag should = 1"

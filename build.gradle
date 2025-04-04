@@ -33,10 +33,10 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.21.4-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.5-R0.1-SNAPSHOT")
 
     // Skript
-    compileOnly(group: 'com.github.SkriptLang', name: 'Skript', version: '2.10.0') {
+    compileOnly("com.github.SkriptLang:Skript:2.11.0-pre1") {
         transitive = false
     }
 
@@ -45,12 +45,12 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.14.1") {
+    implementation("de.tr7zw:item-nbt-api:2.14.2-SNAPSHOT") {
         transitive = false
     }
 
     // FastBoard
-    implementation("fr.mrmicky:fastboard:2.1.3")
+    implementation("fr.mrmicky:fastboard:2.1.4")
 
     // Virtual Furnace
     implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.1.1") {
@@ -99,7 +99,7 @@ shadowJar {
 tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
-    into '/Users/ShaneBee/Desktop/Server/Skript/1-21-4/plugins'
+    into '/Users/ShaneBee/Desktop/Server/Skript/1-21-5/plugins'
 }
 
 publishing {

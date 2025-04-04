@@ -1,0 +1,13 @@
+test "SkBee - ExprWorldTime":
+	set {_w} to world "world"
+	set full world time of {_w} to 0
+	assert full world time of {_w} = 0 with "Full world time should be 0"
+	assert world time of {_w} = 0 with "World time should be 0"
+
+	set full world time of {_w} to 12000
+	assert full world time of {_w} = 12000 with "Full world time should be 12000"
+	assert world time of {_w} = 12000 with "World time should be 12000"
+
+	add 24000 to full world time of {_w}
+	assert full world time of {_w} = 36000 with "Full world time should be 36000"
+	assert world time of {_w} = 12000 with "World time should be 12000"

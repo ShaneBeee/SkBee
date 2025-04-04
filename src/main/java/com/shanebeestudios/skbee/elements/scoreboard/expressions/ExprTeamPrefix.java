@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.reflection.ChatReflection;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
@@ -67,10 +68,23 @@ public class ExprTeamPrefix extends SimplePropertyExpression<Team, String> {
         Team[] teams = getExpr().getArray(event);
         String name = mode == ChangeMode.SET ? (String) delta[0] : null;
         for (Team team : teams) {
-            if (pattern == 0) {
-                ChatReflection.setTeamPrefix(team, name);
+            setTeamDetail(team, name, this.pattern == 0);
+        }
+    }
+
+    @SuppressWarnings("deprecation")
+    private void setTeamDetail(Team team, String detail, boolean prefix) {
+        if (Util.IS_RUNNING_MC_1_20_1) {
+            if (prefix) {
+                team.setPrefix(detail);
             } else {
-                ChatReflection.setTeamSuffix(team, name);
+                team.setSuffix(detail);
+            }
+        } else {
+            if (prefix) {
+                ChatReflection.setTeamPrefix(team, detail);
+            } else {
+                ChatReflection.setTeamSuffix(team, detail);
             }
         }
     }

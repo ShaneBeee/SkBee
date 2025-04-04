@@ -17,6 +17,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent;
 import com.destroystokyo.paper.event.player.PlayerArmorChangeEvent.SlotType;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
@@ -30,11 +31,10 @@ import org.jetbrains.annotations.Nullable;
         "\tif new armor item is any helmet:",
         "\t\tset armor item to a diamond helmet"})
 @Since("1.3.1")
-@SuppressWarnings("NullableProblems")
 public class ExprArmorChange extends SimpleExpression<ItemType> {
 
     static {
-        if (Skript.classExists("com.destroystokyo.paper.event.player.PlayerArmorChangeEvent")) {
+        if (!Util.IS_RUNNING_SKRIPT_2_11 && Skript.classExists("com.destroystokyo.paper.event.player.PlayerArmorChangeEvent")) {
             Skript.registerExpression(ExprArmorChange.class, ItemType.class, ExpressionType.SIMPLE,
                     "[(new|1:old)] armor item");
         }

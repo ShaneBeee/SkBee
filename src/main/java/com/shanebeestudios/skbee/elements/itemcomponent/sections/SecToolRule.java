@@ -96,7 +96,7 @@ public class SecToolRule extends Section {
 
         this.blocks = (Expression<ItemType>) container.getOptional("blocks", false);
         this.speed = (Expression<Number>) container.getOptional("speed", false);
-        this.correctForDrops = (Expression<Boolean>) container.getOptional("correct for drops", false);
+        this.correctForDrops = (Expression<Boolean>) container.getOptional("correct_for_drops", false);
         return true;
     }
 
