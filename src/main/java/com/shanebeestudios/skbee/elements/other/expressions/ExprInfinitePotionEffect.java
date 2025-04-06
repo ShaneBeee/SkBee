@@ -21,19 +21,17 @@ import java.util.List;
 
 @Name("Infinite Potion Effect")
 @Description({"Represents an infinite potion effect. This is similar to Skript's potion effect expression except it is infinite time.",
-        "This can be used in Skript's `apply %potion effects% to %living entities%` effect!",
-        "\nNOTE: This will cause console errors when sending as a string (This is an issue in Skript itself).",
-        "This is only a temp solution until Skript adds a proper solution. Requires Minecraft 1.19.4+"})
+    "This can be used in Skript's `apply %potion effects% to %living entities%` effect!",
+    "\nNOTE: This will cause console errors when sending as a string (This is an issue in Skript itself).",
+    "This is only a temp solution until Skript adds a proper solution. Requires Minecraft 1.19.4+"})
 @Examples({"set {_potion} to infinite potion effect of night vision of tier 1 without particles",
-        "apply {_potion} to player"})
+    "apply {_potion} to player"})
 @Since("2.8.5")
 public class ExprInfinitePotionEffect extends SimpleExpression<PotionEffect> {
 
     static {
-        if (Skript.isRunningMinecraft(1, 19, 4)) {
-            Skript.registerExpression(ExprInfinitePotionEffect.class, PotionEffect.class, ExpressionType.COMBINED,
-                    "[new] [:ambient] infinite potion effect[s] of %potioneffecttypes% [[[of] tier] %number%] [particles:without particles]");
-        }
+        Skript.registerExpression(ExprInfinitePotionEffect.class, PotionEffect.class, ExpressionType.COMBINED,
+            "[new] [:ambient] infinite potion effect[s] of %potioneffecttypes% [[[of] tier] %number%] [particles:without particles]");
     }
 
     private boolean ambient;
@@ -82,9 +80,9 @@ public class ExprInfinitePotionEffect extends SimpleExpression<PotionEffect> {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String ambient = this.ambient ? "ambient " : "";
-        String tier = this.tier != null ? " of tier " + this.tier.toString(e,d) : "";
+        String tier = this.tier != null ? " of tier " + this.tier.toString(e, d) : "";
         String particles = this.particles ? " without particles" : "";
-        return ambient + "potion effect of " + this.potionEffectTypes.toString(e,d) + tier + particles;
+        return ambient + "potion effect of " + this.potionEffectTypes.toString(e, d) + tier + particles;
     }
 
 }

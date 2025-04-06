@@ -51,7 +51,7 @@ public class SecRecipeSmithing extends Section {
     private static EntryValidator VALIDATOR;
 
     static {
-        if (Skript.isRunningMinecraft(1, 20)) {
+        if (Util.IS_RUNNING_MC_1_20) {
             SimpleEntryValidator builder = SimpleEntryValidator.builder();
             builder.addRequiredEntry("id", String.class);
             builder.addRequiredEntry("result", ItemStack.class);

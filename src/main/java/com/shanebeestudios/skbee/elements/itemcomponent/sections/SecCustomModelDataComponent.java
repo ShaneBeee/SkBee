@@ -14,6 +14,7 @@ import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
+import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.CustomModelData;
 import org.bukkit.event.Event;
@@ -42,7 +43,6 @@ import java.util.List;
 public class SecCustomModelDataComponent extends Section {
 
     private static final EntryValidator VALIDATOR;
-    private static final boolean HAS_SUPPORT = Skript.isRunningMinecraft(1, 21, 4);
 
     static {
         VALIDATOR = SimpleEntryValidator.builder()
@@ -65,7 +65,7 @@ public class SecCustomModelDataComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
-        if (!HAS_SUPPORT) {
+        if (!Util.IS_RUNNING_MC_1_21_4) {
             Skript.error("CustomModelData with fields requires Minecraft 1.21.4+");
             return false;
         }

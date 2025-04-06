@@ -56,7 +56,7 @@ public class EffSmithingRecipe extends Effect {
         base = (Expression<Object>) exprs[1];
         addition = (Expression<Object>) exprs[2];
         key = (Expression<String>) exprs[3];
-        if (Skript.isRunningMinecraft(1,20)) {
+        if (Util.IS_RUNNING_MC_1_20) {
             Skript.error("Smithing recipes have been temporarily removed as Minecraft has changed how these recipes work!");
             return false;
         }

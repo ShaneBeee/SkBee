@@ -13,6 +13,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
+import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.TooltipDisplay;
@@ -44,7 +45,7 @@ public class SecTooltipDisplayComponent extends Section {
     private static final EntryValidator VALIDATOR;
 
     static {
-        if (Skript.isRunningMinecraft(1, 21, 5)) {
+        if (Util.IS_RUNNING_MC_1_21_5) {
             VALIDATOR = SimpleEntryValidator.builder()
                 .addOptionalEntry("hide_tooltip", Boolean.class)
                 .addOptionalEntry("hidden_components", DataComponentType.class)
