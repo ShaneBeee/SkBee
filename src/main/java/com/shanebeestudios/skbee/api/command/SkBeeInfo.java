@@ -17,11 +17,14 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.StringJoiner;
 
 import static com.shanebeestudios.skbee.api.util.Util.sendColMsg;
 
 public class SkBeeInfo implements TabExecutor {
 
+    private static final List<String> commands = List.of("info", "debug");
+    private static final List<String> debugs = List.of("enable", "disable");
     private final PluginDescriptionFile desc;
     private final Config config;
 
@@ -34,7 +37,11 @@ public class SkBeeInfo implements TabExecutor {
     @SuppressWarnings("deprecation")
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
-        if (args.length > 0) {
+        if (args.length == 0) {
+            StringJoiner joiner = new StringJoiner("/");
+            commands.forEach(joiner::add);
+            Util.sendColMsg(sender, "Usage: /skbee <" + joiner + ">");
+        } else {
             // INFO COMMAND
             if (args[0].equalsIgnoreCase("info")) {
                 sendColMsg(sender, "&7--- [&bSkBee Loading Info&7] ---");
@@ -89,9 +96,6 @@ public class SkBeeInfo implements TabExecutor {
         }
         return true;
     }
-
-    private static final List<String> commands = List.of("info", "debug");
-    private static final List<String> debugs = List.of("enable", "disable");
 
     @Override
     public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
