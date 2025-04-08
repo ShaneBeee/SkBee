@@ -21,6 +21,7 @@ import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
+import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.Color;
 import org.bukkit.EntityEffect;
@@ -37,18 +38,15 @@ import org.bukkit.entity.Pose;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityPotionEffectEvent.Cause;
 import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.bukkit.event.player.PlayerSpawnChangeEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
-import org.bukkit.loot.LootTable;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -212,25 +210,25 @@ public class Types {
                         return toString(o, 0);
                     }
                 }));
-            }
+        }
 
-            if (Classes.getExactClassInfo(TrimMaterial.class) == null) {
-                Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_MATERIAL, TrimMaterial.class, "trimmaterial", null, "material")
-                    .user("trim ?materials?")
-                    .name("ArmorTrim - TrimMaterial")
-                    .description("Represents a material that may be used in an ArmorTrim.",
-                        "NOTE: These are auto-generated and may differ between server versions.")
-                    .since("2.13.0"));
-            }
+        if (Classes.getExactClassInfo(TrimMaterial.class) == null) {
+            Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_MATERIAL, TrimMaterial.class, "trimmaterial", null, "material")
+                .user("trim ?materials?")
+                .name("ArmorTrim - TrimMaterial")
+                .description("Represents a material that may be used in an ArmorTrim.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
+                .since("2.13.0"));
+        }
 
-            if (Classes.getExactClassInfo(TrimPattern.class) == null) {
-                Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_PATTERN, TrimPattern.class, "trimpattern", null, "pattern")
-                    .user("trim ?patterns?")
-                    .name("ArmorTrim - TrimPattern")
-                    .description("Represents a pattern that may be used in an ArmorTrim.",
-                        "NOTE: These are auto-generated and may differ between server versions.")
-                    .since("2.13.0"));
-            }
+        if (Classes.getExactClassInfo(TrimPattern.class) == null) {
+            Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_PATTERN, TrimPattern.class, "trimpattern", null, "pattern")
+                .user("trim ?patterns?")
+                .name("ArmorTrim - TrimPattern")
+                .description("Represents a pattern that may be used in an ArmorTrim.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
+                .since("2.13.0"));
+        }
 
         if (HAS_CHUNK_LOAD_LEVEL && Classes.getExactClassInfo(LoadLevel.class) == null) {
             EnumWrapper<LoadLevel> LOAD_LEVEL_ENUM = new EnumWrapper<>(LoadLevel.class, "", "level");
@@ -245,7 +243,7 @@ public class Types {
                     "- `unloaded_level` = This chunk is not loaded.",
                     "NOTE: These are auto-generated and may differ between server versions.")
                 .since("2.17.0"));
-            }
+        }
 
         if (Classes.getExactClassInfo(EntityEffect.class) == null) {
             EnumWrapper<EntityEffect> ENTITY_EFFECT_ENUM = new EnumWrapper<>(EntityEffect.class);
@@ -261,7 +259,8 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(MemoryKey.class) == null) {
-            Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, MemoryKey.class, "memory")
+            //noinspection unchecked
+            Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, (Class)MemoryKey.class, "memory")
                 .user("memor(y|ies)")
                 .name("Memory")
                 .description("Represents the different memories of an entity.",
@@ -271,17 +270,19 @@ public class Types {
             Util.logLoading("You may have to use their ItemFlags in SkBee's syntaxes.");
         }
 
-        if (Classes.getExactClassInfo(EquipmentSlot.class) == null) {
-            EnumWrapper<EquipmentSlot> SLOT_ENUM = new EnumWrapper<>(EquipmentSlot.class, null, "slot");
-            Classes.registerClass(SLOT_ENUM.getClassInfo("equipmentslot")
-                .user("equipment ?slots?")
-                .name("Equipment Slot")
-                .description("Represents different slots of an entity.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .since("3.4.0"));
-        } else {
-            Util.logLoading("It looks like another addon registered 'slot' already.");
-            Util.logLoading("You may have to use their EquipmentSlot in SkBee's syntaxes.");
+        if (!Util.IS_RUNNING_SKRIPT_2_11) {
+            if (Classes.getExactClassInfo(EquipmentSlot.class) == null) {
+                EnumWrapper<EquipmentSlot> SLOT_ENUM = new EnumWrapper<>(EquipmentSlot.class, null, "slot");
+                Classes.registerClass(SLOT_ENUM.getClassInfo("equipmentslot")
+                    .user("equipment ?slots?")
+                    .name("Equipment Slot")
+                    .description("Represents different slots of an entity.",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .since("3.4.0"));
+            } else {
+                Util.logLoading("It looks like another addon registered 'slot' already.");
+                Util.logLoading("You may have to use their EquipmentSlot in SkBee's syntaxes.");
+            }
         }
 
         if (Classes.getExactClassInfo(Action.class) == null) {
@@ -516,6 +517,15 @@ public class Types {
             } else {
                 Util.logLoading("It looks like another addon registered 'jukeboxson' already.");
                 Util.logLoading("You may have to use their JukeboxSongs in SkBee's syntaxes.");
+            }
+        }
+
+        if (Skript.classExists("io.papermc.paper.event.player.PlayerFailMoveEvent$FailReason")) {
+            if (Classes.getExactClassInfo(PlayerFailMoveEvent.FailReason.class) == null) {
+                Classes.registerClass(new EnumWrapper<>(PlayerFailMoveEvent.FailReason.class).getClassInfo("failmovereason")
+                    .user("fail ?move ?reasons?")
+                    .description("The reason a player failed to move in a `player fail move` event.")
+                    .since("INSERT VERSION"));
             }
         }
     }

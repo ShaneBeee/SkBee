@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Lockable;
@@ -29,7 +30,7 @@ import org.jetbrains.annotations.Nullable;
 @Since("2.16.0")
 public class ExprLockableKey extends SimplePropertyExpression<Block, String> {
 
-    private static final boolean INVALID = Skript.isRunningMinecraft(1, 21, 2);
+    private static final boolean INVALID = Util.IS_RUNNING_MC_1_21_2;
 
     static {
         register(ExprLockableKey.class, String.class, "(container|lockable) key", "blocks");

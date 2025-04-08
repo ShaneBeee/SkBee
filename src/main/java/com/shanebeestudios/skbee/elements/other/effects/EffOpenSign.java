@@ -11,6 +11,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
@@ -33,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 @Since("1.5.2, 2.14.0 (sides)")
 public class EffOpenSign extends Effect {
 
-    private static final boolean HAS_SIDES = Skript.isRunningMinecraft(1, 20);
+    private static final boolean HAS_SIDES = Util.IS_RUNNING_MC_1_20;
 
     static {
         String side = HAS_SIDES ? "[(front|back:back)] " : "";

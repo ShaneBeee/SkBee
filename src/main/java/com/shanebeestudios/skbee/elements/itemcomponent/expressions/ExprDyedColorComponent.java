@@ -5,11 +5,8 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
@@ -23,7 +20,6 @@ import org.jetbrains.annotations.Nullable;
 @Name("ItemComponent - Dyed Color")
 @Description({"Represents the dyed color component of an item.",
     "This will work on leather armor, or items that have a dye component on their item model.",
-    "The `hidden` option will hide this value in the item's tooltip.",
     "See [**ItemModel**](https://minecraft.wiki/w/Data_component_format#dyed_color) on McWiki for more details.",
     "Requires Paper 1.21.3+",
     "",
@@ -33,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
     "`reset` = Will reset the dyed color back to the original value."})
 @Examples({"set dyed color of player's tool to red",
     "set dyed color of player's tool to rgb(255,100,3)",
-    "set hidden dyed color of player's tool to yellow",
+    "set dyed color of player's tool to yellow",
     "delete dyed color of player's tool",
     "reset dyed color of {_item}"})
 @Since("3.9.0")
@@ -41,15 +37,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprDyedColorComponent extends SimplePropertyExpression<Object, Color> {
 
     static {
-        register(ExprDyedColorComponent.class, Color.class, "[:hidden] dyed color [component]", "itemstacks/itemtypes/slots");
-    }
-
-    private boolean hidden;
-
-    @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.hidden = parseResult.hasTag("hidden");
-        return super.init(exprs, matchedPattern, isDelayed, parseResult);
+        register(ExprDyedColorComponent.class, Color.class, "dyed color [component]", "itemstacks/itemtypes/slots");
     }
 
     @Override
@@ -76,7 +64,7 @@ public class ExprDyedColorComponent extends SimplePropertyExpression<Object, Col
         Color color = delta != null && delta[0] instanceof Color col ? col : null;
         DyedItemColor dyedItemColor = null;
         if (color != null) {
-            dyedItemColor = DyedItemColor.dyedItemColor(color.asBukkitColor(), !this.hidden);
+            dyedItemColor = DyedItemColor.dyedItemColor(color.asBukkitColor());
         }
 
         ItemComponentUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.DYED_COLOR, dyedItemColor);

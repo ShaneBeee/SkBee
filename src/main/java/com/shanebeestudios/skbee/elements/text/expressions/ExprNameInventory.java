@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.HumanEntity;
@@ -39,7 +40,7 @@ public class ExprNameInventory extends SimplePropertyExpression<Inventory, Compo
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (!Skript.isRunningMinecraft(1, 21)) {
+        if (!Util.IS_RUNNING_MC_1_21) {
             // Bukkit changed from Class to Interface, which won't work on older servers
             // I don't feel like doing handfuls of reflection to fix this
             Skript.error("'component inventory name' requires Minecraft 1.21+");

@@ -1,7 +1,10 @@
-package com.shanebeestudios.skbee.elements.testing.elements;
+package com.shanebeestudios.skbee.elements.itemcomponent.conditions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.NoDoc;
+import ch.njol.skript.doc.Description;
+import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Name;
+import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -12,13 +15,20 @@ import io.papermc.paper.datacomponent.DataComponentType;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 
-@NoDoc
 @SuppressWarnings("UnstableApiUsage")
+@Name("ItemComponent - Has Components")
+@Description({"Check if an item has a specific item component.",
+    "See [Data Component Format](https://minecraft.wiki/w/Data_component_format) on McWiki for more details."})
+@Examples({"if player's tool has item component minecraft:tooltip_display:",
+    "if {_i} doesnt have data component minecraft:glider:",
+    "set {_a} to whether player's tool has max_damage item component"})
+@Since("INSERT VERSION")
 public class CondHasComponent extends Condition {
 
     static {
         Skript.registerCondition(CondHasComponent.class,
-            "%itemstacks/itemtypes/slots% (has|neg:doesn't have) (item|data) component %datacomponenttypes%");
+            "%itemstacks/itemtypes/slots% (has|neg:doesn't have) (item|data) component %datacomponenttypes%",
+            "%itemstacks/itemtypes/slots% (has|neg:doesn't have) %datacomponenttypes% (item|data) component");
     }
 
     private Expression<Object> items;

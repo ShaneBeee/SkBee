@@ -38,7 +38,7 @@ import org.skriptlang.skript.lang.structure.Structure;
     "SECTIONS:",
     "(These are all optional, but some do rely on others. `height gen` and `block pop` require `chunk gen`)",
     "`noise gen` = Generate the base terrain of a chunk.",
-    "`surface gen` = Generate the surface above the terrain of the chunk.",
+    "`surface gen` = Generate the surface above the base terrain of the chunk.",
     "`chunk gen` = A combination of noise and surface gen (Cannot be used WITH noise/surface gen).",
     "`biome gen` = Generate the biomes to be placed in a chunk.",
     "`height gen` = Tell Minecraft where the highest block in a chunk is for generating structures.",

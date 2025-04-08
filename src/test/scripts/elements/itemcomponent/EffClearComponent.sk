@@ -1,0 +1,14 @@
+test "SkBee - ItemComponent - EffClearComponent":
+	set {_i} to 1 of diamond sword
+	assert {_i} has item component attribute_modifiers with "Should have the attribute modifier component"
+
+	remove attribute_modifiers item component of {_i}
+	assert {_i} doesn't have item component attribute_modifiers with "Should have removed the attribute modifier component"
+
+	reset attribute_modifiers item component of {_i}
+	assert {_i} has item component attribute_modifiers with "Should have reset the attribute modifier component"
+
+	# Test to make sure items that don't normally have this component won't cause issue
+	set {_a} to 1 of apple
+	assert {_a} doesn't have item component max damage with "This item shouldn't have this component"
+	remove max damage item component of {_i}

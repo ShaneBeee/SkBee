@@ -5,7 +5,6 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Experience;
-import com.destroystokyo.paper.event.block.BeaconEffectEvent;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
@@ -18,9 +17,8 @@ import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
+import com.shanebeestudios.skbee.api.skript.TempEvent;
 import com.shanebeestudios.skbee.api.util.Util;
-import io.papermc.paper.event.block.BeaconActivatedEvent;
-import io.papermc.paper.event.block.BeaconDeactivatedEvent;
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
@@ -33,9 +31,6 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-
 
 @SuppressWarnings({"unused", "unchecked"})
 public class PaperEvents extends SimpleEvent {
@@ -260,6 +255,12 @@ public class PaperEvents extends SimpleEvent {
                 .since("3.5.1");
 
             EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, PlayerTrackEntityEvent::getEntity, EventValues.TIME_NOW);
+        }
+
+        // PlayerFailMoveEvent
+        if (Util.IS_RUNNING_SKRIPT_2_11 && Skript.classExists("io.papermc.paper.event.player.PlayerFailMoveEvent")) {
+            // Move out of this class to allow loading on Skript 2.10.x
+            TempEvent.loadEvent();
         }
 
         // SERVER EVENTS

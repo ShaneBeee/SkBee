@@ -10,9 +10,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
@@ -41,11 +41,12 @@ public class ExprItemFromNBT extends PropertyExpression<NBTCompound, ItemType> {
         return true;
     }
 
+    @SuppressWarnings("deprecation")
     @Override
     protected ItemType @NotNull [] get(@NotNull Event event, NBTCompound @NotNull [] source) {
         return get(source, nbtCompound -> {
             if (nbtCompound.hasTag("id")) {
-                ItemStack itemStack = NBTApi.convertNBTtoItem(nbtCompound); // TODO temp solution to use data fixer upper
+                ItemStack itemStack = NBTItem.convertNBTtoItem(nbtCompound);
                 if (itemStack != null) return new ItemType(itemStack);
             }
             return null;

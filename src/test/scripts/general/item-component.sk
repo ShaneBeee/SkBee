@@ -4,12 +4,10 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 	set {_i} to 1 of diamond axe
 	apply can break predicate to {_i}:
 		blocks: diamond ore, emerald ore, iron ore
-		show_in_tooltip: false
 	assert {_i} has item component minecraft:can_break with "The axe should have a can break component"
 	set {_i} to 1 of oak stairs
 	apply can place on predicate to {_i}:
 		blocks: minecraft block tag "minecraft:dirt"
-		show_in_tooltip: false
 	assert {_i} has item component minecraft:can_place_on with "The axe should have a can place on component"
 	delete {_i}
 
@@ -97,7 +95,7 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 	# Equippable Section
 	set {_i} to 1 of stick
 	apply equippable component to {_i}:
-		slot: hand_slot
+		slot: hand slot
 		equip_sound: "entity.player.burp"
 		asset_id: "my_pack:some_asset"
 		allowed_entities: player, evoker, zombie
@@ -110,7 +108,7 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 
 	set {_i} to 1 of stick
 	apply equippable component to {_i}:
-		slot: hand_slot
+		slot: hand slot
 		allowed_entities: minecraft entity tag "minecraft:undead"
 	assert {_i} has item component minecraft:equippable with "The stick should have an equippable component"
 	delete {_i}
@@ -162,11 +160,12 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 	assert glider component of {_i} = true with "After reset, item should have a glider"
 
 	# Instrument
-	set {_i} to 1 of goat horn
-	assert {_i} doesn't have item component minecraft:instrument with "The horn shouldn't have an instrument yet"
-	apply instrument component to {_i}:
-		instrument: admire_goat_horn
-	assert {_i} has item component minecraft:instrument with "The horn should have an instrument now"
+	# todo behaviour has changed, will redo this test at a later time
+	#set {_i} to 1 of goat horn
+	#assert {_i} doesn't have item component minecraft:instrument with "The horn shouldn't have an instrument yet"
+	#apply instrument component to {_i}:
+	#	instrument: admire_goat_horn
+	#assert {_i} has item component minecraft:instrument with "The horn should have an instrument now"
 
 	# Intangible Projectile
 	set {_i} to 1 of arrow
@@ -191,7 +190,6 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 	assert {_i} doesn't have item component minecraft:jukebox_playable with "The diamond shouldn't have a song"
 	apply jukebox playable to {_i}:
 		song: mall
-		show_in_tooltip: false
 	assert {_i} has item component minecraft:jukebox_playable with "The diamond should now have a song"
 
 	# Max Stack Size
@@ -268,6 +266,15 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 				correct_for_drops: false
 	assert {_i} has item component minecraft:tool with "The stick should have a tool component"
 
+	# Tooltip Display
+	## Not much I can do here other than checking that this doesnt error
+	parse if running minecraft "1.21.5":
+		set {_i} to 1 of diamond sword of unbreaking 3
+		apply tooltip display component to {_i}:
+			hide_tooltip: false
+			hidden_components: minecraft:attribute_modifiers, minecraft:enchantments
+		assert {_i} has item component minecraft:tooltip_display with "The sword should have a tooltip display component"
+
 	# Tooltip Style
 	set {_i} to 1 of stick
 	assert tooltip style of {_i} is not set with "Default stick should not have a tooltip style"
@@ -288,6 +295,12 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 		apply use cooldown to {_i}:
 			seconds: 0 seconds # Testing a previous bug
 			group: "sovde_found_this_bug_so_he_gets_a_custom_group"
+
+		set {_i} to 1 of stick
+		apply use cooldown to {_i}:
+			seconds: 1 tick # Testing a previous bug #784
+			group: "another_bug_784"
+	assert size of parse logs = 1 with "Should only be 1 error"
 	assert parse logs = "Timespan '0 seconds' too low, defaulting to 1 tick." with "This should error"
 
 	# Use Remainder

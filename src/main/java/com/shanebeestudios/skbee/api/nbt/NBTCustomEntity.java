@@ -1,6 +1,8 @@
 package com.shanebeestudios.skbee.api.nbt;
 
+import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
@@ -14,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("deprecation")
 public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 
+    private static final boolean HAS_CUSTOM_DATA = Skript.isRunningMinecraft(1, 21, 5);
     private final Entity entity;
 
     /**
@@ -37,6 +40,25 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 
     @Override
     public NBTCompound getOrCreateCompound(String name) {
+        if (name.equals("data") && HAS_CUSTOM_DATA) {
+            // NBT-API doesn't properly support the "data" compound in NBTEntity
+            // This is probably due to internally Minecraft doesn't straight up use a compound
+            // It uses a CustomData class which houses the compound inside
+            // We can return a temp container and apply it back to the entity when saving
+            NBTContainer tempContainer = new NBTContainer(this.getCompound()) {
+                @Override
+                protected void saveCompound() {
+                    super.saveCompound();
+                    NBTCompound data = getCompound("data");
+                    if (data != null) {
+                        NBT.modify(NBTCustomEntity.this.entity, readWriteNBT -> {
+                            readWriteNBT.getOrCreateCompound("data").mergeCompound(data);
+                        });
+                    }
+                }
+            };
+            return tempContainer.getOrCreateCompound(name);
+        }
         if (name.equals("custom")) {
             return getCustomNBT();
         }

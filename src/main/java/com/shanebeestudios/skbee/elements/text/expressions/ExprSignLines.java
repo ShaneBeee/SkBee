@@ -11,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
@@ -28,7 +29,7 @@ import org.jetbrains.annotations.Nullable;
 @Since("2.4.0, 2.11.0 (front|back)")
 public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
 
-    private static final boolean HAS_SIDES = Skript.isRunningMinecraft(1, 20);
+    private static final boolean HAS_SIDES = Util.IS_RUNNING_MC_1_20;
 
     static {
         register(ExprSignLines.class, ComponentWrapper.class, "[(front|:back)] sign line %number%", "blocks");

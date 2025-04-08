@@ -87,7 +87,7 @@ public class SkriptTypes {
                 }
             }));
         Classes.registerClass(new ClassInfo<>(NBTCompound.class, "nbtcompound")
-            .user("nbt ?compound")
+            .user("nbt ?(compounds?)?")
             .name("NBT - Compound")
             .description("Represents the NBT compound of an entity/block/item/file/string.",
                 "NBT compounds can be merged by adding together, see examples.")
