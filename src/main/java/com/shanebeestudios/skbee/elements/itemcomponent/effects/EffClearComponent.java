@@ -21,7 +21,7 @@ import org.jetbrains.annotations.NotNull;
 @Examples({"clear food component of player's tool",
     "clear tool component of player's tool",
     "reset attribute modifier component of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.11.0")
 public class EffClearComponent extends Effect {
 
     static {

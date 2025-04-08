@@ -26,7 +26,7 @@ import org.jetbrains.annotations.Nullable;
     "add 1000 to full world time of world of player",
     "remove 100 from world time of world of player",
     "remove 50 from full world time of world of player"})
-@Since("INSERT VERSION")
+@Since("3.11.0")
 public class ExprWorldTime extends SimplePropertyExpression<World, Long> {
 
     static {

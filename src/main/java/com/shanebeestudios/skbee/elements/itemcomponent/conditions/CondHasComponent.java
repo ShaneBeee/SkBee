@@ -22,7 +22,7 @@ import org.bukkit.inventory.ItemStack;
 @Examples({"if player's tool has item component minecraft:tooltip_display:",
     "if {_i} doesnt have data component minecraft:glider:",
     "set {_a} to whether player's tool has max_damage item component"})
-@Since("INSERT VERSION")
+@Since("3.11.0")
 public class CondHasComponent extends Condition {
 
     static {

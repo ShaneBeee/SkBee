@@ -68,7 +68,7 @@ public class Types {
             .user("data ?component ?types?")
             .name("Data Component Type")
             .description("Represents the different types of data components.")
-            .since("INSERT VERSION"));
+            .since("3.11.0"));
 
         // Functions (ConsumeEffects)
         Functions.registerFunction(new SimpleJavaFunction<>("apply_effects", new Parameter[]{

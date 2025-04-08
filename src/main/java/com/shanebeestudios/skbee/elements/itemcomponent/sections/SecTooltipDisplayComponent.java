@@ -39,7 +39,7 @@ import java.util.List;
     "\thidden_components: minecraft:attribute_modifiers, minecraft:enchantments",
     "apply tooltip display component to {_i}:",
     "\thide_tooltip: true"})
-@Since("INSERT VERSION")
+@Since("3.11.0")
 public class SecTooltipDisplayComponent extends Section {
 
     private static final EntryValidator VALIDATOR;

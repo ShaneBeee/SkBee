@@ -525,7 +525,7 @@ public class Types {
                 Classes.registerClass(new EnumWrapper<>(PlayerFailMoveEvent.FailReason.class).getClassInfo("failmovereason")
                     .user("fail ?move ?reasons?")
                     .description("The reason a player failed to move in a `player fail move` event.")
-                    .since("INSERT VERSION"));
+                    .since("3.11.0"));
             }
         }
     }

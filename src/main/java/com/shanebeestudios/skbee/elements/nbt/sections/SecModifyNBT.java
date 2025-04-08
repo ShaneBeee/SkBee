@@ -62,7 +62,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
     "# Block - Custom",
     "modify custom nbt of target block:",
     "\tset string tag \"owner\" of nbt to {_nameOfPlayer}"})
-@Since("INSERT VERSION")
+@Since("3.11.0")
 public class SecModifyNBT extends Section {
 
     private static class NBTEditEvent extends Event {

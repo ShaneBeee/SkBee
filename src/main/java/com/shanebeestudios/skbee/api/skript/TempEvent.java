@@ -24,7 +24,7 @@ public class TempEvent {
                 "\tset future event-boolean to false",
                 "\tif event-failmovereason = clipped_into_block:",
                 "\t\tpush player up with speed 1")
-            .since("INSERT VERSION");
+            .since("3.11.0");
 
         EventValues.registerEventValue(PlayerFailMoveEvent.class, PlayerFailMoveEvent.FailReason.class, PlayerFailMoveEvent::getFailReason);
         EventValues.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getFrom, EventValues.TIME_NOW);
