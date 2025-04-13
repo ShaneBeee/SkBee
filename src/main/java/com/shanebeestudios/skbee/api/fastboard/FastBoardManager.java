@@ -15,8 +15,7 @@ import java.util.UUID;
 
 public class FastBoardManager implements Listener {
 
-    public static final boolean HAS_ADVENTURE = SkBee.getPlugin().getAddonLoader().isTextComponentEnabled();
-
+    private static boolean HAS_ADVENTURE;
     private static final Map<UUID, FastBoardBase<?, ?>> BOARDS = new HashMap<>();
 
     @Nullable
@@ -38,12 +37,10 @@ public class FastBoardManager implements Listener {
         }
     }
 
-    public static void reload() {
+    public FastBoardManager(SkBee plugin, boolean isTextComponentEnabled) {
+        HAS_ADVENTURE = isTextComponentEnabled;
+        FastBoardBase.init(plugin);
         Bukkit.getOnlinePlayers().forEach(FastBoardManager::getBoard);
-    }
-
-    public FastBoardManager() {
-        reload();
     }
 
     @EventHandler
