@@ -15,7 +15,7 @@ import java.util.UUID;
 
 public class FastBoardManager implements Listener {
 
-    private static boolean HAS_ADVENTURE;
+    public static boolean HAS_ADVENTURE;
     private static final Map<UUID, FastBoardBase<?, ?>> BOARDS = new HashMap<>();
 
     @Nullable
