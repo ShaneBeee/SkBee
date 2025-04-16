@@ -5,17 +5,17 @@ import ch.njol.skript.SkriptAddon;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.listener.OnTheFlipSide;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
-import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnaceListener;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
@@ -195,8 +195,8 @@ public class AddonLoader {
         }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.fastboard");
-            pluginManager.registerEvents(new FastBoardManager(), this.plugin);
-            String type = FastBoardManager.HAS_ADVENTURE ? "Adventure" : "Legacy";
+            this.pluginManager.registerEvents(new FastBoardManager(this.plugin, this.textComponentEnabled), this.plugin);
+            String type = this.textComponentEnabled ? "Adventure" : "Legacy";
             Util.logLoading("&5Fastboard&7[&b%s&7] &5Elements &asuccessfully loaded", type);
         } catch (Exception ex) {
             logFailure("Fastboard", ex);

@@ -10,9 +10,17 @@ import org.jetbrains.annotations.Nullable;
 
 public abstract class FastBoardBase<T, B> {
 
-    protected static final boolean REVERSE = SkBee.getPlugin().getPluginConfig().SETTINGS_FASTBOARD_LINES;
-    // Folia has currently removed vanilla scoreboards
-    private static final Scoreboard DUMMY_BOARD = Util.IS_RUNNING_FOLIA ? null : Bukkit.getScoreboardManager().getNewScoreboard();
+    protected static boolean REVERSE;
+    private static Scoreboard DUMMY_BOARD;
+
+    public static void init(SkBee plugin) {
+        REVERSE = plugin.getPluginConfig().SETTINGS_FASTBOARD_LINES;
+
+        // Make sure to initialize dummy scoreboard before usage
+        // Prevents errors if setting scoreboards off the main thread
+        // Folia has currently removed vanilla scoreboards
+        DUMMY_BOARD = Util.IS_RUNNING_FOLIA ? null : Bukkit.getScoreboardManager().getNewScoreboard();
+    }
 
     protected final Player player;
     protected fr.mrmicky.fastboard.FastBoardBase<B> fastBoard;
