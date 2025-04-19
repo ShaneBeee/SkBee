@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.nbt;
 
 import ch.njol.util.StringUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import org.jetbrains.annotations.Nullable;
@@ -11,6 +12,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.UUID;
 
 public enum NBTCustomType {
 
@@ -35,7 +37,7 @@ public enum NBTCustomType {
     NBTTagCompoundList("compound list", NBTType.NBTTagList, NBTCompound[].class),
     NBTTagStringList("string list", NBTType.NBTTagList, String[].class),
     // Custom
-    NBTTagUUID("uuid", NBTType.NBTTagIntArray, String.class),
+    NBTTagUUID("uuid", NBTType.NBTTagIntArray, Util.IS_RUNNING_SKRIPT_2_11 ? UUID.class : String.class),
     NBTTagBoolean("boolean", NBTType.NBTTagByte, Boolean.class);
 
     final String name;

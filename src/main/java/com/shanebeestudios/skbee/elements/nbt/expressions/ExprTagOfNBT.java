@@ -26,6 +26,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.UUID;
 
 @Name("NBT - Tag")
 @Description({"Get/set/delete the value of the specified tag of an NBT compound. Also supports getting nested tags using a semi colon as a delimiter.",
@@ -160,6 +161,7 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
         else if (object instanceof String string) return new String[]{string};
         else if (object instanceof Number number) return new Number[]{number};
         else if (object instanceof Boolean bool) return new Boolean[]{bool};
+        else if (object instanceof UUID uuid) return new UUID[]{uuid};
         return new Object[]{object};
     }
 

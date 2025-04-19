@@ -20,3 +20,15 @@ test "SkBee - NBT - ExprTagOfNBT":
 	add 4,5,6 to int list tag "int-list" of {_n}
 	assert size of int list tag "int-list" of {_n} = 6 with "There should be 6 numbers"
 	assert int list tag "int-list" of {_n} = 1,2,3,4,5,6 with "The numbers should be set"
+
+	# Set UUID tag
+	spawn a sheep at event-location:
+		set {_e} to entity
+
+	set {_nbt} to custom nbt of {_e}
+	set uuid tag "uuid-test" of {_nbt} to uuid of {_e}
+	assert uuid tag "uuid-test" of {_nbt} is set with "The tag should have set"
+	assert classinfo of (uuid tag "uuid-test" of {_nbt}) = "uuid" with "The tag type should be uuid"
+	assert nbt tag type of tag "uuid-test" of {_nbt} = int array tag with "The tag type should be int array tag"
+
+	delete entity within {_e}
