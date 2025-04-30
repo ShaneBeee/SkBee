@@ -194,8 +194,8 @@ public class AddonLoader {
             return;
         }
         try {
-            this.addon.loadClasses("com.shanebeestudios.skbee.elements.fastboard");
             this.pluginManager.registerEvents(new FastBoardManager(this.plugin, this.textComponentEnabled), this.plugin);
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.fastboard");
             String type = this.textComponentEnabled ? "Adventure" : "Legacy";
             Util.logLoading("&5Fastboard&7[&b%s&7] &5Elements &asuccessfully loaded", type);
         } catch (Exception ex) {
