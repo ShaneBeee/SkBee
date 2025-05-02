@@ -14,8 +14,8 @@ import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
+import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.region.scheduler.task.Task;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -63,6 +63,7 @@ public class SecRunTaskLater extends LoopSection {
             "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(at|on|for) %-entity/location%]");
     }
 
+    private static Task<?> LAST_CREATED_TASK = null;
     private boolean async;
     private Expression<Timespan> timespan;
     private Expression<?> taskObject;
@@ -126,6 +127,7 @@ public class SecRunTaskLater extends LoopSection {
         } else {
             this.task = scheduler.runTaskLater(runnable, delay);
         }
+        LAST_CREATED_TASK = this.task;
         if (last != null) last.setNext(null);
         return super.walk(event, false);
     }
@@ -133,6 +135,10 @@ public class SecRunTaskLater extends LoopSection {
     public int getCurrentTaskId() {
         if (this.task.isCancelled()) return -1;
         return this.task.getTaskId();
+    }
+
+    public static Task<?> getLastCreatedTask() {
+        return LAST_CREATED_TASK;
     }
 
     @Override
