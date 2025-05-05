@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.text.expressions;
 import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
+import ch.njol.skript.doc.Keywords;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
@@ -46,6 +47,7 @@ import java.util.List;
     "set {_custom} to translate component from \"my.custom.key\" with fallback \"Some Message\"",
     "set {_key} to keybind component of \"key.jump\"",
     "set {_name} to json component from (string tag \"custom_name\" of nbt of target block)"})
+@Keywords({"keybind", "keybind component", "translate", "translate component", "json component"})
 @Since("1.5.0")
 public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
 
