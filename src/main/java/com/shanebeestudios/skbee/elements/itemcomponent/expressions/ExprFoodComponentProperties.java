@@ -21,7 +21,7 @@ import org.jetbrains.annotations.Nullable;
     "Requires Paper 1.21.3+"})
 @Examples({"set {_nutrition} to food nutrition of player's tool",
     "if food saturation of player's tool > 0:"})
-@Since("INSERT VERSION")
+@Since("3.11.2")
 public class ExprFoodComponentProperties extends SimplePropertyExpression<Object, Number> {
 
     static {
