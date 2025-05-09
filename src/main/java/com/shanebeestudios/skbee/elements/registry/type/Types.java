@@ -4,12 +4,11 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryHolders;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
 import io.papermc.paper.registry.tag.TagKey;
-import org.bukkit.Bukkit;
 
 @SuppressWarnings({"UnstableApiUsage", "rawtypes"})
 public class Types {
@@ -27,9 +26,7 @@ public class Types {
         Classes.registerClass(registryKeyClassInfo);
 
         // Run later to make sure SkBee's classes have loaded
-        Bukkit.getGlobalRegionScheduler().runDelayed(SkBee.getPlugin(), scheduledTask -> {
-            registryKeyClassInfo.usage(RegistryHolders.getDocUsage());
-        }, 1);
+        TaskUtils.getGlobalScheduler().runTaskLater(() -> registryKeyClassInfo.usage(RegistryHolders.getDocUsage()), 1);
 
         Classes.registerClass(new ClassInfo<>(TagKey.class, "tagkey")
             .user("tag ?keys?")
