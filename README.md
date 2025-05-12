@@ -2,7 +2,7 @@
 
 **SkBee** is a [**Skript**](https://github.com/SkriptLang/Skript) addon that aims to add more useful elements to Skript.
 
-## Elements
+## <ins>ELEMENTS</ins>:
 This is only a small list of the many things included
 - **NBT elements** get/set NBT of items, blocks (tile entities) and entities. (Available for 1.8.8+)
 - **ScoreBoards** super-duper simple anti-flicker scoreboards (Available on 1.13+)
@@ -15,45 +15,28 @@ This is only a small list of the many things included
 - **Bounds** create your own simple bounds similarly to WorldGuard regions
 - **GameEvents** use Minecraft's GameEvent system, which was created for Skulk Sensors. This system adds more events to the server than were previously available
 
-## Wiki
+## <ins>DOWNLOADS</ins>:
+Downloads for SkBee can be found on [**Modrinth**](https://modrinth.com/plugin/skbee/versions)
+
+## <ins>WIKI</ins>:
 See the [**Wiki**](https://github.com/ShaneBeee/SkBee/wiki) for more detailed info on syntaxes
 
-## Docs
+## <ins>DOCS</ins>:
 [![SkriptHubViewTheDocs](http://skripthub.net/static/addon/ViewTheDocsButton.png)](http://skripthub.net/docs/?addon=SkBee)
 
 ## [**JavaDocs**](https://shanebeee.github.io/docs/SkBee/)
 
-## <ins>Contributing</ins>
+## <ins>CONTRIBUTING</ins>:
 SkBee is an open source project, and we are open to contributions from the community.
 Before working on a contribution please read our [contributing guidelines](https://github.com/ShaneBeee/SkBee/blob/master/.github/contributing.md)
 
-## <ins>Building</ins>
+## <ins>BUILDING</ins>:
 SkBee is a gradle project.
 Simply clone the repo to your computer then run `./gradlew build`.
 
-## <ins>Outdated</ins>
+## <ins>OUTDATED</ins>:
 Are you running an <ins>**outdated**</ins> version of Minecraft and looking for an <ins>**outdated**</ins> build of SkBee that will work on your <ins>**outdated**</ins> server? Well look no further, here is a list of <ins>**outdated**</ins> builds of SkBee for your <ins>**outdated**</ins> server.
 Keep in mind, these <ins>**outdated**</ins> builds for <ins>**outdated**</ins> servers are not supported and you will not get support/bug fixes, because they're <ins>**outdated**</ins>!
 
-### <ins>Skript 2.9.5 (and below)</ins>
-Due to changes in Skript 2.10's API, SkBee 3.8.0+ will only work on Skript 2.10+   
-If you need SkBee to work on an older version of Skript this is the last version that will work:
-[**SkBee 3.7.0**](https://github.com/ShaneBeee/SkBee/releases/tag/3.7.0)   
-(Just like any other <ins>**outdated**</ins> build, this one is no longer supported)
-
-### <ins>Skript 2.6.4 (and below)</ins>
-Due to changes in Skript 2.7's API, SkBee 3.0.0+ will only work on Skript 2.7+
-If you need SkBee to work on an older version of Skript this is the last version that will work:
-[**SkBee 2.18.4**](https://github.com/ShaneBeee/SkBee/releases/tag/2.18.4)
-(Just like any other <ins>**outdated**</ins> build, this one is no longer supported)
-
-### <ins>1.18.2</ins>
-[**SkBee 3.5.9**](https://github.com/ShaneBeee/SkBee/releases/tag/3.5.9)
-### <ins>1.17.1</ins>
-[**SkBee 2.11.0**](https://github.com/ShaneBeee/SkBee/releases/tag/2.11.0)
-### <ins>1.16.5</ins>
-[**SkBee 1.15.3**](https://github.com/ShaneBeee/SkBee/releases/tag/1.15.3)
-### <ins>1.15.2</ins>
-[**SkBee 1.12.4**](https://github.com/ShaneBeee/SkBee/releases/tag/1.12.4)
-### <ins>1.12.2 (and below)</ins>
-[**SkBee 1.10.3**](https://github.com/ShaneBeee/SkBee/releases/tag/1.10.3)
+See the version tab on [**Modrinth**](https://modrinth.com/plugin/skbee/versions) for all version downloads.  
+Use the "Game Versions" dropdown to locate the appropriate version of SkBee for your server version.
