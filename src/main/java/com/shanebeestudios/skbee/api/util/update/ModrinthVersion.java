@@ -15,8 +15,7 @@ public class ModrinthVersion {
 
     public ModrinthVersion(JsonElement jsonElement) {
         JsonObject json = jsonElement.getAsJsonObject();
-        //this.updateVersion = new Version(json.get("version_number").getAsString());
-        this.updateVersion = new Version("3.11.3");
+        this.updateVersion = new Version(json.get("version_number").getAsString());
         JsonArray gameVersions = json.getAsJsonArray("game_versions");
         gameVersions.forEach(version -> this.supportedVersions.add(new Version(version.getAsString())));
     }
