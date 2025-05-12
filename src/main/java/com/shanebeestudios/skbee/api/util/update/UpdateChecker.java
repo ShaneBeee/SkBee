@@ -84,37 +84,33 @@ public class UpdateChecker implements Listener {
     }
 
     private CompletableFuture<ModrinthVersion> getUpdateVersion(boolean async) {
-        CompletableFuture<ModrinthVersion> future = new CompletableFuture<>();
+        CompletableFuture<ModrinthVersion> updateVersionFuture = new CompletableFuture<>();
         if (this.currentUpdateVersion != null) {
-            future.complete(this.currentUpdateVersion);
+            updateVersionFuture.complete(this.currentUpdateVersion);
         } else {
-            getLatestReleaseVersion(async).thenApply(version -> {
+            CompletableFuture<ModrinthVersion> latestReleaseFuture = new CompletableFuture<>();
+            if (async) {
+                TaskUtils.getGlobalScheduler().runTaskAsync(() -> {
+                    ModrinthVersion lastest = getLatestVersionFromModrinth();
+                    if (lastest == null) latestReleaseFuture.cancel(true);
+                    latestReleaseFuture.complete(lastest);
+                });
+            } else {
+                ModrinthVersion latest = getLatestVersionFromModrinth();
+                if (latest == null) latestReleaseFuture.cancel(true);
+                latestReleaseFuture.complete(latest);
+            }
+            latestReleaseFuture.thenApply(version -> {
                 if (version.getUpdateVersion().compareTo(this.pluginVersion) <= 0) {
-                    future.cancel(true);
+                    updateVersionFuture.cancel(true);
                 } else {
                     this.currentUpdateVersion = version;
-                    future.complete(this.currentUpdateVersion);
+                    updateVersionFuture.complete(this.currentUpdateVersion);
                 }
                 return true;
             });
         }
-        return future;
-    }
-
-    private CompletableFuture<ModrinthVersion> getLatestReleaseVersion(boolean async) {
-        CompletableFuture<ModrinthVersion> future = new CompletableFuture<>();
-        if (async) {
-            TaskUtils.getGlobalScheduler().runTaskAsync(() -> {
-                ModrinthVersion lastest = getLatestVersionFromModrinth();
-                if (lastest == null) future.cancel(true);
-                future.complete(lastest);
-            });
-        } else {
-            ModrinthVersion latest = getLatestVersionFromModrinth();
-            if (latest == null) future.cancel(true);
-            future.complete(latest);
-        }
-        return future;
+        return updateVersionFuture;
     }
 
     @SuppressWarnings("CallToPrintStackTrace")
