@@ -1,17 +1,19 @@
-package com.shanebeestudios.skbee.api.util;
+package com.shanebeestudios.skbee.api.util.update;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.util.Version;
 import com.google.gson.Gson;
-import com.google.gson.JsonObject;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -27,7 +29,8 @@ public class UpdateChecker implements Listener {
 
     private final SkBee plugin;
     private final Version pluginVersion;
-    private Version currentUpdateVersion;
+    private final Version serverVersion = Skript.getMinecraftVersion();
+    private ModrinthVersion currentUpdateVersion;
 
     public UpdateChecker(SkBee plugin) {
         this.plugin = plugin;
@@ -50,8 +53,8 @@ public class UpdateChecker implements Listener {
                 if (!player.hasPermission("skbee.update.check")) return;
 
                 TaskUtils.getEntityScheduler(player).runTaskLater(() -> getUpdateVersion(true).thenApply(version -> {
-                    Util.sendColMsg(player, "&7[&bSk&3Bee&7] update available: &a" + version);
-                    Util.sendColMsg(player, "&7[&bSk&3Bee&7] download at &bhttps://modrinth.com/plugin/skbee/versions");
+                    Util.sendColMsg(player, "&7[&bSk&3Bee&7] Update available: &a" + version);
+                    Util.sendColMsg(player, "&7[&bSk&3Bee&7] Download at: &b" + version.getUpdateLink());
                     return true;
                 }), 30);
             }
@@ -60,11 +63,19 @@ public class UpdateChecker implements Listener {
 
     private void checkUpdate(boolean async) {
         Util.log("Checking for update...");
-        getUpdateVersion(async).thenApply(version -> {
+        getUpdateVersion(async).thenApply(modrinthVersion -> {
             Util.logLoading("&cPlugin is not up to date!");
             Util.logLoading(" - Current version: &cv%s", this.pluginVersion);
-            Util.logLoading(" - Available update: &av%s", version);
-            Util.logLoading(" - Download available at: https://modrinth.com/plugin/skbee/versions");
+            Util.logLoading(" - Available update: &av%s", modrinthVersion.getUpdateVersion());
+            if (modrinthVersion.isServerSupported(this.serverVersion)) {
+                Util.logLoading(" - Download at: &b" + modrinthVersion.getUpdateLink());
+            } else {
+                Util.logLoading(" - &cYour server version &7(&e%s&7) &cdoes not support this update.", this.serverVersion);
+                Util.logLoading(" - Supported Versions:");
+                for (Version supportedVersion : modrinthVersion.getSupportedVersions()) {
+                    Util.logLoading("   - " + supportedVersion.toString());
+                }
+            }
             return true;
         }).exceptionally(throwable -> {
             Util.logLoading("&aPlugin is up to date!");
@@ -72,13 +83,13 @@ public class UpdateChecker implements Listener {
         });
     }
 
-    private CompletableFuture<Version> getUpdateVersion(boolean async) {
-        CompletableFuture<Version> future = new CompletableFuture<>();
+    private CompletableFuture<ModrinthVersion> getUpdateVersion(boolean async) {
+        CompletableFuture<ModrinthVersion> future = new CompletableFuture<>();
         if (this.currentUpdateVersion != null) {
             future.complete(this.currentUpdateVersion);
         } else {
             getLatestReleaseVersion(async).thenApply(version -> {
-                if (version.compareTo(this.pluginVersion) <= 0) {
+                if (version.getUpdateVersion().compareTo(this.pluginVersion) <= 0) {
                     future.cancel(true);
                 } else {
                     this.currentUpdateVersion = version;
@@ -90,16 +101,16 @@ public class UpdateChecker implements Listener {
         return future;
     }
 
-    private CompletableFuture<Version> getLatestReleaseVersion(boolean async) {
-        CompletableFuture<Version> future = new CompletableFuture<>();
+    private CompletableFuture<ModrinthVersion> getLatestReleaseVersion(boolean async) {
+        CompletableFuture<ModrinthVersion> future = new CompletableFuture<>();
         if (async) {
-            TaskUtils.getGlobalScheduler().runTaskAsync( () -> {
-                Version lastest = getLastestVersionFromGitHub();
+            TaskUtils.getGlobalScheduler().runTaskAsync(() -> {
+                ModrinthVersion lastest = getLatestVersionFromModrinth();
                 if (lastest == null) future.cancel(true);
                 future.complete(lastest);
             });
         } else {
-            Version latest = getLastestVersionFromGitHub();
+            ModrinthVersion latest = getLatestVersionFromModrinth();
             if (latest == null) future.cancel(true);
             future.complete(latest);
         }
@@ -107,13 +118,13 @@ public class UpdateChecker implements Listener {
     }
 
     @SuppressWarnings("CallToPrintStackTrace")
-    private @Nullable Version getLastestVersionFromGitHub() {
+    public static ModrinthVersion getLatestVersionFromModrinth() {
         try {
-            URL url = new URL("https://api.github.com/repos/ShaneBeee/SkBee/releases/latest");
+            URL url = new URL("https://api.modrinth.com/v2/project/a0tlbHZO/version");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
-            JsonObject jsonObject = new Gson().fromJson(reader, JsonObject.class);
-            String tag_name = jsonObject.get("tag_name").getAsString();
-            return new Version(tag_name);
+            JsonArray elements = new Gson().fromJson(reader, JsonArray.class);
+            JsonElement latestVersion = elements.get(0);
+            return new ModrinthVersion(latestVersion);
         } catch (IOException e) {
             if (SkBee.isDebug()) {
                 e.printStackTrace();
