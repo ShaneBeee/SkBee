@@ -7,7 +7,7 @@ import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
-import com.shanebeestudios.skbee.api.util.UpdateChecker;
+import com.shanebeestudios.skbee.api.util.update.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.LazyLocation;
 import com.shanebeestudios.skbee.config.Config;
