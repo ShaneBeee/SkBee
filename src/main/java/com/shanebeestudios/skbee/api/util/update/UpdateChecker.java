@@ -114,7 +114,7 @@ public class UpdateChecker implements Listener {
     }
 
     @SuppressWarnings("CallToPrintStackTrace")
-    public static ModrinthVersion getLatestVersionFromModrinth() {
+    private ModrinthVersion getLatestVersionFromModrinth() {
         try {
             URL url = new URL("https://api.modrinth.com/v2/project/a0tlbHZO/version");
             BufferedReader reader = new BufferedReader(new InputStreamReader(url.openStream()));
