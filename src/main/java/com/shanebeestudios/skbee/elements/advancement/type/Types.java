@@ -6,6 +6,7 @@ import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.yggdrasil.Fields;
+import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -104,6 +105,7 @@ public class Types {
                     .description("Represents the advancement progress of a player.",
                             "You will see `%advancementpro%` in the docs, this is due to a silly issue with Skript",
                             "where I couldn't use `progress` in expressions.")
+                    .parser(SkriptUtils.getDefaultParser())
                     .since("1.17.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'advancementpro' already.");
