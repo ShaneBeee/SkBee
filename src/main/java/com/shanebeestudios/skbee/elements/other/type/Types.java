@@ -138,7 +138,7 @@ public class Types {
             Util.logLoading("You may have to use their BlockFace in SkBee's syntaxes.");
         }
 
-        if (Skript.methodExists(PlayerRespawnEvent.class, "getRespawnReason")) {
+        if (Skript.methodExists(PlayerRespawnEvent.class, "getRespawnReason") || Skript.classExists("io.papermc.paper.event.player.AbstractRespawnEvent")) {
             EnumWrapper<RespawnReason> RESPAWN_REASON_ENUM = new EnumWrapper<>(RespawnReason.class, "", "respawn");
             Classes.registerClass(RESPAWN_REASON_ENUM.getClassInfo("respawnreason")
                 .user("respawn ?reasons?")
