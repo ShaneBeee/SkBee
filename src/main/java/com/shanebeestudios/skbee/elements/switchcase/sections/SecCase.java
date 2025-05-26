@@ -138,16 +138,16 @@ public class SecCase extends Section implements ReturnHandler<Object> {
         return Comparators.comparatorExists(c1, c2);
     }
 
-    public static boolean compare(Object[] objects1, Object o2) {
-        if (objects1 == null || o2 == null) return false;
-        for (Object object : objects1) {
-            if (Comparators.comparatorExists(object.getClass(), o2.getClass())) {
-                if (Comparators.compare(object, o2) == Relation.EQUAL) {
+    public static boolean compare(Object[] comparables, Object source) {
+        if (comparables == null || source == null) return false;
+        for (Object comparable : comparables) {
+            if (Comparators.comparatorExists(comparable.getClass(), source.getClass())) {
+                if (Comparators.compare(source, comparable) == Relation.EQUAL) {
                     return true;
                 }
             }
         }
-        return objects1.equals(o2);
+        return comparables.equals(source);
     }
 
 
