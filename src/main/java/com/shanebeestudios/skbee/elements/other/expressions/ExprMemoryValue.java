@@ -42,11 +42,17 @@ public class ExprMemoryValue extends SimplePropertyExpression<LivingEntity, Obje
 
     @Override
     public @Nullable Object convert(LivingEntity entity) {
-        Object memory = entity.getMemory(this.memory.getSingle());
-        if (memory instanceof UUID uuid) {
-            return uuid.toString();
+        try {
+            Object memory = entity.getMemory(this.memory.getSingle());
+            if (memory instanceof UUID uuid) {
+                return uuid.toString();
+            }
+            return memory;
+        } catch (IllegalStateException ignore) {
+            // Minecraft throws this... reported to PaperMC
+            // https://github.com/PaperMC/Paper/issues/12618
+            return null;
         }
-        return memory;
     }
 
     @SuppressWarnings("NullableProblems")
