@@ -1,6 +1,8 @@
 package com.shanebeestudios.skbee.elements.testing.elements;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.ClassInfo;
+import ch.njol.skript.classes.Parser;
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -22,6 +24,7 @@ public class CondClassInfoRegistered extends Condition implements VerboseAssert 
 
     private Expression<String> name;
     private boolean codename;
+    private String errorMessage = null;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -35,15 +38,29 @@ public class CondClassInfoRegistered extends Condition implements VerboseAssert 
     @Override
     public boolean check(Event event) {
         return this.name.check(event, name -> {
-            if (codename) {
-                return Classes.getClassInfoNoError(name) != null;
+            ClassInfo<?> ci = null;
+            if (this.codename) {
+                ci = Classes.getClassInfoNoError(name);
             } else {
                 try {
                     Class<?> aClass = Class.forName(name);
-                    return Classes.getExactClassInfo(aClass) != null;
+                    ci = Classes.getExactClassInfo(aClass);
                 } catch (ClassNotFoundException ignored) {
                 }
             }
+            if (ci != null) {
+                Parser<?> parser = ci.getParser();
+                if (parser == null) {
+                    this.errorMessage = "Parser for ClassInfo '" + ci.getCodeName() + "' is null";
+                    return false;
+                } else if (!parser.getClass().toString().contains("com.shanebeestudios.skbee")) {
+                    this.errorMessage = "ClassInfo '" + ci.getCodeName() + "' does not belong to SkBee!";
+                    return false;
+                } else {
+                    return true;
+                }
+            }
+            this.errorMessage = "ClassInfo with name '" + name + "' is missing!";
             return false;
         }, isNegated());
     }
@@ -59,12 +76,12 @@ public class CondClassInfoRegistered extends Condition implements VerboseAssert 
 
     @Override
     public String getExpectedMessage(Event event) {
-        return "expected class info '" + this.name.getSingle(event) + "'";
+        return "class info '" + this.name.getSingle(event) + "'";
     }
 
     @Override
     public String getReceivedMessage(Event event) {
-        return "not registered";
+        return this.errorMessage;
     }
 
 }

@@ -17,12 +17,10 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.UUID;
-
 @Name("Entity Memory")
 @Description("Get/set memories of entities.")
 @Examples({"set {_home} to home memory of {_villager}",
-        "set home memory of last spawned villager to location of player"})
+    "set home memory of last spawned villager to location of player"})
 @Since("3.4.0")
 public class ExprMemoryValue extends SimplePropertyExpression<LivingEntity, Object> {
 
@@ -32,7 +30,7 @@ public class ExprMemoryValue extends SimplePropertyExpression<LivingEntity, Obje
 
     private Literal<MemoryKey<?>> memory;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.memory = (Literal<MemoryKey<?>>) exprs[matchedPattern];
@@ -42,35 +40,28 @@ public class ExprMemoryValue extends SimplePropertyExpression<LivingEntity, Obje
 
     @Override
     public @Nullable Object convert(LivingEntity entity) {
-        Object memory = entity.getMemory(this.memory.getSingle());
-        if (memory instanceof UUID uuid) {
-            return uuid.toString();
+        try {
+            return entity.getMemory(this.memory.getSingle());
+        } catch (IllegalStateException ignore) {
+            // Minecraft throws this... reported to PaperMC
+            // https://github.com/PaperMC/Paper/issues/12618
+            return null;
         }
-        return memory;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET) return CollectionUtils.array(getSkriptClass(this.memory.getSingle()));
+        if (mode == ChangeMode.SET) return CollectionUtils.array(this.memory.getSingle().getMemoryClass());
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue", "unchecked", "rawtypes"})
+    @SuppressWarnings({"rawtypes", "unchecked"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (mode == ChangeMode.SET && delta != null && delta[0] != null) {
             MemoryKey memory = this.memory.getSingle();
             Object value = delta[0];
-            Class<?> skriptClass = getSkriptClass(memory);
-            if (value.getClass().isAssignableFrom(skriptClass)) {
-                if (memory.getMemoryClass() == UUID.class && value instanceof String string) {
-                    try {
-                        value = UUID.fromString(string);
-                    } catch (IllegalArgumentException ig) {
-                        return;
-                    }
-                }
+            if (value.getClass().isAssignableFrom(memory.getMemoryClass())) {
                 for (LivingEntity livingEntity : getExpr().getArray(event)) {
                     livingEntity.setMemory(memory, value);
                 }
@@ -80,18 +71,12 @@ public class ExprMemoryValue extends SimplePropertyExpression<LivingEntity, Obje
 
     @Override
     public @NotNull Class<?> getReturnType() {
-        return getSkriptClass(this.memory.getSingle());
+        return this.memory.getSingle().getMemoryClass();
     }
 
     @Override
     protected @NotNull String getPropertyName() {
         return this.memory.toString() + " memory";
-    }
-
-    private Class<?> getSkriptClass(MemoryKey<?> memoryKey) {
-        Class<?> memoryClass = memoryKey.getMemoryClass();
-        if (memoryClass == UUID.class) return String.class;
-        return memoryClass;
     }
 
 }

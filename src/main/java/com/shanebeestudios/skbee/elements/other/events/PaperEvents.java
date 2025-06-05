@@ -19,12 +19,15 @@ import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import com.shanebeestudios.skbee.api.skript.TempEvent;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
+import io.papermc.paper.event.packet.UncheckedSignChangeEvent;
 import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import io.papermc.paper.event.player.PlayerTrackEntityEvent;
+import io.papermc.paper.math.BlockPosition;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -32,7 +35,7 @@ import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 
-@SuppressWarnings({"unused", "unchecked"})
+@SuppressWarnings({"unused", "unchecked", "UnstableApiUsage"})
 public class PaperEvents extends SimpleEvent {
 
     static {
@@ -135,6 +138,31 @@ public class PaperEvents extends SimpleEvent {
                 .since("2.6.1");
 
             EventValues.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, PlayerChunkUnloadEvent::getPlayer, EventValues.TIME_NOW);
+        }
+
+        // UncheckedSignChangeEvent
+        if (Skript.classExists("io.papermc.paper.event.packet.UncheckedSignChangeEvent")) {
+            Skript.registerEvent("Unchecked Sign Change", PaperEvents.class, UncheckedSignChangeEvent.class, "unchecked sign change")
+                .description("Called when a client attempts to modify a sign, but the location at which the sign should be edited has not yet been checked for the existence of a real sign.",
+                    "This event is used for client side sign changes.",
+                    "`event-text components` = The lines from the sign (will include all 4 lines, reglardless if they were changed).",
+                    "`event-location` = The location of the client side sign block.",
+                    "`event-")
+                .examples("")
+                .since("INSERT VERSION");
+
+            EventValues.registerEventValue(UncheckedSignChangeEvent.class, ComponentWrapper[].class, from -> {
+                ComponentWrapper[] comps = new ComponentWrapper[4];
+                for (int i = 0; i < 4; i++) {
+                    comps[i] = ComponentWrapper.fromComponent(from.lines().get(i));
+                }
+                return comps;
+            }, EventValues.TIME_NOW);
+
+            EventValues.registerEventValue(UncheckedSignChangeEvent.class, Location.class, from -> {
+                BlockPosition editedBlockPosition = from.getEditedBlockPosition();
+                return editedBlockPosition.toLocation(from.getPlayer().getWorld());
+            }, EventValues.TIME_NOW);
         }
 
         // == ENTITY EVENTS == //

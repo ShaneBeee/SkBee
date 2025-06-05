@@ -49,6 +49,21 @@ test "SkBee - Switch and Case":
 			set {_test} to 3
 	assert {_test} = 3 with "The 3rd case should have run"
 
+	# Regression test - bug found by Fuse and another Skripter
+	# Comparators were backwards
+	set {_i} to diamond sword
+	switch {_i}:
+		case diamond sword named "BOB":
+			assert {_i} is a stick with "This shouldn't pass"
+			set {_test} to 1
+		case iron sword named "BOB":
+			assert {_i} is a stick with "This shouldn't pass"
+			set {_test} to 2
+		default:
+			assert {_i} is a diamond sword with "This should pass"
+			set {_test} to 3
+	assert {_test} = 3 with "The 3rd (default) case should have run"
+
 	parse:
 		switch event-block:
 			case plains:
