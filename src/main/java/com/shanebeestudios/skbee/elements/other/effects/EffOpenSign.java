@@ -34,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 @Examples({"open sign gui of target block to player",
     "open target block's sign gui to player",
     "open sign back of target block to player"})
-@Since({"1.5.2", "2.14.0 (sides)", "INSERT VERSION (virtual)"})
+@Since({"1.5.2", "2.14.0 (sides)", "3.11.3 (virtual)"})
 public class EffOpenSign extends Effect {
 
     private static final boolean HAS_SIDES = Util.IS_RUNNING_MC_1_20;

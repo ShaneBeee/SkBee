@@ -149,7 +149,7 @@ public class PaperEvents extends SimpleEvent {
                     "`event-location` = The location of the client side sign block.",
                     "`event-")
                 .examples("")
-                .since("INSERT VERSION");
+                .since("3.11.3");
 
             EventValues.registerEventValue(UncheckedSignChangeEvent.class, ComponentWrapper[].class, from -> {
                 ComponentWrapper[] comps = new ComponentWrapper[4];
