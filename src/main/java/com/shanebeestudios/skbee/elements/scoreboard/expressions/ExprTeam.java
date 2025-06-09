@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -9,6 +10,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.entity.Entity;
@@ -75,6 +77,35 @@ public class ExprTeam extends SimpleExpression<Team> {
             }
         }
         return null;
+    }
+
+    @Override
+    public Class<?> @Nullable [] acceptChange(Changer.ChangeMode mode) {
+        if (mode == Changer.ChangeMode.SET) {
+            if (this.pattern != 1) {
+                Skript.error("You may only set the team of an entity, a team cannot be changed.");
+                return null;
+            }
+            return CollectionUtils.array(Team.class);
+        }
+        return super.acceptChange(mode);
+    }
+
+    @Override
+    public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
+        if (mode == Changer.ChangeMode.SET) {
+
+            Team deltaTeam = delta != null && delta[0] instanceof Team team ? team : null;
+            if (deltaTeam == null || this.pattern != 1 || this.entity == null) return;
+
+            Entity entity = this.entity.getSingle(event);
+            if (entity == null) return;
+
+            deltaTeam.addEntity(entity);
+            return;
+        }
+        // Delegate to default changers
+        super.change(event, delta, mode);
     }
 
     @Override
