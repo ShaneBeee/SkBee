@@ -36,7 +36,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.5-R0.1-SNAPSHOT")
 
     // Skript
-    compileOnly("com.github.SkriptLang:Skript:2.11.0-pre1") {
+    compileOnly("com.github.SkriptLang:Skript:2.11.2") {
         transitive = false
     }
 
@@ -58,7 +58,7 @@ dependencies {
     }
 
     // bStats
-    implementation(group: 'org.bstats', name: 'bstats-bukkit', version: '3.0.2')
+    implementation(group: 'org.bstats', name: 'bstats-bukkit', version: '3.1.0')
 }
 
 tasks.withType(JavaCompile).configureEach {
