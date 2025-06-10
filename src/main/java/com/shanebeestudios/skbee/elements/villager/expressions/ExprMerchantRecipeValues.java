@@ -37,7 +37,6 @@ public class ExprMerchantRecipeValues extends SimpleExpression<Number> {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
         this.pattern = parseResult.mark;
         this.recipe = (Expression<MerchantRecipe>) exprs[0];
-        Util.log("pattern: " + pattern);
         return true;
     }
 
