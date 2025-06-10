@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.villager.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -12,7 +12,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.MerchantRecipe;
 import org.jetbrains.annotations.Nullable;
@@ -57,14 +56,14 @@ public class ExprMerchantRecipeValues extends SimpleExpression<Number> {
     }
 
     @Override
-    public Class<?> @Nullable [] acceptChange(Changer.ChangeMode mode) {
-        if (mode == Changer.ChangeMode.SET) return CollectionUtils.array(Number.class);
+    public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
+        if (mode == ChangeMode.SET) return CollectionUtils.array(Number.class);
         return null;
     }
 
     @Override
-    public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
-        if (delta != null && delta[0] instanceof Number value) {
+    public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
+        if (delta != null && delta[0] instanceof Number value && mode == ChangeMode.SET) {
             MerchantRecipe recipe = this.recipe.getSingle(event);
             if (recipe == null) return;
 
