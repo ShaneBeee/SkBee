@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
@@ -20,11 +21,13 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Team - Get")
-@Description({"Get an instance of a team, either from an entity or by name of team, or get a list of all teams.",
-    "If getting a team by id, and it does not exist, a new team with that id will be registered.",
-    "You have the option to get a team from a specific scoreboard (defaults to the main scoreboard).",
-    "Teams off the main scoreboard cannot be serialized/saved to variables (This is due to custom scoreboards not being persistent)."})
+@Name("Team - From Entity")
+@Description("""
+    Get an instance of a team, either from an entity or by name of team, or get a list of all teams.
+    If getting a team by id, and it does not exist, a new team with that id will be registered.
+    You have the option to get a team from a specific scoreboard (defaults to the main scoreboard).
+    Teams off the main scoreboard cannot be serialized/saved to variables (This is because custom scoreboards aren't persistent).
+    """)
 @Examples({"set {_team} to team of player",
     "set {_team} to team with id \"le-team\"",
     "set {_teams::*} to all teams"})
@@ -33,59 +36,32 @@ public class ExprTeam extends SimpleExpression<Team> {
 
     static {
         Skript.registerExpression(ExprTeam.class, Team.class, ExpressionType.SIMPLE,
-            "team (named|with id) %string% [(of|from) %scoreboard%]",
-            "team of %entity% [(of|from) %scoreboard%]",
-            "all teams [(of|from) %scoreboard%]");
+            "team of %entity% [(of|from) %scoreboard%]");
     }
 
-    private int pattern;
-    private Expression<String> name;
-    private Expression<Entity> entity;
+    private Expression<Entity> entities;
     private Expression<Scoreboard> scoreboard;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.pattern = matchedPattern;
-        this.name = pattern == 0 ? (Expression<String>) exprs[0] : null;
-        this.entity = pattern == 1 ? (Expression<Entity>) exprs[0] : null;
-        this.scoreboard = (Expression<Scoreboard>) exprs[matchedPattern == 2 ? 0 : 1];
+        this.entities = (Expression<Entity>) exprs[0];
+        this.scoreboard = (Expression<Scoreboard>) exprs[1];
         return true;
     }
 
     @Override
     protected Team @Nullable [] get(Event event) {
         Scoreboard scoreboard = this.scoreboard.getSingle(event);
-        if (scoreboard == null) {
-            return null;
-        }
-        switch (pattern) {
-            case 0 -> {
-                String name = this.name.getSingle(event);
-                if (name != null) {
-                    return new Team[]{TeamUtils.getTeam(name, scoreboard)};
-                }
-            }
-            case 1 -> {
-                Entity entity = this.entity.getSingle(event);
-                if (entity != null) {
-                    return new Team[]{TeamUtils.getTeam(entity, scoreboard)};
-                }
-            }
-            case 2 -> {
-                return TeamUtils.getTeams(scoreboard).toArray(new Team[0]);
-            }
-        }
-        return null;
+        if (scoreboard == null) return null;
+        return this.entities.stream(event)
+            .map(entity -> TeamUtils.getTeam(entity, scoreboard))
+            .toArray(Team[]::new);
     }
 
     @Override
     public Class<?> @Nullable [] acceptChange(Changer.ChangeMode mode) {
         if (mode == Changer.ChangeMode.SET) {
-            if (this.pattern != 1) {
-                Skript.error("You may only set the team of an entity, a team cannot be changed.");
-                return null;
-            }
             return CollectionUtils.array(Team.class);
         }
         return super.acceptChange(mode);
@@ -95,13 +71,13 @@ public class ExprTeam extends SimpleExpression<Team> {
     public void change(Event event, Object @Nullable [] delta, Changer.ChangeMode mode) {
         if (mode == Changer.ChangeMode.SET) {
 
-            Team deltaTeam = delta != null && delta[0] instanceof Team team ? team : null;
-            if (deltaTeam == null || this.pattern != 1 || this.entity == null) return;
+            Team team = delta != null && delta[0] instanceof Team deltaTeam ? deltaTeam : null;
+            if (team == null || this.entities == null) return;
 
-            Entity entity = this.entity.getSingle(event);
+            Entity entity = this.entities.getSingle(event);
             if (entity == null) return;
 
-            deltaTeam.addEntity(entity);
+            team.addEntity(entity);
             return;
         }
         // Delegate to default changers
@@ -110,7 +86,7 @@ public class ExprTeam extends SimpleExpression<Team> {
 
     @Override
     public boolean isSingle() {
-        return pattern != 2;
+        return this.entities.isSingle();
     }
 
     @Override
@@ -119,14 +95,12 @@ public class ExprTeam extends SimpleExpression<Team> {
     }
 
     @Override
-    public @NotNull String toString(Event e, boolean d) {
-        String scorebard = this.scoreboard != null ? " from scoreboard " + this.scoreboard.toString(e, true) : "";
-        return switch (this.pattern) {
-            case 0 -> "team with id " + this.name.toString(e, d) + scorebard;
-            case 1 -> "team of " + this.entity.toString(e, d) + scorebard;
-            case 2 -> "all teams";
-            default -> throw new IllegalStateException("Unexpected value: " + this.pattern);
-        };
+    public @NotNull String toString(Event event, boolean debug) {
+        SyntaxStringBuilder builder = new SyntaxStringBuilder(event, debug);
+        builder.append("team of", this.entities);
+        if (!this.scoreboard.isDefault())
+            builder.append("from scoreboard", this.scoreboard);
+        return builder.toString();
     }
 
 }
