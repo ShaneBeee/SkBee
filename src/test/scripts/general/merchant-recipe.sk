@@ -1,0 +1,9 @@
+test "SkBee - Merchant Recipe":
+	set {_recipe} to new merchant recipe with result diamond sword with max uses 10 with uses 1 with villager experience 5 with price multiplier 3 with demand 4 with special price 10
+
+	assert merchant recipe demand of {_recipe} = 4 with "Demand should be 4"
+	assert merchant recipe max uses of {_recipe} = 10 with "Max uses should be 10"
+	assert merchant recipe price multiplier of {_recipe} = 3 with "Price multiplier should be 3"
+	assert merchant recipe special price of {_recipe} = 10 with "Special price should be 10"
+	assert merchant recipe uses of {_recipe} = 1 with "Uses should be 1"
+	assert merchant recipe villager experience of {_recipe} = 5 with "Villager experience should be 5"
