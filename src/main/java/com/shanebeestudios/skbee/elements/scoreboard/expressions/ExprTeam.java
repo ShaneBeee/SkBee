@@ -22,15 +22,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Team - From Entity")
-@Description("""
-    Get an instance of a team from an entity.
-    You have the option to get a team from a specific scoreboard (defaults to the main scoreboard).
-    Teams off the main scoreboard cannot be serialized/saved to variables (This is because custom scoreboards aren't persistent).
-    """)
-@Examples("""
-    set {_team} to team of player
-    set {_team} to team of player from {-teams::groups}
-    """)
+@Description({
+    "Get an instance of a team from an entity.",
+    "You have the option to get a team from a specific scoreboard (defaults to the main scoreboard).",
+    "Teams off the main scoreboard cannot be serialized/saved to variables (This is because custom scoreboards aren't persistent)."
+})
+@Examples({
+    "set {_team} to team of player",
+    "set {_team} to team of player from {-teams::groups}"
+})
 @Since("1.16.0")
 public class ExprTeam extends SimpleExpression<Team> {
 
