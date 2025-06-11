@@ -23,8 +23,7 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Team - From Entity")
 @Description("""
-    Get an instance of a team, either from an entity or by name of team, or get a list of all teams.
-    If getting a team by id, and it does not exist, a new team with that id will be registered.
+    Get an instance of a team from an entity.
     You have the option to get a team from a specific scoreboard (defaults to the main scoreboard).
     Teams off the main scoreboard cannot be serialized/saved to variables (This is because custom scoreboards aren't persistent).
     """)
