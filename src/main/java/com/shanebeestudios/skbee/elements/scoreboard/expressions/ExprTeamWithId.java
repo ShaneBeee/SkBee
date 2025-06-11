@@ -17,9 +17,9 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Team - From Name")
+@Name("Team - From ID")
 @Description("""
-    Get an instance of a team, by the name. If getting the team and it does not exist, a new team with that name will be registered.
+    Get an instance of a team, by the id. If getting the team and it does not exist, a new team with that name will be registered.
     You have the option to get a team from a specific scoreboard (defaults to the main scoreboard).
     Teams off the main scoreboard cannot be serialized/saved to variables (This is because custom scoreboards aren't persistent).
     """)
