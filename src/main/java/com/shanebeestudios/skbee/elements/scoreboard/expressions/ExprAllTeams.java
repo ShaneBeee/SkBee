@@ -17,15 +17,15 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Team - All Teams")
-@Examples("""
-    set {_teams::*} to all teams
-    set {_foodBoard} to a custom scoreboard
-    set {_food::*} to all teams from {_foodBoard}
-    """)
 @Description("""
     Get a list of all teams.
     You have the option to get all teams from a specific scoreboard (defaults to the main scoreboard).
     Teams off the main scoreboard cannot be serialized/saved to variables (This is due to custom scoreboards not being persistent).
+    """)
+@Examples("""
+    set {_teams::*} to all teams
+    set {_foodBoard} to a custom scoreboard
+    set {_food::*} to all teams from {_foodBoard}
     """)
 @Since("1.16.0")
 public class ExprAllTeams extends SimpleExpression<Team> {
@@ -71,3 +71,4 @@ public class ExprAllTeams extends SimpleExpression<Team> {
     }
 
 }
+

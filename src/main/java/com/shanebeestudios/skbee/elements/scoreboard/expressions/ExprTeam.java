@@ -28,9 +28,10 @@ import org.jetbrains.annotations.Nullable;
     You have the option to get a team from a specific scoreboard (defaults to the main scoreboard).
     Teams off the main scoreboard cannot be serialized/saved to variables (This is because custom scoreboards aren't persistent).
     """)
-@Examples({"set {_team} to team of player",
-    "set {_team} to team with id \"le-team\"",
-    "set {_teams::*} to all teams"})
+@Examples("""
+    set {_team} to team of player
+    set {_team} to team of player from {-teams::groups}
+    """)
 @Since("1.16.0")
 public class ExprTeam extends SimpleExpression<Team> {
 
