@@ -16,10 +16,10 @@ import java.lang.reflect.Method;
 public class ChatReflection {
 
     // Cache these classes/methods to prevent retrieving them too often
-    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("net.minecraft.network.chat.IChatBaseComponent");
+    private static final Class<?> ICHAT_BASE_COMPONENT_CLASS = ReflectionUtils.getNMSClass("net.minecraft.network.chat.Component", "IChatBaseComponent");
     private static final Class<?> CRAFT_CHAT_MESSAGE_CLASS = ReflectionUtils.getOBCClass("util.CraftChatMessage");
     private static final Class<?> TEXT_TAG_VISITOR_CLASS;
-    private static final Class<?> NBT_BASE_CLASS = ReflectionUtils.getNMSClass("net.minecraft.nbt.NBTBase");
+    private static final Class<?> NBT_BASE_CLASS = ReflectionUtils.getNMSClass("net.minecraft.nbt.Tag", "NBTBase");
     private static final Method FROM_COMPONENT;
     private static final Method VISIT_METHOD;
     private static final boolean IS_RUNNING_1_20_5 = Skript.isRunningMinecraft(1, 20, 5);

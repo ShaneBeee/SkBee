@@ -27,7 +27,7 @@ public class EvtPlayerUseUnknown extends SkriptEvent {
                     "\n`event-vector` = Returns the position relative to the entity that was clicked if available. (Requires Paper 1.20.1+)",
                     "\n`event-number` = Returns the entity id of the unknown entity that was interacted with. (Not sure if this usefull or not)",
                     "\nRequires PaperMC.")
-                .examples("oh right click unknown entity:",
+                .examples("on right click unknown entity:",
                     "\tteleport player to spawn of world \"world\"")
                 .since("2.17.0");
 

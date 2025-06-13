@@ -43,16 +43,16 @@ public class ReflectionUtils {
     /**
      * Get a Minecraft class with an optional Bukkit mapping alternative
      *
-     * @param nmsClass      Path of class to get (ex: "net.minecraft.world.entity.Entity")
+     * @param mojangMapping Path of class to get (ex: "net.minecraft.world.entity.Entity")
      * @param bukkitMapping Optional Bukkit mapping for NMS class (just the class, not the package)
      * @return Minecraft class
      */
-    public static @Nullable Class<?> getNMSClass(String nmsClass, String bukkitMapping) {
+    public static @Nullable Class<?> getNMSClass(String mojangMapping, String bukkitMapping) {
         if (!MAPPED_SERVER) {
-            String split = nmsClass.substring(0, nmsClass.lastIndexOf("."));
-            nmsClass = split + "." + bukkitMapping;
+            String split = mojangMapping.substring(0, mojangMapping.lastIndexOf("."));
+            mojangMapping = split + "." + bukkitMapping;
         }
-        return getClass(nmsClass);
+        return getClass(mojangMapping);
     }
 
     private static @Nullable Class<?> getClass(String className) {
