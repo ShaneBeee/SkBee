@@ -11,13 +11,13 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("List/Unlist Players")
 @Description("List/unlist a player for a player. (show/hide them in PlayerList for each other). Requires PaperMC 1.20.1+")
 @Examples({"unlist all players for player",
-        "list (all players in world of player) for player"})
+    "list (all players in world of player) for player"})
 @Since("2.17.0")
 public class EffPlayerListed extends Effect {
 
@@ -31,7 +31,7 @@ public class EffPlayerListed extends Effect {
     private Expression<Player> players;
     private Expression<Player> toUnlist;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.unlist = parseResult.hasTag("un");
@@ -40,13 +40,19 @@ public class EffPlayerListed extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         for (Player player : this.players.getArray(event)) {
             for (Player toUnlist : this.toUnlist.getArray(event)) {
-                if (this.unlist) player.unlistPlayer(toUnlist);
-                else player.listPlayer(toUnlist);
+                if (this.unlist) {
+                    player.unlistPlayer(toUnlist);
+                } else {
+                    try {
+                        player.listPlayer(toUnlist);
+                    } catch (IllegalStateException ignore) {
+                        // Paper throws an error if the player cant see the other player?!?!?
+                    }
+                }
             }
         }
     }
