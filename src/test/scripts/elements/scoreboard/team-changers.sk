@@ -1,0 +1,27 @@
+test "SkBee - Team Changers":
+	before:
+		set {_teams::foo} to team with id "foo"
+		set {_teams::bar} to team with id "bar"
+		spawn sheep at event-location:
+			set {_entity} to entity
+		spawn sheep at event-location:
+			set {_backupEntity} to entity
+
+	test:
+		set team of {_entity} to {_teams::foo}
+		assert team of {_entity} is team with id "foo"
+
+		set team of {_backupEntity} to {_teams::bar}
+		assert team of {_backupEntity} is team with id "bar"
+
+		add {_backupEntity} to team of {_entity}
+		assert team of {_backupEntity} is team with id "foo"
+
+		remove {_entity} from team of {_entity}
+		assert team of {_entity} is not set
+
+	after:
+		delete team with id "foo"
+		delete team with id "bar"
+		delete entity within {_entity}
+		delete entity within {_backupEntity}
