@@ -58,6 +58,10 @@ public class ExprTaskID extends SimpleExpression<Number> {
         this.last = parseResult.hasTag("last");
         if (!this.last) {
             List<SecRunTaskLater> currentSections = getParser().getCurrentSections(SecRunTaskLater.class);
+            if (currentSections.isEmpty()) {
+                Skript.error("Current task ID can only be retrieved in a task section.");
+                return false;
+            }
             this.task = currentSections.getLast();
         }
         return true;
