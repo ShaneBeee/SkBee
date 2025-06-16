@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.other.sections;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -10,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.LoopSection;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
@@ -32,6 +34,7 @@ import java.util.concurrent.atomic.AtomicReference;
     "This can be very useful in loops, to prevent halting the loop.",
     "You can optionally have your task repeat until cancelled.",
     "You can optionally run your code async/on another thread.",
+    "You can optionally store the task ID in a variable, to help make use of it later.",
     "\nNOTE: A good chunk of Bukkit/Minecraft stuff can NOT be run async. It may throw console errors.",
     "Please be careful when running async, this is generally reserved for heavy math/functions that could cause lag.",
     "Simply waiting a tick, or running a new non-async section will put your code back on the main thread.",
@@ -50,6 +53,11 @@ import java.util.concurrent.atomic.AtomicReference;
     "\t\trun 2 seconds later:",
     "\t\t\tset block at {_loc} to {_data}\n",
     "",
+    "run 0 ticks later repeating every second and store id in {_id}:",
+    "\tadd 1 to {_a}",
+    "\tif {_a} > 10:",
+    "\t\tcancel task with id {_id}",
+    "",
     "run 0 ticks later repeating every second:",
     "\tadd 1 to {_a}",
     "\tif {_a} > 10:",
@@ -59,8 +67,8 @@ public class SecRunTaskLater extends LoopSection {
 
     static {
         Skript.registerSection(SecRunTaskLater.class,
-            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [globally]",
-            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(at|on|for) %-entity/location%]");
+            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [globally] [and store [task] id in %object%]",
+            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(at|on|for) %-entity/location%] [and store [task] id in %object%]");
     }
 
     private static Task<?> LAST_CREATED_TASK = null;
@@ -68,6 +76,7 @@ public class SecRunTaskLater extends LoopSection {
     private Expression<Timespan> timespan;
     private Expression<?> taskObject;
     private Expression<Timespan> repeating;
+    private Expression<Object> idStorage;
     private Task<?> task;
 
     @SuppressWarnings("unchecked")
@@ -79,6 +88,11 @@ public class SecRunTaskLater extends LoopSection {
             this.taskObject = exprs[2];
         }
         this.repeating = (Expression<Timespan>) exprs[1];
+        this.idStorage = (Expression<Object>) exprs[2 + matchedPattern];
+        if (this.idStorage != null && (!(this.idStorage instanceof Variable<?>))) {
+            Skript.error("The id can only be stored in a variable.");
+            return false;
+        }
         ParserInstance parserInstance = ParserInstance.get();
         Kleenean hasDelayBefore = parserInstance.getHasDelayBefore();
         parserInstance.setHasDelayBefore(Kleenean.TRUE);
@@ -127,6 +141,11 @@ public class SecRunTaskLater extends LoopSection {
         } else {
             this.task = scheduler.runTaskLater(runnable, delay);
         }
+        if (this.idStorage != null) {
+            this.idStorage.change(event, new Integer[]{this.task.getTaskId()}, ChangeMode.SET);
+            // Re-set the local vars since we've now changed them
+            previousLocalVars.set(Variables.copyLocalVariables(event));
+        }
         LAST_CREATED_TASK = this.task;
         if (last != null) last.setNext(null);
         return super.walk(event, false);
@@ -146,7 +165,8 @@ public class SecRunTaskLater extends LoopSection {
         String async = this.async ? "async " : "";
         String type = this.taskObject != null ? (" for " + this.taskObject.toString(e, d)) : " globally";
         String repeat = this.repeating != null ? (" repeating every " + this.repeating.toString(e, d)) : "";
-        return async + "run task " + this.timespan.toString(e, d) + " later" + repeat + type;
+        String id = this.idStorage != null ? (" and store id in " + this.idStorage.toString(e, d)) : "";
+        return async + "run task " + this.timespan.toString(e, d) + " later" + repeat + type + id;
     }
 
     @Override
