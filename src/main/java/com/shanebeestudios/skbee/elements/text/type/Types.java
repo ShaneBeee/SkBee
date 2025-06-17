@@ -49,7 +49,7 @@ public class Types {
 
             @Override
             public void change(ComponentWrapper[] components, @Nullable Object[] delta, ChangeMode mode) {
-                if (delta == null) return;
+                if (delta == null || delta.length == 0) return;
                 if (mode == ChangeMode.ADD) {
                     for (ComponentWrapper component : components) {
                         if (delta[0] instanceof HoverEvent<?> hoverEvent) {
