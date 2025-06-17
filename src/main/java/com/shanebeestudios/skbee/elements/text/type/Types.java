@@ -43,7 +43,7 @@ public class Types {
         Changer<ComponentWrapper> COMP_CHANGER = new Changer<>() {
             @Override
             public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-                if (mode == ChangeMode.ADD) return CollectionUtils.array(HoverEvent.class, ClickEvent.class);
+                if (mode == ChangeMode.ADD) return CollectionUtils.array(HoverEvent.class, ClickEvent.class, ComponentWrapper.class);
                 return null;
             }
 
@@ -56,6 +56,8 @@ public class Types {
                             component.setHoverEvent(hoverEvent);
                         } else if (delta[0] instanceof ClickEvent clickEvent) {
                             component.setClickEvent(clickEvent);
+                        } else if (delta[0] instanceof ComponentWrapper cw) {
+                            component.append(cw);
                         }
                     }
                 }
