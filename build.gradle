@@ -11,7 +11,7 @@ compileJava {
 }
 
 // SkBee version
-version = '3.11.3'
+version = '3.12.0'
 def oldestJava = 17
 
 repositories {

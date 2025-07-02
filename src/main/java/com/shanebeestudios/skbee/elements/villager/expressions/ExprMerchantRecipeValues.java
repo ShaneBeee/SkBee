@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("Represents different number values of a merchant recipe.")
 @Examples({"set {_uses} to merchant recipe uses of {_recipe}",
     "set merchant recipe demand of {_recipe} to 2"})
-@Since("INSERT VERSION")
+@Since("3.12.0")
 public class ExprMerchantRecipeValues extends SimpleExpression<Number> {
 
     static {
