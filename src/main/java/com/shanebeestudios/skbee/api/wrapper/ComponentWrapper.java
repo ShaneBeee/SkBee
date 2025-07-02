@@ -16,6 +16,7 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -355,6 +356,29 @@ public class ComponentWrapper {
         return ColorRGB.fromRGB(textColor.red(), textColor.green(), textColor.blue());
     }
 
+    /**
+     * Set the shadow color of this component
+     *
+     * @param color Shadow color of this component
+     */
+    public void setShadowColor(Color color) {
+        ShadowColor shadowColor = ShadowColor.shadowColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+        this.component = this.component.shadowColor(shadowColor);
+    }
+
+    /**
+     * Get the shadow color of this component
+     *
+     * @return Shadow color of this component
+     */
+    public Color getShadowColor() {
+        ShadowColor shadowColor = this.component.shadowColor();
+        if (shadowColor == null) {
+            return null;
+        }
+        return ColorRGB.fromRGB(shadowColor.red(), shadowColor.green(), shadowColor.blue());
+    }
+
     public void setBold(boolean bold) {
         this.component = this.component.decoration(TextDecoration.BOLD, bold);
     }
@@ -532,7 +556,7 @@ public class ComponentWrapper {
     /**
      * Set the name of an entity
      *
-     * @param entity        Entity to change name
+     * @param entity  Entity to change name
      * @param display Whether or not always visible
      */
     public void setEntityName(Entity entity, boolean display) {
