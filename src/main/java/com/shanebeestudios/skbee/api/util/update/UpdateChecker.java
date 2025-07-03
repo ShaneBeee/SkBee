@@ -53,7 +53,7 @@ public class UpdateChecker implements Listener {
                 if (!player.hasPermission("skbee.update.check")) return;
 
                 TaskUtils.getEntityScheduler(player).runTaskLater(() -> getUpdateVersion(true).thenApply(version -> {
-                    Util.sendColMsg(player, "&7[&bSk&3Bee&7] Update available: &a" + version);
+                    Util.sendColMsg(player, "&7[&bSk&3Bee&7] Update available: &a" + version.getUpdateVersion());
                     Util.sendColMsg(player, "&7[&bSk&3Bee&7] Download at: &b" + version.getUpdateLink());
                     return true;
                 }), 30);
