@@ -67,8 +67,8 @@ public class SecRunTaskLater extends LoopSection {
 
     static {
         Skript.registerSection(SecRunTaskLater.class,
-            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [globally] [and store [task] id in %object%]",
-            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(at|on|for) %-entity/location%] [and store [task] id in %object%]");
+            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [globally] [and store [task] id in %-object%]",
+            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(at|on|for) %-entity/location%] [and store [task] id in %-object%]");
     }
 
     private static Task<?> LAST_CREATED_TASK = null;
