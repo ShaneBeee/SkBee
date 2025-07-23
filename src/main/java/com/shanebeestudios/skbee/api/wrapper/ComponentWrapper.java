@@ -9,6 +9,8 @@ import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.ChatUtil;
+import com.shanebeestudios.skbee.api.util.TextCompUtil;
+import com.shanebeestudios.skbee.api.util.Util;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -16,7 +18,6 @@ import net.kyori.adventure.text.TextComponent;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.format.ShadowColor;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.text.format.TextDecoration;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -273,6 +274,10 @@ public class ComponentWrapper {
         return component;
     }
 
+    public void setComponent(Component component) {
+        this.component = component;
+    }
+
     /**
      * Get the children of a component
      *
@@ -362,8 +367,9 @@ public class ComponentWrapper {
      * @param color Shadow color of this component
      */
     public void setShadowColor(Color color) {
-        ShadowColor shadowColor = ShadowColor.shadowColor(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
-        this.component = this.component.shadowColor(shadowColor);
+        // remove this check and Util class after support is 1.21.4+
+        if (!Util.IS_RUNNING_MC_1_21_4) return;
+        TextCompUtil.setShadowColor(this, color);
     }
 
     /**
@@ -372,11 +378,8 @@ public class ComponentWrapper {
      * @return Shadow color of this component
      */
     public Color getShadowColor() {
-        ShadowColor shadowColor = this.component.shadowColor();
-        if (shadowColor == null) {
-            return null;
-        }
-        return ColorRGB.fromRGB(shadowColor.red(), shadowColor.green(), shadowColor.blue());
+        if (!Util.IS_RUNNING_MC_1_21_4) return null;
+        return TextCompUtil.getShadowColor(this);
     }
 
     public void setBold(boolean bold) {
