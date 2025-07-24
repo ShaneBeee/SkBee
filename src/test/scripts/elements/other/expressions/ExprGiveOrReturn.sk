@@ -7,12 +7,12 @@ test "SkBee - ExprGiveOrReturn":
 	assert {_i::*} contains 36 of diamond with "Should have returned 36 diamonds"
 	delete {_i::*}
 
-	set {_i::*} to give or return (10 * 64) of diamonds to {_inv}
+	set {_i::*} to give or return 640 of diamonds to {_inv}
 	assert size of {_i::*} = 10 with "The list size should have been 10"
 	delete {_i::*}
 
 	clear inventory within {_inv}
-	set {_i::*} to give or return (5 * 64) of stick to {_inv}
+	set {_i::*} to give or return 320 of stick to {_inv}
 	assert {_i::*} is not set with "All those sticks should have fit"
 	delete {_i::*}
 
