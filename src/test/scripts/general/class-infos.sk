@@ -19,8 +19,11 @@ test "SkBee - ClassInfos":
 	assert class info with codename "chunkloadlevel" is registered with "should be registered"
 	assert class info with codename "consumeeffect" is registered with "should be registered"
 	assert class info with codename "criteria" is registered with "should be registered"
-	assert class info with codename "damagesource" is registered with "should be registered"
-	assert class info with codename "damagetype" is registered with "should be registered"
+
+	# Skript has added these under an experiment // TODO - remove in future
+	#assert class info with codename "damagesource" is registered with "should be registered"
+	#assert class info with codename "damagetype" is registered with "should be registered"
+
 	assert class info with codename "datacomponenttype" is registered with "should be registered"
 	assert class info with codename "displaybrightness" is registered with "should be registered"
 	assert class info with codename "displayslot" is registered with "should be registered"
