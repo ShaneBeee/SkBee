@@ -65,7 +65,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Since("3.11.0")
 public class SecModifyNBT extends Section {
 
-    private static class NBTEditEvent extends Event {
+    public static class NBTEditEvent extends Event {
 
         private final NBTCompound compound;
 
