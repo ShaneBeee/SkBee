@@ -2,10 +2,7 @@ package com.shanebeestudios.skbee.elements.nbt.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.SectionExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
@@ -34,10 +31,11 @@ import java.util.concurrent.atomic.AtomicBoolean;
     "\tset int tag \"points\" of nbt to 99",
     "\tset compound tag \"extra\" of nbt to empty nbt compound"})
 @Since("2.8.0")
-public class ExprBlankNBTCompound extends SectionExpression<NBTCompound> {
+@DocumentationId("ExprBlankNBTCompound")
+public class SecExprBlankNBTCompound extends SectionExpression<NBTCompound> {
 
     static {
-        Skript.registerExpression(ExprBlankNBTCompound.class, NBTCompound.class, ExpressionType.SIMPLE,
+        Skript.registerExpression(SecExprBlankNBTCompound.class, NBTCompound.class, ExpressionType.SIMPLE,
             "[a[n]] (blank|empty|new) nbt compound");
     }
 
