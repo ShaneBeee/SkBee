@@ -38,6 +38,7 @@ public class Util {
 
     // Shortcut for finding stuff to remove later
     public static final boolean IS_RUNNING_SKRIPT_2_11 = Skript.getVersion().isLargerThan(new Version(2, 10, 999));
+    public static final boolean IS_RUNNING_SKRIPT_2_12 = Skript.getVersion().isLargerThan(new Version(2, 11, 999));
     public static final boolean IS_RUNNING_MC_1_20 = Skript.isRunningMinecraft(1, 20);
     public static final boolean IS_RUNNING_MC_1_20_1 = Skript.isRunningMinecraft(1, 20, 1);
     public static final boolean IS_RUNNING_MC_1_21 = Skript.isRunningMinecraft(1, 21);
