@@ -535,6 +535,10 @@ public class AddonLoader {
             Util.logLoading("&5Damage Source Elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
             return;
         }
+        if (Util.IS_RUNNING_SKRIPT_2_12) {
+            Util.log("&5Damage Source Elements &cdisabled &7(&enow in Skript&7)");
+            return;
+        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.damagesource");
             Util.logLoading("&5Damage Source Elements &asuccessfully loaded");
