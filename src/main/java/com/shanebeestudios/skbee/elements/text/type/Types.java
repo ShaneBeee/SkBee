@@ -9,6 +9,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.Parameter;
 import ch.njol.skript.lang.function.SimpleJavaFunction;
+import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.coll.CollectionUtils;
@@ -17,8 +18,10 @@ import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
+import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
+import net.kyori.adventure.text.minimessage.internal.TagInternals;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.CommandSender;
@@ -154,32 +157,40 @@ public class Types {
         // Functions
         Functions.registerFunction(new SimpleJavaFunction<>("resolver", new Parameter[]{
             new Parameter<>("placeholder", DefaultClasses.STRING, true, null),
-            new Parameter<>("replacement", DefaultClasses.OBJECT, true, null)
+            new Parameter<>("replacement", DefaultClasses.OBJECT, true, null),
+            new Parameter<>("parsable", DefaultClasses.BOOLEAN, true, new SimpleLiteral<>(false, true)),
         }, Classes.getExactClassInfo(TagResolver.class), true) {
             @SuppressWarnings("PatternValidation")
             @Override
             public TagResolver @Nullable [] executeSimple(Object[][] params) {
                 if (params[0].length == 0 || params[1].length == 0) return null;
 
-                String string = (String) params[0][0];
-                if (string == null) return null;
+                String key = (String) params[0][0];
+                if (key == null) return null;
 
                 Object object = params[1][0];
-                ComponentWrapper component;
-                if (object instanceof String s) {
-                    component = ComponentWrapper.fromText(s);
-                } else if (object instanceof ComponentWrapper c) {
-                    component = c;
+                Boolean parsable = (Boolean) params[2][0];
+                if (parsable == null) parsable = false;
+
+                TagResolver resolver;
+                if (object instanceof ComponentWrapper component) {
+                    resolver = Placeholder.component(key, component.getComponent());
+                } else if (object instanceof Component component) {
+                    resolver = Placeholder.component(key, component);
+                } else if (parsable) {
+                    resolver = Placeholder.parsed(key, Classes.toString(object));
                 } else {
-                    component = ComponentWrapper.fromText(Classes.toString(object));
+                    resolver = Placeholder.component(key, ComponentWrapper.fromText(Classes.toString(object)).getComponent());
                 }
-                return new TagResolver[]{Placeholder.component(string, component.getComponent())};
+                return new TagResolver[]{resolver};
             }
         }
             .description("Creates a tag resolver for replacements in mini message.",
                 "`placeholder` = The string that will be replaced in the mini message.",
                 "In the mini message itself this part needs to be surrounded by <>. See examples!",
-                "`replacement` = A string/text component that will replace the first string.")
+                "`replacement` = A string/text component that will replace the first string.",
+                "`parsable` = Whether the replacement should be parsed as mini message after being replaced.",
+                "For servers that take in user inputs, this should be used with caution.")
             .examples("# Create a component",
                 "set {_t} to translate component of player's tool",
                 "add hover event showing player's tool to {_t}",
@@ -187,7 +198,11 @@ public class Types {
                 "set {_r} to resolver(\"item\", {_t})",
                 "# setup the mini message with the replacement placeholder",
                 "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r}",
-                "send component {_m}")
+                "send component {_m}",
+                "",
+                "on async chat:",
+                "\tset {_chatColor} to resolver(\"chatcolor\", raw ({chatcolor::%player%} ? raw \"<gray>\"), true)",
+                "\tset async chat message to mini message from \"<chatcolor>%async chat message%\" with resolver {_chatColor}")
             .since("3.5.0"));
     }
 
