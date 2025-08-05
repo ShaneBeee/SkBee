@@ -1,4 +1,4 @@
-text "SkBee - NBT - Blank NBT Compound":
+test "SkBee - NBT - Blank NBT Compound":
 	set {_nbt} to empty nbt compound
 	assert {_nbt} is nbt from "{}" with "blank nbt compound didn't match against '{}'"
 
