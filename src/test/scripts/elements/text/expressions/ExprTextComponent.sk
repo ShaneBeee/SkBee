@@ -31,3 +31,11 @@ test "SkBee - Text/ExprTextComponent":
 	# Json component
 	set {_t} to json component from "{""color"":""aqua"",""text"":""hello"",""bold"":true}"
 	assert {_t} = "&b&lhello" with "Should match"
+
+	# MiniMessage Component With Resolvers
+	set {_unparsedResolver} to resolver("unparsed", raw "<yellow>")
+	set {_parsedResolver} to resolver("parsed", raw "<yellow>", true)
+	set {_mm::unparsed} to minimessage from "<unparsed>Color!" with resolvers {_unparsedResolver}
+	set {_mm::parsed} to minimessage from "<parsed>Color!" with resolvers {_parsedResolver}
+	assert {_mm::unparsed} is raw "<yellow>Color!" with "Unparsed MiniMessage resolver did not use raw context"
+	assert {_mm::parsed} is "<yellow>Color!" with "Parsed MiniMessage resolver did not apply the styling to the message."
