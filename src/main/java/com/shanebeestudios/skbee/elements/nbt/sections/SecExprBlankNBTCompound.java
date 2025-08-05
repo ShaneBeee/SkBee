@@ -22,7 +22,8 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Name("NBT - Empty Compound")
-@Description("Returns an empty/new NBT compound.")
+@Description({"Returns an empty/new NBT compound.",
+    "Optionally you can define this as a section to modify the created nbt compound directly"})
 @Examples({"set {_nbt} to blank nbt compound",
     "set tag \"points\" of {_nbt} to 10",
     "",
