@@ -9,5 +9,5 @@ test "SkBee - NBT - Blank NBT Compound":
 
 	assert {_nbt} is nbt from "{}" to fail with "blank nbt compound section failed to assign data"
 	assert int tag "integerTag" of {_nbt} is 100000 with "blank nbt compound failed to set integer tag"
-	assert int tag "compoundTag" of {_nbt} is nbt from "{}" with "blank nbt compound failed to set compound tag"
-	assert int tag "stringTag" of {_nbt} is "Stringy" with "blank nbt compound failed to set string tag"
+	assert compound tag "compoundTag" of {_nbt} is nbt from "{}" with "blank nbt compound failed to set compound tag"
+	assert string tag "stringTag" of {_nbt} is "Stringy" with "blank nbt compound failed to set string tag"
