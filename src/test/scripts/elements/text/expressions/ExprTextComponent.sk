@@ -5,6 +5,14 @@ test "SkBee - Text/ExprTextComponent":
 	set {_text} to rawtext component from "&aHI DAD"
 	assert raw {_text} = raw "&aHI DAD" with "Should match"
 
+	set {_text} to text component from "Normal Text"
+	copy {_text} into {_textCopy}
+	assert {_text} = {_textCopy}
+	set color format of {_text} to rgb(100,100,255)
+	assert color format of {_textCopy} is not set
+	add a new hover event showing "Hello World!" to {_textCopy}
+	assert hover event of {_text} is not set
+
 	# Keybind component
 	set {_key} to keybind component of "key.jump"
 	assert {_key} is set with "Should have set" # We can't test this server side

@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.function.Functions;
@@ -13,6 +14,7 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.coll.CollectionUtils;
+import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
@@ -21,7 +23,6 @@ import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
-import net.kyori.adventure.text.minimessage.internal.TagInternals;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.command.CommandSender;
@@ -32,6 +33,8 @@ import org.skriptlang.skript.lang.comparator.Comparators;
 import org.skriptlang.skript.lang.comparator.Relation;
 import org.skriptlang.skript.lang.converter.Converters;
 
+import java.io.NotSerializableException;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -77,6 +80,7 @@ public class Types {
                 "add click event to open url \"https://OurDiscord.com\" to {_t}",
                 "send component {_t} to player")
             .since("1.5.0")
+            .cloner(original -> ComponentWrapper.fromComponent(original.getComponent()))
             .parser(new Parser<>() {
                 @Override
                 public @NotNull String toString(@NotNull ComponentWrapper o, int flags) {
@@ -92,7 +96,42 @@ public class Types {
                 public @NotNull String toVariableNameString(@NotNull ComponentWrapper o) {
                     return o.toString();
                 }
-            }).changer(COMP_CHANGER)
+            })
+            .changer(COMP_CHANGER)
+            .serializer(new Serializer<>() {
+                @Override
+                public Fields serialize(ComponentWrapper component) throws NotSerializableException {
+                    Fields fields = new Fields();
+                    fields.putObject("json", component.toJsonString());
+                    return fields;
+                }
+
+                @Override
+                protected ComponentWrapper deserialize(Fields fields) throws StreamCorruptedException, NotSerializableException {
+                    if (!fields.hasField("json"))
+                        throw new StreamCorruptedException("TextComponent is missing the 'json' tag");
+                    try {
+                        return ComponentWrapper.fromJson(fields.getObject("json", String.class));
+                    } catch (StreamCorruptedException exception) {
+                        throw new StreamCorruptedException("TextComponent JSON failed to convert back into a component, possibly caused by version changes.");
+                    }
+                }
+
+                @Override
+                public void deserialize(ComponentWrapper component, Fields fields) throws StreamCorruptedException, NotSerializableException {
+                    assert false : "This should never by called by skript";
+                }
+
+                @Override
+                public boolean mustSyncDeserialization() {
+                    return true;
+                }
+
+                @Override
+                protected boolean canBeInstantiated() {
+                    return false;
+                }
+            })
         );
 
         if (Skript.classExists("net.kyori.adventure.chat.SignedMessage") && Classes.getExactClassInfo(SignedMessage.class) == null) {
