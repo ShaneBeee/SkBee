@@ -9,6 +9,7 @@ test "SkBee - FastBoard":
 		set line 1 of scoreboard of {_p} to "This is line 1"
 		set line 1 of fastboard of {_p} to "This is line 1"
 		set line 1 of fastboard of {_p} to mini message from "This is line 1"
+		set line 2 of fastboard of {_p} to "line 2" and "format 2"
 
 	assert last parse logs contains "'scoreboard' is deprecated, please use 'fastboard' instead." with "Should get the warning"
 	assert size of last parse logs = 2 with "Should only be the 2 warnings"
