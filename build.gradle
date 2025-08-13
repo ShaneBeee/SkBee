@@ -117,6 +117,7 @@ publishing {
 javadoc {
     destinationDir = file("${projectDir}/build/javadoc")
     options {
+        links('https://javadoc.io/doc/org.jetbrains/annotations/latest/')
         links('https://jd.papermc.io/paper/1.21.4/')
         links('https://docs.skriptlang.org/javadocs/')
         links('https://tr7zw.github.io/Item-NBT-API/v2-api/')
