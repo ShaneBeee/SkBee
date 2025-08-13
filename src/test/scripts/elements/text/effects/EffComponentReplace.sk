@@ -1,6 +1,14 @@
 test "SkBee - Text/EffComponentReplace":
 
-	set {_m} to mini message from "look mom im on tv"
-	assert {_m} = "look mom im on tv" with "Should be the same"
-	component replace "mom" with "dad" in {_m}
-	assert {_m} = "look dad im on tv" with "Should have changed"
+	set {_component} to text component from "Mom! Look! I'm on television!"
+	component replace "Mom" with "Dad" in {_component}
+	assert {_component} is "Dad! Look! I'm on television!"
+
+	set {_component} to text component from "Mom! Mom! Look at me!"
+	component replace first "Mom" in {_component} with "Dad"
+	assert {_component} is "Dad! Mom! Look at me!"
+
+	set {_component} to text component from "Hello! Hi! Howdy! Sup!"
+	component regex replace "(Hello|Howdy)" with "Salut" in {_component}
+	component regex replace "(Hi|Sup)" with "Hola" in {_component}
+	assert {_component} is "Salut! Hola! Salut! Hola!"
