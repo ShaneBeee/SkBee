@@ -18,8 +18,8 @@ import org.jetbrains.annotations.NotNull;
 @Name("TextComponent - Replace Text")
 @Description({"Replaces a given string with another string/text component.",
     "**NOTE:**",
-    " - `regex` Defining the regex keyword will have the provided string be parsed as regex",
-    " - `first` Defining the first keyword will only replace the first instance ",
+    " - `regex` Defining the regex keyword will have the provided string be parsed as regex.",
+    " - `first` Defining the first keyword will only replace the first instance. ",
     "If you're new to regex and want to see how it's parsed you can use https://regex101.com/ for debugging."})
 @Examples({"component replace \"[item]\", \"[i]\" with getItemComponent(player's tool) in async chat message",
     "component regex replace \"\\[(item|i)]\" with getItemComponent(player's tool) in async chat message",
