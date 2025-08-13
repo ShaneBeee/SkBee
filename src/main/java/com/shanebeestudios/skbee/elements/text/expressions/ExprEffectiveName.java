@@ -11,7 +11,7 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
 @Name("TextComponent - Effective Name")
-@Description({"Gets the effective name of an item stack shown to player.",
+@Description({"Gets the effective name of an item stack shown to the player.",
     "It takes into account the display name (with italics) from the item meta, the potion effect, translatable name, rarity etc",
     "Requires PaperMC 1.21.4+"})
 @Examples("broadcast effective name of player's tool")
