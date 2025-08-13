@@ -32,8 +32,8 @@ public class EffComponentReplace extends Effect {
 
     static {
         Skript.registerEffect(EffComponentReplace.class,
-            "component [:regex] replace [:first] %strings% with %string/textcomponent% in %~textcomponents%",
-            "component [:regex] replace [:first] %strings% in %~textcomponents% with %string/textcomponent%");
+            "component [:regex] replace [:first] %strings% with %object% in %~textcomponents%",
+            "component [:regex] replace [:first] %strings% in %~textcomponents% with %object%");
     }
 
     private boolean useRegex, replaceFirst;
