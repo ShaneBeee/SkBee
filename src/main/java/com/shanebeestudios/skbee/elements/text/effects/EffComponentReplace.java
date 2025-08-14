@@ -8,59 +8,68 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
+import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 @Name("TextComponent - Replace Text")
-@Description({"Replace a string with another string or text component in a text component. Supports regex patterns.",
-    "NOTE: If you notice sometimes your symbols aren't replace, this could be a regex pattern issue and you may need to escape characters.",
-    "ex: `:(` -> `:\\(` and `[` -> `\\[`"})
-@Examples({"component replace \"puppy\" with \"***\" in {_comp}",
-    "component replace \"\\d+\" with \"0\" in {_comp}",
-    "component replace \":\\(\" with \"sad\" in {_comp}"})
+@Description({"Replaces a given string with another string/text component.",
+    "**NOTE:**",
+    " - `regex` Defining the regex keyword will have the provided string be parsed as regex.",
+    " - `first` Defining the first keyword will only replace the first instance. ",
+    "If you're new to regex and want to see how it's parsed you can use https://regex101.com/ for debugging."})
+@Examples({"component replace \"[item]\", \"[i]\" with getItemComponent(player's tool) in async chat message",
+    "component regex replace \"\\[(item|i)]\" with getItemComponent(player's tool) in async chat message",
+    "component replace first \"Mom!\" in {_message} with \"Dad!\""})
 @Since("2.18.0")
 public class EffComponentReplace extends Effect {
 
     static {
         Skript.registerEffect(EffComponentReplace.class,
-            "component replace %strings% with %string/textcomponent% in %textcomponents%");
+            "component [:regex] replace [:first] %strings% with %object% in %~textcomponents%",
+            "component [:regex] replace [:first] %strings% in %~textcomponents% with %object%");
     }
 
-    private Expression<String> toReplace;
-    private Expression<Object> replacement;
+    private boolean useRegex, replaceFirst;
+    private Expression<String> patterns;
+    private Expression<?> replacement;
     private Expression<ComponentWrapper> components;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.toReplace = (Expression<String>) exprs[0];
-        this.replacement = (Expression<Object>) exprs[1];
-        this.components = (Expression<ComponentWrapper>) exprs[2];
-        return true;
+        this.useRegex = parseResult.hasTag("regex");
+        this.replaceFirst = parseResult.hasTag("first");
+        this.patterns = (Expression<String>) exprs[0];
+        this.components = (Expression<ComponentWrapper>) exprs[(2 - matchedPattern % 2)];
+        this.replacement = LiteralUtils.defendExpression(exprs[(1 + matchedPattern % 2)]);
+        return LiteralUtils.canInitSafely(this.replacement);
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         Object replacement = this.replacement.getSingle(event);
-        String replacementString = replacement instanceof String s ? s : null;
-        ComponentWrapper replacementComp = replacement instanceof ComponentWrapper w ? w : null;
-        for (ComponentWrapper component : this.components.getArray(event)) {
-            for (String s : this.toReplace.getArray(event)) {
-                if (replacementString != null) component.replace(s, replacementString);
-                else if (replacementComp != null) component.replace(s, replacementComp);
-            }
-        }
+        String[] patterns = this.patterns.getArray(event);
+        if (replacement == null || patterns.length == 0) return;
+        //noinspection UnstableApiUsage - Skript marks changeInPlace as internal but is fine to use
+        this.components.changeInPlace(event, component -> {
+            component.replace(this.useRegex, this.replaceFirst, replacement, patterns);
+            return component;
+        });
     }
 
     @Override
-    public @NotNull String toString(Event e, boolean d) {
-        String toReplace = this.toReplace.toString(e, d);
-        String replace = this.replacement.toString(e, d);
-        String comp = this.components.toString(e, d);
-        return "component replace " + toReplace + " with " + replace + " in " + comp;
+    public @NotNull String toString(Event event, boolean debug) {
+        SyntaxStringBuilder syntaxBuilder = new SyntaxStringBuilder(event, debug);
+        syntaxBuilder.append("component");
+        if (this.useRegex) syntaxBuilder.append("regex");
+        syntaxBuilder.append("replace");
+        if (this.replaceFirst) syntaxBuilder.append("first");
+        syntaxBuilder.append(this.patterns, "with", this.replacement, "in", this.components);
+        return syntaxBuilder.toString();
     }
 
 }
