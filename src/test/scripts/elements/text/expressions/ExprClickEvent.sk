@@ -3,3 +3,16 @@ test "SkBee - Text/ExprClickEvent":
 	assert click event of {_text} is not set with "Shouldn't have a click event yet"
 	add click event to open link "some url" to {_text}
 	assert click event of {_text} is set with "Should now have a click event"
+
+	delete {_text}
+	set {_text} to text component of "i like dialogs"
+	assert click event of {_text} is not set with "Shouldn't have a click event yet"
+	add click event to open dialog with key "minecraft:quick_actions" to {_text} # This is a default dialog
+	assert click event of {_text} is set with "Should now have a click event"
+
+	delete {_text}
+	set {_text} to text component of "i like custom payloads"
+	assert click event of {_text} is not set with "Shouldn't have a click event yet"
+	set {_nbt} to nbt from "{some:1}"
+	add click event to run custom payload with key "some:key" with data {_nbt} to {_text}
+	assert click event of {_text} is set with "Should now have a click event"
