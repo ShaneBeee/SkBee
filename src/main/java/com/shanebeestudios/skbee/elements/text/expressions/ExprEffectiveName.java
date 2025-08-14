@@ -22,7 +22,7 @@ public class ExprEffectiveName extends SimplePropertyExpression<ItemStack, Compo
 
     static {
         if (HAS_EFFECTIVE_NAME)
-            registerDefault(ExprEffectiveName.class, ComponentWrapper.class, "effective name", "itemstacks");
+            registerDefault(ExprEffectiveName.class, ComponentWrapper.class, "[component] effective name", "itemstacks");
     }
 
     @Override
