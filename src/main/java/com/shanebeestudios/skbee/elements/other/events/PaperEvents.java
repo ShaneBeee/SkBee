@@ -20,20 +20,29 @@ import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import com.shanebeestudios.skbee.api.skript.TempEvent;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import de.tr7zw.changeme.nbtapi.NBTCompound;
+import de.tr7zw.changeme.nbtapi.NBTContainer;
+import io.papermc.paper.connection.PlayerGameConnection;
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.packet.UncheckedSignChangeEvent;
 import io.papermc.paper.event.player.PlayerChangeBeaconEffectEvent;
+import io.papermc.paper.event.player.PlayerCustomClickEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import io.papermc.paper.event.player.PlayerTrackEntityEvent;
 import io.papermc.paper.math.BlockPosition;
+import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.converter.Converter;
 
 @SuppressWarnings({"unused", "unchecked", "UnstableApiUsage"})
 public class PaperEvents extends SimpleEvent {
@@ -138,6 +147,60 @@ public class PaperEvents extends SimpleEvent {
                 .since("2.6.1");
 
             EventValues.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, PlayerChunkUnloadEvent::getPlayer, EventValues.TIME_NOW);
+        }
+
+        // Player Custom Click Event
+        if (Skript.classExists("io.papermc.paper.event.player.PlayerCustomClickEvent")) {
+            Skript.registerEvent("Player Custom Click Event", PaperEvents.class, PlayerCustomClickEvent.class,
+                    "[player] custom (click|payload)")
+                .description("This event is fired for any custom click events.",
+                    "This is primarily used for dialogs and text component click events with custom payloads.",
+                    "Requires Paper 1.21.6+",
+                    "",
+                    "**Event Values:**",
+                    "- `event-nbt` = The nbt compound passed from the custom payload click.",
+                    "- `event-player` = The player who sent the payload.",
+                    "- `event-string/event-namespacedkey` = The key used to identify the custom payload.")
+                .examples("on custom click:",
+                    "\tif event-namespacedkey = \"test:key\":",
+                    "\t\tset {_nbt} to event-nbt",
+                    "\t\tset {_blah} to string tag \"blah\" of {_nbt}",
+                    "\t\tsend \"YourData: %{_blah}%\" to player")
+                .since("INSERT VERSION");
+
+            EventValues.registerEventValue(PlayerCustomClickEvent.class, Player.class, new Converter<>() {
+                @Override
+                public @Nullable Player convert(PlayerCustomClickEvent event) {
+                    if (event.getCommonConnection() instanceof PlayerGameConnection connection)
+                        return connection.getPlayer();
+                    return null;
+                }
+            });
+
+            EventValues.registerEventValue(PlayerCustomClickEvent.class, NBTCompound.class, new Converter<>() {
+                @SuppressWarnings("deprecation")
+                @Override
+                public @Nullable NBTCompound convert(PlayerCustomClickEvent event) {
+                    BinaryTagHolder tag = event.getTag();
+                    if (tag == null) return null;
+
+                    return new NBTContainer(tag.string());
+                }
+            });
+
+            EventValues.registerEventValue(PlayerCustomClickEvent.class, NamespacedKey.class, new Converter<>() {
+                @Override
+                public @Nullable NamespacedKey convert(PlayerCustomClickEvent event) {
+                    return NamespacedKey.fromString(event.getIdentifier().asString());
+                }
+            });
+
+            EventValues.registerEventValue(PlayerCustomClickEvent.class, String.class, new Converter<>() {
+                @Override
+                public @NotNull String convert(PlayerCustomClickEvent event) {
+                    return event.getIdentifier().asString();
+                }
+            });
         }
 
         // UncheckedSignChangeEvent
