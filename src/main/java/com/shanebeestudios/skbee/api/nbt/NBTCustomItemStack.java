@@ -45,7 +45,7 @@ public class NBTCustomItemStack extends NBTContainer implements NBTCustom {
             // TODO end
             return itemContainer;
         }
-        return itemContainer.getOrCreateCompound(NBTApi.TAG_NAME);
+        return itemContainer.getOrCreateCompound("components");
     }
 
     @Override
@@ -79,12 +79,7 @@ public class NBTCustomItemStack extends NBTContainer implements NBTCustom {
 
     @Override
     public @NotNull NBTCompound getCustomNBT() {
-        if (NBTApi.HAS_ITEM_COMPONENTS) {
-            return this.getOrCreateCompound("minecraft:custom_data");
-        }
-        // Prior to 1.20.5, the "tag" compound could store any custom data
-        // After 1.20.5 this is merged into the "minecraft:custom_data" component
-        return this;
+        return this.getOrCreateCompound("minecraft:custom_data");
     }
 
 }

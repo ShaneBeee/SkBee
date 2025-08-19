@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -11,7 +10,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
@@ -29,8 +27,6 @@ import org.jetbrains.annotations.Nullable;
 @Since("2.4.0, 2.11.0 (front|back)")
 public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
 
-    private static final boolean HAS_SIDES = Util.IS_RUNNING_MC_1_20;
-
     static {
         register(ExprSignLines.class, ComponentWrapper.class, "[(front|:back)] sign line %number%", "blocks");
     }
@@ -44,10 +40,6 @@ public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
         setExpr((Expression<? extends Block>) exprs[1]);
         this.signLine = (Expression<Number>) exprs[0];
         this.front = !parseResult.hasTag("back");
-        if (!this.front && !HAS_SIDES) {
-            this.front = true;
-            Skript.warning("Setting lines on the back of a sign requires Minecraft 1.20+");
-        }
         return true;
     }
 

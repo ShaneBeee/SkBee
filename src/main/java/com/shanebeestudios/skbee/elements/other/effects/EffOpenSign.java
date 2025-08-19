@@ -11,7 +11,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
-import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.math.Position;
 import org.bukkit.Location;
 import org.bukkit.block.BlockState;
@@ -37,14 +36,12 @@ import org.jetbrains.annotations.Nullable;
 @Since({"1.5.2", "2.14.0 (sides)", "3.11.3 (virtual)"})
 public class EffOpenSign extends Effect {
 
-    private static final boolean HAS_SIDES = Util.IS_RUNNING_MC_1_20;
     private static final boolean HAS_VIRTUAL = Skript.classExists("io.papermc.paper.event.packet.UncheckedSignChangeEvent");
 
     static {
-        String side = HAS_SIDES ? "[(front|back:back)] " : "";
         Skript.registerEffect(EffOpenSign.class,
-            "open [:virtual] sign [gui] " + side + "[(for|of)] [%direction%] %location% to %players%",
-            "open [%direction%] %location%'[s] [:virtual] sign [gui] " + side + "to %players%");
+            "open [:virtual] sign [gui] [(front|back:back)] [(for|of)] [%direction%] %location% to %players%",
+            "open [%direction%] %location%'[s] [:virtual] sign [gui] [(front|back:back)] to %players%");
     }
 
     @SuppressWarnings("null")
@@ -82,11 +79,7 @@ public class EffOpenSign extends Effect {
             }
         } else if (block instanceof Sign sign) {
             for (Player player : this.players.getArray(event)) {
-                if (HAS_SIDES) {
-                    player.openSign(sign, this.back ? Side.BACK : Side.FRONT);
-                } else {
-                    player.openSign(sign);
-                }
+                player.openSign(sign, this.back ? Side.BACK : Side.FRONT);
             }
         } else {
             error("Block is not a sign: " + Classes.toString(location.getBlock()));
@@ -95,7 +88,7 @@ public class EffOpenSign extends Effect {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String side = HAS_SIDES ? (this.back ? "back " : "front ") : "";
+        String side = this.back ? "back " : "front ";
         String virtual = this.virtual ? "virtual " : "";
         return "open " + virtual + "sign " + side + "for " + this.locations.toString(e, d) + " to " + this.players.toString(e, d);
     }

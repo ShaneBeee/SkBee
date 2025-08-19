@@ -48,20 +48,18 @@ import java.util.List;
 public class SecRecipeSmithing extends Section {
 
     public static final boolean HAS_NBT_METHOD = Skript.methodExists(SmithingRecipe.class, "willCopyNbt");
-    private static EntryValidator VALIDATOR;
+    private static final EntryValidator VALIDATOR;
 
     static {
-        if (Util.IS_RUNNING_MC_1_20) {
-            SimpleEntryValidator builder = SimpleEntryValidator.builder();
-            builder.addRequiredEntry("id", String.class);
-            builder.addRequiredEntry("result", ItemStack.class);
-            builder.addRequiredEntry("template", RecipeChoice.class);
-            builder.addRequiredEntry("base", RecipeChoice.class);
-            builder.addOptionalEntry("addition", RecipeChoice.class);
-            builder.addOptionalEntry("copynbt", Boolean.class);
-            Skript.registerSection(SecRecipeSmithing.class, "register [a] [new] smithing [transform] recipe");
-            VALIDATOR = builder.build();
-        }
+        SimpleEntryValidator builder = SimpleEntryValidator.builder();
+        builder.addRequiredEntry("id", String.class);
+        builder.addRequiredEntry("result", ItemStack.class);
+        builder.addRequiredEntry("template", RecipeChoice.class);
+        builder.addRequiredEntry("base", RecipeChoice.class);
+        builder.addOptionalEntry("addition", RecipeChoice.class);
+        builder.addOptionalEntry("copynbt", Boolean.class);
+        Skript.registerSection(SecRecipeSmithing.class, "register [a] [new] smithing [transform] recipe");
+        VALIDATOR = builder.build();
     }
 
     private Expression<String> id;

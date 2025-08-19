@@ -82,7 +82,7 @@ import org.jetbrains.annotations.NotNull;
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     // My reflection requires Paper/Mojmap. I cant be bothered to re-write this for Spigot
-    private static final boolean HAS_VANILLA_NBT = Skript.classExists("net.minecraft.server.level.ServerPlayer") && NBTApi.HAS_ITEM_COMPONENTS;
+    private static final boolean HAS_VANILLA_NBT = Skript.classExists("net.minecraft.server.level.ServerPlayer");
     private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().NBT_ALLOW_UNSAFE_OPERATIONS;
 
     static {

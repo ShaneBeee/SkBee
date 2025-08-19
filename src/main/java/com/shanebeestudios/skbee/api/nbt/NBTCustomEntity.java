@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.api.nbt;
 
-import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.util.Util;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -16,7 +16,6 @@ import org.jetbrains.annotations.NotNull;
 @SuppressWarnings("deprecation")
 public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 
-    private static final boolean HAS_CUSTOM_DATA = Skript.isRunningMinecraft(1, 21, 5);
     private final Entity entity;
 
     /**
@@ -40,7 +39,7 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 
     @Override
     public NBTCompound getOrCreateCompound(String name) {
-        if (name.equals("data") && HAS_CUSTOM_DATA) {
+        if (name.equals("data") && Util.IS_RUNNING_MC_1_21_5) {
             // NBT-API doesn't properly support the "data" compound in NBTEntity
             // This is probably due to internally Minecraft doesn't straight up use a compound
             // It uses a CustomData class which houses the compound inside
