@@ -43,7 +43,7 @@ import java.util.List;
 public class ExprFastBoardLine extends SimpleExpression<Object> {
 
     private static final Class<?>[] CHANGE_TYPES = FastBoardManager.HAS_ADVENTURE ?
-        new Class<?>[]{ComponentWrapper.class, String.class} : new Class<?>[]{String.class};
+        new Class<?>[]{ComponentWrapper[].class, String[].class} : new Class<?>[]{String[].class};
 
     static {
         Skript.registerExpression(ExprFastBoardLine.class, Object.class, ExpressionType.COMBINED,

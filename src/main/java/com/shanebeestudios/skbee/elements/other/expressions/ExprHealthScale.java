@@ -34,7 +34,6 @@ public class ExprHealthScale extends SimplePropertyExpression<Player, Number> {
         return player.getHealthScale();
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.RESET) {
@@ -43,12 +42,10 @@ public class ExprHealthScale extends SimplePropertyExpression<Player, Number> {
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue", "DataFlowIssue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        Number changeNumber = delta != null ? ((Number) delta[0]) : 0;
-        double change = changeNumber.doubleValue();
-
+        Number changeNumber = delta != null && delta[0] instanceof Number ? ((Number) delta[0]) : 0;
+        double change = Math.max(changeNumber.doubleValue(), 1);
         for (Player player : getExpr().getArray(event)) {
             boolean scaled = true;
             double oldScale = player.getHealthScale();
