@@ -56,7 +56,7 @@ import java.util.Map;
     "\t\tcategory: \"redstone\"",
     "\t\tingredients:",
     "\t\t\tadd diamond block to ingredients",
-    "\t\t\tadd material choice of every plank to ingredients",
+    "\t\t\tadd material choice of minecraft item tag \"minecraft:planks\" to ingredients",
     "\t\t\tadd emerald block to ingredients",
     "\t\t\tadd end rod to ingredients",
     "\t\t\tadd wither skeleton skull to ingredients",
