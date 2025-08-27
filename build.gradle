@@ -118,10 +118,10 @@ javadoc {
     destinationDir = file("${projectDir}/build/javadoc")
     options {
         links('https://javadoc.io/doc/org.jetbrains/annotations/latest/')
-        links('https://jd.papermc.io/paper/1.21.4/')
+        links('https://jd.papermc.io/paper/1.21.8/')
         links('https://docs.skriptlang.org/javadocs/')
         links('https://tr7zw.github.io/Item-NBT-API/v2-api/')
-        links('https://jd.advntr.dev/api/4.14.0/')
+        links('https://jd.advntr.dev/api/4.24.0/')
     }
     options.addStringOption('Xdoclint:none', '-quiet')
     exclude("com/shanebeestudios/skbee/api/listener", "com/shanebeestudios/skbee/elements",
