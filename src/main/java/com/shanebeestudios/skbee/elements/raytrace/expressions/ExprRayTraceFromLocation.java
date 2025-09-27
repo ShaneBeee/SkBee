@@ -73,10 +73,10 @@ public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {
     protected RayTraceResult @Nullable [] get(Event event) {
         Object[] ignoredEntities = this.ignoredEntities != null ? this.ignoredEntities.getArray(event) : null;
         Object[] ignoredBlocks = this.ignoredBlocks != null ? this.ignoredBlocks.getArray(event) : null;
-        int maxDistance = SkriptConfig.maxTargetBlockDistance.value();
+        double maxDistance = SkriptConfig.maxTargetBlockDistance.value();
         if (this.maxDistance != null) {
             Number single = this.maxDistance.getSingle(event);
-            if (single != null) maxDistance = single.intValue();
+            if (single != null) maxDistance = single.doubleValue();
         }
 
         double raySize = 0.0;
