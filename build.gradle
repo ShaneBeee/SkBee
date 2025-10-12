@@ -11,7 +11,7 @@ compileJava {
 }
 
 // SkBee version
-version = '3.12.3'
+version = '3.13.0'
 def oldestJava = 17
 
 repositories {
@@ -33,7 +33,7 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.21.9-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
 
     // Skript
     compileOnly("com.github.SkriptLang:Skript:2.11.2") {
