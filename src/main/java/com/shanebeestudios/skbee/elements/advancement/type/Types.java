@@ -14,6 +14,8 @@ import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.comparator.Comparators;
+import org.skriptlang.skript.lang.comparator.Relation;
 
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
@@ -24,74 +26,74 @@ public class Types {
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Advancement.class) == null) {
             Classes.registerClass(new ClassInfo<>(Advancement.class, "advancement")
-                    .user("advancements?")
-                    .name("Advancement")
-                    .description("Represents an advancement. These CAN be parsed, see examples.")
-                    .examples("set {_a} to \"minecraft:nether/use_lodestone\" parsed as advancement")
-                    .since("1.17.0")
-                    .parser(new Parser<>() {
+                .user("advancements?")
+                .name("Advancement")
+                .description("Represents an advancement. These CAN be parsed, see examples.")
+                .examples("set {_a} to \"minecraft:nether/use_lodestone\" parsed as advancement")
+                .since("1.17.0")
+                .parser(new Parser<>() {
 
-                        @SuppressWarnings("NullableProblems")
-                        @Override
-                        public boolean canParse(ParseContext context) {
-                            return context != ParseContext.DEFAULT;
+                    @Override
+                    public boolean canParse(ParseContext context) {
+                        return context != ParseContext.DEFAULT;
+                    }
+
+                    @Override
+                    public @Nullable Advancement parse(String string, ParseContext context) {
+                        NamespacedKey namespacedKey = Util.getNamespacedKey(string, false);
+                        if (namespacedKey != null) {
+                            return Bukkit.getAdvancement(namespacedKey);
                         }
+                        return null;
+                    }
 
-                        @SuppressWarnings("NullableProblems")
-                        @Override
-                        public @Nullable Advancement parse(String string, ParseContext context) {
-                            NamespacedKey namespacedKey = Util.getNamespacedKey(string, false);
+                    @Override
+                    public @NotNull String toString(Advancement advancement, int i) {
+                        return advancement.getKey().toString();
+                    }
+
+                    @Override
+                    public @NotNull String toVariableNameString(Advancement advancement) {
+                        return "advancement:" + toString(advancement, 0);
+                    }
+                })
+                .serializer(new Serializer<>() {
+                    @Override
+                    public @NotNull Fields serialize(Advancement advancement) throws NotSerializableException {
+                        Fields fields = new Fields();
+                        fields.putObject("advancement", advancement.getKey().toString());
+                        return fields;
+                    }
+
+                    @Override
+                    public void deserialize(Advancement advancement, Fields fields) {
+                    }
+
+                    @Override
+                    protected Advancement deserialize(Fields fields) throws StreamCorruptedException {
+                        String string = fields.getObject("advancement", String.class);
+                        if (string != null) {
+                            NamespacedKey namespacedKey = NamespacedKey.fromString(string);
                             if (namespacedKey != null) {
                                 return Bukkit.getAdvancement(namespacedKey);
                             }
-                            return null;
                         }
+                        return null;
+                    }
 
-                        @Override
-                        public @NotNull String toString(Advancement advancement, int i) {
-                            return advancement.getKey().toString();
-                        }
+                    @Override
+                    public boolean mustSyncDeserialization() {
+                        return false;
+                    }
 
-                        @Override
-                        public @NotNull String toVariableNameString(Advancement advancement) {
-                            return "advancement:" + toString(advancement, 0);
-                        }
-                    })
-                    .serializer(new Serializer<>() {
-                        @Override
-                        public @NotNull Fields serialize(Advancement advancement) throws NotSerializableException {
-                            Fields fields = new Fields();
-                            fields.putObject("advancement", advancement.getKey().toString());
-                            return fields;
-                        }
+                    @Override
+                    protected boolean canBeInstantiated() {
+                        return false;
+                    }
+                }));
 
-                        @Override
-                        public void deserialize(Advancement advancement, Fields fields) {
-                        }
-
-                        @SuppressWarnings("NullableProblems")
-                        @Override
-                        protected Advancement deserialize(Fields fields) throws StreamCorruptedException {
-                            String string = fields.getObject("advancement", String.class);
-                            if (string != null) {
-                                NamespacedKey namespacedKey = NamespacedKey.fromString(string);
-                                if (namespacedKey != null) {
-                                    return Bukkit.getAdvancement(namespacedKey);
-                                }
-                            }
-                            return null;
-                        }
-
-                        @Override
-                        public boolean mustSyncDeserialization() {
-                            return false;
-                        }
-
-                        @Override
-                        protected boolean canBeInstantiated() {
-                            return false;
-                        }
-                    }));
+            Comparators.registerComparator(Advancement.class, String.class, (advancement, s) ->
+                Relation.get(advancement.getKey().toString().equalsIgnoreCase(s)));
         } else {
             Util.logLoading("It looks like another addon registered 'advancement' already.");
             Util.logLoading("You may have to use their advancements in SkBee's 'advancement' elements.");
@@ -100,13 +102,13 @@ public class Types {
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(AdvancementProgress.class) == null) {
             Classes.registerClass(new ClassInfo<>(AdvancementProgress.class, "advancementpro")
-                    .user("advancement ?progress(es)?")
-                    .name("Advancement Progress")
-                    .description("Represents the advancement progress of a player.",
-                            "You will see `%advancementpro%` in the docs, this is due to a silly issue with Skript",
-                            "where I couldn't use `progress` in expressions.")
-                    .parser(SkriptUtils.getDefaultParser())
-                    .since("1.17.0"));
+                .user("advancement ?progress(es)?")
+                .name("Advancement Progress")
+                .description("Represents the advancement progress of a player.",
+                    "You will see `%advancementpro%` in the docs, this is due to a silly issue with Skript",
+                    "where I couldn't use `progress` in expressions.")
+                .parser(SkriptUtils.getDefaultParser())
+                .since("1.17.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'advancementpro' already.");
             Util.logLoading("You may have to use their advancement progresses in SkBee's 'advancement' elements.");

@@ -15,6 +15,7 @@ import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;
+import net.kyori.adventure.text.TextReplacementConfig;
 import net.kyori.adventure.text.TranslatableComponent;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -458,32 +459,34 @@ public class ComponentWrapper {
     }
 
     /**
-     * Replace a string with a component
-     *
-     * @param text        String to replace
-     * @param replacement To replace with
+     * Replaces a string with a string/component
+     * @param regex Whether the provided pattern string is treated as regex
+     * @param replaceFirst Whether it should only replace the first instance
+     * @param patterns The string patterns that will be matched against
+     * @param replacement The string/component that will replace the provided pattern
      */
-    @SuppressWarnings("LanguageMismatch")
-    public void replace(String text, ComponentWrapper replacement) {
-        try {
-            this.component = this.component.replaceText(c -> c.match(text).replacement(replacement.component));
-        } catch (PatternSyntaxException ex) {
-            if (SkBee.isDebug()) ex.printStackTrace();
+    public void replace(boolean regex, boolean replaceFirst, Object replacement, String ...patterns) {
+        TextReplacementConfig.Builder replacementConfig = TextReplacementConfig.builder();
+        if (replacement instanceof String string) {
+            replacementConfig.replacement(string);
+        } else if (replacement instanceof ComponentWrapper componentWrapper) {
+            replacementConfig.replacement(componentWrapper.getComponent());
+        } else {
+            replacementConfig.replacement(Classes.toString(replacement));
         }
-    }
-
-    /**
-     * Replace a string with a string
-     *
-     * @param text        String to replace
-     * @param replacement To replace with
-     */
-    @SuppressWarnings("LanguageMismatch")
-    public void replace(String text, String replacement) {
-        try {
-            this.component = this.component.replaceText(c -> c.match(text).replacement(replacement));
-        } catch (PatternSyntaxException ex) {
-            if (SkBee.isDebug()) ex.printStackTrace();
+        if (replaceFirst)
+            replacementConfig.once();
+        for (String pattern : patterns) {
+            if (regex) {
+                try {
+                    replacementConfig.match(pattern);
+                } catch (PatternSyntaxException exception) {
+                    if (SkBee.isDebug()) exception.printStackTrace();
+                }
+            } else {
+                replacementConfig.matchLiteral(pattern);
+            }
+            this.component = this.component.replaceText(replacementConfig.build());
         }
     }
 

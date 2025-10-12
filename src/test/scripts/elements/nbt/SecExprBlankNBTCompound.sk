@@ -1,0 +1,13 @@
+test "SkBee - NBT - Blank NBT Compound":
+	set {_nbt} to empty nbt compound
+	assert {_nbt} is nbt from "{}" with "blank nbt compound didn't match against '{}'"
+
+	set {_nbt} to empty nbt compound:
+		set string tag "stringTag" of nbt to "Stringy"
+		set compound tag "compoundTag" of nbt to empty nbt compound
+		set int tag "integerTag" of nbt to 100000
+
+	assert {_nbt} is nbt from "{}" to fail with "blank nbt compound section failed to assign data"
+	assert int tag "integerTag" of {_nbt} is 100000 with "blank nbt compound failed to set integer tag"
+	assert compound tag "compoundTag" of {_nbt} is nbt from "{}" with "blank nbt compound failed to set compound tag"
+	assert string tag "stringTag" of {_nbt} is "Stringy" with "blank nbt compound failed to set string tag"

@@ -14,7 +14,9 @@ public class SimpleEvents extends SimpleEvent {
         Skript.registerEvent("Player Advancement", SimpleEvents.class, PlayerAdvancementDoneEvent.class,
                 "[player] advancement done")
             .description("Called when a player has completed all criteria in an advancement.")
-            .examples("")
+            .examples("on advancement done:",
+                "\tif event-advancement is \"minecraft:story/mine_stone\":",
+                "\t\tgive player a diamond named \"Stone Age\"")
             .since("1.17.0");
 
         EventValues.registerEventValue(PlayerAdvancementDoneEvent.class, String.class, event -> event.getAdvancement().getKey().toString(), EventValues.TIME_NOW);

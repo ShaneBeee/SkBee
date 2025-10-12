@@ -36,8 +36,7 @@ public class Types {
                     "Requires Minecraft 1.13+")
                 .usage("see material choice expression")
                 .examples("set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
-                    "set {_a} to material choice of every sword",
-                    "set {_a} to material choice of minecraft tag \"doors\"")
+                    "set {_a} to material choice of minecraft tag \"minecraft:doors\"")
                 .after("itemtype", "itemstack")
                 .since("1.10.0")
                 .parser(new Parser<>() {

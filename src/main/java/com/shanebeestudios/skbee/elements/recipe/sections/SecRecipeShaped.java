@@ -73,7 +73,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
     "\t\tresult: 4 of string",
     "\t\tshape: \"a\"",
     "\t\tingredients:",
-    "\t\t\tset ingredient of \"a\" to material choice of all wool",
+    "\t\t\tset ingredient of \"a\" to material choice of minecraft item tag \"minecraft:wool\"",
     "",
     "\tregister shaped recipe:",
     "\t\tid: \"custom:bee_2\"",

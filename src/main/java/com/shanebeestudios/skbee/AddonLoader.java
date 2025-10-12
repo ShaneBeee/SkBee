@@ -509,10 +509,6 @@ public class AddonLoader {
             Util.logLoading("&5Display Entity Elements &cdisabled via config");
             return;
         }
-        if (!Skript.isRunningMinecraft(1, 19, 4)) {
-            Util.logLoading("&5Display Entity Elements &cdisabled &7(&eRequires Minecraft 1.19.4+&7)");
-            return;
-        }
         if (!Skript.classExists("org.bukkit.entity.TextDisplay$TextAlignment")) {
             Util.logLoading("&5Display Entity Elements &cdisabled due to a Bukkit API change!");
             Util.logLoading("&7- &eYou need to update your server to fix this issue!");
@@ -533,6 +529,10 @@ public class AddonLoader {
         }
         if (!Skript.classExists("org.bukkit.damage.DamageSource")) {
             Util.logLoading("&5Damage Source Elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
+            return;
+        }
+        if (Util.IS_RUNNING_SKRIPT_2_12) {
+            Util.log("&5Damage Source Elements &cdisabled &7(&enow in Skript&7)");
             return;
         }
         try {

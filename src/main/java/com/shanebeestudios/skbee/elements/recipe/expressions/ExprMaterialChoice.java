@@ -29,8 +29,6 @@ import java.util.List;
     "This allows you to have one specific slot of a recipe to accept multiple items, without having to create multiple recipes.",
     "Do note that material choices do not accept custom items (ie: items with names, lore, enchants, etc). Requires Minecraft 1.13+"})
 @Examples({"set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
-    "set {_choice} to material choice of every sword",
-    "set {_choice} to material choice of every sword and every axe",
     "set {_choice} to material choice of minecraft tag \"minecraft:planks\""})
 @Since("1.10.0")
 public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {

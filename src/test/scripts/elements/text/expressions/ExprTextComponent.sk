@@ -5,6 +5,14 @@ test "SkBee - Text/ExprTextComponent":
 	set {_text} to rawtext component from "&aHI DAD"
 	assert raw {_text} = raw "&aHI DAD" with "Should match"
 
+	set {_text} to text component from "Normal Text"
+	copy {_text} into {_textCopy}
+	assert {_text} = {_textCopy}
+	set color format of {_text} to rgb(100,100,255)
+	assert color format of {_textCopy} is not set
+	add a new hover event showing "Hello World!" to {_textCopy}
+	assert hover event of {_text} is not set
+
 	# Keybind component
 	set {_key} to keybind component of "key.jump"
 	assert {_key} is set with "Should have set" # We can't test this server side
@@ -31,3 +39,11 @@ test "SkBee - Text/ExprTextComponent":
 	# Json component
 	set {_t} to json component from "{""color"":""aqua"",""text"":""hello"",""bold"":true}"
 	assert {_t} = "&b&lhello" with "Should match"
+
+	# MiniMessage Component With Resolvers
+	set {_unparsedResolver} to resolver("unparsed", raw "<yellow>")
+	set {_parsedResolver} to resolver("parsed", raw "<yellow>", true)
+	set {_mm::unparsed} to minimessage from "<unparsed>Color!" with resolvers {_unparsedResolver}
+	set {_mm::parsed} to minimessage from "<parsed>Color!" with resolvers {_parsedResolver}
+	assert {_mm::unparsed} is raw "<yellow>Color!" with "Unparsed MiniMessage resolver did not use raw context"
+	assert {_mm::parsed} is "<yellow>Color!" with "Parsed MiniMessage resolver did not apply the styling to the message."

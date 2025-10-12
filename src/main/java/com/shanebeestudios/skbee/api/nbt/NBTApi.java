@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.api.nbt;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.SkBee;
@@ -39,8 +38,6 @@ public class NBTApi {
 
     @SuppressWarnings("ConstantConditions")
     private static boolean ENABLED;
-    public static final boolean HAS_ITEM_COMPONENTS = Skript.isRunningMinecraft(1, 20, 5);
-    static final String TAG_NAME = HAS_ITEM_COMPONENTS ? "components" : "tag";
 
     /**
      * Initialize this NBT API
@@ -213,7 +210,7 @@ public class NBTApi {
         NBTContainer itemNBT = NBTItem.convertItemtoNBT(itemType.getRandom());
 
         // Full NBT
-        if (nbtCompound.hasTag(TAG_NAME)) {
+        if (nbtCompound.hasTag("components")) {
             if (nbtCompound.hasTag("id") && !itemNBT.getString("id").equalsIgnoreCase(nbtCompound.getString("id"))) {
                 // NBT compounds not the same item
                 return itemType;
@@ -221,8 +218,8 @@ public class NBTApi {
             itemNBT.mergeCompound(nbtCompound);
         } else {
             // Components/Tag portion of NBT
-            NBTCompound components = itemNBT.getOrCreateCompound(TAG_NAME);
-            if (custom && HAS_ITEM_COMPONENTS) components = components.getOrCreateCompound("minecraft:custom_data");
+            NBTCompound components = itemNBT.getOrCreateCompound("components");
+            if (custom) components = components.getOrCreateCompound("minecraft:custom_data");
             components.mergeCompound(nbtCompound);
         }
         ItemStack newItemStack = NBTItem.convertNBTtoItem(itemNBT);
