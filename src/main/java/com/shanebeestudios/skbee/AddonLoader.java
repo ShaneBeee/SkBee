@@ -454,7 +454,7 @@ public class AddonLoader {
             return;
         }
         if (Util.IS_RUNNING_SKRIPT_2_11) {
-            Util.log("&5World Border Elements &cdisabled &7(&enow in Skript&7)");
+            Util.logLoading("&5World Border Elements &cdisabled &7(&enow in Skript&7)");
             return;
         }
         try {
@@ -532,7 +532,7 @@ public class AddonLoader {
             return;
         }
         if (Util.IS_RUNNING_SKRIPT_2_12) {
-            Util.log("&5Damage Source Elements &cdisabled &7(&enow in Skript&7)");
+            Util.logLoading("&5Damage Source Elements &cdisabled &7(&enow in Skript&7)");
             return;
         }
         try {
