@@ -31,7 +31,7 @@ import java.util.Map;
 /**
  * Utility class for {@link Particle particles}
  */
-@SuppressWarnings({"CallToPrintStackTrace", "UnstableApiUsage"})
+@SuppressWarnings({"CallToPrintStackTrace"})
 public class ParticleUtil {
 
     private ParticleUtil() {
@@ -43,6 +43,7 @@ public class ParticleUtil {
         Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class);
     // Added in Minecraft 1.21.4
     public static final boolean HAS_TRAIL = Skript.classExists("org.bukkit.Particle$Trail");
+    public static final boolean HAS_SPELL = Skript.classExists("org.bukkit.Particle$Spell");
 
     static {
         // Added in Spigot 1.20.2 (oct 20/2023)
@@ -151,6 +152,8 @@ public class ParticleUtil {
             return "color/bukkitcolor";
         } else if (HAS_TRAIL && dataType == Particle.Trail.class) {
             return "trail";
+        } else if (HAS_SPELL && dataType == Particle.Spell.class) {
+            return "spell";
         }
         // For future particle data additions that haven't been added here yet
         Util.debug("Missing particle data type: '&e" + dataType.getName() + "&7'");
@@ -211,6 +214,8 @@ public class ParticleUtil {
                 }
             }
         } else if (HAS_TRAIL && dataType == Particle.Trail.class && data instanceof Particle.Trail) {
+            return data;
+        } else if (HAS_SPELL && dataType == Particle.Spell.class && data instanceof Particle.Spell) {
             return data;
         }
         return null;
