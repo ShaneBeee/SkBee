@@ -30,7 +30,7 @@ import org.bukkit.generator.BiomeParameterPoint;
 public class ExprBiomeParamPoint extends EventValueExpression<BiomeParameterPoint> {
 
     static {
-        register(ExprBiomeParamPoint.class, BiomeParameterPoint.class, "[the] biome parameter point");
+        register(ExprBiomeParamPoint.class, BiomeParameterPoint.class, "biome parameter point");
     }
 
     public ExprBiomeParamPoint() {
