@@ -3,4 +3,5 @@ test "SkBee - Other/SecWhileRunnable":
 		while 1 = 2 repeating every 5 seconds:
 			set {_a} to {_a}
 
-	assert parse logs is not set with "This should have parsed fine"
+	# This means it parsed fine (just a funny Skript warning)
+	assert parse logs = "The condition '1 is equal to 2' will always be false."
