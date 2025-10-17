@@ -10,10 +10,10 @@ import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.sections.EffSecSpawn;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
-import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Location;
@@ -91,11 +91,10 @@ public class EffSpawnEntityNBT extends Effect {
                         Entity spawn;
                         if (Util.IS_RUNNING_SKRIPT_2_13) {
                             spawn = entityType.data.spawn(loc, entity -> NBTApi.addNBTToEntity(entity, compound));
-
                         } else {
                             spawn = oldSpawn(entityType, loc, compound);
                         }
-                        SkriptUtils.setLastSpawned(spawn);
+                        EffSecSpawn.lastSpawned = spawn;
                     }
                 }
             } else if (this.blockdata != null) {
@@ -105,7 +104,7 @@ public class EffSpawnEntityNBT extends Effect {
                 World world = loc.getWorld();
                 FallingBlock fallingBlock = world.spawnFallingBlock(loc, blockData);
                 NBTApi.addNBTToEntity(fallingBlock, compound);
-                SkriptUtils.setLastSpawned(fallingBlock);
+                EffSecSpawn.lastSpawned = fallingBlock;
             }
         }
     }
@@ -137,6 +136,7 @@ public class EffSpawnEntityNBT extends Effect {
             throw new RuntimeException(e);
         }
     }
+
     @SuppressWarnings({"removal"})
     private static Entity oldSpawn(EntityType entityType, Location location, NBTCompound compound) {
         org.bukkit.util.Consumer<Entity> consumer = (entity -> NBTApi.addNBTToEntity(entity, compound));

@@ -10,7 +10,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.util.legacy.WorldUtils;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -65,7 +64,7 @@ public class ExprBlockInChunk extends SimpleExpression<Block> {
         }
 
         World world = chunk.getWorld();
-        if (y < WorldUtils.getMinHeight(world) || y > WorldUtils.getMaxHeight(world)) {
+        if (y < world.getMinHeight() || y > (world.getMaxHeight() - 1)) {
             return null;
         }
         return new Block[]{chunk.getBlock(x, y, z)};

@@ -14,7 +14,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import org.bukkit.command.CommandSender;
-import org.bukkit.entity.Entity;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.potion.PotionEffectType;
 import org.jetbrains.annotations.ApiStatus;
@@ -30,36 +29,6 @@ import java.util.regex.Pattern;
  * Utility class to handle Skript things
  */
 public class SkriptUtils {
-
-    private static Field LAST_SPAWNED;
-
-    static {
-        Class<?> effSpawnClass;
-        try {
-            if (Skript.classExists("ch.njol.skript.sections.EffSecSpawn")) {
-                effSpawnClass = Class.forName("ch.njol.skript.sections.EffSecSpawn");
-            } else {
-                effSpawnClass = Class.forName("ch.njol.skript.effects.EffSpawn");
-            }
-            LAST_SPAWNED = effSpawnClass.getDeclaredField("lastSpawned");
-        } catch (ClassNotFoundException | NoSuchFieldException ignore) {
-        }
-    }
-
-    /**
-     * Set last spawned entity
-     * <p>Skript changed the name of the EffSpawn class so now we gotta use this method</p>
-     *
-     * @param entity Entity that was spawned last
-     */
-    public static void setLastSpawned(Entity entity) {
-        if (LAST_SPAWNED != null) {
-            try {
-                LAST_SPAWNED.set(null, entity);
-            } catch (IllegalAccessException ignore) {
-            }
-        }
-    }
 
     /**
      * Get counts of loaded Skript elements
@@ -101,25 +70,24 @@ public class SkriptUtils {
         }
     }
 
-    /** Get a default instance of a Parser for ClassInfos
+    /**
+     * Get a default instance of a Parser for ClassInfos
+     *
      * @param <T> ClassType
      * @return New instance of default parser
      */
     public static <T> Parser<T> getDefaultParser() {
         return new Parser<T>() {
-            @SuppressWarnings("NullableProblems")
             @Override
             public boolean canParse(ParseContext context) {
                 return false;
             }
 
-            @SuppressWarnings("NullableProblems")
             @Override
             public String toString(T o, int flags) {
                 return o.toString();
             }
 
-            @SuppressWarnings("NullableProblems")
             @Override
             public String toVariableNameString(T o) {
                 return o.toString();
@@ -127,8 +95,8 @@ public class SkriptUtils {
         };
     }
 
-    public static Map<String,EquipmentSlotGroup> getEquipmentSlotGroups() {
-        Map<String,EquipmentSlotGroup> groups = new HashMap<>();
+    public static Map<String, EquipmentSlotGroup> getEquipmentSlotGroups() {
+        Map<String, EquipmentSlotGroup> groups = new HashMap<>();
         for (Field declaredField : EquipmentSlotGroup.class.getDeclaredFields()) {
             if (EquipmentSlotGroup.class.isAssignableFrom(declaredField.getType())) {
                 try {

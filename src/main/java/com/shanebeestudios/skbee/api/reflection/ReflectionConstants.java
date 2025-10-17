@@ -13,16 +13,16 @@ public class ReflectionConstants {
     // net.minecraft.nbt.TextComponentTagVisitor -> visit(Tag)
     public static String TAG_VISITOR_VISIT_METHOD = get("visit", "a");
     // net.minecraft.world.entity.Entity -> noPhysics
-    public static String ENTITY_NO_PHYSICS_FIELD = get("noPhysics", "ag", "ad");
-    // net.minecraft.world.scores.PlayerTeam -> setPlayerPrefix
-    public static String NMS_SCOREBOARD_TEAM_SET_PREFIX_METHOD = get("setPlayerPrefix", "b");
-    // net.minecraft.world.scores.PlayerTeam -> setPlayerSuffix
-    public static String NMS_SCOREBOARD_TEAM_SET_SUFFIX_METHOD = get("setPlayerSuffix", "c");
+    public static String ENTITY_NO_PHYSICS_FIELD = get("noPhysics", "ag", "ad", "aq", "ar");
 
     @SuppressWarnings("SameParameterValue")
-    private static String get(String mapped, String v1205, String v1212) {
+    private static String get(String mapped, String v1205, String v1212, String v1218, String v1219) {
         if (REMAPPED_SERVER) {
             return mapped;
+        } else if (Skript.isRunningMinecraft(1, 21, 9)) {
+            return v1219;
+        } else if (Skript.isRunningMinecraft(1, 21, 8)) {
+            return v1218;
         } else if (Skript.isRunningMinecraft(1, 21, 2)) {
             return v1212;
         } else if (Skript.isRunningMinecraft(1, 20, 5)) {
