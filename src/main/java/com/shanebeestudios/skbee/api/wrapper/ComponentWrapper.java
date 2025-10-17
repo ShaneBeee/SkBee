@@ -9,7 +9,7 @@ import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.ChatUtil;
-import com.shanebeestudios.skbee.api.util.TextCompUtil;
+import com.shanebeestudios.skbee.api.util.legacy.TextCompUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.key.Key;

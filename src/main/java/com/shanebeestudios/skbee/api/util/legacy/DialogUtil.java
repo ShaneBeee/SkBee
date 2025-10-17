@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.util;
+package com.shanebeestudios.skbee.api.util.legacy;
 
 import io.papermc.paper.dialog.Dialog;
 import net.kyori.adventure.text.event.ClickEvent;

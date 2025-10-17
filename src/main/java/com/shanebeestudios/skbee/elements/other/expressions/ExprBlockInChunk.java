@@ -10,7 +10,7 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.util.WorldUtils;
+import com.shanebeestudios.skbee.api.util.legacy.WorldUtils;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.block.Block;
