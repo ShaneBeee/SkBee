@@ -114,6 +114,7 @@ public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {
 
     public static Predicate<Block> filteredBlocks(Object[] ignoredBlocks) {
         return block -> {
+            if (ignoredBlocks == null) return true;
             for (Object ignoredBlock : ignoredBlocks) {
                 if (ignoredBlock instanceof Block block1 && block == block1) return false;
                 if (ignoredBlock instanceof ItemType itemType && block.getType() == itemType.getMaterial())

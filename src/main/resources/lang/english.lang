@@ -56,6 +56,7 @@ types:
     nbttype: nbt type¦s @an
     objective: objective¦s
     particle: particle¦s @-
+    particlespell: particle spell¦s @-
     playerspawnchangereason: player spawn change reason¦s
     pose: pose¦s
     potioneffectcause: potion effect cause¦s

@@ -21,7 +21,6 @@ import org.bukkit.Vibration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("UnstableApiUsage")
 public class Types {
 
     static {
@@ -112,6 +111,13 @@ public class Types {
                 .parser(SkriptUtils.getDefaultParser()));
         }
 
+        if (ParticleUtil.HAS_SPELL && Classes.getExactClassInfo(Particle.Spell.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Particle.Spell.class, "particlespell")
+                .name(ClassInfo.NO_DOC)
+                .user("particle ?spells?")
+                .parser(SkriptUtils.getDefaultParser()));
+        }
+
         // == FUNCTIONS ==
 
         // Function to create DustOptions
@@ -197,6 +203,26 @@ public class Types {
                 .examples("set {_trail} to trail(location of target block, blue, 1 second)",
                     "make 10 of trail using {_trail} at location of player")
                 .since("3.6.5");
+        }
+
+        if (ParticleUtil.HAS_SPELL) {
+            Functions.registerFunction(new SimpleJavaFunction<>("particleSpell", new Parameter[]{
+                    new Parameter<>("color", DefaultClasses.COLOR, true, null),
+                    new Parameter<>("power", DefaultClasses.NUMBER, true, null)
+                }, Classes.getExactClassInfo(Particle.Spell.class), true) {
+                    @Override
+                    public Particle.Spell @Nullable [] executeSimple(Object[][] params) {
+                        org.bukkit.Color color = ((Color) params[0][0]).asBukkitColor();
+                        float power = ((Number) params[1][0]).floatValue();
+                        return new Particle.Spell[]{new Particle.Spell(color, power)};
+                    }
+                })
+                .description("Creates a new spell data to be used with the 'effect'/'instant_effect' particles.",
+                    "Takes in a color and a number(float - which represents the power of the effect.)",
+                    "Requires Minecraft 1.21.9+")
+                .examples("set {_spell} to particleSpell(blue, 0.5)",
+                    "make 10 of effect using {_spell} at location of player's head")
+                .since("INSERT VERSION");
         }
     }
 
