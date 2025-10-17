@@ -11,7 +11,7 @@ compileJava {
 }
 
 // SkBee version
-version = '3.12.3'
+version = '3.13.0'
 def oldestJava = 17
 
 repositories {
@@ -33,7 +33,7 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.21.7-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
 
     // Skript
     compileOnly("com.github.SkriptLang:Skript:2.11.2") {
@@ -45,7 +45,7 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.15.2") {
+    implementation("de.tr7zw:item-nbt-api:2.15.3") {
         transitive = false
     }
 
@@ -99,7 +99,7 @@ shadowJar {
 tasks.register('server', Copy) {
     from shadowJar
     // Change this to wherever you want your jar to build
-    into '/Users/ShaneBee/Desktop/Server/Skript/1-21-8/plugins'
+    into '/Users/ShaneBee/Desktop/Server/Skript/1-21-10/plugins'
 }
 
 publishing {

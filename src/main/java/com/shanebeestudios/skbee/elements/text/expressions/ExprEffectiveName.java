@@ -15,7 +15,7 @@ import org.jetbrains.annotations.Nullable;
     "It takes into account the display name (with italics) from the item meta, the potion effect, translatable name, rarity etc.",
     "Requires PaperMC 1.21.4+"})
 @Examples("broadcast effective name of player's tool")
-@Since("INSERT VERSION")
+@Since("3.13.0")
 public class ExprEffectiveName extends SimplePropertyExpression<ItemStack, ComponentWrapper> {
 
     private static final boolean HAS_EFFECTIVE_NAME = Skript.methodExists(ItemStack.class, "effectiveName");

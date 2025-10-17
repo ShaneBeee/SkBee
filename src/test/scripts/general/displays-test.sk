@@ -39,7 +39,5 @@ test "SkBee - Display entities":
 
 	set display width of {_e} to 3
 	set display glow color override of {_e} to bukkitColor(255,1,1,100)
-	set display interpolation start of {_e} to -1
-	set display interpolation delay of {_e} to 200
 
 	delete entities within {_e::*}

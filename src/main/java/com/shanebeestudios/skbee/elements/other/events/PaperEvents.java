@@ -166,7 +166,7 @@ public class PaperEvents extends SimpleEvent {
                     "\t\tset {_nbt} to event-nbt",
                     "\t\tset {_blah} to string tag \"blah\" of {_nbt}",
                     "\t\tsend \"YourData: %{_blah}%\" to player")
-                .since("INSERT VERSION");
+                .since("3.13.0");
 
             EventValues.registerEventValue(PlayerCustomClickEvent.class, Player.class, new Converter<>() {
                 @Override
