@@ -43,6 +43,7 @@ public class Util {
     public static final boolean IS_RUNNING_MC_1_21_2 = Skript.isRunningMinecraft(1, 21, 2);
     public static final boolean IS_RUNNING_MC_1_21_4 = Skript.isRunningMinecraft(1, 21, 4);
     public static final boolean IS_RUNNING_MC_1_21_5 = Skript.isRunningMinecraft(1, 21, 5);
+    public static final boolean IS_RUNNING_MC_1_21_9 = Skript.isRunningMinecraft(1, 21, 9);
 
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
