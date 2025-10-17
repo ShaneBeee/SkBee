@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.ObjectTextComponentUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
@@ -28,6 +29,7 @@ import java.util.UUID;
 @Name("TextComponent - Object Text Component")
 @Description({"Create a text component using an atlas/sprite or a player head.",
     "The atlas is optional and will default to the \"minecraft:blocks\" atlas.",
+    "Requires Minecraft 1.21.9+",
     "See [**Text Component Format on McWiki**](https://minecraft.wiki/w/Text_component_format#Object) for more information."})
 @Examples({"set {_ds} to object text component with sprite \"item/diamond_sword\"",
     "set {_head} to object text component with player head from player",
@@ -78,26 +80,11 @@ public class ExprObjectTextComponent extends SimpleExpression<ComponentWrapper> 
             if (spriteString == null) return null;
             Key sprite = Key.key(spriteString);
 
-            SpriteObjectContents spriteObject = ObjectContents.sprite(atlas, sprite);
-            ObjectComponent objectComponent = Component.object(spriteObject);
-            ComponentWrapper componentWrapper = ComponentWrapper.fromComponent(objectComponent);
-
+            ComponentWrapper componentWrapper = ObjectTextComponentUtils.getSpriteObject(atlas, sprite);
             return new ComponentWrapper[]{componentWrapper};
         } else if (this.playerData != null) {
             Object playerData = this.playerData.getSingle(event);
-            PlayerHeadObjectContents playerHeadObject = null;
-            if (playerData instanceof String name) {
-                playerHeadObject = ObjectContents.playerHead(name);
-            } else if (playerData instanceof UUID uuid) {
-                playerHeadObject = ObjectContents.playerHead(uuid);
-            } else if (playerData instanceof OfflinePlayer offlinePlayer) {
-                playerHeadObject = ObjectContents.playerHead(offlinePlayer);
-            }
-            if (playerHeadObject == null) return null;
-
-            ObjectComponent objectComponent = Component.object(playerHeadObject);
-            ComponentWrapper componentWrapper = ComponentWrapper.fromComponent(objectComponent);
-
+            ComponentWrapper componentWrapper = ObjectTextComponentUtils.getPlayerHead(playerData);
             return new ComponentWrapper[]{componentWrapper};
         }
         return null;
