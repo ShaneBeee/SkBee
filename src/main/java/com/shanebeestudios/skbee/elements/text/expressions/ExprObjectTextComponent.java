@@ -17,58 +17,90 @@ import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.ObjectComponent;
 import net.kyori.adventure.text.object.ObjectContents;
+import net.kyori.adventure.text.object.PlayerHeadObjectContents;
 import net.kyori.adventure.text.object.SpriteObjectContents;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.UUID;
+
 @Name("TextComponent - Object Text Component")
-@Description({"Create a text component using an atlas and a sprite.",
+@Description({"Create a text component using an atlas/sprite or a player head.",
     "The atlas is optional and will default to the \"minecraft:blocks\" atlas.",
     "See [**Text Component Format on McWiki**](https://minecraft.wiki/w/Text_component_format#Object) for more information."})
-@Examples("set {_ds} to object text component with sprite \"item/diamond_sword\"")
+@Examples({"set {_ds} to object text component with sprite \"item/diamond_sword\"",
+    "set {_head} to object text component with player head from player",
+    "set {_head} to object text component with player head from \"Notch\"",
+    "set {_head} to object text component with player head from {_uuid}"})
 @Since("INSERT VERSION")
 public class ExprObjectTextComponent extends SimpleExpression<ComponentWrapper> {
 
     static {
         if (Util.IS_RUNNING_MC_1_21_9) {
             Skript.registerExpression(ExprObjectTextComponent.class, ComponentWrapper.class, ExpressionType.COMBINED,
-                "object text component [with atlas %-string% [and]] with sprite %string%");
+                "object text component [with atlas %-string% [and]] with sprite %string%",
+                "object text component with player head (from|of) %string/player/offlineplayer/uuid%");
         }
     }
 
-    private Expression<String> atlas;
-    private Expression<String> sprite;
+    private Expression<String> atlasData;
+    private Expression<String> spriteData;
+    private Expression<?> playerData;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        this.atlas = (Expression<String>) exprs[0];
-        this.sprite = (Expression<String>) exprs[1];
+        if (matchedPattern == 0) {
+            this.atlasData = (Expression<String>) exprs[0];
+            this.spriteData = (Expression<String>) exprs[1];
+        } else {
+            this.playerData = exprs[0];
+        }
         return true;
     }
 
     @SuppressWarnings("PatternValidation")
     @Override
     protected ComponentWrapper @Nullable [] get(Event event) {
-        Key atlas = SpriteObjectContents.DEFAULT_ATLAS;
+        if (this.spriteData != null) {
+            Key atlas = SpriteObjectContents.DEFAULT_ATLAS;
 
-        if (this.atlas != null) {
-            String atlasString = this.atlas.getSingle(event);
-            if (atlasString != null) {
-                atlas = Key.key(atlasString);
+            if (this.atlasData != null) {
+                String atlasString = this.atlasData.getSingle(event);
+                if (atlasString != null) {
+                    atlas = Key.key(atlasString);
+                }
             }
+
+            if (this.spriteData == null) return null;
+            String spriteString = this.spriteData.getSingle(event);
+            if (spriteString == null) return null;
+            Key sprite = Key.key(spriteString);
+
+            SpriteObjectContents spriteObject = ObjectContents.sprite(atlas, sprite);
+            ObjectComponent objectComponent = Component.object(spriteObject);
+            ComponentWrapper componentWrapper = ComponentWrapper.fromComponent(objectComponent);
+
+            return new ComponentWrapper[]{componentWrapper};
+        } else if (this.playerData != null) {
+            Object playerData = this.playerData.getSingle(event);
+            PlayerHeadObjectContents playerHeadObject = null;
+            if (playerData instanceof String name) {
+                playerHeadObject = ObjectContents.playerHead(name);
+            } else if (playerData instanceof UUID uuid) {
+                playerHeadObject = ObjectContents.playerHead(uuid);
+            } else if (playerData instanceof OfflinePlayer offlinePlayer) {
+                playerHeadObject = ObjectContents.playerHead(offlinePlayer);
+            }
+            if (playerHeadObject == null) return null;
+
+            ObjectComponent objectComponent = Component.object(playerHeadObject);
+            ComponentWrapper componentWrapper = ComponentWrapper.fromComponent(objectComponent);
+
+            return new ComponentWrapper[]{componentWrapper};
         }
-
-        if (this.sprite == null) return null;
-        String spriteString = this.sprite.getSingle(event);
-        if (spriteString == null) return null;
-        Key sprite = Key.key(spriteString);
-
-        SpriteObjectContents spriteObject = ObjectContents.sprite(atlas, sprite);
-        ObjectComponent objectComponent = Component.object(spriteObject);
-        ComponentWrapper componentWrapper = ComponentWrapper.fromComponent(objectComponent);
-
-        return new ComponentWrapper[]{componentWrapper};
+        return null;
     }
 
     @Override
@@ -86,10 +118,14 @@ public class ExprObjectTextComponent extends SimpleExpression<ComponentWrapper> 
         SyntaxStringBuilder builder = new SyntaxStringBuilder(e, d)
             .append("object text component");
 
-        if (this.atlas != null) {
-            builder.append("with atlas").append(this.atlas);
+        if (this.spriteData != null) {
+            if (this.atlasData != null) {
+                builder.append("with atlas").append(this.atlasData);
+            }
+            builder.append("with sprite", this.spriteData);
+        } else if (this.playerData != null) {
+            builder.append("with player head from", this.playerData);
         }
-        builder.append("with sprite", this.sprite);
         return builder.toString();
     }
 
