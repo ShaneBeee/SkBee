@@ -3,5 +3,9 @@ test "SkBee - Other/SecWhileRunnable":
 		while 1 = 2 repeating every 5 seconds:
 			set {_a} to {_a}
 
-	# This means it parsed fine (just a funny Skript warning)
-	assert parse logs = "The condition '1 is equal to 2' will always be false."
+	if parse logs is set:
+		# This for some reason happens locally
+		assert parse logs = "The condition '1 is equal to 2' will always be false."
+	else:
+		# This one happens in GitHub Actions
+		assert parse logs is not set with "Shouldn't get an error if this parses correctly"
