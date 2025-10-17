@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.util;
+package com.shanebeestudios.skbee.api.util.legacy;
 
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import org.bukkit.World;
