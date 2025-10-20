@@ -28,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
     "set {_head} to object text component with player head from player",
     "set {_head} to object text component with player head from \"Notch\"",
     "set {_head} to object text component with player head from {_uuid}"})
-@Since("INSERT VERSION")
+@Since("3.13.1")
 public class ExprObjectTextComponent extends SimpleExpression<ComponentWrapper> {
 
     static {

@@ -222,7 +222,7 @@ public class Types {
                     "Requires Minecraft 1.21.9+")
                 .examples("set {_spell} to particleSpell(blue, 0.5)",
                     "make 10 of effect using {_spell} at location of player's head")
-                .since("INSERT VERSION");
+                .since("3.13.1");
         }
     }
 
