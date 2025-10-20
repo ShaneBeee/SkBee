@@ -46,7 +46,7 @@ public class FastBoardManager implements Listener {
     @EventHandler
     private void onQuit(PlayerQuitEvent event) {
         UUID uuid = event.getPlayer().getUniqueId();
-        TaskUtils.getEntityScheduler(event.getPlayer()).runTaskLater(() -> removeBoard(uuid), 1);
+        TaskUtils.getGlobalScheduler().runTaskLater(() -> removeBoard(uuid), 1);
     }
 
 }

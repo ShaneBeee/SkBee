@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.util;
+package com.shanebeestudios.skbee.api.util.legacy;
 
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;

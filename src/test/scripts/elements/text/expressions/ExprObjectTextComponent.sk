@@ -1,0 +1,9 @@
+test "SkBee - Text/ExprObjectTextComponent" when running minecraft "1.21.9":
+	set {_text} to object text component with atlas "minecraft:blocks" and with sprite "item/diamond_chestplate"
+	assert {_text} is set with "The component with atlas and sprite should be set"
+
+	set {_text2} to object text component with sprite "item/diamond_chestplate"
+	assert {_text2} is set with "The component with sprite should be set"
+
+	set {_text3} to object text component with player head from "Notch"
+	assert {_text3} is set with "The component with player head should be set"

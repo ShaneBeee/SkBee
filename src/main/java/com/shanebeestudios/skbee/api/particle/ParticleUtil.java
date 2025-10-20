@@ -3,7 +3,6 @@ package com.shanebeestudios.skbee.api.particle;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.util.StringUtils;
-import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Color;
 import org.bukkit.Location;
@@ -21,7 +20,6 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -31,7 +29,6 @@ import java.util.Map;
 /**
  * Utility class for {@link Particle particles}
  */
-@SuppressWarnings({"CallToPrintStackTrace", "UnstableApiUsage"})
 public class ParticleUtil {
 
     private ParticleUtil() {
@@ -43,40 +40,15 @@ public class ParticleUtil {
         Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class);
     // Added in Minecraft 1.21.4
     public static final boolean HAS_TRAIL = Skript.classExists("org.bukkit.Particle$Trail");
+    // Added in Minecraft 1.21.9
+    public static final boolean HAS_SPELL = Skript.classExists("org.bukkit.Particle$Spell");
 
     static {
-        // Added in Spigot 1.20.2 (oct 20/2023)
-        if (Skript.methodExists(Particle.class, "getKey")) {
-            Registry.PARTICLE_TYPE.forEach(particle -> {
-                String key = particle.getKey().getKey();
-                PARTICLES.put(key, particle);
-                PARTICLE_NAMES.put(particle, key);
-            });
-        } else {
-            // Load and map Minecraft particle names
-            // Prior to 1.20.2, Bukkit does not have any API for getting the Minecraft names of particles (how stupid)
-            // This method fetches them from the server and maps them with the Bukkit particle enums
-            Class<?> cbParticle = ReflectionUtils.getOBCClass("CraftParticle");
-            try {
-                assert cbParticle != null;
-                Field bukkitParticleField = cbParticle.getDeclaredField("bukkit");
-                bukkitParticleField.setAccessible(true);
-                Field mcKeyField = cbParticle.getDeclaredField("minecraftKey");
-                mcKeyField.setAccessible(true);
-
-                for (Object enumConstant : cbParticle.getEnumConstants()) {
-                    String mcKey = mcKeyField.get(enumConstant).toString().replace("minecraft:", "");
-                    Particle bukkitParticle = (Particle) bukkitParticleField.get(enumConstant);
-
-                    if (!bukkitParticle.toString().contains("LEGACY")) {
-                        PARTICLES.put(mcKey, bukkitParticle);
-                        PARTICLE_NAMES.put(bukkitParticle, mcKey);
-                    }
-                }
-            } catch (NoSuchFieldException | IllegalAccessException e) {
-                e.printStackTrace();
-            }
-        }
+        Registry.PARTICLE_TYPE.forEach(particle -> {
+            String key = particle.getKey().getKey();
+            PARTICLES.put(key, particle);
+            PARTICLE_NAMES.put(particle, key);
+        });
     }
 
     /**
@@ -151,6 +123,8 @@ public class ParticleUtil {
             return "color/bukkitcolor";
         } else if (HAS_TRAIL && dataType == Particle.Trail.class) {
             return "trail";
+        } else if (HAS_SPELL && dataType == Particle.Spell.class) {
+            return "spell";
         }
         // For future particle data additions that haven't been added here yet
         Util.debug("Missing particle data type: '&e" + dataType.getName() + "&7'");
@@ -211,6 +185,8 @@ public class ParticleUtil {
                 }
             }
         } else if (HAS_TRAIL && dataType == Particle.Trail.class && data instanceof Particle.Trail) {
+            return data;
+        } else if (HAS_SPELL && dataType == Particle.Spell.class && data instanceof Particle.Spell) {
             return data;
         }
         return null;
