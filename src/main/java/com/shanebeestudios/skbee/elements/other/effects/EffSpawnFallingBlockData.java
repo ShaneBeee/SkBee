@@ -7,10 +7,10 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.sections.EffSecSpawn;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
-import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -52,7 +52,7 @@ public class EffSpawnFallingBlockData extends Effect {
         for (Location location : this.locations.getArray(event)) {
             World world = location.getWorld();
             FallingBlock fallingBlock = world.spawnFallingBlock(location, blockData);
-            SkriptUtils.setLastSpawned(fallingBlock);
+            EffSecSpawn.lastSpawned = fallingBlock;
         }
     }
 
