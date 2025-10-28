@@ -46,7 +46,7 @@ public class ExprPlayerStatistic extends SimpleExpression<Number> {
     private Expression<OfflinePlayer> player;
     private Expression<Object> qualifier;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.statistic = (Expression<Statistic>) exprs[0];
@@ -55,7 +55,6 @@ public class ExprPlayerStatistic extends SimpleExpression<Number> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable Number[] get(Event event) {
         List<Number> stats = new ArrayList<>();
@@ -69,7 +68,6 @@ public class ExprPlayerStatistic extends SimpleExpression<Number> {
         return stats.toArray(new Number[0]);
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         return switch (mode) {
@@ -78,7 +76,6 @@ public class ExprPlayerStatistic extends SimpleExpression<Number> {
         };
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantConditions"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         int change = (delta != null && delta[0] instanceof Number) ? ((Number) delta[0]).intValue() : 0;
@@ -88,12 +85,13 @@ public class ExprPlayerStatistic extends SimpleExpression<Number> {
         if (statistic == null) return;
 
         for (OfflinePlayer offlinePlayer : this.player.getArray(event)) {
+            int changeValue = change;
             switch (mode) {
-                case ADD -> change += getStat(offlinePlayer, statistic, qualifier);
-                case REMOVE -> change = getStat(offlinePlayer, statistic, qualifier) - change;
-                case RESET -> change = 0;
+                case ADD -> changeValue += getStat(offlinePlayer, statistic, qualifier);
+                case REMOVE -> changeValue = getStat(offlinePlayer, statistic, qualifier) - changeValue;
+                case RESET -> changeValue = 0;
             }
-            setStat(offlinePlayer, statistic, change, qualifier);
+            setStat(offlinePlayer, statistic, changeValue, qualifier);
         }
     }
 
