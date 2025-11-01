@@ -5,14 +5,7 @@ import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Pair;
 import com.shanebeestudios.skbee.api.util.Util;
-import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTCompoundList;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
-import de.tr7zw.changeme.nbtapi.NBTFile;
-import de.tr7zw.changeme.nbtapi.NBTItem;
-import de.tr7zw.changeme.nbtapi.NBTList;
-import de.tr7zw.changeme.nbtapi.NBTType;
-import de.tr7zw.changeme.nbtapi.NbtApiException;
+import de.tr7zw.changeme.nbtapi.*;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.apache.commons.lang3.ArrayUtils;
 import org.bukkit.OfflinePlayer;
@@ -82,9 +75,9 @@ public class NBTApi {
     @SuppressWarnings("CallToPrintStackTrace")
     public static @Nullable NBTCompound validateNBT(String nbtString) {
         if (nbtString == null) return null;
-        NBTCompound compound;
+        NBTCompound compound = (NBTCompound) NBT.createNBTObject();
         try {
-            compound = new NBTContainer(nbtString);
+            compound.mergeCompound(NBT.parseNBT(nbtString));
         } catch (Exception ex) {
             Util.skriptError("&cInvalid NBT: &7'&b%s&7'&c", nbtString);
 
