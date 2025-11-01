@@ -8,7 +8,7 @@ test "SkBee - NBT - ExprNbtCompound":
 	# Creat compound (modification - Regression Test for #872)
 	set {_n} to nbt from "{}"
 	set int tag "test" of {_n} to 1
-	asset {_n} is not nbt from "{}" with "The compound should not have been equal"
+	assert {_n} is not nbt from "{}" with "The compound should not have been equal"
 
 	# NBT of item
 	set {_i} to 1 of diamond sword
