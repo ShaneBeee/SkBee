@@ -10,8 +10,8 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
-import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.util.EntityUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.FluidCollisionMode;
@@ -93,6 +93,10 @@ public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {
 
         List<RayTraceResult> results = new ArrayList<>();
         for (Vector vector : this.vectors.getArray(event)) {
+            if (vector.isZero()) {
+                error("A ray trace may not trace along a zero vector");
+                continue;
+            }
             RayTraceResult rayTraceResult = world.rayTrace(location, vector, maxDistance,
                 FluidCollisionMode.NEVER, this.ignore, raySize,
                 EntityUtils.filter(null, ignoredEntities), filteredBlocks(ignoredBlocks));
