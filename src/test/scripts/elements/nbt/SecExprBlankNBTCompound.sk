@@ -11,3 +11,9 @@ test "SkBee - NBT - Blank NBT Compound":
 	assert int tag "integerTag" of {_nbt} is 100000 with "blank nbt compound failed to set integer tag"
 	assert compound tag "compoundTag" of {_nbt} is nbt from "{}" with "blank nbt compound failed to set compound tag"
 	assert string tag "stringTag" of {_nbt} is "Stringy" with "blank nbt compound failed to set string tag"
+
+	set {_nbt} to nbt from "{test:1b}"
+	parse:
+		if {_nbt} is not an empty nbt compound:
+			stop
+	assert last parse logs is not set with "Parse section contained errors when code was valid"

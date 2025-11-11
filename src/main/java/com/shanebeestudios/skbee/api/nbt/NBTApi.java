@@ -5,6 +5,7 @@ import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Pair;
 import com.shanebeestudios.skbee.api.util.Util;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -82,9 +83,9 @@ public class NBTApi {
     @SuppressWarnings("CallToPrintStackTrace")
     public static @Nullable NBTCompound validateNBT(String nbtString) {
         if (nbtString == null) return null;
-        NBTCompound compound;
+        NBTCompound compound = (NBTCompound) NBT.createNBTObject();
         try {
-            compound = new NBTContainer(nbtString);
+            compound.mergeCompound(NBT.parseNBT(nbtString));
         } catch (Exception ex) {
             Util.skriptError("&cInvalid NBT: &7'&b%s&7'&c", nbtString);
 
