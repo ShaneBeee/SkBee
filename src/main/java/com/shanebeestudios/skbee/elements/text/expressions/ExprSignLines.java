@@ -12,6 +12,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.block.Block;
+import org.bukkit.block.sign.Side;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -28,18 +29,18 @@ import org.jetbrains.annotations.Nullable;
 public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
 
     static {
-        register(ExprSignLines.class, ComponentWrapper.class, "[(front|:back)] sign line %number%", "blocks");
+        register(ExprSignLines.class, ComponentWrapper.class, "[front|:back] sign line %number%", "blocks");
     }
 
     private Expression<Number> signLine;
-    private boolean front;
+    private Side side;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setExpr((Expression<? extends Block>) exprs[1]);
         this.signLine = (Expression<Number>) exprs[0];
-        this.front = !parseResult.hasTag("back");
+        this.side = parseResult.hasTag("back") ? Side.BACK : Side.FRONT;
         return true;
     }
 
@@ -50,7 +51,7 @@ public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
         int signLine = signLineSingle.intValue();
         if (signLine > 4 || signLine < 1) return null;
 
-        return get(source, block -> ComponentWrapper.getSignLine(block, signLine - 1, front));
+        return get(source, block -> ComponentWrapper.getSignLine(block, signLine - 1, side));
     }
 
     @Override
@@ -63,17 +64,17 @@ public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
 
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        if (mode == ChangeMode.SET) {
-            if (!(delta[0] instanceof ComponentWrapper component)) return;
-            Number signLineSingle = this.signLine.getSingle(event);
-            if (signLineSingle == null) return;
-            int signLine = signLineSingle.intValue();
-            if (signLine > 4 || signLine < 1) return;
-            signLine--;
+        if (mode != ChangeMode.SET) return;
+        if (!(delta[0] instanceof ComponentWrapper component)) return;
 
-            for (Block block : getExpr().getArray(event)) {
-                component.setBlockLine(block, signLine, this.front);
-            }
+        Number signLineSingle = this.signLine.getSingle(event);
+        if (signLineSingle == null) return;
+        int signLine = signLineSingle.intValue();
+        if (signLine > 4 || signLine < 1) return;
+        signLine--;
+
+        for (Block block : getExpr().getArray(event)) {
+            component.setBlockLine(block, signLine, this.side);
         }
     }
 
@@ -84,8 +85,7 @@ public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String front = this.front ? "front" : "back";
-        return front + " sign line " + this.signLine.toString(e, d) + " of " + getExpr().toString(e, d);
+        return side.name().toLowerCase() + " sign line " + this.signLine.toString(e, d) + " of " + getExpr().toString(e, d);
     }
 
 }
