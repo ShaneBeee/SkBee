@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.text.effects;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -29,11 +30,11 @@ public class EffComponentReplace extends Effect {
 
     static {
         Skript.registerEffect(EffComponentReplace.class,
-            "component [:regex] replace [:first] %strings% with %object% in %~textcomponents%",
-            "component [:regex] replace [:first] %strings% in %~textcomponents% with %object%");
+            "component [:regex] replace [:first] %strings% with %object% in %~textcomponents% [case:with case sensitivity]",
+            "component [:regex] replace [:first] %strings% in %~textcomponents% with %object% [case:with case sensitivity]");
     }
 
-    private boolean useRegex, replaceFirst;
+    private boolean useRegex, replaceFirst, caseSensitive;
     private Expression<String> patterns;
     private Expression<?> replacement;
     private Expression<ComponentWrapper> components;
@@ -41,6 +42,7 @@ public class EffComponentReplace extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        this.caseSensitive = parseResult.hasTag("case");
         this.useRegex = parseResult.hasTag("regex");
         this.replaceFirst = parseResult.hasTag("first");
         this.patterns = (Expression<String>) exprs[0];
@@ -54,9 +56,15 @@ public class EffComponentReplace extends Effect {
         Object replacement = this.replacement.getSingle(event);
         String[] patterns = this.patterns.getArray(event);
         if (replacement == null || patterns.length == 0) return;
-        //noinspection UnstableApiUsage - Skript marks changeInPlace as internal but is fine to use
+
+        boolean caseSensitive = this.caseSensitive;
+        if (!caseSensitive) caseSensitive = SkriptConfig.caseSensitive.value();
+
+        // Java and lambdas being "effective final" without this the above statement would be uglier
+        final boolean finalCaseSensitive = caseSensitive;
+        //noinspection UnstableApiUsage - Skript marks changeInPlace as internal but is safe to use
         this.components.changeInPlace(event, component -> {
-            component.replace(this.useRegex, this.replaceFirst, replacement, patterns);
+            component.replace(this.useRegex, this.replaceFirst, finalCaseSensitive, replacement, patterns);
             return component;
         });
     }
@@ -69,6 +77,7 @@ public class EffComponentReplace extends Effect {
         syntaxBuilder.append("replace");
         if (this.replaceFirst) syntaxBuilder.append("first");
         syntaxBuilder.append(this.patterns, "with", this.replacement, "in", this.components);
+        if (this.caseSensitive) syntaxBuilder.append("with case sensitivity");
         return syntaxBuilder.toString();
     }
 
