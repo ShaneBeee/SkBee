@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.elements.text.effects;
 
 import ch.njol.skript.Skript;
+import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -20,20 +21,21 @@ import org.jetbrains.annotations.NotNull;
     "**NOTE:**",
     " - `regex` Defining the regex keyword will have the provided string be parsed as regex.",
     " - `first` Defining the first keyword will only replace the first instance. ",
+    " - Any case-sensitivity checks only apply to literal patterns, for regex append `(?i)` to the start",
     "If you're new to regex and want to see how it's parsed you can use https://regex101.com/ for debugging."})
 @Examples({"component replace \"[item]\", \"[i]\" with getItemComponent(player's tool) in async chat message",
     "component regex replace \"\\[(item|i)]\" with getItemComponent(player's tool) in async chat message",
-    "component replace first \"Mom!\" in {_message} with \"Dad!\""})
+    "component replace first \"Mom!\" in {_message} with \"Dad!\" with case sensitivity"})
 @Since("2.18.0")
 public class EffComponentReplace extends Effect {
 
     static {
         Skript.registerEffect(EffComponentReplace.class,
-            "component [:regex] replace [:first] %strings% with %object% in %~textcomponents%",
-            "component [:regex] replace [:first] %strings% in %~textcomponents% with %object%");
+            "component [:regex] replace [:first] %strings% with %object% in %~textcomponents% [case:with case sensitivity]",
+            "component [:regex] replace [:first] %strings% in %~textcomponents% with %object% [case:with case sensitivity]");
     }
 
-    private boolean useRegex, replaceFirst;
+    private boolean useRegex, replaceFirst, caseSensitive;
     private Expression<String> patterns;
     private Expression<?> replacement;
     private Expression<ComponentWrapper> components;
@@ -41,6 +43,7 @@ public class EffComponentReplace extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        this.caseSensitive = parseResult.hasTag("case");
         this.useRegex = parseResult.hasTag("regex");
         this.replaceFirst = parseResult.hasTag("first");
         this.patterns = (Expression<String>) exprs[0];
@@ -54,9 +57,15 @@ public class EffComponentReplace extends Effect {
         Object replacement = this.replacement.getSingle(event);
         String[] patterns = this.patterns.getArray(event);
         if (replacement == null || patterns.length == 0) return;
-        //noinspection UnstableApiUsage - Skript marks changeInPlace as internal but is fine to use
+
+        boolean caseSensitive = this.caseSensitive;
+        if (!caseSensitive) caseSensitive = SkriptConfig.caseSensitive.value();
+
+        // Java and lambdas being "effective final" without this the above statement would be uglier
+        final boolean finalCaseSensitive = caseSensitive;
+        //noinspection UnstableApiUsage - Skript marks changeInPlace as internal but is safe to use
         this.components.changeInPlace(event, component -> {
-            component.replace(this.useRegex, this.replaceFirst, replacement, patterns);
+            component.replace(this.useRegex, this.replaceFirst, finalCaseSensitive, replacement, patterns);
             return component;
         });
     }
@@ -69,6 +78,7 @@ public class EffComponentReplace extends Effect {
         syntaxBuilder.append("replace");
         if (this.replaceFirst) syntaxBuilder.append("first");
         syntaxBuilder.append(this.patterns, "with", this.replacement, "in", this.components);
+        if (this.caseSensitive) syntaxBuilder.append("with case sensitivity");
         return syntaxBuilder.toString();
     }
 
