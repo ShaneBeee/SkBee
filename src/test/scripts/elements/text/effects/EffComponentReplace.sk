@@ -12,3 +12,16 @@ test "SkBee - Text/EffComponentReplace":
 	component regex replace "(Hello|Howdy)" with "Salut" in {_component}
 	component regex replace "(Hi|Sup)" with "Hola" in {_component}
 	assert {_component} is "Salut! Hola! Salut! Hola!"
+
+	# Test case sensitivity
+	set {_comp} to text component from "hello from shane Hello from bob HELLO from mike"
+	component replace "hello" with "TEST" in {_comp}
+	assert {_comp} is "TEST from shane TEST from bob TEST from mike" with "this should work"
+
+	set {_comp} to text component from "hello from shane Hello from bob HELLO from mike"
+	component replace "hello" with "TEST" in {_comp} with case sensitivity
+	assert {_comp} is "TEST from shane Hello from bob HELLO from mike" with "this should work"
+
+	set {_comp} to text component from "hello from shane Hello from bob HELLO from mike"
+	component regex replace "(?i)hello" with "TEST" in {_comp}
+	assert {_comp} is "TEST from shane TEST from bob TEST from mike" with "this should work"
