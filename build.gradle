@@ -8,11 +8,12 @@ plugins {
 
 compileJava {
     options.encoding = 'UTF-8'
+    sourceCompatibility = '21'
+    targetCompatibility = '21'
 }
 
 // SkBee version
 version = '3.13.2'
-def oldestJava = 17
 
 repositories {
     mavenCentral()
@@ -59,10 +60,6 @@ dependencies {
 
     // bStats
     implementation(group: 'org.bstats', name: 'bstats-bukkit', version: '3.1.0')
-}
-
-tasks.withType(JavaCompile).configureEach {
-    options.compilerArgs += ['-source', '' + oldestJava, '-target', '' + oldestJava]
 }
 
 build {
