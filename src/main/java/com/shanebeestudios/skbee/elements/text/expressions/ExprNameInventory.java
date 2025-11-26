@@ -37,18 +37,6 @@ public class ExprNameInventory extends SimplePropertyExpression<Inventory, Compo
             "component inventory (name|title)", "inventories");
     }
 
-    @SuppressWarnings("NullableProblems")
-    @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (!Util.IS_RUNNING_MC_1_21) {
-            // Bukkit changed from Class to Interface, which won't work on older servers
-            // I don't feel like doing handfuls of reflection to fix this
-            Skript.error("'component inventory name' requires Minecraft 1.21+");
-            return false;
-        }
-        return super.init(exprs, matchedPattern, isDelayed, parseResult);
-    }
-
     @Override
     public @Nullable ComponentWrapper convert(Inventory inventory) {
         List<HumanEntity> viewers = inventory.getViewers();

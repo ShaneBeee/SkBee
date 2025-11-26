@@ -62,7 +62,7 @@ public class EffLootTableFillInv extends Effect {
         this.lootTable = (Expression<LootTable>) exprs[1];
         this.seed = (Expression<Number>) exprs[2];
         this.lootingModifier = (Expression<Number>) exprs[3];
-        if (Util.IS_RUNNING_MC_1_21 && this.lootingModifier != null) {
+        if (this.lootingModifier != null) {
             Skript.error("'with looting modifier' is no longer functional!");
             return false;
         }

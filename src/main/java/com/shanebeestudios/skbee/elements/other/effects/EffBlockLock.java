@@ -10,7 +10,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
-import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Lockable;
@@ -27,11 +26,9 @@ import org.jetbrains.annotations.NotNull;
 public class EffBlockLock extends Effect {
 
     static {
-        if (Util.IS_RUNNING_MC_1_21_2) {
-            Skript.registerEffect(EffBlockLock.class,
-                "apply lock to %blocks% using %itemstack%",
-                "(remove|clear) lock (of|from) %blocks%");
-        }
+        Skript.registerEffect(EffBlockLock.class,
+            "apply lock to %blocks% using %itemstack%",
+            "(remove|clear) lock (of|from) %blocks%");
     }
 
     private Expression<Block> blocks;
