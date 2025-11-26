@@ -7,8 +7,8 @@ import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
-import com.shanebeestudios.skbee.api.util.update.UpdateChecker;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.update.UpdateChecker;
 import com.shanebeestudios.skbee.api.wrapper.LazyLocation;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
@@ -16,7 +16,9 @@ import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.permissions.DefaultPermissions;
 
 /**
  * Main class for SkBee
@@ -81,11 +83,11 @@ public class SkBee extends JavaPlugin {
         // Looks like we made it after all
     }
 
-
     private void loadCommands() {
-        //noinspection ConstantConditions
-        getCommand("skbee").setExecutor(new SkBeeInfo(this));
+        registerCommand("skbee", new SkBeeInfo(this));
         //pm.registerEvents(new ScriptListener(), this); // Temp removed
+        DefaultPermissions.registerPermission("skbee.admin", "Permission to receive error messages", PermissionDefault.OP);
+        DefaultPermissions.registerPermission("skbee.command", "Permission to use SkBee's main command", PermissionDefault.OP);
     }
 
     private void loadMetrics() { //6719
