@@ -50,6 +50,7 @@ import org.jetbrains.annotations.Nullable;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
 
 /**
@@ -58,8 +59,6 @@ import java.util.regex.PatternSyntaxException;
 @SuppressWarnings({"PatternValidation", "CallToPrintStackTrace"})
 public class ComponentWrapper {
 
-    // STATIC
-    private static final boolean HAS_SIDES = Skript.classExists("org.bukkit.block.sign.SignSide");
     /**
      * Check if ItemMeta supports 'itemName' ('item_name' component
      */
@@ -462,10 +461,11 @@ public class ComponentWrapper {
      * Replaces a string with a string/component
      * @param regex Whether the provided pattern string is treated as regex
      * @param replaceFirst Whether it should only replace the first instance
+     * @param caseSensitive Whether the regex should be parsed as case-sensitive
      * @param patterns The string patterns that will be matched against
      * @param replacement The string/component that will replace the provided pattern
      */
-    public void replace(boolean regex, boolean replaceFirst, Object replacement, String ...patterns) {
+    public void replace(boolean regex, boolean replaceFirst, boolean caseSensitive, Object replacement, String ...patterns) {
         TextReplacementConfig.Builder replacementConfig = TextReplacementConfig.builder();
         if (replacement instanceof String string) {
             replacementConfig.replacement(string);
@@ -483,6 +483,10 @@ public class ComponentWrapper {
                 } catch (PatternSyntaxException exception) {
                     if (SkBee.isDebug()) exception.printStackTrace();
                 }
+            } else if (!caseSensitive) {
+                // Java doesn't use a vararg for pattern flags 🙄
+                Pattern compiledPattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE|Pattern.LITERAL);
+                replacementConfig.match(compiledPattern);
             } else {
                 replacementConfig.matchLiteral(pattern);
             }
@@ -520,16 +524,11 @@ public class ComponentWrapper {
      *
      * @param block Sign to change
      * @param line  Line to change
-     * @param front Whether front or back
+     * @param side What side should be modified
      */
-    @SuppressWarnings("deprecation") // Remove once we drop 1.19.x support
-    public void setBlockLine(Block block, int line, boolean front) {
+    public void setBlockLine(Block block, int line, Side side) {
         if (block.getState() instanceof Sign sign) {
-            if (!front && HAS_SIDES) {
-                sign.getSide(Side.BACK).line(line, this.component);
-            } else {
-                sign.line(line, this.component);
-            }
+            sign.getSide(side).line(line, this.component);
             sign.update();
         }
     }
@@ -539,19 +538,13 @@ public class ComponentWrapper {
      *
      * @param block Sign to get lines from
      * @param line  Line to get
-     * @param front Whether front or back of sign
+     * @param side Whether front or back of sign
      * @return Component from sign lines
      */
-    @SuppressWarnings("deprecation") // Remove once we drop 1.19.x support
     @Nullable
-    public static ComponentWrapper getSignLine(Block block, int line, boolean front) {
+    public static ComponentWrapper getSignLine(Block block, int line, Side side) {
         if (block.getState() instanceof Sign sign) {
-            Component lineComponent;
-            if (!front && HAS_SIDES) {
-                lineComponent = sign.getSide(Side.BACK).line(line);
-            } else {
-                lineComponent = sign.line(line);
-            }
+            Component lineComponent = sign.getSide(side).line(line);
             if (!lineComponent.equals(Component.empty())) {
                 return ComponentWrapper.fromComponent(lineComponent);
             }
