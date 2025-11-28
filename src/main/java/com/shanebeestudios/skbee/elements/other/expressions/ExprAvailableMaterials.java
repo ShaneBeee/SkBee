@@ -62,24 +62,25 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
     static {
         // Register materials as itemtypes and blockdata
-        List<Material> bukkitMaterials = Arrays.asList(Material.values());
         List<ItemType> materials = new ArrayList<>();
         List<ItemType> itemTypes = new ArrayList<>();
         List<ItemType> blockTypes = new ArrayList<>();
         List<BlockData> blockDatas = new ArrayList<>();
 
-        bukkitMaterials = bukkitMaterials.stream().sorted(Comparator.comparing(Enum::toString)).toList();
-        for (Material material : bukkitMaterials) {
-            ItemType itemType = new ItemType(material);
-            materials.add(itemType);
-            if (material.isItem()) {
-                itemTypes.add(itemType);
-            }
-            if (material.isBlock()) {
-                blockTypes.add(itemType);
-                blockDatas.add(material.createBlockData());
-            }
-        }
+        Arrays.stream(Material.values())
+            .filter(material -> !material.isLegacy())
+            .sorted(Comparator.comparing(Material::getKey))
+            .forEach(material -> {
+                ItemType itemType = new ItemType(material);
+                materials.add(itemType);
+                if (material.isItem()) {
+                    itemTypes.add(itemType);
+                }
+                if (material.isBlock()) {
+                    blockTypes.add(itemType);
+                    blockDatas.add(material.createBlockData());
+                }
+            });
         Registration.registerList("materials", ItemType.class, materials);
         Registration.registerList("item[ ]types", ItemType.class, itemTypes);
         Registration.registerList("block[ ]types", ItemType.class, blockTypes);
