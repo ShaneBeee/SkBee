@@ -15,7 +15,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
     "set {_nbt} to custom nbt copy of player's tool",
     "if {_nbt} is a blank nbt compound:",
     "\tbroadcast \"You got zero nbt ;(\""})
-@Since("INSERT VERSION")
+@Since("3.13.2")
 public class CondNBTIsBlank extends PropertyCondition<NBTCompound> {
 
     static {
