@@ -8,34 +8,32 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.EntityUtils;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 @Name("Entity NoClip")
 @Description("Set or get the noClip status of an entity (This will not work on players)")
 @Examples({"spawn a zombie at player",
-        "set no clip state of last spawned zombie to true",
-        "set {_var} to no clip state of last spawned sheep",
-        "loop all entities in radius 5 around player:",
-        "\tset no clip state of loop-entity to true",
-        "\tpush loop-entity up with speed 5"})
+    "set no clip state of last spawned zombie to true",
+    "set {_var} to no clip state of last spawned sheep",
+    "loop all entities in radius 5 around player:",
+    "\tset no clip state of loop-entity to true",
+    "\tpush loop-entity up with speed 5"})
 @Since("1.0.2")
 public class ExprNoClip extends SimplePropertyExpression<Entity, Boolean> {
 
     static {
         PropertyExpression.register(ExprNoClip.class, Boolean.class,
-                "no[( |-)](clip|physics) (state|mode)", "entities");
+            "no[( |-)](clip|physics) (state|mode)", "entities");
     }
 
     @Override
     public @Nullable Boolean convert(Entity entity) {
-        return EntityUtils.getNoPhysics(entity);
+        return entity.hasNoPhysics();
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) {
@@ -44,7 +42,6 @@ public class ExprNoClip extends SimplePropertyExpression<Entity, Boolean> {
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Boolean changeValue = (Boolean) delta[0];
@@ -52,7 +49,7 @@ public class ExprNoClip extends SimplePropertyExpression<Entity, Boolean> {
 
         if (mode == ChangeMode.SET) {
             for (Entity entity : getExpr().getArray(event)) {
-                EntityUtils.setNoPhysics(entity, changeValue);
+                entity.setNoPhysics(changeValue);
             }
         }
     }
