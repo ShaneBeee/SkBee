@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -12,7 +11,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -49,10 +47,6 @@ public class ExprComponentFormat extends PropertyExpression<ComponentWrapper, Ob
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = parseResult.mark;
-        if (!Util.IS_RUNNING_MC_1_21_4 && this.pattern == SHADOW_COLOR) {
-            Skript.error("Shadow color format requires Minecraft 1.21.4+");
-            return false;
-        }
         setExpr((Expression<ComponentWrapper>) exprs[0]);
         return true;
     }

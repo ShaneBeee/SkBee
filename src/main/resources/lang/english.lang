@@ -1,4 +1,4 @@
-version: @version@
+version: $version
 
 types:
     advancement: advancement¦s

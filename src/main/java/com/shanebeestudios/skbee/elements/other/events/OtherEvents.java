@@ -10,7 +10,6 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.slot.Slot;
 import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
-import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,20 +18,17 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.BlockDamageAbortEvent;
-import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.MoistureChangeEvent;
 import org.bukkit.event.command.UnknownCommandEvent;
 import org.bukkit.event.entity.EntityAirChangeEvent;
-import org.bukkit.event.entity.EntityBreedEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -131,14 +127,12 @@ public class OtherEvents extends SimpleEvent {
             }
         }, EventValues.TIME_NOW);
 
-        if (Util.IS_RUNNING_MC_1_21) {
-            EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
-                @Override
-                public Player get(PrepareAnvilEvent event) {
-                    return (Player) event.getView().getPlayer();
-                }
-            }, EventValues.TIME_NOW);
-        }
+        EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
+            @Override
+            public Player get(PrepareAnvilEvent event) {
+                return (Player) event.getView().getPlayer();
+            }
+        }, EventValues.TIME_NOW);
 
         // Player shear entity event
         Skript.registerEvent("Shear Entity", OtherEvents.class, PlayerShearEntityEvent.class, "[player] shear entity")

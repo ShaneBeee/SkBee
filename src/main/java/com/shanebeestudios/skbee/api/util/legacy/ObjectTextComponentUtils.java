@@ -11,7 +11,7 @@ import org.bukkit.OfflinePlayer;
 
 import java.util.UUID;
 
-// TODO remove after lowest support is 1.21.3+
+// TODO remove after lowest support is 1.21.9+
 public class ObjectTextComponentUtils {
 
     public static ComponentWrapper getSpriteObject(Key atlas, Key sprite) {

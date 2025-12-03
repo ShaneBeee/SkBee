@@ -9,7 +9,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.reflection.ChatReflection;
+import com.shanebeestudios.skbee.api.nbt.NBTReflection;
 import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
@@ -47,7 +47,7 @@ public class ExprPrettyNBT extends PropertyExpression<Object, String> {
     protected String[] get(Event event, Object[] source) {
         String split = this.split != null ? this.split.getSingle(event) : null;
         return get(source, object -> {
-            if (object instanceof NBTCompound compound) return ChatReflection.getPrettyNBT(compound, split);
+            if (object instanceof NBTCompound compound) return NBTReflection.getPrettyNBT(compound, split);
             return null;
         });
     }
