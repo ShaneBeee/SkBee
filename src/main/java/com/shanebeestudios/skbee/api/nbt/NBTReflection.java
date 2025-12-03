@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.api.nbt;
 
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.reflection.ReflectionConstants;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -79,7 +78,7 @@ public class NBTReflection {
         try {
             assert TEXT_TAG_VISITOR_CLASS != null;
             assert CRAFT_CHAT_MESSAGE_CLASS != null;
-            visit = TEXT_TAG_VISITOR_CLASS.getDeclaredMethod(ReflectionConstants.TAG_VISITOR_VISIT_METHOD, NBT_TAG_CLASS);
+            visit = TEXT_TAG_VISITOR_CLASS.getDeclaredMethod("visit", NBT_TAG_CLASS);
             from_comp = CRAFT_CHAT_MESSAGE_CLASS.getMethod("fromComponent", NMS_COMPONENT_CLASS);
         } catch (NoSuchMethodException e) {
             if (SkBee.isDebug()) e.printStackTrace();
