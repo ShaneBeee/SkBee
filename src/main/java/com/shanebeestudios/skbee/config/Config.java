@@ -28,6 +28,7 @@ public class Config {
     public boolean SETTINGS_FASTBOARD_LINES;
     public boolean ELEMENTS_NBT;
     public boolean NBT_ALLOW_UNSAFE_OPERATIONS;
+    public boolean NBT_ALLOW_FORCE_LOAD_UNKNOWN_VERSION;
     public boolean NBT_EVENTS_BREAK_BLOCK;
     public boolean NBT_EVENTS_PISTON_EXTEND;
     public boolean NBT_EVENTS_ENTITY_CHANGE_BLOCK;
@@ -150,6 +151,7 @@ public class Config {
         this.SETTINGS_FASTBOARD_LINES = getSetting("fastboard-reverse-lines");
 
         this.ELEMENTS_NBT = getElement("nbt");
+        this.NBT_ALLOW_FORCE_LOAD_UNKNOWN_VERSION = getSetting("allow-nbt-force-load-unknown-version");
         this.NBT_ALLOW_UNSAFE_OPERATIONS = getSetting("allow-unsafe-nbt-operations");
         if (this.NBT_ALLOW_UNSAFE_OPERATIONS) {
             Util.logLoading("&eAllow Unsafe NBT Operations enabled!");

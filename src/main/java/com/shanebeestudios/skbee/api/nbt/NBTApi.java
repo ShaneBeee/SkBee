@@ -5,6 +5,7 @@ import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Pair;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.Config;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTCompoundList;
@@ -45,12 +46,28 @@ public class NBTApi {
      * <br>
      * This should NOT be used by other plugins.
      */
-    public static void initializeAPI() {
+    public static void initializeAPI(Config config) {
         Util.log("&aLoading NBTApi...");
         MinecraftVersion version = MinecraftVersion.getVersion();
         if (version == MinecraftVersion.UNKNOWN) {
-            Util.log("&cFailed to load NBTApi!");
-            ENABLED = false;
+            if (config.NBT_ALLOW_FORCE_LOAD_UNKNOWN_VERSION) {
+                Util.log("&eAttempting to force load NBT-API with an unknown Minecraft version.");
+                try {
+                    // Failsafe to make sure API is properly loaded each time
+                    // This is to prevent an error when unloading/saving vars
+                    // noinspection ResultOfMethodCallIgnored
+                    new NBTContainer("{a:1}").toString();
+                    Util.log("&eNBT-API has loaded and will use recent mappings.");
+                    Util.log("&eThings may not work as expected");
+                    ENABLED = true;
+                } catch (NbtApiException ignore) {
+                    Util.log("&cFailed to load NBTApi!");
+                    ENABLED = false;
+                }
+            } else {
+                Util.log("&cFailed to load NBTApi!");
+                ENABLED = false;
+            }
         } else {
             Util.log("&aSuccessfully loaded NBTApi!");
             // Failsafe to make sure API is properly loaded each time
