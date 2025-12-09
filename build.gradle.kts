@@ -42,7 +42,7 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.15.3")
+    implementation("de.tr7zw:item-nbt-api:2.15.5-SNAPSHOT")
 
     // FastBoard
     implementation("fr.mrmicky:fastboard:2.1.5")
