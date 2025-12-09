@@ -157,7 +157,7 @@ public class AddonLoader {
             Util.logLoading("&5NBT Elements &cdisabled via config");
             return;
         }
-        NBTApi.initializeAPI();
+        NBTApi.initializeAPI(this.config);
         if (!NBTApi.isEnabled()) {
             String ver = Skript.getMinecraftVersion().toString();
             Util.logLoading("&5NBT Elements &cDISABLED!");

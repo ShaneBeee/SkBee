@@ -11,6 +11,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.util.legacy.DialogUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import io.papermc.paper.dialog.Dialog;
@@ -47,6 +48,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
 
     static {
         SUPPORTS_CLIPBOARD = Skript.fieldExists(Action.class, "COPY_TO_CLIPBOARD");
+        String nbtClickEvent = NBTApi.isEnabled() ? "[a] [new] click event to run custom payload with key %string/namespacedkey% [and] with [custom] data %nbtcompound%" : "";
         Skript.registerExpression(ExprClickEvent.class, ClickEvent.class, ExpressionType.COMBINED,
             "[a] [new] click event to run command %string%",
             "[a] [new] click event to suggest command %string%",
@@ -54,7 +56,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
             "[a] [new] click event to copy %string% to clipboard",
             "[a] [new] click event to change to page %number%",
             "[a] [new] click event to (open|show) dialog [with key] %string/namespacedkey%",
-            "[a] [new] click event to run custom payload with key %string/namespacedkey% [and] with [custom] data %nbtcompound%");
+            nbtClickEvent);
     }
 
     private int pattern;
@@ -74,7 +76,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
             Skript.error("'" + parseResult.expr + "' is not supported on your server version", ErrorQuality.SEMANTIC_ERROR);
             return false;
         }
-        if (this.pattern == 6) {
+        if (this.pattern == 6 && !parseResult.expr.isEmpty()) {
             this.nbtData = (Expression<NBTCompound>) exprs[1];
         }
         return true;

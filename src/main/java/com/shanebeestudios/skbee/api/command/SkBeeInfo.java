@@ -6,22 +6,26 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.property.PropertyPrinter;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
+import io.papermc.paper.command.brigadier.BasicCommand;
+import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.TabExecutor;
 import org.bukkit.plugin.PluginDescriptionFile;
-import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.Nullable;
 
-import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.StringJoiner;
 
 import static com.shanebeestudios.skbee.api.util.Util.sendColMsg;
 
-public class SkBeeInfo implements TabExecutor {
+/**
+ * Base SkBee command
+ * // TODO I would like to eventually use Paper's proper command system
+ */
+public class SkBeeInfo implements BasicCommand {
 
     private static final List<String> commands = List.of("info", "debug");
     private static final List<String> debugs = List.of("enable", "disable");
@@ -34,9 +38,19 @@ public class SkBeeInfo implements TabExecutor {
         this.config = plugin.getPluginConfig();
     }
 
-    @SuppressWarnings("deprecation")
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
+    public @NotNull Collection<String> suggest(@NotNull CommandSourceStack commandSourceStack, String[] args) {
+        if (args.length <= 1) {
+            return commands;
+        } else if (args.length == 2 && args[0].equalsIgnoreCase("debug")) {
+            return debugs;
+        }
+        return Collections.emptyList();
+    }
+
+    @Override
+    public void execute(CommandSourceStack commandSourceStack, String[] args) {
+        CommandSender sender = commandSourceStack.getSender();
         if (args.length == 0) {
             StringJoiner joiner = new StringJoiner("/");
             commands.forEach(joiner::add);
@@ -94,17 +108,11 @@ public class SkBeeInfo implements TabExecutor {
                 PropertyPrinter.printAll();
             }
         }
-        return true;
     }
 
     @Override
-    public @Nullable List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String label, String @NotNull [] args) {
-        if (args.length == 1) {
-            return StringUtil.copyPartialMatches(args[0], commands, new ArrayList<>());
-        } else if (args.length == 2 && args[0].equalsIgnoreCase("debug")) {
-            return StringUtil.copyPartialMatches(args[1], debugs, new ArrayList<>());
-        }
-        return null;
+    public @Nullable String permission() {
+        return "skbee.command";
     }
 
 }

@@ -22,12 +22,19 @@ settings:
     # True = Line 15 at the top, line 1 at the bottom
     fastboard-reverse-lines: false
 
+    # Whether to allow NBT-API to attempt to load when MC version is not found
+    # If NBT-API hasn't updated a Minecraft version yet and neither has SkBee,
+    # This will allow NBT-API to attempt to use the latest Minecraft mappings
+    # Not recommended to use, use at your own risk after much testing
+    allow-nbt-force-load-unknown-version: false
+
     # Whether to allow unsafe NBT opersations
     # This includes handling NBT off the main thread
     # The API behind NBT doesn't fully allow this
     # Not recommended to use
     # No support will be given for breakages due to this
     allow-unsafe-nbt-operations: false
+
 
 # Disable elements you do not plan to use.
 elements:

@@ -2,14 +2,11 @@ package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.entity.EntityData;
-import com.shanebeestudios.skbee.api.reflection.ReflectionConstants;
-import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Predicate;
@@ -20,28 +17,7 @@ import java.util.function.Predicate;
 public class EntityUtils {
 
     // Paper has this method
-    private static final boolean HAS_NO_PHYSICS = Skript.methodExists(Entity.class, "hasNoPhysics");
     public static final boolean HAS_TRANSIENT = Skript.methodExists(AttributeInstance.class, "addTransientModifier", AttributeModifier.class);
-    private static final Class<?> ENTITY_NMS_CLASS = ReflectionUtils.getNMSClass("net.minecraft.world.entity.Entity");
-
-    public static void setNoPhysics(@NotNull Entity entity, boolean clip) {
-        if (HAS_NO_PHYSICS) entity.setNoPhysics(clip);
-
-        if (ENTITY_NMS_CLASS == null) return;
-        Object nmsEntity = ReflectionUtils.getNMSEntity(entity);
-        if (nmsEntity == null) return;
-        ReflectionUtils.setField(ReflectionConstants.ENTITY_NO_PHYSICS_FIELD, ENTITY_NMS_CLASS, nmsEntity, clip);
-    }
-
-    @SuppressWarnings("ConstantConditions")
-    public static boolean getNoPhysics(@NotNull Entity entity) {
-        if (HAS_NO_PHYSICS) return entity.hasNoPhysics();
-
-        if (ENTITY_NMS_CLASS == null) return false;
-        Object nmsEntity = ReflectionUtils.getNMSEntity(entity);
-        if (nmsEntity == null) return false;
-        return Boolean.parseBoolean(ReflectionUtils.getField(ReflectionConstants.ENTITY_NO_PHYSICS_FIELD, ENTITY_NMS_CLASS, nmsEntity).toString());
-    }
 
     public static Predicate<Entity> filter(@Nullable LivingEntity livingEntity, @Nullable Object[] ignored) {
         return filterEntity -> {

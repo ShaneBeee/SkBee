@@ -7,6 +7,7 @@ import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.Bukkit;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -17,6 +18,10 @@ public class NBTReflection {
 
     // Classes
     private static Class<?> CRAFT_ITEM_STACK_CLASS;
+    private static final Class<?> NMS_COMPONENT_CLASS = ReflectionUtils.getNMSClass("net.minecraft.network.chat.Component");
+    private static final Class<?> CRAFT_CHAT_MESSAGE_CLASS = ReflectionUtils.getOBCClass("util.CraftChatMessage");
+    private static final Class<?> TEXT_TAG_VISITOR_CLASS = ReflectionUtils.getNMSClass("net.minecraft.nbt.TextComponentTagVisitor");
+    private static final Class<?> NBT_TAG_CLASS = ReflectionUtils.getNMSClass("net.minecraft.nbt.Tag");
 
     // Fields/Objects
     private static Object CODEC;
@@ -28,6 +33,8 @@ public class NBTReflection {
     private static Method ENCODE_METHOD;
     private static Method GET_OR_ELSE;
     private static Method CREATE_SERIALIZER_METHOD;
+    private static final Method FROM_COMPONENT;
+    private static final Method VISIT_METHOD;
 
     // Constructors
     private static Constructor<?> NBT_COMPOUND_CONSTRUCTOR;
@@ -65,6 +72,19 @@ public class NBTReflection {
         } catch (NoSuchMethodException | IllegalAccessException | InvocationTargetException e) {
             if (SkBee.isDebug()) e.printStackTrace();
         }
+
+        Method from_comp = null;
+        Method visit = null;
+        try {
+            assert TEXT_TAG_VISITOR_CLASS != null;
+            assert CRAFT_CHAT_MESSAGE_CLASS != null;
+            visit = TEXT_TAG_VISITOR_CLASS.getDeclaredMethod("visit", NBT_TAG_CLASS);
+            from_comp = CRAFT_CHAT_MESSAGE_CLASS.getMethod("fromComponent", NMS_COMPONENT_CLASS);
+        } catch (NoSuchMethodException e) {
+            if (SkBee.isDebug()) e.printStackTrace();
+        }
+        FROM_COMPONENT = from_comp;
+        VISIT_METHOD = visit;
     }
 
     /**
@@ -91,6 +111,31 @@ public class NBTReflection {
             if (SkBee.isDebug()) e.printStackTrace();
             return new NBTContainer();
         }
+    }
+
+    /**
+     * Get a pretty NBT string
+     * <p>This is the same as what vanilla Minecraft outputs when using the '/data' command</p>
+     *
+     * @param compound Compound to convert to pretty
+     * @param split    When null NBT will print on one long line, if not null NBT compound will be
+     *                 split into lines with JSON style, and this string will start each line off
+     *                 (usually spaces)
+     * @return Pretty string of NBTCompound
+     */
+    @SuppressWarnings("deprecation")
+    public static @Nullable String getPrettyNBT(NBTCompound compound, String split) {
+        Object nmsNBT = new NBTContainer(compound.toString()).getCompound();
+        String s = split != null ? split : "";
+        try {
+            Object tagVisitorInstance = TEXT_TAG_VISITOR_CLASS.getConstructor(String.class).newInstance(s);
+            Object prettyComponent = VISIT_METHOD.invoke(tagVisitorInstance, nmsNBT);
+            return ((String) FROM_COMPONENT.invoke(CRAFT_CHAT_MESSAGE_CLASS, prettyComponent));
+        } catch (InstantiationException | IllegalAccessException | NoSuchMethodException |
+                 InvocationTargetException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
 }
