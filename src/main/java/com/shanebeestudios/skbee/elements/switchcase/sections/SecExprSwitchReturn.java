@@ -74,7 +74,7 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
         Class<? extends Event>[] events = new Class[currentEvents.length + 1];
         System.arraycopy(currentEvents, 0, events, 0, currentEvents.length);
         events[currentEvents.length] = SwitchSecEvent.class;
-        this.caseSection = loadCode(sectionNode, "switch section expression", null, events);
+        this.caseSection = loadCode(sectionNode, "switch section expression", null, null, events);
 
         // Search through the section and see if the lines are cases
         for (Node node : sectionNode) {

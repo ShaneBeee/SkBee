@@ -79,7 +79,7 @@ public class EffSecBoundCreate extends EffectSection {
         if (sectionNode != null) {
             AtomicBoolean delayed = new AtomicBoolean(false);
             Runnable afterLoading = () -> delayed.set(!getParser().getHasDelayBefore().isFalse());
-            trigger = loadCode(sectionNode, "bound create", afterLoading, BoundCreateEvent.class);
+            trigger = loadCode(sectionNode, "bound create", null, afterLoading, BoundCreateEvent.class);
             if (delayed.get()) {
                 Skript.error("Delays can't be within a Create Bound section.");
                 return false;

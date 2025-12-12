@@ -82,7 +82,7 @@ public class SkBeeInfo implements BasicCommand {
                 Skript.getAddons().forEach(addon -> {
                     String name = addon.getName();
                     if (!name.contains("SkBee")) {
-                        sendColMsg(sender, "&7- &b" + name + " v" + addon.plugin.getDescription().getVersion());
+                        sendColMsg(sender, "&7- &b" + name + " v" + addon.plugin.getPluginMeta().getVersion());
                     }
                 });
 

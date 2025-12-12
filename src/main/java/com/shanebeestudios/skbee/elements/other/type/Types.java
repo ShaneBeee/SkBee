@@ -270,21 +270,6 @@ public class Types {
             Util.logLoading("You may have to use their ItemFlags in SkBee's syntaxes.");
         }
 
-        if (!Util.IS_RUNNING_SKRIPT_2_11) {
-            if (Classes.getExactClassInfo(EquipmentSlot.class) == null) {
-                EnumWrapper<EquipmentSlot> SLOT_ENUM = new EnumWrapper<>(EquipmentSlot.class, null, "slot");
-                Classes.registerClass(SLOT_ENUM.getClassInfo("equipmentslot")
-                    .user("equipment ?slots?")
-                    .name("Equipment Slot")
-                    .description("Represents different slots of an entity.",
-                        "NOTE: These are auto-generated and may differ between server versions.")
-                    .since("3.4.0"));
-            } else {
-                Util.logLoading("It looks like another addon registered 'slot' already.");
-                Util.logLoading("You may have to use their EquipmentSlot in SkBee's syntaxes.");
-            }
-        }
-
         if (Classes.getExactClassInfo(Action.class) == null) {
             EnumWrapper<Action> ACTION_ENUM = new EnumWrapper<>(Action.class);
             Classes.registerClass(ACTION_ENUM.getClassInfo("blockaction")
@@ -480,8 +465,6 @@ public class Types {
                     .description("Represents the different types of potions (not potion effect types) used in vanilla potion items.")
                     .after("potioneffecttype", "itemtype")
                     .since("3.8.0"));
-
-                SkriptUtils.hackPotionEffectTypeClassInfoPattern();
             }
         } else {
             Util.logLoading("It looks like another addon registered 'potiontype' already.");

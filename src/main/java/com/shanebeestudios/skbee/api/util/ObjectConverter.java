@@ -118,7 +118,7 @@ public abstract class ObjectConverter<T> {
         register(ItemType.class, new ObjectConverter<>() {
             @Override
             public ItemType get(NamespacedKey key) {
-                Material mat = BukkitUnsafe.getMaterialFromMinecraftId(key.toString());
+                Material mat = BukkitUnsafe.getMaterialFromNamespacedId(key.toString());
                 if (mat != null) return new ItemType(mat);
                 return null;
             }
