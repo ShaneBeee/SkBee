@@ -105,7 +105,6 @@ public class AddonLoader {
         loadAdvancementElements();
         loadBossBarElements();
         loadBoundElements();
-        loadDamageSourceElements();
         loadDisplayEntityElements();
         loadFastboardElements();
         loadFishingElements();
@@ -141,7 +140,7 @@ public class AddonLoader {
         }
         if (this.config.ELEMENTS_PROPERTY) {
             int size = PropertyRegistry.properties().size();
-            Util.log(" - %s properties",size);
+            Util.log(" - %s properties", size);
         }
         if (this.config.RUNTIME_DISABLE_ERRORS) {
             Util.logLoading("&eRuntime Errors have been disabled via config!");
@@ -501,27 +500,6 @@ public class AddonLoader {
             Util.logLoading("&5Display Entity Elements &asuccessfully loaded");
         } catch (Exception ex) {
             logFailure("Display Entity", ex);
-        }
-    }
-
-    private void loadDamageSourceElements() {
-        if (!this.config.ELEMENTS_DAMAGE_SOURCE) {
-            Util.logLoading("&5Damage Source Elements &cdisabled via config");
-            return;
-        }
-        if (!Skript.classExists("org.bukkit.damage.DamageSource")) {
-            Util.logLoading("&5Damage Source Elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
-            return;
-        }
-        if (Util.IS_RUNNING_SKRIPT_2_12) {
-            Util.logLoading("&5Damage Source Elements &cdisabled &7(&enow in Skript&7)");
-            return;
-        }
-        try {
-            this.addon.loadClasses("com.shanebeestudios.skbee.elements.damagesource");
-            Util.logLoading("&5Damage Source Elements &asuccessfully loaded");
-        } catch (Exception ex) {
-            logFailure("Damage Source", ex);
         }
     }
 

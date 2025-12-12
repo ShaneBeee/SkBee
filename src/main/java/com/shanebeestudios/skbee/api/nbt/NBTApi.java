@@ -770,8 +770,7 @@ public class NBTApi {
                 try {
                     UUID uuid = compound.getUUID(tag);
                     if (uuid != null) {
-                        if (Util.IS_RUNNING_SKRIPT_2_11) return uuid;
-                        return uuid.toString();
+                        return uuid;
                     }
                 } catch (NbtApiException ignore) {
                 }

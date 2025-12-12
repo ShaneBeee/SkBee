@@ -37,7 +37,6 @@ public class Util {
     public static final String MCWIKI_TICK_COMMAND = "See [**Tick Command**](https://minecraft.wiki/w/Commands/tick) on McWiki for more details.";
 
     // Shortcut for finding stuff to remove later
-    public static final boolean IS_RUNNING_SKRIPT_2_11 = Skript.getVersion().isLargerThan(new Version(2, 10, 999));
     public static final boolean IS_RUNNING_SKRIPT_2_12 = Skript.getVersion().isLargerThan(new Version(2, 11, 999));
     public static final boolean IS_RUNNING_SKRIPT_2_13 = Skript.getVersion().isLargerThan(new Version(2, 12, 999));
     public static final boolean IS_RUNNING_MC_1_21_5 = Skript.isRunningMinecraft(1, 21, 5);
