@@ -69,12 +69,6 @@ public class SkriptTypes {
 
                     @SuppressWarnings("NullableProblems")
                     @Override
-                    public @Nullable Bound deserialize(String s) {
-                        return null;
-                    }
-
-                    @SuppressWarnings("NullableProblems")
-                    @Override
                     protected Bound deserialize(Fields fields) throws StreamCorruptedException {
                         String boundID = fields.getObject("boundID", String.class);
                         Bound bound = SkBee.getPlugin().getBoundConfig().getBoundFromID(boundID);
