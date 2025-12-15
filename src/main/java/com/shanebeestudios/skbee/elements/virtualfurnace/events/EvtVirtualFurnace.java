@@ -137,6 +137,11 @@ public class EvtVirtualFurnace extends SkriptEvent {
     }
 
     @Override
+    public boolean canExecuteAsynchronously() {
+        return true;
+    }
+
+    @Override
     public String toString(@Nullable Event event, boolean debug) {
         String result = switch (event) {
             case FurnaceCookEvent ignored -> "smelt";
