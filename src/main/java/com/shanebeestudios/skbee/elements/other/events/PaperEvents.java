@@ -19,8 +19,8 @@ import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
-import de.tr7zw.changeme.nbtapi.NBTContainer;
 import io.papermc.paper.connection.PlayerGameConnection;
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
@@ -173,7 +173,7 @@ public class PaperEvents extends SimpleEvent {
                 BinaryTagHolder tag = event.getTag();
                 if (tag == null) return null;
 
-                return new NBTContainer(tag.string());
+                return (NBTCompound) NBT.parseNBT(tag.string());
             });
             EventValues.registerEventValue(PlayerCustomClickEvent.class, NamespacedKey.class, event -> NamespacedKey.fromString(event.getIdentifier().asString()));
             EventValues.registerEventValue(PlayerCustomClickEvent.class, String.class, new Converter<>() {
