@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.worldcreator.expressions;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
@@ -10,6 +11,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.Location;
 import org.bukkit.World.Environment;
@@ -47,6 +49,11 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         this.pattern = parseResult.mark;
+        if (this.pattern == 7 && Util.IS_RUNNING_MC_1_21_9) {
+            // Minecraft no longer has spawn chunks starting in 1.21.9
+            Skript.error("'keep spawn loaded' is no longer used by Minecraft.");
+            return false;
+        }
         setExpr((Expression<BeeWorldCreator>) exprs[0]);
         return true;
     }
@@ -54,7 +61,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
     @Nullable
     @Override
     public Object convert(@NotNull BeeWorldCreator creator) {
-        return switch (pattern) {
+        return switch (this.pattern) {
             case 1 -> creator.getWorldType();
             case 2 -> creator.getSeed();
             case 3 -> creator.getGeneratorSettings();
@@ -71,7 +78,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
     @Override
     public Class<?>[] acceptChange(@NotNull ChangeMode mode) {
         if (mode == ChangeMode.SET) {
-            return switch (pattern) {
+            return switch (this.pattern) {
                 case 1 -> CollectionUtils.array(WorldType.class);
                 case 2 -> CollectionUtils.array(Number.class);
                 case 3, 4 -> CollectionUtils.array(String.class);
@@ -89,7 +96,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
         BeeWorldCreator creator = getExpr().getSingle(event);
         if (creator == null) return;
 
-        switch (pattern) {
+        switch (this.pattern) {
             case 1:
                 if (object instanceof WorldType) {
                     creator.setWorldType((WorldType) object);
@@ -144,7 +151,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
 
     @Override
     public @NotNull Class<?> getReturnType() {
-        return switch (pattern) {
+        return switch (this.pattern) {
             case 1 -> WorldType.class;
             case 2 -> Number.class;
             case 3, 4 -> String.class;
@@ -155,7 +162,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
 
     @Override
     protected @NotNull String getPropertyName() {
-        String option = switch (pattern) {
+        String option = switch (this.pattern) {
             case 1 -> "world type";
             case 2 -> "seed";
             case 3 -> "generator settings";
