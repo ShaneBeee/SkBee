@@ -6,12 +6,14 @@ import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.tag.DamageTypeTags;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+@SuppressWarnings({"UnstableApiUsage", "unused"})
 public class ItemProperties {
 
     static {
@@ -28,13 +30,13 @@ public class ItemProperties {
         PropertyRegistry.registerProperty("fire resistant", new Property<>(ItemType.class, Boolean.class) {
                 @Override
                 public Boolean get(ItemType itemType) {
-                    return itemType.getItemMeta().isFireResistant();
+                    return itemType.getItemMeta().getDamageResistant() == DamageTypeTags.IS_FIRE;
                 }
 
                 @Override
                 public void set(ItemType itemType, Boolean value) {
                     ItemMeta itemMeta = itemType.getItemMeta();
-                    itemMeta.setFireResistant(value);
+                    itemMeta.setDamageResistant(DamageTypeTags.IS_FIRE);
                     itemType.setItemMeta(itemMeta);
                 }
             })
