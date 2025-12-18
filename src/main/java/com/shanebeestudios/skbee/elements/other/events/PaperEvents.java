@@ -33,6 +33,7 @@ import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import io.papermc.paper.event.player.PlayerTrackEntityEvent;
 import io.papermc.paper.math.BlockPosition;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
@@ -161,6 +162,7 @@ public class PaperEvents extends SimpleEvent {
                     "",
                     "**Event Values:**",
                     "- `event-[offline]player` = The player/offlineplayer who sent the payload.",
+                    "- `event-audience` = The audience who sent the payload.",
                     "- `event-uuid` = The uuid of the player who sent the payload.`",
                     "- `event-string` = The name of the player (used when a player isn't available yet).",
                     "- `event-namespacedkey` = The key used to identify the custom payload.",
@@ -190,6 +192,15 @@ public class PaperEvents extends SimpleEvent {
                     if (uuid != null) {
                         return Bukkit.getOfflinePlayer(uuid);
                     }
+                }
+                return null;
+            });
+            EventValues.registerEventValue(PlayerCustomClickEvent.class, Audience.class, event -> {
+                PlayerCommonConnection connection = event.getCommonConnection();
+                if (connection instanceof PlayerGameConnection gameConnection)
+                    return gameConnection.getPlayer();
+                else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
+                    return configConnection.getAudience();
                 }
                 return null;
             });
