@@ -51,7 +51,6 @@ public class ExprTaskID extends SimpleExpression<Number> {
     }
 
     private boolean last;
-    private SecRunTaskLater task;
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
@@ -62,7 +61,6 @@ public class ExprTaskID extends SimpleExpression<Number> {
                 Skript.error("Current task ID can only be retrieved in a task section.");
                 return false;
             }
-            this.task = currentSections.getLast();
         }
         return true;
     }
@@ -75,7 +73,7 @@ public class ExprTaskID extends SimpleExpression<Number> {
             if (lastTask != null) id = lastTask.getTaskId();
             return new Number[]{id};
         }
-        return new Number[]{this.task.getCurrentTaskId()};
+        return new Number[]{SecRunTaskLater.getCurrentTaskId(event)};
     }
 
     @Override
