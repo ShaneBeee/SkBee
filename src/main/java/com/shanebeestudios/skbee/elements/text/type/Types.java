@@ -182,17 +182,6 @@ public class Types {
                 .since("3.5.0"));
         }
 
-        ClassInfo<Audience> audienceClassInfo = new ClassInfo<>(Audience.class, "audience")
-            .user("audiences?")
-            .name("TextComponent - Audience")
-            .description("Represents things in Minecraft (players, entities, worlds, console, etc) which can receive media (messages, bossbars, action bars, etc).")
-            .defaultExpression(new EventValueExpression<>(CommandSender.class))
-            .parser(SkriptUtils.getDefaultParser())
-            .after("commandsender", "player", "livingentity", "entity")
-            .since("3.8.0");
-        Classes.registerClass(audienceClassInfo);
-        setupUsage(audienceClassInfo);
-
         // Functions
         Functions.registerFunction(new SimpleJavaFunction<>("resolver", new Parameter[]{
             new Parameter<>("placeholder", DefaultClasses.STRING, true, null),
@@ -243,23 +232,6 @@ public class Types {
                 "\tset {_chatColor} to resolver(\"chatcolor\", raw ({chatcolor::%player%} ? raw \"<gray>\"), true)",
                 "\tset async chat message to mini message from \"<chatcolor>%async chat message%\" with resolver {_chatColor}")
             .since("3.5.0"));
-    }
-
-    @SuppressWarnings("DataFlowIssue")
-    private static void setupUsage(ClassInfo<Audience> audienceClassInfo) {
-        // Make sure all class infos are created before creating usage
-        TaskUtils.getGlobalScheduler().runTaskLater(() -> {
-            List<String> names = new ArrayList<>();
-            Classes.getExactClassInfo(ClassInfo.class).getSupplier().get().forEachRemaining(classInfo -> {
-                if (Audience.class.isAssignableFrom(classInfo.getC()) && classInfo.getC() != Audience.class) {
-                    String docName = classInfo.getDocName();
-                    if (docName != null && !docName.isEmpty()) names.add(docName);
-                }
-            });
-            Collections.sort(names);
-            String usage = String.join(", ", names);
-            audienceClassInfo.usage("Skript Types that are considered audiences:", usage);
-        }, 1);
     }
 
 }

@@ -5,6 +5,7 @@ import ch.njol.skript.bukkitutil.BukkitUtils;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
+import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.Parameter;
@@ -15,6 +16,7 @@ import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
@@ -22,6 +24,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
+import net.kyori.adventure.audience.Audience;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.Color;
 import org.bukkit.EntityEffect;
@@ -33,6 +36,7 @@ import org.bukkit.TreeType;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pose;
 import org.bukkit.entity.Spellcaster;
@@ -52,6 +56,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Map;
 
 @SuppressWarnings({"removal", "deprecation", "UnstableApiUsage"})
@@ -511,6 +518,17 @@ public class Types {
                     .since("3.11.0"));
             }
         }
+
+        ClassInfo<Audience> audienceClassInfo = new ClassInfo<>(Audience.class, "audience")
+            .user("audiences?")
+            .name("TextComponent - Audience")
+            .description("Represents things in Minecraft (players, entities, worlds, console, etc) which can receive media (messages, bossbars, action bars, etc).")
+            .defaultExpression(new EventValueExpression<>(CommandSender.class))
+            .parser(SkriptUtils.getDefaultParser())
+            .after("commandsender", "player", "livingentity", "entity")
+            .since("3.8.0");
+        Classes.registerClass(audienceClassInfo);
+        setupUsage(audienceClassInfo);
     }
 
     // FUNCTIONS
@@ -575,6 +593,23 @@ public class Types {
                 "set {_time} to timespan(3, ticks)",
                 "set {_time} to timespan(1, hour) + timespan(10, minutes)")
             .since("3.9.0"));
+    }
+
+    @SuppressWarnings("DataFlowIssue")
+    private static void setupUsage(ClassInfo<Audience> audienceClassInfo) {
+        // Make sure all class infos are created before creating usage
+        TaskUtils.getGlobalScheduler().runTaskLater(() -> {
+            List<String> names = new ArrayList<>();
+            Classes.getExactClassInfo(ClassInfo.class).getSupplier().get().forEachRemaining(classInfo -> {
+                if (Audience.class.isAssignableFrom(classInfo.getC()) && classInfo.getC() != Audience.class) {
+                    String docName = classInfo.getDocName();
+                    if (docName != null && !docName.isEmpty()) names.add(docName);
+                }
+            });
+            Collections.sort(names);
+            String usage = String.join(", ", names);
+            audienceClassInfo.usage("Skript Types that are considered audiences:", usage);
+        }, 1);
     }
 
 }
