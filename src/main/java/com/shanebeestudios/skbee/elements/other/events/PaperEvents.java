@@ -21,6 +21,8 @@ import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import io.papermc.paper.connection.PlayerCommonConnection;
+import io.papermc.paper.connection.PlayerConfigurationConnection;
 import io.papermc.paper.connection.PlayerGameConnection;
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
@@ -32,20 +34,24 @@ import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import io.papermc.paper.event.player.PlayerTrackEntityEvent;
 import io.papermc.paper.math.BlockPosition;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.skriptlang.skript.lang.converter.Converter;
+
+import java.util.UUID;
 
 @SuppressWarnings({"unused", "unchecked", "UnstableApiUsage"})
 public class PaperEvents extends SimpleEvent {
+
+    private static final boolean HAS_CONFIG = Skript.classExists("io.papermc.paper.connection.PlayerConfigurationConnection");
 
     static {
         // == PLAYER EVENTS == //
@@ -154,9 +160,11 @@ public class PaperEvents extends SimpleEvent {
                     "Requires Paper 1.21.6+",
                     "",
                     "**Event Values:**",
-                    "- `event-nbt` = The nbt compound passed from the custom payload click.",
-                    "- `event-player` = The player who sent the payload.",
-                    "- `event-string/event-namespacedkey` = The key used to identify the custom payload.")
+                    "- `event-[offline]player` = The player/offlineplayer who sent the payload.",
+                    "- `event-uuid` = The uuid of the player who sent the payload.`",
+                    "- `event-string` = The name of the player (used when a player isn't available yet).",
+                    "- `event-namespacedkey` = The key used to identify the custom payload.",
+                    "- `event-nbt` = The nbt compound passed from the custom payload click.")
                 .examples("on custom click:",
                     "\tif event-namespacedkey = \"test:key\":",
                     "\t\tset {_nbt} to event-nbt",
@@ -164,9 +172,34 @@ public class PaperEvents extends SimpleEvent {
                     "\t\tsend \"YourData: %{_blah}%\" to player")
                 .since("3.13.0");
 
-            EventValues.registerEventValue(PlayerCustomClickEvent.class, Player.class, event -> {
-                if (event.getCommonConnection() instanceof PlayerGameConnection connection)
-                    return connection.getPlayer();
+            EventValues.registerEventValue(PlayerCustomClickEvent.class, UUID.class, from -> {
+                PlayerCommonConnection connection = from.getCommonConnection();
+                if (connection instanceof PlayerGameConnection gameConnection) {
+                    return gameConnection.getPlayer().getUniqueId();
+                } else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
+                    return configConnection.getProfile().getId();
+                }
+                return null;
+            });
+            EventValues.registerEventValue(PlayerCustomClickEvent.class, OfflinePlayer.class, event -> {
+                PlayerCommonConnection connection = event.getCommonConnection();
+                if (connection instanceof PlayerGameConnection gameConnection)
+                    return gameConnection.getPlayer();
+                else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
+                    UUID uuid = configConnection.getProfile().getId();
+                    if (uuid != null) {
+                        return Bukkit.getOfflinePlayer(uuid);
+                    }
+                }
+                return null;
+            });
+            EventValues.registerEventValue(PlayerCustomClickEvent.class, String.class, event -> {
+                PlayerCommonConnection connection = event.getCommonConnection();
+                if (connection instanceof PlayerGameConnection gameConnection)
+                    return gameConnection.getPlayer().getName();
+                else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
+                    return configConnection.getProfile().getName();
+                }
                 return null;
             });
             EventValues.registerEventValue(PlayerCustomClickEvent.class, NBTCompound.class, event -> {
@@ -176,12 +209,6 @@ public class PaperEvents extends SimpleEvent {
                 return (NBTCompound) NBT.parseNBT(tag.string());
             });
             EventValues.registerEventValue(PlayerCustomClickEvent.class, NamespacedKey.class, event -> NamespacedKey.fromString(event.getIdentifier().asString()));
-            EventValues.registerEventValue(PlayerCustomClickEvent.class, String.class, new Converter<>() {
-                @Override
-                public @NotNull String convert(PlayerCustomClickEvent event) {
-                    return event.getIdentifier().asString();
-                }
-            });
         }
 
         // UncheckedSignChangeEvent
