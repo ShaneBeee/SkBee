@@ -29,7 +29,15 @@ public class AsyncEvents extends SimpleEvent {
                     "- `event-uuid` = Uuid of the player who is logging in.",
                     "- `event-string` = Name of the player who is logging in.",
                     "- `event-audience` = The audience represented by the connection.")
-                .examples("--TODO--") // TODO add examples
+                .examples("on async player connection configure:",
+                    "\tset {-connect::%event-uuid%} to true",
+                    "",
+                    "\t# Do something",
+                    "",
+                    "\twhile {-connect::%event-uuid%} is set:",
+                    "\t\t# Player login will be halted while we wait for something",
+                    "\t\tsleep thread for 1 tick",
+                    "\t#Player will now connect")
                 .since("INSERT VERSION");
 
             EventValues.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, UUID.class,
