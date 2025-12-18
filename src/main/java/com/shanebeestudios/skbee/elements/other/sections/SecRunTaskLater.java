@@ -117,7 +117,7 @@ public class SecRunTaskLater extends LoopSection {
             Variables.setLocalVariables(event, previousLocalVars.get());
             assert this.first != null;
             TriggerItem.walk(this.first, event);
-            previousLocalVars.set(Variables.copyLocalVariables(event));
+            previousLocalVars.set(Variables.removeLocals(event));
         };
 
         Scheduler<?> scheduler;
