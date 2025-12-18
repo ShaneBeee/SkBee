@@ -74,7 +74,7 @@ public class SecRunTaskLater extends LoopSection {
     }
 
     private static Task<?> LAST_CREATED_TASK = null;
-    private static final Map<Event, Task<?>> TASK_MAP = new HashMap<>();
+    private static final Map<Long, Map<Event, Task<?>>> THREADED_TASK_MAP = new HashMap<>();
     private boolean async;
     private Expression<Timespan> timespan;
     private Expression<?> taskObject;
@@ -118,11 +118,16 @@ public class SecRunTaskLater extends LoopSection {
         AtomicReference<Task<?>> taskRef = new AtomicReference<>();
         AtomicReference<Object> previousLocalVars = new AtomicReference<>(Variables.copyLocalVariables(event));
         Runnable runnable = () -> {
-            Variables.setLocalVariables(event, previousLocalVars.get());
             assert this.first != null;
-            TASK_MAP.put(event, taskRef.get());
-            TriggerItem.walk(this.first, event);
 
+            // Store task fo task ID expression
+            Map<Event, Task<?>> eventTaskMap = new HashMap<>();
+            eventTaskMap.put(event, taskRef.get());
+            THREADED_TASK_MAP.put(Thread.currentThread().threadId(), eventTaskMap);
+
+            // Set local variables and walk trigger
+            Variables.setLocalVariables(event, previousLocalVars.get());
+            TriggerItem.walk(this.first, event);
             previousLocalVars.set(Variables.removeLocals(event));
         };
 
@@ -159,7 +164,8 @@ public class SecRunTaskLater extends LoopSection {
     }
 
     public static int getCurrentTaskId(Event event) {
-        Task<?> task = TASK_MAP.get(event);
+        Map<Event, Task<?>> eventTaskMap = THREADED_TASK_MAP.get(Thread.currentThread().threadId());
+        Task<?> task = eventTaskMap.get(event);
 
         if (task == null || task.isCancelled()) return -1;
         return task.getTaskId();
@@ -185,7 +191,8 @@ public class SecRunTaskLater extends LoopSection {
 
     @Override
     public void exit(Event event) {
-        Task<?> task = TASK_MAP.get(event);
+        Map<Event, Task<?>> eventTaskMap = THREADED_TASK_MAP.get(Thread.currentThread().threadId());
+        Task<?> task = eventTaskMap.get(event);
 
         if (task == null || task.isCancelled()) return;
         task.cancel();
