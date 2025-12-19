@@ -32,6 +32,7 @@ import io.papermc.paper.event.player.PlayerCustomClickEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import io.papermc.paper.event.player.PlayerTrackEntityEvent;
+import io.papermc.paper.event.server.ServerResourcesReloadedEvent;
 import io.papermc.paper.math.BlockPosition;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
@@ -423,6 +424,14 @@ public class PaperEvents extends SimpleEvent {
                 from.getTimeRemaining() / 1_000_000,
                 from.getTimeRemaining()
             });
+
+        // Server Resources Reloaded Event
+        Skript.registerEvent("Server Resources Reloaded", PaperEvents.class, ServerResourcesReloadedEvent.class,
+            "server resources reload[ed]")
+            .description("Called when resources such as datapacks are reloaded (e.g. /minecraft:reload).",
+                "Intended for use to re-register custom recipes, advancements that may be lost during a reload like this.",
+                "This can also be used after SkBriggy commands are loaded (since they appear to wipe recipes).")
+            .since("INSERT VERSION");
     }
 
 }
