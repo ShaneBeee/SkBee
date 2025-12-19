@@ -427,10 +427,21 @@ public class PaperEvents extends SimpleEvent {
 
         // Server Resources Reloaded Event
         Skript.registerEvent("Server Resources Reloaded", PaperEvents.class, ServerResourcesReloadedEvent.class,
-            "server resources reload[ed]")
+                "server resources reload[ed]")
             .description("Called when resources such as datapacks are reloaded (e.g. /minecraft:reload).",
                 "Intended for use to re-register custom recipes, advancements that may be lost during a reload like this.",
                 "This can also be used after SkBriggy commands are loaded (since they appear to wipe recipes).")
+            .examples("function loadRecipes():",
+                "\tregister shaped recipe:",
+                "\t\t...",
+                "",
+                "on skript load:",
+                "\t# Load recipes when the server starts",
+                "\tloadRecipes()",
+                "",
+                "on server resources reload:",
+                "\t# Reload recipes when datapacks get reloaded",
+                "\tloadRecipes()")
             .since("INSERT VERSION");
     }
 
