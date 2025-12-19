@@ -2,6 +2,9 @@ package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
+import ch.njol.skript.util.Version;
+import com.google.common.collect.HashBasedTable;
+import com.google.common.collect.Table;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
@@ -14,6 +17,7 @@ import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bstats.bukkit.Metrics;
+import org.bstats.charts.DrilldownPie;
 import org.bstats.charts.SimplePie;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.permissions.PermissionDefault;
@@ -94,6 +98,50 @@ public class SkBee extends JavaPlugin {
         Metrics metrics = new Metrics(this, 6719);
         metrics.addCustomChart(new SimplePie("skript_version", () -> Skript.getVersion().toString()));
         metrics.addCustomChart(new SimplePie("virtual_furnace", () -> String.valueOf(config.ELEMENTS_VIRTUAL_FURNACE)));
+
+        // New Metrics
+        // Many of these are copied from Skript -> SkriptMetrics.class
+        metrics.addCustomChart(new DrilldownPie("plugin_version_drilldown_pie", () -> {
+            Version version = new Version(this.getPluginMeta().getVersion());
+            Table<String, String, Integer> table = HashBasedTable.create(1,1);
+            table.put(
+                version.getMajor() + "." + version.getMinor(), // upper label
+                version.toString(), // lower label
+                1 // weight
+            );
+            return table.rowMap();
+        }));
+        metrics.addCustomChart(new DrilldownPie("skript_version_drilldown_pie", () -> {
+            Version version = Skript.getVersion();
+            Table<String, String, Integer> table = HashBasedTable.create(1,1);
+            table.put(
+                version.getMajor() + "." + version.getMinor(), // upper label
+                version.toString(), // lower label
+                1 // weight
+            );
+            return table.rowMap();
+        }));
+        metrics.addCustomChart(new DrilldownPie("minecraft_version_drilldown_pie", () -> {
+            Version version = Skript.getMinecraftVersion();
+            Table<String, String, Integer> table = HashBasedTable.create(1,1);
+
+            if (version.getMajor() == 1) {
+                // Minecraft 1.x.x versioning
+                table.put(
+                    version.getMajor() + "." + version.getMinor(), // upper label
+                    version.toString(), // lower label
+                    1 // weight
+                );
+            } else {
+                // Minecraft (year).x.x versioning
+                table.put(
+                    "" + version.getMajor(), // upper label
+                    version.toString(), // lower label
+                    1 // weight
+                );
+            }
+            return table.rowMap();
+        }));
     }
 
     /**
