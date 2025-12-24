@@ -51,7 +51,8 @@ public class EffSleepThread extends Effect {
 
         try {
             Thread.sleep(millis);
-        } catch (InterruptedException ignore) {
+        } catch (InterruptedException ex) {
+            error("InterruptedException: " + ex.getMessage());
         }
     }
 
