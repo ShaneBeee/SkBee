@@ -7,7 +7,6 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.entity.RangedEntity;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
@@ -27,9 +26,7 @@ import org.jetbrains.annotations.Nullable;
 public class EffRangedAttack extends Effect {
 
     static {
-        if (Skript.classExists("com.destroystokyo.paper.entity.RangedEntity")) {
-            Skript.registerEffect(EffRangedAttack.class, "make %livingentity% range attack %livingentities% [with charge %-number%]");
-        }
+        Skript.registerEffect(EffRangedAttack.class, "make %livingentity% range attack %livingentities% [with charge %-number%]");
     }
 
     private Expression<LivingEntity> entity;

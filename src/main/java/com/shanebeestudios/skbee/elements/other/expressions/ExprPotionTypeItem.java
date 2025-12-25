@@ -1,21 +1,20 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
-import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.PotionContents;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("UnstableApiUsage")
 @Name("PotionType of Item")
 @Description({"Get/set/delete the potion type of an item.",
     "This is not the same as the potion effect type, this is the base potion Minecraft uses for the potion items in the creative menu."})
@@ -24,8 +23,6 @@ import org.jetbrains.annotations.Nullable;
     "delete potion type of player's tool"})
 @Since("3.8.1")
 public class ExprPotionTypeItem extends SimplePropertyExpression<Object, PotionType> {
-
-    private static final boolean HAS_COMPONENTS = Skript.classExists("io.papermc.paper.datacomponent.DataComponentType");
 
     static {
         register(ExprPotionTypeItem.class, PotionType.class,
@@ -38,10 +35,9 @@ public class ExprPotionTypeItem extends SimplePropertyExpression<Object, PotionT
         if (itemStack == null) {
             return null;
         }
-        if (HAS_COMPONENTS) {
-            return ItemComponentUtils.getPotionType(itemStack);
-        } else if (itemStack.getItemMeta() instanceof PotionMeta potionMeta) {
-            return potionMeta.getBasePotionType();
+        if (itemStack.hasData(DataComponentTypes.POTION_CONTENTS)) {
+            PotionContents data = itemStack.getData(DataComponentTypes.POTION_CONTENTS);
+            if (data != null) return data.potion();
         }
         return null;
     }
@@ -58,13 +54,11 @@ public class ExprPotionTypeItem extends SimplePropertyExpression<Object, PotionT
         PotionType potionType = delta != null && delta[0] instanceof PotionType pt ? pt : null;
 
         ItemUtils.modifyItems(from, itemStack -> {
-            if (HAS_COMPONENTS) {
-                ItemComponentUtils.setPotionType(itemStack, potionType);
+            if (potionType != null) {
+                PotionContents potionContents = PotionContents.potionContents().potion(potionType).build();
+                itemStack.setData(DataComponentTypes.POTION_CONTENTS, potionContents);
             } else {
-                if (itemStack.getItemMeta() instanceof PotionMeta meta) {
-                    meta.setBasePotionType(potionType);
-                    itemStack.setItemMeta(meta);
-                }
+                itemStack.unsetData(DataComponentTypes.POTION_CONTENTS);
             }
         });
     }

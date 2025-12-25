@@ -72,7 +72,6 @@ import java.util.Map;
 @Since("3.0.0")
 public class SecRecipeShapeless extends Section {
 
-    private static final boolean HAS_CATEGORY = RecipeUtil.HAS_CATEGORY;
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>(); // TODO this will cause errors on lower versions, will fix later
     private static final EntryValidator VALIDATOR;
 
@@ -81,12 +80,10 @@ public class SecRecipeShapeless extends Section {
         builder.addRequiredEntry("id", String.class);
         builder.addRequiredEntry("result", ItemStack.class);
         builder.addOptionalEntry("group", String.class);
-        if (HAS_CATEGORY) {
-            builder.addOptionalEntry("category", String.class);
-            for (CraftingBookCategory value : CraftingBookCategory.values()) {
-                String name = value.name().toLowerCase(Locale.ROOT);
-                CATEGORY_MAP.put(name, value);
-            }
+        builder.addOptionalEntry("category", String.class);
+        for (CraftingBookCategory value : CraftingBookCategory.values()) {
+            String name = value.name().toLowerCase(Locale.ROOT);
+            CATEGORY_MAP.put(name, value);
         }
         builder.addRequiredSection("ingredients");
         VALIDATOR = builder.build();
@@ -111,7 +108,7 @@ public class SecRecipeShapeless extends Section {
         this.result = (Expression<ItemStack>) container.getOptional("result", false);
         if (this.result == null) return false;
         this.group = (Expression<String>) container.getOptional("group", false);
-        this.category = HAS_CATEGORY ? (Expression<String>) container.getOptional("category", false) : null;
+        this.category = (Expression<String>) container.getOptional("category", false);
 
         // Parse the ingredients section
         SectionNode ingredients = container.get("ingredients", SectionNode.class, false);

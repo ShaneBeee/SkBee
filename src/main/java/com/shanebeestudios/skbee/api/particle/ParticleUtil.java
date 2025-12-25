@@ -38,10 +38,8 @@ public class ParticleUtil {
     private static final Map<Particle, String> PARTICLE_NAMES = new HashMap<>();
     private static final boolean HAS_PLAYER_FORCE = Skript.methodExists(Player.class, "spawnParticle",
         Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class);
-    // Added in Minecraft 1.21.4
-    public static final boolean HAS_TRAIL = Skript.classExists("org.bukkit.Particle$Trail");
     // Added in Minecraft 1.21.9
-    public static final boolean HAS_SPELL = Skript.classExists("org.bukkit.Particle$Spell");
+    public static final boolean HAS_SPELL = Util.IS_RUNNING_MC_1_21_9;
 
     static {
         Registry.PARTICLE_TYPE.forEach(particle -> {
@@ -121,7 +119,7 @@ public class ParticleUtil {
             return "number(float)";
         } else if (dataType == Color.class) {
             return "color/bukkitcolor";
-        } else if (HAS_TRAIL && dataType == Particle.Trail.class) {
+        } else if (dataType == Particle.Trail.class) {
             return "trail";
         } else if (HAS_SPELL && dataType == Particle.Spell.class) {
             return "spell";
@@ -184,7 +182,7 @@ public class ParticleUtil {
                     return material.createBlockData();
                 }
             }
-        } else if (HAS_TRAIL && dataType == Particle.Trail.class && data instanceof Particle.Trail) {
+        } else if (dataType == Particle.Trail.class && data instanceof Particle.Trail) {
             return data;
         } else if (HAS_SPELL && dataType == Particle.Spell.class && data instanceof Particle.Spell) {
             return data;

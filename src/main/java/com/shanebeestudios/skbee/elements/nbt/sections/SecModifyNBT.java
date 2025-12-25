@@ -102,7 +102,7 @@ public class SecModifyNBT extends Section {
 
         AtomicBoolean delayed = new AtomicBoolean(false);
         Runnable afterLoading = () -> delayed.set(!getParser().getHasDelayBefore().isFalse());
-        this.trigger = loadCode(sectionNode, "nbt modify", afterLoading, NBTEditEvent.class);
+        this.trigger = loadCode(sectionNode, "nbt modify", null, afterLoading, NBTEditEvent.class);
         if (delayed.get()) {
             Skript.error("Delays can't be used within an NBT Modify Section");
             return false;

@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.api.recipe;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Timespan;
@@ -39,7 +38,6 @@ import java.util.StringJoiner;
  */
 public class RecipeUtil {
 
-    public static final boolean HAS_CATEGORY = Skript.classExists("org.bukkit.inventory.recipe.CraftingBookCategory");
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
 
     static {
@@ -132,9 +130,7 @@ public class RecipeUtil {
         if (!group.isEmpty()) {
             log(" - &7Group: &r\"&6%s&r\"", group);
         }
-        if (HAS_CATEGORY) {
-            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory().name().toLowerCase(Locale.ROOT));
-        }
+        log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory().name().toLowerCase(Locale.ROOT));
         log(" - &7CookTime: &b%s", new Timespan(Timespan.TimePeriod.TICK, recipe.getCookingTime()));
         log(" - &7Experience: &b%s", recipe.getExperience());
         log(" - &7Ingredients: %s", getFancy(recipe.getInputChoice()));
@@ -153,9 +149,7 @@ public class RecipeUtil {
         if (!group.isEmpty()) {
             log(" - &7Group: &r\"&6%s&r\"", group);
         }
-        if (HAS_CATEGORY) {
-            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory().name().toLowerCase(Locale.ROOT));
-        }
+        log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory().name().toLowerCase(Locale.ROOT));
         log(" - &7Ingredients:");
         recipe.getChoiceList().forEach(recipeChoice ->
             log("   - %s", getFancy(recipeChoice)));
@@ -175,9 +169,7 @@ public class RecipeUtil {
         if (!group.isEmpty()) {
             log(" - &7Group: &r\"&6%s&r\"", group);
         }
-        if (HAS_CATEGORY) {
-            log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory().name().toLowerCase(Locale.ROOT));
-        }
+        log(" - &7Category: &r\"&6%s&r\"", recipe.getCategory().name().toLowerCase(Locale.ROOT));
 
         String[] shape = recipe.getShape();
         StringJoiner joiner = new StringJoiner("&r], &r[&d", "&r[&d", "&r]");

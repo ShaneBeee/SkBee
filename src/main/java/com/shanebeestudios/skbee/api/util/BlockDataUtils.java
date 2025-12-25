@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.api.util;
 
-import ch.njol.skript.Skript;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Registry;
@@ -13,8 +12,6 @@ import java.util.List;
 import java.util.Locale;
 
 public class BlockDataUtils {
-
-    private static final boolean HAS_ITEMTYPE = Skript.classExists("org.bukkit.inventory.ItemType");
 
     /**
      * Get an array of BlockData keys/values
@@ -59,21 +56,9 @@ public class BlockDataUtils {
     @SuppressWarnings("deprecation")
     public static @Nullable Material getBlockForm(Material material) {
         if (material.isBlock()) return material;
-        if (HAS_ITEMTYPE) {
-            ItemType itemType = Registry.ITEM.get(material.getKey());
-            if (itemType != null && itemType.hasBlockType()) return itemType.getBlockType().asMaterial();
-            return null;
-        }
-        return switch (material) {
-            case WHEAT_SEEDS -> Material.WHEAT;
-            case POTATO -> Material.POTATOES;
-            case CARROT -> Material.CARROTS;
-            case BEETROOT_SEEDS -> Material.BEETROOTS;
-            case PUMPKIN_SEEDS -> Material.PUMPKIN_STEM;
-            case MELON_SEEDS -> Material.MELON_STEM;
-            case SWEET_BERRIES -> Material.SWEET_BERRY_BUSH;
-            default -> material;
-        };
+        ItemType itemType = Registry.ITEM.get(material.getKey());
+        if (itemType != null && itemType.hasBlockType()) return itemType.getBlockType().asMaterial();
+        return null;
     }
 
     /**
@@ -123,7 +108,7 @@ public class BlockDataUtils {
                 Util.debug("Could not parse block data: %s", newData);
             }
         }
-       return null;
+        return null;
     }
 
 }

@@ -25,7 +25,6 @@ test "SkBee - Chunk Generator":
 		set {_creator} to world creator named "test_world_gen"
 
 	test:
-		set keep spawn loaded option of {_creator} to false
 		set chunk generator of {_creator} to chunk generator with id "test_generator"
 		try:
 			set chunk generator of {_creator} to chunk generator with id "invalid_generator"

@@ -48,7 +48,7 @@ dependencies {
     implementation("fr.mrmicky:fastboard:2.1.5")
 
     // Virtual Furnace
-    implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.1.1")
+    implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.1.2")
 
     // bStats
     implementation("org.bstats:bstats-bukkit:3.1.0")

@@ -27,10 +27,6 @@ test "SkBee - World Creator":
 		set hardcore option of {_creator} to true
 		assert hardcore option of {_creator} = true with "The creator should now be hardcore"
 
-		assert keep spawn loaded option of {_creator} = true with "By default the spawn should be kept loaded"
-		set keep spawn loaded option of {_creator} to false
-		assert keep spawn loaded option of {_creator} = false with "Keep spawn loaded should be set to false"
-
 		# Load test world
 		load world from creator {_creator}
 		set {_w} to world "test_world"

@@ -11,15 +11,17 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import io.papermc.paper.datacomponent.DataComponentType;
+import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("UnstableApiUsage")
 @Name("TextComponent - Item Name")
 @Description({"Get/set the component name of an Item.",
     "`(custom|display) name` = Get/set the `custom_name` component of an item just like you would with Skript's name expression.",
@@ -33,8 +35,6 @@ import org.jetbrains.annotations.Nullable;
     "delete component item name of player's tool"})
 @Since("2.4.0")
 public class ExprItemName extends SimplePropertyExpression<Object, ComponentWrapper> {
-
-    private static final boolean HAS_DATA = Skript.classExists("io.papermc.paper.datacomponent.DataComponentTypes");
 
     static {
         register(ExprItemName.class, ComponentWrapper.class,
@@ -56,14 +56,12 @@ public class ExprItemName extends SimplePropertyExpression<Object, ComponentWrap
     @Override
     public @Nullable ComponentWrapper convert(Object object) {
         Component component = ItemUtils.getValue(object, itemStack -> {
-            if (HAS_DATA) {
-                return ItemComponentUtils.getItemName(itemStack, this.itemName);
+            DataComponentType.Valued<Component> type = this.itemName ? DataComponentTypes.ITEM_NAME : DataComponentTypes.CUSTOM_NAME;
+            if (itemStack.hasData(type)) {
+                return itemStack.getData(type);
             }
-            if (this.itemName) {
-                return itemStack.getItemMeta().itemName();
-            } else {
-                return itemStack.getItemMeta().displayName();
-            }
+            ItemMeta itemMeta = itemStack.getItemMeta();
+            return itemName ? itemMeta.itemName() : itemMeta.displayName();
         });
         if (component == null) return null;
         return ComponentWrapper.fromComponent(component);
@@ -78,19 +76,14 @@ public class ExprItemName extends SimplePropertyExpression<Object, ComponentWrap
 
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        Component component = delta != null && delta[0] instanceof ComponentWrapper comp ? comp.getComponent() : null;
+        Component name = delta != null && delta[0] instanceof ComponentWrapper comp ? comp.getComponent() : null;
 
         ItemUtils.modifyItems(getExpr().getArray(event), itemStack -> {
-            if (HAS_DATA) {
-                ItemComponentUtils.setItemName(itemStack, component, this.itemName);
+            DataComponentType.Valued<Component> type = this.itemName ? DataComponentTypes.ITEM_NAME : DataComponentTypes.CUSTOM_NAME;
+            if (name == null) {
+                itemStack.resetData(type);
             } else {
-                ItemMeta itemMeta = itemStack.getItemMeta();
-                if (this.itemName) {
-                    itemMeta.itemName(component);
-                } else {
-                    itemMeta.displayName(component);
-                }
-                itemStack.setItemMeta(itemMeta);
+                itemStack.setData(type, name);
             }
         });
     }

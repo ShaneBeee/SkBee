@@ -17,4 +17,3 @@ test "SkBee - ExprTranslationKey":
 	testTranslationKey(minecraft:movement_speed, "attribute.name.movement_speed")
 	testTranslationKey(peaceful, "options.difficulty.peaceful")
 	testTranslationKey(creative, "gameMode.creative")
-	testTranslationKey(disableElytraMovementCheck, "gamerule.disableElytraMovementCheck")

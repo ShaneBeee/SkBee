@@ -25,7 +25,9 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
 @Name("Task - Run Task Later")
@@ -72,12 +74,12 @@ public class SecRunTaskLater extends LoopSection {
     }
 
     private static Task<?> LAST_CREATED_TASK = null;
+    private static final Map<Long, Map<Event, Task<?>>> THREADED_TASK_MAP = new HashMap<>();
     private boolean async;
     private Expression<Timespan> timespan;
     private Expression<?> taskObject;
     private Expression<Timespan> repeating;
     private Expression<Object> idStorage;
-    private Task<?> task;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -112,12 +114,21 @@ public class SecRunTaskLater extends LoopSection {
             if (repeatingTimespan != null) repeat = repeatingTimespan.getAs(Timespan.TimePeriod.TICK);
         }
 
+        Task<?> task;
+        AtomicReference<Task<?>> taskRef = new AtomicReference<>();
         AtomicReference<Object> previousLocalVars = new AtomicReference<>(Variables.copyLocalVariables(event));
         Runnable runnable = () -> {
-            Variables.setLocalVariables(event, previousLocalVars.get());
             assert this.first != null;
+
+            // Store task fo task ID expression
+            Map<Event, Task<?>> eventTaskMap = new HashMap<>();
+            eventTaskMap.put(event, taskRef.get());
+            THREADED_TASK_MAP.put(Thread.currentThread().threadId(), eventTaskMap);
+
+            // Set local variables and walk trigger
+            Variables.setLocalVariables(event, previousLocalVars.get());
             TriggerItem.walk(this.first, event);
-            previousLocalVars.set(Variables.copyLocalVariables(event));
+            previousLocalVars.set(Variables.removeLocals(event));
         };
 
         Scheduler<?> scheduler;
@@ -133,27 +144,31 @@ public class SecRunTaskLater extends LoopSection {
         if (scheduler == null) return super.walk(event, false);
 
         if (repeat > 0 && this.async) {
-            this.task = scheduler.runTaskTimerAsync(runnable, delay, repeat);
+            task = scheduler.runTaskTimerAsync(runnable, delay, repeat);
         } else if (repeat > 0) {
-            this.task = scheduler.runTaskTimer(runnable, delay, repeat);
+            task = scheduler.runTaskTimer(runnable, delay, repeat);
         } else if (this.async) {
-            this.task = scheduler.runTaskLaterAsync(runnable, delay);
+            task = scheduler.runTaskLaterAsync(runnable, delay);
         } else {
-            this.task = scheduler.runTaskLater(runnable, delay);
+            task = scheduler.runTaskLater(runnable, delay);
         }
+        taskRef.set(task);
         if (this.idStorage != null) {
-            this.idStorage.change(event, new Integer[]{this.task.getTaskId()}, ChangeMode.SET);
+            this.idStorage.change(event, new Integer[]{task.getTaskId()}, ChangeMode.SET);
             // Re-set the local vars since we've now changed them
             previousLocalVars.set(Variables.copyLocalVariables(event));
         }
-        LAST_CREATED_TASK = this.task;
+        LAST_CREATED_TASK = task;
         if (last != null) last.setNext(null);
         return super.walk(event, false);
     }
 
-    public int getCurrentTaskId() {
-        if (this.task.isCancelled()) return -1;
-        return this.task.getTaskId();
+    public static int getCurrentTaskId(Event event) {
+        Map<Event, Task<?>> eventTaskMap = THREADED_TASK_MAP.get(Thread.currentThread().threadId());
+        Task<?> task = eventTaskMap.get(event);
+
+        if (task == null || task.isCancelled()) return -1;
+        return task.getTaskId();
     }
 
     public static Task<?> getLastCreatedTask() {
@@ -176,7 +191,11 @@ public class SecRunTaskLater extends LoopSection {
 
     @Override
     public void exit(Event event) {
-        this.task.cancel();
+        Map<Event, Task<?>> eventTaskMap = THREADED_TASK_MAP.get(Thread.currentThread().threadId());
+        Task<?> task = eventTaskMap.get(event);
+
+        if (task == null || task.isCancelled()) return;
+        task.cancel();
     }
 
 }

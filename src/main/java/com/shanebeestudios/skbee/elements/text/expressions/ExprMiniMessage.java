@@ -10,7 +10,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -48,25 +47,23 @@ public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
     private Expression<String> string;
     private Expression<TagResolver> resolvers;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (!Skript.classExists("net.kyori.adventure.text.minimessage.MiniMessage")) {
-            Skript.error("It appears MiniMessage isn't available on your server version.", ErrorQuality.SEMANTIC_ERROR);
-            return false;
-        }
         this.string = (Expression<String>) exprs[0];
         this.resolvers = (Expression<TagResolver>) exprs[1];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable ComponentWrapper @Nullable [] get(Event event) {
-        String string = this.string.getSingle(event);
+        String string;
         if (this.string instanceof VariableString variableString) {
             string = variableString.toUnformattedString(event);
+        } else {
+            string = this.string.getSingle(event);
         }
+
         if (string == null) return null;
         TagResolver[] resolvers = this.resolvers != null ? this.resolvers.getArray(event) : null;
         return new ComponentWrapper[]{ComponentWrapper.fromMiniMessage(string, resolvers)};

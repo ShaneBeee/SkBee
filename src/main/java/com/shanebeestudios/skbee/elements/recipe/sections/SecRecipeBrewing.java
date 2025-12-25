@@ -49,22 +49,18 @@ import java.util.List;
 @Since("3.0.0")
 public class SecRecipeBrewing extends Section {
 
-    private static EntryValidator VALIDATOR;
-    private static PotionBrewer POTION_BREWER = null;
+    private static final EntryValidator VALIDATOR;
+    private static final PotionBrewer POTION_BREWER = Bukkit.getPotionBrewer();
 
     static {
-        if (Skript.classExists("io.papermc.paper.potion.PotionMix")) {
-            SimpleEntryValidator builder = SimpleEntryValidator.builder();
-            builder.addRequiredEntry("id", String.class);
-            builder.addRequiredEntry("result", ItemStack.class);
-            builder.addRequiredEntry("ingredient", RecipeChoice.class);
-            builder.addRequiredEntry("input", RecipeChoice.class);
-            POTION_BREWER = Bukkit.getPotionBrewer();
-            VALIDATOR = builder.build();
+        SimpleEntryValidator builder = SimpleEntryValidator.builder();
+        builder.addRequiredEntry("id", String.class);
+        builder.addRequiredEntry("result", ItemStack.class);
+        builder.addRequiredEntry("ingredient", RecipeChoice.class);
+        builder.addRequiredEntry("input", RecipeChoice.class);
+        VALIDATOR = builder.build();
 
-            Skript.registerSection(SecRecipeBrewing.class,
-                "register [a] [new] (brewing recipe|potion mix)");
-        }
+        Skript.registerSection(SecRecipeBrewing.class, "register [a] [new] (brewing recipe|potion mix)");
     }
 
     private Expression<String> id;

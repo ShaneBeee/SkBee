@@ -86,7 +86,7 @@ public class SecSpawnMinecraftEntity extends EffectSection {
         if (sectionNode != null) {
             AtomicBoolean delayed = new AtomicBoolean(false);
             Runnable afterLoading = () -> delayed.set(!getParser().getHasDelayBefore().isFalse());
-            this.trigger = loadCode(sectionNode, "spawn", afterLoading, EffSecSpawn.SpawnEvent.class);
+            this.trigger = loadCode(sectionNode, "spawn", null, afterLoading, EffSecSpawn.SpawnEvent.class);
             if (delayed.get()) {
                 Skript.error("Delays can't be used within a Spawn Effect Section");
                 return false;

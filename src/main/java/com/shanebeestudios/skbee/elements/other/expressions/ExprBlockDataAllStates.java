@@ -40,10 +40,8 @@ import java.util.List;
 public class ExprBlockDataAllStates extends SimpleExpression<BlockData> {
 
     static {
-        if (Skript.classExists("org.bukkit.block.BlockType") && Skript.methodExists(BlockType.class, "createBlockDataStates")) {
-            Skript.registerExpression(ExprBlockDataAllStates.class, BlockData.class, ExpressionType.COMBINED,
-                "[all] [possible] block[ ]data (states|variations) of %itemtypes/blockdatas%");
-        }
+        Skript.registerExpression(ExprBlockDataAllStates.class, BlockData.class, ExpressionType.COMBINED,
+            "[all] [possible] block[ ]data (states|variations) of %itemtypes/blockdatas%");
     }
 
     private Expression<?> objects;

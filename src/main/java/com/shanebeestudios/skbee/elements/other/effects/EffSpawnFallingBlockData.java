@@ -21,14 +21,14 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("Spawn Falling BlockData")
 @Description({"Spawn a falling block data.",
-        "This is a temp effect until Skript properly handles block data with spawning of falling blocks."})
+    "This is a temp effect until Skript properly handles block data with spawning of falling blocks."})
 @Examples("le spawn falling snow[layers=3] above target block of player")
 @Since("2.10.0")
 public class EffSpawnFallingBlockData extends Effect {
 
     static {
         Skript.registerEffect(EffSpawnFallingBlockData.class,
-                "(skbee|le) spawn falling %blockdata% [%directions% %locations%]");
+            "(skbee|le) spawn falling %blockdata% [%directions% %locations%]");
     }
 
     private Expression<BlockData> blockData;
@@ -51,8 +51,8 @@ public class EffSpawnFallingBlockData extends Effect {
 
         for (Location location : this.locations.getArray(event)) {
             World world = location.getWorld();
-            FallingBlock fallingBlock = world.spawnFallingBlock(location, blockData);
-            EffSecSpawn.lastSpawned = fallingBlock;
+            EffSecSpawn.lastSpawned = world.spawn(location, FallingBlock.class,
+                entity -> entity.setBlockData(blockData));
         }
     }
 

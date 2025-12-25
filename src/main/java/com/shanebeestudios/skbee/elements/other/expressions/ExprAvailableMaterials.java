@@ -15,7 +15,6 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.elements.other.type.Types;
 import org.bukkit.EntityEffect;
 import org.bukkit.GameEvent;
 import org.bukkit.GameRule;
@@ -143,11 +142,8 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         Registration.registerRegistry("game events", GameEvent.class, Registry.GAME_EVENT);
         Registration.registerRegistry("minecraft entity[ ]types", EntityType.class, Registry.ENTITY_TYPE);
         Registration.registerRegistry("statistics", Statistic.class, Registry.STATISTIC);
-
-        if (Types.HAS_ARMOR_TRIM) {
-            Registration.registerRegistry("trim materials", TrimMaterial.class, Registry.TRIM_MATERIAL);
-            Registration.registerRegistry("trim patterns", TrimPattern.class, Registry.TRIM_PATTERN);
-        }
+        Registration.registerRegistry("trim materials", TrimMaterial.class, Registry.TRIM_MATERIAL);
+        Registration.registerRegistry("trim patterns", TrimPattern.class, Registry.TRIM_PATTERN);
 
         // Register registries as strings (this may be for types Skript doesn't have)
         Registration.registerStrings("sounds", Registry.SOUNDS);

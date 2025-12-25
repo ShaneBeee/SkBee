@@ -3,12 +3,13 @@ package com.shanebeestudios.skbee.elements.other.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
+import ch.njol.skript.registrations.EventConverter;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.BlockStateBlock;
-import ch.njol.skript.util.Getter;
 import ch.njol.skript.util.Timespan;
+import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.skript.util.slot.Slot;
-import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
+import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -33,7 +34,6 @@ import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntitySpellCastEvent;
-import org.bukkit.event.entity.EntityTeleportEvent;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
@@ -41,11 +41,11 @@ import org.bukkit.event.entity.SpawnerSpawnEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
-import org.bukkit.event.player.PlayerSpawnChangeEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.Locale;
 
@@ -62,13 +62,7 @@ public class OtherEvents extends SimpleEvent {
                 "\t\tcancel event")
             .since("1.5.0");
 
-        EventValues.registerEventValue(EntityBlockInteractEvent.class, Block.class, new Getter<>() {
-            @Nullable
-            @Override
-            public Block get(EntityBlockInteractEvent event) {
-                return event.getBlock();
-            }
-        }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(EntityBlockInteractEvent.class, Block.class, EntityBlockInteractEvent::getBlock, EventValues.TIME_NOW);
 
         // Prepare Anvil Event
         Skript.registerEvent("Anvil Prepare Event", OtherEvents.class, PrepareAnvilEvent.class, "[skbee] anvil prepare")
@@ -85,54 +79,43 @@ public class OtherEvents extends SimpleEvent {
                 "\t\t\t\tset repair cost of event-inventory to 30")
             .since("1.11.0");
 
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Slot.class, new Getter<>() {
+        EventValues.registerEventValue(PrepareAnvilEvent.class, Slot.class, event -> new Slot() {
+            final ItemStack result = event.getResult();
+
+            @Nullable
             @Override
-            public Slot get(PrepareAnvilEvent event) {
-                return new Slot() {
-                    final ItemStack result = event.getResult();
+            public ItemStack getItem() {
+                return result;
+            }
 
-                    @Nullable
-                    @Override
-                    public ItemStack getItem() {
-                        return result;
-                    }
+            @Override
+            public void setItem(@Nullable ItemStack item) {
+                event.setResult(item);
+            }
 
-                    @Override
-                    public void setItem(@Nullable ItemStack item) {
-                        event.setResult(item);
-                    }
+            @Override
+            public int getAmount() {
+                if (result != null) return result.getAmount();
+                return 0;
+            }
 
-                    @Override
-                    public int getAmount() {
-                        if (result != null) return result.getAmount();
-                        return 0;
-                    }
+            @Override
+            public void setAmount(int amount) {
+                if (result != null) result.setAmount(amount);
+            }
 
-                    @Override
-                    public void setAmount(int amount) {
-                        if (result != null) result.setAmount(amount);
-                    }
+            @Override
+            public boolean isSameSlot(@NotNull Slot o) {
+                ItemStack item = o.getItem();
+                return item != null && item.isSimilar(result);
+            }
 
-                    @Override
-                    public boolean isSameSlot(@NotNull Slot o) {
-                        ItemStack item = o.getItem();
-                        return item != null && item.isSimilar(result);
-                    }
-
-                    @Override
-                    public @NotNull String toString(@Nullable Event e, boolean debug) {
-                        return "anvil inventory result slot";
-                    }
-                };
+            @Override
+            public @NotNull String toString(@Nullable Event e, boolean debug) {
+                return "anvil inventory result slot";
             }
         }, EventValues.TIME_NOW);
-
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, new Getter<>() {
-            @Override
-            public Player get(PrepareAnvilEvent event) {
-                return (Player) event.getView().getPlayer();
-            }
-        }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, event -> (Player) event.getView().getPlayer(), EventValues.TIME_NOW);
 
         // Player shear entity event
         Skript.registerEvent("Shear Entity", OtherEvents.class, PlayerShearEntityEvent.class, "[player] shear entity")
@@ -154,35 +137,28 @@ public class OtherEvents extends SimpleEvent {
                 "\t\t\theal event-entity")
             .since("2.5.3");
 
-        EventValues.registerEventValue(EntityChangeBlockEvent.class, BlockData.class, new Getter<>() {
+        EventValues.registerEventValue(EntityChangeBlockEvent.class, BlockData.class, new Converter<>() {
             @Override
-            public @NotNull BlockData get(EntityChangeBlockEvent event) {
+            public @NotNull BlockData convert(EntityChangeBlockEvent event) {
                 return event.getBlockData();
             }
         }, EventValues.TIME_NOW);
 
         // Block Damage Abort Event
-        if (Skript.classExists("org.bukkit.event.block.BlockDamageAbortEvent")) {
-            Skript.registerEvent("Block Damage Abort", OtherEvents.class, BlockDamageAbortEvent.class,
-                    "block damage abort")
-                .description("Called when a player stops damaging a Block. Requires MC 1.18.x+")
-                .examples("on block damage abort:",
-                    "\tsend \"get back to work\"")
-                .since("2.8.3");
+        Skript.registerEvent("Block Damage Abort", OtherEvents.class, BlockDamageAbortEvent.class,
+                "block damage abort")
+            .description("Called when a player stops damaging a Block. Requires MC 1.18.x+")
+            .examples("on block damage abort:",
+                "\tsend \"get back to work\"")
+            .since("2.8.3");
 
-            EventValues.registerEventValue(BlockDamageAbortEvent.class, Player.class, new Getter<>() {
-                @Override
-                public Player get(BlockDamageAbortEvent event) {
-                    return event.getPlayer();
-                }
-            }, EventValues.TIME_NOW);
-        }
+        EventValues.registerEventValue(BlockDamageAbortEvent.class, Player.class, BlockDamageAbortEvent::getPlayer, EventValues.TIME_NOW);
 
         Skript.registerEvent("Entity Air Change", OtherEvents.class, EntityAirChangeEvent.class,
                 "[entity] air change")
             .description("Called when the amount of air an entity has remaining changes.",
-                "\n`event-number` = The amount of air the entity will have left (measured in ticks).",
-                "\n`event-timespan` = The amount of air the entity will have left (as a time span).",
+                "\n`event-number` = The amount of air the entity will have left (measured in ticks) (can be set).",
+                "\n`event-timespan` = The amount of air the entity will have left (as a time span) (can be set).",
                 "\n`past event-number` = The amount of air the entity had left before the event (measured in ticks).",
                 "\n`past event-timespan` = The amount of air the entity had left before the event (as a time span).")
             .examples("on entity air change:",
@@ -190,72 +166,59 @@ public class OtherEvents extends SimpleEvent {
                 "\t\tcancel event")
             .since("2.8.4");
 
-        EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, new Getter<>() {
-            @Override
-            public Number get(EntityAirChangeEvent event) {
-                if (event.getEntity() instanceof LivingEntity livingEntity) return livingEntity.getRemainingAir();
-                return 0;
-            }
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, event -> {
+            if (event.getEntity() instanceof LivingEntity livingEntity) return livingEntity.getRemainingAir();
+            return 0;
         }, EventValues.TIME_PAST);
-
-        EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new Getter<>() {
-            @Override
-            public Timespan get(EntityAirChangeEvent event) {
-                int ticks = 0;
-                if (event.getEntity() instanceof LivingEntity livingEntity) {
-                    ticks = livingEntity.getRemainingAir();
-                }
-                return Timespan.fromTicks(ticks);
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, event -> {
+            int ticks = 0;
+            if (event.getEntity() instanceof LivingEntity livingEntity) {
+                ticks = livingEntity.getRemainingAir();
             }
+            return Timespan.fromTicks(ticks);
         }, EventValues.TIME_PAST);
-
-        EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, new Getter<>() {
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, new EventConverter<>() {
             @Override
-            public Number get(EntityAirChangeEvent event) {
+            public void set(EntityAirChangeEvent event, @Nullable Number value) {
+                int amount = value != null ? value.intValue() : 0;
+                event.setAmount(amount);
+            }
+
+            @Override
+            public Number convert(EntityAirChangeEvent event) {
                 return event.getAmount();
             }
         }, EventValues.TIME_NOW);
-
-        EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new Getter<>() {
+        EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new EventConverter<>() {
             @Override
-            public Timespan get(EntityAirChangeEvent event) {
-                return Timespan.fromTicks(event.getAmount());
+            public void set(EntityAirChangeEvent event, @Nullable Timespan value) {
+                int amount = value != null ? (int) value.getAs(TimePeriod.TICK) : 0;
+                event.setAmount(amount);
+            }
+
+            @Override
+            public Timespan convert(EntityAirChangeEvent event) {
+                return new Timespan(TimePeriod.TICK, event.getAmount());
             }
         }, EventValues.TIME_NOW);
 
-        EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, new Getter<>() {
-            @Override
-            public @Nullable Block get(SpawnerSpawnEvent event) {
-                CreatureSpawner spawner = event.getSpawner();
-                if (spawner == null) return null;
-                return spawner.getBlock();
-            }
+        EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
+            CreatureSpawner spawner = event.getSpawner();
+            if (spawner == null) return null;
+            return spawner.getBlock();
         }, EventValues.TIME_NOW);
 
         // OTHER EVENT VALUES
         // Click Events
-        EventValues.registerEventValue(PlayerInteractEvent.class, BlockFace.class, new Getter<>() {
-            @Override
-            public BlockFace get(PlayerInteractEvent event) {
-                return event.getBlockFace();
-            }
-        }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerInteractEvent.class, BlockFace.class, PlayerInteractEvent::getBlockFace, EventValues.TIME_NOW);
 
         // Projectile Hit Event
-        EventValues.registerEventValue(ProjectileHitEvent.class, BlockFace.class, new Getter<>() {
-            @Override
-            public @Nullable BlockFace get(ProjectileHitEvent event) {
-                return event.getHitBlockFace();
-            }
-        }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(ProjectileHitEvent.class, BlockFace.class, ProjectileHitEvent::getHitBlockFace, EventValues.TIME_NOW);
 
-        EventValues.registerEventValue(BlockPlaceEvent.class, BlockFace.class, new Getter<>() {
-            @Override
-            public @Nullable BlockFace get(BlockPlaceEvent event) {
-                Block placed = event.getBlockPlaced();
-                Block against = event.getBlockAgainst();
-                return against.getFace(placed);
-            }
+        EventValues.registerEventValue(BlockPlaceEvent.class, BlockFace.class, event -> {
+            Block placed = event.getBlockPlaced();
+            Block against = event.getBlockAgainst();
+            return against.getFace(placed);
         }, EventValues.TIME_NOW);
 
         // Entity Spell Cast Event
@@ -268,12 +231,7 @@ public class OtherEvents extends SimpleEvent {
                 "\t\t\tcancel event")
             .since("2.14.0");
 
-        EventValues.registerEventValue(EntitySpellCastEvent.class, Spellcaster.Spell.class, new Getter<>() {
-            @Override
-            public Spellcaster.Spell get(EntitySpellCastEvent event) {
-                return event.getSpell();
-            }
-        }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(EntitySpellCastEvent.class, Spellcaster.Spell.class, EntitySpellCastEvent::getSpell, EventValues.TIME_NOW);
 
         // Entity Shoot Bow Event
         Skript.registerEvent("Entity Shoot Bow", OtherEvents.class, EntityShootBowEvent.class,
@@ -290,54 +248,16 @@ public class OtherEvents extends SimpleEvent {
                 "\t\tgive player 1 of event-item")
             .since("2.16.0");
 
-        EventValues.registerEventValue(EntityShootBowEvent.class, Projectile.class, new Getter<>() {
-            @Override
-            public @Nullable Projectile get(EntityShootBowEvent event) {
-                if (event.getProjectile() instanceof Projectile projectile) return projectile;
-                return null;
-            }
+        EventValues.registerEventValue(EntityShootBowEvent.class, Projectile.class, event -> {
+            if (event.getProjectile() instanceof Projectile projectile) return projectile;
+            return null;
         }, EventValues.TIME_NOW);
-
-        EventValues.registerEventValue(EntityShootBowEvent.class, ItemType.class, new Getter<>() {
-            @Override
-            public @Nullable ItemType get(EntityShootBowEvent event) {
-                ItemStack consumable = event.getConsumable();
-                if (consumable != null) return new ItemType(consumable);
-                return null;
-            }
+        EventValues.registerEventValue(EntityShootBowEvent.class, ItemType.class, event -> {
+            ItemStack consumable = event.getConsumable();
+            if (consumable != null) return new ItemType(consumable);
+            return null;
         }, EventValues.TIME_NOW);
-
-        EventValues.registerEventValue(EntityShootBowEvent.class, ItemStack.class, new Getter<>() {
-            @Override
-            public @Nullable ItemStack get(EntityShootBowEvent event) {
-                return event.getConsumable();
-            }
-        }, EventValues.TIME_NOW);
-
-        // Entity Teleport Event
-        Skript.registerEvent("Entity Teleport", OtherEvents.class, EntityTeleportEvent.class, "entity teleport")
-            .description("Thrown when a non-player entity is teleported from one location to another.",
-                "This may be as a result of natural causes (Enderman, Shulker), pathfinding (Wolf), or commands (/teleport).",
-                "\n`past event-location` = Location teleported from.",
-                "\n`event-location` = Location teleported to.")
-            .examples("on entity teleport:",
-                "\tif event-entity is an enderman:",
-                "\t\tcancel event")
-            .since("2.18.0");
-
-        EventValues.registerEventValue(EntityTeleportEvent.class, Location.class, new Getter<>() {
-            @Override
-            public Location get(EntityTeleportEvent event) {
-                return event.getFrom();
-            }
-        }, EventValues.TIME_PAST);
-
-        EventValues.registerEventValue(EntityTeleportEvent.class, Location.class, new Getter<>() {
-            @Override
-            public Location get(EntityTeleportEvent event) {
-                return event.getTo();
-            }
-        }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(EntityShootBowEvent.class, ItemStack.class, EntityShootBowEvent::getConsumable, EventValues.TIME_NOW);
 
         // Moisture Change Event
         Skript.registerEvent("Moisture Change", OtherEvents.class, MoistureChangeEvent.class, "moisture change")
@@ -347,9 +267,9 @@ public class OtherEvents extends SimpleEvent {
                 "\tset event-block to farmland[moisture=7]")
             .since("3.0.0");
 
-        EventValues.registerEventValue(MoistureChangeEvent.class, Block.class, new Getter<>() {
+        EventValues.registerEventValue(MoistureChangeEvent.class, Block.class, new Converter<>() {
             @Override
-            public @NotNull Block get(MoistureChangeEvent event) {
+            public @NotNull Block convert(MoistureChangeEvent event) {
                 return new BlockStateBlock(event.getNewState());
             }
         }, EventValues.TIME_FUTURE);
@@ -365,31 +285,18 @@ public class OtherEvents extends SimpleEvent {
             .examples("")
             .since("3.2.0");
 
-        EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, new Getter<>() {
+        EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, event -> event.getBlock().getBlockData(), EventValues.TIME_NOW);
+        EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, new Converter<>() {
             @Override
-            public BlockData get(BlockExplodeEvent event) {
-                return event.getBlock().getBlockData();
-            }
-        }, EventValues.TIME_NOW);
-
-        EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, new Getter<>() {
-            @Override
-            public @NotNull BlockData get(BlockExplodeEvent event) {
+            public @NotNull BlockData convert(BlockExplodeEvent event) {
                 BlockState explodedBlockState = event.getExplodedBlockState();
                 return explodedBlockState.getBlockData();
             }
         }, EventValues.TIME_PAST);
-
-        EventValues.registerEventValue(BlockExplodeEvent.class, ItemType.class, new Getter<>() {
+        EventValues.registerEventValue(BlockExplodeEvent.class, ItemType.class, event -> new ItemType(event.getBlock().getType()), EventValues.TIME_NOW);
+        EventValues.registerEventValue(BlockExplodeEvent.class, ItemType.class, new Converter<>() {
             @Override
-            public ItemType get(BlockExplodeEvent event) {
-                return new ItemType(event.getBlock().getType());
-            }
-        }, EventValues.TIME_NOW);
-
-        EventValues.registerEventValue(BlockExplodeEvent.class, ItemType.class, new Getter<>() {
-            @Override
-            public @NotNull ItemType get(BlockExplodeEvent event) {
+            public @NotNull ItemType convert(BlockExplodeEvent event) {
                 BlockState explodedBlockState = event.getExplodedBlockState();
                 return new ItemType(explodedBlockState.getType());
             }
@@ -405,26 +312,9 @@ public class OtherEvents extends SimpleEvent {
                 "\tkill event-entity")
             .since("3.2.0");
 
-        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, new Getter<>() {
-            @Override
-            public Entity get(PlayerLeashEntityEvent event) {
-                return event.getEntity();
-            }
-        }, EventValues.TIME_NOW);
-
-        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, new Getter<>() {
-            @Override
-            public Entity get(PlayerLeashEntityEvent event) {
-                return event.getLeashHolder();
-            }
-        }, EventValues.TIME_FUTURE);
-
-        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Player.class, new Getter<>() {
-            @Override
-            public Player get(PlayerLeashEntityEvent event) {
-                return event.getPlayer();
-            }
-        }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getEntity, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getLeashHolder, EventValues.TIME_FUTURE);
+        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Player.class, PlayerLeashEntityEvent::getPlayer, EventValues.TIME_NOW);
 
         Skript.registerEvent("Entity Unleash", OtherEvents.class, EntityUnleashEvent.class, "entity unleash")
             .description("Called immediately prior to an entity being unleashed.",
@@ -440,95 +330,48 @@ public class OtherEvents extends SimpleEvent {
                 "\t\t\tcancel event")
             .since("3.2.0");
 
-        EventValues.registerEventValue(EntityUnleashEvent.class, String.class, new Getter<>() {
-            @Override
-            public String get(EntityUnleashEvent event) {
-                return event.getReason().name().toLowerCase(Locale.ROOT);
-            }
-        }, EventValues.TIME_NOW);
-
-        EventValues.registerEventValue(EntityUnleashEvent.class, Player.class, new Getter<>() {
-            @Override
-            public @Nullable Player get(EntityUnleashEvent event) {
-                if (event instanceof PlayerUnleashEntityEvent playerUnleashEntityEvent)
-                    return playerUnleashEntityEvent.getPlayer();
-                return null;
-            }
+        EventValues.registerEventValue(EntityUnleashEvent.class, String.class, event -> event.getReason().name().toLowerCase(Locale.ROOT), EventValues.TIME_NOW);
+        EventValues.registerEventValue(EntityUnleashEvent.class, Player.class, event -> {
+            if (event instanceof PlayerUnleashEntityEvent playerUnleashEntityEvent)
+                return playerUnleashEntityEvent.getPlayer();
+            return null;
         }, EventValues.TIME_NOW);
 
         // Entity Remove Event
-        Class<? extends Event> eventClass = null;
-        boolean bukkitRemoveEvent = false;
-        if (Skript.classExists("org.bukkit.event.entity.EntityRemoveEvent")) {
-            eventClass = EntityRemoveEvent.class;
-            bukkitRemoveEvent = true;
-        } else if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent")) {
-            eventClass = EntityRemoveFromWorldEvent.class;
-        }
-        if (eventClass != null) {
-            Skript.registerEvent("Entity Remove from World", OtherEvents.class, eventClass,
-                    "entity remove[d] [from world]")
-                .description("Fired any time an entity is being removed from a world for any reason.",
-                    "Requires a PaperMC server or Spigot 1.20.4+ server.",
-                    "`event-entityremovecause` = The reason the entity was removed (requires MC 1.20.4+).")
-                .examples("on entity removed from world:",
-                    "\tbroadcast \"a lonely %event-entity% left the world.\"")
-                .since("2.7.2");
+        Skript.registerEvent("Entity Remove from World", OtherEvents.class, EntityRemoveEvent.class,
+                "entity remove[d] [from world]")
+            .description("Fired any time an entity is being removed from a world for any reason.",
+                "Requires a PaperMC server or Spigot 1.20.4+ server.",
+                "`event-entityremovecause` = The reason the entity was removed (requires MC 1.20.4+).")
+            .examples("on entity removed from world:",
+                "\tbroadcast \"a lonely %event-entity% left the world.\"")
+            .since("2.7.2");
 
-            if (bukkitRemoveEvent) {
-                EventValues.registerEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class, new Getter<>() {
-                    @Override
-                    public EntityRemoveEvent.Cause get(EntityRemoveEvent event) {
-                        return event.getCause();
-                    }
-                }, EventValues.TIME_NOW);
-            }
-        }
+        EventValues.registerEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class, EntityRemoveEvent::getCause, EventValues.TIME_NOW);
 
         // Player Spawn Change Event
-        if (Skript.classExists("org.bukkit.event.player.PlayerSpawnChangeEvent")) {
-            Skript.registerEvent("Player Spawn Change", OtherEvents.class, PlayerSpawnChangeEvent.class, "player spawn change")
-                .description("This event is fired when the spawn point of the player is changed.")
-                .examples("on player spawn change:",
-                    "\tif event-playerspawnchangereason = bed or respawn_anchor:",
-                    "\t\tcancel event",
-                    "\t\tsend \"Nope... sorry!\"")
-                .since("3.4.0");
+        Skript.registerEvent("Player Spawn Change", OtherEvents.class, PlayerSetSpawnEvent.class, "player spawn change")
+            .description("This event is fired when the spawn point of the player is changed.")
+            .examples("on player spawn change:",
+                "\tif event-playerspawnchangereason = bed or respawn_anchor:",
+                "\t\tcancel event",
+                "\t\tsend \"Nope... sorry!\"")
+            .since("3.4.0");
 
-            EventValues.registerEventValue(PlayerSpawnChangeEvent.class, PlayerSpawnChangeEvent.Cause.class, new Getter<>() {
-                @Override
-                public PlayerSpawnChangeEvent.Cause get(PlayerSpawnChangeEvent event) {
-                    return event.getCause();
-                }
-            }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerSetSpawnEvent.class, PlayerSetSpawnEvent.Cause.class, PlayerSetSpawnEvent::getCause, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerSetSpawnEvent.class, Location.class, event -> event.getPlayer().getRespawnLocation(), EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerSetSpawnEvent.class, Location.class, PlayerSetSpawnEvent::getLocation, EventValues.TIME_FUTURE);
 
-            EventValues.registerEventValue(PlayerSpawnChangeEvent.class, Location.class, new Getter<>() {
-                @SuppressWarnings("deprecation")
-                @Override
-                public @Nullable Location get(PlayerSpawnChangeEvent event) {
-                    return event.getPlayer().getBedSpawnLocation();
-                }
-            }, EventValues.TIME_NOW);
+        // Unknown Command Event
+        Skript.registerEvent("Unknown Command", OtherEvents.class, UnknownCommandEvent.class, "unknown command")
+            .description("This event is fired when a player executes a command that is not defined.",
+                "`event-string` = The command that was sent.",
+                "`event-sender/player` = Who sent the command.")
+            .examples("")
+            .since("3.10.0");
 
-            EventValues.registerEventValue(PlayerSpawnChangeEvent.class, Location.class, new Getter<>() {
-                @Override
-                public @Nullable Location get(PlayerSpawnChangeEvent event) {
-                    return event.getNewSpawn();
-                }
-            }, EventValues.TIME_FUTURE);
-        }
-
-        if (Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) {
-            Skript.registerEvent("Unknown Command", OtherEvents.class, UnknownCommandEvent.class, "unknown command")
-                .description("This event is fired when a player executes a command that is not defined.",
-                    "`event-string` = The command that was sent.",
-                    "`event-sender/player` = Who sent the command.")
-                .examples("")
-                .since("3.10.0");
-
-            EventValues.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
-            EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);
-        }
+        EventValues.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
+        EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);
     }
 
 }

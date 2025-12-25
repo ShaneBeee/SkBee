@@ -10,7 +10,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.elements.other.type.Types;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
@@ -21,21 +20,19 @@ import org.jetbrains.annotations.Nullable;
 @Name("ArmorTrim - Create")
 @Description("Create a new armor trim to be applied to an item. Requires MC 1.19.4+")
 @Examples({"set {_trim} to armor trim using gold_material with eye_pattern",
-        "add armor trim using gold_material with eye_pattern to armor trim of player's helmet"})
+    "add armor trim using gold_material with eye_pattern to armor trim of player's helmet"})
 @Since("2.13.0")
 public class ExprArmorTrim extends SimpleExpression<ArmorTrim> {
 
     static {
-        if (Types.HAS_ARMOR_TRIM) {
-            Skript.registerExpression(ExprArmorTrim.class, ArmorTrim.class, ExpressionType.COMBINED,
-                    "[new] armor trim (of|from|using) %trimmaterial% (and|with) %trimpattern%");
-        }
+        Skript.registerExpression(ExprArmorTrim.class, ArmorTrim.class, ExpressionType.COMBINED,
+            "[new] armor trim (of|from|using) %trimmaterial% (and|with) %trimpattern%");
     }
 
     private Expression<TrimMaterial> trimMaterial;
     private Expression<TrimPattern> trimPattern;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.trimMaterial = (Expression<TrimMaterial>) exprs[0];
@@ -43,7 +40,6 @@ public class ExprArmorTrim extends SimpleExpression<ArmorTrim> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable ArmorTrim[] get(Event event) {
         TrimMaterial trimMaterial = this.trimMaterial.getSingle(event);

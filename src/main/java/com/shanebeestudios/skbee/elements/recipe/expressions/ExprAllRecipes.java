@@ -24,16 +24,14 @@ import java.util.List;
 
 @Name("Recipe - All Recipes")
 @Description({"Get a list of all recipes. May be from a specific item, may be just Minecraft recipes or custom recipes.",
-        "Due to some items having more than 1 recipe this may return multiple recipes. Requires 1.13+"})
+    "Due to some items having more than 1 recipe this may return multiple recipes. Requires 1.13+"})
 @Examples("set {_recipes::*} to all recipes of iron ingot")
 @Since("1.4.0")
 public class ExprAllRecipes extends SimpleExpression<String> {
 
     static {
-        if (Skript.classExists("org.bukkit.Keyed")) {
-            Skript.registerExpression(ExprAllRecipes.class, String.class, ExpressionType.COMBINED,
-                    "[(all [[of] the]|the)] [(1:(mc|minecraft)|2:custom)] recipe[s] [(for|of) %-itemtypes%]");
-        }
+        Skript.registerExpression(ExprAllRecipes.class, String.class, ExpressionType.COMBINED,
+            "[(all [[of] the]|the)] [(1:(mc|minecraft)|2:custom)] recipe[s] [(for|of) %-itemtypes%]");
     }
 
     private int pattern;

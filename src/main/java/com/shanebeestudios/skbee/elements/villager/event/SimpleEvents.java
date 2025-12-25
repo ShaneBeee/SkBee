@@ -36,22 +36,20 @@ public class SimpleEvents extends SimpleEvent {
             return null;
         }, EventValues.TIME_NOW);
 
-        if (Skript.classExists("io.papermc.paper.event.player.PlayerPurchaseEvent")) {
-            Skript.registerEvent("Player Purchase", SimpleEvents.class, PlayerPurchaseEvent.class,
-                    "player purchase")
-                .description("Called when a player trades with a standalone merchant/villager GUI. Requires PaperMC.")
-                .examples("on player purchase:",
-                    "\tignite event-entity for 1 minute")
-                .since("1.17.1");
+        Skript.registerEvent("Player Purchase", SimpleEvents.class, PlayerPurchaseEvent.class,
+                "player purchase")
+            .description("Called when a player trades with a standalone merchant/villager GUI. Requires PaperMC.")
+            .examples("on player purchase:",
+                "\tignite event-entity for 1 minute")
+            .since("1.17.1");
 
-            EventValues.registerEventValue(PlayerPurchaseEvent.class, MerchantRecipe.class, PlayerPurchaseEvent::getTrade, EventValues.TIME_NOW);
-            EventValues.registerEventValue(PlayerPurchaseEvent.class, Entity.class, event -> {
-                if (event instanceof PlayerTradeEvent tradeEvent) {
-                    return tradeEvent.getVillager();
-                }
-                return null;
-            }, EventValues.TIME_NOW);
-        }
+        EventValues.registerEventValue(PlayerPurchaseEvent.class, MerchantRecipe.class, PlayerPurchaseEvent::getTrade, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerPurchaseEvent.class, Entity.class, event -> {
+            if (event instanceof PlayerTradeEvent tradeEvent) {
+                return tradeEvent.getVillager();
+            }
+            return null;
+        }, EventValues.TIME_NOW);
     }
 
 }
