@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.property.properties;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
@@ -44,53 +43,51 @@ public class ItemProperties {
             .examples("set fire resistant property of {_i} to true")
             .since("3.10.0");
 
-        if (Skript.classExists("org.bukkit.inventory.ItemRarity")) {
-            List<String> rarityNames = new ArrayList<>();
-            for (ItemRarity value : ItemRarity.values()) {
-                rarityNames.add("\"" + value.name().toLowerCase(Locale.ROOT) + "\"");
-            }
-            PropertyRegistry.registerProperty("item rarity", new Property<>(ItemType.class, String.class) {
-                    @SuppressWarnings("DataFlowIssue")
-                    @Override
-                    public @Nullable String get(ItemType itemType) {
-                        ItemMeta itemMeta = itemType.getItemMeta();
-                        ItemRarity rarity;
-                        if (itemMeta.hasRarity()) {
-                            rarity = itemMeta.getRarity();
-                        } else {
-                            rarity = itemType.getMaterial().asItemType().getItemRarity();
-                        }
-                        if (rarity == null) return null;
-                        return rarity.toString().toLowerCase(Locale.ROOT);
-                    }
-
-                    @Override
-                    public void set(ItemType itemType, String value) {
-                        ItemRarity itemRarity;
-                        try {
-                            itemRarity = ItemRarity.valueOf(value.toUpperCase(Locale.ROOT));
-                        } catch (IllegalArgumentException ignore) {
-                            itemRarity = ItemRarity.COMMON;
-                        }
-                        ItemMeta itemMeta = itemType.getItemMeta();
-                        itemMeta.setRarity(itemRarity);
-                        itemType.setItemMeta(itemMeta);
-                    }
-
-                    @Override
-                    public void delete(ItemType itemType) {
-                        ItemMeta itemMeta = itemType.getItemMeta();
-                        itemMeta.setRarity(null);
-                        itemType.setItemMeta(itemMeta);
-                    }
-                })
-                .description("Represents the different item rarities of an item (represented as a string).",
-                    "Options are: " + String.join(", ", rarityNames), "Requires MC 1.20.5+")
-                .examples("set item rarity property of player's tool to \"uncommon\"",
-                    "set {_rarity} to item rarity property of player's tool",
-                    "if item rarity property of player's tool = \"epic\":")
-                .since("3.10.0");
+        List<String> rarityNames = new ArrayList<>();
+        for (ItemRarity value : ItemRarity.values()) {
+            rarityNames.add("\"" + value.name().toLowerCase(Locale.ROOT) + "\"");
         }
+        PropertyRegistry.registerProperty("item rarity", new Property<>(ItemType.class, String.class) {
+                @SuppressWarnings("DataFlowIssue")
+                @Override
+                public @Nullable String get(ItemType itemType) {
+                    ItemMeta itemMeta = itemType.getItemMeta();
+                    ItemRarity rarity;
+                    if (itemMeta.hasRarity()) {
+                        rarity = itemMeta.getRarity();
+                    } else {
+                        rarity = itemType.getMaterial().asItemType().getItemRarity();
+                    }
+                    if (rarity == null) return null;
+                    return rarity.toString().toLowerCase(Locale.ROOT);
+                }
+
+                @Override
+                public void set(ItemType itemType, String value) {
+                    ItemRarity itemRarity;
+                    try {
+                        itemRarity = ItemRarity.valueOf(value.toUpperCase(Locale.ROOT));
+                    } catch (IllegalArgumentException ignore) {
+                        itemRarity = ItemRarity.COMMON;
+                    }
+                    ItemMeta itemMeta = itemType.getItemMeta();
+                    itemMeta.setRarity(itemRarity);
+                    itemType.setItemMeta(itemMeta);
+                }
+
+                @Override
+                public void delete(ItemType itemType) {
+                    ItemMeta itemMeta = itemType.getItemMeta();
+                    itemMeta.setRarity(null);
+                    itemType.setItemMeta(itemMeta);
+                }
+            })
+            .description("Represents the different item rarities of an item (represented as a string).",
+                "Options are: " + String.join(", ", rarityNames), "Requires MC 1.20.5+")
+            .examples("set item rarity property of player's tool to \"uncommon\"",
+                "set {_rarity} to item rarity property of player's tool",
+                "if item rarity property of player's tool = \"epic\":")
+            .since("3.10.0");
 
         PropertyRegistry.registerProperty("unbreakable", new Property<>(ItemType.class, Boolean.class) {
                 @Override

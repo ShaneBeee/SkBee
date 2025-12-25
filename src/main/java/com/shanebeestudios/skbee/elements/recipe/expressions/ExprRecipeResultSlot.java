@@ -38,7 +38,6 @@ import org.jetbrains.annotations.Nullable;
 @Since("3.6.1")
 public class ExprRecipeResultSlot extends SimpleExpression<Slot> {
 
-    public static final boolean HAS_CRAFTER_RECIPE = Skript.classExists("org.bukkit.event.block.CrafterCraftEvent");
 
     static {
         Skript.registerExpression(ExprRecipeResultSlot.class, Slot.class, ExpressionType.SIMPLE,
@@ -49,7 +48,7 @@ public class ExprRecipeResultSlot extends SimpleExpression<Slot> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         ParserInstance parser = getParser();
-        if (HAS_CRAFTER_RECIPE && parser.isCurrentEvent(CrafterCraftEvent.class)) {
+        if (parser.isCurrentEvent(CrafterCraftEvent.class)) {
             return true;
         } else if (parser.isCurrentEvent(CraftItemEvent.class, PrepareItemCraftEvent.class)) {
             return true;
@@ -62,7 +61,7 @@ public class ExprRecipeResultSlot extends SimpleExpression<Slot> {
     @Override
     protected Slot @Nullable [] get(Event event) {
         Slot slot = null;
-        if (HAS_CRAFTER_RECIPE && event instanceof CrafterCraftEvent craftEvent) {
+        if (event instanceof CrafterCraftEvent craftEvent) {
             slot = new Slot() {
                 @Override
                 public @NotNull ItemStack getItem() {
@@ -97,7 +96,6 @@ public class ExprRecipeResultSlot extends SimpleExpression<Slot> {
                     return "crafter craft event result slot";
                 }
             };
-            //} else if (event instanceof CraftItemEvent craftItemEvent) {
         } else if (event instanceof InventoryEvent invEvent && invEvent.getInventory() instanceof CraftingInventory craftingInventory) {
             slot = new Slot() {
                 @Override

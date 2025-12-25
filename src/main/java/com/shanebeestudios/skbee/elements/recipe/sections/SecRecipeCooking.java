@@ -90,11 +90,9 @@ public class SecRecipeCooking extends Section {
         builder.addOptionalEntry("group", String.class);
         builder.addOptionalEntry("cooktime", Timespan.class);
         builder.addOptionalEntry("experience", Number.class);
-        if (RecipeUtil.HAS_CATEGORY) {
-            builder.addOptionalEntry("category", String.class);
-            for (CookingBookCategory category : CookingBookCategory.values()) {
-                CATEGORY_MAP.put(category.toString().toLowerCase(Locale.ROOT), category);
-            }
+        builder.addOptionalEntry("category", String.class);
+        for (CookingBookCategory category : CookingBookCategory.values()) {
+            CATEGORY_MAP.put(category.toString().toLowerCase(Locale.ROOT), category);
         }
         VALIDATOR = builder.build();
 

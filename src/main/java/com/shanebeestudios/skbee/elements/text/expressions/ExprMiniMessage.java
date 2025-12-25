@@ -10,7 +10,6 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
@@ -51,10 +50,6 @@ public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
     @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (!Skript.classExists("net.kyori.adventure.text.minimessage.MiniMessage")) {
-            Skript.error("It appears MiniMessage isn't available on your server version.", ErrorQuality.SEMANTIC_ERROR);
-            return false;
-        }
         this.string = (Expression<String>) exprs[0];
         this.resolvers = (Expression<TagResolver>) exprs[1];
         return true;

@@ -134,7 +134,7 @@ public class Types {
             })
         );
 
-        if (Skript.classExists("net.kyori.adventure.chat.SignedMessage") && Classes.getExactClassInfo(SignedMessage.class) == null) {
+        if (Classes.getExactClassInfo(SignedMessage.class) == null) {
             Classes.registerClass(new ClassInfo<>(SignedMessage.class, "signedmessage")
                 .user("signed ?messages?")
                 .name("Signed Chat Message")

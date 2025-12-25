@@ -42,7 +42,7 @@ import java.util.Map;
  *
  * @param <T> {@link ClassInfo} class for conversion type
  */
-@SuppressWarnings({"deprecation", "UnstableApiUsage", "NullableProblems"})
+@SuppressWarnings({"deprecation", "NullableProblems"})
 public abstract class ObjectConverter<T> {
 
     private static final Map<Class<?>, ObjectConverter<?>> CONVERTERS = new HashMap<>();
@@ -99,9 +99,7 @@ public abstract class ObjectConverter<T> {
         });
         register(Attribute.class, Registry.ATTRIBUTE);
         register(Biome.class, Registry.BIOME);
-        if (Skript.classExists("org.bukkit.damage.DamageType")) {
-            register(DamageType.class, Registry.DAMAGE_TYPE);
-        }
+        register(DamageType.class, Registry.DAMAGE_TYPE);
         register(Enchantment.class, Registry.ENCHANTMENT);
         register(EntityData.class, new ObjectConverter<>() {
             @Override
@@ -131,10 +129,7 @@ public abstract class ObjectConverter<T> {
             }
         });
         register(MusicInstrument.class, Registry.INSTRUMENT);
-        // Added in Spigot 1.20.2 (oct 20/2023)
-        if (Skript.methodExists(Particle.class, "getKey")) {
-            register(Particle.class, Registry.PARTICLE_TYPE);
-        }
+        register(Particle.class, Registry.PARTICLE_TYPE);
         register(PotionEffectType.class, new ObjectConverter<>() {
             @SuppressWarnings("deprecation")
             @Override

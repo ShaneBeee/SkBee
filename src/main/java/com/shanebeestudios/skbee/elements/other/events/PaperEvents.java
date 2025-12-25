@@ -229,8 +229,7 @@ public class PaperEvents extends SimpleEvent {
                 .description("Called when a client attempts to modify a sign, but the location at which the sign should be edited has not yet been checked for the existence of a real sign.",
                     "This event is used for client side sign changes.",
                     "`event-text components` = The lines from the sign (will include all 4 lines, reglardless if they were changed).",
-                    "`event-location` = The location of the client side sign block.",
-                    "`event-")
+                    "`event-location` = The location of the client side sign block.")
                 .examples("")
                 .since("3.11.3");
 
@@ -304,40 +303,36 @@ public class PaperEvents extends SimpleEvent {
         // == BLOCK EVENTS == //
 
         // EntityInsideBlockEvent
-        if (Skript.classExists("io.papermc.paper.event.entity.EntityInsideBlockEvent")) {
-            Skript.registerEvent("Entity Inside Block", PaperEvents.class, EntityInsideBlockEvent.class, "entity inside block")
-                .description("Called when an entity enters the hitbox of a block.",
-                    "Only called for blocks that react when an entity is inside.",
-                    "If cancelled, any action that would have resulted from that entity being in the block will not happen (such as extinguishing an entity in a cauldron).",
-                    "Currently called for: Big dripleaf, Bubble column, Buttons, Cactus, Campfire, Cauldron, Crops, Ender Portal, Fires, Frogspawn, Honey, Hopper, Detector rails,",
-                    "Nether portals, Pitcher crop, Powdered snow, Pressure plates, Sweet berry bush, Tripwire, Waterlily, Web, Wither rose")
-                .examples("on entity inside block:",
-                    "\tif event-block is a cactus:",
-                    "\t\tcancel event",
-                    "\t\tbroadcast \"OUCHIE\"")
-                .since("3.4.0");
+        Skript.registerEvent("Entity Inside Block", PaperEvents.class, EntityInsideBlockEvent.class, "entity inside block")
+            .description("Called when an entity enters the hitbox of a block.",
+                "Only called for blocks that react when an entity is inside.",
+                "If cancelled, any action that would have resulted from that entity being in the block will not happen (such as extinguishing an entity in a cauldron).",
+                "Currently called for: Big dripleaf, Bubble column, Buttons, Cactus, Campfire, Cauldron, Crops, Ender Portal, Fires, Frogspawn, Honey, Hopper, Detector rails,",
+                "Nether portals, Pitcher crop, Powdered snow, Pressure plates, Sweet berry bush, Tripwire, Waterlily, Web, Wither rose")
+            .examples("on entity inside block:",
+                "\tif event-block is a cactus:",
+                "\t\tcancel event",
+                "\t\tbroadcast \"OUCHIE\"")
+            .since("3.4.0");
 
-            EventValues.registerEventValue(EntityInsideBlockEvent.class, Block.class, EntityInsideBlockEvent::getBlock, EventValues.TIME_NOW);
-        }
+        EventValues.registerEventValue(EntityInsideBlockEvent.class, Block.class, EntityInsideBlockEvent::getBlock, EventValues.TIME_NOW);
 
         // PlayerAttemptPickupItemEvent
-        if (Skript.classExists("org.bukkit.event.player.PlayerAttemptPickupItemEvent")) {
-            Skript.registerEvent("Player Attempt Item Pickup", PaperEvents.class, PlayerAttemptPickupItemEvent.class, "player attempt item pickup")
-                .description("Called when a player attempts to pick an item up from the ground. Requires PaperMC.",
-                    "`event-number` = Represents the amount that will remain on the ground, if any.",
-                    "`past event-number` = Represents the item amount of the dropped item before pickup.",
-                    "`event-dropped item` = Represents the dropped item entity that is attempting to pickup.")
-                .examples("on player attempt item pickup:",
-                    "\tif event-number > 0:",
-                    "\t\twait 1 tick",
-                    "\t\tadd (item of event-dropped item) to enderchest of player",
-                    "\t\tkill event-dropped item")
-                .since("3.5.0");
+        Skript.registerEvent("Player Attempt Item Pickup", PaperEvents.class, PlayerAttemptPickupItemEvent.class, "player attempt item pickup")
+            .description("Called when a player attempts to pick an item up from the ground. Requires PaperMC.",
+                "`event-number` = Represents the amount that will remain on the ground, if any.",
+                "`past event-number` = Represents the item amount of the dropped item before pickup.",
+                "`event-dropped item` = Represents the dropped item entity that is attempting to pickup.")
+            .examples("on player attempt item pickup:",
+                "\tif event-number > 0:",
+                "\t\twait 1 tick",
+                "\t\tadd (item of event-dropped item) to enderchest of player",
+                "\t\tkill event-dropped item")
+            .since("3.5.0");
 
-            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, PlayerAttemptPickupItemEvent::getRemaining, EventValues.TIME_NOW);
-            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, event -> event.getItem().getItemStack().getAmount(), EventValues.TIME_PAST);
-            EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Item.class, PlayerAttemptPickupItemEvent::getItem, EventValues.TIME_NOW);
-        }
+        EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, PlayerAttemptPickupItemEvent::getRemaining, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, event -> event.getItem().getItemStack().getAmount(), EventValues.TIME_PAST);
+        EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Item.class, PlayerAttemptPickupItemEvent::getItem, EventValues.TIME_NOW);
 
         // PlayerTrackEntityEvent
         Skript.registerEvent("Player Track Entity", PaperEvents.class, PlayerTrackEntityEvent.class, "player track entity")
@@ -354,48 +349,46 @@ public class PaperEvents extends SimpleEvent {
         EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, PlayerTrackEntityEvent::getEntity, EventValues.TIME_NOW);
 
         // PlayerFailMoveEvent
-        if (Skript.classExists("io.papermc.paper.event.player.PlayerFailMoveEvent")) {
-            Skript.registerEvent("Player Fail Move", PaperEvents.class, PlayerFailMoveEvent.class, "player fail move")
-                .description("Called when a player attempts to move, but is prevented from doing so by the server.",
-                    "Requires PaperMC and Skript 2.11+.",
-                    "`event-failmovereason` = The reason they failed to move.",
-                    "`event-location` = The location they moved from.",
-                    "`future event-location` = The location they moved to.",
-                    "`event-boolean` = Whether the player is allowed to move (can be set).",
-                    "`future event-boolean` = Whether to log warning to console (can be set).")
-                .examples("on player fail move:",
-                    "\tset event-boolean to true",
-                    "\tset future event-boolean to false",
-                    "\tif event-failmovereason = clipped_into_block:",
-                    "\t\tpush player up with speed 1")
-                .since("3.11.0");
+        Skript.registerEvent("Player Fail Move", PaperEvents.class, PlayerFailMoveEvent.class, "player fail move")
+            .description("Called when a player attempts to move, but is prevented from doing so by the server.",
+                "Requires PaperMC and Skript 2.11+.",
+                "`event-failmovereason` = The reason they failed to move.",
+                "`event-location` = The location they moved from.",
+                "`future event-location` = The location they moved to.",
+                "`event-boolean` = Whether the player is allowed to move (can be set).",
+                "`future event-boolean` = Whether to log warning to console (can be set).")
+            .examples("on player fail move:",
+                "\tset event-boolean to true",
+                "\tset future event-boolean to false",
+                "\tif event-failmovereason = clipped_into_block:",
+                "\t\tpush player up with speed 1")
+            .since("3.11.0");
 
-            EventValues.registerEventValue(PlayerFailMoveEvent.class, PlayerFailMoveEvent.FailReason.class, PlayerFailMoveEvent::getFailReason);
-            EventValues.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getFrom, EventValues.TIME_NOW);
-            EventValues.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getTo, EventValues.TIME_FUTURE);
-            EventValues.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
-                @Override
-                public void set(PlayerFailMoveEvent event, @Nullable Boolean allowed) {
-                    event.setAllowed(Boolean.TRUE.equals(allowed));
-                }
+        EventValues.registerEventValue(PlayerFailMoveEvent.class, PlayerFailMoveEvent.FailReason.class, PlayerFailMoveEvent::getFailReason);
+        EventValues.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getFrom, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getTo, EventValues.TIME_FUTURE);
+        EventValues.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
+            @Override
+            public void set(PlayerFailMoveEvent event, @Nullable Boolean allowed) {
+                event.setAllowed(Boolean.TRUE.equals(allowed));
+            }
 
-                @Override
-                public Boolean convert(PlayerFailMoveEvent event) {
-                    return event.isAllowed();
-                }
-            }, EventValues.TIME_NOW);
-            EventValues.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
-                @Override
-                public void set(PlayerFailMoveEvent event, @Nullable Boolean allowed) {
-                    event.setLogWarning(Boolean.TRUE.equals(allowed));
-                }
+            @Override
+            public Boolean convert(PlayerFailMoveEvent event) {
+                return event.isAllowed();
+            }
+        }, EventValues.TIME_NOW);
+        EventValues.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
+            @Override
+            public void set(PlayerFailMoveEvent event, @Nullable Boolean allowed) {
+                event.setLogWarning(Boolean.TRUE.equals(allowed));
+            }
 
-                @Override
-                public Boolean convert(PlayerFailMoveEvent event) {
-                    return event.getLogWarning();
-                }
-            }, EventValues.TIME_FUTURE);
-        }
+            @Override
+            public Boolean convert(PlayerFailMoveEvent event) {
+                return event.getLogWarning();
+            }
+        }, EventValues.TIME_FUTURE);
 
         // SERVER EVENTS
         // Tick Start/End Event

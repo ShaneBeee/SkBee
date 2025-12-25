@@ -94,12 +94,10 @@ public class SecRecipeShaped extends Section {
         builder.addRequiredEntry("result", ItemStack.class);
         builder.addRequiredEntry("shape", String.class);
         builder.addOptionalEntry("group", String.class);
-        if (RecipeUtil.HAS_CATEGORY) {
-            builder.addOptionalEntry("category", String.class);
-            for (CraftingBookCategory value : CraftingBookCategory.values()) {
-                String name = value.name().toLowerCase(Locale.ROOT);
-                CATEGORY_MAP.put(name, value);
-            }
+        builder.addOptionalEntry("category", String.class);
+        for (CraftingBookCategory value : CraftingBookCategory.values()) {
+            String name = value.name().toLowerCase(Locale.ROOT);
+            CATEGORY_MAP.put(name, value);
         }
         builder.addRequiredSection("ingredients");
         VALIDATOR = builder.build();
@@ -126,7 +124,7 @@ public class SecRecipeShaped extends Section {
         this.shape = (Expression<String>) container.getOptional("shape", false);
         if (this.shape == null) return false;
         this.group = (Expression<String>) container.getOptional("group", false);
-        this.category = RecipeUtil.HAS_CATEGORY ? (Expression<String>) container.getOptional("category", false) : null;
+        this.category = (Expression<String>) container.getOptional("category", false);
 
         // Parse the ingredients section
         SectionNode ingredients = container.get("ingredients", SectionNode.class, false);

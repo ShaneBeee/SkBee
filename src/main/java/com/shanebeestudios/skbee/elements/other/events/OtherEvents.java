@@ -9,7 +9,6 @@ import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.skript.util.slot.Slot;
-import com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent;
 import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import org.bukkit.Location;
@@ -339,28 +338,16 @@ public class OtherEvents extends SimpleEvent {
         }, EventValues.TIME_NOW);
 
         // Entity Remove Event
-        Class<? extends Event> eventClass = null;
-        boolean bukkitRemoveEvent = false;
-        if (Skript.classExists("org.bukkit.event.entity.EntityRemoveEvent")) {
-            eventClass = EntityRemoveEvent.class;
-            bukkitRemoveEvent = true;
-        } else if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityRemoveFromWorldEvent")) {
-            eventClass = EntityRemoveFromWorldEvent.class;
-        }
-        if (eventClass != null) {
-            Skript.registerEvent("Entity Remove from World", OtherEvents.class, eventClass,
-                    "entity remove[d] [from world]")
-                .description("Fired any time an entity is being removed from a world for any reason.",
-                    "Requires a PaperMC server or Spigot 1.20.4+ server.",
-                    "`event-entityremovecause` = The reason the entity was removed (requires MC 1.20.4+).")
-                .examples("on entity removed from world:",
-                    "\tbroadcast \"a lonely %event-entity% left the world.\"")
-                .since("2.7.2");
+        Skript.registerEvent("Entity Remove from World", OtherEvents.class, EntityRemoveEvent.class,
+                "entity remove[d] [from world]")
+            .description("Fired any time an entity is being removed from a world for any reason.",
+                "Requires a PaperMC server or Spigot 1.20.4+ server.",
+                "`event-entityremovecause` = The reason the entity was removed (requires MC 1.20.4+).")
+            .examples("on entity removed from world:",
+                "\tbroadcast \"a lonely %event-entity% left the world.\"")
+            .since("2.7.2");
 
-            if (bukkitRemoveEvent) {
-                EventValues.registerEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class, EntityRemoveEvent::getCause, EventValues.TIME_NOW);
-            }
-        }
+        EventValues.registerEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class, EntityRemoveEvent::getCause, EventValues.TIME_NOW);
 
         // Player Spawn Change Event
         Skript.registerEvent("Player Spawn Change", OtherEvents.class, PlayerSetSpawnEvent.class, "player spawn change")
@@ -375,17 +362,16 @@ public class OtherEvents extends SimpleEvent {
         EventValues.registerEventValue(PlayerSetSpawnEvent.class, Location.class, event -> event.getPlayer().getRespawnLocation(), EventValues.TIME_NOW);
         EventValues.registerEventValue(PlayerSetSpawnEvent.class, Location.class, PlayerSetSpawnEvent::getLocation, EventValues.TIME_FUTURE);
 
-        if (Skript.classExists("org.bukkit.event.command.UnknownCommandEvent")) {
-            Skript.registerEvent("Unknown Command", OtherEvents.class, UnknownCommandEvent.class, "unknown command")
-                .description("This event is fired when a player executes a command that is not defined.",
-                    "`event-string` = The command that was sent.",
-                    "`event-sender/player` = Who sent the command.")
-                .examples("")
-                .since("3.10.0");
+        // Unknown Command Event
+        Skript.registerEvent("Unknown Command", OtherEvents.class, UnknownCommandEvent.class, "unknown command")
+            .description("This event is fired when a player executes a command that is not defined.",
+                "`event-string` = The command that was sent.",
+                "`event-sender/player` = Who sent the command.")
+            .examples("")
+            .since("3.10.0");
 
-            EventValues.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
-            EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);
-        }
+        EventValues.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
+        EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);
     }
 
 }

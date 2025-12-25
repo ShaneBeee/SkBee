@@ -104,7 +104,7 @@ public class Types {
                 .parser(SkriptUtils.getDefaultParser()));
         }
 
-        if (ParticleUtil.HAS_TRAIL && Classes.getExactClassInfo(Particle.Trail.class) == null) {
+        if (Classes.getExactClassInfo(Particle.Trail.class) == null) {
             Classes.registerClass(new ClassInfo<>(Particle.Trail.class, "trail")
                 .name(ClassInfo.NO_DOC)
                 .user("trails?")
@@ -184,26 +184,24 @@ public class Types {
             .examples("set {_v} to vibration({loc}, 10 seconds)")
             .since("1.11.1"));
 
-        if (ParticleUtil.HAS_TRAIL) {
-            Functions.registerFunction(new SimpleJavaFunction<>("trail", new Parameter[]{
-                    new Parameter<>("target", DefaultClasses.LOCATION, true, null),
-                    new Parameter<>("color", DefaultClasses.COLOR, true, null),
-                    new Parameter<>("duration", DefaultClasses.TIMESPAN, true, null)
-                }, Classes.getExactClassInfo(Particle.Trail.class), true) {
-                    @Override
-                    public Particle.Trail[] executeSimple(Object[][] params) {
-                        Location target = (Location) params[0][0];
-                        org.bukkit.Color color = ((Color) params[1][0]).asBukkitColor();
-                        Timespan timespan = (Timespan) params[2][0];
-                        return new Particle.Trail[]{new Particle.Trail(target, color, (int) timespan.getAs(Timespan.TimePeriod.TICK))};
-                    }
-                }).description("Creates a new trail to be used with 'trail' particle.",
-                    "Takes in a location for the target (where the trail heads to), the color and duration.",
-                    "Requires Minecraft 1.21.4+")
-                .examples("set {_trail} to trail(location of target block, blue, 1 second)",
-                    "make 10 of trail using {_trail} at location of player")
-                .since("3.6.5");
-        }
+        Functions.registerFunction(new SimpleJavaFunction<>("trail", new Parameter[]{
+                new Parameter<>("target", DefaultClasses.LOCATION, true, null),
+                new Parameter<>("color", DefaultClasses.COLOR, true, null),
+                new Parameter<>("duration", DefaultClasses.TIMESPAN, true, null)
+            }, Classes.getExactClassInfo(Particle.Trail.class), true) {
+                @Override
+                public Particle.Trail[] executeSimple(Object[][] params) {
+                    Location target = (Location) params[0][0];
+                    org.bukkit.Color color = ((Color) params[1][0]).asBukkitColor();
+                    Timespan timespan = (Timespan) params[2][0];
+                    return new Particle.Trail[]{new Particle.Trail(target, color, (int) timespan.getAs(Timespan.TimePeriod.TICK))};
+                }
+            }).description("Creates a new trail to be used with 'trail' particle.",
+                "Takes in a location for the target (where the trail heads to), the color and duration.",
+                "Requires Minecraft 1.21.4+")
+            .examples("set {_trail} to trail(location of target block, blue, 1 second)",
+                "make 10 of trail using {_trail} at location of player")
+            .since("3.6.5");
 
         if (ParticleUtil.HAS_SPELL) {
             Functions.registerFunction(new SimpleJavaFunction<>("particleSpell", new Parameter[]{

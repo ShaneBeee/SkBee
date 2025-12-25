@@ -8,7 +8,6 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.elements.other.type.Types;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.ArmorMeta;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
@@ -17,18 +16,16 @@ import org.jetbrains.annotations.Nullable;
 
 @Name("ArmorTrim - Item")
 @Description({"Represents the armor trim of an item. You can get, set, add or delete/reset.",
-        "Requires Minecraft 1.19.4+"})
+    "Requires Minecraft 1.19.4+"})
 @Examples({"add armor trim from gold_material and eye_pattern to armor trim of player's leggings",
-        "set armor trim of player's helmet to armor trim from gold_material and eye_pattern",
-        "delete armor trim of player's leggings",
-        "reset armor trim of player's boots"})
+    "set armor trim of player's helmet to armor trim from gold_material and eye_pattern",
+    "delete armor trim of player's leggings",
+    "reset armor trim of player's boots"})
 @Since("2.13.0")
 public class ExprArmorTrimItem extends SimplePropertyExpression<ItemType, ArmorTrim> {
 
     static {
-        if (Types.HAS_ARMOR_TRIM) {
-            register(ExprArmorTrimItem.class, ArmorTrim.class, "armor trim", "itemtypes");
-        }
+        register(ExprArmorTrimItem.class, ArmorTrim.class, "armor trim", "itemtypes");
     }
 
     @Override
@@ -39,7 +36,6 @@ public class ExprArmorTrimItem extends SimplePropertyExpression<ItemType, ArmorT
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.DELETE || mode == ChangeMode.RESET) return CollectionUtils.array();
@@ -47,7 +43,7 @@ public class ExprArmorTrimItem extends SimplePropertyExpression<ItemType, ArmorT
         return null;
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue"})
+    @SuppressWarnings({"ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         ArmorTrim trim = null;

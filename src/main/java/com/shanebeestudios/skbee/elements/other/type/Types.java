@@ -46,7 +46,6 @@ import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.bukkit.event.player.PlayerSpawnChangeEvent;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
@@ -61,11 +60,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-@SuppressWarnings({"removal", "deprecation", "UnstableApiUsage"})
+@SuppressWarnings({"removal", "deprecation", "UnstableApiUsage", "rawtypes"})
 public class Types {
-
-    public static boolean HAS_ARMOR_TRIM = Skript.classExists("org.bukkit.inventory.meta.trim.ArmorTrim");
-    public static boolean HAS_CHUNK_LOAD_LEVEL = Skript.classExists("org.bukkit.Chunk$LoadLevel");
 
     static {
         // Only register if no other addons have registered this class
@@ -190,7 +186,7 @@ public class Types {
             Util.logLoading("You may have to use their BlockState in SkBee's syntaxes.");
         }
 
-        if (HAS_ARMOR_TRIM && Classes.getExactClassInfo(ArmorTrim.class) == null) {
+        if (Classes.getExactClassInfo(ArmorTrim.class) == null) {
             Classes.registerClass(new ClassInfo<>(ArmorTrim.class, "armortrim")
                 .user("armor ?trims?")
                 .name("ArmorTrim")
@@ -237,7 +233,7 @@ public class Types {
                 .since("2.13.0"));
         }
 
-        if (HAS_CHUNK_LOAD_LEVEL && Classes.getExactClassInfo(LoadLevel.class) == null) {
+        if (Classes.getExactClassInfo(LoadLevel.class) == null) {
             EnumWrapper<LoadLevel> LOAD_LEVEL_ENUM = new EnumWrapper<>(LoadLevel.class, "", "level");
             Classes.registerClass(LOAD_LEVEL_ENUM.getClassInfo("chunkloadlevel")
                 .user("chunk ?load ?levels?")
@@ -267,7 +263,7 @@ public class Types {
 
         if (Classes.getExactClassInfo(MemoryKey.class) == null) {
             //noinspection unchecked
-            Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, (Class)MemoryKey.class, "memory")
+            Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, (Class) MemoryKey.class, "memory")
                 .user("memor(y|ies)")
                 .name("Memory")
                 .description("Represents the different memories of an entity.",
@@ -290,7 +286,7 @@ public class Types {
             Util.logLoading("You may have to use their BlockAction in SkBee's syntaxes.");
         }
 
-        if (Skript.classExists("org.bukkit.event.entity.EntityRemoveEvent") && Classes.getExactClassInfo(EntityRemoveEvent.Cause.class) == null) {
+        if (Classes.getExactClassInfo(EntityRemoveEvent.Cause.class) == null) {
             EnumWrapper<EntityRemoveEvent.Cause> CAUSE_ENUM = new EnumWrapper<>(EntityRemoveEvent.Cause.class);
             Classes.registerClass(CAUSE_ENUM.getClassInfo("entityremovecause")
                 .user("entity ?remove ?causes?")
@@ -301,7 +297,7 @@ public class Types {
                 .since("3.4.0"));
         }
 
-        if (Skript.classExists("org.bukkit.event.player.PlayerSpawnChangeEvent") && Classes.getExactClassInfo(PlayerSpawnChangeEvent.Cause.class) == null) {
+        if (Classes.getExactClassInfo(PlayerSpawnChangeEvent.Cause.class) == null) {
             EnumWrapper<PlayerSpawnChangeEvent.Cause> CAUSE_ENUM = new EnumWrapper<>(PlayerSpawnChangeEvent.Cause.class);
             Classes.registerClass(CAUSE_ENUM.getClassInfo("playerspawnchangereason")
                 .user("player ?spawn ?change ?reasons?")
@@ -391,39 +387,36 @@ public class Types {
             Util.logLoading("You may have to use their Pose in SkBee's syntaxes.");
         }
 
-        if (Skript.classExists("org.bukkit.inventory.EquipmentSlotGroup")) {
-            if (Classes.getExactClassInfo(EquipmentSlotGroup.class) == null) {
-                // This class is not an enum, and does not have a registry
-                Map<String, EquipmentSlotGroup> equipmentSlotGroups = SkriptUtils.getEquipmentSlotGroups();
-                Classes.registerClass(new ClassInfo<>(EquipmentSlotGroup.class, "equipmentslotgroup")
-                    .user("equipment ?slot ?groups?")
-                    .name("Equipment Slot Group")
-                    .description("Represents different groups of equipment slots.",
-                        "NOTE: These are auto-generated and may differ between server versions.")
-                    .usage(StringUtils.join(equipmentSlotGroups.keySet().stream().sorted().toList(), ", "))
-                    .parser(new Parser<>() {
-                        @Override
-                        public @Nullable EquipmentSlotGroup parse(String string, ParseContext context) {
-                            string = string.replace(" ", "_");
-                            return equipmentSlotGroups.get(string);
-                        }
+        if (Classes.getExactClassInfo(EquipmentSlotGroup.class) == null) {
+            // This class is not an enum, and does not have a registry
+            Map<String, EquipmentSlotGroup> equipmentSlotGroups = SkriptUtils.getEquipmentSlotGroups();
+            Classes.registerClass(new ClassInfo<>(EquipmentSlotGroup.class, "equipmentslotgroup")
+                .user("equipment ?slot ?groups?")
+                .name("Equipment Slot Group")
+                .description("Represents different groups of equipment slots.",
+                    "NOTE: These are auto-generated and may differ between server versions.")
+                .usage(StringUtils.join(equipmentSlotGroups.keySet().stream().sorted().toList(), ", "))
+                .parser(new Parser<>() {
+                    @Override
+                    public @Nullable EquipmentSlotGroup parse(String string, ParseContext context) {
+                        string = string.replace(" ", "_");
+                        return equipmentSlotGroups.get(string);
+                    }
 
-                        @Override
-                        public @NotNull String toString(EquipmentSlotGroup slot, int flags) {
-                            return slot.toString();
-                        }
+                    @Override
+                    public @NotNull String toString(EquipmentSlotGroup slot, int flags) {
+                        return slot.toString();
+                    }
 
-                        @Override
-                        public @NotNull String toVariableNameString(EquipmentSlotGroup slot) {
-                            return slot.toString();
-                        }
-                    }));
-            } else {
-                Util.logLoading("It looks like another addon registered 'equipmentSlotGroup' already.");
-                Util.logLoading("You may have to use their EquipmentSlotGroup in SkBee's syntaxes.");
-            }
+                    @Override
+                    public @NotNull String toVariableNameString(EquipmentSlotGroup slot) {
+                        return slot.toString();
+                    }
+                }));
+        } else {
+            Util.logLoading("It looks like another addon registered 'equipmentSlotGroup' already.");
+            Util.logLoading("You may have to use their EquipmentSlotGroup in SkBee's syntaxes.");
         }
-
 
         if (Classes.getExactClassInfo(AttributeModifier.class) == null) {
             Classes.registerClass(new ClassInfo<>(AttributeModifier.class, "attributemodifier")
@@ -432,7 +425,6 @@ public class Types {
                 .description("Represents an attribute modifier from an item/living entity.")
                 .parser(new Parser<>() {
 
-                    @SuppressWarnings("NullableProblems")
                     @Override
                     public boolean canParse(ParseContext context) {
                         return false;
@@ -493,30 +485,26 @@ public class Types {
             Util.logLoading("You may have to use their Instruments in SkBee's syntaxes.");
         }
 
-        if (Skript.classExists("org.bukkit.JukeboxSong")) {
-            if (Classes.getExactClassInfo(JukeboxSong.class) == null) {
-                if (BukkitUtils.registryExists("JUKEBOX_SONG")) {
-                    Classes.registerClass(RegistryClassInfo.create(Registry.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
-                        .user("jukebox ?songs?")
-                        .name("Instrument")
-                        .description("Represents the songs for jukeboxes.",
-                            "Requires Minecraft 1.21+",
-                            "NOTE: These are auto-generated and may differ between server versions.")
-                        .since("3.8.0"));
-                }
-            } else {
-                Util.logLoading("It looks like another addon registered 'jukeboxson' already.");
-                Util.logLoading("You may have to use their JukeboxSongs in SkBee's syntaxes.");
+        if (Classes.getExactClassInfo(JukeboxSong.class) == null) {
+            if (BukkitUtils.registryExists("JUKEBOX_SONG")) {
+                Classes.registerClass(RegistryClassInfo.create(Registry.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
+                    .user("jukebox ?songs?")
+                    .name("Instrument")
+                    .description("Represents the songs for jukeboxes.",
+                        "Requires Minecraft 1.21+",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .since("3.8.0"));
             }
+        } else {
+            Util.logLoading("It looks like another addon registered 'jukeboxson' already.");
+            Util.logLoading("You may have to use their JukeboxSongs in SkBee's syntaxes.");
         }
 
-        if (Skript.classExists("io.papermc.paper.event.player.PlayerFailMoveEvent$FailReason")) {
-            if (Classes.getExactClassInfo(PlayerFailMoveEvent.FailReason.class) == null) {
-                Classes.registerClass(new EnumWrapper<>(PlayerFailMoveEvent.FailReason.class).getClassInfo("failmovereason")
-                    .user("fail ?move ?reasons?")
-                    .description("The reason a player failed to move in a `player fail move` event.")
-                    .since("3.11.0"));
-            }
+        if (Classes.getExactClassInfo(PlayerFailMoveEvent.FailReason.class) == null) {
+            Classes.registerClass(new EnumWrapper<>(PlayerFailMoveEvent.FailReason.class).getClassInfo("failmovereason")
+                .user("fail ?move ?reasons?")
+                .description("The reason a player failed to move in a `player fail move` event.")
+                .since("3.11.0"));
         }
 
         ClassInfo<Audience> audienceClassInfo = new ClassInfo<>(Audience.class, "audience")

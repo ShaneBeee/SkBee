@@ -9,7 +9,6 @@ import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
-import com.shanebeestudios.skbee.api.listener.OnTheFlipSide;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
@@ -229,10 +228,6 @@ public class AddonLoader {
             Util.logLoading("&5Tick Manager Elements &cdisabled via config");
             return;
         }
-        if (!Skript.classExists("org.bukkit.ServerTickManager")) {
-            Util.logLoading("&5Tick Manager Elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
-            return;
-        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.tickmanager");
             Util.logLoading("&5Tick Manager Elements &asuccessfully loaded");
@@ -258,11 +253,6 @@ public class AddonLoader {
     private void loadTextElements() {
         if (!this.config.ELEMENTS_TEXT_COMPONENT) {
             Util.logLoading("&5Text Component Elements &cdisabled via config");
-            return;
-        }
-        if (!Skript.classExists("io.papermc.paper.event.player.AsyncChatEvent")) {
-            Util.logLoading("&5Text Component Elements &cdisabled");
-            Util.logLoading("&7- Text components require a PaperMC server.");
             return;
         }
         if (Classes.getClassInfoNoError("textcomponent") != null) {
@@ -300,12 +290,6 @@ public class AddonLoader {
             Util.logLoading("&5Virtual Furnace Elements &cdisabled via config");
             return;
         }
-        // PaperMC check
-        if (!Skript.classExists("net.kyori.adventure.text.Component")) {
-            Util.logLoading("&5Virtual Furnace Elements &cdisabled");
-            Util.logLoading("&7- Virtual Furnace require a PaperMC server.");
-            return;
-        }
         try {
             this.plugin.virtualFurnaceAPI = new VirtualFurnaceAPI(this.plugin, true);
             pluginManager.registerEvents(new VirtualFurnaceListener(), this.plugin);
@@ -318,9 +302,6 @@ public class AddonLoader {
 
     private void loadOtherElements() {
         try {
-            if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityAddToWorldEvent")) {
-                this.pluginManager.registerEvents(new OnTheFlipSide(), this.plugin);
-            }
             pluginManager.registerEvents(new EntityListener(), this.plugin);
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.other");
         } catch (Exception ex) {
@@ -490,11 +471,6 @@ public class AddonLoader {
             Util.logLoading("&5Display Entity Elements &cdisabled via config");
             return;
         }
-        if (!Skript.classExists("org.bukkit.entity.TextDisplay$TextAlignment")) {
-            Util.logLoading("&5Display Entity Elements &cdisabled due to a Bukkit API change!");
-            Util.logLoading("&7- &eYou need to update your server to fix this issue!");
-            return;
-        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.display");
             Util.logLoading("&5Display Entity Elements &asuccessfully loaded");
@@ -506,10 +482,6 @@ public class AddonLoader {
     private void loadItemComponentElements() {
         if (!this.config.ELEMENTS_ITEM_COMPONENT) {
             Util.logLoading("&5Item Component Elements &cdisabled via config");
-            return;
-        }
-        if (!Skript.classExists("io.papermc.paper.datacomponent.DataComponentTypes")) {
-            Util.logLoading("&5Item Component Elements &cdisabled &7(&eRequires Paper 1.21.3+&7)");
             return;
         }
         try {
@@ -531,13 +503,6 @@ public class AddonLoader {
     }
 
     private void loadRegistryElements() {
-        // We won't use a config for this
-        // Not sure which truly came last
-        if (!Skript.classExists("io.papermc.paper.registry.tag.TagKey") ||
-            !Skript.classExists("io.papermc.paper.registry.RegistryKey")) {
-            Util.logLoading("&5Registry Elements &cdisabled &7(&eRequires Paper 1.21+&7)");
-            return;
-        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.registry");
             Util.logLoading("&5Registry Elements &asuccessfully loaded");

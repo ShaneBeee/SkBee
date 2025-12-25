@@ -1,11 +1,10 @@
 package com.shanebeestudios.skbee.api.listener;
 
-import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
 import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
-import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.config.Config;
 import org.bukkit.Bukkit;
@@ -33,10 +32,6 @@ import org.jetbrains.annotations.NotNull;
 public class BoundBorderListener implements Listener {
 
     private final BoundConfig boundConfig;
-
-    // Bukkit 1.20.5 moved these events from Spigot package to Bukkit package
-    private static final boolean HAS_MOUNT_EVENT = Skript.classExists("org.bukkit.event.entity.EntityMountEvent");
-    private static final boolean HAS_DISMOUNT_EVENT = Skript.classExists("org.bukkit.event.entity.EntityDismountEvent");
 
     public BoundBorderListener(SkBee plugin) {
         Config config = plugin.getPluginConfig();
@@ -119,7 +114,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_ENTITY_MOUNT && HAS_MOUNT_EVENT) pluginManager.registerEvents(new Listener() {
+        if (config.BOUND_EVENTS_ENTITY_MOUNT) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onMount(EntityMountEvent event) {
                 if (event.getEntity() instanceof Player player) {
@@ -132,7 +127,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_ENTITY_DISMOUNT && HAS_DISMOUNT_EVENT) pluginManager.registerEvents(new Listener() {
+        if (config.BOUND_EVENTS_ENTITY_DISMOUNT) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onDismount(EntityDismountEvent event) {
                 if (event.getEntity() instanceof Player player) {
