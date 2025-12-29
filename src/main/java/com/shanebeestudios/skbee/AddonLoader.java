@@ -104,6 +104,7 @@ public class AddonLoader {
         loadAdvancementElements();
         loadBossBarElements();
         loadBoundElements();
+        loadDamageSourceElements();
         loadDisplayEntityElements();
         loadFastboardElements();
         loadFishingElements();
@@ -476,6 +477,21 @@ public class AddonLoader {
             Util.logLoading("&5Display Entity Elements &asuccessfully loaded");
         } catch (Exception ex) {
             logFailure("Display Entity", ex);
+        }
+    }
+
+    private void loadDamageSourceElements() {
+        if (!this.config.ELEMENTS_DAMAGE_SOURCE) {
+            Util.logLoading("&5Damage Source Elements &cdisabled via config");
+            return;
+        }
+        try {
+            this.addon.loadClasses("com.shanebeestudios.skbee.elements.damagesource");
+            Util.logLoading("&5Damage Source Elements &asuccessfully loaded");
+            Util.log("&7 - Do note these elements are in Skript as 'Experimental'");
+            Util.log("&7 - If issues arise, disable this feature and use Skript's elements instead");
+        } catch (Exception ex) {
+            logFailure("Damage Source", ex);
         }
     }
 
