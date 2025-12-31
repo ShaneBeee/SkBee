@@ -142,16 +142,21 @@ public class Types {
         }
 
         if (Skript.methodExists(PlayerRespawnEvent.class, "getRespawnReason") || Skript.classExists("io.papermc.paper.event.player.AbstractRespawnEvent")) {
-            EnumWrapper<RespawnReason> RESPAWN_REASON_ENUM = new EnumWrapper<>(RespawnReason.class, "", "respawn");
-            Classes.registerClass(RESPAWN_REASON_ENUM.getClassInfo("respawnreason")
-                .user("respawn ?reasons?")
-                .name("Respawn Reason")
-                .description("Represents the reason the respawn event was called. Requires MC 1.19.4+",
-                    "NOTE: These are auto-generated and may differ between server versions.")
-                .examples("on respawn:",
-                    "\tif respawn reason = death respawn:",
-                    "\t\tgive player 10 diamonds")
-                .since("2.8.4"));
+            if (Classes.getExactClassInfo(RespawnReason.class) == null) {
+                EnumWrapper<RespawnReason> RESPAWN_REASON_ENUM = new EnumWrapper<>(RespawnReason.class, "", "respawn");
+                Classes.registerClass(RESPAWN_REASON_ENUM.getClassInfo("respawnreason")
+                    .user("respawn ?reasons?")
+                    .name("Respawn Reason")
+                    .description("Represents the reason the respawn event was called. Requires MC 1.19.4+",
+                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .examples("on respawn:",
+                        "\tif respawn reason = death respawn:",
+                        "\t\tgive player 10 diamonds")
+                    .since("2.8.4"));
+            } else {
+                Util.logLoading("It looks like another addon registered 'respawn reason' already.");
+                Util.logLoading("You may have to use their RespawnReason in SkBee's syntaxes.");
+            }
         }
 
         if (Classes.getExactClassInfo(BlockState.class) == null) {
