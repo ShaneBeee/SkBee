@@ -90,18 +90,27 @@ public class Types {
                         return toString(o, 0);
                     }
                 }));
+        } else {
+            Util.logLoading("It looks like another addon registered 'dustoption' already.");
+            Util.logLoading("You may have to use their DustOption in SkBee's syntaxes.");
         }
 
         if (Classes.getExactClassInfo(DustTransition.class) == null) {
             Classes.registerClass(new ClassInfo<>(DustTransition.class, "dusttransition")
                 .name(ClassInfo.NO_DOC).user("dust ?transitions?")
                 .parser(SkriptUtils.getDefaultParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'dusttransition' already.");
+            Util.logLoading("You may have to use their DustTransition in SkBee's syntaxes.");
         }
 
         if (Classes.getExactClassInfo(Vibration.class) == null) {
             Classes.registerClass(new ClassInfo<>(Vibration.class, "vibration")
                 .name(ClassInfo.NO_DOC).user("vibrations?")
                 .parser(SkriptUtils.getDefaultParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'vibration' already.");
+            Util.logLoading("You may have to use their Vibration in SkBee's syntaxes.");
         }
 
         if (Classes.getExactClassInfo(Particle.Trail.class) == null) {
@@ -109,13 +118,21 @@ public class Types {
                 .name(ClassInfo.NO_DOC)
                 .user("trails?")
                 .parser(SkriptUtils.getDefaultParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'trail' already.");
+            Util.logLoading("You may have to use their Trail in SkBee's syntaxes.");
         }
 
-        if (ParticleUtil.HAS_SPELL && Classes.getExactClassInfo(Particle.Spell.class) == null) {
-            Classes.registerClass(new ClassInfo<>(Particle.Spell.class, "particlespell")
-                .name(ClassInfo.NO_DOC)
-                .user("particle ?spells?")
-                .parser(SkriptUtils.getDefaultParser()));
+        if (ParticleUtil.HAS_SPELL) {
+            if (Classes.getExactClassInfo(Particle.Spell.class) == null) {
+                Classes.registerClass(new ClassInfo<>(Particle.Spell.class, "particlespell")
+                    .name(ClassInfo.NO_DOC)
+                    .user("particle ?spells?")
+                    .parser(SkriptUtils.getDefaultParser()));
+            } else {
+                Util.logLoading("It looks like another addon registered 'particlespell' already.");
+                Util.logLoading("You may have to use their Particle Spell in SkBee's syntaxes.");
+            }
         }
 
         // == FUNCTIONS ==
