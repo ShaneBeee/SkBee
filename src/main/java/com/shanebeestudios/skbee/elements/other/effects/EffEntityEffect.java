@@ -9,6 +9,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.EntityEffect;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -26,7 +27,9 @@ import java.util.Set;
 public class EffEntityEffect extends Effect {
 
     static {
-        Skript.registerEffect(EffEntityEffect.class, "play entity effect %entityeffect% on %entities%");
+        if (!Util.IS_RUNNING_SKRIPT_2_14) {
+            Skript.registerEffect(EffEntityEffect.class, "play entity effect %entityeffect% on %entities%");
+        }
     }
 
     private Expression<EntityEffect> entityEffect;
