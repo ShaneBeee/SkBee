@@ -142,7 +142,7 @@ public class Types {
         }
 
         if (Skript.methodExists(PlayerRespawnEvent.class, "getRespawnReason") || Skript.classExists("io.papermc.paper.event.player.AbstractRespawnEvent")) {
-            if (Classes.getExactClassInfo(RespawnReason.class) == null) {
+            if (!Util.IS_RUNNING_SKRIPT_2_14 && Classes.getExactClassInfo(RespawnReason.class) == null) {
                 EnumWrapper<RespawnReason> RESPAWN_REASON_ENUM = new EnumWrapper<>(RespawnReason.class, "", "respawn");
                 Classes.registerClass(RESPAWN_REASON_ENUM.getClassInfo("respawnreason")
                     .user("respawn ?reasons?")
@@ -253,7 +253,7 @@ public class Types {
                 .since("2.17.0"));
         }
 
-        if (Classes.getExactClassInfo(EntityEffect.class) == null) {
+        if (!Util.IS_RUNNING_SKRIPT_2_14 && Classes.getExactClassInfo(EntityEffect.class) == null) {
             EnumWrapper<EntityEffect> ENTITY_EFFECT_ENUM = new EnumWrapper<>(EntityEffect.class);
             Classes.registerClass(ENTITY_EFFECT_ENUM.getClassInfo("entityeffect")
                 .user("entit(y|ies) ?effects?")
