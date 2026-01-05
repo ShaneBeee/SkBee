@@ -15,10 +15,11 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Make Player Break Block")
-@Description({"Breaks blocks as if a specific player had broken them using their held item as the tool.",
+@Description({"Force this player to break a Block using the item in their main hand. ",
+    "This effect will respect enchantments, handle item durability (if applicable) and drop experience and the correct items according to the tool/item in the player's hand.",
     "This triggers the on break event, so be careful with infinite loops.",
-    "This allows survival mode players to break unbreakable blocks such as bedrock, however, no item will be dropped.",
-    "See https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/Player.html#breakBlock(org.bukkit.block.Block)"})
+    "This allows survival mode players to break unbreakable blocks such as bedrock, however, no item will be dropped."
+})
 @Examples({
     "make {_player} break {_blocks::*}",
     "make player break target block"
@@ -51,9 +52,7 @@ public class EffMakePlayerBreakBlock extends Effect {
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
-        String playerName = this.player.toString(e, d);
-        String blocks = this.blocks.toString(e, d);
-        return "make " + playerName + " break " + blocks;
+        return "make " + this.player.toString(e, d) + " break " + this.blocks.toString(e, d);
     }
 
 }
