@@ -34,7 +34,7 @@ public class EffMakePlayerBreakBlock extends Effect {
     private Expression<Player> player;
     private Expression<Block> blocks;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.player = (Expression<Player>) exprs[0];
@@ -42,15 +42,11 @@ public class EffMakePlayerBreakBlock extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        for (Block block : this.blocks.getArray(event)) {
-            Player thePlayer = player.getSingle(event);
-            if (thePlayer != null) {
-                thePlayer.breakBlock(block);
-            }
-        }
+        Player player = this.player.getSingle(event);
+        if (player == null) return;
+        this.blocks.stream(event).forEach(player::breakBlock);
     }
 
     @Override
