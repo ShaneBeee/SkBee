@@ -1,0 +1,8 @@
+test "SkBee - EffMakePlayerBreakBlock":
+    set {_p} to "underscore95" parsed as a player
+    set {_b} to block at location(1,1,1)
+    force {_p} to break {_b}
+
+    set {_b::*} to block at location(1,1,2)
+    add {_b} to {_b::*}
+    make {_p} break {_b::*}

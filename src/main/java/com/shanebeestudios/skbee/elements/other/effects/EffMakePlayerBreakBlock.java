@@ -17,7 +17,8 @@ import org.jetbrains.annotations.NotNull;
 @Name("Make Player Break Block")
 @Description({"Breaks blocks as if a specific player had broken them using their held item as the tool.",
     "This triggers the on break event, so be careful with infinite loops.",
-    "This allows survival mode players to break unbreakable blocks such as bedrock, however, no item will be dropped."})
+    "This allows survival mode players to break unbreakable blocks such as bedrock, however, no item will be dropped.",
+    "See https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/entity/Player.html#breakBlock(org.bukkit.block.Block)"})
 @Examples({
     "make {_player} break {_blocks::*}",
     "make player break target block"
@@ -27,7 +28,7 @@ public class EffMakePlayerBreakBlock extends Effect {
 
     static {
         Skript.registerEffect(EffMakePlayerBreakBlock.class,
-            "(make|force) %player% break %blocks%");
+            "(make|force) %player% [to] break %blocks%");
     }
 
     private Expression<Player> player;
