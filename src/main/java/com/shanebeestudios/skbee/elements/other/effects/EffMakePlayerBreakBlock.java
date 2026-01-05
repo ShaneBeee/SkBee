@@ -23,7 +23,7 @@ import org.jetbrains.annotations.NotNull;
     "make {_player} break {_blocks::*}",
     "make player break target block"
 })
-@Since("3.14.0")
+@Since("INSERT VERSION")
 public class EffMakePlayerBreakBlock extends Effect {
 
     static {
