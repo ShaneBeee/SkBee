@@ -435,7 +435,7 @@ public class PaperEvents extends SimpleEvent {
                 "on server resources reload:",
                 "\t# Reload recipes when datapacks get reloaded",
                 "\tloadRecipes()")
-            .since("INSERT VERSION");
+            .since("3.15.0");
     }
 
 }

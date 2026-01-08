@@ -31,7 +31,7 @@ public class EvtVirtualFurnace extends SkriptEvent {
             .examples("on virtual furnace smelt:",
                 "\tif event-item is a diamond:",
                 "\t\tcancel event")
-            .since("INSERT VERSION");
+            .since("3.15.0");
 
         EventValues.registerEventValue(FurnaceCookEvent.class, Machine.class, FurnaceCookEvent::getFurnace);
         EventValues.registerEventValue(FurnaceCookEvent.class, ItemStack.class, FurnaceCookEvent::getSource);
@@ -44,7 +44,7 @@ public class EvtVirtualFurnace extends SkriptEvent {
             .examples("on virtual furnace extract:",
                 "\tif event-item is an iron nugget:",
                 "\t\tsend \"Congrats\" to player")
-            .since("INSERT VERSION");
+            .since("3.15.0");
 
         EventValues.registerEventValue(FurnaceExtractEvent.class, Machine.class, FurnaceExtractEvent::getFurnace);
         EventValues.registerEventValue(FurnaceExtractEvent.class, Player.class, FurnaceExtractEvent::getPlayer);
@@ -82,7 +82,7 @@ public class EvtVirtualFurnace extends SkriptEvent {
             .examples("on virtual furnace fuel burn:",
                 "\tif event-item is coal:",
                 "\t\tset event-item to charcoal")
-            .since("INSERT VERSION");
+            .since("3.15.0");
 
         EventValues.registerEventValue(FurnaceFuelBurnEvent.class, Machine.class, FurnaceFuelBurnEvent::getFurnace);
         EventValues.registerEventValue(FurnaceFuelBurnEvent.class, Fuel.class, FurnaceFuelBurnEvent::getFuel);

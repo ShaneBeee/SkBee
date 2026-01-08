@@ -38,7 +38,7 @@ public class AsyncEvents extends SimpleEvent {
                     "\t\t# Player login will be halted while we wait for something",
                     "\t\tsleep thread for 1 tick",
                     "\t#Player will now connect")
-                .since("INSERT VERSION");
+                .since("3.15.0");
 
             EventValues.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, UUID.class,
                 event -> event.getConnection().getProfile().getId());

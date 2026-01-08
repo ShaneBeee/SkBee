@@ -25,7 +25,7 @@ import org.jetbrains.annotations.Nullable;
     "\t\t# Player login will be halted while we wait for something",
     "\t\tsleep thread for 1 tick",
     "\t#Player will now connect"})
-@Since("INSERT VERSION")
+@Since("3.15.0")
 public class EffSleepThread extends Effect {
 
     static {
