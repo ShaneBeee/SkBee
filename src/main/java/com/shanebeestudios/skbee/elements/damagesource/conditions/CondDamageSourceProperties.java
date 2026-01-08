@@ -25,7 +25,6 @@ public class CondDamageSourceProperties extends PropertyCondition<DamageSource> 
 
     private int pattern;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = parseResult.mark;

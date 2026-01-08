@@ -35,7 +35,6 @@ public class ExprDamageSourceEvent extends SimpleExpression<DamageSource> {
             "[the] damage source");
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (DEATH_EVENT_HAS_DAMAGE_SOURCE) {
@@ -48,7 +47,6 @@ public class ExprDamageSourceEvent extends SimpleExpression<DamageSource> {
         return false;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected DamageSource @Nullable [] get(Event event) {
         if (event instanceof EntityDamageEvent entityDamageEvent) {

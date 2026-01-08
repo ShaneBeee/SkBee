@@ -12,6 +12,7 @@ import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
@@ -27,7 +28,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprRespawnReason extends SimpleExpression<RespawnReason> {
 
     static {
-        if (Skript.methodExists(PlayerRespawnEvent.class, "getRespawnReason")) {
+        if (!Util.IS_RUNNING_SKRIPT_2_14) {
             Skript.registerExpression(ExprRespawnReason.class, RespawnReason.class, ExpressionType.SIMPLE,
                     "respawn reason");
         }

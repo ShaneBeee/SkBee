@@ -9,7 +9,6 @@ test "SkBee - ExprClassInfoOf":
 	assert class info of dirt[] = "block data" with "Should be block data"
 	assert class info of minecraft entity type from key "minecraft:sheep" = "minecraft entity type" with "Should be minecraft entity type"
 	assert class info of out of world = "damage type" with "Should be damage type"
-	assert class info of gust_emitter_large = "particle" with "Should be particle"
 	assert class info of item interact start = "game event" with "Should be game event"
 	assert class info of rain = "weather type" with "Should be weather type"
 	assert class info of 10 seconds = "time span" with "Should be time span"

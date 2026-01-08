@@ -52,21 +52,19 @@ import java.util.List;
 @Since("3.8.0")
 public class SecTransmuteRecipe extends Section {
 
-    private static EntryValidator VALIDATOR;
+    private static final EntryValidator VALIDATOR;
 
     static {
-        if (Skript.classExists("org.bukkit.inventory.TransmuteRecipe")) {
-            SimpleEntryValidator builder = SimpleEntryValidator.builder();
-            builder.addRequiredEntry("id", String.class);
-            builder.addRequiredEntry("result", ItemType.class);
-            builder.addRequiredEntry("input", RecipeChoice.class);
-            builder.addRequiredEntry("material", RecipeChoice.class);
-            builder.addOptionalEntry("group", String.class);
-            builder.addOptionalEntry("category", String.class);
+        SimpleEntryValidator builder = SimpleEntryValidator.builder();
+        builder.addRequiredEntry("id", String.class);
+        builder.addRequiredEntry("result", ItemType.class);
+        builder.addRequiredEntry("input", RecipeChoice.class);
+        builder.addRequiredEntry("material", RecipeChoice.class);
+        builder.addOptionalEntry("group", String.class);
+        builder.addOptionalEntry("category", String.class);
 
-            VALIDATOR = builder.build();
-            Skript.registerSection(SecTransmuteRecipe.class, "register transmute recipe");
-        }
+        VALIDATOR = builder.build();
+        Skript.registerSection(SecTransmuteRecipe.class, "register transmute recipe");
     }
 
     private Expression<String> id;

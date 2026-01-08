@@ -18,22 +18,21 @@ import org.jetbrains.annotations.Nullable;
 @Name("DamageSource - Properties")
 @Description("Represents different elements you can get from a damage source.")
 @Examples({"on damage of player:",
-        "\tif damage type of damage source = arrow:",
-        "\t\tbroadcast \"OUCHIE\"",
-        "\tif causing entity of damage source is a chicken:",
-        "\t\tbroadcast \"YOU JERK\""})
+    "\tif damage type of damage source = arrow:",
+    "\t\tbroadcast \"OUCHIE\"",
+    "\tif causing entity of damage source is a chicken:",
+    "\t\tbroadcast \"YOU JERK\""})
 @Since("3.3.0")
 public class ExprDamageSourceProperties extends SimplePropertyExpression<DamageSource, Object> {
 
     static {
         register(ExprDamageSourceProperties.class, Object.class,
-                "(1:causing entity|2:direct entity|3:damage type|4:damage location|5:food exhaustion|6:source location)",
-                "damagesources");
+            "(1:causing entity|2:direct entity|3:damage type|4:damage location|5:food exhaustion|6:source location)",
+            "damagesources");
     }
 
     private int pattern;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = parseResult.mark;

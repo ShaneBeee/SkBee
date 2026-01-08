@@ -9,7 +9,6 @@ import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
-import com.shanebeestudios.skbee.api.listener.OnTheFlipSide;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
@@ -60,9 +59,9 @@ public class AddonLoader {
             return false;
         }
         Version skriptVersion = Skript.getVersion();
-        if (skriptVersion.isSmallerThan(new Version(2, 9, 999))) {
+        if (skriptVersion.isSmallerThan(new Version(2, 11, 999))) {
             Util.logLoading("&cDependency Skript outdated, Skript elements cannot load.");
-            Util.logLoading("&eSkBee requires Skript 2.10+ but found Skript " + skriptVersion);
+            Util.logLoading("&eSkBee requires Skript 2.12+ but found Skript " + skriptVersion);
             return false;
         }
         if (!Skript.isAcceptRegistrations()) {
@@ -122,7 +121,6 @@ public class AddonLoader {
         loadTickManagerElements();
         loadVillagerElements();
         loadVirtualFurnaceElements();
-        loadWorldBorderElements();
         loadWorldCreatorElements();
         loadChunkGenElements();
         loadTestingElements();
@@ -142,7 +140,7 @@ public class AddonLoader {
         }
         if (this.config.ELEMENTS_PROPERTY) {
             int size = PropertyRegistry.properties().size();
-            Util.log(" - %s properties",size);
+            Util.log(" - %s properties", size);
         }
         if (this.config.RUNTIME_DISABLE_ERRORS) {
             Util.logLoading("&eRuntime Errors have been disabled via config!");
@@ -231,10 +229,6 @@ public class AddonLoader {
             Util.logLoading("&5Tick Manager Elements &cdisabled via config");
             return;
         }
-        if (!Skript.classExists("org.bukkit.ServerTickManager")) {
-            Util.logLoading("&5Tick Manager Elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
-            return;
-        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.tickmanager");
             Util.logLoading("&5Tick Manager Elements &asuccessfully loaded");
@@ -260,11 +254,6 @@ public class AddonLoader {
     private void loadTextElements() {
         if (!this.config.ELEMENTS_TEXT_COMPONENT) {
             Util.logLoading("&5Text Component Elements &cdisabled via config");
-            return;
-        }
-        if (!Skript.classExists("io.papermc.paper.event.player.AsyncChatEvent")) {
-            Util.logLoading("&5Text Component Elements &cdisabled");
-            Util.logLoading("&7- Text components require a PaperMC server.");
             return;
         }
         if (Classes.getClassInfoNoError("textcomponent") != null) {
@@ -302,12 +291,6 @@ public class AddonLoader {
             Util.logLoading("&5Virtual Furnace Elements &cdisabled via config");
             return;
         }
-        // PaperMC check
-        if (!Skript.classExists("net.kyori.adventure.text.Component")) {
-            Util.logLoading("&5Virtual Furnace Elements &cdisabled");
-            Util.logLoading("&7- Virtual Furnace require a PaperMC server.");
-            return;
-        }
         try {
             this.plugin.virtualFurnaceAPI = new VirtualFurnaceAPI(this.plugin, true);
             pluginManager.registerEvents(new VirtualFurnaceListener(), this.plugin);
@@ -320,9 +303,6 @@ public class AddonLoader {
 
     private void loadOtherElements() {
         try {
-            if (Skript.classExists("com.destroystokyo.paper.event.entity.EntityAddToWorldEvent")) {
-                this.pluginManager.registerEvents(new OnTheFlipSide(), this.plugin);
-            }
             pluginManager.registerEvents(new EntityListener(), this.plugin);
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.other");
         } catch (Exception ex) {
@@ -448,26 +428,13 @@ public class AddonLoader {
         }
     }
 
-    private void loadWorldBorderElements() {
-        if (!this.config.ELEMENTS_WORLD_BORDER) {
-            Util.logLoading("&5World Border Elements &cdisabled via config");
-            return;
-        }
-        if (Util.IS_RUNNING_SKRIPT_2_11) {
-            Util.logLoading("&5World Border Elements &cdisabled &7(&enow in Skript&7)");
-            return;
-        }
-        try {
-            this.addon.loadClasses("com.shanebeestudios.skbee.elements.worldborder");
-            Util.logLoading("&5World Border Elements &asuccessfully loaded");
-        } catch (Exception ex) {
-            logFailure("World Border", ex);
-        }
-    }
-
     private void loadParticleElements() {
         if (!this.config.ELEMENTS_PARTICLE) {
             Util.logLoading("&5Particle Elements &cdisabled via config");
+            return;
+        }
+        if (Util.IS_RUNNING_SKRIPT_2_14) {
+            Util.log("&5Particle Elements &cdisable &r(&7now in Skript&r)");
             return;
         }
         try {
@@ -509,11 +476,6 @@ public class AddonLoader {
             Util.logLoading("&5Display Entity Elements &cdisabled via config");
             return;
         }
-        if (!Skript.classExists("org.bukkit.entity.TextDisplay$TextAlignment")) {
-            Util.logLoading("&5Display Entity Elements &cdisabled due to a Bukkit API change!");
-            Util.logLoading("&7- &eYou need to update your server to fix this issue!");
-            return;
-        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.display");
             Util.logLoading("&5Display Entity Elements &asuccessfully loaded");
@@ -527,17 +489,11 @@ public class AddonLoader {
             Util.logLoading("&5Damage Source Elements &cdisabled via config");
             return;
         }
-        if (!Skript.classExists("org.bukkit.damage.DamageSource")) {
-            Util.logLoading("&5Damage Source Elements &cdisabled &7(&eRequires Minecraft 1.20.4+&7)");
-            return;
-        }
-        if (Util.IS_RUNNING_SKRIPT_2_12) {
-            Util.logLoading("&5Damage Source Elements &cdisabled &7(&enow in Skript&7)");
-            return;
-        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.damagesource");
             Util.logLoading("&5Damage Source Elements &asuccessfully loaded");
+            Util.log("&7 - Do note these elements are in Skript as 'Experimental'");
+            Util.log("&7 - If issues arise, disable this feature and use Skript's elements instead");
         } catch (Exception ex) {
             logFailure("Damage Source", ex);
         }
@@ -546,10 +502,6 @@ public class AddonLoader {
     private void loadItemComponentElements() {
         if (!this.config.ELEMENTS_ITEM_COMPONENT) {
             Util.logLoading("&5Item Component Elements &cdisabled via config");
-            return;
-        }
-        if (!Skript.classExists("io.papermc.paper.datacomponent.DataComponentTypes")) {
-            Util.logLoading("&5Item Component Elements &cdisabled &7(&eRequires Paper 1.21.3+&7)");
             return;
         }
         try {
@@ -571,13 +523,6 @@ public class AddonLoader {
     }
 
     private void loadRegistryElements() {
-        // We won't use a config for this
-        // Not sure which truly came last
-        if (!Skript.classExists("io.papermc.paper.registry.tag.TagKey") ||
-            !Skript.classExists("io.papermc.paper.registry.RegistryKey")) {
-            Util.logLoading("&5Registry Elements &cdisabled &7(&eRequires Paper 1.21+&7)");
-            return;
-        }
         try {
             this.addon.loadClasses("com.shanebeestudios.skbee.elements.registry");
             Util.logLoading("&5Registry Elements &asuccessfully loaded");

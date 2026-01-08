@@ -18,7 +18,6 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("UnstableApiUsage")
 @Name("DamageSource - Create")
 @Description({"Create a new damage source which includes a damage type and some optional values.",
     "Optional Values:",

@@ -53,7 +53,7 @@ public class EffSecBoundCopy extends EffectSection {
         if (sectionNode != null) {
             AtomicBoolean delayed = new AtomicBoolean(false);
             Runnable afterLoading = () -> delayed.set(!getParser().getHasDelayBefore().isFalse());
-            this.trigger = loadCode(sectionNode, "bound copy", afterLoading, BoundCreateEvent.class);
+            this.trigger = loadCode(sectionNode, "bound copy", null, afterLoading, BoundCreateEvent.class);
             if (delayed.get()) {
                 Skript.error("Delays can't be within a Copy Bound section.");
                 return false;

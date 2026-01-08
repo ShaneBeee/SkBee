@@ -34,12 +34,9 @@ import java.util.Objects;
 @Since("2.6.0")
 public class ExprObjCreate extends SimpleExpression<Objective> {
 
-    private static final boolean HAS_CRITERIA_CLASS = Skript.classExists("org.bukkit.scoreboard.Criteria");
-
     static {
-        String pattern = HAS_CRITERIA_CLASS ? "criteria/string" : "string";
         Skript.registerExpression(ExprObjCreate.class, Objective.class, ExpressionType.COMBINED,
-            "objective with id %string% with [criteria] %" + pattern + "% named " +
+            "objective with id %string% with [criteria] %criteria/string% named " +
                 "%string% [(for|of|from) %scoreboard%] [with render[ ]type %-rendertype%] [(with|in) [display[ ]slot] %-displayslot%]");
     }
 
@@ -82,25 +79,14 @@ public class ExprObjCreate extends SimpleExpression<Objective> {
 
         objective = scoreboard.getObjective(id);
         if (objective == null) {
-            if (HAS_CRITERIA_CLASS) {
-                Criteria criteria;
-                Object object = this.criteria.getSingle(event);
-                if (object instanceof Criteria c) criteria = c;
-                else if (object instanceof String string) criteria = Criteria.create(string);
-                else return null;
+            Criteria criteria;
+            Object object = this.criteria.getSingle(event);
+            if (object instanceof Criteria c) criteria = c;
+            else if (object instanceof String string) criteria = Criteria.create(string);
+            else return null;
 
-                if (displayName != null) {
-                    objective = scoreboard.registerNewObjective(id, criteria, displayName, Objects.requireNonNullElseGet(renderType, criteria::getDefaultRenderType));
-                }
-            } else {
-                String criteria = (String) this.criteria.getSingle(event);
-                if (displayName != null && criteria != null) {
-                    if (renderType != null) {
-                        objective = scoreboard.registerNewObjective(id, criteria, displayName, renderType);
-                    } else {
-                        objective = scoreboard.registerNewObjective(id, criteria, displayName);
-                    }
-                }
+            if (displayName != null) {
+                objective = scoreboard.registerNewObjective(id, criteria, displayName, Objects.requireNonNullElseGet(renderType, criteria::getDefaultRenderType));
             }
             if (this.displaySlot != null) {
                 DisplaySlot displaySlot = this.displaySlot.getSingle(event);

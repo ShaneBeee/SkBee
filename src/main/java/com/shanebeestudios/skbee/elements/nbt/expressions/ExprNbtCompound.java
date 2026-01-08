@@ -81,8 +81,6 @@ import org.jetbrains.annotations.NotNull;
 @Since("1.6.0")
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
-    // My reflection requires Paper/Mojmap. I cant be bothered to re-write this for Spigot
-    private static final boolean HAS_VANILLA_NBT = Skript.classExists("net.minecraft.server.level.ServerPlayer");
     private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().NBT_ALLOW_UNSAFE_OPERATIONS;
 
     static {
@@ -104,10 +102,6 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
         setExpr(expr);
         this.isFullItem = parseResult.hasTag("full");
         this.isVanilla = parseResult.hasTag("vanilla");
-        if (this.isVanilla && !HAS_VANILLA_NBT) {
-            Skript.error("Vanilla NBT requires a PaperMC server (or any other MojMapped server).");
-            return false;
-        }
         this.isCustom = parseResult.hasTag("custom");
         this.isCopy = parseResult.hasTag("copy");
         this.isFile = matchedPattern == 1;

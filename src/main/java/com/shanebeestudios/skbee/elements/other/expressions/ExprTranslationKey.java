@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
@@ -17,9 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprTranslationKey extends SimplePropertyExpression<Object, String> {
 
     static {
-        if (Skript.classExists("net.kyori.adventure.translation.Translatable")) {
-            register(ExprTranslationKey.class, String.class, "translation key[s]", "objects");
-        }
+        register(ExprTranslationKey.class, String.class, "translation key[s]", "objects");
     }
 
     @Override

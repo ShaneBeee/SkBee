@@ -48,8 +48,7 @@ public class SecExprBlankNBTCompound extends SectionExpression<NBTCompound> {
         if (sectionNode != null) {
             AtomicBoolean delayed = new AtomicBoolean(false);
             Runnable afterLoading = () -> delayed.set(!getParser().getHasDelayBefore().isFalse());
-            //noinspection unchecked
-            this.trigger = loadCode(sectionNode, "empty nbt modify", afterLoading, NBTEditEvent.class);
+            this.trigger = loadCode(sectionNode, "empty nbt modify", null, afterLoading, NBTEditEvent.class);
             if (delayed.get()) {
                 Skript.error("Delays can't be used within an Empty NBT Modify Section");
                 return false;
