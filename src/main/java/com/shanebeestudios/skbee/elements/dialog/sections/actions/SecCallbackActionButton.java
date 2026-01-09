@@ -50,7 +50,7 @@ import java.util.UUID;
     "- `trigger` = This section will run code when the button is clicked.",
     "",
     "**Callback Section Event-Values**:",
-    "- `event-nbt` = Returns NBT from the event (not sure yet what this is used for).",
+    "- `event-nbt` = Returns NBT from the event (will contain data from inputs).",
     "- `event-audience` = The audience represented in this event.",
     "- `event-player` = The player represented in this event (Might be null if the player isn't available yet, such as in the async config event).",
     "- `event-uuid` - The uuid of the player/player connection represented in this event."})
