@@ -53,7 +53,7 @@ import java.util.UUID;
     "**Callback Section Event-Values**:",
     "- `event-nbt` = Returns NBT from the event (will contain data from inputs).",
     "- `event-audience` = The audience represented in this event.",
-    "- `event-playerconnect` = The player connection represented in this event (Used if opening a dialog in the async player connection config evnet).",
+    "- `event-playerconnection` = The player connection represented in this event (Used if opening a dialog in the async player connection config evnet).",
     "- `event-player` = The player represented in this event (Might be null if the player isn't available yet, such as in the async config event).",
     "- `event-string` = The name of the player/player connection represented in this event (Useful if the player is null).",
     "- `event-uuid` - The uuid of the player/player connection represented in this event."})
