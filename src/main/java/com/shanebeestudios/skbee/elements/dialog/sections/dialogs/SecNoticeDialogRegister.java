@@ -12,9 +12,9 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.DialogBase;
@@ -75,9 +75,7 @@ public class SecNoticeDialogRegister extends Section {
         // NOTICE DIALOG STUFF
         VALIDATOR.addEntryData(new SectionEntryData("action", null, true));
 
-        Skript.registerSection(SecNoticeDialogRegister.class,
-            "register [new] notice dialog with id %string/namespacedkey%",
-            "open [new] notice dialog to %audiences%");
+        Skript.registerSection(SecNoticeDialogRegister.class, "open [new] notice dialog to %audiences%");
     }
 
     // GENERAL DIALOG

@@ -12,9 +12,9 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.DialogBase;
@@ -78,9 +78,7 @@ public class SecMultiDialogRegister extends Section {
         VALIDATOR.addEntryData(new SectionEntryData("actions", null, false));
         VALIDATOR.addEntryData(new SectionEntryData("exit_action", null, true));
 
-        Skript.registerSection(SecMultiDialogRegister.class,
-            "register [new] multi action dialog with id %string/namespacedkey%",
-            "open [new] multi action dialog to %audiences%");
+        Skript.registerSection(SecMultiDialogRegister.class, "open [new] multi action dialog to %audiences%");
     }
 
     // GENERAL DIALOG
