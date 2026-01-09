@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.api.event.dialog;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
+import io.papermc.paper.connection.PlayerConnection;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -35,10 +36,21 @@ public class DialogCallbackEvent extends Event {
         return null;
     }
 
+    public @Nullable String getName() {
+        if (this.audience instanceof Player player) return player.getName();
+        else if (this.audience instanceof PlayerConfigurationConnection connection) return connection.getProfile().getName();
+        return null;
+    }
+
     public @Nullable UUID getUUID() {
         if (this.audience instanceof Player player) return player.getUniqueId();
         else if (this.audience instanceof PlayerConfigurationConnection connection)
             return connection.getProfile().getId();
+        return null;
+    }
+
+    public @Nullable PlayerConnection getConnection() {
+        if (this.audience instanceof PlayerConnection playerConnection) return playerConnection;
         return null;
     }
 

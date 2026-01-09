@@ -21,6 +21,7 @@ import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
+import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.action.DialogAction;
 import net.kyori.adventure.audience.Audience;
@@ -52,7 +53,9 @@ import java.util.UUID;
     "**Callback Section Event-Values**:",
     "- `event-nbt` = Returns NBT from the event (will contain data from inputs).",
     "- `event-audience` = The audience represented in this event.",
+    "- `event-playerconnect` = The player connection represented in this event (Used if opening a dialog in the async player connection config evnet).",
     "- `event-player` = The player represented in this event (Might be null if the player isn't available yet, such as in the async config event).",
+    "- `event-string` = The name of the player/player connection represented in this event (Useful if the player is null).",
     "- `event-uuid` - The uuid of the player/player connection represented in this event."})
 @Examples({"add callback action button:",
     "\tlabel: \"Spawn\"",
@@ -67,8 +70,10 @@ public class SecCallbackActionButton extends Section {
     static {
         EventValues.registerEventValue(DialogCallbackEvent.class, NBTCompound.class, DialogCallbackEvent::getNbtCompound);
         EventValues.registerEventValue(DialogCallbackEvent.class, Audience.class, DialogCallbackEvent::getAudience);
+        EventValues.registerEventValue(DialogCallbackEvent.class, PlayerConnection.class, DialogCallbackEvent::getConnection);
         EventValues.registerEventValue(DialogCallbackEvent.class, Player.class, DialogCallbackEvent::getPlayer);
         EventValues.registerEventValue(DialogCallbackEvent.class, UUID.class, DialogCallbackEvent::getUUID);
+        EventValues.registerEventValue(DialogCallbackEvent.class, String.class, DialogCallbackEvent::getName);
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
         VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
