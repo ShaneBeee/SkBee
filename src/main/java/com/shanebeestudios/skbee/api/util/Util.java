@@ -182,4 +182,22 @@ public class Util {
         return false;
     }
 
+    /**
+     * Check if a dialog input key is valid.
+     * Must contain only numbers, letters and underscores
+     *
+     * @param key Key to check
+     * @return Whether valid
+     */
+    public static boolean isValidDialogInputKey(String key) {
+        for (int i = 0; i < key.length(); i++) {
+            char c = key.charAt(i);
+            if (!Character.isLetterOrDigit(c) && c != '_') {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
 }

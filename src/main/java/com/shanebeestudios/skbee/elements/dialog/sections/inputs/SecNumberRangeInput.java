@@ -12,6 +12,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.skript.base.Section;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
@@ -113,6 +114,10 @@ public class SecNumberRangeInput extends Section {
         // GENERAL INPUT
         String key = this.key.getSingle(event);
         if (key == null) {
+            return next;
+        }
+        if (!Util.isValidDialogInputKey(key)) {
+            error("Invalid key. Must only contain letters, numbers and underscores but found: " + key);
             return next;
         }
 
