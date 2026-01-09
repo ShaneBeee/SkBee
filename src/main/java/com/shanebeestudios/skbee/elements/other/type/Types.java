@@ -23,6 +23,7 @@ import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
+import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.Chunk.LoadLevel;
@@ -522,6 +523,19 @@ public class Types {
             .since("3.8.0");
         Classes.registerClass(audienceClassInfo);
         setupUsage(audienceClassInfo);
+
+        if (Classes.getExactClassInfo(PlayerConnection.class) == null) {
+            Classes.registerClass(new ClassInfo<>(PlayerConnection.class, "playerconnection")
+                .user("player ?connections?")
+                .name("Player Connection")
+                .description("Represents the connection of a player in an async connect config event and custom click event.")
+                .defaultExpression(new EventValueExpression<>(PlayerConnection.class))
+                .parser(SkriptUtils.getDefaultParser())
+                .since("INSERT VERSION"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'playerconnection' already.");
+            Util.logLoading("You may have to use their PlayerConnection in SkBee's syntaxes.");
+        }
     }
 
     // FUNCTIONS

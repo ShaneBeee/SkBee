@@ -57,6 +57,7 @@ types:
     objective: objective¦s
     particle: particle¦s @-
     particlespell: particle spell¦s @-
+    playerconnection: player connection¦s
     playerspawnchangereason: player spawn change reason¦s
     pose: pose¦s
     potioneffectcause: potion effect cause¦s
