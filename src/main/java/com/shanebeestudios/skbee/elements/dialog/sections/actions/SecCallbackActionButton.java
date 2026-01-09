@@ -36,7 +36,7 @@ import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
-import java.util.Optional;
+import java.util.UUID;
 
 @SuppressWarnings("UnstableApiUsage")
 @Name("Dialog - Callback Action Button")
@@ -52,7 +52,8 @@ import java.util.Optional;
     "**Callback Section Event-Values**:",
     "- `event-nbt` = Returns NBT from the event (not sure yet what this is used for).",
     "- `event-audience` = The audience represented in this event.",
-    "- `event-player` = The player represented in this event (Might be null if the player isn't available yet, such as in the async config event)."})
+    "- `event-player` = The player represented in this event (Might be null if the player isn't available yet, such as in the async config event).",
+    "- `event-uuid` - The uuid of the player/player connection represented in this event."})
 @Examples({"add callback action button:",
     "\tlabel: \"Spawn\"",
     "\ttooltip: \"Teleport yoursel to spawn!\"",
@@ -66,11 +67,8 @@ public class SecCallbackActionButton extends Section {
     static {
         EventValues.registerEventValue(DialogCallbackEvent.class, NBTCompound.class, DialogCallbackEvent::getNbtCompound);
         EventValues.registerEventValue(DialogCallbackEvent.class, Audience.class, DialogCallbackEvent::getAudience);
-        EventValues.registerEventValue(DialogCallbackEvent.class, Player.class, from -> {
-            if (from.getAudience() instanceof Player player) return player;
-            return null;
-        });
-
+        EventValues.registerEventValue(DialogCallbackEvent.class, Player.class, DialogCallbackEvent::getPlayer);
+        EventValues.registerEventValue(DialogCallbackEvent.class, UUID.class, DialogCallbackEvent::getUUID);
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
         VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
@@ -133,23 +131,20 @@ public class SecCallbackActionButton extends Section {
             error("Unknown label object: " + Classes.toString(labelObject));
             return next;
         }
+        ActionButton.Builder actionButtonBuilder = ActionButton.builder(label);
 
-        Optional<Component> tooltip = Optional.empty();
         if (this.tooltip != null) {
             Object tooltipSingle = this.tooltip.getSingle(event);
             if (tooltipSingle instanceof ComponentWrapper cw) {
-                tooltip = Optional.of(cw.getComponent());
+                actionButtonBuilder.tooltip(cw.getComponent());
             } else if (tooltipSingle instanceof String string) {
-                tooltip = Optional.of(ComponentWrapper.fromText(string).getComponent());
+                actionButtonBuilder.tooltip(ComponentWrapper.fromText(string).getComponent());
             }
         }
 
-        ActionButton.Builder actionButtonBuilder = ActionButton.builder(label);
-        tooltip.ifPresent(actionButtonBuilder::tooltip);
         if (this.width != null) {
             actionButtonBuilder.width(this.width.getSingle(event));
         }
-
 
         if (event instanceof DialogRegisterEvent actionEvent) {
 
@@ -177,7 +172,7 @@ public class SecCallbackActionButton extends Section {
     }
 
     @Override
-    public String toString(@Nullable Event event, boolean debug) {
+    public String toString(@Nullable Event e, boolean d) {
         return "add callback action button";
     }
 
