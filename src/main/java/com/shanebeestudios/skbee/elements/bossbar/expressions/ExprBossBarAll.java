@@ -10,8 +10,8 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import org.bukkit.Bukkit;
-import org.bukkit.boss.BossBar;
+import com.shanebeestudios.skbee.api.util.BossBarUtils;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -27,21 +27,17 @@ public class ExprBossBarAll extends SimpleExpression<BossBar> {
 
     static {
         Skript.registerExpression(ExprBossBarAll.class, BossBar.class, ExpressionType.SIMPLE,
-                "all boss[ ]bars");
+            "all boss[ ]bars");
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable BossBar[] get(Event event) {
-        List<BossBar> bars = new ArrayList<>();
-        Bukkit.getBossBars().forEachRemaining(bars::add);
-        return bars.toArray(new BossBar[0]);
+        return BossBarUtils.getAllBossBars().toArray(new BossBar[0]);
     }
 
     @Override

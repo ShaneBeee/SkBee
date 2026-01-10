@@ -14,12 +14,9 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.BossBarUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
-import org.bukkit.Bukkit;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.NamespacedKey;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
-import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -38,28 +35,27 @@ public class ExprBossBarCreate extends SimpleExpression<BossBar> {
 
     static {
         Skript.registerExpression(ExprBossBarCreate.class, BossBar.class, ExpressionType.COMBINED,
-            "[new] boss[ ]bar [(named|with id) %-string%] with title %string% [with (color|colour) %-color%] " +
+            "[new] boss[ ]bar [(named|with id) %-string%] with title %string/textcomponent% [with (color|colour) %-color%] " +
                 "[with style %-bossbarstyle%] [with progress %-number%]");
     }
 
     private Expression<String> key;
-    private Expression<String> title;
+    private Expression<?> title;
     private Expression<SkriptColor> color;
-    private Expression<BarStyle> barStyle;
+    private Expression<BossBar.Overlay> barStyle;
     private Expression<Number> progress;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.key = (Expression<String>) exprs[0];
-        this.title = (Expression<String>) exprs[1];
+        this.title = exprs[1];
         this.color = (Expression<SkriptColor>) exprs[2];
-        this.barStyle = (Expression<BarStyle>) exprs[3];
+        this.barStyle = (Expression<BossBar.Overlay>) exprs[3];
         this.progress = (Expression<Number>) exprs[4];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable BossBar[] get(Event event) {
 
@@ -69,33 +65,33 @@ public class ExprBossBarCreate extends SimpleExpression<BossBar> {
             if (keyString != null) key = Util.getNamespacedKey(keyString, false);
 
             if (key != null) {
-                KeyedBossBar bossBar = Bukkit.getBossBar(key);
+                BossBar bossBar = BossBarUtils.getByKey(key);
                 if (bossBar != null) return new BossBar[]{bossBar};
             }
         }
 
-        String title = null;
-        if (this.title != null && this.title.getSingle(event) != null) {
-            title = this.title.getSingle(event);
+        ComponentWrapper title = null;
+        if (this.title != null) {
+            Object titleObject = this.title.getSingle(event);
+            if (titleObject instanceof ComponentWrapper cw) title = cw;
+            else if (titleObject instanceof String s) title = ComponentWrapper.fromText(s);
         }
+        if (title == null) title = ComponentWrapper.empty();
 
-        BarColor barColor = null;
+        SkriptColor barColor = null;
         if (this.color != null) {
             SkriptColor skriptColor = this.color.getSingle(event);
             if (skriptColor != null) {
-                barColor = BossBarUtils.getBossBarColor(skriptColor);
+                barColor = skriptColor;
             }
         }
-        if (barColor == null) {
-            barColor = BarColor.PURPLE;
-        }
 
-        BarStyle barStyle = null;
+        BossBar.Overlay barStyle = null;
         if (this.barStyle != null) {
             barStyle = this.barStyle.getSingle(event);
         }
         if (barStyle == null) {
-            barStyle = BarStyle.SEGMENTED_20;
+            barStyle = BossBar.Overlay.NOTCHED_20;
         }
 
         float progress = 1;
@@ -107,11 +103,10 @@ public class ExprBossBarCreate extends SimpleExpression<BossBar> {
         }
         BossBar bossBar;
         if (key != null) {
-            bossBar = Bukkit.createBossBar(key, title, barColor, barStyle);
+            bossBar = BossBarUtils.create(key, title, barColor, barStyle, progress);
         } else {
-            bossBar = Bukkit.createBossBar(title, barColor, barStyle);
+            bossBar = BossBarUtils.create(title, barColor, barStyle, progress);
         }
-        bossBar.setProgress(progress);
 
         return new BossBar[]{bossBar};
     }

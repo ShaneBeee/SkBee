@@ -16,26 +16,28 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.util.BossBarUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarFlag;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.boss.BossBar;
+import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import net.kyori.adventure.audience.Audience;
+import net.kyori.adventure.bossbar.BossBar;
+import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("NullableProblems")
+import java.util.ArrayList;
+import java.util.List;
+
 @Name("BossBar - Properties")
 @Description({"Represents the properties of a BossBar that can be changed.",
     "Progress of a bar is a number from 0-100."})
 @Examples({"set {_players::*} to bar players of {_bar}",
     "set bar color of {_bar} to blue",
-    "set bar style of {_bar} to segmented 20",
+    "set bar style of {_bar} to notched_20",
     "set bar title of {_bar} to \"Le-Title\"",
     "reset bar title of {_bar}",
     "set bar progress of {_bar} to 100",
-    "set bar flag darken sky of {_bar} to true"})
+    "set bar flag darken_screen of {_bar} to true"})
 @Since("2.14.1")
 public class ExprBossBarProperties extends SimpleExpression<Object> {
 
@@ -46,8 +48,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
             "[boss[ ]]bar style of %bossbar%",
             "[boss[ ]]bar title of %bossbar%",
             "[boss[ ]]bar progress of %bossbar%",
-            "[boss[ ]]bar flag %bossbarflag% of %bossbar%",
-            "[boss[ ]]bar visibility of %bossbar%");
+            "[boss[ ]]bar flag %bossbarflag% of %bossbar%");
     }
 
     private static final int PLAYERS = 0;
@@ -56,17 +57,16 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
     private static final int BAR_TITLE = 3;
     private static final int BAR_PROGRESS = 4;
     private static final int BAR_FLAG = 5;
-    private static final int BAR_VISIBILITY = 6;
     private int pattern;
     private Expression<BossBar> bossBar;
-    private Expression<BarFlag> barFlag;
+    private Expression<BossBar.Flag> barFlag;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        pattern = matchedPattern;
-        bossBar = (Expression<BossBar>) exprs[pattern == 5 ? 1 : 0];
-        barFlag = pattern == 5 ? (Expression<BarFlag>) exprs[0] : null;
+        this.pattern = matchedPattern;
+        this.bossBar = (Expression<BossBar>) exprs[this.pattern == 5 ? 1 : 0];
+        this.barFlag = this.pattern == 5 ? (Expression<BossBar.Flag>) exprs[0] : null;
         return true;
     }
 
@@ -77,33 +77,33 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
 
         switch (this.pattern) {
             case PLAYERS -> {
-                return bossBar.getPlayers().toArray(new Player[0]);
+                List<Player> players = new ArrayList<>();
+                bossBar.viewers().forEach(bossBarViewer -> {
+                    if (bossBarViewer instanceof Player player) players.add(player);
+                });
+                return players.toArray(new Player[0]);
             }
             case BAR_COLOR -> {
-                return new SkriptColor[]{BossBarUtils.getSkriptColor(bossBar.getColor())};
+                return new SkriptColor[]{BossBarUtils.getSkriptColor(bossBar.color())};
             }
             case BAR_STYLE -> {
-                return new BarStyle[]{bossBar.getStyle()};
+                return new BossBar.Overlay[]{bossBar.overlay()};
             }
             case BAR_TITLE -> {
-                return new String[]{bossBar.getTitle()};
+                return new ComponentWrapper[]{ComponentWrapper.fromComponent(bossBar.name())};
             }
             case BAR_PROGRESS -> {
-                return new Number[]{(bossBar.getProgress() * 100)};
+                return new Number[]{(bossBar.progress() * 100)};
             }
             case BAR_FLAG -> {
-                BarFlag barFlag = this.barFlag.getSingle(event);
+                BossBar.Flag barFlag = this.barFlag.getSingle(event);
                 if (barFlag == null) return null;
                 return new Boolean[]{bossBar.hasFlag(barFlag)};
-            }
-            case BAR_VISIBILITY -> {
-                return new Boolean[]{bossBar.isVisible()};
             }
         }
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (this.pattern == PLAYERS) {
@@ -111,21 +111,17 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
                 return CollectionUtils.array(Player[].class);
             }
         } else if (this.pattern == BAR_COLOR && mode == ChangeMode.SET) {
-            return CollectionUtils.array(Color.class, BarColor.class);
+            return CollectionUtils.array(Color.class, BossBar.Color.class);
         } else if (this.pattern == BAR_STYLE && mode == ChangeMode.SET) {
-            return CollectionUtils.array(BarStyle.class);
+            return CollectionUtils.array(BossBar.Overlay.class);
         } else if (this.pattern == BAR_TITLE && (mode == ChangeMode.SET || mode == ChangeMode.RESET || mode == ChangeMode.DELETE)) {
-            return CollectionUtils.array(String.class);
+            return CollectionUtils.array(String.class, ComponentWrapper.class);
         } else if (this.pattern == BAR_PROGRESS) {
             if (mode == ChangeMode.ADD || mode == ChangeMode.REMOVE || mode == ChangeMode.SET || mode == ChangeMode.RESET) {
                 return CollectionUtils.array(Number.class);
             }
         } else if (this.pattern == BAR_FLAG) {
             if (mode == ChangeMode.SET || mode == ChangeMode.REMOVE) {
-                return CollectionUtils.array(Boolean.class);
-            }
-        } else if (this.pattern == BAR_VISIBILITY) {
-            if (mode == ChangeMode.SET) {
                 return CollectionUtils.array(Boolean.class);
             }
         }
@@ -142,42 +138,45 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
         if (this.pattern == PLAYERS) {
             if (delta instanceof Player[] players) {
                 if (mode == ChangeMode.SET || mode == ChangeMode.RESET) {
-                    bossBar.removeAll();
+                    bossBar.viewers().forEach(bossBarViewer -> {
+                        if (bossBarViewer instanceof Audience audience) bossBar.removeViewer(audience);
+                    });
                 }
                 if (mode == ChangeMode.ADD || mode == ChangeMode.SET) {
                     for (Player player : players) {
-                        bossBar.addPlayer(player);
+                        bossBar.addViewer(player);
                     }
                 } else if (mode == ChangeMode.REMOVE) {
                     for (Player player : players) {
-                        bossBar.removePlayer(player);
+                        bossBar.removeViewer(player);
                     }
                 }
 
             }
         } else if (this.pattern == BAR_COLOR && mode == ChangeMode.SET) {
             if (object instanceof SkriptColor skriptColor) {
-                BarColor bossBarColor = BossBarUtils.getBossBarColor(skriptColor);
-                bossBar.setColor(bossBarColor);
-            } else if (object instanceof BarColor barColor) {
-                bossBar.setColor(barColor);
+                BossBar.Color bossBarColor = BossBarUtils.getBossBarColor(skriptColor);
+                bossBar.color(bossBarColor);
+            } else if (object instanceof BossBar.Color barColor) {
+                bossBar.color(barColor);
             }
         } else if (this.pattern == BAR_STYLE && mode == ChangeMode.SET) {
-            if (object instanceof BarStyle barStyle) {
-                bossBar.setStyle(barStyle);
+            if (object instanceof BossBar.Overlay barStyle) {
+                bossBar.overlay(barStyle);
             }
         } else if (this.pattern == BAR_TITLE) {
-            if (mode == ChangeMode.SET && object instanceof String title) {
-                bossBar.setTitle(title);
+            if (mode == ChangeMode.SET) {
+                if (object instanceof String s) bossBar.name(ComponentWrapper.fromText(s).getComponent());
+                else if (object instanceof ComponentWrapper cw) bossBar.name(cw.getComponent());
             } else if (mode == ChangeMode.RESET || mode == ChangeMode.DELETE) {
-                bossBar.setTitle(null);
+                bossBar.name(Component.empty());
             }
         } else if (this.pattern == BAR_PROGRESS) {
             if (mode == ChangeMode.RESET) {
-                bossBar.setProgress(1.0);
+                bossBar.progress(1.0f);
             } else if (object instanceof Number number) {
-                double newProgress = 0;
-                double oldProgress = bossBar.getProgress();
+                float newProgress = 0;
+                float oldProgress = bossBar.progress();
                 float progress = number.floatValue() / 100;
                 if (mode == ChangeMode.SET) {
                     newProgress = progress;
@@ -187,12 +186,12 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
                     newProgress = oldProgress - progress;
                 }
 
-                newProgress = MathUtil.clamp((float) newProgress, 0, 1);
-                if (Double.isNaN(newProgress)) newProgress = 0;
-                bossBar.setProgress(newProgress);
+                newProgress = MathUtil.clamp(newProgress, 0, 1);
+                if (Float.isNaN(newProgress)) newProgress = 0;
+                bossBar.progress(newProgress);
             }
         } else if (this.pattern == BAR_FLAG) {
-            BarFlag barFlag = this.barFlag.getSingle(event);
+            BossBar.Flag barFlag = this.barFlag.getSingle(event);
             if (barFlag == null) return;
 
             if (mode == ChangeMode.SET && object instanceof Boolean setter) {
@@ -204,8 +203,6 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
             } else if (mode == ChangeMode.REMOVE) {
                 bossBar.removeFlag(barFlag);
             }
-        } else if (this.pattern == BAR_VISIBILITY && object instanceof Boolean isVisible) {
-            bossBar.setVisible(isVisible);
         }
     }
 
@@ -219,10 +216,10 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
         return switch (this.pattern) {
             case PLAYERS -> Player.class;
             case BAR_COLOR -> SkriptColor.class;
-            case BAR_STYLE -> BarStyle.class;
-            case BAR_TITLE -> String.class;
+            case BAR_STYLE -> BossBar.Overlay.class;
+            case BAR_TITLE -> ComponentWrapper.class;
             case BAR_PROGRESS -> Number.class;
-            case BAR_FLAG, BAR_VISIBILITY -> Boolean.class;
+            case BAR_FLAG ->  Boolean.class;
             default -> throw new IllegalStateException("Unexpected value: " + this.pattern);
         };
     }
@@ -236,7 +233,6 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
             case BAR_TITLE -> "bar title";
             case BAR_PROGRESS -> "bar progress";
             case BAR_FLAG -> "bar flag " + this.barFlag.toString(e, d);
-            case BAR_VISIBILITY -> "bar visibility";
             default -> "null?!?!";
         };
         return prop + " of boss bar " + this.bossBar.toString(e, d);

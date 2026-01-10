@@ -10,11 +10,10 @@ import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.BossBarUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import org.bukkit.Bukkit;
+import net.kyori.adventure.bossbar.BossBar;
 import org.bukkit.NamespacedKey;
-import org.bukkit.boss.BossBar;
-import org.bukkit.boss.KeyedBossBar;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -34,21 +33,20 @@ public class ExprBossBarByID extends SimpleExpression<BossBar> {
 
     private Expression<String> key;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
         this.key = (Expression<String>) exprs[0];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected BossBar @Nullable [] get(Event event) {
         String name = this.key.getSingle(event);
         if (name == null) return null;
         NamespacedKey key = Util.getNamespacedKey(name, true);
         if (key != null) {
-            KeyedBossBar bossBar = Bukkit.getBossBar(key);
+            BossBar bossBar = BossBarUtils.getByKey(key);
             if (bossBar != null) return new BossBar[]{bossBar};
         }
         return null;
