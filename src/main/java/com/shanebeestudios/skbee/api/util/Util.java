@@ -35,6 +35,7 @@ public class Util {
 
     // QuickLinks
     public static final String MCWIKI_TICK_COMMAND = "See [**Tick Command**](https://minecraft.wiki/w/Commands/tick) on McWiki for more details.";
+    public static final String AUTO_GEN_NOTE = "NOTE: These are auto-generated and may differ between server versions, currently generated for Minecraft " + Bukkit.getMinecraftVersion() + ".";
 
     // Shortcut for finding stuff to remove later
     public static final boolean IS_RUNNING_SKRIPT_2_13 = Skript.getVersion().isLargerThan(new Version(2, 12, 999));
