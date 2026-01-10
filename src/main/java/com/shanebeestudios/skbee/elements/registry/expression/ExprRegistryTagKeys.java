@@ -19,6 +19,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Name("Registry - TagKeys from Registry")
@@ -51,6 +52,7 @@ public class ExprRegistryTagKeys extends SimpleExpression<TagKey> {
         Registry<?> registry = RegistryAccess.registryAccess().getRegistry(registryKey);
         List<TagKey<?>> tagKeys = new ArrayList<>();
         registry.getTags().forEach(tag -> tagKeys.add(tag.tagKey()));
+        tagKeys.sort(Comparator.comparing(tagKey -> tagKey.key().toString()));
         return tagKeys.toArray(new TagKey[0]);
     }
 

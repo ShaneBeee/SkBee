@@ -1,39 +1,39 @@
 # Welcome to SkBee
 
 settings:
-    # Enable this if you would like to see more verbose debug messages
-    debug: false
+  # Enable this if you would like to see more verbose debug messages
+  debug: false
 
-    # Enable this to automatically check for SkBee updates
-    # Disable this if you do not want to check for updates, or it takes too long/has issues checking
-    update-checker:
-        # Whether or not to check for updates
-        enabled: true
-        # Whether or not the update check should be done on another thread
-        async: false
+  # Enable this to automatically check for SkBee updates
+  # Disable this if you do not want to check for updates, or it takes too long/has issues checking
+  update-checker:
+    # Whether or not to check for updates
+    enabled: true
+    # Whether or not the update check should be done on another thread
+    async: false
 
-    # Enable Paper schedulers
-    # This will have no effect on Folia
-    # If you don't know what this does, leave it false
-    use-paper-schedulers: false
+  # Enable Paper schedulers
+  # This will have no effect on Folia
+  # If you don't know what this does, leave it false
+  use-paper-schedulers: false
 
-    # Whether fastboard lines should be in normal order or reversed
-    # False = Line 1 at the top, line 15 at the bottom (default)
-    # True = Line 15 at the top, line 1 at the bottom
-    fastboard-reverse-lines: false
+  # Whether fastboard lines should be in normal order or reversed
+  # False = Line 1 at the top, line 15 at the bottom (default)
+  # True = Line 15 at the top, line 1 at the bottom
+  fastboard-reverse-lines: false
 
-    # Whether to allow NBT-API to attempt to load when MC version is not found
-    # If NBT-API hasn't updated a Minecraft version yet and neither has SkBee,
-    # This will allow NBT-API to attempt to use the latest Minecraft mappings
-    # Not recommended to use, use at your own risk after much testing
-    allow-nbt-force-load-unknown-version: false
+  # Whether to allow NBT-API to attempt to load when MC version is not found
+  # If NBT-API hasn't updated a Minecraft version yet and neither has SkBee,
+  # This will allow NBT-API to attempt to use the latest Minecraft mappings
+  # Not recommended to use, use at your own risk after much testing
+  allow-nbt-force-load-unknown-version: false
 
-    # Whether to allow unsafe NBT opersations
-    # This includes handling NBT off the main thread
-    # The API behind NBT doesn't fully allow this
-    # Not recommended to use
-    # No support will be given for breakages due to this
-    allow-unsafe-nbt-operations: false
+  # Whether to allow unsafe NBT opersations
+  # This includes handling NBT off the main thread
+  # The API behind NBT doesn't fully allow this
+  # Not recommended to use
+  # No support will be given for breakages due to this
+  allow-unsafe-nbt-operations: false
 
 
 # Disable elements you do not plan to use.
@@ -165,10 +165,10 @@ bound-events:
   vehicle-destroy: true
 
 runtime:
-    # Disable SkBee's runtime errors if you find them overbearing
-    disable-errors: false
-    # Disable SkBee's runtime warnings if you find them overbearing
-    disable-warnings: false
+  # Disable SkBee's runtime errors if you find them overbearing
+  disable-errors: false
+  # Disable SkBee's runtime warnings if you find them overbearing
+  disable-warnings: false
 
 special:
   on-the-flip-side: true

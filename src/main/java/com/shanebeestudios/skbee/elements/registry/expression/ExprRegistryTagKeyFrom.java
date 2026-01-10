@@ -22,12 +22,15 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Registry - TagKey from Registry")
-@Description("Get a TagKey from a registry.")
+@Description({"Get a TagKey from a registry.",
+    "You can check if a tag key contains an object. Think of it like a list."})
 @Examples({"set {_tagkey} to tag key \"minecraft:wool\" from block registry",
+    "if {_tagkey} contains player's tool:",
     "set {_tagkey} to tag key \"my_pack:cool_enchantments\" from enchantment registry",
-    "set {_tagkey} to item registry tag key \"minecraft:swords\""})
+    "set {_tagkey} to item registry tag key \"minecraft:swords\"",
+    "if biome registry tag key \"minecraft:is_forest\" contains biome at player:"})
 @Since("3.8.0")
-@SuppressWarnings({"UnstableApiUsage", "rawtypes"})
+@SuppressWarnings({"rawtypes"})
 public class ExprRegistryTagKeyFrom extends SimpleExpression<TagKey> {
 
     static {

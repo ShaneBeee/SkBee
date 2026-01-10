@@ -64,10 +64,11 @@ public class Types {
         Classes.registerClass(CONSUME_EFFECT_INFO);
 
         Classes.registerClass(RegistryClassInfo.create(Registry.DATA_COMPONENT_TYPE, DataComponentType.class,
-                false, "datacomponenttype")
+                true, "datacomponenttype")
             .user("data ?component ?types?")
             .name("Data Component Type")
-            .description("Represents the different types of data components.")
+            .description("Represents the different types of data components.",
+                "See [**Data Components**](https://minecraft.wiki/w/Data_component_format#List_of_components) on McWiki for more detailed info.")
             .since("3.11.0"));
 
         // Functions (ConsumeEffects)

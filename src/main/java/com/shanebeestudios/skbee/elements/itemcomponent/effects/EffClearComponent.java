@@ -17,7 +17,9 @@ import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("UnstableApiUsage")
 @Name("ItemComponent - Clear/Reset Components")
-@Description({"Clear/reset components of an item. Requires Minecraft 1.21+"})
+@Description({"Clear/reset data components of an item. Requires Minecraft 1.21+",
+    "- `clear/remove/unset` = Will remove the component from the item.",
+    "- `reset` = Will reset the data component of the item back to its default value."})
 @Examples({"clear food component of player's tool",
     "clear tool component of player's tool",
     "reset attribute modifier component of player's tool"})

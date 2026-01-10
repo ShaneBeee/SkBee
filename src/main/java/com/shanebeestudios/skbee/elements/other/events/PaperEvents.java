@@ -23,6 +23,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import io.papermc.paper.connection.PlayerCommonConnection;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
+import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.connection.PlayerGameConnection;
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
@@ -47,6 +48,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.UUID;
 
@@ -221,6 +224,7 @@ public class PaperEvents extends SimpleEvent {
                 return (NBTCompound) NBT.parseNBT(tag.string());
             });
             EventValues.registerEventValue(PlayerCustomClickEvent.class, NamespacedKey.class, event -> NamespacedKey.fromString(event.getIdentifier().asString()));
+            EventValues.registerEventValue(PlayerCustomClickEvent.class, PlayerConnection.class, PlayerCustomClickEvent::getCommonConnection);
         }
 
         // UncheckedSignChangeEvent
