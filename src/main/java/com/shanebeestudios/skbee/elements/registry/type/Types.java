@@ -6,11 +6,12 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryHolders;
+import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
 import io.papermc.paper.registry.tag.TagKey;
 
-@SuppressWarnings({"UnstableApiUsage", "rawtypes"})
+@SuppressWarnings({"rawtypes"})
 public class Types {
 
     static {
@@ -19,7 +20,7 @@ public class Types {
             .name("Registry - Registry Key")
             .description("Represents a key for a Minecraft registry.",
                 "Values in square brackets resemble the Skript type linked to the registry.",
-                "Registry names are auto-generated based on the Minecraft registry, these may change at any time.")
+                Util.AUTO_GEN_NOTE)
             .parser(RegistryHolders.createParser())
             .supplier(RegistryHolders.getSupplier())
             .since("3.8.0");

@@ -3,12 +3,16 @@ package com.shanebeestudios.skbee.api.registry;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
+import com.shanebeestudios.skbee.api.util.Util;
+import io.papermc.paper.datacomponent.DataComponentType;
+import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
 import io.papermc.paper.registry.tag.TagKey;
 import net.kyori.adventure.key.Key;
 import org.bukkit.GameEvent;
+import org.bukkit.GameRule;
 import org.bukkit.JukeboxSong;
 import org.bukkit.Keyed;
 import org.bukkit.MusicInstrument;
@@ -19,9 +23,16 @@ import org.bukkit.block.Biome;
 import org.bukkit.block.BlockType;
 import org.bukkit.damage.DamageType;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.entity.Chicken;
+import org.bukkit.entity.Cow;
 import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Frog;
 import org.bukkit.entity.Villager;
+import org.bukkit.entity.Wolf;
+import org.bukkit.entity.ZombieNautilus;
+import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.generator.structure.Structure;
+import org.bukkit.generator.structure.StructureType;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
 import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.potion.PotionEffectType;
@@ -66,25 +77,45 @@ public class RegistryHolders {
         register(RegistryKey.ATTRIBUTE, Attribute.class);
         register(RegistryKey.BIOME, Biome.class);
         register(RegistryKey.BLOCK, ItemType.class, blockType -> new ItemType(blockType.asMaterial()), itemTypeComparator);
+        if (Util.IS_RUNNING_MC_1_21_5) {
+            register(RegistryKey.CHICKEN_VARIANT, Chicken.Variant.class);
+            register(RegistryKey.COW_VARIANT, Cow.Variant.class);
+        }
+        register(RegistryKey.DAMAGE_TYPE, DamageType.class);
+        register(RegistryKey.DATA_COMPONENT_TYPE, DataComponentType.class);
+        if (Util.IS_RUNNING_MC_1_21_7) {
+            register(RegistryKey.DIALOG, Dialog.class);
+        }
         register(RegistryKey.ENCHANTMENT, Enchantment.class);
         register(RegistryKey.ENTITY_TYPE, EntityType.class);
-        register(RegistryKey.DAMAGE_TYPE, DamageType.class);
+        register(RegistryKey.FROG_VARIANT, Frog.Variant.class);
         register(RegistryKey.GAME_EVENT, GameEvent.class);
+        if (Util.IS_RUNNING_MC_1_21_11) {
+            register(RegistryKey.GAME_RULE, GameRule.class);
+        }
         register(RegistryKey.INSTRUMENT, MusicInstrument.class);
         register(RegistryKey.ITEM, ItemType.class, itemType -> new ItemType(itemType.asMaterial()));
         register(RegistryKey.JUKEBOX_SONG, JukeboxSong.class);
+        register(RegistryKey.MEMORY_MODULE_TYPE, MemoryKey.class);
         register(RegistryKey.MOB_EFFECT, PotionEffectType.class);
-        register(RegistryKey.POTION, PotionType.class);
         register(RegistryKey.PARTICLE_TYPE, Particle.class);
+        register(RegistryKey.POTION, PotionType.class);
         register(RegistryKey.SOUND_EVENT, String.class, soundEvent -> soundEvent.key().toString());
         register(RegistryKey.STRUCTURE, Structure.class);
+        register(RegistryKey.STRUCTURE_TYPE, StructureType.class);
         register(RegistryKey.TRIM_MATERIAL, TrimMaterial.class);
         register(RegistryKey.TRIM_PATTERN, TrimPattern.class);
         register(RegistryKey.VILLAGER_PROFESSION, Villager.Profession.class);
         register(RegistryKey.VILLAGER_TYPE, Villager.Type.class);
+        if (Util.IS_RUNNING_MC_1_21_5) {
+            register(RegistryKey.WOLF_VARIANT, Wolf.Variant.class);
+        }
+        if (Util.IS_RUNNING_MC_1_21_11) {
+            register(RegistryKey.ZOMBIE_NAUTILUS_VARIANT, ZombieNautilus.Variant.class);
+        }
     }
 
-    private static <F extends Keyed, T extends Keyed> void register(RegistryKey<F> key, Class<T> returnType) {
+    private static <F extends Keyed, T extends F> void register(RegistryKey<F> key, Class<T> returnType) {
         register(key, returnType, null, (o1, o2) -> {
             TypedKey<F> typedKey = TypedKey.create(o1.registryKey(), o2.key());
             return Relation.get(RegistryAccess.registryAccess().getRegistry(o1.registryKey()).getTag(o1).contains(typedKey));
