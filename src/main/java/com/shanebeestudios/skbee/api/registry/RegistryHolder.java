@@ -10,6 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -57,9 +58,10 @@ public class RegistryHolder<F extends Keyed, T> {
         if (this.converter != null) {
             List<T> values = new ArrayList<>();
             registry.forEach(value -> values.add(this.converter.convert(value)));
+            values.sort(Comparator.comparing(Object::toString));
             return values;
         } else {
-            return (List<T>) registry.stream().toList();
+            return (List<T>) registry.stream().sorted(Comparator.comparing(keyed -> keyed.key().toString())).toList();
         }
     }
 
