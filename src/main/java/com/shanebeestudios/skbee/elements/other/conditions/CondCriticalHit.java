@@ -20,9 +20,9 @@ import org.jetbrains.annotations.Nullable;
 @Name("Is Critical Hit")
 @Description("Check if a hit was a critical hit in a damage event. Requires a PaperMC server.")
 @Examples({"on damage:",
-        "\tif attacker is a player:",
-        "\t\tif hit is critical:",
-        "\t\t\tcancel event"})
+    "\tif attacker is a player:",
+    "\t\tif hit is critical:",
+    "\t\t\tcancel event"})
 @Since("2.8.3")
 public class CondCriticalHit extends Condition {
 
@@ -30,13 +30,8 @@ public class CondCriticalHit extends Condition {
         Skript.registerCondition(CondCriticalHit.class, "hit (is|1:(isn't|is not)) [a] critical");
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        if (!Skript.methodExists(EntityDamageByEntityEvent.class, "isCritical")) {
-            Skript.error("'hit is critical' requires a PaperMC server.", ErrorQuality.SEMANTIC_ERROR);
-            return false;
-        }
         if (!ParserInstance.get().isCurrentEvent(EntityDamageEvent.class)) {
             Skript.error("'hit is critical' is only available in an entity damage event!", ErrorQuality.SEMANTIC_ERROR);
             return false;
@@ -45,7 +40,6 @@ public class CondCriticalHit extends Condition {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
         if (event instanceof EntityDamageByEntityEvent entityEvent) {
