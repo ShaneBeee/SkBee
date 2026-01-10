@@ -32,7 +32,11 @@ public class Types {
         Classes.registerClass(new ClassInfo<>(TagKey.class, "tagkey")
             .user("tag ?keys?")
             .name("Registry - Tag Key")
-            .description("Represents a key for a Minecraft tag.")
+            .description("Represents a key for a Minecraft tag.",
+                "TagKeys can also compare if it contains objects (Think of them like a list).")
+            .examples("set {_tagkey} to tag key \"minecraft:wool\" from block registry",
+                "if {_tagkey} contains player's tool:",
+                "if biome registry tag key \"minecraft:is_forest\" contains biome at player:")
             .since("3.8.0")
             .parser(new Parser<>() {
                 @Override
