@@ -8,14 +8,20 @@ import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.util.ItemUtils;
+import io.papermc.paper.datacomponent.DataComponentTypes;
+import io.papermc.paper.datacomponent.item.ItemArmorTrim;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.meta.ArmorMeta;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+@SuppressWarnings("UnstableApiUsage")
 @Name("ArmorTrim - Item")
 @Description({"Represents the armor trim of an item. You can get, set, add or delete/reset.",
+    "Reset will reset the trim back to any default vanilla value.",
+    "Delete will remove any trim on the item.",
     "Requires Minecraft 1.19.4+"})
 @Examples({"add armor trim from gold_material and eye_pattern to armor trim of player's leggings",
     "set armor trim of player's helmet to armor trim from gold_material and eye_pattern",
@@ -30,8 +36,10 @@ public class ExprArmorTrimItem extends SimplePropertyExpression<ItemType, ArmorT
 
     @Override
     public @Nullable ArmorTrim convert(ItemType itemType) {
-        if (itemType.getItemMeta() instanceof ArmorMeta armorMeta) {
-            return armorMeta.getTrim();
+        ItemStack itemStack = itemType.getRandom();
+        if (itemStack != null && itemStack.hasData(DataComponentTypes.TRIM)) {
+            ItemArmorTrim data = itemStack.getData(DataComponentTypes.TRIM);
+            if (data != null) return data.armorTrim();
         }
         return null;
     }
@@ -46,14 +54,22 @@ public class ExprArmorTrimItem extends SimplePropertyExpression<ItemType, ArmorT
     @SuppressWarnings({"ConstantValue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        ArmorTrim trim = null;
-        if (delta != null && delta[0] instanceof ArmorTrim armorTrim) trim = armorTrim;
-        for (ItemType itemType : getExpr().getArray(event)) {
-            if (itemType.getItemMeta() instanceof ArmorMeta armorMeta) {
-                armorMeta.setTrim(trim);
-                itemType.setItemMeta(armorMeta);
-            }
+        ArmorTrim armorTrim;
+        if (delta != null && delta[0] instanceof ArmorTrim trim) {
+            armorTrim = trim;
+        } else {
+            armorTrim = null;
         }
+
+        ItemUtils.modifyItems(getExpr().getArray(event), itemStack -> {
+            if (armorTrim != null) {
+                itemStack.setData(DataComponentTypes.TRIM, ItemArmorTrim.itemArmorTrim(armorTrim).build());
+            } else if (mode == ChangeMode.RESET) {
+                itemStack.resetData(DataComponentTypes.TRIM);
+            } else if (mode == ChangeMode.DELETE) {
+                itemStack.unsetData(DataComponentTypes.TRIM);
+            }
+        });
     }
 
     @Override
