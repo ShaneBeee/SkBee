@@ -40,7 +40,7 @@ import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Callback Action Button")
+@Name("Dialog - Dynamic Callback Action Button")
 @Description({"Add a dynamic action button to a dialog.",
     "This action includes a callback section to run code when the action button is clicked.",
     "See [**Custom Dynmaic Action**](https://minecraft.wiki/w/Dialog#dynamic/custom) on McWiki for more specific info.",
@@ -63,7 +63,7 @@ import java.util.UUID;
     "\ttrigger:",
     "\t\tteleport event-player to spawn of world \"world\""})
 @Since("INSERT VERSION")
-public class SecCallbackActionButton extends Section {
+public class SecDynamicCallbackActionButton extends Section {
 
     private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
 
@@ -83,7 +83,7 @@ public class SecCallbackActionButton extends Section {
         // DYNAMIC
         VALIDATOR.addSection("trigger", false);
 
-        Skript.registerSection(SecCallbackActionButton.class, "add callback action button");
+        Skript.registerSection(SecDynamicCallbackActionButton.class, "add [dynamic] callback action button");
     }
 
     private boolean exitAction;
