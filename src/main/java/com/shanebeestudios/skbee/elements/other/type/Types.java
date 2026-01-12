@@ -478,7 +478,7 @@ public class Types {
             if (BukkitUtils.registryExists("JUKEBOX_SONG")) {
                 Classes.registerClass(RegistryClassInfo.create(Registry.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
                     .user("jukebox ?songs?")
-                    .name("Instrument")
+                    .name("Jukebox Song")
                     .description("Represents the songs for jukeboxes.",
                         "Requires Minecraft 1.21+", Util.AUTO_GEN_NOTE)
                     .since("3.8.0"));
