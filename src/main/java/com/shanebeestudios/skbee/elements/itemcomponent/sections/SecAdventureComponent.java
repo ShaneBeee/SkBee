@@ -70,6 +70,7 @@ public class SecAdventureComponent extends Section {
             .build();
         Skript.registerSection(SecAdventureComponent.class,
             "apply (place:can place on|can break) [adventure] predicate to %itemstacks/itemtypes/slots%");
+
     }
 
     private Expression<?> items;
