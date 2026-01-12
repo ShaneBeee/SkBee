@@ -1,0 +1,95 @@
+test "SkBee - Dialogs" when running minecraft "1.21.7":
+	# Even though there's no players to open the dialog to,
+	# A world is an audience, so we can still try send it
+	# These are run to catch any parsing issues and internal errors
+	set {_world} to world "world"
+	open multi action dialog to {_world}:
+		title: "Some title"
+		actions:
+			add dynamic action button:
+				label: "Some label"
+				tooltip: mini message from "some tooltip"
+				width: 100
+				id: "some:id"
+				additions: nbt from "{some:1}"
+			add static action button:
+				label: "Some label"
+				tooltip: mini message from "some tooltip"
+				action: click event to run command "/somecommand"
+			add callback action button:
+				label: "Some label"
+				trigger:
+					broadcast "button clicked"
+
+	open confirmation dialog to {_world}:
+		title: "Block Break Confirmation"
+		can_close_with_escape: false
+		body:
+			add plain message body:
+				contents: mini message from "Do you want to break this block?"
+		inputs:
+			add boolean input:
+				label: "some label"
+				key: "boolean_key"
+				initial: true
+				on_true: "true was selected"
+				on_false: "false was selected"
+			add number range input:
+				key: "number_range_key"
+				label: "Slide for Health"
+				width: 300
+				start: 0
+				end: 20
+				step: 1
+				initial: 20
+			add single option input:
+				key: "single_option_key"
+				label: "Choose favorite animal"
+				options:
+					add options entry:
+						id: "something:cat"
+						display: "cat"
+					add options entry:
+						id: "something:dog"
+						display: "dog"
+			add text input:
+				key: "text_input"
+				label: "Input your name to confirm:"
+				initial: "name"
+		after_action: "close"
+
+		actions:
+			add dynamic action button:
+				label: mini message from "Confirm Break"
+				tooltip: mini message from "I wish for the block to break and drop stuff"
+				id: "custom:confirm_break"
+				additions: {_n}
+			add static action button:
+				label: mini message from "Cancel Break"
+				tooltip: mini message from "I do not wish for the block to break"
+
+	open notice dialog to {_world}:
+		title: "Chat Monitor"
+		body:
+			add plain message body:
+				contents: mini message from "<bold><red>You said a bad word!!!"
+			add plain message body:
+				contents: mini message from "<grey>Please don't say <white>""<yellow>%{_v}%<white>"""
+
+	open multi action dialog to {_world}:
+		title: "Some title"
+		external_title: "Some external title"
+		body:
+			add item body:
+				item: diamond sword of unbreaking 3 damaged by 500
+				description:
+					add plain message body:
+						contents: "A Cool Item!"
+						width: 300
+				show_decoration: true
+				show_tooltip: false
+		actions:
+			add callback action button:
+				label: "Some label"
+				trigger:
+					broadcast "button clicked"

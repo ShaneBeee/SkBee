@@ -55,6 +55,9 @@ elements:
   # This is specifically for Minecraft 1.20.4+
   damage-source: true
 
+  # Enable dialog elements
+  dialog: true
+
   # Enable display entity elements
   # This is specifically for Minecraft 1.19.4+
   # Disabled by default as most of these syntaxes are in Skript now
