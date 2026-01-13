@@ -38,6 +38,7 @@ public class SkBee extends JavaPlugin {
     static final int[] EARLIEST_VERSION = new int[]{1, 18, 2};
 
     private static SkBee instance;
+    private Version skBeeVersion;
     private boolean properlyEnabled = true;
     private Config config;
     BoundConfig boundConfig = null;
@@ -55,12 +56,12 @@ public class SkBee extends JavaPlugin {
     /**
      * @hidden
      */
-    @SuppressWarnings("deprecation")
     @Override
     public void onEnable() {
         // Let's get this party started...
         long start = System.currentTimeMillis();
         instance = this;
+        this.skBeeVersion = new Version(this.getPluginMeta().getVersion());
         this.config = new Config(this);
         TaskUtils.initialize(this, Util.IS_RUNNING_FOLIA || this.config.settings_use_paper_schedulers);
         this.addonLoader = new AddonLoader(this);
@@ -71,14 +72,13 @@ public class SkBee extends JavaPlugin {
         loadMetrics();
 
         // Beta check + notice
-        String version = getDescription().getVersion();
-        if (version.contains("-")) {
+        if (this.skBeeVersion.toString().contains("-")) {
             Util.log("&eThis is a BETA build, things may not work as expected, please report any bugs on GitHub");
             Util.log("&ehttps://github.com/ShaneBeee/SkBee/issues");
         }
 
         new UpdateChecker(this);
-        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", version, (float) (System.currentTimeMillis() - start) / 1000);
+        Util.log("&aSuccessfully enabled v%s&7 in &b%.2f seconds", this.skBeeVersion.toString(), (float) (System.currentTimeMillis() - start) / 1000);
 
         // Load custom worlds if enabled in config
         if (this.properlyEnabled && this.beeWorldConfig != null) {
@@ -103,7 +103,7 @@ public class SkBee extends JavaPlugin {
         // Many of these are copied from Skript -> SkriptMetrics.class
         metrics.addCustomChart(new DrilldownPie("plugin_version_drilldown_pie", () -> {
             Version version = new Version(this.getPluginMeta().getVersion());
-            Table<String, String, Integer> table = HashBasedTable.create(1,1);
+            Table<String, String, Integer> table = HashBasedTable.create(1, 1);
             table.put(
                 version.getMajor() + "." + version.getMinor(), // upper label
                 version.toString(), // lower label
@@ -113,7 +113,7 @@ public class SkBee extends JavaPlugin {
         }));
         metrics.addCustomChart(new DrilldownPie("skript_version_drilldown_pie", () -> {
             Version version = Skript.getVersion();
-            Table<String, String, Integer> table = HashBasedTable.create(1,1);
+            Table<String, String, Integer> table = HashBasedTable.create(1, 1);
             table.put(
                 version.getMajor() + "." + version.getMinor(), // upper label
                 version.toString(), // lower label
@@ -123,7 +123,7 @@ public class SkBee extends JavaPlugin {
         }));
         metrics.addCustomChart(new DrilldownPie("minecraft_version_drilldown_pie", () -> {
             Version version = Skript.getMinecraftVersion();
-            Table<String, String, Integer> table = HashBasedTable.create(1,1);
+            Table<String, String, Integer> table = HashBasedTable.create(1, 1);
 
             if (version.getMajor() == 1) {
                 // Minecraft 1.x.x versioning
@@ -140,6 +140,30 @@ public class SkBee extends JavaPlugin {
                     1 // weight
                 );
             }
+            return table.rowMap();
+        }));
+        // Monitor Skript/Minecraft versions used per release of SkBee
+        // This helps us understand which versions of Skript and Minecraft are most commonly used with SkBee per release
+        metrics.addCustomChart(new DrilldownPie("skript_version_per_release_drilldown_pie", () -> {
+            Table<String, String, Integer> table = HashBasedTable.create(1, 1);
+            Version skriptVersion = Skript.getVersion();
+
+            table.put(
+                this.skBeeVersion.getMajor() + "." + this.skBeeVersion.getMinor() + ".x",
+                skriptVersion.toString(),
+                1
+            );
+            return table.rowMap();
+        }));
+        metrics.addCustomChart(new DrilldownPie("minecraft_version_per_release_drilldown_pie", () -> {
+            Table<String, String, Integer> table = HashBasedTable.create(1, 1);
+            Version minecraftVersion = Skript.getMinecraftVersion();
+
+            table.put(
+                this.skBeeVersion.getMajor() + "." + this.skBeeVersion.getMinor() + ".x",
+                minecraftVersion.toString(),
+                1
+            );
             return table.rowMap();
         }));
     }
