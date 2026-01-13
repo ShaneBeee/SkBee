@@ -27,6 +27,7 @@ import org.bukkit.entity.Chicken;
 import org.bukkit.entity.Cow;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Frog;
+import org.bukkit.entity.Pig;
 import org.bukkit.entity.Villager;
 import org.bukkit.entity.Wolf;
 import org.bukkit.entity.ZombieNautilus;
@@ -99,6 +100,9 @@ public class RegistryHolders {
         register(RegistryKey.MEMORY_MODULE_TYPE, MemoryKey.class);
         register(RegistryKey.MOB_EFFECT, PotionEffectType.class);
         register(RegistryKey.PARTICLE_TYPE, Particle.class);
+        if (Util.IS_RUNNING_MC_1_21_5) {
+            register(RegistryKey.PIG_VARIANT, Pig.Variant.class);
+        }
         register(RegistryKey.POTION, PotionType.class);
         register(RegistryKey.SOUND_EVENT, String.class, soundEvent -> soundEvent.key().toString());
         register(RegistryKey.STRUCTURE, Structure.class);
