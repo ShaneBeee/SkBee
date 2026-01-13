@@ -79,12 +79,6 @@ public class AddonLoader {
             }
             return false;
         }
-        Version version = new Version(SkBee.EARLIEST_VERSION);
-        if (!Skript.isRunningMinecraft(version)) {
-            Util.logLoading("&cYour server version &7'&bMC %s&7'&c is not supported, only &7'&bMC %s+&7'&c is supported!", Skript.getMinecraftVersion(), version);
-            Util.logLoading("&7For outdated server versions please see: &ehttps://github.com/ShaneBeee/SkBee#outdated");
-            return false;
-        }
         loadSkriptElements();
         return true;
     }

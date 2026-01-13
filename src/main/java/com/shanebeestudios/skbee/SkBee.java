@@ -34,9 +34,6 @@ public class SkBee extends JavaPlugin {
         ConfigurationSerialization.registerClass(LazyLocation.class, "LazyLocation");
     }
 
-    // Earliest MC Version that SkBee will support
-    static final int[] EARLIEST_VERSION = new int[]{1, 18, 2};
-
     private static SkBee instance;
     private Version skBeeVersion;
     private boolean properlyEnabled = true;
