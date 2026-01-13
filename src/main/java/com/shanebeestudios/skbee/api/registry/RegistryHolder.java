@@ -4,7 +4,6 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.registrations.Classes;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
-import io.papermc.paper.registry.TypedKey;
 import io.papermc.paper.registry.tag.Tag;
 import io.papermc.paper.registry.tag.TagKey;
 import org.bukkit.Keyed;
@@ -81,12 +80,11 @@ public class RegistryHolder<F extends Keyed, T> {
         List<T> values = new ArrayList<>();
         Tag<F> tag = registry.getTag(tagKey);
         if (tag != null) {
-            for (TypedKey<F> fTypedKey : tag) {
-                F f = registry.get(fTypedKey);
+            for (F value : tag.resolve(registry)) {
                 if (this.converter != null) {
-                    values.add(this.converter.convert(f));
+                    values.add(this.converter.convert(value));
                 } else {
-                    values.add((T) f);
+                    values.add((T) value);
                 }
             }
             values.sort(Comparator.comparing(Object::toString));
