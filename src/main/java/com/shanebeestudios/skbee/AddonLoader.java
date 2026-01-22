@@ -429,7 +429,7 @@ public class AddonLoader {
             return;
         }
         if (Util.IS_RUNNING_SKRIPT_2_14) {
-            Util.log("&5Particle Elements &cdisable &r(&7now in Skript&r)");
+            Util.logLoading("&5Particle Elements &cdisable &r(&7now in Skript&r)");
             return;
         }
         try {
