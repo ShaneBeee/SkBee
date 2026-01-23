@@ -120,6 +120,23 @@ public class AddonLoader {
         loadChunkGenElements();
         loadTestingElements();
 
+        String[] elementNames = new String[]{"event", "effect", "expression", "condition", "section"};
+
+        if (false) {
+            // This is just debug code for counting Skript's elements
+            // Activate when I want to see it,
+            // I just don't want to keep typing this out
+            int skriptTotal = 0;
+            for (int j : elementCountBefore) {
+                skriptTotal += j;
+            }
+
+            Util.log("Loaded Skript (%s) elements:", skriptTotal);
+            for (int i = 0; i < elementCountBefore.length; i++) {
+                Util.log(" - %s %s%s", elementCountBefore[i], elementNames[i], elementCountBefore[i] == 1 ? "" : "s");
+            }
+        }
+
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
         int total = 0;
@@ -127,9 +144,8 @@ public class AddonLoader {
             finish[i] = elementCountAfter[i] - elementCountBefore[i];
             total += finish[i];
         }
-        String[] elementNames = new String[]{"event", "effect", "expression", "condition", "section"};
 
-        Util.log("Loaded (%s) elements:", total);
+        Util.log("Loaded SkBee (%s) elements:", total);
         for (int i = 0; i < finish.length; i++) {
             Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
         }
