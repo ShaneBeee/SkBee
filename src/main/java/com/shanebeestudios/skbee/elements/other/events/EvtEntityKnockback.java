@@ -2,8 +2,8 @@ package com.shanebeestudios.skbee.elements.other.events;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.entity.EntityData;
-import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
+import ch.njol.skript.lang.LiteralList;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
@@ -31,14 +31,16 @@ public class EvtEntityKnockback extends SkriptEvent {
             EventValues.TIME_NOW, "There may be multiple entities in an entity knockback event use knockback attacker/victim expression.", EntityKnockbackEvent.class);
     }
 
-    private Expression<EntityData<?>> victims;
-    private @Nullable Expression<EntityData<?>> attackers;
+    private Literal<EntityData<?>> victims;
+    private @Nullable Literal<EntityData<?>> attackers;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
-        this.victims = (Expression<EntityData<?>>) args[0];
-        this.attackers = (Expression<EntityData<?>>) args[1];
+        this.victims = (Literal<EntityData<?>>) args[0];
+        this.attackers = (Literal<EntityData<?>>) args[1];
+        if (victims instanceof LiteralList<EntityData<?>> literalList && !victims.getAnd()) literalList.invertAnd();
+        if (attackers instanceof LiteralList<EntityData<?>> literalList && !attackers.getAnd()) literalList.invertAnd();
         return true;
     }
 
