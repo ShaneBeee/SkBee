@@ -281,13 +281,6 @@ public class PaperEvents extends SimpleEvent {
             .since("1.8.0");
         EventValues.registerEventValue(EntityZapEvent.class, Location.class, e -> e.getEntity().getLocation(), EventValues.TIME_NOW);
 
-        // Entity Knockback Event
-        Skript.registerEvent("Entity Knockback", PaperEvents.class, EntityKnockbackByEntityEvent.class, "entity knockback")
-            .description("Fired when an Entity is knocked back by the hit of another Entity. " +
-                "If this event is cancelled, the entity is not knocked back. Requires Paper 1.12.2+")
-            .examples("on entity knockback:", "\tif event-entity is a cow:", "\t\tcancel event")
-            .since("1.8.0");
-
         // Experience Orb Merge Event
         Skript.registerEvent("Experience Orb Merge", PaperEvents.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")
             .description("Fired anytime the server is about to merge 2 experience orbs into one. Requires Paper 1.12.2+")

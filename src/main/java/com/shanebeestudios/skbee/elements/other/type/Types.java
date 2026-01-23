@@ -24,6 +24,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import io.papermc.paper.connection.PlayerConnection;
+import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.Chunk.LoadLevel;
@@ -517,6 +518,19 @@ public class Types {
         } else {
             Util.logLoading("It looks like another addon registered 'playerconnection' already.");
             Util.logLoading("You may have to use their PlayerConnection in SkBee's syntaxes.");
+        }
+
+        if (Classes.getExactClassInfo(EntityKnockbackEvent.Cause.class) == null) {
+            Classes.registerClass(new EnumWrapper<>(EntityKnockbackEvent.Cause.class).getClassInfo("knockbackcause")
+                .user("knockback ?causes?")
+                .defaultExpression(new EventValueExpression<>(EntityKnockbackEvent.Cause.class))
+                .name("Entity Knockback Cause")
+                .description("Represents the cause of knockback in an entity knockback event")
+                .since("INSERT VERSION")
+            );
+        } else {
+            Util.logLoading("It looks like another addon registered 'knockbackcause' already.");
+            Util.logLoading("You may have to use their KnockbackCause in SkBee's syntaxes.");
         }
     }
 
