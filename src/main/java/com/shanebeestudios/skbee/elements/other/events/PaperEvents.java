@@ -393,7 +393,7 @@ public class PaperEvents extends SimpleEvent {
             }
         }, EventValues.TIME_FUTURE);
 
-        Skript.registerEvent("", PaperEvents.class, PlayerClientLoadedWorldEvent.class, "player client load world")
+        Skript.registerEvent("Player Client Load World", PaperEvents.class, PlayerClientLoadedWorldEvent.class, "player client load world")
             .description("Called when the player's client has officially loaded into the world, this is called after the join event.",
                 "This event may also be called when a player timeouts if the player fails to load into the world.")
             .examples("on client load world:", "\tbroadcast \"%player% has loaded into the world%\"")
