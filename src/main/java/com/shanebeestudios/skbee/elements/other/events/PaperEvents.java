@@ -394,8 +394,9 @@ public class PaperEvents extends SimpleEvent {
         }, EventValues.TIME_FUTURE);
 
         Skript.registerEvent("Player Client Load World", PaperEvents.class, PlayerClientLoadedWorldEvent.class, "player client load world")
-            .description("Called when the player's client has officially loaded into the world, this is called after the join event.",
-                "This event may also be called when a player timeouts if the player fails to load into the world.")
+            .description("Called when a player is marked as loaded.", "",
+                "This either happens when the player notifies the server after loading the world (closing the downloading terrain screen)",
+                "or when the player has not done so for 60 ticks after joining the server or respawning.")
             .examples("on client load world:", "\tbroadcast \"%player% has loaded into the world%\"")
             .since("INSERT VERSION");
 
