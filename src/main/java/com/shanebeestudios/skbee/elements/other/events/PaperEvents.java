@@ -29,6 +29,7 @@ import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.packet.UncheckedSignChangeEvent;
+import io.papermc.paper.event.player.PlayerClientLoadedWorldEvent;
 import io.papermc.paper.event.player.PlayerCustomClickEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
@@ -48,8 +49,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
-import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.UUID;
 
@@ -393,6 +392,12 @@ public class PaperEvents extends SimpleEvent {
                 return event.getLogWarning();
             }
         }, EventValues.TIME_FUTURE);
+
+        Skript.registerEvent("", PaperEvents.class, PlayerClientLoadedWorldEvent.class, "")
+            .description("Called when the player's client has officially loaded into the world, this is called after the join event.",
+                "This event may also be called when a player timeouts if the player fails to load into the world.")
+            .examples("on client load world:", "\tbroadcast \"%player% has loaded into the world%\"")
+            .since("INSERT VERSION");
 
         // SERVER EVENTS
         // Tick Start/End Event
