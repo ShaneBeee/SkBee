@@ -5,55 +5,51 @@ import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
-import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
+import io.papermc.paper.event.entity.EntityKnockbackEvent;
+import io.papermc.paper.event.entity.EntityPushedByEntityAttackEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 @Name("Knockback Attacker/Victim")
-@Description("The attacker/victim in an entity knockback event. Paper 1.12.2+")
+@Description("The attacker/victim in an entity knockback event.")
 @Examples({"on entity knockback:",
         "\tif knockback attacker is a player:",
         "\t\tif knockback victim is a sheep:",
         "\t\t\tcancel event"})
 @Since("1.8.0")
-public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> {
+public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> implements EventRestrictedSyntax {
 
     static {
         Skript.registerExpression(ExprKnockbackAttackerVictim.class, Entity.class, ExpressionType.SIMPLE,
                 "[the] knockback (:attacker|victim)");
     }
 
-    private boolean attacker;
+    private boolean useAttacker;
 
     @Override
     public boolean init(Expression<?> @NotNull [] expressions, int i, @NotNull Kleenean kleenean, @NotNull ParseResult parseResult) {
-        if (!ParserInstance.get().isCurrentEvent(EntityKnockbackByEntityEvent.class)) {
-            Skript.error("Cannot use 'knockback attacker/victim' outside of knockback event", ErrorQuality.SEMANTIC_ERROR);
-            return false;
-        }
-        this.attacker = parseResult.hasTag("attacker");
+        this.useAttacker = parseResult.hasTag("attacker");
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Entity[] get(@NotNull Event event) {
-        if (event instanceof EntityKnockbackByEntityEvent knockbackEvent) {
-            if (this.attacker) {
-                return new Entity[]{knockbackEvent.getHitBy()};
-            } else {
-                return new Entity[]{knockbackEvent.getEntity()};
-            }
-        }
-        return null;
+        if (!(event instanceof EntityKnockbackEvent knockbackEvent)) return new Entity[0];
+        if (!this.useAttacker) return new Entity[]{knockbackEvent.getEntity()};
+        if (!(event instanceof EntityPushedByEntityAttackEvent pushedByEntityAttackEvent)) return new Entity[0];
+        return new Entity[]{pushedByEntityAttackEvent.getPushedBy()};
+    }
+
+    @Override
+    public Class<? extends Event>[] supportedEvents() {
+        return new Class[]{EntityKnockbackEvent.class};
     }
 
     @Override
@@ -68,7 +64,7 @@ public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> {
 
     @Override
     public @NotNull String toString(Event event, boolean b) {
-        return String.format("knockback %s", this.attacker ? "attacker" : "victim");
+        return String.format("knockback %s", this.useAttacker ? "attacker" : "victim");
     }
 
 }
