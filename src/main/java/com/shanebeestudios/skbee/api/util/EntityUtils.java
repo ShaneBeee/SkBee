@@ -19,19 +19,19 @@ public class EntityUtils {
     // Paper has this method
     public static final boolean HAS_TRANSIENT = Skript.methodExists(AttributeInstance.class, "addTransientModifier", AttributeModifier.class);
 
-    public static Predicate<Entity> filter(@Nullable LivingEntity livingEntity, @Nullable Object[] ignored) {
+    public static Predicate<Entity> filter(@Nullable LivingEntity livingEntity, @Nullable Object[] filtered, boolean allow) {
         return filterEntity -> {
-            if (filterEntity == livingEntity) return false;
-            if (ignored != null) {
-                for (Object object : ignored) {
+            if (livingEntity != null && filterEntity == livingEntity) return false;
+            if (filtered != null) {
+                for (Object object : filtered) {
                     if (object instanceof Entity entity) {
-                        if (filterEntity == entity) return false;
+                        if (filterEntity == entity) return allow;
                     } else if (object instanceof EntityData<?> ed) {
-                        if (ed.isInstance(filterEntity)) return false;
+                        if (ed.isInstance(filterEntity)) return allow;
                     }
                 }
             }
-            return true;
+            return !allow;
         };
     }
 
