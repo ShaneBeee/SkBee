@@ -30,8 +30,9 @@ public class EntityUtils {
                         if (ed.isInstance(filterEntity)) return allow;
                     }
                 }
+                return !allow;
             }
-            return !allow;
+            return true;
         };
     }
 
