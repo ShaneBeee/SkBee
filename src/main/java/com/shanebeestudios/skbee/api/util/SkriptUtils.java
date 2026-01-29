@@ -11,6 +11,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.util.LiteralUtils;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.EquipmentSlotGroup;
 
 import java.lang.reflect.Field;
@@ -57,11 +58,14 @@ public class SkriptUtils {
         parserInstance.setCurrentEvent("effect command", EffectCommandEvent.class);
         Effect effect = Effect.parse(stringEffect, null);
         parserInstance.deleteCurrentEvent();
-        if (effect != null) {
-            return TriggerItem.walk(effect, new EffectCommandEvent(sender, stringEffect));
-        } else {
-            return false;
-        }
+        if (effect == null) return false;
+        return TriggerItem.walk(effect, new EffectCommandEvent(sender, stringEffect));
+    }
+
+    public static boolean parseEffect(String stringEffect, Event event) {
+        Effect effect = Effect.parse(stringEffect, null);
+        if (effect == null) return false;
+        return TriggerItem.walk(effect, event);
     }
 
     /**
