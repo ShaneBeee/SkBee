@@ -16,7 +16,7 @@ import org.bukkit.event.Event;
 @Name("Parse Effect")
 @Description({"This will parse a string as an effect, and then executes it",
     "If you provide a command sender it works the same as Skript's 'effect commands'.",
-    "Otherwise it runs using the current event instance allowing local variable definition"})
+    "Otherwise it runs using the current event allowing you to use event-values"})
 @Examples({"on join:",
         "\tparse effect \"give player a diamond sword\""})
 @Since("1.15.0")

@@ -20,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 @Name("Parse Effect - With Return")
 @Description({"This will parse a string as an effect and then execute it and returns whether or not it executed.",
     "If you provide a command sender it works the same as Skript's 'effect commands'.",
-    "Otherwise it runs using the current event instance allowing local variable definition"})
+    "Otherwise it runs using the current event allowing you to use event-values"})
 @Examples({"command /parse <string>:",
     "\ttrigger:",
     "\t\tif parse effect arg-1 = false:",
