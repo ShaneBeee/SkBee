@@ -56,7 +56,7 @@ public class ExprParseEffect extends SimpleExpression<Boolean> {
             }
         } else {
             for (String string : this.effects.getArray(event)) {
-                if (!SkriptUtils.parseEffect(string, sender)) {
+                if (!SkriptUtils.parseEffect(string, sender, event)) {
                     parsed = false;
                 }
             }

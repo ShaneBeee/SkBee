@@ -46,7 +46,7 @@ public class EffParseEffect extends Effect {
             }
         } else {
             for (String effect : this.effects.getArray(event)) {
-                SkriptUtils.parseEffect(effect, sender);
+                SkriptUtils.parseEffect(effect, sender, event);
             }
         }
     }
