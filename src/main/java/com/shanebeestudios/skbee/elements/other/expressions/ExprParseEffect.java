@@ -12,15 +12,15 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Parse Effect - With Return")
-@Description({"This will parse a string as an effect, execute it and return whether or not it executed.",
-    "Works the same as Skript's 'effect commands'."})
+@Description({"This will parse a string as an effect and then execute it and returns whether or not it executed.",
+    "If you provide a command sender it works the same as Skript's 'effect commands'.",
+    "Otherwise it runs using the current event instance allowing local variable definition"})
 @Examples({"command /parse <string>:",
     "\ttrigger:",
     "\t\tif parse effect arg-1 = false:",
@@ -46,14 +46,22 @@ public class ExprParseEffect extends SimpleExpression<Boolean> {
 
     @Override
     protected @Nullable Boolean[] get(Event event) {
-        boolean pasred = true;
-        CommandSender sender = this.sender != null ? this.sender.getSingle(event) : Bukkit.getConsoleSender();
-        for (String string : this.effects.getArray(event)) {
-            if (!SkriptUtils.parseEffect(string, sender)) {
-                pasred = false;
+        boolean parsed = true;
+        CommandSender sender = this.sender != null ? this.sender.getSingle(event) : null;
+        if (sender == null) {
+            for (String string : this.effects.getArray(event)) {
+                if (!SkriptUtils.parseEffect(string, event)) {
+                    parsed = false;
+                }
+            }
+        } else {
+            for (String string : this.effects.getArray(event)) {
+                if (!SkriptUtils.parseEffect(string, sender)) {
+                    parsed = false;
+                }
             }
         }
-        return new Boolean[]{pasred};
+        return new Boolean[]{parsed};
     }
 
     @Override
