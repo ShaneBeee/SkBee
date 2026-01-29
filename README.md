@@ -5,11 +5,10 @@
 ## <ins>ELEMENTS</ins>:
 This is only a small list of the many things included
 - **NBT elements** get/set NBT of items, blocks (tile entities) and entities. (Available for 1.8.8+)
-- **ScoreBoards** super-duper simple anti-flicker scoreboards (Available on 1.13+)
+- **FastBoards** super-duper simple anti-flicker scoreboards (Available on 1.13+)
 - **Recipes** add custom recipes and remove vanilla recipes (Available on 1.13+)
 - **BlockData** get/set block data with ease (Available on 1.13+)
 - **Structures** use vanilla Minecraft's structure system for saving/pasting structures in your world
-- **Particles** a particle system that is a little more advanced than Skript's, that is more inline with Bukkit's particle system
 - **TextComponents** a system a little more advanced than Skript's text formatting. You can build text components and manipulate each one separately with things like hover events (including showing an item), click events, and much more.
 - **WorldCreator** create your own custom worlds with some handly little options
 - **Bounds** create your own simple bounds similarly to WorldGuard regions
@@ -17,6 +16,16 @@ This is only a small list of the many things included
 
 ## <ins>DOWNLOADS</ins>:
 Downloads for SkBee can be found on [**Modrinth**](https://modrinth.com/plugin/skbee/versions)
+
+## <ins>VERSION SUPPORT</ins>:
+Here at SkBee, we strive to support the latest versions of both Skript and Minecraft.  
+Let's break it down:
+- Skript: 
+  - We aim to support the latest stable version of Skript, ensuring compatibility and functionality.
+  - We also hope to support upto the latest 3 major releases of Skript.
+- Minecraft:
+  - We aim to support the latest release of Minecraft as soon as we can.  (This is usually delayed as we wait for NBT-API to update). 
+  - We also aim to support the latest 3 drops of Minecraft.
 
 ## <ins>WIKI</ins>:
 See the [**Wiki**](https://github.com/ShaneBeee/SkBee/wiki) for more detailed info on syntaxes
