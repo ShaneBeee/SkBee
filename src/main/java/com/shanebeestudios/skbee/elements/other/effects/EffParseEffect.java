@@ -8,30 +8,28 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 
 @Name("Parse Effect")
-@Description("This will parse a string as an effect, and execute it. Works the same as Skript's 'effect commands'.")
+@Description({"This will parse a string as an effect, and then executes it",
+    "If you provide a command sender it works the same as Skript's 'effect commands'.",
+    "Otherwise it runs using the current event allowing you to use event-values"})
 @Examples({"on join:",
         "\tparse effect \"give player a diamond sword\""})
 @Since("1.15.0")
 public class EffParseEffect extends Effect {
 
     static {
-        if (Skript.methodExists(ParserInstance.class, "get")) {
-            Skript.registerEffect(EffParseEffect.class, "parse effect[s] %strings% [from %-commandsender%]");
-        }
+        Skript.registerEffect(EffParseEffect.class, "parse effect[s] %strings% [from %-commandsender%]");
     }
 
     private Expression<String> effects;
     private Expression<CommandSender> sender;
 
-    @SuppressWarnings({"unchecked", "NullableProblems"})
+    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         effects = (Expression<String>) exprs[0];
@@ -39,18 +37,24 @@ public class EffParseEffect extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
-        CommandSender sender = this.sender != null ? this.sender.getSingle(event) : Bukkit.getConsoleSender();
-        for (String s : this.effects.getArray(event)) {
-            SkriptUtils.parseEffect(s, sender);
+        CommandSender sender = this.sender != null ? this.sender.getSingle(event) : null;
+        if (sender == null) {
+            for (String effect : this.effects.getArray(event)) {
+                SkriptUtils.parseEffect(effect, event);
+            }
+        } else {
+            for (String effect : this.effects.getArray(event)) {
+                SkriptUtils.parseEffect(effect, sender, event);
+            }
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(Event e, boolean d) {
+        if (this.sender == null)
+            return "parse effect '" + this.effects.toString(e, d) + "'";
         return "parse effect '" + this.effects.toString(e, d) + "' from " + this.sender.toString(e, d);
     }
 
