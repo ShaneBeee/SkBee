@@ -9,6 +9,7 @@ import org.bukkit.block.BlockState;
 import org.bukkit.block.TileState;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("deprecation")
@@ -31,8 +32,11 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     }
 
     @Override
-    public @NotNull NBTCompound getCustomNBT() {
-        return getPersistentDataContainer().getOrCreateCompound(KEY);
+    @Contract("false -> !null")
+    public NBTCompound getCustomNBT(boolean createTagIfMissing) {
+        if (createTagIfMissing)
+            return getPersistentDataContainer().getOrCreateCompound(KEY);
+        return getPersistentDataContainer().getCompound(KEY);
     }
 
     @Override

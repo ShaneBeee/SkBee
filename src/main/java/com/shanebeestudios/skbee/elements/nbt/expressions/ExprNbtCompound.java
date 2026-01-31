@@ -9,6 +9,7 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.parser.ParsingStack;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
@@ -22,6 +23,7 @@ import com.shanebeestudios.skbee.api.nbt.NBTCustomItemType;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomSlot;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomTileEntity;
 import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
+import com.shanebeestudios.skbee.elements.nbt.conditions.CondHasNBTTag;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -95,6 +97,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
     private boolean isCustom;
     private boolean isCopy;
     private boolean isFile;
+    private boolean enforceTagCreationIfMissing;
 
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
@@ -105,6 +108,9 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
         this.isCustom = parseResult.hasTag("custom");
         this.isCopy = parseResult.hasTag("copy");
         this.isFile = matchedPattern == 1;
+        // avoid creating new compounds if all we're doing is checking if they exist.
+        ParsingStack stack = getParser().getParsingStack();
+        this.enforceTagCreationIfMissing = stack.isEmpty() || stack.peek().getSyntaxElementClass() != CondHasNBTTag.class;
         return LiteralUtils.canInitSafely(expr);
     }
 
@@ -154,7 +160,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
             }
             if (compound != null) {
                 if (this.isCustom && !this.isFullItem && compound instanceof NBTCustom nbtCustom) {
-                    compound = nbtCustom.getCustomNBT();
+                    compound = nbtCustom.getCustomNBT(enforceTagCreationIfMissing);
                 }
                 if (this.isCopy) {
                     if (compound instanceof NBTCustom nbtCustom) {

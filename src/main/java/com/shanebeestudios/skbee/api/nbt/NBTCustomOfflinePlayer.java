@@ -8,6 +8,7 @@ import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -85,8 +86,15 @@ public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
     }
 
     @Override
-    public @NotNull NBTCompound getCustomNBT() {
-        return super.getOrCreateCompound("BukkitValues").getOrCreateCompound(KEY);
+    @Contract("true -> !null")
+    public NBTCompound getCustomNBT(boolean createTagIfMissing) {
+        if (createTagIfMissing)
+            return super.getOrCreateCompound("BukkitValues").getOrCreateCompound(KEY);
+        NBTCompound bukkitValues = super.getCompound("BukkitValues");
+        if (bukkitValues != null) {
+            return bukkitValues.getCompound(KEY);
+        }
+        return null;
     }
 
     @Override

@@ -33,8 +33,10 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     }
 
     @Override
-    public @NotNull NBTCompound getCustomNBT() {
-        return getPersistentDataContainer().getOrCreateCompound(KEY);
+    public NBTCompound getCustomNBT(boolean createTagIfMissing) {
+        if (createTagIfMissing)
+            return getPersistentDataContainer().getOrCreateCompound(KEY);
+        return getPersistentDataContainer().getCompound(KEY);
     }
 
     @Override
