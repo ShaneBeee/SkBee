@@ -32,7 +32,7 @@ public class Types {
                 .description("Represents a particle which can be used in the 'Particle Spawn' effect.",
                     "Some particles require extra data, these are distinguished by their data type within the square brackets.",
                     "DustOption, DustTransition and Vibration each have their own functions to build the appropriate data for these particles.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                    Util.AUTO_GEN_NOTE)
                 .usage(ParticleUtil.getNamesAsString())
                 .after("itemtype")
                 .since("1.9.0")

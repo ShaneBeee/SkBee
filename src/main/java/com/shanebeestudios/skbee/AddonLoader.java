@@ -79,12 +79,6 @@ public class AddonLoader {
             }
             return false;
         }
-        Version version = new Version(SkBee.EARLIEST_VERSION);
-        if (!Skript.isRunningMinecraft(version)) {
-            Util.logLoading("&cYour server version &7'&bMC %s&7'&c is not supported, only &7'&bMC %s+&7'&c is supported!", Skript.getMinecraftVersion(), version);
-            Util.logLoading("&7For outdated server versions please see: &ehttps://github.com/ShaneBeee/SkBee#outdated");
-            return false;
-        }
         loadSkriptElements();
         return true;
     }
@@ -105,6 +99,7 @@ public class AddonLoader {
         loadBossBarElements();
         loadBoundElements();
         loadDamageSourceElements();
+        loadDialogElements();
         loadDisplayEntityElements();
         loadFastboardElements();
         loadFishingElements();
@@ -125,6 +120,23 @@ public class AddonLoader {
         loadChunkGenElements();
         loadTestingElements();
 
+        String[] elementNames = new String[]{"event", "effect", "expression", "condition", "section"};
+
+        if (false) {
+            // This is just debug code for counting Skript's elements
+            // Activate when I want to see it,
+            // I just don't want to keep typing this out
+            int skriptTotal = 0;
+            for (int j : elementCountBefore) {
+                skriptTotal += j;
+            }
+
+            Util.log("Loaded Skript (%s) elements:", skriptTotal);
+            for (int i = 0; i < elementCountBefore.length; i++) {
+                Util.log(" - %s %s%s", elementCountBefore[i], elementNames[i], elementCountBefore[i] == 1 ? "" : "s");
+            }
+        }
+
         int[] elementCountAfter = SkriptUtils.getElementCount();
         int[] finish = new int[elementCountBefore.length];
         int total = 0;
@@ -132,9 +144,8 @@ public class AddonLoader {
             finish[i] = elementCountAfter[i] - elementCountBefore[i];
             total += finish[i];
         }
-        String[] elementNames = new String[]{"event", "effect", "expression", "condition", "section"};
 
-        Util.log("Loaded (%s) elements:", total);
+        Util.log("Loaded SkBee (%s) elements:", total);
         for (int i = 0; i < finish.length; i++) {
             Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
         }
@@ -434,7 +445,7 @@ public class AddonLoader {
             return;
         }
         if (Util.IS_RUNNING_SKRIPT_2_14) {
-            Util.log("&5Particle Elements &cdisable &r(&7now in Skript&r)");
+            Util.logLoading("&5Particle Elements &cdisable &r(&7now in Skript&r)");
             return;
         }
         try {
@@ -552,6 +563,23 @@ public class AddonLoader {
         try {
             addon.loadClasses("com.shanebeestudios.skbee.elements.property");
             Util.logLoading("&5Property Elements &asuccessfully loaded");
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private void loadDialogElements() {
+        if (!this.config.ELEMENTS_DIALOG) {
+            Util.logLoading("&5Dialog elements &cdisabled via config");
+            return;
+        }
+        if (!Util.IS_RUNNING_MC_1_21_7) {
+            Util.logLoading("&5Dialog elements &cdisabled &7(&rRequires Paper 1.21.7+&7)");
+            return;
+        }
+        try {
+            addon.loadClasses("com.shanebeestudios.skbee.elements.dialog");
+            Util.logLoading("&5Dialog Elements &asuccessfully loaded");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

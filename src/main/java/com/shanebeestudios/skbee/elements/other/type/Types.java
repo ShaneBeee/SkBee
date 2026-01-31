@@ -23,6 +23,8 @@ import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
+import io.papermc.paper.connection.PlayerConnection;
+import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.Chunk.LoadLevel;
@@ -70,8 +72,7 @@ public class Types {
             Classes.registerClass(SPELL_ENUM.getClassInfo("spell")
                 .user("spells?")
                 .name("Spellcaster Spell")
-                .description("Represents the different spells of a spellcaster.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents the different spells of a spellcaster.", Util.AUTO_GEN_NOTE)
                 .since("1.17.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'spell' already.");
@@ -132,8 +133,7 @@ public class Types {
             Classes.registerClass(BLOCK_FACE_ENUM.getClassInfo("blockface")
                 .user("blockfaces?")
                 .name("BlockFace")
-                .description("Represents the face of a block.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents the face of a block.", Util.AUTO_GEN_NOTE)
                 .since("2.6.0")
                 .defaultExpression(new SimpleLiteral<>(BlockFace.NORTH, true)));
         } else {
@@ -147,8 +147,7 @@ public class Types {
                 Classes.registerClass(RESPAWN_REASON_ENUM.getClassInfo("respawnreason")
                     .user("respawn ?reasons?")
                     .name("Respawn Reason")
-                    .description("Represents the reason the respawn event was called. Requires MC 1.19.4+",
-                        "NOTE: These are auto-generated and may differ between server versions.")
+                    .description("Represents the reason the respawn event was called. Requires MC 1.19.4+", Util.AUTO_GEN_NOTE)
                     .examples("on respawn:",
                         "\tif respawn reason = death respawn:",
                         "\t\tgive player 10 diamonds")
@@ -224,8 +223,7 @@ public class Types {
             Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_MATERIAL, TrimMaterial.class, "trimmaterial", null, "material")
                 .user("trim ?materials?")
                 .name("ArmorTrim - TrimMaterial")
-                .description("Represents a material that may be used in an ArmorTrim.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents a material that may be used in an ArmorTrim.", Util.AUTO_GEN_NOTE)
                 .since("2.13.0"));
         }
 
@@ -233,8 +231,7 @@ public class Types {
             Classes.registerClass(RegistryClassInfo.create(Registry.TRIM_PATTERN, TrimPattern.class, "trimpattern", null, "pattern")
                 .user("trim ?patterns?")
                 .name("ArmorTrim - TrimPattern")
-                .description("Represents a pattern that may be used in an ArmorTrim.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents a pattern that may be used in an ArmorTrim.", Util.AUTO_GEN_NOTE)
                 .since("2.13.0"));
         }
 
@@ -248,8 +245,7 @@ public class Types {
                     "- `entity_ticking_level` = All game logic is processed.",
                     "- `inaccessible_level` = No game logic is processed, world generation may still occur.",
                     "- `ticking_level` = All game logic except entities is processed.",
-                    "- `unloaded_level` = This chunk is not loaded.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                    "- `unloaded_level` = This chunk is not loaded.")
                 .since("2.17.0"));
         }
 
@@ -258,8 +254,7 @@ public class Types {
             Classes.registerClass(ENTITY_EFFECT_ENUM.getClassInfo("entityeffect")
                 .user("entit(y|ies) ?effects?")
                 .name("Entity Effect")
-                .description("Represents an effect that can be played on an entity.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents an effect that can be played on an entity.", Util.AUTO_GEN_NOTE)
                 .since("3.0.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'EntityEffect' already.");
@@ -271,8 +266,7 @@ public class Types {
             Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, (Class) MemoryKey.class, "memory")
                 .user("memor(y|ies)")
                 .name("Memory")
-                .description("Represents the different memories of an entity.",
-                    "NOTE: These are auto-generated and may differ between server versions."));
+                .description("Represents the different memories of an entity.", Util.AUTO_GEN_NOTE));
         } else {
             Util.logLoading("It looks like another addon registered 'memory' already.");
             Util.logLoading("You may have to use their ItemFlags in SkBee's syntaxes.");
@@ -283,8 +277,7 @@ public class Types {
             Classes.registerClass(ACTION_ENUM.getClassInfo("blockaction")
                 .user("block ?actions?")
                 .name("Block Action")
-                .description("Represents different wants to interact.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents different ways to interact.")
                 .since("3.4.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'blockaction' already.");
@@ -296,8 +289,7 @@ public class Types {
             Classes.registerClass(CAUSE_ENUM.getClassInfo("entityremovecause")
                 .user("entity ?remove ?causes?")
                 .name("Entity Remove Cause")
-                .description("Represents the reasons an entity was removed from the world.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents the reasons an entity was removed from the world.", Util.AUTO_GEN_NOTE)
                 .after("damagecause", "damagetype")
                 .since("3.4.0"));
         }
@@ -307,8 +299,7 @@ public class Types {
             Classes.registerClass(CAUSE_ENUM.getClassInfo("playerspawnchangereason")
                 .user("player ?spawn ?change ?reasons?")
                 .name("Player Spawn Change Reason")
-                .description("Represents the reasons why a player changed their spawn location.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents the reasons why a player changed their spawn location.", Util.AUTO_GEN_NOTE)
                 .after("damagecause", "damagetype", "itemtype")
                 .since("3.4.0"));
         }
@@ -319,8 +310,7 @@ public class Types {
                 .name("Minecraft - EntityType")
                 .description("Represents a Minecraft entity.",
                     "These differ slightly from Skript's EntityType as the names match Minecraft namespaces.",
-                    "These also support the use of the Minecraft namespace as well as underscores.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                    "These also support the use of the Minecraft namespace as well as underscores.", Util.AUTO_GEN_NOTE)
                 .examples("mc spawn sheep at player",
                     "mc spawn minecraft:sheep at player",
                     "mc spawn minecraft:armor_stand at player")
@@ -370,8 +360,7 @@ public class Types {
             Classes.registerClass(TREE_TYPE.getClassInfo("bukkittreetype")
                 .user("bukkit ?tree ?types?")
                 .name("Bukkit Tree Type")
-                .description("Represents the different types of trees.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents the different types of trees.", Util.AUTO_GEN_NOTE)
                 .after("structuretype")
                 .since("3.5.3"));
         } else {
@@ -384,8 +373,7 @@ public class Types {
             Classes.registerClass(POSE.getClassInfo("pose")
                 .user("poses?")
                 .name("Entity Pose")
-                .description("Represents the pose of an entity.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents the pose of an entity.", Util.AUTO_GEN_NOTE)
                 .since("3.5.4"));
         } else {
             Util.logLoading("It looks like another addon registered 'pose' already.");
@@ -398,8 +386,7 @@ public class Types {
             Classes.registerClass(new ClassInfo<>(EquipmentSlotGroup.class, "equipmentslotgroup")
                 .user("equipment ?slot ?groups?")
                 .name("Equipment Slot Group")
-                .description("Represents different groups of equipment slots.",
-                    "NOTE: These are auto-generated and may differ between server versions.")
+                .description("Represents different groups of equipment slots.", Util.AUTO_GEN_NOTE)
                 .usage(StringUtils.join(equipmentSlotGroups.keySet().stream().sorted().toList(), ", "))
                 .parser(new Parser<>() {
                     @Override
@@ -454,8 +441,7 @@ public class Types {
             Classes.registerClass(new EnumWrapper<>(AttributeModifier.Operation.class).getClassInfo("attributeoperation")
                 .user("attribute ?operations?")
                 .name("Attribute Modifier Operation")
-                .description("Represents the different operations of an attribute modifer.",
-                    "NOTE: These are auto-generated and may differ between server versions."));
+                .description("Represents the different operations of an attribute modifer.", Util.AUTO_GEN_NOTE));
         } else {
             Util.logLoading("It looks like another addon registered 'attributeOperation' already.");
             Util.logLoading("You may have to use their AttributeModifier Operation in SkBee's syntaxes.");
@@ -481,8 +467,7 @@ public class Types {
                     .user("instruments?")
                     .name("Instrument")
                     .description("Represents the instruments used by goat horns.",
-                        "Requires Minecraft 1.20.6+",
-                        "NOTE: These are auto-generated and may differ between server versions.")
+                        "Requires Minecraft 1.20.6+", Util.AUTO_GEN_NOTE)
                     .since("3.8.0"));
             }
         } else {
@@ -494,10 +479,9 @@ public class Types {
             if (BukkitUtils.registryExists("JUKEBOX_SONG")) {
                 Classes.registerClass(RegistryClassInfo.create(Registry.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
                     .user("jukebox ?songs?")
-                    .name("Instrument")
+                    .name("Jukebox Song")
                     .description("Represents the songs for jukeboxes.",
-                        "Requires Minecraft 1.21+",
-                        "NOTE: These are auto-generated and may differ between server versions.")
+                        "Requires Minecraft 1.21+", Util.AUTO_GEN_NOTE)
                     .since("3.8.0"));
             }
         } else {
@@ -522,6 +506,32 @@ public class Types {
             .since("3.8.0");
         Classes.registerClass(audienceClassInfo);
         setupUsage(audienceClassInfo);
+
+        if (Classes.getExactClassInfo(PlayerConnection.class) == null) {
+            Classes.registerClass(new ClassInfo<>(PlayerConnection.class, "playerconnection")
+                .user("player ?connections?")
+                .name("Player Connection")
+                .description("Represents the connection of a player in an async connect config event and custom click event.")
+                .defaultExpression(new EventValueExpression<>(PlayerConnection.class))
+                .parser(SkriptUtils.getDefaultParser())
+                .since("INSERT VERSION"));
+        } else {
+            Util.logLoading("It looks like another addon registered 'playerconnection' already.");
+            Util.logLoading("You may have to use their PlayerConnection in SkBee's syntaxes.");
+        }
+
+        if (Classes.getExactClassInfo(EntityKnockbackEvent.Cause.class) == null) {
+            Classes.registerClass(new EnumWrapper<>(EntityKnockbackEvent.Cause.class).getClassInfo("knockbackcause")
+                .user("knockback ?causes?")
+                .defaultExpression(new EventValueExpression<>(EntityKnockbackEvent.Cause.class))
+                .name("Entity Knockback Cause")
+                .description("Represents the cause of knockback in an entity knockback event")
+                .since("INSERT VERSION")
+            );
+        } else {
+            Util.logLoading("It looks like another addon registered 'knockbackcause' already.");
+            Util.logLoading("You may have to use their KnockbackCause in SkBee's syntaxes.");
+        }
     }
 
     // FUNCTIONS

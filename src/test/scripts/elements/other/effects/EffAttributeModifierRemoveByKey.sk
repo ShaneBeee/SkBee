@@ -1,0 +1,31 @@
+test "SkBee - EffAttributeModifierRemoveByKey":
+	set {_i} to 1 of stick
+	assert size of generic scale attribute modifiers of {_i} = 0 with "Should start off with 0 modifiers"
+
+	apply attribute modifier to {_i}:
+		attribute: generic scale
+		id: "test:test"
+		amount: 2
+		operation: add_number
+
+	assert size of generic scale attribute modifiers of {_i} = 1 with "Should be 1 modifier"
+
+	remove attribute modifier with key "test:test" from {_i}
+	assert size of generic scale attribute modifiers of {_i} = 0 with "Should be 0 modifiers after removing"
+
+	spawn a sheep at event-location
+	set {_e} to last spawned entity
+	assert size of generic scale attribute modifiers of {_e} = 0 with "The entity should start off with 0 modifiers"
+
+	apply attribute modifier to {_e}:
+		attribute: generic scale
+		id: "test:test"
+		amount: 2
+		operation: add_number
+
+	assert size of generic scale attribute modifiers of {_e} = 1 with "The entity should have 1 modifier now"
+
+	remove attribute modifier with key "test:test" from {_e}
+	assert size of generic scale attribute modifiers of {_e} = 0 with "The entity should have 0 modifiers now"
+
+	delete entity within {_e}

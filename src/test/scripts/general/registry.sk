@@ -45,3 +45,16 @@ test "SkBee - Registry TagKey from Registry" when running minecraft "1.21.3":
 
 	set {_key} to tag key "minecraft:blah" from block registry
 	assert {_key} is not set with "Block registry should NOT have 'minecraft:blah' TagKey."
+
+test "SkBee - Registry TagKey Values from TagKey" when running minecraft "1.21.3":
+
+	set {_key} to tag key "minecraft:has_structure/mineshaft" from biome registry
+	assert tag key values of {_key} contains minecraft:plains with "The plains biome should have mineshafts"
+	delete {_key}
+
+	set {_key} to tag key "minecraft:swords" from item registry
+	assert tag key values of {_key} contains 1 of diamond sword with "The sword should be in the sword tag"
+	assert size of tag key values of {_key} > 1 with "The 'minecraft:swords' item tag should have more than 1 value"
+
+	set {_key} to tag key "minecraft:blah" from block registry
+	assert tag key values of {_key} is not set with "The fake tag should not have values"

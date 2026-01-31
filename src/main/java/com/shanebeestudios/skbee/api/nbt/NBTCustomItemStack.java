@@ -4,6 +4,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.inventory.ItemStack;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -78,8 +79,11 @@ public class NBTCustomItemStack extends NBTContainer implements NBTCustom {
     }
 
     @Override
-    public @NotNull NBTCompound getCustomNBT() {
-        return this.getOrCreateCompound("minecraft:custom_data");
+    @Contract("true -> !null")
+    public NBTCompound getCustomNBT(boolean createTagIfMissing) {
+        if (createTagIfMissing)
+            return this.getOrCreateCompound("minecraft:custom_data");
+        return this.getCompound("minecraft:custom_data");
     }
 
 }

@@ -320,3 +320,72 @@ test "SkBee - Item Component test" when running minecraft "1.21.3":
 	set {_c::4} to teleport_randomly(15)
 	set {_c::5} to play_sound("minecraft:block.stone.break")
 	assert size of {_c::*} = 5 with "5 consume effects should have been created"
+
+test "SkBee - Item Component test" when running minecraft "1.21.11":
+
+	# Damage Type Component Expression
+	set {_i} to 1 of stick
+	assert {_i} doesn't have item component minecraft:damage_type with "The stick should not have a damage type component"
+	set damage type component of {_i} to cactus
+	assert {_i} has item component minecraft:damage_type with "The stick should have a damage type component"
+	assert damage type component of {_i} = cactus with "Should be cactus"
+	delete {_i}
+
+	# Min Attack Charge Component Expression
+	set {_i} to 1 of diamond sword
+	assert {_i} doesn't have item component minecraft:minimum_attack_charge with "The sword should not have a min attack charge component"
+
+	set min attack charge component of {_i} to 0.5
+	assert {_i} has item component minecraft:minimum_attack_charge with "The sword should have a min attack charge component"
+	assert min attack charge component of {_i} = 0.5 with "The sword should have a min attack charge of 0.5"
+	delete {_i}
+
+	# Attack Range Component Section
+	set {_i} to 1 of diamond sword
+	assert {_i} doesn't have item component minecraft:attack_range with "The sword should not have a attack range component"
+	apply attack range component to {_i}:
+		min_reach: 1
+		max_reach: 10
+		min_creative_reach: 1
+		max_creative_reach: 10
+		hitbox_margin: 0.5
+		mob_factor: 0.5
+
+	assert {_i} has item component minecraft:attack_range with "The sword should have a attack range component"
+	delete {_i}
+
+	# Piercing Weapon Component Section
+	set {_i} to 1 of stick
+	assert {_i} doesn't have item component minecraft:piercing_weapon with "The stick should not have a piercing weapon component"
+	apply piercing weapon component to {_i}:
+		deals_knockback: true
+		dismounts: true
+		sound: "minecraft:item.spear.attack"
+		hit_sound: "minecraft:item.spear.hit"
+	assert {_i} has item component minecraft:piercing_weapon with "The stick should have a piercing weapon component"
+	delete {_i}
+
+	# Swing Animation Component Section
+	set {_i} to 1 of diamond sword
+	assert {_i} has item component minecraft:swing_animation with "The sword should have a default swing animation component"
+
+	set {_i} to 1 of stick
+	clear minecraft:swing_animation data component of {_i} #they come with one by default
+	assert {_i} doesn't have item component minecraft:swing_animation with "The stick should not have a swing component"
+
+	apply swing animation component to {_i}:
+		type: "stab"
+		duration: 10 seconds
+	assert {_i} has item component minecraft:swing_animation with "The stick should now have a default swing component again"
+	delete {_i}
+
+	# Use Effects Component Section
+	set {_i} to 1 of stick
+	clear minecraft:use_effects data component of {_i} #they come with one by default
+	assert {_i} doesn't have item component minecraft:use_effects with "The stick should not have a use effects component"
+
+	apply use effects component to {_i}:
+		can_sprint: false
+		speed_multiplier: 0.01
+		interact_vibrations: false
+	assert {_i} has item component minecraft:use_effects with "The stick should now have a use effects component"

@@ -4,12 +4,15 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.registrations.Classes;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
+import io.papermc.paper.registry.tag.Tag;
+import io.papermc.paper.registry.tag.TagKey;
 import org.bukkit.Keyed;
 import org.bukkit.Registry;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 /**
@@ -18,6 +21,7 @@ import java.util.List;
  * @param <F> Type of registry
  * @param <T> Return type from registry (may differ from F)
  */
+@SuppressWarnings("UnstableApiUsage")
 public class RegistryHolder<F extends Keyed, T> {
 
     private final RegistryKey<F> registryKey;
@@ -48,7 +52,7 @@ public class RegistryHolder<F extends Keyed, T> {
      * Get all values from this {@link Registry}
      * <p>May be converted</p>
      *
-     * @return List of values from registry
+     * @return List of values from the registry
      */
     @SuppressWarnings({"unchecked", "NullableProblems"})
     public List<T> getValues() {
@@ -57,10 +61,36 @@ public class RegistryHolder<F extends Keyed, T> {
         if (this.converter != null) {
             List<T> values = new ArrayList<>();
             registry.forEach(value -> values.add(this.converter.convert(value)));
+            values.sort(Comparator.comparing(Object::toString));
             return values;
         } else {
-            return (List<T>) registry.stream().toList();
+            return (List<T>) registry.stream().sorted(Comparator.comparing(keyed -> keyed.key().toString())).toList();
         }
+    }
+
+    /**
+     * Get all values of a TagKey
+     *
+     * @param tagKey TagKey to get values from
+     * @return Values from tagkey
+     */
+    @SuppressWarnings("unchecked")
+    public List<T> getTagValues(TagKey<F> tagKey) {
+        Registry<F> registry = RegistryAccess.registryAccess().getRegistry(this.registryKey);
+        List<T> values = new ArrayList<>();
+        Tag<F> tag = registry.getTag(tagKey);
+        if (tag != null) {
+            for (F value : tag.resolve(registry)) {
+                if (this.converter != null) {
+                    values.add(this.converter.convert(value));
+                } else {
+                    values.add((T) value);
+                }
+            }
+            values.sort(Comparator.comparing(Object::toString));
+        }
+        return values;
+
     }
 
     public String getDocString() {

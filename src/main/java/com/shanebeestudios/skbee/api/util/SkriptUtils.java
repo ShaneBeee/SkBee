@@ -10,13 +10,16 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.util.LiteralUtils;
+import ch.njol.skript.variables.Variables;
 import org.bukkit.command.CommandSender;
+import org.bukkit.event.Event;
 import org.bukkit.inventory.EquipmentSlotGroup;
 
 import java.lang.reflect.Field;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
 /**
@@ -52,16 +55,25 @@ public class SkriptUtils {
      * @param sender       Who it was sent from
      * @return True if parsed correctly else false
      */
-    public static boolean parseEffect(String stringEffect, CommandSender sender) {
+    public static boolean parseEffect(String stringEffect, CommandSender sender, Event parentEvent) {
+        Effect effect = Effect.parse(stringEffect, null);
+        if (effect == null) return false;
+
+        Event newEvent = new EffectCommandEvent(sender, stringEffect);
         ParserInstance parserInstance = ParserInstance.get();
         parserInstance.setCurrentEvent("effect command", EffectCommandEvent.class);
-        Effect effect = Effect.parse(stringEffect, null);
+
+        AtomicBoolean parsed = new AtomicBoolean(false);
+        Variables.withLocalVariables(parentEvent, newEvent, () -> parsed.set(TriggerItem.walk(effect, newEvent)));
         parserInstance.deleteCurrentEvent();
-        if (effect != null) {
-            return TriggerItem.walk(effect, new EffectCommandEvent(sender, stringEffect));
-        } else {
-            return false;
-        }
+
+        return parsed.get();
+    }
+
+    public static boolean parseEffect(String stringEffect, Event event) {
+        Effect effect = Effect.parse(stringEffect, null);
+        if (effect == null) return false;
+        return TriggerItem.walk(effect, event);
     }
 
     /**

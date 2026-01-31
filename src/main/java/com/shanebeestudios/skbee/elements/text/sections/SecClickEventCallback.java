@@ -9,18 +9,20 @@ import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.text.event.ClickCallback;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
-import org.bukkit.event.player.PlayerEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -55,10 +57,20 @@ import java.util.List;
 @Since("2.17.0")
 public class SecClickEventCallback extends Section {
 
-    private static class ComponentCallbackEvent extends PlayerEvent {
+    private static class ComponentCallbackEvent extends Event {
 
-        public ComponentCallbackEvent(Player player) {
-            super(player);
+        private final Audience audience;
+
+        public ComponentCallbackEvent(@NotNull Audience audience) {
+            this.audience = audience;
+        }
+
+        public @NotNull Audience getAudience() {
+            return this.audience;
+        }
+
+        public @Nullable Player getPlayer() {
+            return this.audience instanceof Player player ? player : null;
         }
 
         @Override
@@ -69,6 +81,9 @@ public class SecClickEventCallback extends Section {
     }
 
     static {
+        EventValues.registerEventValue(ComponentCallbackEvent.class, Audience.class, ComponentCallbackEvent::getAudience);
+        EventValues.registerEventValue(ComponentCallbackEvent.class, Player.class, ComponentCallbackEvent::getPlayer);
+
         Skript.registerSection(SecClickEventCallback.class,
             "create [a] [new] [click event] callback for %textcomponent% " +
                 "[with %-number% use[s]] [[and] with [a] (lifetime|duration) of %-timespan%]");
@@ -109,12 +124,10 @@ public class SecClickEventCallback extends Section {
 
             Object localVariables = Variables.copyLocalVariables(event);
             component.setClickEvent(ClickEvent.callback(audience -> {
-                Player player = audience instanceof Player p ? p : null;
-                ComponentCallbackEvent callbackEvent = new ComponentCallbackEvent(player);
+                ComponentCallbackEvent callbackEvent = new ComponentCallbackEvent(audience);
                 Variables.setLocalVariables(callbackEvent, localVariables);
                 TriggerItem.walk(this.trigger, callbackEvent);
-                Variables.setLocalVariables(event, Variables.copyLocalVariables(callbackEvent));
-                Variables.removeLocals(callbackEvent);
+                Variables.setLocalVariables(event, Variables.removeLocals(callbackEvent));
             }, ClickCallback.Options.builder().uses(uses).lifetime(lifeTime).build()));
         }
         return super.walk(event, false);
@@ -122,9 +135,16 @@ public class SecClickEventCallback extends Section {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String uses = this.uses != null ? (" with " + this.uses.toString(e, d) + " uses") : "";
-        String time = this.lifeTime != null ? (" with lifetime of " + this.lifeTime.toString(e, d)) : "";
-        return "create click event callback for " + this.component.toString(e, d) + uses + time;
+        SyntaxStringBuilder builder = new SyntaxStringBuilder(e, d);
+        builder.append("create click event callback for", this.component);
+        if (this.uses != null) {
+            builder.append("with", this.uses).append("uses");
+        }
+        if (this.lifeTime != null) {
+            builder.append("with lifetime of", this.lifeTime);
+        }
+
+        return builder.toString();
     }
 
 }

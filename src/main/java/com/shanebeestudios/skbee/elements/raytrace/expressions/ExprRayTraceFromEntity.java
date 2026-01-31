@@ -30,9 +30,9 @@ import java.util.List;
     "Default max distance = 'maximum target block distance' in Skript's config.",
     "RaySize = entity bounding boxes will be uniformly expanded (or shrunk)",
     "by this value before doing collision checks (default = 0.0).",
-    "IngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..). [Added in SkBee 3.0.0]",
-    "Ignoring Entities/EntityTypes = Will ignore the entities/entitytypes from the final ray. [Added in SkBee 3.5.0]",
-    "Going through Blocks/ItemTypes = Will ignore the blocks/itemtypes from the final ray. [Added in SkBee INSERTVERSION]"})
+    "IngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..).",
+    "Ignoring/Only Allowing Entities/EntityTypes = Will ignore/only allow the entities/entitytypes from the final ray.",
+    "Going through Blocks/ItemTypes = Will ignore the blocks/itemtypes from the final ray."})
 @Examples({"set {_ray} to ray trace from player with max distance 25",
     "set {_ray} to ray trace from player with max distance 25 while ignoring passable blocks",
     "set {_rays::*} to raytrace from all players with ray size 0.1"})
@@ -42,7 +42,7 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
     static {
         Skript.registerExpression(ExprRayTraceFromEntity.class, RayTraceResult.class, ExpressionType.COMBINED,
             "ray[ ]trace from %livingentities% [with max distance %-number%] [with ray size %-number%] " +
-                "[ignore:while ignoring passable blocks] [while ignoring %-entities/entitydatas%]" +
+                "[ignore:while ignoring passable blocks] [while (ignoring|allowing:only allowing) %-entities/entitydatas%]" +
                 "[while going through %-blocks/itemtypes%]");
     }
 
@@ -50,7 +50,8 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
     private Expression<Number> maxDistance;
     private Expression<Number> raySize;
     private boolean ignore;
-    private Expression<?> ignoredEntities;
+    private Expression<?> filteredEntities;
+    private boolean allowing;
     private Expression<?> ignoredBlocks;
 
     @SuppressWarnings({"unchecked"})
@@ -60,7 +61,8 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
         this.maxDistance = (Expression<Number>) exprs[1];
         this.raySize = (Expression<Number>) exprs[2];
         this.ignore = parseResult.hasTag("ignore");
-        this.ignoredEntities = exprs[3];
+        this.allowing = parseResult.hasTag("allowing");
+        this.filteredEntities = exprs[3];
         this.ignoredBlocks = exprs[4];
         return true;
     }
@@ -68,7 +70,7 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
     @SuppressWarnings({"UnstableApiUsage"})
     @Override
     protected @Nullable RayTraceResult[] get(Event event) {
-        Object[] ignoredEntities = this.ignoredEntities != null ? this.ignoredEntities.getArray(event) : null;
+        Object[] ignoredEntities = this.filteredEntities != null ? this.filteredEntities.getArray(event) : null;
         Object[] ignoredBlocks = this.ignoredBlocks != null ? this.ignoredBlocks.getArray(event) : null;
         double maxDistance = SkriptConfig.maxTargetBlockDistance.value();
         if (this.maxDistance != null) {
@@ -91,7 +93,8 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
 
             RayTraceResult rayTraceResult = world.rayTrace(location, direction, maxDistance,
                 FluidCollisionMode.NEVER, this.ignore, raySize,
-                EntityUtils.filter(livingEntity, ignoredEntities), ExprRayTraceFromLocation.filteredBlocks(ignoredBlocks));
+                EntityUtils.filter(livingEntity, ignoredEntities, this.allowing),
+                ExprRayTraceFromLocation.filteredBlocks(ignoredBlocks));
             results.add(rayTraceResult);
         }
 
@@ -113,7 +116,8 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
         String max = this.maxDistance != null ? " with max distance " + this.maxDistance.toString(e, d) : "";
         String size = this.raySize != null ? " with ray size " + this.raySize.toString(e, d) : "";
         String ignore = this.ignore ? " while ignoring passable blocks" : "";
-        String ignoredEntities = this.ignoredEntities != null ? (" while ignoring " + this.ignoredEntities.toString(e, d)) : "";
+        String filter = this.allowing ? "only allowing " : "ignoring ";
+        String ignoredEntities = this.filteredEntities != null ? (" while " + filter + this.filteredEntities.toString(e, d)) : "";
         String ignoredBlocks = this.ignoredBlocks != null ? (" while going through " + this.ignoredBlocks.toString(e, d)) : "";
         return "ray trace from " + this.entities.toString(e, d) + max + size + ignore + ignoredEntities + ignoredBlocks;
     }

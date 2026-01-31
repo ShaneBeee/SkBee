@@ -12,6 +12,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.legacy.DialogUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import io.papermc.paper.dialog.Dialog;
@@ -43,11 +44,10 @@ import java.util.Objects;
 @Since("1.5.0")
 public class ExprClickEvent extends SimpleExpression<ClickEvent> {
 
-    private static final boolean SUPPORTS_CLIPBOARD;
-    private static final boolean SUPPORTS_CUSTOM_PAYLOAD = Skript.methodExists(ClickEvent.class, "custom", Key.class, String.class);
+    // TODO see below things to remove
+    private static final boolean SUPPORTS_CUSTOM_PAYLOAD = Util.IS_RUNNING_MC_1_21_7;
 
     static {
-        SUPPORTS_CLIPBOARD = Skript.fieldExists(Action.class, "COPY_TO_CLIPBOARD");
         String nbtClickEvent = NBTApi.isEnabled() ? "[a] [new] click event to run custom payload with key %string/namespacedkey% [and] with [custom] data %nbtcompound%" : "";
         Skript.registerExpression(ExprClickEvent.class, ClickEvent.class, ExpressionType.COMBINED,
             "[a] [new] click event to run command %string%",
@@ -67,10 +67,6 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = matchedPattern;
-        if (pattern == 3 && !SUPPORTS_CLIPBOARD) {
-            Skript.error("'click event to copy %string% to clipboard' is not supported on your server version", ErrorQuality.SEMANTIC_ERROR);
-            return false;
-        }
         this.object = (Expression<Object>) exprs[0];
         if (this.pattern > 4 && !SUPPORTS_CUSTOM_PAYLOAD) {
             Skript.error("'" + parseResult.expr + "' is not supported on your server version", ErrorQuality.SEMANTIC_ERROR);
@@ -108,6 +104,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
                     Dialog dialog = dialogRegistry.get(key);
                     if (dialog == null) yield null;
 
+                    // TODO remove util when old versions no longer supported
                     yield DialogUtil.showDialog(dialog);
                 }
                 case 6 -> {

@@ -23,6 +23,7 @@ import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import io.papermc.paper.connection.PlayerCommonConnection;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
+import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.connection.PlayerGameConnection;
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
@@ -47,6 +48,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
+import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.UUID;
 
@@ -221,6 +224,7 @@ public class PaperEvents extends SimpleEvent {
                 return (NBTCompound) NBT.parseNBT(tag.string());
             });
             EventValues.registerEventValue(PlayerCustomClickEvent.class, NamespacedKey.class, event -> NamespacedKey.fromString(event.getIdentifier().asString()));
+            EventValues.registerEventValue(PlayerCustomClickEvent.class, PlayerConnection.class, PlayerCustomClickEvent::getCommonConnection);
         }
 
         // UncheckedSignChangeEvent
@@ -276,13 +280,6 @@ public class PaperEvents extends SimpleEvent {
                 "\t\tspawn 3 zombie pigmen at event-location")
             .since("1.8.0");
         EventValues.registerEventValue(EntityZapEvent.class, Location.class, e -> e.getEntity().getLocation(), EventValues.TIME_NOW);
-
-        // Entity Knockback Event
-        Skript.registerEvent("Entity Knockback", PaperEvents.class, EntityKnockbackByEntityEvent.class, "entity knockback")
-            .description("Fired when an Entity is knocked back by the hit of another Entity. " +
-                "If this event is cancelled, the entity is not knocked back. Requires Paper 1.12.2+")
-            .examples("on entity knockback:", "\tif event-entity is a cow:", "\t\tcancel event")
-            .since("1.8.0");
 
         // Experience Orb Merge Event
         Skript.registerEvent("Experience Orb Merge", PaperEvents.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")

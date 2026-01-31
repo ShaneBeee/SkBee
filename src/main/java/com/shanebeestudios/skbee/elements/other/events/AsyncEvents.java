@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.other.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
+import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.event.connection.configuration.AsyncPlayerConnectionConfigureEvent;
 import net.kyori.adventure.audience.Audience;
 
@@ -46,6 +47,8 @@ public class AsyncEvents extends SimpleEvent {
                 event -> event.getConnection().getProfile().getName());
             EventValues.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, Audience.class,
                 event -> event.getConnection().getAudience());
+            EventValues.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, PlayerConnection.class,
+                AsyncPlayerConnectionConfigureEvent::getConnection);
         }
     }
 

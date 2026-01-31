@@ -139,7 +139,8 @@ public final class EnumWrapper<E extends Enum<E>> {
      * @return ClassInfo with default parser and usage
      */
     public @NotNull ClassInfo<E> getClassInfo(String codeName) {
-        return new ClassInfo<>(this.enumClass, codeName).usage(getAllNames()).parser(new EnumParser<>(this));
+        return new ClassInfo<>(this.enumClass, codeName).usage(getAllNames()).parser(new EnumParser<>(this))
+            .supplier(this.enumClass.getEnumConstants());
     }
 
     /**

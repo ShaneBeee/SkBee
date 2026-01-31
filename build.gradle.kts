@@ -9,7 +9,7 @@ val projectVersion = "3.15.0"
 // Minimum version of Minecraft that SkBee supports
 val apiVersion = "1.21.4"
 // Where this builds on the server
-val serverLocation = "Skript/1-21-11"
+val serverLocation = "Minecraft/Skript/1-21-11"
 
 java.sourceCompatibility = JavaVersion.VERSION_21
 
@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.21.10-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
     // Skript
     compileOnly("com.github.SkriptLang:Skript:2.13.0")
