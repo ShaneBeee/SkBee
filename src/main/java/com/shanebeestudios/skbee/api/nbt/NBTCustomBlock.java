@@ -5,6 +5,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import org.bukkit.block.Block;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
@@ -95,14 +96,16 @@ public class NBTCustomBlock extends NBTContainer implements NBTCustom {
 
     @SuppressWarnings("deprecation")
     @Override
-    public @NotNull NBTCompound getCustomNBT() {
-        NBTCompound custom = this.getOrCreateCompound("custom");
+    @Contract("true -> !null")
+    public NBTCompound getCustomNBT(boolean createTagIfMissing) {
+        NBTCompound custom = createTagIfMissing ? this.getOrCreateCompound("custom") : this.getCompound("custom");
         // Verify the innards haven't been removed
         // If the block is air, the NBT is removed
         if (hasTag("custom")) {
+            assert custom != null : "If the tag exists, the compound should be non-null";
             return custom;
         }
-        return new NBTContainer();
+        return new NBTContainer(); // Is this ever going to actually be run?
     }
 
 }
