@@ -32,7 +32,7 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     }
 
     @Override
-    @Contract("false -> !null")
+    @Contract("true -> !null")
     public NBTCompound getCustomNBT(boolean createTagIfMissing) {
         if (createTagIfMissing)
             return getPersistentDataContainer().getOrCreateCompound(KEY);

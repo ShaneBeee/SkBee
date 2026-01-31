@@ -11,6 +11,7 @@ import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.entity.Entity;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("deprecation")
@@ -33,6 +34,7 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     }
 
     @Override
+    @Contract("true -> !null")
     public NBTCompound getCustomNBT(boolean createTagIfMissing) {
         if (createTagIfMissing)
             return getPersistentDataContainer().getOrCreateCompound(KEY);
