@@ -62,7 +62,7 @@ import java.util.UUID;
     "\ttooltip: \"Teleport yoursel to spawn!\"",
     "\ttrigger:",
     "\t\tteleport event-player to spawn of world \"world\""})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecDynamicCallbackActionButton extends Section {
 
     private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();

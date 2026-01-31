@@ -34,7 +34,7 @@ import java.util.List;
     "Will default to all attribute types."})
 @Examples({"remove attribute modifier with key \"my:key\" from player's tool",
     "remove generic scale attribute modifier with key \"my:key\" from player's tool"})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class EffAttributeModifierRemoveByKey extends Effect {
 
     static {

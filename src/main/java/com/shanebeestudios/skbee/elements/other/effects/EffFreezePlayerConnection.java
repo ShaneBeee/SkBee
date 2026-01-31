@@ -51,7 +51,7 @@ import java.util.concurrent.TimeUnit;
     "\tif event-namespacedkey contains \"custom:decline_rules\":",
     "\t\t# Unfreeze the connection and kick the player if they decline the rules",
     "\t\tunfreeze connection event-playerconnection and disconnect due to mini message from \"<red>You decided to leave!\""})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class EffFreezePlayerConnection extends Effect {
 
     private static final Map<UUID, CompletableFuture<Component>> AWAITING_RESPONSE = new ConcurrentHashMap<>();

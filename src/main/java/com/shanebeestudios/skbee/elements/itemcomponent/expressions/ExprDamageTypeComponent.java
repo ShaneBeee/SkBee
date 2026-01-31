@@ -29,7 +29,7 @@ import org.jspecify.annotations.Nullable;
 @Examples({"set damage type of player's tool to cactus",
     "delete damage type of player's tool",
     "reset damage type component of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class ExprDamageTypeComponent extends SimplePropertyExpression<Object, DamageType> {
 
     static {

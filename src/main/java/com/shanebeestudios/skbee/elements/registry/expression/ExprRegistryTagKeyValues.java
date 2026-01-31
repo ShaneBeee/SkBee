@@ -24,7 +24,7 @@ import java.util.List;
 @Description("Get all values from a tag key.")
 @Examples({"set {_biomes::*} to tag key values of tag key \"minecraft:has_structure/mineshaft\" from biome registry",
     "loop tag key values of {_tagKey}:"})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class ExprRegistryTagKeyValues extends SimpleExpression<Object> {
 
     static {

@@ -56,7 +56,7 @@ import java.util.Objects;
     "- `action` = Click action. Defaults to button with `gui.ok` label and no action or tooltip." +
         "This is a section where you'll use an [**aAction Format Section**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#action-format) to add your action[s]."})
 @Examples("")
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecNoticeDialogRegister extends Section {
 
     private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();

@@ -69,7 +69,7 @@ import java.util.Objects;
     "- `columns` = Positive integer describing number of columns. Defaults to 2. [Optional]",
     "- `button_width` = Integer value between 1 and 1024 — Width of the button. Defaults to 150."})
 @Examples("")
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecDialogListDialogRegister extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();

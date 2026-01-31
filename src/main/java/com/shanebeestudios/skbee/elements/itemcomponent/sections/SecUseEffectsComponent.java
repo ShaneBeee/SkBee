@@ -42,7 +42,7 @@ import java.util.List;
     "\tinteract_vibrations: false",
     "",
     "give player 1 of {_i}"})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecUseEffectsComponent extends Section {
 
     private static EntryValidator VALIDATOR;

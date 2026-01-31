@@ -49,7 +49,7 @@ import java.util.List;
     "\tmob_factor: 1",
     "",
     "give player 1 of {_i}"})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecAttackRangeComponent extends Section {
 
     private static EntryValidator VALIDATOR;
