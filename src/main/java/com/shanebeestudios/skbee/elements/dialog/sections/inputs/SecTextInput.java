@@ -47,7 +47,7 @@ import java.util.List;
     "    key: \"name_input\"",
     "    label: \"Input your name to confirm:\"",
     "    initial: \"name\""})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecTextInput extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();

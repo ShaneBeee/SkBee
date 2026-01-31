@@ -48,7 +48,7 @@ import static ch.njol.skript.classes.Changer.ChangeMode.SET;
     "\thit_sound: \"minecraft:item.spear.hit\"",
     "",
     "give player 1 of {_i}"})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecPiercingWeapon extends Section {
 
     private static EntryValidator VALIDATOR;

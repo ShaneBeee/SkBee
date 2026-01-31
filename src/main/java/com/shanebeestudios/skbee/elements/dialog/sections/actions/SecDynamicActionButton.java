@@ -47,7 +47,7 @@ import java.util.Optional;
     "\ttooltip: \"Teleport yoursel to spawn!\"",
     "\tid: \"custom:teleport_to_spawn\"",
     "\tadditions: nbt from \"{some_tag:\"\"some extra info\"\"}\""})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecDynamicActionButton extends Section {
 
     private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();

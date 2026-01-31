@@ -23,7 +23,7 @@ import org.jetbrains.annotations.Nullable;
 @Description("The knockback velocity in an entity knockback event.")
 @Examples({"on entity knockback:",
         "\tset knockback velocity to knockback velocity * -1"})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class ExprKnockbackVelocity extends SimpleExpression<Vector> implements EventRestrictedSyntax {
 
     static {

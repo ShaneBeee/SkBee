@@ -57,7 +57,7 @@ import java.util.Objects;
         "See [**Action Format on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#action-format)" +
         "and [**Action Format on McWiki**](https://minecraft.wiki/w/Dialog#Action_format) for further info."})
 @Examples("")
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecConfirmationDialogRegister extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();

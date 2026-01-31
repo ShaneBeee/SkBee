@@ -514,7 +514,7 @@ public class Types {
                 .description("Represents the connection of a player in an async connect config event and custom click event.")
                 .defaultExpression(new EventValueExpression<>(PlayerConnection.class))
                 .parser(SkriptUtils.getDefaultParser())
-                .since("INSERT VERSION"));
+                .since("3.16.0"));
         } else {
             Util.logLoading("It looks like another addon registered 'playerconnection' already.");
             Util.logLoading("You may have to use their PlayerConnection in SkBee's syntaxes.");
@@ -526,7 +526,7 @@ public class Types {
                 .defaultExpression(new EventValueExpression<>(EntityKnockbackEvent.Cause.class))
                 .name("Entity Knockback Cause")
                 .description("Represents the cause of knockback in an entity knockback event")
-                .since("INSERT VERSION")
+                .since("3.16.0")
             );
         } else {
             Util.logLoading("It looks like another addon registered 'knockbackcause' already.");

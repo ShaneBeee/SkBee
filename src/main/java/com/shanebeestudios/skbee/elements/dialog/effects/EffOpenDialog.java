@@ -27,7 +27,7 @@ import org.jetbrains.annotations.Nullable;
     "open dialog with id \"my_pack:some_dialog\" to all players",
     "close dialogs of all players",
     "close dialogs of world \"world\" #closes dialogs of all players in that world"})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class EffOpenDialog extends Effect {
 
     private static final Registry<Dialog> REGISTRY = RegistryAccess.registryAccess().getRegistry(RegistryKey.DIALOG);

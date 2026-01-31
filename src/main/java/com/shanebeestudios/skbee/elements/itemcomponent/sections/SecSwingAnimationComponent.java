@@ -42,7 +42,7 @@ import java.util.List;
     "\tduration: 60 ticks",
     "",
     "give player 1 of {_i}"})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecSwingAnimationComponent extends Section {
 
     private static EntryValidator VALIDATOR;

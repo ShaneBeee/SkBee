@@ -44,7 +44,7 @@ import java.util.Optional;
     "\ttooltip: mini message from \"Switch to creative gamemode\"",
     "\twidth: 200",
     "\taction: click event to run command \"gamemode creative\""})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class SecStaticActionButton extends Section {
 
     private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();

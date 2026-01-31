@@ -30,7 +30,7 @@ import org.jspecify.annotations.Nullable;
 @Examples({"set minimum attack charge of player's tool to 0.5",
     "delete minimum attack charge of player's tool",
     "reset minimum attack charge component of player's tool"})
-@Since("INSERT VERSION")
+@Since("3.16.0")
 public class ExprMinAttackChargeComponent extends SimplePropertyExpression<Object, Number> {
 
     static {
