@@ -57,9 +57,10 @@ public class EffFreezePlayerConnection extends Effect {
     private static final Map<UUID, CompletableFuture<Component>> AWAITING_RESPONSE = new ConcurrentHashMap<>();
 
     static {
-        Skript.registerEffect(EffFreezePlayerConnection.class,
-            "freeze connection %playerconnection/audience% [with timeout message %-textcomponent%]",
-            "unfreeze connection %playerconnection/audience% [and disconnect due to %-textcomponent%]");
+        if (Skript.classExists("io.papermc.paper.connection.PlayerConfigurationConnection"))
+            Skript.registerEffect(EffFreezePlayerConnection.class,
+                "freeze connection %playerconnection/audience% [with timeout message %-textcomponent%]",
+                "unfreeze connection %playerconnection/audience% [and disconnect due to %-textcomponent%]");
     }
 
     private boolean freeze;

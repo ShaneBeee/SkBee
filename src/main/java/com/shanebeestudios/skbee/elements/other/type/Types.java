@@ -507,17 +507,19 @@ public class Types {
         Classes.registerClass(audienceClassInfo);
         setupUsage(audienceClassInfo);
 
-        if (Classes.getExactClassInfo(PlayerConnection.class) == null) {
-            Classes.registerClass(new ClassInfo<>(PlayerConnection.class, "playerconnection")
-                .user("player ?connections?")
-                .name("Player Connection")
-                .description("Represents the connection of a player in an async connect config event and custom click event.")
-                .defaultExpression(new EventValueExpression<>(PlayerConnection.class))
-                .parser(SkriptUtils.getDefaultParser())
-                .since("3.16.0"));
-        } else {
-            Util.logLoading("It looks like another addon registered 'playerconnection' already.");
-            Util.logLoading("You may have to use their PlayerConnection in SkBee's syntaxes.");
+        if (Skript.classExists("io.papermc.paper.connection.PlayerConnection")) {
+            if (Classes.getExactClassInfo(PlayerConnection.class) == null) {
+                Classes.registerClass(new ClassInfo<>(PlayerConnection.class, "playerconnection")
+                    .user("player ?connections?")
+                    .name("Player Connection")
+                    .description("Represents the connection of a player in an async connect config event and custom click event.")
+                    .defaultExpression(new EventValueExpression<>(PlayerConnection.class))
+                    .parser(SkriptUtils.getDefaultParser())
+                    .since("3.16.0"));
+            } else {
+                Util.logLoading("It looks like another addon registered 'playerconnection' already.");
+                Util.logLoading("You may have to use their PlayerConnection in SkBee's syntaxes.");
+            }
         }
 
         if (Classes.getExactClassInfo(EntityKnockbackEvent.Cause.class) == null) {
