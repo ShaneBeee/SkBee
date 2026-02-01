@@ -16,9 +16,9 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 @Name("BlockFace - Direction")
-@Description({"Gets a skript direction using a blockface with an optional distance value",
-    "not defining a distance will default it to 0",
-    "**NOTE:** this will not work using the `self_face` block face, as Skript makes it NaN"})
+@Description({"Gets a skript direction using a blockface with an optional distance value.",
+    "Not defining a distance will default it to 0.",
+    "**NOTE:** this will not work using the `self_face` block face, as Skript makes it NaN."})
 @Examples({"set {_raytrace} to raytrace from player with max distance {_maxDistance}",
     "set {_direction} to direction of (hit blockface of {_raytrace})",
     "spawn zombie {_direction} player"})
