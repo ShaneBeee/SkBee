@@ -3,3 +3,7 @@ test "SkBee - NBT - ExprItemWithNBT":
 	set {_i::2} to {_i::1} with nbt from "{""minecraft:consumable"":{}}"
 	assert nbt of {_i::2} has tag "minecraft:consumable" with "The item should have a consumable tag"
 	assert nbt of {_i::1} doesn't have tag "minecraft:consumable" with "The original item shouldn't get modified"
+
+	# Test invalid NBT and make sure no error
+	set {_i::3} to 1 of diamond sword with nbt from  "{invalid:1}"
+	assert nbt of {_i::3} = empty nbt compound with "The item should have no NBT"
