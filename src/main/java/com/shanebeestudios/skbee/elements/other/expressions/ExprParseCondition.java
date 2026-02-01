@@ -17,11 +17,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Name("Parse Condition - With Return")
-@Description({"This will parse a string as a condition and then check it and returns whether or not its valid.",
+@Description({"This will parse a string as a condition and then check it and returns whether or not it's valid.",
     "If you provide a command sender it works the same as Skript's 'effect commands'.",
     "Otherwise it runs using the current event allowing you to use event-values",
     "",
-    "**NOTE:** This is handled very from the parse effect eapresssion in addition to behaving differently than skript's `whether <condition>`",
+    "**NOTE:** This is handled very differently from the parse effect expression in addition to behaving differently than Skript's `whether <condition>`.",
     "If you have no good reason to use this, please check out the other two.",
     "*tip: when running into invalid null states try replacing parts with variables*"})
 @Examples({"command /parse <string>:",
