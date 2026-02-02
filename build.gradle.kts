@@ -103,7 +103,7 @@ tasks {
 }
 
 publishing.publications.create("maven", MavenPublication::class.java) {
-    artifact(tasks["shadowJar"])
+    artifact(tasks["jar"])
     groupId = "com.github.shanebeestudios"
     artifactId = "SkBee"
     version = projectVersion
