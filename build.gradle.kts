@@ -75,6 +75,7 @@ tasks {
     }
     shadowJar {
         archiveFileName = project.name + "-" + projectVersion + ".jar"
+        archiveClassifier.set("")
         manifest.attributes["Main-Class"] = "com.shanebeestudios.skbee.game.GamesMain"
         relocate("de.tr7zw.changeme.nbtapi", "com.shanebeestudios.skbee.api.nbt")
         relocate("de.tr7zw.annotations", "com.shanebeestudios.skbee.api.nbt.annotations")
@@ -103,7 +104,7 @@ tasks {
 }
 
 publishing.publications.create("maven", MavenPublication::class.java) {
-    artifact(tasks["jar"])
+    artifact(tasks["shadowJar"])
     groupId = "com.github.shanebeestudios"
     artifactId = "SkBee"
     version = projectVersion
