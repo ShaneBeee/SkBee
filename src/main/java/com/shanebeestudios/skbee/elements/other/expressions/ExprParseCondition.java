@@ -68,7 +68,7 @@ public class ExprParseCondition extends SimpleExpression<Boolean> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "parse condition `" + this.conditions.toString(e, d) + "'";
+        return "parse condition '" + this.conditions.toString(e, d) + "'";
     }
 
 }
