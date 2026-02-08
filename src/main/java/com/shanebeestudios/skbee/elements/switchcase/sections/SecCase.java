@@ -67,7 +67,7 @@ public class SecCase extends Section implements ReturnHandler<Object> {
     private Expression<Object> caseObject;
     private boolean defaultCase;
     private ReturnableTrigger<?> caseSection;
-    private Object returnObject;
+    private Object[] returnObject;
 
     @SuppressWarnings("UnstableApiUsage")
     @Override
@@ -153,7 +153,7 @@ public class SecCase extends Section implements ReturnHandler<Object> {
 
     @Override
     public void returnValues(Event event, Expression<?> value) {
-        this.returnObject = value.getSingle(event);
+        this.returnObject = value.getArray(event);
     }
 
     @Override

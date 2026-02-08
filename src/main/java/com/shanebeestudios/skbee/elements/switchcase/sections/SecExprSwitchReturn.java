@@ -16,6 +16,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchSecEvent;
 import org.bukkit.event.Event;
@@ -61,6 +62,7 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
             "(switch return|return switch) %object%"); // TODO better pattern? (can't use `switch object` again)
     }
 
+    private boolean isSingle = true;
     private Expression<?> switchedObject;
     private Trigger caseSection;
 
@@ -101,16 +103,20 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
         Variables.setLocalVariables(event, Variables.copyLocalVariables(returnEvent));
         Variables.removeLocals(returnEvent);
 
-        return new Object[]{returnEvent.getReturnedObject()};
+        return returnEvent.getReturnedObject();
     }
 
     public Expression<?> getSwitchedObjectExpression() {
         return this.switchedObject;
     }
 
+    public void setIsSingle(boolean isSingle) {
+        this.isSingle = isSingle;
+    }
+
     @Override
     public boolean isSingle() {
-        return true;
+        return this.isSingle;
     }
 
     @Override

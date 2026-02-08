@@ -240,9 +240,13 @@ public class NBTApi {
             if (custom) components = components.getOrCreateCompound("minecraft:custom_data");
             components.mergeCompound(nbtCompound);
         }
-        ItemStack newItemStack = NBTItem.convertNBTtoItem(itemNBT);
-        if (newItemStack == null) return null;
-        return new ItemType(newItemStack);
+        try {
+            ItemStack newItemStack = NBTItem.convertNBTtoItem(itemNBT);
+            if (newItemStack == null) return null;
+            return new ItemType(newItemStack);
+        } catch (NbtApiException ignore) {
+            return itemType;
+        }
     }
 
     /**

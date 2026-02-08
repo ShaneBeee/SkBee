@@ -17,6 +17,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchSecEvent;
 import com.shanebeestudios.skbee.elements.switchcase.sections.SecCase;
@@ -84,6 +85,7 @@ public class EffCase extends Effect {
             "default -> <.+>");
     }
 
+    private SecExprSwitchReturn parentSwitch;
     private boolean defaultCase;
     private Expression<?> caseObject;
     private Expression<?> returnObject;
@@ -103,6 +105,7 @@ public class EffCase extends Effect {
                 if (expressionSection.getAsExpression() instanceof SecExprSwitchReturn secExprSwitchReturn) {
                     switchSection = expressionSection;
                     switchObject = secExprSwitchReturn.getSwitchedObjectExpression();
+                    this.parentSwitch = secExprSwitchReturn;
                 }
             }
         }
@@ -123,6 +126,9 @@ public class EffCase extends Effect {
             Expression<?> expression = SkriptUtils.parseExpression(group);
             if (expression != null) {
                 this.returnObject = expression;
+                if (this.parentSwitch != null && !expression.isSingle()) {
+                    this.parentSwitch.setIsSingle(false);
+                }
             } else {
                 return false;
             }
@@ -160,7 +166,7 @@ public class EffCase extends Effect {
     protected @Nullable TriggerItem walk(Event event) {
         if (event instanceof SwitchReturnEvent switchReturnEvent) {
             if (this.defaultCase || SecCase.compare(this.caseObject.getArray(event), switchReturnEvent.getSwitchedObject())) {
-                Object returnObject = this.returnObject.getSingle(switchReturnEvent.getParentEvent());
+                Object[] returnObject = this.returnObject.getArray(switchReturnEvent.getParentEvent());
                 if (returnObject != null) {
                     switchReturnEvent.setReturnedObject(returnObject);
                     return null;
