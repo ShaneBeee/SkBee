@@ -8,17 +8,17 @@ import org.jetbrains.annotations.Nullable;
  */
 public class SwitchReturnEvent extends SwitchBaseEvent {
 
-    private Object returnedObject;
+    private Object[] returnedObject;
 
     public SwitchReturnEvent(Object object, Event parentEvent) {
         super(object, parentEvent);
     }
 
-    public @Nullable Object getReturnedObject() {
+    public @Nullable Object[] getReturnedObject() {
         return this.returnedObject;
     }
 
-    public void setReturnedObject(Object returnedObject) {
+    public void setReturnedObject(Object[] returnedObject) {
         this.returnedObject = returnedObject;
     }
 
