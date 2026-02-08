@@ -85,7 +85,11 @@ tasks {
         exclude("META-INF/**", "LICENSE")
     }
     jar {
+        enabled = false
         dependsOn(shadowJar)
+    }
+    java {
+        withSourcesJar()
     }
     javadoc {
         options.encoding = Charsets.UTF_8.name()
@@ -103,9 +107,21 @@ tasks {
     }
 }
 
-publishing.publications.create("maven", MavenPublication::class.java) {
-    artifact(tasks["shadowJar"])
-    groupId = "com.github.shanebeestudios"
-    artifactId = "SkBee"
-    version = projectVersion
+publishing {
+    publications {
+        create<MavenPublication>("maven") {
+            groupId = "com.github.shanebeestudios"
+            artifactId = "SkBee"
+            version = projectVersion
+
+            // 1. Include the Java component (now contains the sources jar)
+            from(components["java"])
+
+            // 2. Remove the default thin jar to prevent the 'multiple artifacts' error
+            artifacts.removeAll { it.extension == "jar" && it.classifier == null }
+
+            // 3. Add the shadow jar as the primary artifact
+            artifact(tasks["shadowJar"])
+        }
+    }
 }
