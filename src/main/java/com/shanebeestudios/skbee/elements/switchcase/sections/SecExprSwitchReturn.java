@@ -71,7 +71,6 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
     public boolean init(Expression<?>[] exprs, int pattern, Kleenean delayed, ParseResult result, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
         if (sectionNode == null) return false;
         this.switchedObject = LiteralUtils.defendExpression(exprs[0]);
-        Util.log( "Starting switch section init");
 
         Class<? extends Event>[] currentEvents = getParser().getCurrentEvents();
         Class<? extends Event>[] events = new Class[currentEvents.length + 1];
@@ -89,7 +88,6 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
             }
         }
 
-        Util.log( "Finished switch section init");
         return LiteralUtils.canInitSafely(this.switchedObject);
     }
 

@@ -94,7 +94,6 @@ public class EffCase extends Effect {
     @SuppressWarnings("UnstableApiUsage")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
-        Util.log( "Starting case effect init");
         Section switchSection = null;
         Expression<?> switchObject = null;
         if (getParser().getCurrentStructure() instanceof SectionSkriptEvent skriptEvent) {
