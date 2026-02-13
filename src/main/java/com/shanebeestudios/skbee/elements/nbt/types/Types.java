@@ -2,15 +2,14 @@ package com.shanebeestudios.skbee.elements.nbt.types;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTFile;
@@ -21,7 +20,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.StreamCorruptedException;
 
-public class SkriptTypes {
+public class Types {
 
     public static final Changer<NBTCompound> NBT_COMPOUND_CHANGER = new Changer<>() {
         @Nullable
@@ -52,8 +51,8 @@ public class SkriptTypes {
         }
     };
 
-    static {
-        Classes.registerClass(new ClassInfo<>(NBTCustomType.class, "nbttype")
+    public static void register(Registration reg) {
+        reg.newType(NBTCustomType.class, "nbttype")
             .user("nbt ?types?")
             .name("NBT - Tag Type")
             .description("Represents a type of NBT tag.",
@@ -64,7 +63,7 @@ public class SkriptTypes {
             .examples("set byte tag \"points\" of {_nbt} to 1",
                 "set compound tag \"tool\" of {_nbt} to nbt compound of player's tool")
             .since("1.10.0")
-            .parser(new Parser<NBTCustomType>() {
+            .parser(new Parser<>() {
 
                 @Nullable
                 @Override
@@ -81,12 +80,9 @@ public class SkriptTypes {
                 public String toVariableNameString(NBTCustomType nbtCustomType) {
                     return toString(nbtCustomType, 0);
                 }
-
-                public String getVariableNamePattern() {
-                    return "\\S";
-                }
-            }));
-        Classes.registerClass(new ClassInfo<>(NBTCompound.class, "nbtcompound")
+            })
+            .register();
+        reg.newType(NBTCompound.class, "nbtcompound")
             .user("nbt ?(compounds?)?")
             .name("NBT - Compound")
             .description("Represents the NBT compound of an entity/block/item/file/string.",
@@ -155,7 +151,8 @@ public class SkriptTypes {
                     return false;
                 }
             })
-            .changer(NBT_COMPOUND_CHANGER));
+            .changer(NBT_COMPOUND_CHANGER)
+            .register();
     }
 
     @SuppressWarnings("deprecation")

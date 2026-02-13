@@ -3,12 +3,15 @@ package com.shanebeestudios.skbee;
 import ch.njol.skript.Skript;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Version;
+import com.shanebeestudios.skbee.api.listener.NBTListener;
+import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
+import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
@@ -80,7 +83,7 @@ public class AddonLoader {
         // Load first as these are the base for many things
         //loadRegistryElements();
         loadOtherElements();
-        //loadNBTElements();
+        loadNBTElements();
         loadTextElements();
 
         this.addon.loadModules(module);
@@ -153,28 +156,28 @@ public class AddonLoader {
         }
     }
 
-//    private void loadNBTElements() {
-//        if (!this.config.ELEMENTS_NBT) {
-//            Util.logLoading("&5NBT Elements &cdisabled via config");
-//            return;
-//        }
-//        NBTApi.initializeAPI(this.config);
-//        if (!NBTApi.isEnabled()) {
-//            String ver = Skript.getMinecraftVersion().toString();
-//            Util.logLoading("&5NBT Elements &cDISABLED!");
-//            Util.logLoading(" - Your server version [&b" + ver + "&7] is not currently supported by the NBT-API");
-//            Util.logLoading(" - This is not a bug!");
-//            Util.logLoading(" - NBT elements will resume once the API is updated to work with [&b" + ver + "&7]");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.nbt");
-//            new NBTListener(this.plugin);
-//            Util.logLoading("&5NBT Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("NBT", ex);
-//        }
-//    }
+    private void loadNBTElements() {
+        if (!this.config.ELEMENTS_NBT) {
+            Util.logLoading("&5NBT Elements &cdisabled via config");
+            return;
+        }
+        NBTApi.initializeAPI(this.config);
+        if (!NBTApi.isEnabled()) {
+            String ver = Skript.getMinecraftVersion().toString();
+            Util.logLoading("&5NBT Elements &cDISABLED!");
+            Util.logLoading(" - Your server version [&b" + ver + "&7] is not currently supported by the NBT-API");
+            Util.logLoading(" - This is not a bug!");
+            Util.logLoading(" - NBT elements will resume once the API is updated to work with [&b" + ver + "&7]");
+            return;
+        }
+        try {
+            NBTElementRegistration.register(this.registration);
+            new NBTListener(this.plugin);
+            Util.logLoading("&5NBT Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("NBT", ex);
+        }
+    }
 //
 //    private void loadRecipeElements() {
 //        if (!this.config.ELEMENTS_RECIPE) {
