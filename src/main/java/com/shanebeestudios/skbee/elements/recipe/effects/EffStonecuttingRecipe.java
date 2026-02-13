@@ -2,17 +2,13 @@ package com.shanebeestudios.skbee.elements.recipe.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -25,21 +21,21 @@ import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.StonecuttingRecipe;
 
 @SuppressWarnings({"ConstantConditions"})
-@Name("Recipe - StoneCutting")
-@Description({"Register a new stone cutting recipe.",
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
-        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"minecraft:\",",
-        "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
-        "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",
-        "Requires MC 1.13+"})
-@Examples({"on skript load:", "\tregister new stone cutting recipe for diamond using diamond ore with id \"cutting_diamond\""})
-@RequiredPlugins("1.14+")
-@Since("1.0.0")
 public class EffStonecuttingRecipe extends Effect {
 
-    static {
-        Skript.registerEffect(EffStonecuttingRecipe.class,
-                "register [new] stone[ ]cutt(ing|er) recipe for %itemtype% (using|with ingredient) %itemtype/recipechoice% with id %string% [in group %-string%]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffStonecuttingRecipe.class,
+                "register [new] stone[ ]cutt(ing|er) recipe for %itemtype% (using|with ingredient) %itemtype/recipechoice% with id %string% [in group %-string%]")
+            .name("Recipe - StoneCutting Recipe")
+            .description("Register a new stone cutting recipe.",
+                "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
+                "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"minecraft:\",",
+                "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
+                "You may also include an optional group for recipes. These will group the recipes together in the recipe book.")
+            .examples("on skript load:",
+                "\tregister new stone cutting recipe for diamond using diamond ore with id \"cutting_diamond\"")
+            .since("1.0.0")
+            .register();
     }
 
     @SuppressWarnings("null")

@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -22,22 +17,23 @@ import org.bukkit.plugin.Plugin;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Recipe - Knowledge Book")
-@Description({"Add/Remove custom or minecraft recipes to/from a knowledge book item.",
-        "Optional string for plugin name, to add recipes from other plugins. Requires MC 1.13+"})
-@Examples({"add custom recipe \"my_recipe\" to player's tool",
-        "add recipe \"my_recipes:fancy_recipe\" to player's tool",
-        "add minecraft recipe \"cooked_cod_from_campfire_cooking\" to {_book}",
-        "add recipe \"minecraft:cooked_cod_from_campfire_cooking\" to {_book}",
-        "add recipe \"some_recipe\" from plugin \"SomePlugin\" to player's tool",
-        "add recipe \"someplugin:some_recipe\" to player's tool"})
-@Since("1.0.0")
 public class EffKnowledgeBook extends Effect {
 
-    static {
-        Skript.registerEffect(EffKnowledgeBook.class,
+    public static void register(Registration reg) {
+        reg.newEffect(EffKnowledgeBook.class,
                 "add [(custom|1:(mc|minecraft))] recipe[s] [with id[s]] %strings% [from plugin %-string%] to %itemtype%",
-                "remove [(custom|1:(mc|minecraft))] recipe[s] [with id[s]] %strings% [from plugin %-string%] from %itemtype%");
+                "remove [(custom|1:(mc|minecraft))] recipe[s] [with id[s]] %strings% [from plugin %-string%] from %itemtype%")
+            .name("Recipe - Knowledge Book")
+            .description("Add/Remove custom or minecraft recipes to/from a knowledge book item.",
+                "Optional string for plugin name, to add recipes from other plugins.")
+            .examples("add custom recipe \"my_recipe\" to player's tool",
+                "add recipe \"my_recipes:fancy_recipe\" to player's tool",
+                "add minecraft recipe \"cooked_cod_from_campfire_cooking\" to {_book}",
+                "add recipe \"minecraft:cooked_cod_from_campfire_cooking\" to {_book}",
+                "add recipe \"some_recipe\" from plugin \"SomePlugin\" to player's tool",
+                "add recipe \"someplugin:some_recipe\" to player's tool")
+            .since("1.0.0")
+            .register();
     }
 
     private Expression<String> recipes;
@@ -97,7 +93,7 @@ public class EffKnowledgeBook extends Effect {
     @Override
     public String toString(Event e, boolean d) {
         return (add ? "add" : "remove") + (minecraft ? " minecraft" : " custom") + " recipe(s) " + recipes.toString(e, d) +
-                (add ? " to " : " from ") + book.toString(e, d);
+            (add ? " to " : " from ") + book.toString(e, d);
     }
 
 }

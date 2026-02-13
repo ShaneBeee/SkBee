@@ -1,17 +1,11 @@
 package com.shanebeestudios.skbee.elements.recipe.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
-import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -23,18 +17,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Recipe - Recipe Type")
-@Description({"Get the type of a recipe.", "\nID = Minecraft or custom NamespacedKey, see examples."})
-@Examples({"set {_type} to recipe type of recipe with id \"minecraft:oak_door\"",
-        "set {_type} to recipe type of recipe \"skbee:some_recipe\"",
-        "set {_type} to recipe type of recipe with id \"my_recipes:some_custom_recipe\"",
-        "if recipe type of recipe with id \"my_recipes:some_custom_recipe\" = shaped recipe:"})
-@Since("2.6.0")
 public class ExprRecipeType extends SimpleExpression<RecipeType> {
 
-    static {
-        Skript.registerExpression(ExprRecipeType.class, RecipeType.class, ExpressionType.SIMPLE,
-                "recipe type of recipe[s] [with id[s]] %strings%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprRecipeType.class, RecipeType.class,
+                "recipe type of recipe[s] [with id[s]] %strings%")
+            .name("Recipe - Recipe Type")
+            .description("Get the type of a recipe.",
+                "`ID` = Minecraft or custom NamespacedKey, see examples.")
+            .examples("set {_type} to recipe type of recipe with id \"minecraft:oak_door\"",
+                "set {_type} to recipe type of recipe \"skbee:some_recipe\"",
+                "set {_type} to recipe type of recipe with id \"my_recipes:some_custom_recipe\"",
+                "if recipe type of recipe with id \"my_recipes:some_custom_recipe\" = shaped recipe:")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<String> key;

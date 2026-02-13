@@ -8,13 +8,13 @@ import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
-import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.bossbar.BossbarElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
 import com.shanebeestudios.skbee.elements.property.PropertyElementRegistration;
+import com.shanebeestudios.skbee.elements.recipe.RecipeElementRegistration;
 import com.shanebeestudios.skbee.elements.registry.RegistryElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
@@ -103,7 +103,7 @@ public class AddonLoader {
 //        loadParticleElements();
         loadPropertyElements();
 //        loadRayTraceElements();
-//        loadRecipeElements();
+        loadRecipeElements();
         loadRegistryElements();
 //        loadScoreboardElements();
 //        loadStatisticElements();
@@ -171,20 +171,21 @@ public class AddonLoader {
         }
     }
 
+
+    private void loadRecipeElements() {
+        if (!this.config.ELEMENTS_RECIPE) {
+            Util.logLoading("&5Recipe Elements &cdisabled via config");
+            return;
+        }
+        try {
+            RecipeElementRegistration.register(this.registration);
+            Util.logLoading("&5Recipe Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Recipe", ex);
+        }
+    }
+
     //
-//    private void loadRecipeElements() {
-//        if (!this.config.ELEMENTS_RECIPE) {
-//            Util.logLoading("&5Recipe Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.recipe");
-//            Util.logLoading("&5Recipe Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Recipe", ex);
-//        }
-//    }
-//
 //    private void loadFastboardElements() {
 //        if (!this.config.ELEMENTS_FASTBOARD) {
 //            Util.logLoading("&5Fastboard Elements &cdisabled via config");

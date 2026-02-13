@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.recipe.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -30,18 +25,18 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings({"NullableProblems", "deprecation"})
-@Name("Recipe - Ingredients of Recipe")
-@Description("Get the ingredients from a recipe. Requires 1.13+")
-@Examples({"set {_ing::*} to ingredients of recipe \"minecraft:diamond_sword\"",
-        "loop recipes for iron ingot:",
-        "\tset {_ing::*} to ingredients of recipe %loop-value%"})
-@Since("1.4.0")
 public class ExprIngredientsOfRecipe extends SimpleExpression<ItemType> {
 
-    static {
-        Skript.registerExpression(ExprIngredientsOfRecipe.class, ItemType.class, ExpressionType.COMBINED,
-                "[(all [[of] the]|the)] ingredients (for|of) recipe %string%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprIngredientsOfRecipe.class, ItemType.class,
+                "[(all [[of] the]|the)] ingredients (for|of) recipe %string%")
+            .name("Recipe - Ingredients of Recipe")
+            .description("Get the ingredients from a recipe.")
+            .examples("set {_ing::*} to ingredients of recipe \"minecraft:diamond_sword\"",
+                "loop recipes for iron ingot:",
+                "\tset {_ing::*} to ingredients of recipe %loop-value%")
+            .since("1.4.0")
+            .register();
     }
 
     private Expression<String> recipe;
