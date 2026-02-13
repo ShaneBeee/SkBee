@@ -23,8 +23,6 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.skriptlang.skript.addon.SkriptAddon;
 
-import java.io.IOException;
-
 /**
  * @hidden
  */
@@ -85,7 +83,6 @@ public class AddonLoader {
         this.addon.localizer().setSourceDirectories("lang", null);
         SkBeeAddonModule module = new SkBeeAddonModule(this.registration);
 
-        int[] elementCountBefore = SkriptUtils.getElementCount(this.registration);
         // Load first as these are the base for many things
         loadOtherElements();
         loadNBTElements();
@@ -120,40 +117,29 @@ public class AddonLoader {
 //        loadChunkGenElements();
 //        loadTestingElements();
 
-        String[] elementNames = new String[]{"event", "effect", "expression", "condition", "section", "type", "structure"};
-
-        if (false) {
-            // This is just debug code for counting Skript's elements
-            // Activate when I want to see it,
-            // I just don't want to keep typing this out
-            int skriptTotal = 0;
-            for (int j : elementCountBefore) {
-                skriptTotal += j;
-            }
-
-            Util.log("Loaded Skript (%s) elements:", skriptTotal);
-            for (int i = 0; i < elementCountBefore.length; i++) {
-                Util.log(" - %s %s%s", elementCountBefore[i], elementNames[i], elementCountBefore[i] == 1 ? "" : "s");
-            }
-        }
-
-        // TODO redo this whole thing with new registration
-        int[] elementCountAfter = SkriptUtils.getElementCount(this.registration);
-        int[] finish = new int[elementCountBefore.length];
-        int total = 0;
-        for (int i = 0; i < elementCountBefore.length; i++) {
-            finish[i] = elementCountAfter[i] - elementCountBefore[i];
-            total += finish[i];
-        }
+        // ELEMENT COUNT
+        int typeCount = this.registration.getTypes().size();
+        int structureCount = this.registration.getStructures().size();
+        int eventCount = this.registration.getEvents().size();
+        int sectionCount = this.registration.getSections().size();
+        int effectCount = this.registration.getEffects().size();
+        int expressionCount = this.registration.getExpressions().size();
+        int conditionCount = this.registration.getConditions().size();
+        int propertyCount = PropertyRegistry.properties().size();
+        int total = eventCount + effectCount + expressionCount + conditionCount + sectionCount + typeCount + structureCount + propertyCount;
 
         Util.log("Loaded SkBee (%s) elements:", total);
-        for (int i = 0; i < finish.length; i++) {
-            Util.log(" - %s %s%s", finish[i], elementNames[i], finish[i] == 1 ? "" : "s");
-        }
+        Util.log(" - %s types", typeCount);
+        Util.log(" - %s structures", structureCount);
+        Util.log(" - %s events", eventCount);
+        Util.log(" - %s sections", sectionCount);
+        Util.log(" - %s effects", effectCount);
+        Util.log(" - %s expressions", expressionCount);
+        Util.log(" - %s conditions", conditionCount);
         if (this.config.ELEMENTS_PROPERTY) {
-            int size = PropertyRegistry.properties().size();
-            Util.log(" - %s properties", size);
+            Util.log(" - %s properties", propertyCount);
         }
+
         if (this.config.RUNTIME_DISABLE_ERRORS) {
             Util.logLoading("&eRuntime Errors have been disabled via config!");
         }
@@ -566,7 +552,7 @@ public class AddonLoader {
         Util.logLoading("&5Property Elements &asuccessfully loaded");
     }
 
-//    private void loadDialogElements() {
+    //    private void loadDialogElements() {
 //        if (!this.config.ELEMENTS_DIALOG) {
 //            Util.logLoading("&5Dialog elements &cdisabled via config");
 //            return;
