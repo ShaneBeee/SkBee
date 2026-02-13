@@ -15,6 +15,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptEvent;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Keyed;
 import org.bukkit.Registry;
 import org.bukkit.event.Event;
@@ -201,11 +202,20 @@ public class Registration {
     public class EnumTypeRegistrar<T extends Enum<T>> extends TypeRegistrar<T> {
         public final String prefix;
         public final String suffix;
+        public final EnumWrapper<T> enumWrapper;
 
         public EnumTypeRegistrar(Class<T> type, String codename, String prefix, String suffix) {
             super(type, codename);
             this.prefix = prefix;
             this.suffix = suffix;
+            this.enumWrapper = null;
+        }
+
+        public EnumTypeRegistrar(Class<T> type, EnumWrapper<T> enumWrapper, String codename, String prefix, String suffix) {
+            super(type, codename);
+            this.prefix = prefix;
+            this.suffix = suffix;
+            this.enumWrapper = enumWrapper;
         }
     }
 
@@ -215,6 +225,14 @@ public class Registration {
 
     public <T extends Enum<T>> EnumTypeRegistrar<T> newEnumType(Class<T> type, String codename, String prefix, String suffix) {
         return new EnumTypeRegistrar<>(type, codename, prefix, suffix);
+    }
+
+    public <T extends Enum<T>> EnumTypeRegistrar<T> newEnumType(Class<T> type, EnumWrapper<T> enumWrapper, String codename) {
+        return new EnumTypeRegistrar<>(type, enumWrapper, codename, null, null);
+    }
+
+    public <T extends Enum<T>> EnumTypeRegistrar<T> newEnumType(Class<T> type, EnumWrapper<T> enumWrapper, String codename, String prefix, String suffix) {
+        return new EnumTypeRegistrar<>(type, enumWrapper, codename, prefix, suffix);
     }
 
     public class RegistryTypeRegistrar<T extends Keyed> extends TypeRegistrar<T> {
@@ -355,19 +373,19 @@ public class Registration {
         }
     }
 
-    public ExpressionRegistrar<?,?> newExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, Priority priority, String... patterns) {
+    public ExpressionRegistrar<?, ?> newExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, Priority priority, String... patterns) {
         return new ExpressionRegistrar(expressionClass, returnType, priority, patterns);
     }
 
-    public ExpressionRegistrar<?,?> newSimpleExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, String... patterns) {
+    public ExpressionRegistrar<?, ?> newSimpleExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, String... patterns) {
         return new ExpressionRegistrar(expressionClass, returnType, SyntaxInfo.SIMPLE, patterns);
     }
 
-    public ExpressionRegistrar<?,?> newEventExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, String... patterns) {
+    public ExpressionRegistrar<?, ?> newEventExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, String... patterns) {
         return new ExpressionRegistrar(expressionClass, returnType, EventValueExpression.DEFAULT_PRIORITY, patterns);
     }
 
-    public ExpressionRegistrar<?,?> newCombinedExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, String... patterns) {
+    public ExpressionRegistrar<?, ?> newCombinedExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, String... patterns) {
         return new ExpressionRegistrar(expressionClass, returnType, SyntaxInfo.COMBINED, patterns);
     }
 

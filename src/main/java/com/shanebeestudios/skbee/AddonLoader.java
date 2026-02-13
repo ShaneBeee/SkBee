@@ -11,13 +11,19 @@ import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
+import com.shanebeestudios.skbee.elements.bossbar.BossbarElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
+import com.shanebeestudios.skbee.elements.property.PropertyElementRegistration;
+import com.shanebeestudios.skbee.elements.registry.RegistryElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.skriptlang.skript.addon.SkriptAddon;
+
+import java.io.IOException;
 
 /**
  * @hidden
@@ -81,16 +87,14 @@ public class AddonLoader {
 
         int[] elementCountBefore = SkriptUtils.getElementCount(this.registration);
         // Load first as these are the base for many things
-        //loadRegistryElements();
         loadOtherElements();
         loadNBTElements();
-        loadTextElements();
 
         this.addon.loadModules(module);
 
         // Load in alphabetical order (to make "/skbee info" easier to read)
 //        loadAdvancementElements();
-//        loadBossBarElements();
+        loadBossBarElements();
 //        loadBoundElements();
 //        loadDamageSourceElements();
 //        loadDialogElements();
@@ -100,13 +104,15 @@ public class AddonLoader {
 //        loadGameEventElements();
 //        loadItemComponentElements();
 //        loadParticleElements();
-//        loadPropertyElements();
+        loadPropertyElements();
 //        loadRayTraceElements();
 //        loadRecipeElements();
+        loadRegistryElements();
 //        loadScoreboardElements();
 //        loadStatisticElements();
 //        loadStructureElements();
 //        loadSwitchCaseElements();
+        loadTextElements();
 //        loadTickManagerElements();
 //        loadVillagerElements();
 //        loadVirtualFurnaceElements();
@@ -178,7 +184,8 @@ public class AddonLoader {
             logFailure("NBT", ex);
         }
     }
-//
+
+    //
 //    private void loadRecipeElements() {
 //        if (!this.config.ELEMENTS_RECIPE) {
 //            Util.logLoading("&5Recipe Elements &cdisabled via config");
@@ -271,7 +278,8 @@ public class AddonLoader {
             logFailure("Text Component", ex);
         }
     }
-//
+
+    //
 //    private void loadStructureElements() {
 //        if (!this.config.ELEMENTS_STRUCTURE) {
 //            Util.logLoading("&5Structure Elements &cdisabled via config");
@@ -311,7 +319,7 @@ public class AddonLoader {
 //            logFailure("Other", ex);
 //        }
 //    }
-    private void loadOtherElements(){
+    private void loadOtherElements() {
         OtherElementRegistration.register(this.registration);
     }
 //
@@ -367,27 +375,27 @@ public class AddonLoader {
 //        }
 //
 //    }
-//
-//    private void loadBossBarElements() {
-//        if (!this.config.ELEMENTS_BOSS_BAR) {
-//            Util.logLoading("&5BossBar Elements &cdisabled via config");
-//            return;
-//        }
-//        if (Classes.getClassInfoNoError("bossbar") != null || Classes.getExactClassInfo(BossBar.class) != null) {
-//            Util.logLoading("&5BossBar Elements &cdisabled");
-//            Util.logLoading("&7It appears another Skript addon may have registered BossBar syntax.");
-//            Util.logLoading("&7To use SkBee BossBars, please remove the addon which has registered BossBars already.");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.bossbar");
-//            Util.logLoading("&5BossBar Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("BossBar", ex);
-//        }
-//
-//    }
-//
+
+    private void loadBossBarElements() {
+        if (!this.config.ELEMENTS_BOSS_BAR) {
+            Util.logLoading("&5BossBar Elements &cdisabled via config");
+            return;
+        }
+        if (Classes.getClassInfoNoError("bossbar") != null || Classes.getExactClassInfo(BossBar.class) != null) {
+            Util.logLoading("&5BossBar Elements &cdisabled");
+            Util.logLoading("&7It appears another Skript addon may have registered BossBar syntax.");
+            Util.logLoading("&7To use SkBee BossBars, please remove the addon which has registered BossBars already.");
+            return;
+        }
+        try {
+            BossbarElementRegistration.register(this.registration);
+            Util.logLoading("&5BossBar Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("BossBar", ex);
+        }
+
+    }
+
 //    private void loadStatisticElements() {
 //        if (!this.config.ELEMENTS_STATISTIC) {
 //            Util.logLoading("&5Statistic Elements &cdisabled via config");
@@ -526,17 +534,17 @@ public class AddonLoader {
 //            logFailure("Testing", ex);
 //        }
 //    }
-//
-//    private void loadRegistryElements() {
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.registry");
-//            Util.logLoading("&5Registry Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Registry", ex);
-//        }
-//    }
-//
-//    private void loadSwitchCaseElements() {
+
+    private void loadRegistryElements() {
+        try {
+            RegistryElementRegistration.register(this.registration);
+            Util.logLoading("&5Registry Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Registry", ex);
+        }
+    }
+
+    //    private void loadSwitchCaseElements() {
 //        if (!this.config.ELEMENTS_SWITCH_CASE) {
 //            Util.logLoading("&5SwitchCase Elements &cdisabled via config");
 //            return;
@@ -548,20 +556,16 @@ public class AddonLoader {
 //            logFailure("SwitchCase", ex);
 //        }
 //    }
-//
-//    private void loadPropertyElements() {
-//        if (!this.config.ELEMENTS_PROPERTY) {
-//            Util.logLoading("&5Property elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            addon.loadClasses("com.shanebeestudios.skbee.elements.property");
-//            Util.logLoading("&5Property Elements &asuccessfully loaded");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
+
+    private void loadPropertyElements() {
+        if (!this.config.ELEMENTS_PROPERTY) {
+            Util.logLoading("&5Property elements &cdisabled via config");
+            return;
+        }
+        PropertyElementRegistration.register(this.registration);
+        Util.logLoading("&5Property Elements &asuccessfully loaded");
+    }
+
 //    private void loadDialogElements() {
 //        if (!this.config.ELEMENTS_DIALOG) {
 //            Util.logLoading("&5Dialog elements &cdisabled via config");

@@ -50,9 +50,14 @@ public class SkBeeAddonModule implements AddonModule {
             }
             ClassInfo<?> classInfo;
             if (type instanceof EnumTypeRegistrar<?> enumTypeRegistrar) {
-                EnumWrapper<?> enumWrapper = new EnumWrapper<>(enumTypeRegistrar.type,
-                    enumTypeRegistrar.prefix,
-                    enumTypeRegistrar.suffix);
+                EnumWrapper<?> enumWrapper;
+                if (enumTypeRegistrar.enumWrapper == null) {
+                    enumWrapper = new EnumWrapper<>(enumTypeRegistrar.type,
+                        enumTypeRegistrar.prefix,
+                        enumTypeRegistrar.suffix);
+                } else {
+                    enumWrapper = enumTypeRegistrar.enumWrapper;
+                }
 
                 classInfo = enumWrapper.getClassInfo(enumTypeRegistrar.codename);
             } else if (type instanceof RegistryTypeRegistrar<? extends Keyed> registryTypeRegistrar) {
