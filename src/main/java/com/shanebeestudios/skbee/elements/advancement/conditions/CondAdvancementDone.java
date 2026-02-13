@@ -1,30 +1,27 @@
 package com.shanebeestudios.skbee.elements.advancement.conditions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.conditions.base.PropertyCondition;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Advancement - Done")
-@Description("Check if the advancement progress is done.")
-@Examples("if advancement progress of {_advancement} of player is done:")
-@Since("1.17.0")
 public class CondAdvancementDone extends Condition {
 
-    static {
-        Skript.registerCondition(CondAdvancementDone.class,
+    public static void register(Registration reg) {
+        reg.newCondition(CondAdvancementDone.class,
                 "%advancementpro% is done",
-                "%advancementpro% (isn't|is not) done");
+                "%advancementpro% (isn't|is not) done")
+            .name("Advancement - Done")
+            .description("Check if the advancement progress is done.")
+            .examples("if advancement progress of {_advancement} of player is done:")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<AdvancementProgress> progress;

@@ -1,28 +1,25 @@
 package com.shanebeestudios.skbee.elements.advancement.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Advancement - Progress Criteria")
-@Description("Award or revoke criteria of an advancement progress.")
-@Examples("TODO") // TODO
-@Since("1.17.0")
 public class EffAdvancementCriteriaAward extends Effect {
 
-    static {
-        Skript.registerEffect(EffAdvancementCriteriaAward.class,
-                "(award|1:revoke) criteria %string% of %advancementpros%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffAdvancementCriteriaAward.class,
+                "(award|1:revoke) criteria %string% of %advancementpros%")
+            .name("Advancement - Progress Criteria")
+            .description("Award or revoke criteria of an advancement progress.")
+            .examples("TODO") // TODO
+            .since("1.17.0")
+            .register();
     }
 
     private boolean award;

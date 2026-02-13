@@ -11,6 +11,7 @@ import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
+import com.shanebeestudios.skbee.elements.advancement.AdvancementElementRegistration;
 import com.shanebeestudios.skbee.elements.bossbar.BossbarElementRegistration;
 import com.shanebeestudios.skbee.elements.fastboard.FastboardElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
@@ -90,7 +91,7 @@ public class AddonLoader {
         loadNBTElements();
 
         // Load in alphabetical order (to make "/skbee info" easier to read)
-//        loadAdvancementElements();
+        loadAdvancementElements();
         loadBossBarElements();
 //        loadBoundElements();
 //        loadDamageSourceElements();
@@ -226,7 +227,8 @@ public class AddonLoader {
             logFailure("Scoreboard", ex);
         }
     }
-//
+
+    //
 //    private void loadTickManagerElements() {
 //        if (!this.config.ELEMENTS_TICK_MANAGER) {
 //            Util.logLoading("&5Tick Manager Elements &cdisabled via config");
@@ -417,20 +419,20 @@ public class AddonLoader {
 //            logFailure("Villager", ex);
 //        }
 //    }
-//
-//    private void loadAdvancementElements() {
-//        if (!this.config.ELEMENTS_ADVANCEMENT) {
-//            Util.logLoading("&5Advancement Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.advancement");
-//            Util.logLoading("&5Advancement Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Advancement", ex);
-//        }
-//    }
-//
+
+    private void loadAdvancementElements() {
+        if (!this.config.ELEMENTS_ADVANCEMENT) {
+            Util.logLoading("&5Advancement Elements &cdisabled via config");
+            return;
+        }
+        try {
+            AdvancementElementRegistration.register(this.registration);
+            Util.logLoading("&5Advancement Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Advancement", ex);
+        }
+    }
+
 //    private void loadRayTraceElements() {
 //        if (!this.config.ELEMENTS_RAYTRACE) {
 //            Util.logLoading("&5RayTrace Elements &cdisabled via config");
