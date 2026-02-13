@@ -72,6 +72,11 @@ public class Registration {
         private final Documentation documentation = new Documentation();
         private boolean registered;
 
+        public T noDoc() {
+            this.documentation.setNoDoc(true);
+            return (T) this;
+        }
+
         public T name(String name) {
             this.documentation.setName(name);
             return (T) this;
@@ -84,6 +89,11 @@ public class Registration {
 
         public T examples(String... examples) {
             this.documentation.setExamples(examples);
+            return (T) this;
+        }
+
+        public T keywords(String... keywords) {
+            this.documentation.setKeywords(keywords);
             return (T) this;
         }
 

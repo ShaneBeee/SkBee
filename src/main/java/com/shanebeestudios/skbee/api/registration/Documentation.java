@@ -2,10 +2,20 @@ package com.shanebeestudios.skbee.api.registration;
 
 public class Documentation {
 
+    private boolean noDoc;
     private String name;
     private String[] description;
     private String[] examples;
     private String[] since;
+    private String[] keywords;
+
+    public void setNoDoc(boolean noDoc) {
+        this.noDoc = noDoc;
+    }
+
+    public boolean isNoDoc() {
+        return noDoc;
+    }
 
     void setName(String name) {
         this.name = name;
@@ -37,6 +47,14 @@ public class Documentation {
 
     String[] getSince() {
         return this.since;
+    }
+
+    void setKeywords(String[] keywords) {
+        this.keywords = keywords;
+    }
+
+    String[] getKeywords() {
+        return this.keywords;
     }
 
 }

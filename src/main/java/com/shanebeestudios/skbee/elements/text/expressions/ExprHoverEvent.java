@@ -1,15 +1,11 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.event.HoverEvent;
@@ -27,20 +23,19 @@ import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("rawtypes")
-@Name("TextComponent - Hover Event")
-@Description({"Create a new hover event. Can show texts, text components, an item or an entity to a player.",
-    "'showing %itemtype%' requires Minecraft 1.18.2+"})
-@Examples({"set {_t} to text component from \"Check out my cool tool!\"",
-    "add hover event showing player's tool to {_t}",
-    "send component {_t} to player"})
-@Since("1.5.0")
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
     private static final boolean HAS_SHOW_ENITY = Skript.methodExists(ShowEntity.class, "showEntity", Key.class, UUID.class);
 
-    static {
-        Skript.registerExpression(ExprHoverEvent.class, HoverEvent.class, ExpressionType.COMBINED,
-            "[a] [new] hover event showing %strings/textcomponents/itemstacks/entities%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprHoverEvent.class, HoverEvent.class, "[a] [new] hover event showing %strings/textcomponents/itemstacks/entities%")
+            .name("TextComponent - Hover Event")
+            .description("Create a new hover event. Can show texts, text components, an item or an entity to a player.", "'showing %itemtype%' requires Minecraft 1.18.2+")
+            .examples("set {_t} to text component from \"Check out my cool tool!\"",
+                "add hover event showing player's tool to {_t}",
+                "send component {_t} to player")
+            .since("1.5.0")
+            .register();
     }
 
     private Expression<?> object;
