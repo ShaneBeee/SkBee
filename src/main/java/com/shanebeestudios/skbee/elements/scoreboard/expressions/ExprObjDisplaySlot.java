@@ -1,17 +1,12 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -19,15 +14,16 @@ import org.bukkit.scoreboard.Objective;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Scoreboard - Objective DisplaySlot")
-@Description("Get/Set the display slot of an objective.")
-@Examples("set display slot of {_objective} to player_list")
-@Since("2.6.0")
 public class ExprObjDisplaySlot extends SimpleExpression<DisplaySlot> {
 
-    static {
-        Skript.registerExpression(ExprObjDisplaySlot.class, DisplaySlot.class, ExpressionType.COMBINED,
-            "[objective] display[ ]slot of %objective%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprObjDisplaySlot.class, DisplaySlot.class,
+                "[objective] display[ ]slot of %objective%")
+            .name("Scoreboard - Objective DisplaySlot")
+            .description("Get/Set the display slot of an objective.")
+            .examples("set display slot of {_objective} to player_list")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<Objective> objective;

@@ -1,34 +1,31 @@
 package com.shanebeestudios.skbee.elements.scoreboard.conditions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Criteria;
 import org.bukkit.scoreboard.Objective;
 
 import java.util.function.Predicate;
 
-@Name("Scoreboard - Objective/Critera Modifiable")
-@Description({"Check if an objective/criteria has modifiable scores.",
-    "Some criteria such as 'health' cannot be modified.",
-    "See [**Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki for more info."})
-@Examples({"if the scores of {_objective} are modifiable:",
-    "if the scores of criteria with id \"some_criteria\" are modifiable:"})
-@Since("3.8.0")
 public class CondObjModifiable extends Condition {
 
-    static {
-        Skript.registerCondition(CondObjModifiable.class,
-            "[the] scores of %criterias/objectives% are modifiable",
-            "[the] scores of %criterias/objectives% (aren't|are not) modifiable");
+    public static void register(Registration reg) {
+        reg.newCondition(CondObjModifiable.class,
+                "[the] scores of %criterias/objectives% are modifiable",
+                "[the] scores of %criterias/objectives% (aren't|are not) modifiable")
+            .name("Scoreboard - Objective/Criteria Modifiable")
+            .description("Check if an objective/criteria has modifiable scores.",
+                "Some criteria such as 'health' cannot be modified.",
+                "See [**Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki for more info.")
+            .examples("if the scores of {_objective} are modifiable:",
+                "if the scores of criteria with id \"some_criteria\" are modifiable:")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<?> objects;

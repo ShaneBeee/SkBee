@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Chunk;
 import org.bukkit.World;
@@ -17,20 +12,21 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Chunk at Coords")
-@Description({"Get a chunk using chunk coords.",
-    "NOTE: Chunk coords are different than location coords.",
-    "Chunk coords are basically location coords divided by 16.",
-    "Optionally get the chunk without generating it (possibly doesn't load as well)."})
-@Examples({"set {_chunk} to chunk at coords 1,1",
-    "set {_chunk} to chunk at coords 1,1 in world \"world\"",
-    "set {_chunk} to chunk at 50,50 in world \"world_nether\" without generating"})
-@Since("2.14.0")
 public class ExprChunkAt extends SimpleExpression<Chunk> {
 
-    static {
-        Skript.registerExpression(ExprChunkAt.class, Chunk.class, ExpressionType.COMBINED,
-            "chunk at [coord[inate]s] %number%,[ ]%number% [(in|of) %world%] [nogen:without (generating|loading)]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprChunkAt.class, Chunk.class,
+                "chunk at [coord[inate]s] %number%,[ ]%number% [(in|of) %world%] [nogen:without (generating|loading)]")
+            .name("Chunk at Coords")
+            .description("Get a chunk using chunk coords.",
+                "NOTE: Chunk coords are different than location coords.",
+                "Chunk coords are basically location coords divided by 16.",
+                "Optionally get the chunk without generating it (possibly doesn't load as well).")
+            .examples("set {_chunk} to chunk at coords 1,1",
+                "set {_chunk} to chunk at coords 1,1 in world \"world\"",
+                "set {_chunk} to chunk at 50,50 in world \"world_nether\" without generating")
+            .since("2.14.0")
+            .register();
     }
 
     private Expression<Number> chunkX, chunkZ;

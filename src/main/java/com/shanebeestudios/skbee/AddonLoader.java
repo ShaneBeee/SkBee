@@ -18,11 +18,13 @@ import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
 import com.shanebeestudios.skbee.elements.property.PropertyElementRegistration;
 import com.shanebeestudios.skbee.elements.recipe.RecipeElementRegistration;
 import com.shanebeestudios.skbee.elements.registry.RegistryElementRegistration;
+import com.shanebeestudios.skbee.elements.scoreboard.ScoreboardElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.scoreboard.Objective;
 import org.skriptlang.skript.addon.SkriptAddon;
 
 /**
@@ -102,7 +104,7 @@ public class AddonLoader {
 //        loadRayTraceElements();
         loadRecipeElements();
         loadRegistryElements();
-//        loadScoreboardElements();
+        loadScoreboardElements();
 //        loadStatisticElements();
 //        loadStructureElements();
 //        loadSwitchCaseElements();
@@ -201,29 +203,29 @@ public class AddonLoader {
         }
     }
 
-    //
-//    private void loadScoreboardElements() {
-//        if (!this.config.ELEMENTS_SCOREBOARD) {
-//            Util.logLoading("&5Scoreboard Elements &cdisabled via config");
-//            return;
-//        }
-//        if (Classes.getClassInfoNoError("objective") != null || Classes.getExactClassInfo(Objective.class) != null) {
-//            Util.logLoading("&5Scoreboard Elements &cdisabled");
-//            Util.logLoading("&7It appears another Skript addon may have registered Scoreboard syntax.");
-//            Util.logLoading("&7To use SkBee Scoreboards, please remove the addon which has registered Scoreboard already.");
-//            return;
-//        }
-//        if (Util.IS_RUNNING_FOLIA) {
-//            Util.logLoading("&5Scoreboard Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.scoreboard");
-//            Util.logLoading("&5Scoreboard Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Scoreboard", ex);
-//        }
-//    }
+
+    private void loadScoreboardElements() {
+        if (!this.config.ELEMENTS_SCOREBOARD) {
+            Util.logLoading("&5Scoreboard Elements &cdisabled via config");
+            return;
+        }
+        if (Classes.getClassInfoNoError("objective") != null || Classes.getExactClassInfo(Objective.class) != null) {
+            Util.logLoading("&5Scoreboard Elements &cdisabled");
+            Util.logLoading("&7It appears another Skript addon may have registered Scoreboard syntax.");
+            Util.logLoading("&7To use SkBee Scoreboards, please remove the addon which has registered Scoreboard already.");
+            return;
+        }
+        if (Util.IS_RUNNING_FOLIA) {
+            Util.logLoading("&5Scoreboard Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
+            return;
+        }
+        try {
+            ScoreboardElementRegistration.register(this.registration);
+            Util.logLoading("&5Scoreboard Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Scoreboard", ex);
+        }
+    }
 //
 //    private void loadTickManagerElements() {
 //        if (!this.config.ELEMENTS_TICK_MANAGER) {

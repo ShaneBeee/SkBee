@@ -1,14 +1,9 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Criteria;
@@ -21,23 +16,24 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-@Name("Scoreboard - Objective Create")
-@Description({"Create an objective.",
-    "- `id` = The id used to keep track of your objective.",
-    "- `criteria` = Uses a criteria object. If using an older server version, this will just be a string.",
-    "- `named` = The display name of this objective.",
-    "- `for scoreboard` = Optionally use a specific scoreboard (will default to the main scoreboard).",
-    "- `render type` = How this objective will render, hearts or integer.",
-    "- `display slot` = Where this objective will render."})
-@Examples({"set {_obj} to objective with id \"le-health\" with criteria {_c} named \"&bLe &cHealth\" with render type hearts in display slot player_list",
-    "set {_obj} to objective with id \"my_objective\" with criteria \"dummy\" named \"OUR GOALS!\" for scoreboard of player"})
-@Since("2.6.0")
 public class ExprObjCreate extends SimpleExpression<Objective> {
 
-    static {
-        Skript.registerExpression(ExprObjCreate.class, Objective.class, ExpressionType.COMBINED,
-            "objective with id %string% with [criteria] %criteria/string% named " +
-                "%string% [(for|of|from) %scoreboard%] [with render[ ]type %-rendertype%] [(with|in) [display[ ]slot] %-displayslot%]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprObjCreate.class, Objective.class,
+                "objective with id %string% with [criteria] %criteria/string% named " +
+                    "%string% [(for|of|from) %scoreboard%] [with render[ ]type %-rendertype%] [(with|in) [display[ ]slot] %-displayslot%]")
+            .name("Scoreboard - Objective Create")
+            .description("Create an objective.",
+                "- `id` = The id used to keep track of your objective.",
+                "- `criteria` = Uses a criteria object. If using an older server version, this will just be a string.",
+                "- `named` = The display name of this objective.",
+                "- `for scoreboard` = Optionally use a specific scoreboard (will default to the main scoreboard).",
+                "- `render type` = How this objective will render, hearts or integer.",
+                "- `display slot` = Where this objective will render.")
+            .examples("set {_obj} to objective with id \"le-health\" with criteria {_c} named \"&bLe &cHealth\" with render type hearts in display slot player_list",
+                "set {_obj} to objective with id \"my_objective\" with criteria \"dummy\" named \"OUR GOALS!\" for scoreboard of player")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<String> id;

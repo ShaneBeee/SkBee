@@ -2,16 +2,11 @@ package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
@@ -19,22 +14,22 @@ import org.bukkit.scoreboard.Objective;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Scoreboard - Objective Name")
-@Description({"Represents the name/display name of an objective.",
-    "- `name` = The name/id given to the objective (Cannot be changed).",
-    "- `display name` = The name the players will see [as a string] (Can be changed).",
-    "- `component display name` = The name the players will see [as a text component] (Can be changed)."})
-@Examples("set objective display name of {_objective} to \"le-objective\"")
-@Since("2.6.0")
 public class ExprObjName extends SimpleExpression<Object> {
 
-    private static final Class<?>[] RETURN_CLASSES;
+    private static final Class<?>[] RETURN_CLASSES = CollectionUtils.array(String.class, ComponentWrapper.class);
 
-    static {
-        RETURN_CLASSES = CollectionUtils.array(String.class, ComponentWrapper.class);
-        Skript.registerExpression(ExprObjName.class, Object.class, ExpressionType.COMBINED,
-            "objective (name|id) of %objective%",
-            "objective [:component] display name of %objective%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprObjName.class, Object.class,
+                "objective (name|id) of %objective%",
+                "objective [:component] display name of %objective%")
+            .name("Scoreboard - Objective Name")
+            .description("Represents the name/display name of an objective.",
+                "- `name` = The name/id given to the objective (Cannot be changed).",
+                "- `display name` = The name the players will see [as a string] (Can be changed).",
+                "- `component display name` = The name the players will see [as a text component] (Can be changed).")
+            .examples("set objective display name of {_objective} to \"le-objective\"")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<Objective> objective;

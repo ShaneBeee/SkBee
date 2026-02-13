@@ -2,15 +2,11 @@ package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.OfflinePlayer;
@@ -21,28 +17,29 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Team - Entries")
-@Description({"Get the entries of a team. Entries can be entities/players or strings.",
-    "**NOTE**: When returning as entities, if the entity isn't currently loaded in a world it won't return.",
-    "OfflinePlayers will also not return. Use strings intead.",
-    "**NOTE**: When returning as strings this will return the list how Minecraft stores it, player names and entity UUIDs.",
-    "**NOTE**: adding/removing to/from team entries is now deprecated. Please directly add/remove to/from the team itself.",
-    "See Team type docs for more info!"})
-@Examples({"set {_team} to team named \"my-team\"",
-    "clear team entries of {_team}",
-    "kill team entries of team named \"mob-team\"",
-    "set {_entities::*} to team entries of team named \"mobs\"",
-    "set {_strings::*} to team entries as strings of team named \"mobs\""})
-@Since("1.16.0, 2.10.0 (strings)")
 public class ExprTeamEntries extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprTeamEntries.class, Object.class, ExpressionType.PROPERTY,
-            "(:string|entity) team entries of %teams%",
-            "%teams%'[s] (:string|entity) team entries",
-            "[all] team entries [string:as strings] of %team%",
-            "[all] team entries of %team% [string:as strings]",
-            "%team%'[s] team entries [string:as strings]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprTeamEntries.class, Object.class,
+                "(:string|entity) team entries of %teams%",
+                "%teams%'[s] (:string|entity) team entries",
+                "[all] team entries [string:as strings] of %team%",
+                "[all] team entries of %team% [string:as strings]",
+                "%team%'[s] team entries [string:as strings]")
+            .name("Team - Entries")
+            .description("Get the entries of a team. Entries can be entities/players or strings.",
+                "**NOTE**: When returning as entities, if the entity isn't currently loaded in a world it won't return.",
+                "OfflinePlayers will also not return. Use strings intead.",
+                "**NOTE**: When returning as strings this will return the list how Minecraft stores it, player names and entity UUIDs.",
+                "**NOTE**: adding/removing to/from team entries is now deprecated. Please directly add/remove to/from the team itself.",
+                "See Team type docs for more info!")
+            .examples("set {_team} to team named \"my-team\"",
+                "clear team entries of {_team}",
+                "kill team entries of team named \"mob-team\"",
+                "set {_entities::*} to team entries of team named \"mobs\"",
+                "set {_strings::*} to team entries as strings of team named \"mobs\"")
+            .since("1.16.0, 2.10.0 (strings)")
+            .register();
     }
 
     private Expression<Team> team;

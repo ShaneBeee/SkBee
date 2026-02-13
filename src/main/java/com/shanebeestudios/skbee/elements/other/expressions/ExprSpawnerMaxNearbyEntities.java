@@ -1,30 +1,28 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Spawner - Max Nearby Entities")
-@Description({"Set the new maximum amount of similar entities that are allowed to be within spawning range of a spawner.",
-        "If more than the maximum number of entities are within range, the spawner will not spawn and try again.",
-        "Default value is 16."})
-@Examples({"add 10 to maximum nearby entities of {_spawner}",
-        "remove 10 from maximum nearby entities of {_spawner}",
-        "reset maximum nearby entities of {_spawner}",
-        "set maximum nearby entities of {_spawner} to 10"})
-@Since("2.16.0")
 public class ExprSpawnerMaxNearbyEntities extends SimplePropertyExpression<Block, Integer> {
 
-    static {
-        register(ExprSpawnerMaxNearbyEntities.class, Integer.class, "max nearby [spawner] entities", "blocks");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprSpawnerMaxNearbyEntities.class, Integer.class, "max nearby [spawner] entities", "blocks")
+                .name("Spawner - Max Nearby Entities")
+                .description("Set the new maximum amount of similar entities that are allowed to be within spawning range of a spawner.",
+                        "If more than the maximum number of entities are within range, the spawner will not spawn and try again.",
+                        "Default value is 16.")
+                .examples("add 10 to maximum nearby entities of {_spawner}",
+                        "remove 10 from maximum nearby entities of {_spawner}",
+                        "reset maximum nearby entities of {_spawner}",
+                        "set maximum nearby entities of {_spawner} to 10")
+                .since("2.16.0")
+                .register();
     }
 
     private static final int DEFAULT_MAX_NEARBY_ENTITIES = 16;

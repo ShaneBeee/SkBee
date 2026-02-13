@@ -1,10 +1,6 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
@@ -12,6 +8,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.entity.Pathfinder;
 import com.destroystokyo.paper.entity.Pathfinder.PathResult;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -20,19 +17,20 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Pathfinding - Path Target")
-@Description({"Set the path of an entity to target a specific location, with an optional speed",
-    "Get the location of the paths end. Delete will stop the entity from pathfinding. Requires Paper 1.13+"})
-@Examples({"set path target of event-entity to player",
-    "set path target with speed 1.5 of last spawned entity to location above player",
-    "set path targets of all entities to location of player",
-    "delete path target of event-entity"})
-@Since("1.5.0")
 public class ExprPathTarget extends SimplePropertyExpression<LivingEntity, Location> {
 
-    static {
-        register(ExprPathTarget.class, Location.class,
-            "[final] path target[s] [with speed %-number%]", "livingentities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprPathTarget.class, Location.class,
+            "[final] path target[s] [with speed %-number%]", "livingentities")
+            .name("Pathfinding - Path Target")
+            .description("Set the path of an entity to target a specific location, with an optional speed",
+                "Get the location of the paths end. Delete will stop the entity from pathfinding. Requires Paper 1.13+")
+            .examples("set path target of event-entity to player",
+                "set path target with speed 1.5 of last spawned entity to location above player",
+                "set path targets of all entities to location of player",
+                "delete path target of event-entity")
+            .since("1.5.0")
+            .register();
     }
 
     @Nullable

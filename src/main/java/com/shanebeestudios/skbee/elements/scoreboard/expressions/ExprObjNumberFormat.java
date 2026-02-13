@@ -2,16 +2,12 @@ package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.NumberFormatUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
@@ -25,41 +21,41 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Scoreboard - Objective Number Format")
-@Description({"Represents the way an objective score can be formatted.",
-    "There are three format types: Blank (nothing there), Fixed (a string of your choosing) and Styled (colored numbers).",
-    "NOTES:",
-    "`set` = You can set the format to any string you'd like (fixed) or a json component (styled number).",
-    "`delete` = Will leave it blank (nothing will be there, just nothing).",
-    "`reset` = Will reset back to its original format.",
-    "See [**Json Formatting**](https://minecraft.wiki/w/Raw_JSON_text_format) on McWiki for more details.",
-    "Requires Paper 1.20.4+"})
-@Examples({"# Format to a string/text component",
-    "set number format of {-obj} to \"Look Im Fancy!!\"",
-    "set number format of {-obj} for player to \"Im a lil less fancy!\"",
-    "set number format of {-obj} for player to mini message from \"<rainbow>Im a lil more fancy!\"",
-    "",
-    "# Format the number with color/style",
-    "set number format of {-obj} for player to \"{color:red,bold:true}\"",
-    "set number format of {-obj} to \"{color:\"\"##0DEAE3\"\",bold:true}\"",
-    "",
-    "# Format to blank (will apply the 'blank' format)",
-    "delete number format of {-obj}",
-    "delete number format of {-obj} for player",
-    "",
-    "# Reset formatting (will remove all formatting)",
-    "reset number format of {-obj}",
-    "reset number format of {-obj} for player"})
-@Since("3.4.0")
 public class ExprObjNumberFormat extends SimpleExpression<String> {
 
     private static final boolean HAS_NUMBER_FORMAT = Skript.methodExists(Objective.class, "numberFormat");
-    private static final Class<?>[] CHANGE_TYPES;
+    private static final Class<?>[] CHANGE_TYPES = CollectionUtils.array(ComponentWrapper.class, String.class);
 
-    static {
-        CHANGE_TYPES = CollectionUtils.array(ComponentWrapper.class, String.class);
-        Skript.registerExpression(ExprObjNumberFormat.class, String.class, ExpressionType.COMBINED,
-            "number format of %objective% [for %-entities/strings%]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprObjNumberFormat.class, String.class,
+                "number format of %objective% [for %-entities/strings%]")
+            .name("Scoreboard - Objective Number Format")
+            .description("Represents the way an objective score can be formatted.",
+                "There are three format types: Blank (nothing there), Fixed (a string of your choosing) and Styled (colored numbers).",
+                "NOTES:",
+                "`set` = You can set the format to any string you'd like (fixed) or a json component (styled number).",
+                "`delete` = Will leave it blank (nothing will be there, just nothing).",
+                "`reset` = Will reset back to its original format.",
+                "See [**Json Formatting**](https://minecraft.wiki/w/Raw_JSON_text_format) on McWiki for more details.",
+                "Requires Paper 1.20.4+")
+            .examples("# Format to a string/text component",
+                "set number format of {-obj} to \"Look Im Fancy!!\"",
+                "set number format of {-obj} for player to \"Im a lil less fancy!\"",
+                "set number format of {-obj} for player to mini message from \"<rainbow>Im a lil more fancy!\"",
+                "",
+                "# Format the number with color/style",
+                "set number format of {-obj} for player to \"{color:red,bold:true}\"",
+                "set number format of {-obj} to \"{color:\"\"##0DEAE3\"\",bold:true}\"",
+                "",
+                "# Format to blank (will apply the 'blank' format)",
+                "delete number format of {-obj}",
+                "delete number format of {-obj} for player",
+                "",
+                "# Reset formatting (will remove all formatting)",
+                "reset number format of {-obj}",
+                "reset number format of {-obj} for player")
+            .since("3.4.0")
+            .register();
     }
 
     private Expression<Objective> objectives;

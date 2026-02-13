@@ -1,14 +1,11 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ChatUtil;
 import org.bukkit.ChatColor;
 import org.bukkit.event.Event;
@@ -17,15 +14,16 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("deprecation")
-@Name("Team - Color")
-@Description("Get/set the color of a team.")
-@Examples({"set team color of {_team} to blue",
-    "set team color of team of player to red"})
-@Since("1.16.0")
 public class ExprTeamColor extends SimplePropertyExpression<Team, SkriptColor> {
 
-    static {
-        register(ExprTeamColor.class, SkriptColor.class, "team color", "teams");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprTeamColor.class, SkriptColor.class, "team color", "teams")
+            .name("Team - Color")
+            .description("Get/set the color of a team.")
+            .examples("set team color of {_team} to blue",
+                "set team color of team of player to red")
+            .since("1.16.0")
+            .register();
     }
 
     @Override

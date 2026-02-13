@@ -1,17 +1,13 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerRespawnEvent;
@@ -19,18 +15,19 @@ import org.bukkit.event.player.PlayerRespawnEvent.RespawnReason;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Respawn Reason")
-@Description("Represents the reason the respawn event was called. Requires MC 1.19.4+")
-@Examples({"on respawn:",
-        "\tif respawn reason = death respawn:",
-        "\t\tgive player 10 diamonds"})
-@Since("2.8.4")
 public class ExprRespawnReason extends SimpleExpression<RespawnReason> {
 
-    static {
+    public static void register(Registration reg) {
         if (!Util.IS_RUNNING_SKRIPT_2_14) {
-            Skript.registerExpression(ExprRespawnReason.class, RespawnReason.class, ExpressionType.SIMPLE,
-                    "respawn reason");
+            reg.newSimpleExpression(ExprRespawnReason.class, RespawnReason.class,
+                    "respawn reason")
+                .name("Respawn Reason")
+                .description("Represents the reason the respawn event was called. Requires MC 1.19.4+")
+                .examples("on respawn:",
+                    "\tif respawn reason = death respawn:",
+                    "\t\tgive player 10 diamonds")
+                .since("2.8.4")
+                .register();
         }
     }
 

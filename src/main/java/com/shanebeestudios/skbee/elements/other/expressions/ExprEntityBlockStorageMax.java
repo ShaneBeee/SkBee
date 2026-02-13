@@ -1,28 +1,26 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.EntityBlockStorage;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("EntityBlockStorage - Max Entities")
-@Description({"Get/Set the max amount of entities which can be stored in a block.",
-        "As of 1.15 this only includes beehives/bee nests! Requires Spigot/Paper 1.15.2+"})
-@Examples({"set {_m} to max entities of target block of player",
-        "set max entities of target block of player to 20",
-        "set max entity storage of event-block to 5"})
-@Since("1.0.0")
 public class ExprEntityBlockStorageMax extends SimplePropertyExpression<Block, Long> {
 
-    static {
-        register(ExprEntityBlockStorageMax.class, Long.class, "max entit(ies|y storage)", "blocks");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprEntityBlockStorageMax.class, Long.class, "max entit(ies|y storage)", "blocks")
+            .name("EntityBlockStorage - Max Entities")
+            .description("Get/Set the max amount of entities which can be stored in a block.",
+                "As of 1.15 this only includes beehives/bee nests! Requires Spigot/Paper 1.15.2+")
+            .examples("set {_m} to max entities of target block of player",
+                "set max entities of target block of player to 20",
+                "set max entity storage of event-block to 5")
+            .since("1.0.0")
+            .register();
     }
 
     @Override
