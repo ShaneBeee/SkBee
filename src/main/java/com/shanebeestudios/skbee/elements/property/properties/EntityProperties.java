@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.property.properties;
 import ch.njol.skript.aliases.ItemType;
 import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;
@@ -23,7 +24,7 @@ import java.util.List;
 @SuppressWarnings({"deprecation", "unused"})
 public class EntityProperties {
 
-    static {
+    public static void register(Registration reg)  {
         PropertyRegistry.registerProperty("aggressive", new Property<>(Mob.class, Boolean.class) {
                 @Override
                 public Boolean get(Mob mob) {

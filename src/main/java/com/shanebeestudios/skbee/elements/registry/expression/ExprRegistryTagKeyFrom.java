@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.registry.expression;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
 import io.papermc.paper.registry.RegistryKey;
@@ -21,22 +16,23 @@ import org.bukkit.Registry;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Registry - TagKey from Registry")
-@Description({"Get a TagKey from a registry.",
-    "You can check if a tag key contains an object. Think of it like a list."})
-@Examples({"set {_tagkey} to tag key \"minecraft:wool\" from block registry",
-    "if {_tagkey} contains player's tool:",
-    "set {_tagkey} to tag key \"my_pack:cool_enchantments\" from enchantment registry",
-    "set {_tagkey} to item registry tag key \"minecraft:swords\"",
-    "if biome registry tag key \"minecraft:is_forest\" contains biome at player:"})
-@Since("3.8.0")
 @SuppressWarnings({"rawtypes"})
 public class ExprRegistryTagKeyFrom extends SimpleExpression<TagKey> {
 
-    static {
-        Skript.registerExpression(ExprRegistryTagKeyFrom.class, TagKey.class, ExpressionType.COMBINED,
-            "tag key %string% from %registrykey%",
-            "%registrykey% tag key %string%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprRegistryTagKeyFrom.class, TagKey.class,
+                "tag key %string% from %registrykey%",
+                "%registrykey% tag key %string%")
+            .name("Registry - TagKey from Registry")
+            .description("Get a TagKey from a registry.",
+                "You can check if a tag key contains an object. Think of it like a list.")
+            .examples("set {_tagkey} to tag key \"minecraft:wool\" from block registry",
+                "if {_tagkey} contains player's tool:",
+                "set {_tagkey} to tag key \"my_pack:cool_enchantments\" from enchantment registry",
+                "set {_tagkey} to item registry tag key \"minecraft:swords\"",
+                "if biome registry tag key \"minecraft:is_forest\" contains biome at player:")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<String> key;

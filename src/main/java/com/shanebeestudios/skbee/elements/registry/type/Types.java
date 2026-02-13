@@ -1,35 +1,32 @@
 package com.shanebeestudios.skbee.elements.registry.type;
 
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import com.shanebeestudios.skbee.api.region.TaskUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.RegistryHolders;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
 import io.papermc.paper.registry.tag.TagKey;
 
-@SuppressWarnings({"rawtypes"})
 public class Types {
 
-    static {
-        ClassInfo<RegistryKey> registryKeyClassInfo = new ClassInfo<>(RegistryKey.class, "registrykey")
+    public static void register(Registration reg) {
+        RegistryHolders.init();
+        reg.newType(RegistryKey.class, "registrykey")
             .user("registry ?keys?")
             .name("Registry - Registry Key")
             .description("Represents a key for a Minecraft registry.",
                 "Values in square brackets resemble the Skript type linked to the registry.",
                 Util.AUTO_GEN_NOTE)
+            .usage(RegistryHolders.getDocUsage())
             .parser(RegistryHolders.createParser())
             .supplier(RegistryHolders.getSupplier())
-            .since("3.8.0");
-        Classes.registerClass(registryKeyClassInfo);
+            .since("3.8.0")
+            .register();
 
-        // Run later to make sure SkBee's classes have loaded
-        TaskUtils.getGlobalScheduler().runTaskLater(() -> registryKeyClassInfo.usage(RegistryHolders.getDocUsage()), 1);
-
-        Classes.registerClass(new ClassInfo<>(TagKey.class, "tagkey")
+        reg.newType(TagKey.class, "tagkey")
             .user("tag ?keys?")
             .name("Registry - Tag Key")
             .description("Represents a key for a Minecraft tag.",
@@ -53,9 +50,10 @@ public class Types {
                 public String toVariableNameString(TagKey tagKey) {
                     return toString(tagKey, 0);
                 }
-            }));
+            })
+            .register();
 
-        Classes.registerClass(new ClassInfo<>(TypedKey.class, "typedkey")
+        reg.newType(TypedKey.class, "typedkey")
             .user("typed ?keys?")
             .name("Registry - Typed Key")
             .description("Represents the key for a value in a Minecraft registry.")
@@ -75,7 +73,8 @@ public class Types {
                 public String toVariableNameString(TypedKey typedKey) {
                     return toString(typedKey, 0);
                 }
-            }));
+            })
+            .register();
     }
 
 }

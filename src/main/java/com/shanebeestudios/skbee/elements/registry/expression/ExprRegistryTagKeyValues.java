@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.registry.expression;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.RegistryHolder;
 import com.shanebeestudios.skbee.api.registry.RegistryHolders;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
@@ -20,16 +15,17 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Name("Registry - Tag Key Values")
-@Description("Get all values from a tag key.")
-@Examples({"set {_biomes::*} to tag key values of tag key \"minecraft:has_structure/mineshaft\" from biome registry",
-    "loop tag key values of {_tagKey}:"})
-@Since("3.16.0")
 public class ExprRegistryTagKeyValues extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprRegistryTagKeyValues.class, Object.class, ExpressionType.COMBINED,
-            "tag[ ]key values of %tagkey%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprRegistryTagKeyValues.class, Object.class,
+                "tag[ ]key values of %tagkey%")
+            .name("Registry - Tag Key Values")
+            .description("Get all values from a tag key.")
+            .examples("set {_biomes::*} to tag key values of tag key \"minecraft:has_structure/mineshaft\" from biome registry",
+                "loop tag key values of {_tagKey}:")
+            .since("3.16.0")
+            .register();
     }
 
     private Expression<TagKey<?>> tagKey;
