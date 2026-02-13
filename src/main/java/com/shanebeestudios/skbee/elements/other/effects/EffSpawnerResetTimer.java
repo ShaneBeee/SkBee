@@ -1,28 +1,26 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Spawner - Reset Timer")
-@Description("Resets the spawner timer for a spawner. Requires a PaperMC server.")
-@Examples({"on spawner spawn:",
-        "\treset spawner timer"})
-@Since("2.16.0")
 public class EffSpawnerResetTimer extends Effect {
 
-    static {
-        Skript.registerEffect(EffSpawnerResetTimer.class, "reset spawner timer [of %blocks%]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffSpawnerResetTimer.class, "reset spawner timer [of %blocks%]")
+            .name("Spawner - Reset Timer")
+            .description("Resets the spawner timer for a spawner.")
+            .examples("on spawner spawn:",
+                "\treset spawner timer")
+            .since("2.16.0")
+            .register();
     }
 
     private static final boolean SUPPORTS_RESET_TIMER = Skript.methodExists(CreatureSpawner.class, "resetTimer");

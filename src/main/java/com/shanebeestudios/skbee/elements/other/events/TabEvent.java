@@ -1,10 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -16,9 +16,10 @@ import java.util.Arrays;
 
 public class TabEvent extends SkriptEvent {
 
-    static {
-        Skript.registerEvent("Tab Complete", TabEvent.class, TabCompleteEvent.class,
+    public static void register(Registration reg) {
+        reg.newEvent(TabEvent.class, TabCompleteEvent.class,
                 "[skbee] tab complete [(of|for) %strings%]")
+            .name("Tab Complete")
             .description("Called when a player attempts to tab complete the arguments of a command. ",
                 "\nNOTE: Tab complete event is only called for the ARGUMENTS of a command, NOT the command itself.",
                 "\nevent-string = the command.")
@@ -30,7 +31,8 @@ public class TabEvent extends SkriptEvent {
                 "on tab complete:",
                 "\tif event-string contains \"/ver\":",
                 "\t\tclear tab completions")
-            .since("1.7.0");
+            .since("1.7.0")
+            .register();
         EventValues.registerEventValue(TabCompleteEvent.class, Player.class, event -> {
             CommandSender sender = event.getSender();
             if (sender instanceof Player) {

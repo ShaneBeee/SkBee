@@ -7,7 +7,6 @@ import ch.njol.skript.registrations.EventConverter;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Experience;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
-import com.destroystokyo.paper.event.entity.EntityKnockbackByEntityEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
 import com.destroystokyo.paper.event.entity.EntityZapEvent;
 import com.destroystokyo.paper.event.entity.ExperienceOrbMergeEvent;
@@ -18,6 +17,7 @@ import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
 import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -48,8 +48,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
-import org.jspecify.annotations.NonNull;
-import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.UUID;
 
@@ -58,29 +56,33 @@ public class PaperEvents extends SimpleEvent {
 
     private static final boolean HAS_CONFIG = Skript.classExists("io.papermc.paper.connection.PlayerConfigurationConnection");
 
-    static {
+    public static void register(Registration reg) {
         // == PLAYER EVENTS == //
 
         // Player Recipe Book Click Event
-        Skript.registerEvent("Recipe Book Click Event", PaperEvents.class, PlayerRecipeBookClickEvent.class, "[player] recipe book click")
+        reg.newEvent(PaperEvents.class, PlayerRecipeBookClickEvent.class, "[player] recipe book click")
+            .name("Recipe Book Click Event")
             .description("Called when the player clicks on a recipe in their recipe book. Requires Paper 1.15+")
             .examples("on recipe book click:",
                 "\tif event-string = \"minecraft:diamond_sword\":",
                 "\t\tcancel event")
-            .since("1.5.0");
+            .since("1.5.0")
+            .register();
 
         EventValues.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, event -> event.getRecipe().toString(), EventValues.TIME_NOW);
 
         // Player Pickup XP Event
-        Skript.registerEvent("Player Pickup Experience Orb", PaperEvents.class, PlayerPickupExperienceEvent.class,
+        reg.newEvent(PaperEvents.class, PlayerPickupExperienceEvent.class,
                 "player pickup (experience|xp) [orb]")
+            .name("Player Pickup Experience Orb")
             .description("Fired when a player is attempting to pick up an experience orb. Requires Paper 1.12.2+",
                 "\n`event-experience` represents the experience picked up (This is Skript's version of XP) (can be set).",
                 "\n`event-number` represents the experience picked up as a number (can be set).",
                 "\n`event-entity` represents the experience orb entity.")
             .examples("on player pickup xp:",
                 "\tadd 10 to level of player")
-            .since("1.8.0");
+            .since("1.8.0")
+            .register();
 
         EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Experience.class, new EventConverter<>() {
             @Override
@@ -109,29 +111,34 @@ public class PaperEvents extends SimpleEvent {
         EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Entity.class, PlayerPickupExperienceEvent::getExperienceOrb, EventValues.TIME_NOW);
 
         // Player Elytra Boost Event
-        Skript.registerEvent("Player Elytra Boost", PaperEvents.class, PlayerElytraBoostEvent.class, "[player] elytra boost")
+        reg.newEvent(PaperEvents.class, PlayerElytraBoostEvent.class, "[player] elytra boost")
+            .name("Player Elytra Boost")
             .description("Fired when a player boosts elytra flight with a firework. Requires Paper 1.13.2+")
             .examples("on elytra boost:",
                 "\tpush player forward at speed 50")
-            .since("1.8.0");
+            .since("1.8.0")
+            .register();
         EventValues.registerEventValue(PlayerElytraBoostEvent.class, ItemType.class, e -> new ItemType(e.getItemStack()), EventValues.TIME_NOW);
 
         // Player Stop Using Item Event
-        Skript.registerEvent("Player Stop Using Item", PaperEvents.class, PlayerStopUsingItemEvent.class, "[player] stop using item")
+        reg.newEvent(PaperEvents.class, PlayerStopUsingItemEvent.class, "[player] stop using item")
+            .name("Player Stop Using Item")
             .description("Called when the server detects a player stopping using an item.",
                 "Examples of this are letting go of the interact button when holding a bow, an edible item, or a spyglass.",
                 "event-number is the number of ticks the item was held for. Requires Paper 1.18+.")
             .examples("on player stop using item:",
                 "\tif event-item is a spyglass:",
                 "\t\tkill player")
-            .since("1.17.0");
+            .since("1.17.0")
+            .register();
         EventValues.registerEventValue(PlayerStopUsingItemEvent.class, ItemType.class, event -> new ItemType(event.getItem()), EventValues.TIME_NOW);
         EventValues.registerEventValue(PlayerStopUsingItemEvent.class, ItemStack.class, PlayerStopUsingItemEvent::getItem);
         EventValues.registerEventValue(PlayerStopUsingItemEvent.class, Number.class, PlayerStopUsingItemEvent::getTicksHeldFor, EventValues.TIME_NOW);
 
         // Player Chunk Load Event
-        Skript.registerEvent("Player Chunk Load", PaperEvents.class, PlayerChunkLoadEvent.class,
+        reg.newEvent(PaperEvents.class, PlayerChunkLoadEvent.class,
                 "player chunk (send|load)")
+            .name("Player Chunk Load")
             .description("Is called when a Player receives a Chunk.",
                 "Can for example be used for spawning a fake entity when the player receives a chunk. ",
                 "Should only be used for packet/clientside related stuff. Not intended for modifying server side state.",
@@ -140,26 +147,30 @@ public class PaperEvents extends SimpleEvent {
                 "\tloop all blocks in event-chunk:",
                 "\t\tif loop-block is diamond ore:",
                 "\t\t\tmake player see loop-block as stone")
-            .since("2.6.1");
+            .since("2.6.1")
+            .register();
 
         EventValues.registerEventValue(PlayerChunkLoadEvent.class, Player.class, PlayerChunkLoadEvent::getPlayer, EventValues.TIME_NOW);
 
         // Player Chunk Unload Event
-        Skript.registerEvent("Player Chunk Unload", PaperEvents.class, PlayerChunkUnloadEvent.class,
+        reg.newEvent(PaperEvents.class, PlayerChunkUnloadEvent.class,
                 "player chunk unload")
+            .name("Player Chunk Unload")
             .description("Is called when a Player receives a chunk unload packet.",
                 "Should only be used for packet/clientside related stuff. Not intended for modifying server side.",
                 "\nRequires a PaperMC server.")
             .examples("on player chunk unload:",
                 "\tsend \"looks like you lost your chunk cowboy!\" to player")
-            .since("2.6.1");
+            .since("2.6.1")
+            .register();
 
         EventValues.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, PlayerChunkUnloadEvent::getPlayer, EventValues.TIME_NOW);
 
         // Player Custom Click Event
         if (Skript.classExists("io.papermc.paper.event.player.PlayerCustomClickEvent")) {
-            Skript.registerEvent("Player Custom Click Event", PaperEvents.class, PlayerCustomClickEvent.class,
+            reg.newEvent(PaperEvents.class, PlayerCustomClickEvent.class,
                     "[player] custom (click|payload)")
+                .name("Player Custom Click Event")
                 .description("This event is fired for any custom click events.",
                     "This is primarily used for dialogs and text component click events with custom payloads.",
                     "Requires Paper 1.21.6+",
@@ -176,7 +187,8 @@ public class PaperEvents extends SimpleEvent {
                     "\t\tset {_nbt} to event-nbt",
                     "\t\tset {_blah} to string tag \"blah\" of {_nbt}",
                     "\t\tsend \"YourData: %{_blah}%\" to player")
-                .since("3.13.0");
+                .since("3.13.0")
+                .register();
 
             EventValues.registerEventValue(PlayerCustomClickEvent.class, UUID.class, from -> {
                 PlayerCommonConnection connection = from.getCommonConnection();
@@ -229,13 +241,15 @@ public class PaperEvents extends SimpleEvent {
 
         // UncheckedSignChangeEvent
         if (Skript.classExists("io.papermc.paper.event.packet.UncheckedSignChangeEvent")) {
-            Skript.registerEvent("Unchecked Sign Change", PaperEvents.class, UncheckedSignChangeEvent.class, "unchecked sign change")
+            reg.newEvent(PaperEvents.class, UncheckedSignChangeEvent.class, "unchecked sign change")
+                .name("Unchecked Sign Change")
                 .description("Called when a client attempts to modify a sign, but the location at which the sign should be edited has not yet been checked for the existence of a real sign.",
                     "This event is used for client side sign changes.",
                     "`event-text components` = The lines from the sign (will include all 4 lines, reglardless if they were changed).",
                     "`event-location` = The location of the client side sign block.")
                 .examples("")
-                .since("3.11.3");
+                .since("3.11.3")
+                .register();
 
             EventValues.registerEventValue(UncheckedSignChangeEvent.class, ComponentWrapper[].class, from -> {
                 ComponentWrapper[] comps = new ComponentWrapper[4];
@@ -253,54 +267,65 @@ public class PaperEvents extends SimpleEvent {
         // == ENTITY EVENTS == //
 
         // Entity Pathfind Event
-        Skript.registerEvent("Entity Pathfind Event", PaperEvents.class, new Class[]{EntityPathfindEvent.class, SlimePathfindEvent.class}, "entity start[s] pathfinding")
+        reg.newEvent(PaperEvents.class, new Class[]{EntityPathfindEvent.class, SlimePathfindEvent.class}, "entity start[s] pathfinding")
+            .name("Entity Pathfind")
             .description("Called when an Entity decides to start moving towards a location. This event does not fire for the entities " +
                 "actual movement. Only when it is choosing to start moving to a location. Requires Paper.")
             .examples("on entity starts pathfinding:",
                 "\tif event-entity is a sheep:",
                 "\t\tcancel event")
-            .since("1.5.0");
+            .since("1.5.0")
+            .register();
 
         EventValues.registerEventValue(EntityPathfindEvent.class, Location.class, EntityPathfindEvent::getLoc, EventValues.TIME_NOW);
 
         // Skeleton Horse Trap Event
-        Skript.registerEvent("Skeleton Horse Trap Event", PaperEvents.class, SkeletonHorseTrapEvent.class, "skeleton horse trap")
+        reg.newEvent(PaperEvents.class, SkeletonHorseTrapEvent.class, "skeleton horse trap")
+            .name("Skeleton Horse Trap Event")
             .description("Called when a player gets close to a skeleton horse and triggers the lightning trap. Requires Paper 1.13+")
             .examples("on skeleton horse trap:",
                 "\tloop all players in radius 10 around event-entity:",
                 "\t\tif loop-player is an op:",
                 "\t\t\tcancel event")
-            .since("1.5.0");
+            .since("1.5.0")
+            .register();
 
         // Entity Zap Event
-        Skript.registerEvent("Entity Zap", PaperEvents.class, EntityZapEvent.class, "entity (zap|struck by lightning)")
+        reg.newEvent(PaperEvents.class, EntityZapEvent.class, "entity (zap|struck by lightning)")
+            .name("Entity Zap")
             .description("Fired when lightning strikes an entity. Requires Paper 1.10.2+")
             .examples("on entity zap:",
                 "\tif event-entity is a pig:",
                 "\t\tspawn 3 zombie pigmen at event-location")
-            .since("1.8.0");
+            .since("1.8.0")
+            .register();
         EventValues.registerEventValue(EntityZapEvent.class, Location.class, e -> e.getEntity().getLocation(), EventValues.TIME_NOW);
 
         // Experience Orb Merge Event
-        Skript.registerEvent("Experience Orb Merge", PaperEvents.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")
+        reg.newEvent(PaperEvents.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")
+            .name("Experience Orb Merge")
             .description("Fired anytime the server is about to merge 2 experience orbs into one. Requires Paper 1.12.2+")
             .examples("on xp merge:",
                 "\tcancel event")
-            .since("1.8.0");
+            .since("1.8.0")
+            .register();
 
         // Entity Add To World Event
-        Skript.registerEvent("Entity Add to World", PaperEvents.class, EntityAddToWorldEvent.class,
+        reg.newEvent(PaperEvents.class, EntityAddToWorldEvent.class,
                 "entity add[ed] to world")
+            .name("Entity Add to World")
             .description("Fired any time an entity is being added to the world for any reason.",
                 "Not to be confused with entity spawn event. This will fire anytime a chunk is reloaded too. Requires a PaperMC server.")
             .examples("on entity added to world:",
                 "\tdelete event-entity")
-            .since("2.7.2");
+            .since("2.7.2")
+            .register();
 
         // == BLOCK EVENTS == //
 
         // EntityInsideBlockEvent
-        Skript.registerEvent("Entity Inside Block", PaperEvents.class, EntityInsideBlockEvent.class, "entity inside block")
+        reg.newEvent(PaperEvents.class, EntityInsideBlockEvent.class, "entity inside block")
+            .name("Entity Inside Block")
             .description("Called when an entity enters the hitbox of a block.",
                 "Only called for blocks that react when an entity is inside.",
                 "If cancelled, any action that would have resulted from that entity being in the block will not happen (such as extinguishing an entity in a cauldron).",
@@ -310,12 +335,14 @@ public class PaperEvents extends SimpleEvent {
                 "\tif event-block is a cactus:",
                 "\t\tcancel event",
                 "\t\tbroadcast \"OUCHIE\"")
-            .since("3.4.0");
+            .since("3.4.0")
+            .register();
 
         EventValues.registerEventValue(EntityInsideBlockEvent.class, Block.class, EntityInsideBlockEvent::getBlock, EventValues.TIME_NOW);
 
         // PlayerAttemptPickupItemEvent
-        Skript.registerEvent("Player Attempt Item Pickup", PaperEvents.class, PlayerAttemptPickupItemEvent.class, "player attempt item pickup")
+        reg.newEvent(PaperEvents.class, PlayerAttemptPickupItemEvent.class, "player attempt item pickup")
+            .name("Player Attempt Item Pickup")
             .description("Called when a player attempts to pick an item up from the ground. Requires PaperMC.",
                 "`event-number` = Represents the amount that will remain on the ground, if any.",
                 "`past event-number` = Represents the item amount of the dropped item before pickup.",
@@ -325,14 +352,16 @@ public class PaperEvents extends SimpleEvent {
                 "\t\twait 1 tick",
                 "\t\tadd (item of event-dropped item) to enderchest of player",
                 "\t\tkill event-dropped item")
-            .since("3.5.0");
+            .since("3.5.0")
+            .register();
 
         EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, PlayerAttemptPickupItemEvent::getRemaining, EventValues.TIME_NOW);
         EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, event -> event.getItem().getItemStack().getAmount(), EventValues.TIME_PAST);
         EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Item.class, PlayerAttemptPickupItemEvent::getItem, EventValues.TIME_NOW);
 
         // PlayerTrackEntityEvent
-        Skript.registerEvent("Player Track Entity", PaperEvents.class, PlayerTrackEntityEvent.class, "player track entity")
+        reg.newEvent(PaperEvents.class, PlayerTrackEntityEvent.class, "player track entity")
+            .name("Player Track Entity")
             .description("Called when a Player tracks an Entity (This means the entity is sent to the client).",
                 "If cancelled entity is not shown to the player and interaction in both directions is not possible.",
                 "(This is copied from Paper javadocs and does not seem true. When testing on a zombie, the zombie still attacked me)",
@@ -341,12 +370,14 @@ public class PaperEvents extends SimpleEvent {
             .examples("on player track entity:",
                 "\tif event-entity is a zombie:",
                 "\t\tcancel event")
-            .since("3.5.1");
+            .since("3.5.1")
+            .register();
 
         EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, PlayerTrackEntityEvent::getEntity, EventValues.TIME_NOW);
 
         // PlayerFailMoveEvent
-        Skript.registerEvent("Player Fail Move", PaperEvents.class, PlayerFailMoveEvent.class, "player fail move")
+        reg.newEvent(PaperEvents.class, PlayerFailMoveEvent.class, "player fail move")
+            .name("Player Fail Move")
             .description("Called when a player attempts to move, but is prevented from doing so by the server.",
                 "Requires PaperMC and Skript 2.11+.",
                 "`event-failmovereason` = The reason they failed to move.",
@@ -359,7 +390,8 @@ public class PaperEvents extends SimpleEvent {
                 "\tset future event-boolean to false",
                 "\tif event-failmovereason = clipped_into_block:",
                 "\t\tpush player up with speed 1")
-            .since("3.11.0");
+            .since("3.11.0")
+            .register();
 
         EventValues.registerEventValue(PlayerFailMoveEvent.class, PlayerFailMoveEvent.FailReason.class, PlayerFailMoveEvent::getFailReason);
         EventValues.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getFrom, EventValues.TIME_NOW);
@@ -389,13 +421,16 @@ public class PaperEvents extends SimpleEvent {
 
         // SERVER EVENTS
         // Tick Start/End Event
-        Skript.registerEvent("Tick Start Event", PaperEvents.class, ServerTickStartEvent.class, "server tick start")
+        reg.newEvent(PaperEvents.class, ServerTickStartEvent.class, "server tick start")
+            .name("Tick Start Event")
             .description("Called each time the server starts its main tick loop.",
                 "`event-number` = The current tick number.")
             .examples("")
-            .since("3.10.0");
+            .since("3.10.0")
+            .register();
 
-        Skript.registerEvent("Tick End Event", PaperEvents.class, ServerTickEndEvent.class, "server tick end")
+        reg.newEvent(PaperEvents.class, ServerTickEndEvent.class, "server tick end")
+            .name("Tick End Event")
             .description("Called when the server has finished ticking the main loop.",
                 "There may be time left after this event is called, and before the next tick starts.",
                 "`event-numbers` = Represents different numbers in this event, in this order:",
@@ -404,7 +439,8 @@ public class PaperEvents extends SimpleEvent {
                 "- Time remaining (in milliseconds) (How long til the next tick executes).",
                 "- Time remaining (in nanoseconds) (How long til the next tick executes).")
             .examples("")
-            .since("3.10.0");
+            .since("3.10.0")
+            .register();
 
         EventValues.registerEventValue(ServerTickStartEvent.class, Integer.class, ServerTickStartEvent::getTickNumber);
         EventValues.registerEventValue(ServerTickEndEvent.class, Number[].class,
@@ -416,8 +452,9 @@ public class PaperEvents extends SimpleEvent {
             });
 
         // Server Resources Reloaded Event
-        Skript.registerEvent("Server Resources Reloaded", PaperEvents.class, ServerResourcesReloadedEvent.class,
+        reg.newEvent(PaperEvents.class, ServerResourcesReloadedEvent.class,
                 "server resources reload[ed]")
+            .name("Server Resources Reloaded")
             .description("Called when resources such as datapacks are reloaded (e.g. /minecraft:reload).",
                 "Intended for use to re-register custom recipes, advancements that may be lost during a reload like this.",
                 "This can also be used after SkBriggy commands are loaded (since they appear to wipe recipes).")
@@ -432,7 +469,8 @@ public class PaperEvents extends SimpleEvent {
                 "on server resources reload:",
                 "\t# Reload recipes when datapacks get reloaded",
                 "\tloadRecipes()")
-            .since("3.15.0");
+            .since("3.15.0")
+            .register();
     }
 
 }

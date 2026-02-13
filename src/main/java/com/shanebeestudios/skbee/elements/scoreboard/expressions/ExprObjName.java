@@ -28,18 +28,13 @@ import org.jetbrains.annotations.Nullable;
 @Since("2.6.0")
 public class ExprObjName extends SimpleExpression<Object> {
 
-    private static final boolean HAS_COMP = SkBee.getPlugin().getAddonLoader().isTextComponentEnabled();
     private static final Class<?>[] RETURN_CLASSES;
 
     static {
-        if (HAS_COMP) {
-            RETURN_CLASSES = CollectionUtils.array(String.class, ComponentWrapper.class);
-        } else {
-            RETURN_CLASSES = CollectionUtils.array(String.class);
-        }
+        RETURN_CLASSES = CollectionUtils.array(String.class, ComponentWrapper.class);
         Skript.registerExpression(ExprObjName.class, Object.class, ExpressionType.COMBINED,
             "objective (name|id) of %objective%",
-            HAS_COMP ? "objective [:component] display name of %objective%" : "objective display name of %objective%");
+            "objective [:component] display name of %objective%");
     }
 
     private Expression<Objective> objective;
@@ -92,7 +87,7 @@ public class ExprObjName extends SimpleExpression<Object> {
         if (delta != null) {
             if (delta[0] instanceof String string) {
                 objective.setDisplayName(string);
-            } else if (HAS_COMP && delta[0] instanceof ComponentWrapper cw) {
+            } else if (delta[0] instanceof ComponentWrapper cw) {
                 objective.displayName(cw.getComponent());
             }
         }

@@ -103,9 +103,6 @@ elements:
   # Enable switch case elements
   switch-case: true
 
-  # Enable Text Component elements
-  text-component: true
-
   # Enable Server Tick Manager elements
   # These elements are based around Minecraft's tick command
   # This is specifically for Minecraft 1.20.4+

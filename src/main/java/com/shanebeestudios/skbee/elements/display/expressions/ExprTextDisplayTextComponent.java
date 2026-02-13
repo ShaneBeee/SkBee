@@ -24,9 +24,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprTextDisplayTextComponent extends SimplePropertyExpression<Entity, ComponentWrapper> {
 
     static {
-        if (SkBee.getPlugin().getAddonLoader().isTextComponentEnabled()) {
             register(ExprTextDisplayTextComponent.class, ComponentWrapper.class, "display [text] component", "entities");
-        }
     }
 
     @Override

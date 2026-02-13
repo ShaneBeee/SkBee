@@ -1,12 +1,12 @@
 package com.shanebeestudios.skbee.elements.other.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
@@ -17,9 +17,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class EvtDamageByBlock extends SkriptEvent {
 
-    static {
-        Skript.registerEvent("Damage By Block", EvtDamageByBlock.class, EntityDamageByBlockEvent.class,
+    public static void register(Registration reg) {
+        reg.newEvent( EvtDamageByBlock.class, EntityDamageByBlockEvent.class,
                 "damag(e|ing) [of %-entitydata%] (by|from) (block|%itemtypes/blockdatas%)")
+            .name("Damage By Block")
             .description("Called when an entity is damaged by a block.",
                 "Anything that works in vanilla Skript's damage event (victim/damage cause/damage/final damage)",
                 "will all work in this event too.",
@@ -30,7 +31,8 @@ public class EvtDamageByBlock extends SkriptEvent {
                 "",
                 "on damage by block:",
                 "\tbroadcast \"%victim% was damaged by %type of event-block%\"")
-            .since("3.0.2");
+            .since("3.0.2")
+            .register();
 
         EventValues.registerEventValue(EntityDamageByBlockEvent.class, Block.class, EntityDamageByBlockEvent::getDamager, EventValues.TIME_NOW);
     }

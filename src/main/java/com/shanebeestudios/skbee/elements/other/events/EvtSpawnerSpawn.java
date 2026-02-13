@@ -1,11 +1,11 @@
 package com.shanebeestudios.skbee.elements.other.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.entity.Entity;
@@ -16,9 +16,10 @@ import org.jetbrains.annotations.Nullable;
 
 public class EvtSpawnerSpawn extends SkriptEvent {
 
-    static {
-        Skript.registerEvent("Spawner Spawn", EvtSpawnerSpawn.class, SpawnerSpawnEvent.class,
+    public static void register(Registration reg) {
+        reg.newEvent(EvtSpawnerSpawn.class, SpawnerSpawnEvent.class,
                 "spawner spawn[ing] [of %entitydatas%]")
+            .name("Spawner Spawn")
             .description("Called whenever an entity is spawned via a spawner.")
             .examples("on spawner spawn of zombie:",
                 "\treset spawner timer of event-block")

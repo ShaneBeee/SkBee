@@ -1,11 +1,8 @@
 package com.shanebeestudios.skbee.elements.text.type;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
-import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.lang.function.Parameter;
@@ -15,17 +12,15 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.region.TaskUtils;
-import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.chat.SignedMessage;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.event.HoverEvent;
 import net.kyori.adventure.text.minimessage.tag.resolver.Placeholder;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -35,13 +30,10 @@ import org.skriptlang.skript.lang.converter.Converters;
 
 import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class Types {
 
-    static {
+    public static void register(Registration reg) {
         // Allow components to be used anywhere a string can
         Converters.registerConverter(ComponentWrapper.class, String.class, ComponentWrapper::toString);
         Comparators.registerComparator(ComponentWrapper.class, ComponentWrapper.class, (o1, o2) -> Relation.get(o1.equals(o2)));
@@ -49,7 +41,8 @@ public class Types {
         Changer<ComponentWrapper> COMP_CHANGER = new Changer<>() {
             @Override
             public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-                if (mode == ChangeMode.ADD) return CollectionUtils.array(HoverEvent.class, ClickEvent.class, ComponentWrapper.class);
+                if (mode == ChangeMode.ADD)
+                    return CollectionUtils.array(HoverEvent.class, ClickEvent.class, ComponentWrapper.class);
                 return null;
             }
 
@@ -70,7 +63,7 @@ public class Types {
             }
         };
 
-        Classes.registerClass(new ClassInfo<>(ComponentWrapper.class, "textcomponent")
+        reg.newType(ComponentWrapper.class, "textcomponent")
             .user("text ?components?")
             .name("TextComponent - Text Component")
             .description("Text components used for hover/click events. Due to the complexity of these, ",
@@ -132,10 +125,10 @@ public class Types {
                     return false;
                 }
             })
-        );
+            .register();
 
         if (Classes.getExactClassInfo(SignedMessage.class) == null) {
-            Classes.registerClass(new ClassInfo<>(SignedMessage.class, "signedmessage")
+            reg.newType(SignedMessage.class, "signedmessage")
                 .user("signed ?messages?")
                 .name("Signed Chat Message")
                 .description("Represents a signed chat message.")
@@ -163,11 +156,12 @@ public class Types {
                             }
                         }
                     }
-                }));
+                })
+                .register();
         }
 
         if (Classes.getExactClassInfo(TagResolver.class) == null) {
-            Classes.registerClass(new ClassInfo<>(TagResolver.class, "tagresolver")
+            reg.newType(TagResolver.class, "tagresolver")
                 .user("tag ?resolvers?")
                 .description("Represents an object to replace text in a mini message.")
                 .examples("# Create a component",
@@ -179,7 +173,8 @@ public class Types {
                     "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r}",
                     "send component {_m}")
                 .parser(SkriptUtils.getDefaultParser())
-                .since("3.5.0"));
+                .since("3.5.0")
+                .register();
         }
 
         // Functions

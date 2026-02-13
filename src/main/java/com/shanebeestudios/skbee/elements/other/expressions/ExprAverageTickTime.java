@@ -1,42 +1,33 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Average Tick Time - MSPT")
-@Description({"Represents the average amount of time (in milliseconds) it takes for the server to finish a tick, also know as MSPT",
-    "Requires PaperMC."})
-@Examples({"set {_avg} to average tick time",
-    "if average tick time > 40:"})
-@Since("3.5.4")
 public class ExprAverageTickTime extends SimpleExpression<Number> {
 
-    static {
-        if (Skript.methodExists(Bukkit.class, "getAverageTickTime")) {
-            Skript.registerExpression(ExprAverageTickTime.class, Number.class, ExpressionType.SIMPLE,
-                "average tick time");
-        }
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprAverageTickTime.class, Number.class,
+                "average tick time")
+            .name("Average Tick Time - MSPT")
+            .description("Represents the average amount of time (in milliseconds) it takes for the server to finish a tick, also know as MSPT")
+            .examples("set {_avg} to average tick time",
+                "if average tick time > 40:")
+            .since("3.5.4")
+            .register();
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable Number[] get(Event event) {
         return new Number[]{Bukkit.getAverageTickTime()};

@@ -1,14 +1,11 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -16,17 +13,6 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.InventoryView;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Open Real Inventory")
-@Description({"Open real inventories to players.",
-    "This will open a real inventory object instead of a custom inventory object to players.",
-    "Most of these (except enchanting and workbench) require a PaperMC server.",
-    "`at %location%` is used to open an inventory at an actual block (Optional, will default to player's location).",
-    "Some inventories require a location of a block for extra functionality," +
-        "such as an enchanting table uses nearby bookshelves to determine enchantment level."})
-@Examples({"open real anvil inventory to player",
-    "open real anvil named \"Mr Anvil\" to player",
-    "open real anvil at location(1,1,1) named \"Senor Anvil\" to player"})
-@Since("3.6.0")
 public class EffOpenRealInventory extends Effect {
 
     private static final boolean HAS_PAPER = Skript.methodExists(HumanEntity.class, "openAnvil", Location.class, boolean.class);
@@ -50,14 +36,26 @@ public class EffOpenRealInventory extends Effect {
         }
     }
 
-    static {
+    public static void register(Registration reg) {
         InventoryViewType[] viewTypes = InventoryViewType.values();
         int size = viewTypes.length;
         String[] patterns = new String[size];
         for (int i = 0; i < size; i++) {
             patterns[i] = "open real " + viewTypes[i].name + " [inventory] [at %-location%] [named %-string%] to %players%";
         }
-        Skript.registerEffect(EffOpenRealInventory.class, patterns);
+        reg.newEffect(EffOpenRealInventory.class, patterns)
+            .name("Open Real Inventory")
+            .description("Open real inventories to players.",
+                "This will open a real inventory object instead of a custom inventory object to players.",
+                "Most of these (except enchanting and workbench) require a PaperMC server.",
+                "`at %location%` is used to open an inventory at an actual block (Optional, will default to player's location).",
+                "Some inventories require a location of a block for extra functionality," +
+                    "such as an enchanting table uses nearby bookshelves to determine enchantment level.")
+            .examples("open real anvil inventory to player",
+                "open real anvil named \"Mr Anvil\" to player",
+                "open real anvil at location(1,1,1) named \"Senor Anvil\" to player")
+            .since("3.6.0")
+            .register();
     }
 
     private InventoryViewType viewType;

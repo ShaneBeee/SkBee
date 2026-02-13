@@ -38,7 +38,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
      * @param codename      Codename for ClassInfo
      * @return ClassInfo from Registry
      */
-    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<T> registry, @NotNull Class<T> registryClass, @NotNull String codename) {
+    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<? extends Keyed> registry, @NotNull Class<T> registryClass, @NotNull String codename) {
         return create(registry, registryClass, true, codename, null, null);
     }
 
@@ -52,7 +52,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
      * @param suffix        Optional suffix to append to items in registry
      * @return ClassInfo from Registry
      */
-    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<T> registry, @NotNull Class<T> registryClass, @NotNull String codename, @Nullable String prefix, @Nullable String suffix) {
+    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<? extends Keyed> registry, @NotNull Class<T> registryClass, @NotNull String codename, @Nullable String prefix, @Nullable String suffix) {
         return create(registry, registryClass, true, codename, prefix, suffix);
     }
 
@@ -65,7 +65,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
      * @param codename      Codename for ClassInfo
      * @return ClassInfo from Registry
      */
-    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<T> registry, @NotNull Class<T> registryClass, boolean usage, @NotNull String codename) {
+    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<? extends Keyed> registry, @NotNull Class<T> registryClass, boolean usage, @NotNull String codename) {
         return create(registry, registryClass, usage, codename, null, null);
     }
 
@@ -81,7 +81,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
      * @return ClassInfo from Registry
      */
     @SuppressWarnings("ConstantValue")
-    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<T> registry, @NotNull Class<T> registryClass, boolean usage, @NotNull String codename, @Nullable String prefix, @Nullable String suffix) {
+    public static <T extends Keyed> RegistryClassInfo<T> create(@NotNull Registry<? extends Keyed> registry, @NotNull Class<T> registryClass, boolean usage, @NotNull String codename, @Nullable String prefix, @Nullable String suffix) {
         // Safety precautions
         Preconditions.checkArgument(registry != null, "Registry cannot be null");
         Preconditions.checkArgument(registryClass != null, "RegistryClass cannot be null");
@@ -90,11 +90,11 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
     }
 
 
-    private final Registry<T> registry;
+    private final Registry<? extends Keyed> registry;
     @Nullable
     private final String prefix, suffix;
 
-    private RegistryClassInfo(Registry<T> registry, Class<T> registryClass, boolean usage, String codename, @Nullable String prefix, @Nullable String suffix) {
+    private RegistryClassInfo(Registry<? extends Keyed> registry, Class<T> registryClass, boolean usage, String codename, @Nullable String prefix, @Nullable String suffix) {
         super(registryClass, codename);
         this.registry = registry;
         this.prefix = prefix;
@@ -103,7 +103,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
             Comparators.registerComparator(registryClass, registryClass, (o1, o2) -> Relation.get(o1.equals(o2)));
         }
         if (usage) this.usage(getNames());
-        this.supplier(() -> registry.stream().sorted(Comparator.comparing(Keyed::getKey)).iterator());
+        this.supplier(() -> (java.util.Iterator<T>) registry.stream().sorted(Comparator.comparing(Keyed::getKey)).iterator());
         this.parser(new Parser<>() {
             @SuppressWarnings("NullableProblems")
             @Override
@@ -143,7 +143,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
                 if (namespacedKey == null) {
                     throw new StreamCorruptedException("NamespacedKey is null for key: " + key);
                 }
-                T registryObject = RegistryClassInfo.this.registry.get(namespacedKey);
+                T registryObject = (T) RegistryClassInfo.this.registry.get(namespacedKey);
                 if (registryObject == null) {
                     throw new StreamCorruptedException("RegistryObject is null for key: " + key);
                 }
@@ -169,7 +169,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
      */
     public String getNames() {
         List<String> keys = new ArrayList<>();
-        this.registry.iterator().forEachRemaining(object -> keys.add(getName(object)));
+        this.registry.iterator().forEachRemaining(object -> keys.add(getName((T) object)));
         Collections.sort(keys);
         return StringUtils.join(keys, ", ");
     }
@@ -221,7 +221,7 @@ public class RegistryClassInfo<T extends Keyed> extends ClassInfo<T> {
 
         NamespacedKey key = Util.getNamespacedKey(string, false);
         if (key == null) return null;
-        return this.registry.get(key);
+        return (T) this.registry.get(key);
     }
 
 }

@@ -3,13 +3,8 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.EntityUtils;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
@@ -46,20 +41,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-@Name("Available Objects")
-@Description({"Get a list of all available objects of a specific type.",
-    "SPECIAL TYPES:",
-    "`materials` = All materials as ItemTypes (will be a list of blocks and items).",
-    "`itemtypes` = All item materials as ItemTypes.",
-    "`blocktypes` = All block materials as ItemTypes."})
-@Examples({"give player random element of all available itemtypes",
-    "set {_blocks::*} to all available blocktypes",
-    "set target block to random element of all available blockdatas"})
-@Since("1.15.0")
 @SuppressWarnings({"NullableProblems", "rawtypes", "deprecation"})
 public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
-    static {
+    public static void register(com.shanebeestudios.skbee.api.registration.Registration reg) {
         // Register materials as itemtypes and blockdata
         List<ItemType> materials = new ArrayList<>();
         List<ItemType> itemTypes = new ArrayList<>();
@@ -148,8 +133,19 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         // Register registries as strings (this may be for types Skript doesn't have)
         Registration.registerStrings("sounds", Registry.SOUNDS);
 
-        Skript.registerExpression(ExprAvailableMaterials.class, Object.class, ExpressionType.SIMPLE,
-            Registration.getPatterns());
+        reg.newSimpleExpression(ExprAvailableMaterials.class, Object.class,
+                Registration.getPatterns())
+            .name("Available Objects")
+            .description("Get a list of all available objects of a specific type.",
+                "SPECIAL TYPES:",
+                "`materials` = All materials as ItemTypes (will be a list of blocks and items).",
+                "`itemtypes` = All item materials as ItemTypes.",
+                "`blocktypes` = All block materials as ItemTypes.")
+            .examples("give player random element of all available itemtypes",
+                "set {_blocks::*} to all available blocktypes",
+                "set target block to random element of all available blockdatas")
+            .since("1.15.0")
+            .register();
     }
 
     private Registration registration;

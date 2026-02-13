@@ -9,8 +9,10 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
+import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.variables.Variables;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.EquipmentSlotGroup;
@@ -34,8 +36,8 @@ public class SkriptUtils {
      *
      * @return Counts of loaded Skript elements
      */
-    public static int[] getElementCount() {
-        int[] i = new int[5];
+    public static int[] getElementCount(Registration registration) {
+        int[] i = new int[7];
 
         i[0] = Skript.getEvents().size();
         i[1] = Skript.getEffects().size();
@@ -44,6 +46,8 @@ public class SkriptUtils {
         i[2] = exprs.get();
         i[3] = Skript.getConditions().size();
         i[4] = Skript.getSections().size();
+        i[5] = registration.getTypes().size();
+        i[6] = Skript.getStructures().size();
 
         return i;
     }

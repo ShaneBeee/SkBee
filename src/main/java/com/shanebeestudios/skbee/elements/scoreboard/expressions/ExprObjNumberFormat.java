@@ -12,7 +12,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.scoreboard.NumberFormatUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.scoreboard.numbers.NumberFormat;
@@ -55,15 +54,10 @@ import java.util.List;
 public class ExprObjNumberFormat extends SimpleExpression<String> {
 
     private static final boolean HAS_NUMBER_FORMAT = Skript.methodExists(Objective.class, "numberFormat");
-    private static final boolean HAS_COMP = SkBee.getPlugin().getAddonLoader().isTextComponentEnabled();
     private static final Class<?>[] CHANGE_TYPES;
 
     static {
-        if (HAS_COMP) {
-            CHANGE_TYPES = CollectionUtils.array(ComponentWrapper.class, String.class);
-        } else {
-            CHANGE_TYPES = CollectionUtils.array(String.class);
-        }
+        CHANGE_TYPES = CollectionUtils.array(ComponentWrapper.class, String.class);
         Skript.registerExpression(ExprObjNumberFormat.class, String.class, ExpressionType.COMBINED,
             "number format of %objective% [for %-entities/strings%]");
     }
@@ -190,7 +184,7 @@ public class ExprObjNumberFormat extends SimpleExpression<String> {
             } else {
                 numberFormat = NumberFormatUtils.getNumberFormatFixed(stringScore);
             }
-        } else if (HAS_COMP && score instanceof ComponentWrapper cw) {
+        } else if (score instanceof ComponentWrapper cw) {
             numberFormat = NumberFormatUtils.getNumberFormatFixed(cw);
         }
 

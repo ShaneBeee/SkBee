@@ -3,10 +3,6 @@ package com.shanebeestudios.skbee.elements.other.sections;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.LoopSection;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -19,6 +15,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.region.scheduler.task.Task;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -30,47 +27,49 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 
-@Name("Task - Run Task Later")
-@Description({"Run a task later. Similar to Skript's delay effect, with the difference being everything in the",
-    "section is run later. All code after your section will keep running as normal without a delay.",
-    "This can be very useful in loops, to prevent halting the loop.",
-    "You can optionally have your task repeat until cancelled.",
-    "You can optionally run your code async/on another thread.",
-    "You can optionally store the task ID in a variable, to help make use of it later.",
-    "\nNOTE: A good chunk of Bukkit/Minecraft stuff can NOT be run async. It may throw console errors.",
-    "Please be careful when running async, this is generally reserved for heavy math/functions that could cause lag.",
-    "Simply waiting a tick, or running a new non-async section will put your code back on the main thread.",
-    "",
-    "**Patterns**:",
-    "The 2nd pattern is only of concern if you are running Folia or have Paper schedulers enabled in the config, " +
-        "otherwise just use the first pattern.",
-    "- `globally` = Will run this task on the global scheduler.",
-    "- `for %entity` = Will run this task for an entity, will follow the entity around (region wise)" +
-        "and will cancel itself when the entity is no longer valid.",
-    "- `at %location%` = Will run this task at a specific location (Use this for block changes in this section)."})
-@Examples({"on explode:",
-    "\tloop exploded blocks:",
-    "\t\tset {_loc} to location of loop-block",
-    "\t\tset {_data} to block data of loop-block",
-    "\t\trun 2 seconds later:",
-    "\t\t\tset block at {_loc} to {_data}\n",
-    "",
-    "run 0 ticks later repeating every second and store id in {_id}:",
-    "\tadd 1 to {_a}",
-    "\tif {_a} > 10:",
-    "\t\tcancel task with id {_id}",
-    "",
-    "run 0 ticks later repeating every second:",
-    "\tadd 1 to {_a}",
-    "\tif {_a} > 10:",
-    "\t\texit loop"})
-@Since("3.0.0")
 public class SecRunTaskLater extends LoopSection {
 
-    static {
-        Skript.registerSection(SecRunTaskLater.class,
-            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [globally] [and store [task] id in %-object%]",
-            "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(at|on|for) %-entity/location%] [and store [task] id in %-object%]");
+    public static void register(Registration reg) {
+        reg.newSection(SecRunTaskLater.class,
+                "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [globally] [and store [task] id in %-object%]",
+                "[:async] (run|execute) [task] %timespan% later [repeating every %-timespan%] [(at|on|for) %-entity/location%] [and store [task] id in %-object%]")
+            .name("Task - Run Task Later")
+            .description("Run a task later. Similar to Skript's delay effect, with the difference being everything in the",
+                "section is run later. All code after your section will keep running as normal without a delay.",
+                "This can be very useful in loops, to prevent halting the loop.",
+                "You can optionally have your task repeat until cancelled.",
+                "You can optionally run your code async/on another thread.",
+                "You can optionally store the task ID in a variable, to help make use of it later.",
+                "",
+                "**NOTE**: A good chunk of Bukkit/Minecraft stuff can NOT be run async. It may throw console errors.",
+                "Please be careful when running async, this is generally reserved for heavy math/functions that could cause lag.",
+                "Simply waiting a tick, or running a new non-async section will put your code back on the main thread.",
+                "",
+                "**Patterns**:",
+                "The 2nd pattern is only of concern if you are running Folia or have Paper schedulers enabled in the config, " +
+                    "otherwise just use the first pattern.",
+                "- `globally` = Will run this task on the global scheduler.",
+                "- `for %entity` = Will run this task for an entity, will follow the entity around (region wise)" +
+                    "and will cancel itself when the entity is no longer valid.",
+                "- `at %location%` = Will run this task at a specific location (Use this for block changes in this section).")
+            .examples("on explode:",
+                "\tloop exploded blocks:",
+                "\t\tset {_loc} to location of loop-block",
+                "\t\tset {_data} to block data of loop-block",
+                "\t\trun 2 seconds later:",
+                "\t\t\tset block at {_loc} to {_data}\n",
+                "",
+                "run 0 ticks later repeating every second and store id in {_id}:",
+                "\tadd 1 to {_a}",
+                "\tif {_a} > 10:",
+                "\t\tcancel task with id {_id}",
+                "",
+                "run 0 ticks later repeating every second:",
+                "\tadd 1 to {_a}",
+                "\tif {_a} > 10:",
+                "\t\texit loop")
+            .since("3.0.0")
+            .register();
     }
 
     private static Task<?> LAST_CREATED_TASK = null;

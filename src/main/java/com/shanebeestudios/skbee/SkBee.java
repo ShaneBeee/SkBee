@@ -61,6 +61,8 @@ public class SkBee extends JavaPlugin {
         this.skBeeVersion = new Version(this.getPluginMeta().getVersion());
         this.config = new Config(this);
         TaskUtils.initialize(this, Util.IS_RUNNING_FOLIA || this.config.settings_use_paper_schedulers);
+
+
         this.addonLoader = new AddonLoader(this);
         // Check if SkriptAddon can actually load
         this.properlyEnabled = addonLoader.canLoadPlugin();
