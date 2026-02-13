@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee;
 import ch.njol.skript.Skript;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Version;
+import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
@@ -11,6 +12,7 @@ import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.bossbar.BossbarElementRegistration;
+import com.shanebeestudios.skbee.elements.fastboard.FastboardElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
 import com.shanebeestudios.skbee.elements.property.PropertyElementRegistration;
@@ -28,12 +30,11 @@ import org.skriptlang.skript.addon.SkriptAddon;
  */
 public class AddonLoader {
 
+    private final PluginManager pluginManager;
     private final SkBee plugin;
     private final Registration registration = new Registration();
-    private final PluginManager pluginManager;
     private final Config config;
     private final Plugin skriptPlugin;
-    private SkriptAddon addon;
 
     public AddonLoader(SkBee plugin) {
         this.plugin = plugin;
@@ -79,15 +80,12 @@ public class AddonLoader {
     }
 
     private void loadSkriptElements() {
-        this.addon = Skript.instance().registerAddon(SkBeeAddonModule.class, "SkBee");
-        this.addon.localizer().setSourceDirectories("lang", null);
-        SkBeeAddonModule module = new SkBeeAddonModule(this.registration);
+        SkriptAddon addon = Skript.instance().registerAddon(SkBeeAddonModule.class, "SkBee");
+        addon.localizer().setSourceDirectories("lang", null);
 
         // Load first as these are the base for many things
         loadOtherElements();
         loadNBTElements();
-
-        this.addon.loadModules(module);
 
         // Load in alphabetical order (to make "/skbee info" easier to read)
 //        loadAdvancementElements();
@@ -96,7 +94,7 @@ public class AddonLoader {
 //        loadDamageSourceElements();
 //        loadDialogElements();
 //        loadDisplayEntityElements();
-//        loadFastboardElements();
+        loadFastboardElements();
 //        loadFishingElements();
 //        loadGameEventElements();
 //        loadItemComponentElements();
@@ -115,6 +113,10 @@ public class AddonLoader {
 //        loadWorldCreatorElements();
 //        loadChunkGenElements();
 //        loadTestingElements();
+
+        // Load elements into Skript
+        SkBeeAddonModule module = new SkBeeAddonModule(this.registration);
+        addon.loadModules(module);
 
         // ELEMENT COUNT
         int typeCount = this.registration.getTypes().size();
@@ -184,22 +186,22 @@ public class AddonLoader {
         }
     }
 
+
+    private void loadFastboardElements() {
+        if (!this.config.ELEMENTS_FASTBOARD) {
+            Util.logLoading("&5Fastboard Elements &cdisabled via config");
+            return;
+        }
+        try {
+            this.pluginManager.registerEvents(new FastBoardManager(this.plugin, true), this.plugin);
+            FastboardElementRegistration.register(this.registration);
+            Util.logLoading("&5Fastboard&7[&bAdventure&7] &5Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Fastboard", ex);
+        }
+    }
+
     //
-//    private void loadFastboardElements() {
-//        if (!this.config.ELEMENTS_FASTBOARD) {
-//            Util.logLoading("&5Fastboard Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.pluginManager.registerEvents(new FastBoardManager(this.plugin, this.textComponentEnabled), this.plugin);
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.fastboard");
-//            String type = this.textComponentEnabled ? "Adventure" : "Legacy";
-//            Util.logLoading("&5Fastboard&7[&b%s&7] &5Elements &asuccessfully loaded", type);
-//        } catch (Exception ex) {
-//            logFailure("Fastboard", ex);
-//        }
-//    }
-//
 //    private void loadScoreboardElements() {
 //        if (!this.config.ELEMENTS_SCOREBOARD) {
 //            Util.logLoading("&5Scoreboard Elements &cdisabled via config");
