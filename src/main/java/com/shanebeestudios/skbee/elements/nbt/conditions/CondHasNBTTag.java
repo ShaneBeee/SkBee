@@ -1,31 +1,27 @@
 package com.shanebeestudios.skbee.elements.nbt.conditions;
 
-import ch.njol.skript.conditions.base.PropertyCondition;
-import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Condition;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("NBT - Has Tag")
-@Description("Check if an NBT Compound contains a tag.")
-@Examples({"if nbt compound of player has tag \"custom;points\":",
-    "if nbt compound of player's tool doesn't have nbt tag \"health;score\":"})
-@Since("2.3.2")
 public class CondHasNBTTag extends Condition {
 
-    static {
-        PropertyCondition.register(CondHasNBTTag.class, PropertyType.HAVE,
-            "[nbt] tag %string%", "nbtcompounds");
+    public static void register(Registration reg) {
+        reg.newPropertyCondition(CondHasNBTTag.class,
+                "[nbt] tag %string%", "nbtcompounds")
+            .name("NBT - Has Tag")
+            .description("Check if an NBT Compound contains a tag.")
+            .examples("if nbt compound of player has tag \"custom;points\":",
+                "if nbt compound of player's tool doesn't have nbt tag \"health;score\":")
+            .since("2.3.2")
+            .register();
     }
 
     private Expression<NBTCompound> compounds;

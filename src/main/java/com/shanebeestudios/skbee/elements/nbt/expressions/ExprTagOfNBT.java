@@ -2,12 +2,7 @@ package com.shanebeestudios.skbee.elements.nbt.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -15,6 +10,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTEntity;
@@ -28,92 +24,94 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.UUID;
 
-@Name("NBT - Tag")
-@Description({"Get/set/delete the value of the specified tag of an NBT compound. Also supports getting nested tags using a semi colon as a delimiter.",
-    "If the return value is a list, you can use it as a list, as it will automatically split it for ya.",
-    "**NOTES**:",
-    "- `uuid tag` will set an int array tag (This is how MC stores uuids). On return it'll convert back to a uuid.",
-    "- Entities/blocks can not natively hold custom NBT tags. SkBee allows you to put custom nbt",
-    "data in the \"custom\" compound tag of a block/entity's NBT compound. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen.",
-    "That said, this system is a tad convoluted, see the SkBee WIKI for more details.",
-    "- 1.20.5+: All custom data on items must be stored in the \"minecraft:custom_data\" compound " +
-        "(see examples and [**McWiki**](https://minecraft.wiki/w/Data_component_format#custom_data)).",
-    "- For more info regarding 1.20.5+ components please see [**Data Component Format**](https://minecraft.wiki/w/Data_component_format) on McWiki.",
-    "- GET FROM LIST BY POSITION: You can get the element of a list by adding `[%number%]` to the end of a tag",
-    "(This only works for getters, not set/add/remove/delete) see examples.",
-    "",
-    "**CHANGERS**:",
-    "- ADD: You can add numbers to number type tags, you can also add numbers/strings/compounds to lists type tags.",
-    "- REMOVE: You can remove numbers from number type tags, you can also remove numbers/strings from lists type tags." +
-        "(You can NOT remove compounds from lists type tags)"})
-@Examples({"# Getting the value of a simple tag",
-    "set {_damage} to int tag \"minecraft:damage\" of nbt of player's tool",
-    "set {_sheared} to byte tag \"Sheared\" of nbt of target entity",
-    "set {_pass::*} to compound list tag \"Passengers\" of nbt of last spawned entity",
-    "set {_pos::*} to double list tag \"Pos\" of nbt of {_sheep}",
-    "set {_burntime} to short tag \"BurnTime\" of nbt of target block",
-    "set {_items::*} to compound list tag \"Items\" of nbt of target block",
-    "",
-    "# Getting the value of a nested tag",
-    "set {_maybuild} to byte tag \"abilities;mayBuild\" of nbt of player",
-    "set {_x} to int tag \"Leash;X\" of nbt of target entity",
-    "set {_pos::*} to int array tag \"LastDeathLocation;pos\" of nbt of player",
-    "",
-    "# Setting the value of a simple tag",
-    "set int tag \"Damage\" of nbt of player's tool to 100",
-    "set byte tag \"Sheared\" of nbt of last spawned entity to 1",
-    "set double list tag \"Pos\" of nbt of {_sheep} to 1,100,1",
-    "set short tag \"BurnTime\" of nbt of target block to 150",
-    "",
-    "# Setting the value of a nested tag",
-    "set byte tag \"abilities;mayBuild\" of nbt of player to 1",
-    "set int array tag \"LastDeathLocation;pos\" of nbt of player to 1,64,1",
-    "",
-    "# Setting the value of a custom tag of an entity/block",
-    "set int tag \"custom;points\" of nbt of player to 55",
-    "set short tag \"custom;bloop\" of nbt of last spawned entity to 10",
-    "set uuid tag of \"custom;owner\" of nbt of target block to uuid of player",
-    "",
-    "# Adding to the value of a tag",
-    "add 10 to int tag \"Score\" of nbt of player",
-    "add 50 to int tag \"custom;points\" of nbt of player",
-    "",
-    "# Removeing from a value of a tag",
-    "remove 10 from int tag \"Score\" of nbt of player",
-    "remove 25 from int tag \"custom;points\" of nbt of player",
-    "",
-    "# Getting elements from lists",
-    "set {_c} to compound tag \"Inventory[0]\" of nbt of player",
-    "set {_x} to double tag \"Pos[0]\" of nbt of player",
-    "set {_y} to double tag \"Pos[1]\" of nbt of player",
-    "set {_z} to double tag \"Pos[2]\" of nbt of player",
-    "set {_s} to string tag \"some_strings[5]\" of {_nbt}",
-    "set {_i} to int tag \"intlist[1]\" of {_nbt}",
-    "set {_b} to byte tag \"someBytes[10]\" of {_nbt}",
-    "",
-    "# Minecraft 1.20.5+ item component stuff",
-    "set int tag \"minecraft:max_damage\" of nbt of player's tool to 500",
-    "set int tag \"minecraft:max_stack_size\" of nbt of player's tool to 25",
-    "set byte tag \"minecraft:enchantment_glint_override\" of nbt of player's tool to 1",
-    "set compound tag \"minecraft:fire_resistant\" of nbt of player's tool to nbt from \"{}\"",
-    "set string tag \"minecraft:rarity\" of nbt of player's tool to \"epic\"",
-    "",
-    "# All custom data must be within the \"minecraft:custom_data\" compound",
-    "# See NBT Compound expression for futher details on the `custom nbt` expression",
-    "set byte tag \"Points\" of custom nbt of player's tool to 10",
-    "set int tag \"MyBloop\" of custom nbt of player's tool to 152",
-    "# These examples will do the same as above",
-    "set byte tag \"minecraft:custom_data;Points\" of nbt of player's tool to 10",
-    "set int tag \"minecraft:custom_data;MyBloop\" of nbt of player's tool to 152"})
-@Since("1.0.0")
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 
     private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().NBT_ALLOW_UNSAFE_OPERATIONS;
 
-
-    static {
-        Skript.registerExpression(ExprTagOfNBT.class, Object.class, ExpressionType.COMBINED,
-            "%nbttype% %string% of %nbtcompound%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprTagOfNBT.class, Object.class,
+                "%nbttype% %string% of %nbtcompound%")
+            .name("NBT - Tag")
+            .description(
+                "Get/set/delete the value of the specified tag of an NBT compound. Also supports getting nested tags using a semi colon as a delimiter.",
+                "If the return value is a list, you can use it as a list, as it will automatically split it for ya.",
+                "**NOTES**:",
+                "- `uuid tag` will set an int array tag (This is how MC stores uuids). On return it'll convert back to a uuid.",
+                "- Entities/blocks can not natively hold custom NBT tags. SkBee allows you to put custom nbt",
+                "data in the \"custom\" compound tag of a block/entity's NBT compound. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen.",
+                "That said, this system is a tad convoluted, see the SkBee WIKI for more details.",
+                "- 1.20.5+: All custom data on items must be stored in the \"minecraft:custom_data\" compound (see examples and [**McWiki**](https://minecraft.wiki/w/Data_component_format#custom_data)).",
+                "- For more info regarding 1.20.5+ components please see [**Data Component Format**](https://minecraft.wiki/w/Data_component_format) on McWiki.",
+                "- GET FROM LIST BY POSITION: You can get the element of a list by adding `[%number%]` to the end of a tag",
+                "(This only works for getters, not set/add/remove/delete) see examples.",
+                "",
+                "**CHANGERS**:",
+                "- ADD: You can add numbers to number type tags, you can also add numbers/strings/compounds to lists type tags.",
+                "- REMOVE: You can remove numbers from number type tags, you can also remove numbers/strings from lists type tags.(You can NOT remove compounds from lists type tags)"
+            )
+            .examples(
+                "# Getting the value of a simple tag",
+                "set {_damage} to int tag \"minecraft:damage\" of nbt of player's tool",
+                "set {_sheared} to byte tag \"Sheared\" of nbt of target entity",
+                "set {_pass::*} to compound list tag \"Passengers\" of nbt of last spawned entity",
+                "set {_pos::*} to double list tag \"Pos\" of nbt of {_sheep}",
+                "set {_burntime} to short tag \"BurnTime\" of nbt of target block",
+                "set {_items::*} to compound list tag \"Items\" of nbt of target block",
+                "",
+                "# Getting the value of a nested tag",
+                "set {_maybuild} to byte tag \"abilities;mayBuild\" of nbt of player",
+                "set {_x} to int tag \"Leash;X\" of nbt of target entity",
+                "set {_pos::*} to int array tag \"LastDeathLocation;pos\" of nbt of player",
+                "",
+                "# Setting the value of a simple tag",
+                "set int tag \"Damage\" of nbt of player's tool to 100",
+                "set byte tag \"Sheared\" of nbt of last spawned entity to 1",
+                "set double list tag \"Pos\" of nbt of {_sheep} to 1,100,1",
+                "set short tag \"BurnTime\" of nbt of target block to 150",
+                "",
+                "# Setting the value of a nested tag",
+                "set byte tag \"abilities;mayBuild\" of nbt of player to 1",
+                "set int array tag \"LastDeathLocation;pos\" of nbt of player to 1,64,1",
+                "",
+                "# Setting the value of a custom tag of an entity/block",
+                "set int tag \"custom;points\" of nbt of player to 55",
+                "set short tag \"custom;bloop\" of nbt of last spawned entity to 10",
+                "set uuid tag of \"custom;owner\" of nbt of target block to uuid of player",
+                "",
+                "# Adding to the value of a tag",
+                "add 10 to int tag \"Score\" of nbt of player",
+                "add 50 to int tag \"custom;points\" of nbt of player",
+                "",
+                "# Removeing from a value of a tag",
+                "remove 10 from int tag \"Score\" of nbt of player",
+                "remove 25 from int tag \"custom;points\" of nbt of player",
+                "",
+                "# Getting elements from lists",
+                "set {_c} to compound tag \"Inventory[0]\" of nbt of player",
+                "set {_x} to double tag \"Pos[0]\" of nbt of player",
+                "set {_y} to double tag \"Pos[1]\" of nbt of player",
+                "set {_z} to double tag \"Pos[2]\" of nbt of player",
+                "set {_s} to string tag \"some_strings[5]\" of {_nbt}",
+                "set {_i} to int tag \"intlist[1]\" of {_nbt}",
+                "set {_b} to byte tag \"someBytes[10]\" of {_nbt}",
+                "",
+                "# Minecraft 1.20.5+ item component stuff",
+                "set int tag \"minecraft:max_damage\" of nbt of player's tool to 500",
+                "set int tag \"minecraft:max_stack_size\" of nbt of player's tool to 25",
+                "set byte tag \"minecraft:enchantment_glint_override\" of nbt of player's tool to 1",
+                "set compound tag \"minecraft:fire_resistant\" of nbt of player's tool to nbt from \"{}\"",
+                "set string tag \"minecraft:rarity\" of nbt of player's tool to \"epic\"",
+                "",
+                "# All custom data must be within the \"minecraft:custom_data\" compound",
+                "# See NBT Compound expression for futher details on the `custom nbt` expression",
+                "set byte tag \"Points\" of custom nbt of player's tool to 10",
+                "set int tag \"MyBloop\" of custom nbt of player's tool to 152",
+                "# These examples will do the same as above",
+                "set byte tag \"minecraft:custom_data;Points\" of nbt of player's tool to 10",
+                "set int tag \"minecraft:custom_data;MyBloop\" of nbt of player's tool to 152"
+            )
+            .since("1.0.0")
+            .register();
     }
 
     @Nullable

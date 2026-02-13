@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.nbt.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
@@ -21,20 +16,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Name("NBT - UUID for NBT")
-@Description({"Allows you to get an entity's UUID which can be represented in an NBT compound. Prior to 1.16 UUIDs were represented ",
-        "as most/least significant bits. As of 1.16, they are now represented as int arrays. If the player/entity is excluded, this ",
-        "will return a random UUID."})
-@Examples({"set {_u::*} to uuid int array of player",
-        "set {_u} to uuid int array as string from player",
-        "set {_m} to uuid most from target entity",
-        "set {_l} to uuid least bits of event-entity"})
-@Since("1.5.2")
 public class ExprNBTUuid extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprNBTUuid.class, Object.class, ExpressionType.SIMPLE,
-                "uuid (int array[(1: as string)]|2:most[ bits]|3:least[ bits]) [(from|of) %-offlineplayer/entity%]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprNBTUuid.class, Object.class,
+                "uuid (int array[(1: as string)]|2:most[ bits]|3:least[ bits]) [(from|of) %-offlineplayer/entity%]")
+            .name("NBT - UUID for NBT")
+            .description(
+                "Allows you to get an entity's UUID which can be represented in an NBT compound. Prior to 1.16 UUIDs were represented ",
+                "as most/least significant bits. As of 1.16, they are now represented as int arrays. If the player/entity is excluded, this ",
+                "will return a random UUID."
+            )
+            .examples(
+                "set {_u::*} to uuid int array of player",
+                "set {_u} to uuid int array as string from player",
+                "set {_m} to uuid most from target entity",
+                "set {_l} to uuid least bits of event-entity"
+            )
+            .since("1.5.2")
+            .register();
     }
 
     private int pattern;

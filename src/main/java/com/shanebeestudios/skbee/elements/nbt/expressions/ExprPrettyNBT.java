@@ -1,15 +1,14 @@
 package com.shanebeestudios.skbee.elements.nbt.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.doc.Description;
 import ch.njol.skript.doc.Examples;
 import ch.njol.skript.doc.Name;
 import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTReflection;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
@@ -27,8 +26,8 @@ import org.jetbrains.annotations.Nullable;
 @Since("1.6.0")
 public class ExprPrettyNBT extends PropertyExpression<Object, String> {
 
-    static {
-        Skript.registerExpression(ExprPrettyNBT.class, String.class, ExpressionType.PROPERTY,
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprPrettyNBT.class, String.class,
             "pretty nbt (of|from) %nbtcompounds% [(with|using) split %-string%]",
             "%nbtcompounds%'[s] pretty nbt [(with|using) split %-string%]");
     }

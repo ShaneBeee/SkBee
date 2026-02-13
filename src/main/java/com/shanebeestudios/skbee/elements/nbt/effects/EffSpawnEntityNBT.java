@@ -1,10 +1,5 @@
 package com.shanebeestudios.skbee.elements.nbt.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.lang.Effect;
@@ -14,6 +9,7 @@ import ch.njol.skript.sections.EffSecSpawn;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Location;
@@ -28,23 +24,26 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-@Name("NBT - Spawn Entity with NBT")
-@Description({"Spawn an entity at a location with NBT.",
-    "The ability to spawn falling was added in 2.10.0 as a temp effect until Skript properly handles falling blocks",
-    "with block data."})
-@Examples({"set {_n} to nbt compound from \"{NoAI:1b}\"",
-    "spawn sheep at player with nbt {_n}",
-    "spawn 1 of zombie at player with nbt nbt compound from \"{NoGravity:1b}\"",
-    "spawn an armor stand at player with nbt from \"{Small:1b,NoBasePlate:1b,Marker:1b}\"",
-    "spawn falling snow[layers=3] at target block with nbt from \"{HurtEntities:1b}\""})
-@Since("1.0.0")
 public class EffSpawnEntityNBT extends Effect {
 
-    static {
-        Skript.registerEffect(EffSpawnEntityNBT.class,
-            "spawn %entitytypes% [%directions% %locations%] with [nbt] %nbtcompound%",
-            "spawn %number% of %entitytypes% [%directions% %locations%] with [nbt] %nbtcompound%",
-            "spawn falling %blockdata% [%directions% %locations%] with [nbt] %nbtcompound%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffSpawnEntityNBT.class,
+                "spawn %entitytypes% [%directions% %locations%] with [nbt] %nbtcompound%",
+                "spawn %number% of %entitytypes% [%directions% %locations%] with [nbt] %nbtcompound%",
+                "spawn falling %blockdata% [%directions% %locations%] with [nbt] %nbtcompound%")
+            .name("NBT - Spawn Entity with NBT")
+            .description(
+                "Spawn an entity at a location with NBT.",
+                "The ability to spawn falling was added in 2.10.0 as a temp effect until Skript properly handles falling blocks",
+                "with block data.")
+            .examples(
+                "set {_n} to nbt compound from \"{NoAI:1b}\"",
+                "spawn sheep at player with nbt {_n}",
+                "spawn 1 of zombie at player with nbt nbt compound from \"{NoGravity:1b}\"",
+                "spawn an armor stand at player with nbt from \"{Small:1b,NoBasePlate:1b,Marker:1b}\"",
+                "spawn falling snow[layers=3] at target block with nbt from \"{HurtEntities:1b}\"")
+            .since("1.0.0")
+            .register();
     }
 
     @SuppressWarnings("null")
