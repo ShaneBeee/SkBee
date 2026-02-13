@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee;
 import ch.njol.skript.Skript;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Version;
+import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
@@ -13,6 +14,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.advancement.AdvancementElementRegistration;
 import com.shanebeestudios.skbee.elements.bossbar.BossbarElementRegistration;
+import com.shanebeestudios.skbee.elements.bound.BoundElementRegistration;
 import com.shanebeestudios.skbee.elements.fastboard.FastboardElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
@@ -93,7 +95,7 @@ public class AddonLoader {
         // Load in alphabetical order (to make "/skbee info" easier to read)
         loadAdvancementElements();
         loadBossBarElements();
-//        loadBoundElements();
+        loadBoundElements();
 //        loadDamageSourceElements();
 //        loadDialogElements();
 //        loadDisplayEntityElements();
@@ -241,21 +243,21 @@ public class AddonLoader {
 //            logFailure("Tick Manager", ex);
 //        }
 //    }
-//
-//    private void loadBoundElements() {
-//        if (!this.config.ELEMENTS_BOUND) {
-//            Util.logLoading("&5Bound Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.plugin.boundConfig = new BoundConfig(this.plugin);
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.bound");
-//            Util.logLoading("&5Bound Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Bound", ex);
-//        }
-//    }
-//
+
+    private void loadBoundElements() {
+        if (!this.config.ELEMENTS_BOUND) {
+            Util.logLoading("&5Bound Elements &cdisabled via config");
+            return;
+        }
+        try {
+            this.plugin.boundConfig = new BoundConfig(this.plugin);
+            BoundElementRegistration.register(this.registration);
+            Util.logLoading("&5Bound Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Bound", ex);
+        }
+    }
+
     private void loadTextElements() {
         if (Classes.getClassInfoNoError("textcomponent") != null) {
             Util.logLoading("&5Text Component Elements &cdisabled");

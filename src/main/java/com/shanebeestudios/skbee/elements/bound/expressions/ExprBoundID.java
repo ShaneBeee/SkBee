@@ -2,35 +2,34 @@ package com.shanebeestudios.skbee.elements.bound.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Bound - ID")
-@Description({"Get/set the id of a bound. When setting the ID of a bound, if another bound has that ID, this will fail with an error in console.",
-    "You cannot set the IDs of multiple bounds at once."})
-@Examples({"set {_id} to id of first element of bounds at player",
-    "loop all bounds at player:",
-    "\tset id of loop-bound to \"%player%-%id of loop-bound%\"",
-    "set {_id} to id of event-bound",
-    "send \"You entered bound '%id of loop-bound%'\""})
-@Since("1.15.0")
 public class ExprBoundID extends SimplePropertyExpression<Bound, String> {
 
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
-    static {
-        register(ExprBoundID.class, String.class, "[bound] id", "bounds");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprBoundID.class, String.class, "bounds",
+                "[bound] id")
+            .name("Bound - ID")
+            .description("Get/set the id of a bound. When setting the ID of a bound, if another bound has that ID, this will fail with an error in console.",
+                "You cannot set the IDs of multiple bounds at once.")
+            .examples("set {_id} to id of first element of bounds at player",
+                "loop all bounds at player:",
+                "\tset id of loop-bound to \"%player%-%id of loop-bound%\"",
+                "set {_id} to id of event-bound",
+                "send \"You entered bound '%id of loop-bound%'\"")
+            .since("1.15.0")
+            .register();
     }
 
     @Nullable

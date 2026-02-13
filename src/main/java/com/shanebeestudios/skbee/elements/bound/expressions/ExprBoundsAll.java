@@ -1,18 +1,13 @@
 package com.shanebeestudios.skbee.elements.bound.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -22,23 +17,24 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Name("Bound - All Bounds")
-@Description("Get a list of non-temporary, temporary, or all bounds/ids. Optionally inside of a specific set of worlds.")
-@Examples({"set {_temporaryBounds::*} to temporary bounds in world of player",
-        "set {_nonTemporaryBounds::*} to nontemporary bounds in world(\"world_nether\")",
-        "loop all bounds:",
-        "loop all bounds in {worlds::*}:",
-        "loop all bounds in world of player:",
-        "loop all bounds in world \"world\"",
-        "\tbroadcast loop-bound"})
-@Since("2.15.0")
 public class ExprBoundsAll extends SimpleExpression<Object> {
 
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
-    static {
-        Skript.registerExpression(ExprBoundsAll.class, Object.class, ExpressionType.SIMPLE,
-                "[all] [1:temporary|2:non[-| ]temporary] bound[s] [id:id[s]] [in %-worlds%]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprBoundsAll.class, Object.class,
+                "[all] [1:temporary|2:non[-| ]temporary] bound[s] [id:id[s]] [in %-worlds%]")
+            .name("Bound - All Bounds")
+            .description("Get a list of non-temporary, temporary, or all bounds/ids. Optionally inside of a specific set of worlds.")
+            .examples("set {_temporaryBounds::*} to temporary bounds in world of player",
+                "set {_nonTemporaryBounds::*} to nontemporary bounds in world(\"world_nether\")",
+                "loop all bounds:",
+                "loop all bounds in {worlds::*}:",
+                "loop all bounds in world of player:",
+                "loop all bounds in world \"world\"",
+                "\tbroadcast loop-bound")
+            .since("2.15.0")
+            .register();
     }
 
     private Expression<World> worlds;

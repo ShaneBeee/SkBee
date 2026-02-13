@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.bound.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -14,32 +10,34 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Bound - Locations")
-@Description({"Get/modify the locations of a bound.",
-    "Greater will always equal the higher south-east corner. ",
-    "Lesser will always equal the lower north-west corner.",
-    "You can set the two corners of the bound to new values.",
-    "You can also add/subtract vectors to/from the corners."})
-@Examples({"set {_center} to bound center of bound with id \"spawn-bound\"",
-    "set block at bound greater corner of {_bound} to pink wool",
-    "set bound lesser corner of {_bound} to location of player",
-    "set bound greater corner of bound with id \"ma_bound\" to {_loc}",
-    "add vector(5,5,5) to bound greater corner of {_bound}",
-    "subtract vector(0,10,0) from bound greater corner of {_bound}"})
-@Since("3.5.9")
 public class ExprBoundLocations extends SimplePropertyExpression<Bound, Location> {
 
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
-    static {
-        register(ExprBoundLocations.class, Location.class,
-            "bound (0:center|(1:greater|2:lesser) corner)", "bounds");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprBoundLocations.class, Location.class, "bounds",
+                "bound (0:center|(1:greater|2:lesser) corner)")
+            .name("Bound - Locations")
+            .description("Get/modify the locations of a bound.",
+                "Greater will always equal the higher south-east corner. ",
+                "Lesser will always equal the lower north-west corner.",
+                "You can set the two corners of the bound to new values.",
+                "You can also add/subtract vectors to/from the corners.")
+            .examples("set {_center} to bound center of bound with id \"spawn-bound\"",
+                "set block at bound greater corner of {_bound} to pink wool",
+                "set bound lesser corner of {_bound} to location of player",
+                "set bound greater corner of bound with id \"ma_bound\" to {_loc}",
+                "add vector(5,5,5) to bound greater corner of {_bound}",
+                "subtract vector(0,10,0) from bound greater corner of {_bound}")
+            .since("3.5.9")
+            .register();
     }
 
     private int type;
