@@ -100,7 +100,6 @@ public class AddonLoader {
 //        loadFishingElements();
 //        loadGameEventElements();
 //        loadItemComponentElements();
-//        loadParticleElements();
         loadPropertyElements();
 //        loadRayTraceElements();
         loadRecipeElements();
@@ -425,23 +424,6 @@ public class AddonLoader {
 //            Util.logLoading("&5Advancement Elements &asuccessfully loaded");
 //        } catch (Exception ex) {
 //            logFailure("Advancement", ex);
-//        }
-//    }
-//
-//    private void loadParticleElements() {
-//        if (!this.config.ELEMENTS_PARTICLE) {
-//            Util.logLoading("&5Particle Elements &cdisabled via config");
-//            return;
-//        }
-//        if (Util.IS_RUNNING_SKRIPT_2_14) {
-//            Util.logLoading("&5Particle Elements &cdisable &r(&7now in Skript&r)");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.particle");
-//            Util.logLoading("&5Particle Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Particle", ex);
 //        }
 //    }
 //

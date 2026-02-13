@@ -79,9 +79,6 @@ elements:
   # Enable NBT elements
   nbt: true
 
-  # Enable particle elements
-  particle: true
-
   # Enable property elements
   property: true
 
