@@ -263,10 +263,6 @@ public class AddonLoader {
             Util.logLoading("&5Dialog elements &cdisabled via config");
             return;
         }
-        if (!Util.IS_RUNNING_MC_1_21_7) {
-            Util.logLoading("&5Dialog elements &cdisabled &7(&rRequires Paper 1.21.7+&7)");
-            return;
-        }
         DialogElementRegestration.register(this.registration);
         Util.logLoading("&5Dialog Elements &asuccessfully loaded");
     }

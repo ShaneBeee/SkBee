@@ -1,14 +1,11 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.registration.Registration;
-import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.legacy.DialogUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import io.papermc.paper.dialog.Dialog;
@@ -17,18 +14,13 @@ import io.papermc.paper.registry.RegistryKey;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import net.kyori.adventure.text.event.ClickEvent;
-import net.kyori.adventure.text.event.ClickEvent.Action;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
 public class ExprClickEvent extends SimpleExpression<ClickEvent> {
-
-    private static final boolean SUPPORTS_CUSTOM_PAYLOAD = Util.IS_RUNNING_MC_1_21_7;
 
     public static void register(Registration reg) {
         String nbtClickEvent = NBTApi.isEnabled() ? "[a] [new] click event to run custom payload with key %string/namespacedkey% [and] with [custom] data %nbtcompound%" : "";
@@ -62,17 +54,13 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.pattern = matchedPattern;
         this.object = (Expression<Object>) exprs[0];
-        if (this.pattern > 4 && !SUPPORTS_CUSTOM_PAYLOAD) {
-            Skript.error("'" + parseResult.expr + "' is not supported on your server version", ErrorQuality.SEMANTIC_ERROR);
-            return false;
-        }
         if (this.pattern == 6 && !parseResult.expr.isEmpty()) {
             this.nbtData = (Expression<NBTCompound>) exprs[1];
         }
         return true;
     }
 
-    @SuppressWarnings({"PatternValidation", "NullableProblems", "deprecation"})
+    @SuppressWarnings({"PatternValidation", "NullableProblems"})
     @Override
     protected ClickEvent @Nullable [] get(Event event) {
         if (this.object == null) return null;
@@ -80,58 +68,41 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
         Object value = this.object.getSingle(event);
         if (value == null) return null;
 
-        if (SUPPORTS_CUSTOM_PAYLOAD) {
-            ClickEvent clickEvent = switch (this.pattern) {
-                case 1 -> ClickEvent.suggestCommand((String) value);
-                case 2 -> ClickEvent.openUrl((String) value);
-                case 3 -> ClickEvent.copyToClipboard((String) value);
-                case 4 -> ClickEvent.changePage(((Number) value).intValue());
-                case 5 -> {
-                    Key key;
-                    if (value instanceof String string) key = Key.key(string);
-                    else if (value instanceof NamespacedKey namespacedKey) key = namespacedKey.key();
-                    else yield null;
+        ClickEvent clickEvent = switch (this.pattern) {
+            case 1 -> ClickEvent.suggestCommand((String) value);
+            case 2 -> ClickEvent.openUrl((String) value);
+            case 3 -> ClickEvent.copyToClipboard((String) value);
+            case 4 -> ClickEvent.changePage(((Number) value).intValue());
+            case 5 -> {
+                Key key;
+                if (value instanceof String string) key = Key.key(string);
+                else if (value instanceof NamespacedKey namespacedKey) key = namespacedKey.key();
+                else yield null;
 
-                    Registry<Dialog> dialogRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.DIALOG);
-                    if (dialogRegistry == null) yield null;
+                Registry<Dialog> dialogRegistry = RegistryAccess.registryAccess().getRegistry(RegistryKey.DIALOG);
+                if (dialogRegistry == null) yield null;
 
-                    Dialog dialog = dialogRegistry.get(key);
-                    if (dialog == null) yield null;
+                Dialog dialog = dialogRegistry.get(key);
+                if (dialog == null) yield null;
 
-                    yield DialogUtil.showDialog(dialog);
-                }
-                case 6 -> {
-                    Key key;
-                    if (value instanceof String string) key = Key.key(string);
-                    else if (value instanceof NamespacedKey namespacedKey) key = namespacedKey.key();
-                    else yield null;
-
-                    NBTCompound nbtData = this.nbtData.getSingle(event);
-                    if (nbtData == null) yield null;
-
-                    BinaryTagHolder nbt = BinaryTagHolder.binaryTagHolder(nbtData.toString());
-                    yield ClickEvent.custom(key, nbt);
-                }
-                default -> ClickEvent.runCommand((String) value);
-            };
-            return new ClickEvent[]{clickEvent};
-        } else {
-            Action action;
-            switch (this.pattern) {
-                case 1 -> action = Action.SUGGEST_COMMAND;
-                case 2 -> action = Action.OPEN_URL;
-                case 3 -> action = Action.COPY_TO_CLIPBOARD;
-                case 4 -> {
-                    action = Action.CHANGE_PAGE;
-                    value = "" + (((Number) Objects.requireNonNull(object.getSingle(event))).intValue());
-                }
-                default -> action = Action.RUN_COMMAND;
+                yield DialogUtil.showDialog(dialog);
             }
-            if (value == null) {
-                return null;
+            case 6 -> {
+                Key key;
+                if (value instanceof String string) key = Key.key(string);
+                else if (value instanceof NamespacedKey namespacedKey) key = namespacedKey.key();
+                else yield null;
+
+                NBTCompound nbtData = this.nbtData.getSingle(event);
+                if (nbtData == null) yield null;
+
+                BinaryTagHolder nbt = BinaryTagHolder.binaryTagHolder(nbtData.toString());
+                yield ClickEvent.custom(key, nbt);
             }
-            return new ClickEvent[]{ClickEvent.clickEvent(action, ((String) value))};
-        }
+            default -> ClickEvent.runCommand((String) value);
+        };
+        return new ClickEvent[]{clickEvent};
+
     }
 
     @Override

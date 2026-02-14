@@ -82,9 +82,7 @@ public class RegistryHolders {
         register(RegistryKey.COW_VARIANT, Cow.Variant.class);
         register(RegistryKey.DAMAGE_TYPE, DamageType.class);
         register(RegistryKey.DATA_COMPONENT_TYPE, DataComponentType.class);
-        if (Util.IS_RUNNING_MC_1_21_7) {
-            register(RegistryKey.DIALOG, Dialog.class);
-        }
+        register(RegistryKey.DIALOG, Dialog.class);
         register(RegistryKey.ENCHANTMENT, Enchantment.class);
         register(RegistryKey.ENTITY_TYPE, EntityType.class);
         register(RegistryKey.FROG_VARIANT, Frog.Variant.class);
