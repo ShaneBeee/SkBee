@@ -22,18 +22,18 @@ import java.util.Arrays;
 import java.util.List;
 
 @SuppressWarnings("unchecked")
-public class ExprProperty<F,T> extends SimpleExpression<T> {
+public class ExprProperty<F extends Object, T extends Object> extends SimpleExpression<T> {
 
     public static void register(Registration reg) {
         // TODO this one won't work, figure out later
-//        reg.newCombinedExpression((Class<? extends Expression<?>>) ExprProperty.class, Object.class,
-//                "%*property% property of %objects%",
-//                "%objects%'[s] %*property% property")
-//            .name("Property - Property of Object")
-//            .description("Represents different properties of an object.",
-//                "See [**Property Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Properties) for available properties and examples.")
-//            .since("3.10.0")
-//            .register();
+        reg.newCombinedExpression( ExprProperty.class, Object.class,
+                "%*property% property of %objects%",
+                "%objects%'[s] %*property% property")
+            .name("Property - Property of Object")
+            .description("Represents different properties of an object.",
+                "See [**Property Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Properties) for available properties and examples.")
+            .since("3.10.0")
+            .register();
     }
 
     private Literal<Property<F, T>> property;

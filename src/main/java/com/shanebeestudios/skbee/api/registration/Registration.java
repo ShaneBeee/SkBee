@@ -378,23 +378,23 @@ public class Registration {
         }
     }
 
-    public ExpressionRegistrar<?, ?> newExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, Priority priority, String... patterns) {
+    public <T, E extends Expression<T>> ExpressionRegistrar<T,E>  newExpression(Class<E> expressionClass, Class<T> returnType, Priority priority, String... patterns) {
         return new ExpressionRegistrar(expressionClass, returnType, priority, patterns);
     }
 
-    public ExpressionRegistrar<?, ?> newSimpleExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, String... patterns) {
+    public <T, E extends Expression<T>> ExpressionRegistrar<T,E>  newSimpleExpression(Class<E> expressionClass, Class<T> returnType, String... patterns) {
         return new ExpressionRegistrar(expressionClass, returnType, SyntaxInfo.SIMPLE, patterns);
     }
 
-    public ExpressionRegistrar<?, ?> newEventExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, String... patterns) {
+    public <T, E extends Expression<T>> ExpressionRegistrar<T,E>  newEventExpression(Class<E> expressionClass, Class<T> returnType, String... patterns) {
         return new ExpressionRegistrar(expressionClass, returnType, EventValueExpression.DEFAULT_PRIORITY, patterns);
     }
 
-    public ExpressionRegistrar<?, ?> newCombinedExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, String... patterns) {
+    public <T, E extends Expression<T>> ExpressionRegistrar<T,E> newCombinedExpression(Class<E> expressionClass, Class<T> returnType, String... patterns) {
         return new ExpressionRegistrar(expressionClass, returnType, SyntaxInfo.COMBINED, patterns);
     }
 
-    public ExpressionRegistrar newPropertyExpression(Class<? extends Expression<?>> expressionClass, Class<?> returnType, String property, String owner) {
+    public <T, E extends Expression<T>> ExpressionRegistrar newPropertyExpression(Class<E> expressionClass, Class<T> returnType, String property, String owner) {
         return new ExpressionRegistrar(expressionClass, returnType, SyntaxInfo.SIMPLE,
             SimplePropertyExpression.getPatterns(property, owner));
     }
