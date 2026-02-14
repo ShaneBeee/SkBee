@@ -6,6 +6,7 @@ import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
+import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
@@ -28,6 +29,8 @@ import com.shanebeestudios.skbee.elements.registry.RegistryElementRegistration;
 import com.shanebeestudios.skbee.elements.scoreboard.ScoreboardElementRegistration;
 import com.shanebeestudios.skbee.elements.testing.TestingElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
+import com.shanebeestudios.skbee.elements.worldcreator.WorldCreatorElementRegistration;
+import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
@@ -120,7 +123,7 @@ public class AddonLoader {
 //        loadTickManagerElements();
 //        loadVillagerElements();
 //        loadVirtualFurnaceElements();
-//        loadWorldCreatorElements();
+        loadWorldCreatorElements();
 //        loadChunkGenElements();
         loadTestingElements();
 
@@ -308,37 +311,29 @@ public class AddonLoader {
 //            logFailure("Virtual Furnace", ex);
 //        }
 //    }
-//
-//    private void loadOtherElements() {
-//        OtherElementRegistration.register(this.registration);
-//        try {
-//            pluginManager.registerEvents(new EntityListener(), this.plugin);
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.other");
-//        } catch (Exception ex) {
-//            logFailure("Other", ex);
-//        }
-//    }
+
     private void loadOtherElements() {
+        this.pluginManager.registerEvents(new EntityListener(), this.plugin);
         OtherElementRegistration.register(this.registration);
     }
-//
-//    private void loadWorldCreatorElements() {
-//        if (!this.config.ELEMENTS_WORLD_CREATOR) {
-//            Util.logLoading("&5World Creator Elements &cdisabled via config");
-//            return;
-//        }
-//        if (Util.IS_RUNNING_FOLIA) {
-//            Util.logLoading("&5World Creator Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
-//            return;
-//        }
-//        try {
-//            this.plugin.beeWorldConfig = new BeeWorldConfig(this.plugin);
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.worldcreator");
-//            Util.logLoading("&5World Creator Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("World Creator", ex);
-//        }
-//    }
+
+    private void loadWorldCreatorElements() {
+        if (!this.config.ELEMENTS_WORLD_CREATOR) {
+            Util.logLoading("&5World Creator Elements &cdisabled via config");
+            return;
+        }
+        if (Util.IS_RUNNING_FOLIA) {
+            Util.logLoading("&5World Creator Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
+            return;
+        }
+        try {
+            this.plugin.beeWorldConfig = new BeeWorldConfig(this.plugin);
+            WorldCreatorElementRegistration.register(this.registration);
+            Util.logLoading("&5World Creator Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("World Creator", ex);
+        }
+    }
 //
 //    private void loadChunkGenElements() {
 //        if (!this.config.ELEMENTS_CHUNK_GEN) {

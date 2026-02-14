@@ -1,14 +1,10 @@
 package com.shanebeestudios.skbee.elements.worldcreator.conditions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -16,14 +12,16 @@ import org.jetbrains.annotations.NotNull;
 import javax.annotation.Nullable;
 import java.io.File;
 
-@Name("World Exists")
-@Description("Check if a world exists in your world directory.")
-@Examples("if world file \"my-world\" exists:")
-@Since("1.8.0")
 public class CondWorldExists extends Condition {
 
-    static {
-        Skript.registerCondition(CondWorldExists.class, "world file %string% (exists|1:(does not|doesn't) exist)");
+    public static void register(Registration reg) {
+        reg.newCondition(CondWorldExists.class,
+                "world file %string% (exists|1:(does not|doesn't) exist)")
+            .name("World Exists")
+            .description("Check if a world exists in your world directory.")
+            .examples("if world file \"my-world\" exists:")
+            .since("1.8.9")
+            .register();
     }
 
     private Expression<String> world;
