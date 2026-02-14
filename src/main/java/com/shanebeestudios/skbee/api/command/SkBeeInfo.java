@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptUpdater;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.property.PropertyPrinter;
+import com.shanebeestudios.skbee.api.registration.JsonDocGenerator;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import io.papermc.paper.command.brigadier.BasicCommand;
@@ -27,6 +28,7 @@ import static com.shanebeestudios.skbee.api.util.Util.sendColMsg;
  */
 public class SkBeeInfo implements BasicCommand {
 
+    private final SkBee plugin;
     private static final List<String> commands = List.of("info", "debug");
     private static final List<String> debugs = List.of("enable", "disable");
     private final PluginDescriptionFile desc;
@@ -34,6 +36,7 @@ public class SkBeeInfo implements BasicCommand {
 
     @SuppressWarnings("deprecation")
     public SkBeeInfo(SkBee plugin) {
+        this.plugin = plugin;
         this.desc = plugin.getDescription();
         this.config = plugin.getPluginConfig();
     }
@@ -106,6 +109,12 @@ public class SkBeeInfo implements BasicCommand {
             // PROPERTY PRINTER
             else if (args[0].equalsIgnoreCase("properties")) {
                 PropertyPrinter.printAll();
+            }
+
+            // JSON DOCS
+            else if (args[0].equalsIgnoreCase("docs")) {
+                JsonDocGenerator docs = new JsonDocGenerator(this.plugin, this.plugin.getRegistration());
+                docs.generateDocs();
             }
         }
     }
