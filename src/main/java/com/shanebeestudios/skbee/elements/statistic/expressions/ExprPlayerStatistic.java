@@ -1,45 +1,41 @@
 package com.shanebeestudios.skbee.elements.statistic.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.EntityUtils;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.Statistic;
 import org.bukkit.Statistic.Type;
 import org.bukkit.entity.EntityType;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Statistic - Get/Set")
-@Description("Represents the statistic of a Player. You can get, set, add, remove or reset stats.")
-@Examples({"set {_s} to kill entity stat using sheep for player",
-        "set kill entity stat using zombie for player to 10",
-        "add 10 to mine block stat using diamond ore for player",
-        "remove 10 from chest opened stat for player",
-        "reset mob kills stat for player"})
-@Since("1.17.0")
 public class ExprPlayerStatistic extends SimpleExpression<Number> {
 
-    static {
-        Skript.registerExpression(ExprPlayerStatistic.class, Number.class, ExpressionType.COMBINED,
-                "%statistic% stat[istic] [using %-entitydata/itemtype%] (of|for) %offlineplayers%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprPlayerStatistic.class, Number.class,
+                "%statistic% stat[istic] [using %-entitydata/itemtype%] (of|for) %offlineplayers%")
+            .name("Statistic - Get/Set")
+            .description("Represents the statistic of a Player. You can get, set, add, remove or reset stats.")
+            .examples("set {_s} to kill entity stat using sheep for player",
+                "set kill entity stat using zombie for player to 10",
+                "add 10 to mine block stat using diamond ore for player",
+                "remove 10 from chest opened stat for player",
+                "reset mob kills stat for player")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<Statistic> statistic;

@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventConverter;
@@ -11,6 +10,7 @@ import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.skript.util.slot.Slot;
 import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -49,25 +49,27 @@ import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.Locale;
 
-@SuppressWarnings({"unused", "removal"})
 public class OtherEvents extends SimpleEvent {
 
-    static {
-        Skript.registerEvent("Block Physical Interact Event", OtherEvents.class, EntityBlockInteractEvent.class,
+    public static void register(Registration reg) {
+        reg.newEvent(OtherEvents.class, EntityBlockInteractEvent.class,
                 "block (interact|trample)")
+            .name("Block Physical Interact Event")
             .description("Called when an entity physically interacts with a block, for example,",
                 " entities trampling farmland and villagers opening doors.")
             .examples("on block trample:",
                 "\tif type of event-block is farmland:",
                 "\t\tcancel event")
-            .since("1.5.0");
+            .since("1.5.0")
+            .register();
 
         EventValues.registerEventValue(EntityBlockInteractEvent.class, Block.class, EntityBlockInteractEvent::getBlock, EventValues.TIME_NOW);
 
         // Prepare Anvil Event
-        Skript.registerEvent("Anvil Prepare Event", OtherEvents.class, PrepareAnvilEvent.class, "[skbee] anvil prepare")
+        reg.newEvent(OtherEvents.class, PrepareAnvilEvent.class, "[skbee] anvil prepare")
             .description("Called when a player attempts to combine 2 items in an anvil.",
                 "'event-slot' represents the result slot, can be used to get or set.")
+            .name("Anvil Prepare Event")
             .examples("on anvil prepare:",
                 "\tif slot 0 of event-inventory is a diamond sword:",
                 "\t\tif slot 1 of event-inventory is an enchanted book:",
@@ -118,14 +120,17 @@ public class OtherEvents extends SimpleEvent {
         EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, event -> (Player) event.getView().getPlayer(), EventValues.TIME_NOW);
 
         // Player shear entity event
-        Skript.registerEvent("Shear Entity", OtherEvents.class, PlayerShearEntityEvent.class, "[player] shear entity")
+        reg.newEvent(OtherEvents.class, PlayerShearEntityEvent.class, "[player] shear entity")
+            .name("Shear Entity")
             .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")
             .examples("on player shear entity:")
-            .since("1.8.0");
+            .since("1.8.0")
+            .register();
 
         // Entity Change Block Event
-        Skript.registerEvent("Entity Change Block", OtherEvents.class, EntityChangeBlockEvent.class,
+        reg.newEvent(OtherEvents.class, EntityChangeBlockEvent.class,
                 "entity change block")
+            .name("Entity Change Block")
             .description("Called when any Entity changes a block and a more specific event is not available.",
                 "Skript does partially have this event, but this version of it opens up ALL possibilities with this event.",
                 "\nevent-entity = the entity which changed the block",
@@ -135,7 +140,8 @@ public class OtherEvents extends SimpleEvent {
                 "\tif event-entity is a villager:",
                 "\t\tif event-block is a composter:",
                 "\t\t\theal event-entity")
-            .since("2.5.3");
+            .since("2.5.3")
+            .register();
 
         EventValues.registerEventValue(EntityChangeBlockEvent.class, BlockData.class, new Converter<>() {
             @Override
@@ -145,17 +151,20 @@ public class OtherEvents extends SimpleEvent {
         }, EventValues.TIME_NOW);
 
         // Block Damage Abort Event
-        Skript.registerEvent("Block Damage Abort", OtherEvents.class, BlockDamageAbortEvent.class,
+        reg.newEvent(OtherEvents.class, BlockDamageAbortEvent.class,
                 "block damage abort")
+            .name("Block Damage Abort")
             .description("Called when a player stops damaging a Block. Requires MC 1.18.x+")
             .examples("on block damage abort:",
                 "\tsend \"get back to work\"")
-            .since("2.8.3");
+            .since("2.8.3")
+            .register();
 
         EventValues.registerEventValue(BlockDamageAbortEvent.class, Player.class, BlockDamageAbortEvent::getPlayer, EventValues.TIME_NOW);
 
-        Skript.registerEvent("Entity Air Change", OtherEvents.class, EntityAirChangeEvent.class,
+        reg.newEvent(OtherEvents.class, EntityAirChangeEvent.class,
                 "[entity] air change")
+            .name("Entity Air Change")
             .description("Called when the amount of air an entity has remaining changes.",
                 "\n`event-number` = The amount of air the entity will have left (measured in ticks) (can be set).",
                 "\n`event-timespan` = The amount of air the entity will have left (as a time span) (can be set).",
@@ -164,7 +173,8 @@ public class OtherEvents extends SimpleEvent {
             .examples("on entity air change:",
                 "\tif event-entity is a player:",
                 "\t\tcancel event")
-            .since("2.8.4");
+            .since("2.8.4")
+            .register();
 
         EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, event -> {
             if (event.getEntity() instanceof LivingEntity livingEntity) return livingEntity.getRemainingAir();
@@ -222,20 +232,23 @@ public class OtherEvents extends SimpleEvent {
         }, EventValues.TIME_NOW);
 
         // Entity Spell Cast Event
-        Skript.registerEvent("Spell Cast", OtherEvents.class, EntitySpellCastEvent.class,
+        reg.newEvent(OtherEvents.class, EntitySpellCastEvent.class,
                 "[entity] spell cast")
+            .name("Entity Spell Cast")
             .description("Called when a Spellcaster casts a spell.")
             .examples("on spell cast:",
                 "\tif event-entity is an evoker:",
                 "\t\tif event-spell is fangs:",
                 "\t\t\tcancel event")
-            .since("2.14.0");
+            .since("2.14.0")
+            .register();
 
         EventValues.registerEventValue(EntitySpellCastEvent.class, Spellcaster.Spell.class, EntitySpellCastEvent::getSpell, EventValues.TIME_NOW);
 
         // Entity Shoot Bow Event
-        Skript.registerEvent("Entity Shoot Bow", OtherEvents.class, EntityShootBowEvent.class,
+        reg.newEvent(OtherEvents.class, EntityShootBowEvent.class,
                 "entity shoot bow")
+            .name("Entity Shoot Bow")
             .description("Called when a LivingEntity shoots a bow/crossbow firing an arrow.",
                 "`event-entity` = Entity which shot the bow.",
                 "`event-projectile` = The projectile which was shot.",
@@ -246,7 +259,8 @@ public class OtherEvents extends SimpleEvent {
                 "on entity shoot bow:",
                 "\tif gamemode of player = survival:",
                 "\t\tgive player 1 of event-item")
-            .since("2.16.0");
+            .since("2.16.0")
+            .register();
 
         EventValues.registerEventValue(EntityShootBowEvent.class, Projectile.class, event -> {
             if (event.getProjectile() instanceof Projectile projectile) return projectile;
@@ -260,12 +274,14 @@ public class OtherEvents extends SimpleEvent {
         EventValues.registerEventValue(EntityShootBowEvent.class, ItemStack.class, EntityShootBowEvent::getConsumable, EventValues.TIME_NOW);
 
         // Moisture Change Event
-        Skript.registerEvent("Moisture Change", OtherEvents.class, MoistureChangeEvent.class, "moisture change")
+        reg.newEvent(OtherEvents.class, MoistureChangeEvent.class, "moisture change")
+            .name("Moisture Change")
             .description("Called when the moisture level of a farmland block changes.")
             .examples("on moisture change:",
                 "\tcancel event",
                 "\tset event-block to farmland[moisture=7]")
-            .since("3.0.0");
+            .since("3.0.0")
+            .register();
 
         EventValues.registerEventValue(MoistureChangeEvent.class, Block.class, new Converter<>() {
             @Override
@@ -275,7 +291,8 @@ public class OtherEvents extends SimpleEvent {
         }, EventValues.TIME_FUTURE);
 
         // Block Explode Event
-        Skript.registerEvent("Block Explode", OtherEvents.class, BlockExplodeEvent.class, "block explode")
+        reg.newEvent(OtherEvents.class, BlockExplodeEvent.class, "block explode")
+            .name("Block Explode")
             .description("Called when a block explodes interacting with blocks.",
                 "The event isn't called if the gamerule MOB_GRIEFING is disabled as no block interaction will occur.",
                 "The Block returned by this event is not necessarily the block that caused the explosion,",
@@ -283,7 +300,8 @@ public class OtherEvents extends SimpleEvent {
                 "\n`past event-itemtype` will return the type of the block which exploded.",
                 "\n`past event-blockdata` will return the blockdata of the block which exploded.")
             .examples("")
-            .since("3.2.0");
+            .since("3.2.0")
+            .register();
 
         EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, event -> event.getBlock().getBlockData(), EventValues.TIME_NOW);
         EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, new Converter<>() {
@@ -303,20 +321,23 @@ public class OtherEvents extends SimpleEvent {
         }, EventValues.TIME_PAST);
 
         // Leash Events
-        Skript.registerEvent("Player Leash", OtherEvents.class, PlayerLeashEntityEvent.class, "player leash entity")
+        reg.newEvent(OtherEvents.class, PlayerLeashEntityEvent.class, "player leash entity")
+            .name("Player Leash")
             .description("Called immediately prior to a creature being leashed by a player.",
                 "\n`event-entity` = Entity which got leashed.",
                 "\n`future event-entity` = The entity the leashed entity is leashed to (could be a player or leash hitch on a fence).",
                 "\n`event-player` = Player whom leashed the entity.")
             .examples("on player leash entity:",
                 "\tkill event-entity")
-            .since("3.2.0");
+            .since("3.2.0")
+            .register();
 
         EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getEntity, EventValues.TIME_NOW);
         EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getLeashHolder, EventValues.TIME_FUTURE);
         EventValues.registerEventValue(PlayerLeashEntityEvent.class, Player.class, PlayerLeashEntityEvent::getPlayer, EventValues.TIME_NOW);
 
-        Skript.registerEvent("Entity Unleash", OtherEvents.class, EntityUnleashEvent.class, "entity unleash")
+        reg.newEvent(OtherEvents.class, EntityUnleashEvent.class, "entity unleash")
+            .name("Entity Unleash")
             .description("Called immediately prior to an entity being unleashed.",
                 "Cancelling this event when either the leashed entity dies, the entity changes dimension, or",
                 "the client has disconnected the leash will have no effect.",
@@ -328,7 +349,8 @@ public class OtherEvents extends SimpleEvent {
                 "\tif event-entity is a cow:",
                 "\t\tif event-string = \"distance\":",
                 "\t\t\tcancel event")
-            .since("3.2.0");
+            .since("3.2.0")
+            .register();
 
         EventValues.registerEventValue(EntityUnleashEvent.class, String.class, event -> event.getReason().name().toLowerCase(Locale.ROOT), EventValues.TIME_NOW);
         EventValues.registerEventValue(EntityUnleashEvent.class, Player.class, event -> {
@@ -338,37 +360,43 @@ public class OtherEvents extends SimpleEvent {
         }, EventValues.TIME_NOW);
 
         // Entity Remove Event
-        Skript.registerEvent("Entity Remove from World", OtherEvents.class, EntityRemoveEvent.class,
+        reg.newEvent(OtherEvents.class, EntityRemoveEvent.class,
                 "entity remove[d] [from world]")
+            .name("Entity Remove from World")
             .description("Fired any time an entity is being removed from a world for any reason.",
                 "Requires a PaperMC server or Spigot 1.20.4+ server.",
                 "`event-entityremovecause` = The reason the entity was removed (requires MC 1.20.4+).")
             .examples("on entity removed from world:",
                 "\tbroadcast \"a lonely %event-entity% left the world.\"")
-            .since("2.7.2");
+            .since("2.7.2")
+            .register();
 
         EventValues.registerEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class, EntityRemoveEvent::getCause, EventValues.TIME_NOW);
 
         // Player Spawn Change Event
-        Skript.registerEvent("Player Spawn Change", OtherEvents.class, PlayerSetSpawnEvent.class, "player spawn change")
+        reg.newEvent(OtherEvents.class, PlayerSetSpawnEvent.class, "player spawn change")
+            .name("Player Spawn Change")
             .description("This event is fired when the spawn point of the player is changed.")
             .examples("on player spawn change:",
                 "\tif event-playerspawnchangereason = bed or respawn_anchor:",
                 "\t\tcancel event",
                 "\t\tsend \"Nope... sorry!\"")
-            .since("3.4.0");
+            .since("3.4.0")
+            .register();
 
         EventValues.registerEventValue(PlayerSetSpawnEvent.class, PlayerSetSpawnEvent.Cause.class, PlayerSetSpawnEvent::getCause, EventValues.TIME_NOW);
         EventValues.registerEventValue(PlayerSetSpawnEvent.class, Location.class, event -> event.getPlayer().getRespawnLocation(), EventValues.TIME_NOW);
         EventValues.registerEventValue(PlayerSetSpawnEvent.class, Location.class, PlayerSetSpawnEvent::getLocation, EventValues.TIME_FUTURE);
 
         // Unknown Command Event
-        Skript.registerEvent("Unknown Command", OtherEvents.class, UnknownCommandEvent.class, "unknown command")
+        reg.newEvent(OtherEvents.class, UnknownCommandEvent.class, "unknown command")
+            .name("Unknown Command")
             .description("This event is fired when a player executes a command that is not defined.",
                 "`event-string` = The command that was sent.",
                 "`event-sender/player` = Who sent the command.")
             .examples("")
-            .since("3.10.0");
+            .since("3.10.0")
+            .register();
 
         EventValues.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
         EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);

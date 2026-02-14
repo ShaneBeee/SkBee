@@ -2,15 +2,12 @@ package com.shanebeestudios.skbee.elements.dialog.sections.inputs;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
@@ -28,26 +25,6 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Text Input")
-@Description({"A text input to be used in an `inputs` section of a dialog.",
-    "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
-        "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
-    "**Entries**:",
-    "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
-    "- `label` = A string/text component to be displayed to the left of the input.",
-    "- `width` = Integer value between 1 and 1024 — The width of the input. Defaults to 200. [Optional]",
-    "- `label_visible` = Controls if the label is visible. Defaults to true. [Optional]",
-    "- `initial` = The initial string value of the text input. [Optional]",
-    "- `max_length` = Maximum length of input. Defaults to 32. [Optional]",
-    "- The next two represent `multiline` and if used, must be used together.",
-    "If present, allows users to input multiple lines, optional object with entries:",
-    "  - `multiline_max_lines` = Positive integer. If present, limits maximum lines.",
-    "  - `multiline_height` = Integer value between 1 and 512 — Height of input."})
-@Examples({"add text input:",
-    "    key: \"name_input\"",
-    "    label: \"Input your name to confirm:\"",
-    "    initial: \"name\""})
-@Since("3.16.0")
 public class SecTextInput extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
@@ -66,8 +43,31 @@ public class SecTextInput extends Section {
         VALIDATOR.addEntryData(new ExpressionEntryData<>("max_length", null, true, Integer.class));
         VALIDATOR.addEntryData(new ExpressionEntryData<>("multiline_max_lines", null, true, Integer.class));
         VALIDATOR.addEntryData(new ExpressionEntryData<>("multiline_height", null, true, Integer.class));
+    }
 
-        Skript.registerSection(SecTextInput.class, "add text input");
+    public static void register(Registration reg) {
+        reg.newSection(SecTextInput.class, "add text input")
+            .name("Dialog - Text Input")
+            .description("A text input to be used in an `inputs` section of a dialog.",
+                "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
+                    "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
+                "**Entries**:",
+                "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
+                "- `label` = A string/text component to be displayed to the left of the input.",
+                "- `width` = Integer value between 1 and 1024 — The width of the input. Defaults to 200. [Optional]",
+                "- `label_visible` = Controls if the label is visible. Defaults to true. [Optional]",
+                "- `initial` = The initial string value of the text input. [Optional]",
+                "- `max_length` = Maximum length of input. Defaults to 32. [Optional]",
+                "- The next two represent `multiline` and if used, must be used together.",
+                "If present, allows users to input multiple lines, optional object with entries:",
+                "  - `multiline_max_lines` = Positive integer. If present, limits maximum lines.",
+                "  - `multiline_height` = Integer value between 1 and 512 — Height of input.")
+            .examples("add text input:",
+                "    key: \"name_input\"",
+                "    label: \"Input your name to confirm:\"",
+                "    initial: \"name\"")
+            .since("3.16.0")
+            .register();
     }
 
     // GENERAL INPUT

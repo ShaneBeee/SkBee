@@ -1,29 +1,26 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Entity Damage Entity")
-@Description("Make an entity damage another entity by a given amount.")
-@Examples({"make last spawned entity damage player by 10",
-    "make target entity damage player by 1"})
-@Since("2.8.0")
 public class EffEntityDamageEntity extends Effect {
 
-    static {
-        Skript.registerEffect(EffEntityDamageEntity.class,
-            "make %entity% damage %livingentities% by %number%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffEntityDamageEntity.class,
+                "make %entity% damage %livingentities% by %number%")
+            .name("Entity Damage Entity")
+            .description("Make an entity damage another entity by a given amount.")
+            .examples("make last spawned entity damage player by 10",
+                "make target entity damage player by 1")
+            .since("2.8.0")
+            .register();
     }
 
     private Expression<LivingEntity> victims;

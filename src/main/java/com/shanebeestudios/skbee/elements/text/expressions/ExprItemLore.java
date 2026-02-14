@@ -1,17 +1,12 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
@@ -23,16 +18,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("TextComponent - Item Lore")
-@Description("Get/set the lore of an item using text components.")
-@Examples("set component lore of player's tool to mini message from \"<rainbow>OOO RAINBOW LORE\"")
-@Since("2.4.0")
 public class ExprItemLore extends SimpleExpression<ComponentWrapper> {
 
-    static {
-        Skript.registerExpression(ExprItemLore.class, ComponentWrapper.class, ExpressionType.PROPERTY,
-            "[the] component [item] lore of %itemstack/itemtype/slot%",
-            "%itemstack/itemtype/slot%'[s] component [item] lore");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprItemLore.class, ComponentWrapper.class,
+                "[the] component [item] lore of %itemstack/itemtype/slot%",
+                "%itemstack/itemtype/slot%'[s] component [item] lore")
+            .name("TextComponent - Item Lore")
+            .description("Get/set the lore of an item using text components.")
+            .examples("set component lore of player's tool to mini message from \"<rainbow>OOO RAINBOW LORE\"")
+            .since("2.4.0")
+            .register();
     }
 
     private Expression<?> item;

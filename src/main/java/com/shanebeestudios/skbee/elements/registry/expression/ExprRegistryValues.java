@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.registry.expression;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.RegistryHolder;
 import com.shanebeestudios.skbee.api.registry.RegistryHolders;
 import io.papermc.paper.registry.RegistryKey;
@@ -20,16 +15,17 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Array;
 import java.util.List;
 
-@Name("Registry - Registry Values")
-@Description("Get all values from a registry.")
-@Examples({"set {_biomes::*} to registry values of biome registry",
-    "loop registry values of item registry:"})
-@Since("3.8.0")
 public class ExprRegistryValues extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprRegistryValues.class, Object.class, ExpressionType.COMBINED,
-            "registry values of %registrykey%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprRegistryValues.class, Object.class,
+                "registry values of %registrykey%")
+            .name("Registry - Registry Values")
+            .description("Get all values from a registry.")
+            .examples("set {_biomes::*} to registry values of biome registry",
+                "loop registry values of item registry:")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<RegistryKey<?>> registryKey;

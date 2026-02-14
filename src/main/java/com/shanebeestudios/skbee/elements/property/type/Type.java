@@ -1,18 +1,17 @@
 package com.shanebeestudios.skbee.elements.property.type;
 
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class Type {
 
-    static {
-        Classes.registerClass(new ClassInfo<>(Property.class, "property")
+    public static void register(Registration reg) {
+        reg.newType(Property.class, "property")
             .user("propert(y|ies)")
             .name("Property")
             .description("Represents the diffrent kinds of properties.",
@@ -39,7 +38,8 @@ public class Type {
                 public @NotNull String toVariableNameString(Property property) {
                     return "property:" + property.getName();
                 }
-            }));
+            })
+            .register();
     }
 
 }

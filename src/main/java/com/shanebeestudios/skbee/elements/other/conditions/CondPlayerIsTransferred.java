@@ -1,26 +1,22 @@
 package com.shanebeestudios.skbee.elements.other.conditions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.conditions.base.PropertyCondition;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Is Transferred")
-@Description("Check if a player transferred servers. Requires Minecraft 1.20.5+")
-@Examples({"on join:",
-    "\tif player is transferred:",
-    "\t\tkick player due to \"No Transfers Bruh!\""})
-@Since("3.5.0")
 public class CondPlayerIsTransferred extends PropertyCondition<Player> {
 
-    static {
-        if (Skript.methodExists(Player.class, "isTransferred")) {
-            register(CondPlayerIsTransferred.class, PropertyType.BE, "transferred", "players");
-        }
+    public static void register(Registration reg) {
+        reg.newPropertyCondition(CondPlayerIsTransferred.class, "transferred", "players")
+            .name("Is Transferred")
+            .description("Check if a player transferred servers.")
+            .examples("on join:",
+                "\tif player is transferred:",
+                "\t\tkick player due to \"No Transfers Bruh!\"")
+            .since("3.5.0")
+            .register();
+
     }
 
     @Override

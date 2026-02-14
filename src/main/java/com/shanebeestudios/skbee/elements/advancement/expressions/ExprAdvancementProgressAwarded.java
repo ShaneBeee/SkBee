@@ -1,29 +1,25 @@
 package com.shanebeestudios.skbee.elements.advancement.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Advancement - Progress Criteria")
-@Description("Get the awarded/remaining criteria of an advancement progress.")
-@Examples("set {_c::*} to awarded criteria of advancement progress of {_advancement} of player")
-@Since("1.17.0")
 public class ExprAdvancementProgressAwarded extends SimpleExpression<String> {
 
-    static {
-        Skript.registerExpression(ExprAdvancementProgressAwarded.class, String.class, ExpressionType.SIMPLE,
-                "(awarded|1:remaining) criteria of %advancementpro%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprAdvancementProgressAwarded.class, String.class,
+                "(awarded|1:remaining) criteria of %advancementpro%")
+            .name("Advancement - Progress Criteria")
+            .description("Get the awarded/remaining criteria of an advancement progress.")
+            .examples("set {_c::*} to awarded criteria of advancement progress of {_advancement} of player")
+            .since("1.17.0")
+            .register();
     }
 
     private boolean awarded;

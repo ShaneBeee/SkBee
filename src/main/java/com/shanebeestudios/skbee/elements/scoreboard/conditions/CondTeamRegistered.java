@@ -1,32 +1,29 @@
 package com.shanebeestudios.skbee.elements.scoreboard.conditions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.skript.base.Condition;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
+import com.shanebeestudios.skbee.api.skript.base.Condition;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Team - Is Registered")
-@Description({"Check if a team is registered.",
-    "Optionally check for a specific scoreboard (will default to main scoreboard)."})
-@Examples({"if team \"a-team\" is registered:",
-    "if team \"b-team\" of player's scoreboard is registered:"})
-@Since("2.17.0")
 public class CondTeamRegistered extends Condition {
 
-    static {
-        Skript.registerCondition(CondTeamRegistered.class,
-            "team[s] [named|with id] %strings% [(of|for) %scoreboard%] (is|are) registered",
-            "team[s] [named] %strings% [(of|for) %scoreboard%] (isn't|is not|are not|aren't) registered");
+    public static void register(Registration reg) {
+        reg.newCondition(CondTeamRegistered.class,
+                "team[s] [named|with id] %strings% [(of|for) %scoreboard%] (is|are) registered",
+                "team[s] [named] %strings% [(of|for) %scoreboard%] (isn't|is not|are not|aren't) registered")
+            .name("Team - Is Registered")
+            .description("Check if a team is registered.",
+                "Optionally check for a specific scoreboard (will default to main scoreboard).")
+            .examples("if team \"a-team\" is registered:",
+                "if team \"b-team\" of player's scoreboard is registered:")
+            .since("2.17.0")
+            .register();
     }
 
     private Expression<String> teams;

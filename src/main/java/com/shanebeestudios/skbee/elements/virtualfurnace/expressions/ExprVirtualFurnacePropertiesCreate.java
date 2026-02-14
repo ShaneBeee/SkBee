@@ -1,31 +1,27 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.vf.api.property.FurnaceProperties;
 import com.shanebeestudios.vf.api.property.Properties;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("VirtualFurnace - Furnace Properties Create")
-@Description("Create furnace properties to be used in a virtual furnace.")
-@Examples("set {_prop} to furnace properties with cook speed multiplier 1.5 and fuel speed multiplier 0.5")
-@Since("3.3.0")
 public class ExprVirtualFurnacePropertiesCreate extends SimpleExpression<Properties> {
 
-    static {
-        Skript.registerExpression(ExprVirtualFurnacePropertiesCreate.class, Properties.class, ExpressionType.COMBINED,
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprVirtualFurnacePropertiesCreate.class, Properties.class,
                 "[virtual] furnace properties " +
-                        "with cook speed multiplier %number% and [with] fuel speed multiplier %number%");
+                    "with cook speed multiplier %number% and [with] fuel speed multiplier %number%")
+            .name("VirtualFurnace - Furnace Properties Create")
+            .description("Create furnace properties to be used in a virtual furnace.")
+            .examples("set {_prop} to furnace properties with cook speed multiplier 1.5 and fuel speed multiplier 0.5")
+            .since("3.3.0")
+            .register();
     }
 
     private Expression<Number> cookX;
@@ -49,8 +45,8 @@ public class ExprVirtualFurnacePropertiesCreate extends SimpleExpression<Propert
         double fuelX = fuelNum != null ? fuelNum.doubleValue() : 1.0;
         String id = "key_machine_" + cookX + "_" + fuelX;
         FurnaceProperties properties = new FurnaceProperties(id)
-                .cookMultiplier(cookX)
-                .fuelMultiplier(fuelX);
+            .cookMultiplier(cookX)
+            .fuelMultiplier(fuelX);
         return new Properties[]{properties};
     }
 

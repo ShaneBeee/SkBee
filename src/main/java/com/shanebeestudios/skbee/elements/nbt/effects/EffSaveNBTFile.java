@@ -1,15 +1,11 @@
 package com.shanebeestudios.skbee.elements.nbt.effects;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptAPIException;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTFile;
@@ -19,17 +15,21 @@ import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 
-@Name("NBT - Save File")
-@Description({"Manually save the NBT from a file. When getting the NBT compound from a file, changing values in the compound will",
-    "not be automatically applied to the file, and saving will have to be done manually."})
-@Examples({"set {_n} to nbt compound from file \"plugins/maScript/some-data.nbt\"",
-    "set tag \"ma-tag\" of {_n} to 32",
-    "save nbt file of {_n}"})
-@Since("1.14.0")
 public class EffSaveNBTFile extends Effect {
 
-    static {
-        Skript.registerEffect(EffSaveNBTFile.class, "save nbt file[s] (from|for|of) %nbtcompounds%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffSaveNBTFile.class,
+                "save nbt file[s] (from|for|of) %nbtcompounds%")
+            .name("NBT - Save File")
+            .description(
+                "Manually save the NBT from a file. When getting the NBT compound from a file, changing values in the compound will",
+                "not be automatically applied to the file, and saving will have to be done manually.")
+            .examples(
+                "set {_n} to nbt compound from file \"plugins/maScript/some-data.nbt\"",
+                "set tag \"ma-tag\" of {_n} to 32",
+                "save nbt file of {_n}")
+            .since("1.14.0")
+            .register();
     }
 
     private Expression<NBTCompound> nbtCompound;

@@ -1,10 +1,6 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -12,35 +8,38 @@ import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Player Time")
-@Description({"Represents the current time on the player's client.",
-    "When relative is used the player's time will be kept synchronized to its world time with the specified offset.",
-    "When using non-relative time the player's time will stay fixed at the specified time parameter.",
-    "It's up to the caller to continue updating the player's time.",
-    "To restore player time to normal use reset.",
-    "Both Time and TimeSpan can be used for this. It is best to use Time for non-relative and TimeSpan for relative.",
-    "Relative will return as a TimeSpan (the offset from world time), non-relative will return as a Time."})
-@Examples({"set player time of player to 12:00am",
-    "set player time of all players to 6pm",
-    "set relative player time of player to 12000 ticks",
-    "set relative player time of player to 10 minutes",
-    "set relative player time of all players to 6000 ticks",
-    "add 10 minutes to player time of player",
-    "add 1 minute to relative player time of player",
-    "remove 10 minutes from player time of all players",
-    "remove 1 minute from relative player time of player",
-    "reset player time of player",
-    "reset player time of all players"})
-@Since("3.3.0")
 public class ExprPlayerTime extends SimplePropertyExpression<Player, Object> {
 
-    static {
-        register(ExprPlayerTime.class, Object.class, "[:relative] (player|client) time", "players");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprPlayerTime.class, Object.class,
+            "[:relative] (player|client) time", "players")
+            .name("Player Time")
+            .description("Represents the current time on the player's client.",
+                "When relative is used the player's time will be kept synchronized to its world time with the specified offset.",
+                "When using non-relative time the player's time will stay fixed at the specified time parameter.",
+                "It's up to the caller to continue updating the player's time.",
+                "To restore player time to normal use reset.",
+                "Both Time and TimeSpan can be used for this. It is best to use Time for non-relative and TimeSpan for relative.",
+                "Relative will return as a TimeSpan (the offset from world time), non-relative will return as a Time.")
+            .examples("set player time of player to 12:00am",
+                "set player time of all players to 6pm",
+                "set relative player time of player to 12000 ticks",
+                "set relative player time of player to 10 minutes",
+                "set relative player time of all players to 6000 ticks",
+                "add 10 minutes to player time of player",
+                "add 1 minute to relative player time of player",
+                "remove 10 minutes from player time of all players",
+                "remove 1 minute from relative player time of player",
+                "reset player time of player",
+                "reset player time of all players")
+            .since("3.3.0")
+            .register();
     }
 
     private boolean relative;

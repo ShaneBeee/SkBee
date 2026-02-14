@@ -1,28 +1,26 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Spawner - Spawn Count")
-@Description("Get how many mobs attempt to spawn. Default is 4.")
-@Examples({"on place of mob spawner:",
-        "\tset spawner spawn count of event-block to 10",
-        "\tadd 10 to spawn count of event-block",
-        "\treset spawn count of event-block"})
-@Since("2.16.0")
 public class ExprSpawnerSpawnCount extends SimplePropertyExpression<Block, Integer> {
 
-    static {
-        register(ExprSpawnerSpawnCount.class, Integer.class, "[spawner] spawn count", "blocks");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprSpawnerSpawnCount.class, Integer.class, "[spawner] spawn count", "blocks")
+                .name("Spawner - Spawn Count")
+                .description("Get how many mobs attempt to spawn. Default is 4.")
+                .examples("on place of mob spawner:",
+                        "\tset spawner spawn count of event-block to 10",
+                        "\tadd 10 to spawn count of event-block",
+                        "\treset spawn count of event-block")
+                .since("2.16.0")
+                .register();
     }
 
     private static final int DEFAULT_SPAWN_COUNT = 4;

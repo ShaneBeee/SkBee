@@ -1,17 +1,13 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.effects;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.vf.api.RecipeManager;
 import com.shanebeestudios.vf.api.recipe.FurnaceRecipe;
 import com.shanebeestudios.vf.api.util.Util;
@@ -21,23 +17,23 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@SuppressWarnings({"ConstantConditions", "NullableProblems"})
-@Name("VirtualFurnace - Furnace Recipe")
-@Description("Register recipes for virtual furnaces. Alternatively you can just register all vanilla-like recipes for" +
-        "your virtual furnaces. ")
-@Examples({"on load:",
-        "\tregister virtual furnace recipe for cooked chicken using raw chicken with cooktime 15 seconds",
-        "on load:",
-        "\tregister all virtual furnace recipes"})
-@Since("1.3.0")
 public class EffFurnaceRecipe extends Effect {
 
     private static final RecipeManager RECIPE_MANAGER = SkBee.getPlugin().getVirtualFurnaceAPI().getRecipeManager();
 
-    static {
-        Skript.registerEffect(EffFurnaceRecipe.class,
+    public static void register(Registration reg) {
+        reg.newEffect(EffFurnaceRecipe.class,
                 "register virtual furnace recipe for %itemtype% using %itemtype% [with cooktime %-timespan%]",
-                "register all virtual (furnace|1:smoker|2:blast furnace) recipes");
+                "register all virtual (furnace|1:smoker|2:blast furnace) recipes")
+            .name("VirtualFurnace - Furnace Recipe")
+            .description("Register recipes for virtual furnaces.",
+                "Alternatively you can just register all vanilla-like recipes for your virtual furnaces.")
+            .examples("on load:",
+                "\tregister virtual furnace recipe for cooked chicken using raw chicken with cooktime 15 seconds",
+                "on load:",
+                "\tregister all virtual furnace recipes")
+            .since("1.3.0")
+            .register();
     }
 
     private Expression<ItemType> ingredient;
@@ -62,18 +58,11 @@ public class EffFurnaceRecipe extends Effect {
     @Override
     protected void execute(Event event) {
         if (vanilla) {
-            List<FurnaceRecipe> recipes;
-            switch (type) {
-                default:
-                case 0:
-                    recipes = FurnaceRecipe.getVanillaFurnaceRecipes();
-                    break;
-                case 1:
-                    recipes = FurnaceRecipe.getVanillaSmokingRecipes();
-                    break;
-                case 2:
-                    recipes = FurnaceRecipe.getVanillaBlastingRecipes();
-            }
+            List<FurnaceRecipe> recipes = switch (type) {
+                case 1 -> FurnaceRecipe.getVanillaSmokingRecipes();
+                case 2 -> FurnaceRecipe.getVanillaBlastingRecipes();
+                default -> FurnaceRecipe.getVanillaFurnaceRecipes();
+            };
             for (FurnaceRecipe recipe : recipes) {
                 RECIPE_MANAGER.registerFurnaceRecipe(recipe);
             }
@@ -98,7 +87,7 @@ public class EffFurnaceRecipe extends Effect {
             return "register all virtual " + type + " recipes";
         }
         return "register new virtual furnace recipe using " + this.ingredient.toString(e, d) + " with result "
-                + this.result.toString(e, d) + (this.cookTime != null ? " with cook time " + this.cookTime.toString(e, d) : "");
+            + this.result.toString(e, d) + (this.cookTime != null ? " with cook time " + this.cookTime.toString(e, d) : "");
     }
 
 }

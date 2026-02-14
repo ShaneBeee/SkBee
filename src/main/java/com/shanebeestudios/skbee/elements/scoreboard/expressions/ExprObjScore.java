@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
@@ -23,19 +18,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Scoreboard - Objective Score")
-@Description({"Get/Set the score of an entity/string for an objective.",
-    "If the score has never been set, it'll return nothing."})
-@Examples({"set score of player for {_objective} to 10",
-    "set score of \"le_test\" for {_objective} to 25",
-    "set {_score} to score of target entity for {_objective}",
-    "set {_score} to score of \"le_test\" for {_objective}"})
-@Since("2.6.0")
 public class ExprObjScore extends SimpleExpression<Number> {
 
-    static {
-        Skript.registerExpression(ExprObjScore.class, Number.class, ExpressionType.COMBINED,
-            "score of %entities/strings% for %objective%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprObjScore.class, Number.class,
+                "score of %entities/strings% for %objective%")
+            .name("Scoreboard - Objective Score")
+            .description("Get/Set the score of an entity/string for an objective.",
+                "If the score has never been set, it'll return nothing.")
+            .examples("set score of player for {_objective} to 10",
+                "set score of \"le_test\" for {_objective} to 25",
+                "set {_score} to score of target entity for {_objective}",
+                "set {_score} to score of \"le_test\" for {_objective}")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<Objective> objective;

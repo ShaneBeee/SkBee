@@ -1,17 +1,12 @@
 package com.shanebeestudios.skbee.elements.recipe.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Material;
 import org.bukkit.Tag;
@@ -22,20 +17,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Recipe Choice - Material Choice")
-@Description({"A material choice is a list of items or a minecraft tag, that can be used as an option in some recipes.",
-    "Will return as a RecipeChoice.",
-    "When using the 'every' item type, this will grab all relatable items in a list, ie: 'every sword'.",
-    "This allows you to have one specific slot of a recipe to accept multiple items, without having to create multiple recipes.",
-    "Do note that material choices do not accept custom items (ie: items with names, lore, enchants, etc). Requires Minecraft 1.13+"})
-@Examples({"set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
-    "set {_choice} to material choice of minecraft tag \"minecraft:planks\""})
-@Since("1.10.0")
 public class ExprMaterialChoice extends SimpleExpression<MaterialChoice> {
 
-    static {
-        Skript.registerExpression(ExprMaterialChoice.class, MaterialChoice.class, ExpressionType.COMBINED,
-            "material choice of %itemtypes/minecrafttags%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprMaterialChoice.class, MaterialChoice.class,
+                "material choice of %itemtypes/minecrafttags%")
+            .name("Recipe Choice - Material Choice")
+            .description("A material choice is a list of items or a minecraft tag, that can be used as an option in some recipes.",
+                "Will return as a RecipeChoice.",
+                "When using the 'every' item type, this will grab all relatable items in a list, ie: 'every sword'.",
+                "This allows you to have one specific slot of a recipe to accept multiple items, without having to create multiple recipes.",
+                "Do note that material choices do not accept custom items (ie: items with names, lore, enchants, etc). Requires Minecraft 1.13+")
+            .examples("set {_a} to material choice of diamond sword, diamond shovel and diamond hoe",
+                "set {_choice} to material choice of minecraft tag \"minecraft:planks\"")
+            .since("1.10.0")
+            .register();
     }
 
     private Expression<?> objects;

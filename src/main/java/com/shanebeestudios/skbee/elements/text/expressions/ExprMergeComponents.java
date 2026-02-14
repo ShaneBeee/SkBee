@@ -1,30 +1,24 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Merge Components")
-@Description("Merge multiple components into one. If adding strings/texts, they will be converted into components.")
-@Examples({"set {_t} to merge components {_t::*}",
-        "set {_t} to merge components {_t::*} joined with newline"})
-@Since("2.4.0, 2.8.5 (delimiter), 2.15.0 (strings)")
 public class ExprMergeComponents extends SimpleExpression<ComponentWrapper> {
 
-    static {
-        Skript.registerExpression(ExprMergeComponents.class, ComponentWrapper.class, ExpressionType.SIMPLE,
-                "merge components %textcomponents/strings% [[join[ed]] (with|using) %-textcomponent/string%]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprMergeComponents.class, ComponentWrapper.class, "merge components %textcomponents/strings% [[join[ed]] (with|using) %-textcomponent/string%]")
+            .name("TextComponent - Merge Components")
+            .description("Merge multiple components into one. If adding strings/texts, they will be converted into components.")
+            .examples("set {_t} to merge components {_t::*}", "set {_t} to merge components {_t::*} joined with newline")
+            .since("2.4.0, 2.8.5 (delimiter), 2.15.0 (strings)")
+            .register();
     }
 
     private Expression<?> components;

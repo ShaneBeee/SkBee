@@ -1,33 +1,32 @@
 package com.shanebeestudios.skbee.elements.text.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Send Title")
-@Description({"Send titles containing components. Supports strings as well.",
-    "If you are using variables and the title won't send, make sure to add `component`.",
-    "`to %audiences%` = An audience is anything that can receieve a component (players, entities, console, worlds, server, etc)."})
-@Examples({"send title mini message from \"<rainbow>OOO RAINBOW TITLE\"",
-    "send title component {_comp} for 10 seconds with fadein 5 ticks and fadeout 10 ticks"})
-@Since("2.4.0")
 public class EffSendComponentTitle extends Effect {
 
-    static {
-        Skript.registerEffect(EffSendComponentTitle.class,
-            "send title [component] %textcomponent/string% [with subtitle [component] %-textcomponent/string%] [to %audiences%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffSendComponentTitle.class,
+                "send title [component] %textcomponent/string% [with subtitle [component] %-textcomponent/string%] [to %audiences%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]")
+            .name("TextComponent - Send Title")
+            .description(
+                "Send titles containing components. Supports strings as well.",
+                "If you are using variables and the title won't send, make sure to add `component`.",
+                "`to %audiences%` = An audience is anything that can receieve a component (players, entities, console, worlds, server, etc).")
+            .examples(
+                "send title mini message from \"<rainbow>OOO RAINBOW TITLE\"",
+                "send title component {_comp} for 10 seconds with fadein 5 ticks and fadeout 10 ticks")
+            .since("2.4.0")
+            .register();
     }
 
     private Expression<Object> title, subtitle;

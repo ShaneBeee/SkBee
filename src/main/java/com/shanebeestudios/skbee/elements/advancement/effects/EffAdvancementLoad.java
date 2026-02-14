@@ -1,15 +1,11 @@
 package com.shanebeestudios.skbee.elements.advancement.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -17,20 +13,21 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Advancement - Load")
-@Description({"Load an advancement represented by the specified string into the server.",
-        "The advancement format is governed by Minecraft and has no specified layout.",
-        "It is currently a JSON object, as described by [**McWiki**](https://minecraft.wiki/w/Advancement).",
-        "Loaded advancements will be stored and persisted across server restarts and reloads.",
-        "NOTE: Bukkit has marked this as 'Unsafe', so please use at your own risk.",
-        "Watch console for errors when loading an advancement."})
-@Examples("¯\\_(ツ)_/¯")
-@Since("1.17.0")
 public class EffAdvancementLoad extends Effect {
 
-    static {
-        Skript.registerEffect(EffAdvancementLoad.class,
-                "load advancement %string% with (key|id) %string%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffAdvancementLoad.class,
+                "load advancement %string% with (key|id) %string%")
+            .name("Advancement - Load")
+            .description("Load an advancement represented by the specified string into the server.",
+                "The advancement format is governed by Minecraft and has no specified layout.",
+                "It is currently a JSON object, as described by [**McWiki**](https://minecraft.wiki/w/Advancement).",
+                "Loaded advancements will be stored and persisted across server restarts and reloads.",
+                "NOTE: Bukkit has marked this as 'Unsafe', so please use at your own risk.",
+                "Watch console for errors when loading an advancement.")
+            .examples("¯\\_(ツ)_/¯")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<String> advancement;

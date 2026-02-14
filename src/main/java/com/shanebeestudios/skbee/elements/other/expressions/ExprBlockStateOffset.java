@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
@@ -18,16 +13,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("BlockState - Offset")
-@Description({"Represents the offset of a blockstate in a structure.",
-        "This is a vector, distance from the starting block of a structure."})
-@Examples("set {_offset} to blockstate offset of {_blockstate}")
-@Since("2.13.0")
 public class ExprBlockStateOffset extends SimpleExpression<Vector> {
 
-    static {
-        Skript.registerExpression(ExprBlockStateOffset.class, Vector.class, ExpressionType.PROPERTY,
-                "block[ ]state offset[s] of %blockstates%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprBlockStateOffset.class, Vector.class,
+                "block[ ]state offset[s] of %blockstates%")
+            .name("BlockState - Offset")
+            .description("Represents the offset of a blockstate in a structure.",
+                "This is a vector, distance from the starting block of a structure.")
+            .examples("set {_offset} to blockstate offset of {_blockstate}")
+            .since("2.13.0")
+            .register();
     }
 
     private Expression<BlockState> blockstate;

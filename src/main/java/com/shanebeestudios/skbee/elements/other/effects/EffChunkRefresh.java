@@ -1,33 +1,30 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.Chunk;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Refresh Chunk")
-@Description({"Resends chunks to the clients. This is useful if you change a biome and need to refresh the client.",
-    "The two numbers represent a chunk's X/Y coords, NOT a location. A chunk's X/Y coords are basically",
-    "a location divided by 16. Ex: Chunk 1/1 would be at location X=16, Z=16."})
-@Examples({"set biome of block at player to plains",
-    "refresh chunk at player",
-    "refresh chunk at 1,1 in world \"world\""})
-@Since("3.4.0")
 public class EffChunkRefresh extends Effect {
 
-    static {
-        Skript.registerEffect(EffChunkRefresh.class,
-            "refresh [chunk[s]] %chunks%",
-            "refresh chunk at %number%,[ ]%number% (in|of) [world] %world%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffChunkRefresh.class,
+                "refresh [chunk[s]] %chunks%",
+                "refresh chunk at %number%,[ ]%number% (in|of) [world] %world%")
+            .name("Chunk Refresh")
+            .description("Resends chunks to the clients. This is useful if you change a biome and need to refresh the client.",
+                "The two numbers represent a chunk's X/Y coords, NOT a location. A chunk's X/Y coords are basically",
+                "a location divided by 16. Ex: Chunk 1/1 would be at location X=16, Z=16.")
+            .examples("set biome of block at player to plains",
+                "refresh chunk at player",
+                "refresh chunk at 1,1 in world \"world\"")
+            .since("3.4.0")
+            .register();
     }
 
     private int pattern;

@@ -1,26 +1,24 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-@Name("World AutoSave")
-@Description({"Turn on/off world auto saving. This will prevent changes in the world to be saved to file.",
-        "\nThis doesn't appear to work when the server stops, so you may need to manually unload your world."})
-@Examples("set world autosave of world of player to false")
-@Since("2.10.0")
 public class ExprWorldAutoSave extends SimplePropertyExpression<World, Boolean> {
 
-    static {
-        register(ExprWorldAutoSave.class, Boolean.class, "world auto[ ]save", "worlds");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprWorldAutoSave.class, Boolean.class, "world auto[ ]save", "worlds")
+            .name("World AutoSave")
+            .description("Turn on/off world auto saving. This will prevent changes in the world to be saved to file.",
+                "\nThis doesn't appear to work when the server stops, so you may need to manually unload your world.")
+            .examples("set world autosave of world of player to false")
+            .since("2.10.0")
+            .register();
     }
 
     @Override

@@ -1,15 +1,12 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.event.Event;
@@ -17,20 +14,22 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-@SuppressWarnings("deprecation")
-@Name("TextComponent - Hover Event Of")
-@Description("Set the hover event of a text component.")
-@Examples({"set {_t} to text component from \"Check out my cool tool!\"",
-        "set hover event of {_t} to a new hover event showing player's tool",
-        "send component {_t} to player"})
-@Since("1.5.0")
+@SuppressWarnings("rawtypes")
 public class ExprHoverEventOf extends PropertyExpression<ComponentWrapper, HoverEvent> {
 
-    static {
-        register(ExprHoverEventOf.class, HoverEvent.class, "hover event", "textcomponents");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprHoverEventOf.class, HoverEvent.class,
+                "hover event", "textcomponents")
+            .name("TextComponent - Hover Event Of")
+            .description("Set the hover event of a text component.")
+            .examples("set {_t} to text component from \"Check out my cool tool!\"",
+                "set hover event of {_t} to a new hover event showing player's tool",
+                "send component {_t} to player")
+            .since("1.5.0")
+            .register();
     }
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         setExpr((Expression<ComponentWrapper>) exprs[0]);
@@ -50,7 +49,6 @@ public class ExprHoverEventOf extends PropertyExpression<ComponentWrapper, Hover
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event e, @Nullable Object[] delta, ChangeMode mode) {
         HoverEvent hoverEvent = delta != null ? ((HoverEvent) delta[0]) : null;

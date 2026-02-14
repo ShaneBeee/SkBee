@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser;
@@ -13,6 +9,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
@@ -28,31 +25,31 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 
 import java.util.List;
 
-@Name("ItemComponent - Use Cooldown")
-@Description({"Apply a cooldown to all items of the same type when it has been used.",
-    "Requires Paper 1.21.3+",
-    "See [**Use Cooldown Component**](https://minecraft.wiki/w/Data_component_format#use_cooldown) on McWiki for more details.",
-    "",
-    "**Entries**:",
-    "- `seconds` = The cooldown duration (timespan, must be >= 1 tick).",
-    "- `group` = The unique key to identify this cooldown group. " +
-        "If present, the item is included in a cooldown group and no longer shares cooldowns with its base item type, " +
-        "but instead with any other items that are part of the same cooldown group. [Optional]"})
-@Examples({"apply use cooldown to {_item}:",
-    "\tseconds: 5 seconds",
-    "\tgroup: \"blah:special_apple\""})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class SecUseCooldownComponent extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         VALIDATOR = SimpleEntryValidator.builder()
             .addRequiredEntry("seconds", Timespan.class)
             .addOptionalEntry("group", String.class)
             .build();
-        Skript.registerSection(SecUseCooldownComponent.class, "apply use cooldown [component] to %itemstacks/itemtypes/slots%");
+        reg.newSection(SecUseCooldownComponent.class, "apply use cooldown [component] to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Use Cooldown")
+            .description("Apply a cooldown to all items of the same type when it has been used.",
+                "See [**Use Cooldown Component**](https://minecraft.wiki/w/Data_component_format#use_cooldown) on McWiki for more details.",
+                "",
+                "**Entries**:",
+                "- `seconds` = The cooldown duration (timespan, must be >= 1 tick).",
+                "- `group` = The unique key to identify this cooldown group. " +
+                    "If present, the item is included in a cooldown group and no longer shares cooldowns with its base item type, " +
+                    "but instead with any other items that are part of the same cooldown group. [Optional]")
+            .examples("apply use cooldown to {_item}:",
+                "\tseconds: 5 seconds",
+                "\tgroup: \"blah:special_apple\"")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<Object> items;

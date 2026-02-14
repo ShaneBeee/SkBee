@@ -1,11 +1,8 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
@@ -22,15 +19,16 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Name("BlockData - Item BlockData Tags")
-@Description("Get all the tags from the BlockData of an item.")
-@Examples("set {_tags::} to item blockdata tags of player's tool")
-@Since("3.4.0")
 public class ExprBlockDataItemTags extends SimpleExpression<String> {
 
-    static {
-        PropertyExpression.register(ExprBlockDataItemTags.class, String.class,
-                "item [block[ ]](data|state) tags", "itemtypes");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprBlockDataItemTags.class, String.class,
+                "item [block[ ]](data|state) tags", "itemtypes")
+            .name("BlockData - Item BlockData Tags")
+            .description("Get all the tags from the BlockData of an item.")
+            .examples("set {_tags::} to item blockdata tags of player's tool")
+            .since("3.4.0")
+            .register();
     }
 
     private Expression<ItemType> itemTypes;

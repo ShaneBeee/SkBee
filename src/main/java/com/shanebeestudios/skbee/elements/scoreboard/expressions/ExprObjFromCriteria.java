@@ -1,13 +1,10 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Criteria;
@@ -19,13 +16,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-@Name("Scoreboard - Objective from Criteria")
-@Description("Get objectives from specific criterias of scoreboards.")
 public class ExprObjFromCriteria extends SimpleExpression<Objective> {
 
-    static {
-        Skript.registerExpression(ExprObjFromCriteria.class, Objective.class, ExpressionType.COMBINED,
-            "objectives (from|by) criteria[s] %criterias% [(of|from) %scoreboards%]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprObjFromCriteria.class, Objective.class,
+                "objectives (from|by) criteria[s] %criterias% [(of|from) %scoreboards%]")
+            .name("Scoreboard - Objective from Criteria")
+            .description("Get objectives from specific criterias of scoreboards.")
+            .register();
     }
 
     private Expression<Criteria> criterias;

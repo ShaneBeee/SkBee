@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.LiteralList;
@@ -9,6 +8,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.EventValues;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.entity.EntityPushedByEntityAttackEvent;
 import org.bukkit.entity.Entity;
@@ -17,14 +17,16 @@ import org.jetbrains.annotations.Nullable;
 
 public class EvtEntityKnockback extends SkriptEvent {
 
-    static {
+    public static void register(Registration reg) {
         //noinspection unchecked
-        Skript.registerEvent("Entity Knockback", EvtEntityKnockback.class, new Class[]{EntityKnockbackEvent.class},
+        reg.newEvent(EvtEntityKnockback.class, new Class[]{EntityKnockbackEvent.class},
                 "%entitydatas% knockback[ed] [by %-entitydatas%]")
+            .name("Entity Knockback")
             .description("Fired when an Entity is knocked back by the hit of another Entity. " +
                 "If this event is cancelled, the entity is not knocked back.")
             .examples("on entity knockback:", "\tif knockback victim is a cow:", "\t\tcancel event")
-            .since("1.8.0");
+            .since("1.8.0")
+            .register();
 
         EventValues.registerEventValue(EntityKnockbackEvent.class, EntityKnockbackEvent.Cause.class, EntityKnockbackEvent::getCause);
         EventValues.registerEventValue(EntityKnockbackEvent.class, Entity.class, EntityKnockbackEvent::getEntity,

@@ -2,13 +2,10 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
@@ -22,18 +19,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("BlockData - Tag")
-@Description("Get/set a block data tag of BlockData or a Block.")
-@Examples({"set {_water} to block data tag \"waterlogged\" of event-block",
-    "set block data tag \"waterlogged\" of {_blockData} to true",
-    "set block data tag \"waterlogged\" of event-block to true",
-    "set blockdata tag \"waterlogged\" of event-block without updates to true"})
-@Since("1.0.0, 2.16.1 (Variable Support)")
 public class ExprBlockDataTag extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprBlockDataTag.class, Object.class, ExpressionType.COMBINED,
-            "block[ ](data|state) tag %string% of %blocks/blockdatas% [1:without updates]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprBlockDataTag.class, Object.class,
+                "block[ ](data|state) tag %string% of %blocks/blockdatas% [1:without updates]")
+            .name("BlockData - Tag")
+            .description("Get/set a block data tag of BlockData or a Block.")
+            .examples("set {_water} to block data tag \"waterlogged\" of event-block",
+                "set block data tag \"waterlogged\" of {_blockData} to true",
+                "set block data tag \"waterlogged\" of event-block to true",
+                "set blockdata tag \"waterlogged\" of event-block without updates to true")
+            .since("1.0.0, 2.16.1 (Variable Support)")
+            .register();
     }
 
     private Expression<String> tag;

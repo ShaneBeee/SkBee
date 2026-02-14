@@ -1,31 +1,29 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Player Health Scale")
-@Description({"Represents the scaled health of the player sent to the client.",
-    "NOTE: This is not persistent, does not last restarts/relogs.",
-    "NOTE: displayedHealth = (health * 2) / (max health * 2) * scale.",
-    "NOTE: If the player is not currently health scaled, this will not be set."})
-@Examples({"set health scale of all players to 10",
-    "add 10 to health scale of player",
-    "reset health scale of player",
-    "set health scale of (\"BrettPlaysMC\" parsed as offline player) to 0.01"})
-@Since("2.7.2")
 public class ExprHealthScale extends SimplePropertyExpression<Player, Number> {
 
-    static {
-        register(ExprHealthScale.class, Number.class, "health scale", "players");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprHealthScale.class, Number.class, "health scale", "players")
+                .name("Player Health Scale")
+                .description("Represents the scaled health of the player sent to the client.",
+                        "NOTE: This is not persistent, does not last restarts/relogs.",
+                        "NOTE: displayedHealth = (health * 2) / (max health * 2) * scale.",
+                        "NOTE: If the player is not currently health scaled, this will not be set.")
+                .examples("set health scale of all players to 10",
+                        "add 10 to health scale of player",
+                        "reset health scale of player",
+                        "set health scale of (\"BrettPlaysMC\" parsed as offline player) to 0.01")
+                .since("2.7.2")
+                .register();
     }
 
     @Override

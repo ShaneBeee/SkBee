@@ -1,24 +1,22 @@
 package com.shanebeestudios.skbee.elements.other.conditions;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.Lockable;
 
-@Name("Is Locked")
-@Description("Check if a lockable container is in a locked state.")
-@Examples({"on right click on shulker box or beacon:",
-    "\tclicked block is locked",
-    "\tplayer has permission \"see.locked\"",
-    "\tsend action bar \"%container key of clicked block%\" to player"})
-@Since("2.16.0")
 public class CondIsLocked extends PropertyCondition<Block> {
 
-    static {
-        register(CondIsLocked.class, "locked", "blocks");
+    public static void register(Registration reg) {
+        reg.newPropertyCondition(CondIsLocked.class, "locked", "blocks")
+            .name("Is Locked")
+            .description("Check if a lockable container is in a locked state.")
+            .examples("on right click on shulker box or beacon:",
+                "\tclicked block is locked",
+                "\tplayer has permission \"see.locked\"",
+                "\tsend action bar \"%container key of clicked block%\" to player")
+            .since("2.16.0")
+            .register();
     }
 
     @Override

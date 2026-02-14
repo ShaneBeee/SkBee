@@ -1,42 +1,36 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Name("ItemComponent - Intangible Projectile")
-@Description({"If applied, a projectile item can't be picked up by a player when fired, except in creative mode.",
-    "If the item does not have this component, it will return null, not false.",
-    "See [**Intangible Projectile Component**](https://minecraft.wiki/w/Data_component_format#intangible_projectile) on McWiki for more details.",
-    "Requires Paper 1.21.3+",
-    "",
-    "**Changers**:",
-    "- `set` = If set to true, the component will be applied, otherwise removed.",
-    "- `reset` = Reset back to default state.",
-    "- `delete` = Will delete any value (vanilla or not)."})
-@Examples({"set intangible projectile component of player's tool to true",
-    "delete intangible projectile component of player's tool",
-    "reset intangible projectile component of player's tool"})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprIntangibleProjectileComponent extends SimplePropertyExpression<Object, Boolean> {
 
-    static {
-        register(ExprIntangibleProjectileComponent.class, Boolean.class,
-            "intangible projectile component", "itemstacks/itemtypes/slots");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprIntangibleProjectileComponent.class, Boolean.class,
+                "intangible projectile component", "itemstacks/itemtypes/slots")
+            .name("ItemComponent - Intangible Projectile")
+            .description("If applied, a projectile item can't be picked up by a player when fired, except in creative mode.",
+                "If the item does not have this component, it will return null, not false.",
+                "See [**Intangible Projectile Component**](https://minecraft.wiki/w/Data_component_format#intangible_projectile) on McWiki for more details.",
+                "Requires Paper 1.21.3+",
+                "",
+                "**Changers**:",
+                "- `set` = If set to true, the component will be applied, otherwise removed.",
+                "- `reset` = Reset back to default state.",
+                "- `delete` = Will delete any value (vanilla or not).")
+            .examples("set intangible projectile component of player's tool to true",
+                "delete intangible projectile component of player's tool",
+                "reset intangible projectile component of player's tool")
+            .since("3.8.0")
+            .register();
     }
 
     @Override

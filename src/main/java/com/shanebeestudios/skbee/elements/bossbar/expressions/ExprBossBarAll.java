@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.bossbar.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.event.Event;
@@ -19,15 +14,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("BossBar - All")
-@Description("Get a list of all BossBars.")
-@Examples("set {_bars::*} to all bossbars")
-@Since("2.14.1")
 public class ExprBossBarAll extends SimpleExpression<BossBar> {
 
-    static {
-        Skript.registerExpression(ExprBossBarAll.class, BossBar.class, ExpressionType.SIMPLE,
-                "all boss[ ]bars");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprBossBarAll.class, BossBar.class,
+                "all boss[ ]bars")
+            .name("BossBar - All")
+            .description("Get a list of all BossBars.")
+            .examples("set {_bars::*} to all bossbars")
+            .since("2.14.1")
+            .register();
     }
 
     @SuppressWarnings("NullableProblems")

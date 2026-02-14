@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.dialog.sections.inputs;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -13,6 +9,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
@@ -31,29 +28,6 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Single Option Input")
-@Description({"A preset option selection input to be used in an `inputs` section of a dialog.",
-    "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
-        "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
-    "**Entries**:",
-    "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
-    "- `label` = A string/text component to be displayed to the left of the input.",
-    "- `label_visible` = Controls if the label is visible. Defaults to true.",
-    "- `width` = Integer value between 1 and 1024 — The width of the input. Defaults to 200.",
-    "- `options` = A section for adding options. See [**options**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#options) for more info."})
-@Examples({"add single option input:",
-    "\tkey: \"le_key\"",
-    "\tlabel: \"Choose favorite animal\"",
-    "\toptions:",
-    "\t\tadd options entity:",
-    "\t\t\tdisplay: \"cat\"",
-    "\t\tadd options entity:",
-    "\t\t\tdisplay: \"dog\"",
-    "\t\tadd options entity:",
-    "\t\t\tdisplay: \"turtle\"",
-    "\t\tadd options entity:",
-    "\t\t\tdisplay: \"spider\""})
-@Since("3.16.0")
 public class SecSingleOptionInput extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
@@ -69,8 +43,34 @@ public class SecSingleOptionInput extends Section {
         VALIDATOR.addEntryData(new ExpressionEntryData<>("label_visible", null, true, Boolean.class));
         VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
         VALIDATOR.addEntryData(new SectionEntryData("options", null, false));
+    }
 
-        Skript.registerSection(SecSingleOptionInput.class, "add single option input");
+    public static void register(Registration reg) {
+        reg.newSection(SecSingleOptionInput.class, "add single option input")
+            .name("Dialog - Single Option Input")
+            .description("A preset option selection input to be used in an `inputs` section of a dialog.",
+                "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
+                    "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
+                "**Entries**:",
+                "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
+                "- `label` = A string/text component to be displayed to the left of the input.",
+                "- `label_visible` = Controls if the label is visible. Defaults to true.",
+                "- `width` = Integer value between 1 and 1024 — The width of the input. Defaults to 200.",
+                "- `options` = A section for adding options. See [**options**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#options) for more info.")
+            .examples("add single option input:",
+                "\tkey: \"le_key\"",
+                "\tlabel: \"Choose favorite animal\"",
+                "\toptions:",
+                "\t\tadd options entity:",
+                "\t\t\tdisplay: \"cat\"",
+                "\t\tadd options entity:",
+                "\t\t\tdisplay: \"dog\"",
+                "\t\tadd options entity:",
+                "\t\t\tdisplay: \"turtle\"",
+                "\t\tadd options entity:",
+                "\t\t\tdisplay: \"spider\"")
+            .since("3.16.0")
+            .register();
     }
 
     // GENERAL INPUT

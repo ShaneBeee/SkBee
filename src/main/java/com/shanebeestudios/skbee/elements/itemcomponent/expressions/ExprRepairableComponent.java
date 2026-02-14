@@ -1,11 +1,6 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -13,6 +8,7 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -38,38 +34,39 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("ItemComponent - Repairable")
-@Description({"Represents the items/tags that will be used to repair an item in an anvil.",
-    "See [**Repairable Component**](https://minecraft.wiki/w/Data_component_format#repairable) on McWiki for more details.",
-    "Requires Paper 1.21.3+",
-    "",
-    "**Patterns**:",
-    "`repairable items` = A list of items that are used.",
-    "`repairable tag` = A single Minecraft item tag that is used.",
-    "",
-    "**Changers**:",
-    "- `set` = Set the items/tag to allow for repairing.",
-    "- `reset` = Reset back to default state.",
-    "- `delete` = Will delete any value (vanilla or not)."})
-@Examples({"set {_items::*} to repairable items of player's tool",
-    "set {_tag} to repairable tag of player's tool",
-    "set repairable items of player's tool to diamond, iron ingot and emerald",
-    "set repairable tag of player's tool to minecraft item tag \"diamond_tool_materials\"",
-    "delete repairable tag of player's tool",
-    "reset repairable tag of player's tool"})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprRepairableComponent extends SimpleExpression<Object> {
+
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprRepairableComponent.class, Object.class,
+                "repairable [component] items of %itemstacks/itemtypes/slots%",
+                "repairable [component] tag of %itemstacks/slots%")
+            .name("ItemComponent - Repairable")
+            .description("Represents the items/tags that will be used to repair an item in an anvil.",
+                "See [**Repairable Component**](https://minecraft.wiki/w/Data_component_format#repairable) on McWiki for more details.",
+                "Requires Paper 1.21.3+",
+                "",
+                "**Patterns**:",
+                "`repairable items` = A list of items that are used.",
+                "`repairable tag` = A single Minecraft item tag that is used.",
+                "",
+                "**Changers**:",
+                "- `set` = Set the items/tag to allow for repairing.",
+                "- `reset` = Reset back to default state.",
+                "- `delete` = Will delete any value (vanilla or not).")
+            .examples("set {_items::*} to repairable items of player's tool",
+                "set {_tag} to repairable tag of player's tool",
+                "set repairable items of player's tool to diamond, iron ingot and emerald",
+                "set repairable tag of player's tool to minecraft item tag \"diamond_tool_materials\"",
+                "delete repairable tag of player's tool",
+                "reset repairable tag of player's tool")
+            .since("3.8.0")
+            .register();
+    }
 
     private static final RegistryAccess REGISTRY_ACCESS = RegistryAccess.registryAccess();
     @SuppressWarnings("NullableProblems")
     private static final Registry<ItemType> ITEM_REGISTRY = REGISTRY_ACCESS.getRegistry(RegistryKey.ITEM);
-
-    static {
-        Skript.registerExpression(ExprRepairableComponent.class, Object.class, ExpressionType.COMBINED,
-            "repairable [component] items of %itemstacks/itemtypes/slots%",
-            "repairable [component] tag of %itemstacks/slots%");
-    }
 
     private Expression<Object> items;
     private boolean tag;

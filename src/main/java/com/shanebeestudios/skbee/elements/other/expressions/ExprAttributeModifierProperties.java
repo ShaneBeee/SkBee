@@ -1,14 +1,11 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import org.bukkit.NamespacedKey;
 import org.bukkit.attribute.AttributeModifier;
@@ -18,24 +15,25 @@ import org.bukkit.inventory.EquipmentSlotGroup;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Attribute Modifier Properties")
-@Description({"Represents the different components of an attribute modifier.",
-    "NOTE: These cannot be changed.",
-    "`id` = The unique NamespacedKey of a modifier (Requires Minecraft 1.21+).",
-    "`name` = The name used to identify this modifier (For Minecraft 1.20.6 and below).",
-    "`uuid` = The uuid used to identify this modifier (For Minecraft 1.20.6 and below).",
-    "`amount` = Amount of change from the modifier.",
-    "`slot` = Equipment Slot Group the item must be in for the modifier to take effect (Minecraft 1.20.6+ uses Equipment Slot Group, other versions use Equipment Slot).",
-    "`operation` = The operation of a modifier. See [**McWiki**](https://minecraft.wiki/w/Attribute#Operations) for more details."})
-@Examples({"set {_id} to modifier id of {_modifier}",
-    "set {_slot} to modifier slot of {_modifier}",
-    "if modifier amount of {_mod} > 1:"})
-@Since("3.5.9")
 public class ExprAttributeModifierProperties extends SimplePropertyExpression<AttributeModifier, Object> {
 
-    static {
-        register(ExprAttributeModifierProperties.class, Object.class,
-            "[attribute] modifier (0:id|1:name|2:uuid|3:amount|4:slot|5:operation)", "attributemodifiers");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprAttributeModifierProperties.class, Object.class,
+                "[attribute] modifier (0:id|1:name|2:uuid|3:amount|4:slot|5:operation)", "attributemodifiers")
+            .name("Attribute Modifier Properties")
+            .description("Represents the different components of an attribute modifier.",
+                "NOTE: These cannot be changed.",
+                "`id` = The unique NamespacedKey of a modifier (Requires Minecraft 1.21+).",
+                "`name` = The name used to identify this modifier (For Minecraft 1.20.6 and below).",
+                "`uuid` = The uuid used to identify this modifier (For Minecraft 1.20.6 and below).",
+                "`amount` = Amount of change from the modifier.",
+                "`slot` = Equipment Slot Group the item must be in for the modifier to take effect (Minecraft 1.20.6+ uses Equipment Slot Group, other versions use Equipment Slot).",
+                "`operation` = The operation of a modifier. See [**McWiki**](https://minecraft.wiki/w/Attribute#Operations) for more details.")
+            .examples("set {_id} to modifier id of {_modifier}",
+                "set {_slot} to modifier slot of {_modifier}",
+                "if modifier amount of {_mod} > 1:")
+            .since("3.5.9")
+            .register();
     }
 
     private int pattern;

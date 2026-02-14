@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.other.events;
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.event.connection.configuration.AsyncPlayerConnectionConfigureEvent;
 import net.kyori.adventure.audience.Audience;
@@ -17,10 +18,11 @@ public class AsyncEvents extends SimpleEvent {
         return true;
     }
 
-    static {
+    public static void register(Registration reg) {
         if (Skript.classExists("io.papermc.paper.event.connection.configuration.AsyncPlayerConnectionConfigureEvent")) {
-            Skript.registerEvent("Async Player Connection Configure", AsyncEvents.class, AsyncPlayerConnectionConfigureEvent.class,
+            reg.newEvent(AsyncEvents.class, AsyncPlayerConnectionConfigureEvent.class,
                     "async player connection configure")
+                .name("Async Player Connection Configure")
                 .description("An event that allows you to configure the player.",
                     "This is async and allows you to run configuration code on the player.",
                     "Once this event has finished execution, the player connection will continue.",
@@ -39,7 +41,8 @@ public class AsyncEvents extends SimpleEvent {
                     "\t\t# Player login will be halted while we wait for something",
                     "\t\tsleep thread for 1 tick",
                     "\t#Player will now connect")
-                .since("3.15.0");
+                .since("3.15.0")
+                .register();
 
             EventValues.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, UUID.class,
                 event -> event.getConnection().getProfile().getId());

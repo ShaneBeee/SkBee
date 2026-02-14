@@ -1,34 +1,31 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Update Server Recipes/Resources")
-@Description({"Update recipes will update recipe data and the recipe book for all connected clients.",
-        "Useful for updating clients to new recipes.",
-        "\nUpdate resources will update all advancement, tag, and recipe data for all connected clients.",
-        "Useful for updating clients to new advancements/recipes/tags.",
-        "\nRequires PaperMC 1.20.1+"})
-@Examples({"update server recipes", "update server resources"})
-@Since("2.17.0")
 public class EffUpdateRecipeResources extends Effect {
 
     private static final boolean HAS_METHODS = Skript.methodExists(Bukkit.class, "updateRecipes");
 
-    static {
-        Skript.registerEffect(EffUpdateRecipeResources.class,
-                "update server recipes", "update server resources");
+    public static void register(Registration reg) {
+        reg.newEffect(EffUpdateRecipeResources.class,
+                "update server recipes", "update server resources")
+            .name("Update Server Recipes/Resources")
+            .description("Update recipes will update recipe data and the recipe book for all connected clients.",
+                "Useful for updating clients to new recipes.",
+                "Update resources will update all advancement, tag, and recipe data for all connected clients.",
+                "Useful for updating clients to new advancements/recipes/tags.")
+            .examples("update server recipes", "update server resources")
+            .since("2.17.0")
+            .register();
     }
 
     private int pattern;

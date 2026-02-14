@@ -1,11 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -14,6 +9,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.recipe.ShapedRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -36,59 +32,12 @@ import java.util.Map;
 import java.util.StringJoiner;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Name("Recipe - Register Shaped Recipe")
-@Description({"This section allows you to register a shaped recipe, define the shape and set ingredients.",
-    "You can optionally add a group and category.",
-    "\n`id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
-    "\n`result` = The resulting item of this recipe.",
-    "\n`shape` = A list of strings (1 to 3 strings) which each have 1-3 characters (must be the same char count per string).",
-    "These correspond to the ingredients set for these shapes. (See examples for details.)",
-    "Blank spaces will just be empty spaces in a crafting grid.",
-    "\n`group` = Define a group to group your recipes together in the recipe book",
-    "(an example would be having 3 recipes with the same outcome but a variety of ingredients) (optional).",
-    "\n`category` = The recipe book category your recipe will be in (optional) [Requires MC 1.19+].",
-    "Options are \"building\", \"redstone\", \"equipment\", \"misc\".",
-    "\n`ingredients` = This section is where you will set the ingredients to correspend with your shape."})
-@Examples({"on load:",
-    "\tregister shaped recipe:",
-    "\t\tid: \"custom:fancy_stone\"",
-    "\t\tresult: stone named \"&aFANCY STONE\"",
-    "\t\tshape: \"aaa\", \"aba\", \"aaa\"",
-    "\t\tgroup: \"bloop\"",
-    "\t\tcategory: \"building\"",
-    "\t\tingredients:",
-    "\t\t\tset ingredient of \"a\" to stone",
-    "\t\t\tset ingredient of \"b\" to diamond",
-    "",
-    "\tregister shaped recipe:",
-    "\t\tid: \"custom:fancy_sword\"",
-    "\t\tresult: diamond sword of unbreaking 5 named \"&bStrong Sword\"",
-    "\t\tshape: \"a\", \"a\", \"b\"",
-    "\t\tingredients:",
-    "\t\t\tset ingredient of \"a\" to emerald",
-    "\t\t\tset ingredient of \"b\" to stick named \"DOOM\"",
-    "",
-    "\tregister shaped recipe:",
-    "\t\tid: \"custom:string\"",
-    "\t\tresult: 4 of string",
-    "\t\tshape: \"a\"",
-    "\t\tingredients:",
-    "\t\t\tset ingredient of \"a\" to material choice of minecraft item tag \"minecraft:wool\"",
-    "",
-    "\tregister shaped recipe:",
-    "\t\tid: \"custom:bee_2\"",
-    "\t\tresult: (skull of \"MHF_Bee\" parsed as offline player) named \"&bMr &3Bee\"",
-    "\t\tshape: \"x x\", \" z \", \"x x\"",
-    "\t\tingredients:",
-    "\t\t\tset ingredient of \"x\" to honeycomb",
-    "\t\t\tset ingredient of \"z\" to honey bottle"})
-@Since("3.0.0")
 public class SecRecipeShaped extends Section {
 
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         SimpleEntryValidator builder = SimpleEntryValidator.builder();
         builder.addRequiredEntry("id", String.class);
         builder.addRequiredEntry("result", ItemStack.class);
@@ -101,7 +50,56 @@ public class SecRecipeShaped extends Section {
         }
         builder.addRequiredSection("ingredients");
         VALIDATOR = builder.build();
-        Skript.registerSection(SecRecipeShaped.class, "register [a] [new] shaped recipe");
+        reg.newSection(SecRecipeShaped.class, "register [a] [new] shaped recipe")
+            .name("Recipe - Register Shaped Recipe")
+            .description("This section allows you to register a shaped recipe, define the shape and set ingredients.",
+                "You can optionally add a group and category.",
+                "**Entries**:",
+                " - `id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
+                " - `result` = The resulting item of this recipe.",
+                " - `shape` = A list of strings (1 to 3 strings) which each have 1-3 characters (must be the same char count per string). " +
+                    "These correspond to the ingredients set for these shapes. (See examples for details.) " +
+                    "Blank spaces will just be empty spaces in a crafting grid.",
+                " - `group` = Define a group to group your recipes together in the recipe book " +
+                    "(an example would be having 3 recipes with the same outcome but a variety of ingredients) (optional).",
+                " - `category` = The recipe book category your recipe will be in (optional)." +
+                    "Options are \"building\", \"redstone\", \"equipment\", \"misc\".",
+                " - `ingredients` = This section is where you will set the ingredients to correspend with your shape.")
+            .examples("on load:",
+                "\tregister shaped recipe:",
+                "\t\tid: \"custom:fancy_stone\"",
+                "\t\tresult: stone named \"&aFANCY STONE\"",
+                "\t\tshape: \"aaa\", \"aba\", \"aaa\"",
+                "\t\tgroup: \"bloop\"",
+                "\t\tcategory: \"building\"",
+                "\t\tingredients:",
+                "\t\t\tset ingredient of \"a\" to stone",
+                "\t\t\tset ingredient of \"b\" to diamond",
+                "",
+                "\tregister shaped recipe:",
+                "\t\tid: \"custom:fancy_sword\"",
+                "\t\tresult: diamond sword of unbreaking 5 named \"&bStrong Sword\"",
+                "\t\tshape: \"a\", \"a\", \"b\"",
+                "\t\tingredients:",
+                "\t\t\tset ingredient of \"a\" to emerald",
+                "\t\t\tset ingredient of \"b\" to stick named \"DOOM\"",
+                "",
+                "\tregister shaped recipe:",
+                "\t\tid: \"custom:string\"",
+                "\t\tresult: 4 of string",
+                "\t\tshape: \"a\"",
+                "\t\tingredients:",
+                "\t\t\tset ingredient of \"a\" to material choice of minecraft item tag \"minecraft:wool\"",
+                "",
+                "\tregister shaped recipe:",
+                "\t\tid: \"custom:bee_2\"",
+                "\t\tresult: (skull of \"MHF_Bee\" parsed as offline player) named \"&bMr &3Bee\"",
+                "\t\tshape: \"x x\", \" z \", \"x x\"",
+                "\t\tingredients:",
+                "\t\t\tset ingredient of \"x\" to honeycomb",
+                "\t\t\tset ingredient of \"z\" to honey bottle")
+            .since("3.0.0")
+            .register();
     }
 
     private Expression<String> id;

@@ -1,16 +1,12 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -28,31 +24,12 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 
 import java.util.List;
 
-@Name("Recipe - Register Brewing Recipe")
-@Description({"This section allows you to register a brewing recipe, define the ingredient and input. Requires a PaperMC server.",
-    "\n`id` = The ID of this recipe.",
-    "\n`result` = The resulting output ItemStack of this recipe (What the 3 bottle slots turn into).",
-    "\n`ingredient` = Represents the ItemStack put in the top of the brewer (Accepts an ItemStack or RecipeChoice).",
-    "\n`input` = Represents the ItemStack put in the 3 bottle slots (Accepts an ItemStack or RecipeChoice)."})
-@Examples({"on load:",
-    "\tregister brewing recipe:",
-    "\t\tid: \"custom:brew_glow_diamond\"",
-    "\t\tresult: diamond of unbreaking with all item flags",
-    "\t\tingredient: glowstone dust",
-    "\t\tinput: potato",
-    "\t\t",
-    "\tregister brewing recipe:",
-    "\t\tid: \"custom:yummy_soup\"",
-    "\t\tresult: mushroom stew named \"&bYummy Soup\"",
-    "\t\tingredient: glowstone dust",
-    "\t\tinput: water bottle"})
-@Since("3.0.0")
 public class SecRecipeBrewing extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
     private static final PotionBrewer POTION_BREWER = Bukkit.getPotionBrewer();
 
-    static {
+    public static void register(Registration reg) {
         SimpleEntryValidator builder = SimpleEntryValidator.builder();
         builder.addRequiredEntry("id", String.class);
         builder.addRequiredEntry("result", ItemStack.class);
@@ -60,7 +37,28 @@ public class SecRecipeBrewing extends Section {
         builder.addRequiredEntry("input", RecipeChoice.class);
         VALIDATOR = builder.build();
 
-        Skript.registerSection(SecRecipeBrewing.class, "register [a] [new] (brewing recipe|potion mix)");
+        reg.newSection(SecRecipeBrewing.class, "register [a] [new] (brewing recipe|potion mix)")
+            .name("Recipe - Register Brewing Recipe")
+            .description("This section allows you to register a brewing recipe, define the ingredient and input. Requires a PaperMC server.",
+                "**Entries**:",
+                " - `id` = The ID of this recipe.",
+                " - `result` = The resulting output ItemStack of this recipe (What the 3 bottle slots turn into).",
+                " - `ingredient` = Represents the ItemStack put in the top of the brewer (Accepts an ItemStack or RecipeChoice).",
+                " - `input` = Represents the ItemStack put in the 3 bottle slots (Accepts an ItemStack or RecipeChoice).")
+            .examples("on load:",
+                "\tregister brewing recipe:",
+                "\t\tid: \"custom:brew_glow_diamond\"",
+                "\t\tresult: diamond of unbreaking with all item flags",
+                "\t\tingredient: glowstone dust",
+                "\t\tinput: potato",
+                "\t\t",
+                "\tregister brewing recipe:",
+                "\t\tid: \"custom:yummy_soup\"",
+                "\t\tresult: mushroom stew named \"&bYummy Soup\"",
+                "\t\tingredient: glowstone dust",
+                "\t\tinput: water bottle")
+            .since("3.0.0")
+            .register();
     }
 
     private Expression<String> id;

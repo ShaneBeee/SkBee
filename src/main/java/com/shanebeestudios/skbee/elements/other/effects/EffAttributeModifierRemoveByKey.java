@@ -1,16 +1,12 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Multimap;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.registry.RegistryAccess;
@@ -28,18 +24,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Name("Attribute Modifier - Remove By Key")
-@Description({"Remove attribute modifiers by key from items/entities.",
-    "You can optionally specify the attribute types you want to remove.",
-    "Will default to all attribute types."})
-@Examples({"remove attribute modifier with key \"my:key\" from player's tool",
-    "remove generic scale attribute modifier with key \"my:key\" from player's tool"})
-@Since("3.16.0")
 public class EffAttributeModifierRemoveByKey extends Effect {
 
-    static {
-        Skript.registerEffect(EffAttributeModifierRemoveByKey.class,
-            "remove [%-attributetypes%] attribute modifier with key %string/namespacedkey% from %itemtypes/entities%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffAttributeModifierRemoveByKey.class,
+            "remove [%-attributetypes%] attribute modifier with key %string/namespacedkey% from %itemtypes/entities%")
+            .name("Attribute Modifier - Remove By Key")
+            .description("Remove attribute modifiers by key from items/entities.",
+                "You can optionally specify the attribute types you want to remove.",
+                "Will default to all attribute types.")
+            .examples("remove attribute modifier with key \"my:key\" from player's tool",
+                "remove generic scale attribute modifier with key \"my:key\" from player's tool")
+            .since("3.16.0")
+            .register();
     }
 
     private Expression<Attribute> attributeTypes;

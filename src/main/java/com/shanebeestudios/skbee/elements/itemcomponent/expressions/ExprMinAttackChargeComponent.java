@@ -1,11 +1,8 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
@@ -17,26 +14,27 @@ import org.bukkit.inventory.ItemStack;
 import org.jspecify.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ItemComponent - Minimum Attack Charge")
-@Description({"Represents the minimum attack charge component of an item.",
-    "The minimum attack charge on the attack indicator required to attack with this item. Must be a non-negative float between 0.0 and 1.0",
-    "See [**Minimum Attack Charge**](https://minecraft.wiki/w/Data_component_format#minimum_attack_charge) on McWiki for more details.",
-    "Requires Minecraft 1.21.11+",
-    "",
-    "**Changers**:",
-    "`set` = Will set the minimum attack charge of the item.",
-    "`delete` = Will delete the minimum attack charge of this item.",
-    "`reset` = Will reset the minimum attack charge back to the original value."})
-@Examples({"set minimum attack charge of player's tool to 0.5",
-    "delete minimum attack charge of player's tool",
-    "reset minimum attack charge component of player's tool"})
-@Since("3.16.0")
 public class ExprMinAttackChargeComponent extends SimplePropertyExpression<Object, Number> {
 
-    static {
+    public static void register(Registration reg) {
         if (Util.IS_RUNNING_MC_1_21_11) {
-            register(ExprMinAttackChargeComponent.class, Number.class,
-                "min[imum] attack charge [component]", "itemstacks/itemtypes/slots");
+            reg.newPropertyExpression(ExprMinAttackChargeComponent.class, Number.class,
+                    "min[imum] attack charge [component]", "itemstacks/itemtypes/slots")
+                .name("ItemComponent - Minimum Attack Charge")
+                .description("Represents the minimum attack charge component of an item.",
+                    "The minimum attack charge on the attack indicator required to attack with this item. Must be a non-negative float between 0.0 and 1.0",
+                    "See [**Minimum Attack Charge**](https://minecraft.wiki/w/Data_component_format#minimum_attack_charge) on McWiki for more details.",
+                    "Requires Minecraft 1.21.11+",
+                    "",
+                    "**Changers**:",
+                    "`set` = Will set the minimum attack charge of the item.",
+                    "`delete` = Will delete the minimum attack charge of this item.",
+                    "`reset` = Will reset the minimum attack charge back to the original value.")
+                .examples("set minimum attack charge of player's tool to 0.5",
+                    "delete minimum attack charge of player's tool",
+                    "reset minimum attack charge component of player's tool")
+                .since("3.16.0")
+                .register();
         }
     }
 

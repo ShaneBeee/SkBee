@@ -1,32 +1,29 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Team - Prefix/Suffix")
-@Description("Get/set/delete the prefix/suffix of a team.")
-@Examples({"set team prefix of {_team} to \"[OWNER]\"",
-    "set team suffix of {_team} to \"[GOLD]\"",
-    "set {_pre} to team prefix of {_team}",
-    "set team prefix of team of player to \"[BestTeam]\""})
-@Since("1.16.0")
 public class ExprTeamPrefix extends SimplePropertyExpression<Team, String> {
 
-    static {
-        register(ExprTeamPrefix.class, String.class,
-            "team (prefix|1:suffix)", "team");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprTeamPrefix.class, String.class, "team (prefix|1:suffix)", "team")
+            .name("Team - Prefix/Suffix")
+            .description("Get/set/delete the prefix/suffix of a team.")
+            .examples("set team prefix of {_team} to \"[OWNER]\"",
+                "set team suffix of {_team} to \"[GOLD]\"",
+                "set {_pre} to team prefix of {_team}",
+                "set team prefix of team of player to \"[BestTeam]\"")
+            .since("1.16.0")
+            .register();
     }
 
     private int pattern;

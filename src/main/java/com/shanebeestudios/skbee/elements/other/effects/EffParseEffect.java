@@ -1,29 +1,26 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import org.bukkit.command.CommandSender;
 import org.bukkit.event.Event;
 
-@Name("Parse Effect")
-@Description({"This will parse a string as an effect, and then executes it",
-    "If you provide a command sender it works the same as Skript's 'effect commands'.",
-    "Otherwise it runs using the current event allowing you to use event-values"})
-@Examples({"on join:",
-        "\tparse effect \"give player a diamond sword\""})
-@Since("1.15.0")
 public class EffParseEffect extends Effect {
 
-    static {
-        Skript.registerEffect(EffParseEffect.class, "parse effect[s] %strings% [from %-commandsender%]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffParseEffect.class, "parse effect[s] %strings% [from %-commandsender%]")
+            .name("Parse Effect")
+            .description("This will parse a string as an effect, and then executes it",
+                "If you provide a command sender it works the same as Skript's 'effect commands'.",
+                "Otherwise it runs using the current event allowing you to use event-values")
+            .examples("on join:",
+                "\tparse effect \"give player a diamond sword\"")
+            .since("1.15.0")
+            .register();
     }
 
     private Expression<String> effects;

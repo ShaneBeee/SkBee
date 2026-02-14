@@ -3,16 +3,12 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.EntityUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import org.bukkit.attribute.Attribute;
@@ -28,27 +24,28 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Name("Attribute Modifiers of Item/LivingEntity")
-@Description({"Get/change the attribute modifiers of an item/living entity.",
-    "`default` = This option will return the vanilla modifiers of an item (only used for GET).",
-    "`transient` = Non-persisent attribute modifier, will not save to the entity's NBT (only used for ADD) (Requires PaperMC).",
-    "`modifier` will return a single modifier (will default to the 1st element of modifiers of that attribute type if more than 1 exists).",
-    "`modifiers` will return a list of modifiers of that attribute type.",
-    "**CHANGERS:**",
-    "- `add` = Will add a modifier of an attribute type to an item/living entity.",
-    "- `remove` = Remove a specific modifier of an attribute type from an item/living entity.",
-    "- `delete` = Will delete all modifiers of an attribute type from an item/living entity."})
-@Examples({"set {_mods::*} to attack damage modifier of player's tool",
-    "set {_mod} to first element of attack damage modifier of player's tool",
-    "set {_mod} to gravity attribute modifier of player",
-    "delete gravity attribute modifier of player",
-    "add scale modifier of player's tool to scale modifier of player"})
-@Since("3.5.9")
 public class ExprAttributeModifierOfItem extends SimpleExpression<AttributeModifier> {
 
-    static {
-        Skript.registerExpression(ExprAttributeModifierOfItem.class, AttributeModifier.class, ExpressionType.COMBINED,
-            "[:default] [:transient] %attributetype% [attribute] modifier[:s] of %itemtypes/livingentities%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprAttributeModifierOfItem.class, AttributeModifier.class,
+                "[:default] [:transient] %attributetype% [attribute] modifier[:s] of %itemtypes/livingentities%")
+            .name("Attribute Modifiers of Item/LivingEntity")
+            .description("Get/change the attribute modifiers of an item/living entity.",
+                "`default` = This option will return the vanilla modifiers of an item (only used for GET).",
+                "`transient` = Non-persisent attribute modifier, will not save to the entity's NBT (only used for ADD) (Requires PaperMC).",
+                "`modifier` will return a single modifier (will default to the 1st element of modifiers of that attribute type if more than 1 exists).",
+                "`modifiers` will return a list of modifiers of that attribute type.",
+                "**CHANGERS:**",
+                "- `add` = Will add a modifier of an attribute type to an item/living entity.",
+                "- `remove` = Remove a specific modifier of an attribute type from an item/living entity.",
+                "- `delete` = Will delete all modifiers of an attribute type from an item/living entity.")
+            .examples("set {_mods::*} to attack damage modifier of player's tool",
+                "set {_mod} to first element of attack damage modifier of player's tool",
+                "set {_mod} to gravity attribute modifier of player",
+                "delete gravity attribute modifier of player",
+                "add scale modifier of player's tool to scale modifier of player")
+            .since("3.5.9")
+            .register();
     }
 
     private boolean single;

@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.bound.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.EffectSection;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -19,6 +15,7 @@ import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.event.bound.BoundCreateEvent;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprLastCreatedBound;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -31,35 +28,36 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Name("Bound - Create")
-@Description({"Create a bound within 2 locations. This can be used as an effect and as a section.",
-    "Optional value `temporary` creates a bound which persists until server stops (not saved to file).",
-    "Optional value `full` will mark the bound to use the world's min/max height.",
-    "These optional values can be used together.",
-    "**SPECIAL NOTE**:",
-    "- When using locations = The bound created will use the locations you pass thru",
-    "- When using blocks = The bound created will extend the x/y/z axes by 1 to fully include those blocks."})
-@Examples({"# Create bounds using locations",
-    "create bound with id \"le-test\" between {_1} and {_2}:",
-    "\tset bound value \"le-value\" of event-bound to 52",
-    "\tset owner of event-bound to player",
-    "create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
-    "create a temporary bound with id \"%{_world}%.safezone-%random uuid%\" between {loc1} and {loc2}",
-    "create a full bound with id \"spawn\" between {loc} and location of player",
-    "",
-    "# Create bounds using blocks",
-    "create bound with id \"my_home\" within block at player and block 10 above target block",
-    "create bound with id \"le_bound\" within {_block1} and {_block2}",
-    "create a new bound with id \"%uuid of player%.home\" between {block1} and {block2}"})
-@Since("2.5.3, 2.10.0 (temporary bounds)")
 public class EffSecBoundCreate extends EffectSection {
 
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
-    static {
-        Skript.registerSection(EffSecBoundCreate.class,
-            "create [a] [new] [:temporary] [:full] bound with id %string% (within|between) " +
-                "%block/location% and %block/location%");
+    public static void register(Registration reg) {
+        reg.newSection(EffSecBoundCreate.class,
+                "create [a] [new] [:temporary] [:full] bound with id %string% (within|between) " +
+                    "%block/location% and %block/location%")
+            .name("Bound - Create")
+            .description("Create a bound within 2 locations. This can be used as an effect and as a section.",
+                "Optional value `temporary` creates a bound which persists until server stops (not saved to file).",
+                "Optional value `full` will mark the bound to use the world's min/max height.",
+                "These optional values can be used together.",
+                "**SPECIAL NOTE**:",
+                "- When using locations = The bound created will use the locations you pass thru",
+                "- When using blocks = The bound created will extend the x/y/z axes by 1 to fully include those blocks.")
+            .examples("# Create bounds using locations",
+                "create bound with id \"le-test\" between {_1} and {_2}:",
+                "\tset bound value \"le-value\" of event-bound to 52",
+                "\tset owner of event-bound to player",
+                "create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
+                "create a temporary bound with id \"%{_world}%.safezone-%random uuid%\" between {loc1} and {loc2}",
+                "create a full bound with id \"spawn\" between {loc} and location of player",
+                "",
+                "# Create bounds using blocks",
+                "create bound with id \"my_home\" within block at player and block 10 above target block",
+                "create bound with id \"le_bound\" within {_block1} and {_block2}",
+                "create a new bound with id \"%uuid of player%.home\" between {block1} and {block2}")
+            .since("2.5.3, 2.10.0 (temporary bounds)")
+            .register();
     }
 
     private Expression<String> boundID;

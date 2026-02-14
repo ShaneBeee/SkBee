@@ -1,33 +1,31 @@
 package com.shanebeestudios.skbee.elements.other.conditions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Is Critical Hit")
-@Description("Check if a hit was a critical hit in a damage event. Requires a PaperMC server.")
-@Examples({"on damage:",
-    "\tif attacker is a player:",
-    "\t\tif hit is critical:",
-    "\t\t\tcancel event"})
-@Since("2.8.3")
 public class CondCriticalHit extends Condition {
 
-    static {
-        Skript.registerCondition(CondCriticalHit.class, "hit (is|1:(isn't|is not)) [a] critical");
+    public static void register(Registration reg) {
+        reg.newCondition(CondCriticalHit.class, "hit (is|1:(isn't|is not)) [a] critical")
+            .name("Is Critical Hit")
+            .description("Check if a hit was a critical hit in a damage event. Requires a PaperMC server.")
+            .examples("on damage:",
+                "\tif attacker is a player:",
+                "\t\tif hit is critical:",
+                "\t\t\tcancel event")
+            .since("2.8.3")
+            .register();
     }
 
     @Override

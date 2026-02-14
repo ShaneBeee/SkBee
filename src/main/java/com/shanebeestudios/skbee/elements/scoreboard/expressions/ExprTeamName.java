@@ -1,33 +1,31 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Team - Name")
-@Description({"Represents the name and display name of a team.",
-        "\nNOTE: Display name can be set, name cannot be set."})
-@Examples({"set team display name of {_team} to \"The Warriors\"",
-        "set team display name of team of player to \"The Rednecks\"",
-        "set team display name of team named \"blue-team\" to \"Blue Team\"",
-        "set {_name} to team name of team of player"})
-@Since("2.10.0")
 @SuppressWarnings("deprecation")
 public class ExprTeamName extends SimplePropertyExpression<Team, String> {
 
-    static {
-        register(ExprTeamName.class, String.class, "team [:display] name", "teams");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprTeamName.class, String.class, "team [:display] name", "teams")
+            .name("Team - Name")
+            .description("Represents the name and display name of a team.",
+                "\nNOTE: Display name can be set, name cannot be set.")
+            .examples("set team display name of {_team} to \"The Warriors\"",
+                "set team display name of team of player to \"The Rednecks\"",
+                "set team display name of team named \"blue-team\" to \"Blue Team\"",
+                "set {_name} to team name of team of player")
+            .since("2.10.0")
+            .register();
     }
 
     private boolean display;

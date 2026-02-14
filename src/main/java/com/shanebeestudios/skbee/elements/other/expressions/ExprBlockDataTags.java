@@ -1,14 +1,9 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.util.BlockDataUtils;
 import org.bukkit.block.Block;
@@ -20,16 +15,17 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Name("BlockData - Tags")
-@Description("Get a list of all block data tags of a Block or BlockData.")
-@Examples({"set {_data::*} to block data tags of target block of player",
-        "loop block data tags of target block of player:"})
-@Since("1.0.0, 2.16.1 (BlockData Support)")
 public class ExprBlockDataTags extends SimpleExpression<String> {
 
-    static {
-        Skript.registerExpression(ExprBlockDataTags.class, String.class, ExpressionType.PROPERTY,
-                "block[ ](data|state) tags of %blocks/blockdatas%");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprBlockDataTags.class, String.class,
+                "block[ ](data|state) tags", "blocks/blockdatas")
+            .name("BlockData - Tags")
+            .description("Get a list of all block data tags of a Block or BlockData.")
+            .examples("set {_data::*} to block data tags of target block of player",
+                "loop block data tags of target block of player:")
+            .since("1.0.0, 2.16.1 (BlockData Support)")
+            .register();
     }
 
     private Expression<?> objects;

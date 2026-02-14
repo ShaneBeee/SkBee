@@ -1,32 +1,30 @@
 package com.shanebeestudios.skbee.elements.fastboard.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardBase;
+import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("FastBoard - Toggle")
-@Description("Toggle a fastboard on or off.")
-@Examples({"toggle fastboards of all players off",
-        "toggle player's fastboard"})
-@Since("1.16.0")
 public class EffFastBoardToggle extends Effect {
 
-    static {
-        Skript.registerEffect(EffFastBoardToggle.class,
+    public static void register(Registration reg) {
+        reg.newEffect(EffFastBoardToggle.class,
                 "toggle [:score|fast]board[s] of %players% [[to ](1:(on|true)|2:(off|false))]",
-                "toggle %players%'[s] [:score|fast]board[s] [[to ](1:(on|true)|2:(off|false))]");
+                "toggle %players%'[s] [:score|fast]board[s] [[to ](1:(on|true)|2:(off|false))]")
+            .name("FastBoard - Toggle")
+            .description("Toggle a fastboard on or off.")
+            .examples("toggle fastboards of all players off",
+                "toggle player's fastboard")
+            .since("1.16.0")
+            .register();
     }
 
     private Expression<Player> player;
@@ -46,7 +44,7 @@ public class EffFastBoardToggle extends Effect {
     @Override
     protected void execute(Event event) {
         for (Player player : this.player.getArray(event)) {
-            FastBoardBase<?,?> board = FastBoardManager.getBoard(player);
+            FastBoardBase<?, ?> board = FastBoardManager.getBoard(player);
             if (board != null) {
                 switch (pattern) {
                     case 0 -> board.toggle();

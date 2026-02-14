@@ -1,24 +1,22 @@
 package com.shanebeestudios.skbee.elements.raytrace.expressions;
 
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.util.RayTraceResult;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("RayTrace - Hit Block")
-@Description("Gets the hit block resulting from a RayTrace.")
-@Examples("set {_hit} to ray trace hit block of {_ray}")
-@Since("2.6.0")
 public class ExprRayTraceHitBlock extends SimplePropertyExpression<RayTraceResult, Block> {
 
-    static {
-        register(ExprRayTraceHitBlock.class, Block.class,
-                "[ray[ ]trace] hit block", "raytraceresults");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprRayTraceHitBlock.class, Block.class,
+                "[ray[ ]trace] hit block", "raytraceresults")
+            .name("RayTrace - Hit Block")
+            .description("Gets the hit block resulting from a RayTrace.")
+            .examples("set {_hit} to ray trace hit block of {_ray}")
+            .since("2.6.0")
+            .register();
     }
 
     @Override

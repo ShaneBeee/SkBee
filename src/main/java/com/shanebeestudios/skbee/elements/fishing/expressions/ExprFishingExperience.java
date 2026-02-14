@@ -2,36 +2,32 @@ package com.shanebeestudios.skbee.elements.fishing.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Fishing - Experience")
-@Description("Get and modify the amount of experience dropped in a fishing event.")
-@Examples({"on fishing:",
-        "\tadd 10xp to fishing experience",
-        "\tsend fishing experience to player"})
-@Since("2.14.0")
 public class ExprFishingExperience extends SimpleExpression<Experience> {
 
-    static {
-        Skript.registerExpression(ExprFishingExperience.class, Experience.class, ExpressionType.SIMPLE,
-                "fish[ing] [event] experience");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprFishingExperience.class, Experience.class,
+                "fish[ing] [event] experience")
+            .name("Fishing - Experience")
+            .description("Get and modify the amount of experience dropped in a fishing event.")
+            .examples("on fishing:",
+                "\tadd 10xp to fishing experience",
+                "\tsend fishing experience to player")
+            .since("2.14.0")
+            .register();
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         if (!getParser().isCurrentEvent(PlayerFishEvent.class)) {
@@ -41,14 +37,12 @@ public class ExprFishingExperience extends SimpleExpression<Experience> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected @Nullable Experience[] get(Event event) {
         Experience experience = new Experience(((PlayerFishEvent) event).getExpToDrop());
         return new Experience[]{experience};
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         return switch (mode) {
@@ -58,7 +52,7 @@ public class ExprFishingExperience extends SimpleExpression<Experience> {
         };
     }
 
-    @SuppressWarnings({"NullableProblems", "ConstantValue", "DataFlowIssue"})
+    @SuppressWarnings({"ConstantValue", "DataFlowIssue"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (!(event instanceof PlayerFishEvent playerFishEvent)) return;

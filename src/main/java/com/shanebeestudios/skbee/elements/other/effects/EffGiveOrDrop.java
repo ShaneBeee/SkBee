@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import org.bukkit.Location;
@@ -23,15 +18,16 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
-@Name("Give or Drop Item")
-@Description("Attempts to give an item to a player and if they dont have room it will drop instead.")
-@Examples({"give or drop a diamond to player",
-    "give or drop {_items::*} to all players"})
-@Since("2.14.0")
 public class EffGiveOrDrop extends Effect {
 
-    static {
-        Skript.registerEffect(EffGiveOrDrop.class, "give or drop %itemtypes% to %players%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffGiveOrDrop.class, "give or drop %itemtypes% to %players%")
+            .name("Give or Drop Item")
+            .description("Attempts to give an item to a player and if they dont have room it will drop instead.")
+            .examples("give or drop a diamond to player",
+                "give or drop {_items::*} to all players")
+            .since("2.14.0")
+            .register();
     }
 
     private Expression<ItemType> itemTypes;

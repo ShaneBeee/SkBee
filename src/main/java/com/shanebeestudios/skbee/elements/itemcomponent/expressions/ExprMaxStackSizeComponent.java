@@ -1,16 +1,9 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
@@ -21,23 +14,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ItemComponent - Max Stack Size")
-@Description({"Represents the max stack size of an item.",
-    "See [**MaxStackSize**](https://minecraft.wiki/w/Data_component_format#max_stack_size) on McWiki for more details.",
-    "Requires Paper 1.21.3+",
-    "",
-    "**Changers**:",
-    "- `set` = Set the max stack size, must be an integer between 1 and 99.",
-    "- `delete` = Will remove the component from the item.",
-    "- `reset` = Resets back to default stack size."})
-@Examples({"set max stack size component of player's tool to 1",
-    "reset max stack size component of player's tool"})
-@Since("3.6.0")
 public class ExprMaxStackSizeComponent extends SimplePropertyExpression<Object, Number> {
 
-    static {
-        register(ExprMaxStackSizeComponent.class, Number.class,
-            "max stack size component", "itemstacks/itemtypes/slots");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprMaxStackSizeComponent.class, Number.class,
+                "max stack size component", "itemstacks/itemtypes/slots")
+            .name("ItemComponent - Max Stack Size")
+            .description("Represents the max stack size of an item.",
+                "See [**MaxStackSize**](https://minecraft.wiki/w/Data_component_format#max_stack_size) on McWiki for more details.",
+                "Requires Paper 1.21.3+",
+                "",
+                "**Changers**:",
+                "- `set` = Set the max stack size, must be an integer between 1 and 99.",
+                "- `delete` = Will remove the component from the item.",
+                "- `reset` = Resets back to default stack size.")
+            .examples("set max stack size component of player's tool to 1",
+                "reset max stack size component of player's tool")
+            .since("3.6.0")
+            .register();
     }
 
     @Override

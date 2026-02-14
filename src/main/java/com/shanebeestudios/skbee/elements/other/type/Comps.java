@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.other.type;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.EntityUtils;
 import ch.njol.skript.entity.EntityData;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -15,7 +16,7 @@ import org.skriptlang.skript.lang.comparator.Relation;
 @SuppressWarnings("unchecked")
 public class Comps {
 
-    static {
+    public static void register(Registration reg) {
         Comparators.registerComparator(NamespacedKey.class, String.class, (o1, o2) ->
             Relation.get(o1.toString().equalsIgnoreCase(o2)));
 

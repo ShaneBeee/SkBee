@@ -2,14 +2,11 @@ package com.shanebeestudios.skbee.elements.other.conditions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -17,19 +14,20 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Block Can Random Tick")
-@Description({"Gets if this block is ticked randomly in the world. The blocks current state may change this value.",
-    "Requires Paper 1.19+"})
-@Examples({"on right click:",
-    "\tif clicked block can random tick:",
-    "\t\trandom tick clicked block"})
-@Since("3.0.0")
 public class CondBlockCanRandomTick extends Condition {
 
-    static {
-        Skript.registerCondition(CondBlockCanRandomTick.class,
-            "%blocks/blockdatas/itemtypes% can random[ly] tick",
-            "%blocks/blockdatas/itemtypes% (can't|cannot) random[ly] tick");
+    public static void register(Registration reg) {
+        reg.newCondition(CondBlockCanRandomTick.class,
+                "%blocks/blockdatas/itemtypes% can random[ly] tick",
+                "%blocks/blockdatas/itemtypes% (can't|cannot) random[ly] tick")
+            .name("Block Can Random Tick")
+            .description("Gets if this block is ticked randomly in the world. The blocks current state may change this value.")
+            .examples("on right click:",
+                "\tif clicked block can random tick:",
+                "\t\trandom tick clicked block")
+            .since("3.0.0")
+            .register();
+
     }
 
     private Expression<?> blocks;

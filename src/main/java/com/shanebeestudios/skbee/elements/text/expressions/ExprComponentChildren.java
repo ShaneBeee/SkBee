@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -18,15 +13,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("TextComponent - Children")
-@Description("Get the children of a text component. This essentially splits the component up into its parts.")
-@Examples("set {_children::*} to component children of {_textcomp}")
-@Since("2.14.0")
 public class ExprComponentChildren extends SimpleExpression<ComponentWrapper> {
 
-    static {
-        Skript.registerExpression(ExprComponentChildren.class, ComponentWrapper.class, ExpressionType.PROPERTY,
-                "[text] component children of %textcomponents%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprComponentChildren.class, ComponentWrapper.class,
+                "[text] component children of %textcomponents%")
+            .name("TextComponent - Children")
+            .description("Get the children of a text component. This essentially splits the component up into its parts.")
+            .examples("set {_children::*} to component children of {_textcomp}")
+            .since("2.14.0")
+            .register();
     }
 
     private Expression<ComponentWrapper> parents;

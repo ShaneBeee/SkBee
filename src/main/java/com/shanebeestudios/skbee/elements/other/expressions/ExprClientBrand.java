@@ -1,28 +1,26 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Client Brand")
-@Description({"Returns player's client brand name. If the client didn't send this information, the brand name will be null.",
-        "For the Notchian client this name defaults to \"vanilla\". Some modified clients report other names such as \"forge\".",
-        "Requires a PaperMC server."})
-@Examples("broadcast client brand of player")
-@Since("2.16.0")
 public class ExprClientBrand extends SimplePropertyExpression<Player, String> {
 
-    static {
-        register(ExprClientBrand.class, String.class, "client brand", "players");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprClientBrand.class, String.class, "client brand", "players")
+            .name("Client Brand")
+            .description("Returns player's client brand name. If the client didn't send this information, the brand name will be null.",
+                "For the Notchian client this name defaults to \"vanilla\". Some modified clients report other names such as \"forge\".",
+                "Requires a PaperMC server.")
+            .examples("broadcast client brand of player")
+            .since("2.16.0")
+            .register();
     }
 
     @SuppressWarnings("NullableProblems")

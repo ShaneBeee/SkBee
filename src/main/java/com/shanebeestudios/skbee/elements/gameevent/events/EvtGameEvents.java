@@ -1,10 +1,10 @@
 package com.shanebeestudios.skbee.elements.gameevent.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.GameEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -19,9 +19,10 @@ import org.skriptlang.skript.lang.converter.Converter;
 @SuppressWarnings("unused")
 public class EvtGameEvents extends SkriptEvent {
 
-    static {
-        Skript.registerEvent("Generic Game Event", EvtGameEvents.class, GenericGameEvent.class,
+    public static void register(Registration reg) {
+        reg.newEvent(EvtGameEvents.class, GenericGameEvent.class,
                 "[generic] game[ ]event [%-gameevent%]")
+            .name("Generic Game Event")
             .description("Called when a Minecraft game event is fired. These events are provided directly by Minecraft.",
                 "NOTE: Cancelling this event will not cancel the action, only cancel broadcasting event to blocks.",
                 "Requires MC 1.17+")
@@ -29,9 +30,11 @@ public class EvtGameEvents extends SkriptEvent {
                 "\tset {_e} to event-entity",
                 "\tif {_e} is a player:",
                 "\t\tpush {_e} up with speed 0.5")
-            .since("1.14.0");
-        Skript.registerEvent("Block Receive Game Event", EvtGameEvents.class, BlockReceiveGameEvent.class,
+            .since("1.14.0")
+            .register();
+        reg.newEvent(EvtGameEvents.class, BlockReceiveGameEvent.class,
                 "block receive game[ ]event [%-gameevent%]")
+            .name("Block Receive Game Event")
             .description("Called when a block receives a Minecraft game event.",
                 "As of now the only block that receives game events are sculk shrieker, sculk sensor, and calibrated sculk sensor.",
                 "Requires MC 1.17+")
@@ -40,7 +43,8 @@ public class EvtGameEvents extends SkriptEvent {
                 "\tif {_e} is a player:",
                 "\t\tif event-block is set:",
                 "\t\t\tdamage {_e} by 0.5")
-            .since("1.14.0");
+            .since("1.14.0")
+            .register();
 
         EventValues.registerEventValue(GenericGameEvent.class, Entity.class, new Converter<>() {
             @Nullable

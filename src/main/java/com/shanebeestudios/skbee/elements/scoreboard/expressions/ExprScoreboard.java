@@ -1,33 +1,29 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.ScoreboardUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Scoreboard - Scoreboard Get")
-@Description("Get the vanilla scoreboard, or create a new scoreboard (custom scoreboard are not persistent).")
-@Examples({"set {_scoreboard} to scoreboard of player",
-    "set scoreboard of player to a new scoreboard",
-    "set scoreboard of player to the vanilla scoreboard",
-    "reset scoreboard of player"})
-@Since("3.9.0")
 public class ExprScoreboard extends SimpleExpression<Scoreboard> {
 
-    static {
-        Skript.registerExpression(ExprScoreboard.class, Scoreboard.class, ExpressionType.SIMPLE,
-            "[a] (new|custom) scoreboard",
-            "[the] (vanilla|main|server|default) scoreboard");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprScoreboard.class, Scoreboard.class,
+                "[a] (new|custom) scoreboard",
+                "[the] (vanilla|main|server|default) scoreboard")
+            .name("Scoreboard - Scoreboard Get")
+            .description("Get the vanilla scoreboard, or create a new scoreboard (custom scoreboard are not persistent).")
+            .examples("set {_scoreboard} to scoreboard of player",
+                "set scoreboard of player to a new scoreboard",
+                "set scoreboard of player to the vanilla scoreboard",
+                "reset scoreboard of player")
+            .since("3.9.0")
+            .register();
     }
 
     private int pattern;

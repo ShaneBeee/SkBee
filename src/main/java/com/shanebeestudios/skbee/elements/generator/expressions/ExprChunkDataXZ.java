@@ -1,37 +1,34 @@
 package com.shanebeestudios.skbee.elements.generator.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("ChunkGenerator - ChunkData X/Z")
-@Description({"Represents the ChunkData's X/Z coordinates.",
-        "This will typically be used to calculate world position from chunk position for your noise system."})
-@Examples({"chunk gen:",
-        "\tloop 16 times:",
-        "\t\tloop 16 times:",
-        "\t\t\tset {_x} to (loop-number-1) - 1",
-        "\t\t\tset {_z} to (loop-number-2) - 1",
-        "\t\t\tset {_noise} to getNoise({_x} + (16 * chunkdata chunk x), {_z} + (16 * chunkdata chunk z))"})
-@Since("3.5.0")
 public class ExprChunkDataXZ extends SimpleExpression<Number> {
 
-    static {
-        Skript.registerExpression(ExprChunkDataXZ.class, Number.class, ExpressionType.SIMPLE,
-                "chunk[ ]data chunk (:x|z)");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprChunkDataXZ.class, Number.class,
+                "chunk[ ]data chunk (:x|z)")
+            .name("ChunkGenerator - ChunkData X/Z")
+            .description("Represents the ChunkData's X/Z coordinates.",
+                "This will typically be used to calculate world position from chunk position for your noise system.")
+            .examples("chunk gen:",
+                "\tloop 16 times:",
+                "\t\tloop 16 times:",
+                "\t\t\tset {_x} to (loop-number-1) - 1",
+                "\t\t\tset {_z} to (loop-number-2) - 1",
+                "\t\t\tset {_noise} to getNoise({_x} + (16 * chunkdata chunk x), {_z} + (16 * chunkdata chunk z))")
+            .since("3.5.0")
+            .register();
     }
 
     private boolean x;

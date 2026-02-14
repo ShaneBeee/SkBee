@@ -1,14 +1,10 @@
 package com.shanebeestudios.skbee.elements.dialog.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.RegistryAccess;
@@ -19,23 +15,23 @@ import org.bukkit.Registry;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Dialog - Open/Close Dialog")
-@Description({"Open a dialog to players.",
-    "You can use keys from your own custom dialogs, as well as dialogs from datapacks.",
-    "You can also close the currently open dialog of a player."})
-@Examples({"open dialog with id \"minecraft:my_dialog\" to player",
-    "open dialog with id \"my_pack:some_dialog\" to all players",
-    "close dialogs of all players",
-    "close dialogs of world \"world\" #closes dialogs of all players in that world"})
-@Since("3.16.0")
 public class EffOpenDialog extends Effect {
 
     private static final Registry<Dialog> REGISTRY = RegistryAccess.registryAccess().getRegistry(RegistryKey.DIALOG);
 
-    static {
-        Skript.registerEffect(EffOpenDialog.class,
-            "close dialog[s] of %audiences%",
-            "open dialog with id %string/namespacedkey% to %audiences%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffOpenDialog.class, "close dialog[s] of %audiences%",
+                "open dialog with id %string/namespacedkey% to %audiences%")
+            .name("Dialog - Open/Close Dialog")
+            .description("Open a dialog to players.",
+                "You can use keys from your own custom dialogs, as well as dialogs from datapacks.",
+                "You can also close the currently open dialog of a player.")
+            .examples("open dialog with id \"minecraft:my_dialog\" to player",
+                "open dialog with id \"my_pack:some_dialog\" to all players",
+                "close dialogs of all players",
+                "close dialogs of world \"world\" #closes dialogs of all players in that world")
+            .since("3.16.0")
+            .register();
     }
 
     private boolean close;

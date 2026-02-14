@@ -1,18 +1,13 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
@@ -26,18 +21,19 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-@Name("TextComponent - Item Lore Lines")
-@Description("Get/set/delete specific lines of lore of an item using text components.")
-@Examples({"set {_lore} to line 3 of component lore of {_item}",
-    "set line 1 of component lore of player's tool to mini message from \"Look Mah, I'm in Minecraft!\"",
-    "delete line 6 of component lore of player's tool"})
-@Since("3.9.0")
 public class ExprItemLoreLine extends SimpleExpression<ComponentWrapper> {
 
-    static {
-        Skript.registerExpression(ExprItemLoreLine.class, ComponentWrapper.class, ExpressionType.COMBINED,
-            "line %integer% of [the] component [item] lore of %itemstack/itemtype/slot%",
-            "%itemstack/itemtype/slot%'[s] line %integer% of component [item] lore");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprItemLoreLine.class, ComponentWrapper.class,
+                "line %integer% of [the] component [item] lore of %itemstack/itemtype/slot%",
+                "%itemstack/itemtype/slot%'[s] line %integer% of component [item] lore")
+            .name("TextComponent - Item Lore Lines")
+            .description("Get/set/delete specific lines of lore of an item using text components.")
+            .examples("set {_lore} to line 3 of component lore of {_item}",
+                "set line 1 of component lore of player's tool to mini message from \"Look Mah, I'm in Minecraft!\"",
+                "delete line 6 of component lore of player's tool")
+            .since("3.9.0")
+            .register();
     }
 
     private Expression<Integer> line;

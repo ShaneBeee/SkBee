@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.entity.Pathfinder.PathResult;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
@@ -21,15 +16,16 @@ import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Pathfinding - Path Points")
-@Description("Get all the points along an entity's pathfinding path. Requires Paper 1.13+")
-@Examples("set {_path::*} to path points of last spawned sheep")
-@Since("1.5.0")
 public class ExprPath extends SimpleExpression<Location> {
 
-    static {
-        Skript.registerExpression(ExprPath.class, Location.class, ExpressionType.COMBINED,
-            "path [points] of %livingentities%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprPath.class, Location.class,
+            "path [points] of %livingentities%")
+            .name("Pathfinding - Path Points")
+            .description("Get all the points along an entity's pathfinding path. Requires Paper 1.13+")
+            .examples("set {_path::*} to path points of last spawned sheep")
+            .since("1.5.0")
+            .register();
     }
 
     private Expression<LivingEntity> entities;

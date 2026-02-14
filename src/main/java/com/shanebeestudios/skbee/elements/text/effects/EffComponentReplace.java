@@ -1,38 +1,37 @@
 package com.shanebeestudios.skbee.elements.text.effects;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("TextComponent - Replace Text")
-@Description({"Replaces a given string with another string/text component.",
-    "**NOTE:**",
-    " - `regex` Defining the regex keyword will have the provided string be parsed as regex.",
-    " - `first` Defining the first keyword will only replace the first instance. ",
-    " - Any case-sensitivity checks only apply to literal patterns, for regex append `(?i)` to the start",
-    "If you're new to regex and want to see how it's parsed you can use https://regex101.com/ for debugging."})
-@Examples({"component replace \"[item]\", \"[i]\" with getItemComponent(player's tool) in async chat message",
-    "component regex replace \"\\[(item|i)]\" with getItemComponent(player's tool) in async chat message",
-    "component replace first \"Mom!\" in {_message} with \"Dad!\" with case sensitivity"})
-@Since("2.18.0")
 public class EffComponentReplace extends Effect {
 
-    static {
-        Skript.registerEffect(EffComponentReplace.class,
-            "component [:regex] replace [:first] %strings% with %object% in %~textcomponents% [case:with case sensitivity]",
-            "component [:regex] replace [:first] %strings% in %~textcomponents% with %object% [case:with case sensitivity]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffComponentReplace.class,
+                "component [:regex] replace [:first] %strings% with %object% in %~textcomponents% [case:with case sensitivity]",
+                "component [:regex] replace [:first] %strings% in %~textcomponents% with %object% [case:with case sensitivity]")
+            .name("TextComponent - Replace Text")
+            .description(
+                "Replaces a given string with another string/text component.",
+                "**NOTE:**",
+                " - `regex` Defining the regex keyword will have the provided string be parsed as regex.",
+                " - `first` Defining the first keyword will only replace the first instance. ",
+                " - Any case-sensitivity checks only apply to literal patterns, for regex append `(?i)` to the start",
+                "If you're new to regex and want to see how it's parsed you can use https://regex101.com/ for debugging.")
+            .examples(
+                "component replace \"[item]\", \"[i]\" with getItemComponent(player's tool) in async chat message",
+                "component regex replace \"\\[(item|i)]\" with getItemComponent(player's tool) in async chat message",
+                "component replace first \"Mom!\" in {_message} with \"Dad!\" with case sensitivity")
+            .since("2.18.0")
+            .register();
     }
 
     private boolean useRegex, replaceFirst, caseSensitive;
@@ -61,7 +60,6 @@ public class EffComponentReplace extends Effect {
         boolean caseSensitive = this.caseSensitive;
         if (!caseSensitive) caseSensitive = SkriptConfig.caseSensitive.value();
 
-        // Java and lambdas being "effective final" without this the above statement would be uglier
         final boolean finalCaseSensitive = caseSensitive;
         //noinspection UnstableApiUsage - Skript marks changeInPlace as internal but is safe to use
         this.components.changeInPlace(event, component -> {

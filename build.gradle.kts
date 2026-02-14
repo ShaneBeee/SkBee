@@ -7,7 +7,7 @@ plugins {
 // Version of SkBee
 val projectVersion = "3.16.1"
 // Minimum version of Minecraft that SkBee supports
-val apiVersion = "1.21.4"
+val apiVersion = "1.21.8"
 // Where this builds on the server
 val serverLocation = "Minecraft/Skript/1-21-11"
 
@@ -35,7 +35,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
 
     // Skript
-    compileOnly("com.github.SkriptLang:Skript:2.13.0")
+    compileOnly("com.github.SkriptLang:Skript:2.14.0")
 
     // commons-io
     compileOnly("commons-io:commons-io:2.14.0")

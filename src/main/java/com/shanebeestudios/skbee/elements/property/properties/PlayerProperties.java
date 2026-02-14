@@ -3,12 +3,13 @@ package com.shanebeestudios.skbee.elements.property.properties;
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 
 @SuppressWarnings("unused")
 public class PlayerProperties {
 
-    static {
+    public static void register(Registration reg) {
         if (Skript.methodExists(Player.class, "getDeathScreenScore")) {
             PropertyRegistry.registerProperty("death screen score", new Property<>(Player.class, Integer.class) {
                     @Override

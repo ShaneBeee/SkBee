@@ -1,29 +1,27 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Random Tick Block")
-@Description({"Causes the block to be ticked randomly.",
-    "This will tick the block the same way Minecraft randomly ticks according to the randomTickSpeed gamerule.",
-    "Requires Paper 1.19+"})
-@Examples("random tick blocks in radius 3 around target block")
-@Since("3.0.0")
 public class EffBlockRandomlyTick extends Effect {
 
-    static {
-        Skript.registerEffect(EffBlockRandomlyTick.class, "random[ly] tick %blocks%");
+    public static void register(Registration reg){
+        reg.newEffect(EffBlockRandomlyTick.class, "random[ly] tick %blocks%")
+            .name("Random Tick Block")
+            .description("Causes the block to be ticked randomly.",
+                "This will tick the block the same way Minecraft randomly ticks according to the randomTickSpeed gamerule.",
+                "Requires Paper 1.19+")
+            .examples("random tick blocks in radius 3 around target block")
+            .since("3.0.0")
+            .register();
     }
 
     private Expression<Block> blocks;

@@ -1,16 +1,13 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
@@ -18,15 +15,17 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Team Prefix/Suffix")
-@Description("Get/set prefix/suffix of teams using components.")
-@Examples("set component team prefix of team of player to mini message from \"<color:grey>[<color:aqua>OWNER<color:grey>] \"")
-@Since("2.4.0")
 public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, ComponentWrapper> {
 
-    static {
+    public static void register(Registration reg) {
         if (!Util.IS_RUNNING_FOLIA && SkBee.getPlugin().getPluginConfig().ELEMENTS_SCOREBOARD) {
-            register(ExprTeamPrefixComp.class, ComponentWrapper.class, "component team (prefix|1:suffix)", "teams");
+            reg.newPropertyExpression(ExprTeamPrefixComp.class, ComponentWrapper.class,
+                    "component team (prefix|1:suffix)", "teams")
+                .name("TextComponent - Team Prefix/Suffix")
+                .description("Get/set prefix/suffix of teams using components.")
+                .examples("set component team prefix of team of player to mini message from \"<color:grey>[<color:aqua>OWNER<color:grey>] \"")
+                .since("2.4.0")
+                .register();
         }
     }
 

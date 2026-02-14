@@ -1,14 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -17,16 +13,17 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Send Equipment Change")
-@Description("Send an equipment change for an entity. This will not actually change the entity's equipment in any way.")
-@Examples({"make player see hand slot of target entity as diamond sword",
-    "make all players see off hand slot of player as shield"})
-@Since("3.4.0")
 public class EffEquipmentChange extends Effect {
 
-    static {
-        Skript.registerEffect(EffEquipmentChange.class,
-            "make %players% see %equipmentslots% of %livingentities% as %itemtype%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffEquipmentChange.class,
+                "make %players% see %equipmentslots% of %livingentities% as %itemtype%")
+            .name("Send Equipment Change")
+            .description("Send an equipment change for an entity. This will not actually change the entity's equipment in any way.")
+            .examples("make player see hand slot of target entity as diamond sword",
+                "make all players see off hand slot of player as shield")
+            .since("3.4.0")
+            .register();
     }
 
     private Expression<Player> players;

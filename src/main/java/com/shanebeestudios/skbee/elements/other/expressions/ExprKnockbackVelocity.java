@@ -1,34 +1,30 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Knockback Velocity")
-@Description("The knockback velocity in an entity knockback event.")
-@Examples({"on entity knockback:",
-        "\tset knockback velocity to knockback velocity * -1"})
-@Since("3.16.0")
 public class ExprKnockbackVelocity extends SimpleExpression<Vector> implements EventRestrictedSyntax {
 
-    static {
-        Skript.registerExpression(ExprKnockbackVelocity.class, Vector.class, ExpressionType.SIMPLE,
-                "[the] knockback velocity");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprKnockbackVelocity.class, Vector.class, "simple",
+                        "[the] knockback velocity")
+                .name("Knockback Velocity")
+                .description("The knockback velocity in an entity knockback event.")
+                .examples("on entity knockback:",
+                        "\tset knockback velocity to knockback velocity * -1")
+                .since("3.16.0")
+                .register();
     }
 
     @Override

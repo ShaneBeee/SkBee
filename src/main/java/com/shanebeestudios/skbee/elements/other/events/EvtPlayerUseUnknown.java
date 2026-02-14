@@ -6,6 +6,7 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
 import com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
@@ -15,11 +16,12 @@ import org.jetbrains.annotations.Nullable;
 @SuppressWarnings("unused")
 public class EvtPlayerUseUnknown extends SkriptEvent {
 
-    static {
-        Skript.registerEvent("Player Click Unknown Entity", EvtPlayerUseUnknown.class, PlayerUseUnknownEntityEvent.class,
+    public static void register(Registration reg) {
+        reg.newEvent(EvtPlayerUseUnknown.class, PlayerUseUnknownEntityEvent.class,
                 "[player] click unknown entity [with (main|:off) hand]",
                 "[player] right[( |-)]click unknown entity [with (main|:off) hand]",
                 "[player] left[( |-)]click unknown entity [with (main|:off) hand]")
+            .name("Player Click Unknown Entity")
             .description("Represents an event that is called when a player right-clicks an unknown entity.",
                 "Useful for dealing with virtual entities (entities that aren't actually spawned on the server).",
                 "This event may be called multiple times per interaction (this is a server issue).",
@@ -28,7 +30,8 @@ public class EvtPlayerUseUnknown extends SkriptEvent {
                 "\nRequires PaperMC.")
             .examples("on right click unknown entity:",
                 "\tteleport player to spawn of world \"world\"")
-            .since("2.17.0");
+            .since("2.17.0")
+            .register();
 
         EventValues.registerEventValue(PlayerUseUnknownEntityEvent.class, Number.class, PlayerUseUnknownEntityEvent::getEntityId, EventValues.TIME_NOW);
         if (Skript.methodExists(PlayerUseUnknownEntityEvent.class, "getClickedRelativePosition")) {

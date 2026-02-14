@@ -1,17 +1,12 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.entity.Entity;
@@ -21,22 +16,19 @@ import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Team - From Entity")
-@Description({
-    "Get an instance of a team from an entity.",
-    "You have the option to get a team from a specific scoreboard (defaults to the main scoreboard).",
-    "Teams off the main scoreboard cannot be serialized/saved to variables (This is because custom scoreboards aren't persistent)."
-})
-@Examples({
-    "set {_team} to team of player",
-    "set {_team} to team of player from {-teams::groups}"
-})
-@Since("1.16.0")
 public class ExprTeam extends SimpleExpression<Team> {
 
-    static {
-        Skript.registerExpression(ExprTeam.class, Team.class, ExpressionType.SIMPLE,
-            "team of %entity% [(of|from) %scoreboard%]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprTeam.class, Team.class,
+                "team of %entity% [(of|from) %scoreboard%]")
+            .name("Team - From Entity")
+            .description("Get an instance of a team from an entity.",
+                "You have the option to get a team from a specific scoreboard (defaults to the main scoreboard).",
+                "Teams off the main scoreboard cannot be serialized/saved to variables (This is because custom scoreboards aren't persistent).")
+            .examples("set {_team} to team of player",
+                "set {_team} to team of player from {-teams::groups}")
+            .since("1.16.0")
+            .register();
     }
 
     private Expression<Entity> entities;

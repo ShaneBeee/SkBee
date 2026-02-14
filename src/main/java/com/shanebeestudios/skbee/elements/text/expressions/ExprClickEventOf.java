@@ -1,32 +1,33 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.event.ClickEvent;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Click Event Of")
-@Description("Set the click event of a text component.")
-@Examples({"set {_t} to text component from \"Check out this cool thing at SPAWN!\"",
-        "set hover event of {_t} to a new hover event showing \"Clicky clicky to go to spawn!\"",
-        "set click event of {_t} to a new click event to run command \"/spawn\"",
-        "send component {_t} to player"})
-@Since("1.5.0")
 public class ExprClickEventOf extends PropertyExpression<ComponentWrapper, ClickEvent> {
 
-    static {
-        register(ExprClickEventOf.class, ClickEvent.class, "click event", "textcomponents");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprClickEventOf.class, ClickEvent.class,
+                "click event", "textcomponents")
+            .name("TextComponent - Click Event Of")
+            .description("Set the click event of a text component.")
+            .examples(
+                "set {_t} to text component from \"Check out this cool thing at SPAWN!\"",
+                "set hover event of {_t} to a new hover event showing \"Clicky clicky to go to spawn!\"",
+                "set click event of {_t} to a new click event to run command \"/spawn\"",
+                "send component {_t} to player"
+            )
+            .since("1.5.0")
+            .register();
     }
 
     @SuppressWarnings({"NullableProblems", "unchecked"})

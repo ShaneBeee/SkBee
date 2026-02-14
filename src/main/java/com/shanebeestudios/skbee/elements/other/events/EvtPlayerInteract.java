@@ -1,11 +1,11 @@
 package com.shanebeestudios.skbee.elements.other.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.Action;
@@ -20,10 +20,11 @@ import org.skriptlang.skript.lang.converter.Converter;
 
 public class EvtPlayerInteract extends SkriptEvent {
 
-    static {
-        Skript.registerEvent("Player Interact", EvtPlayerInteract.class,
+    public static void register(Registration reg) {
+        reg.newEvent(EvtPlayerInteract.class,
                 CollectionUtils.array(PlayerInteractEvent.class, PlayerInteractAtEntityEvent.class),
                 "player interact", "player interact (at|on) entity")
+            .name("Player Interact")
             .description("Called when a player interacts (clicks) a block or entity.",
                 "This is similar to Skript's click event, but more verbose giving you more freedom.",
                 "Note: This event may be called once for each hand.",
@@ -50,7 +51,8 @@ public class EvtPlayerInteract extends SkriptEvent {
                 "\tthen:",
                 "\t\tcancel event",
                 "\t\tkill clicked entity")
-            .since("3.4.0");
+            .since("3.4.0")
+            .register();
 
         EventValues.registerEventValue(PlayerInteractEvent.class, EquipmentSlot.class, new Converter<>() {
             @Override

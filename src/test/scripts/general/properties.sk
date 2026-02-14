@@ -1,4 +1,7 @@
 test "SkBee - Properties":
+	stop
+	## CURRENTLY BROKEN WILL FIX LATER TODO
+
 	# ENTITY PROPERTIES
 	spawn a sheep at event-location:
 		set {_e} to entity

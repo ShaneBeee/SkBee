@@ -1,11 +1,6 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.EffectSection;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
@@ -14,6 +9,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -32,41 +28,6 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import java.util.List;
 import java.util.Locale;
 
-@Name("ItemComponent - Consumable Component Apply")
-@Description({"Apply a consumable component to an item.",
-    "If present, this item can be consumed by the player.",
-    "Requires Paper 1.21.3+",
-    "See [**Consumable Component**](https://minecraft.wiki/w/Data_component_format#consumable) on McWiki for more info.",
-    "**Entries**:",
-    "- `consume_seconds` = The amount of time it takes for a player to consume the item. Defaults to 1.6 seconds. [Optional]",
-    "- `animation` = The animation used during consumption of the item. [Optional]",
-    "  Must be one of \"none\", \"eat\", \"drink\", \"block\", \"bow\", \"spear\", \"crossbow\", \"spyglass\", \"toot_horn\" or \"brush\". Defaults to \"eat\"]",
-    "- `sound` = A sound key to player when consumed. Defaults to \"entity.generic.eat\" [Optional]",
-    "- `has_consume_particles` = Whether consumption particles are emitted while consuming this item. Defaults to true. [Optional]",
-    "- `on_consume_effect` = A `consume effect` to by applied to the component (supports a list) [Optional].",
-    "- `on_consume_effects` = A section to apply `consume effects` [Optional]."})
-@Examples({"apply consumable to {_i}:",
-    "\tanimation: \"drink\"",
-    "\tconsume_seconds: 2.5 seconds",
-    "\ton_consume_effects:",
-    "\t\tapply -> potion effect of slowness for 10 seconds with probability 0.5",
-    "\t\tapply -> clear all effects",
-    "\t\tapply -> remove effects night vision",
-    "\t\tapply -> play sound \"blah.blah\"",
-    "\t\tapply -> teleport randomly within 15",
-    "\t\tapply -> teleport randomly within 20 meters",
-    "\t\tapply -> teleport randomly within 100 blocks",
-    "",
-    "set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)",
-    "set {_i} to 1 of stick",
-    "apply consumable component to {_i}:",
-    "\tconsume_seconds: 3.2 seconds",
-    "\tanimation: \"brush\"",
-    "\tsound: \"block.stone.break\"",
-    "\thas_consume_particles: false",
-    "\ton_consume_effect: {_effects}",
-    "give {_i} to player"})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class SecConsumableComponent extends EffectSection {
 
@@ -88,9 +49,9 @@ public class SecConsumableComponent extends EffectSection {
         }
     }
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         VALIDATOR = SimpleEntryValidator.builder()
             .addOptionalEntry("consume_seconds", Timespan.class)
             .addOptionalEntry("animation", String.class)
@@ -99,8 +60,44 @@ public class SecConsumableComponent extends EffectSection {
             .addOptionalEntry("on_consume_effect", ConsumeEffect.class)
             .addOptionalSection("on_consume_effects")
             .build();
-        Skript.registerSection(SecConsumableComponent.class,
-            "apply consumable [component] to %itemstacks/itemtypes/slots%");
+        reg.newSection(SecConsumableComponent.class,
+                "apply consumable [component] to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Consumable Component Apply")
+            .description("Apply a consumable component to an item.",
+                "If present, this item can be consumed by the player.",
+                "Requires Paper 1.21.3+",
+                "See [**Consumable Component**](https://minecraft.wiki/w/Data_component_format#consumable) on McWiki for more info.",
+                "**Entries**:",
+                "- `consume_seconds` = The amount of time it takes for a player to consume the item. Defaults to 1.6 seconds. [Optional]",
+                "- `animation` = The animation used during consumption of the item. [Optional]",
+                "  Must be one of \"none\", \"eat\", \"drink\", \"block\", \"bow\", \"spear\", \"crossbow\", \"spyglass\", \"toot_horn\" or \"brush\". Defaults to \"eat\"]",
+                "- `sound` = A sound key to player when consumed. Defaults to \"entity.generic.eat\" [Optional]",
+                "- `has_consume_particles` = Whether consumption particles are emitted while consuming this item. Defaults to true. [Optional]",
+                "- `on_consume_effect` = A `consume effect` to by applied to the component (supports a list) [Optional].",
+                "- `on_consume_effects` = A section to apply `consume effects` [Optional].")
+            .examples("apply consumable to {_i}:",
+                "\tanimation: \"drink\"",
+                "\tconsume_seconds: 2.5 seconds",
+                "\ton_consume_effects:",
+                "\t\tapply -> potion effect of slowness for 10 seconds with probability 0.5",
+                "\t\tapply -> clear all effects",
+                "\t\tapply -> remove effects night vision",
+                "\t\tapply -> play sound \"blah.blah\"",
+                "\t\tapply -> teleport randomly within 15",
+                "\t\tapply -> teleport randomly within 20 meters",
+                "\t\tapply -> teleport randomly within 100 blocks",
+                "",
+                "set {_effects} to apply_effects(potion effect of night vision for 10 seconds, 0.5)",
+                "set {_i} to 1 of stick",
+                "apply consumable component to {_i}:",
+                "\tconsume_seconds: 3.2 seconds",
+                "\tanimation: \"brush\"",
+                "\tsound: \"block.stone.break\"",
+                "\thas_consume_particles: false",
+                "\ton_consume_effect: {_effects}",
+                "give {_i} to player")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<Object> items;

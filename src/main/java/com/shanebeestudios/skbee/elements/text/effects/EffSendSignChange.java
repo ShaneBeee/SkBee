@@ -1,37 +1,35 @@
 package com.shanebeestudios.skbee.elements.text.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.DyeColor;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Sign Change")
-@Description({"Sends a sign change to the player. You CAN send a block change first.",
-        "\nColor = the color of the text on the sign.",
-        "\nGlowing = make the text glow."})
-@Examples({"set {_m::1} to mini message from \"<rainbow>OOOOOOOO\"",
-        "set {_m::2} to text component from \"Le-Text\"",
-        "make player see sign lines of target block as {_m::*} with color blue"})
-@Since("2.6.0")
 public class EffSendSignChange extends Effect {
 
-    static {
-        Skript.registerEffect(EffSendSignChange.class,
-                "make %players% see sign lines (at|of) %blocks% as %textcomponents% " +
-                        "[with color %-color%] [glowing:and glowing]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffSendSignChange.class,
+                "make %players% see sign lines (at|of) %blocks% as %textcomponents% [with color %-color%] [glowing:and glowing]")
+            .name("TextComponent - Sign Change")
+            .description(
+                "Sends a sign change to the player. You CAN send a block change first.",
+                "\nColor = the color of the text on the sign.",
+                "\nGlowing = make the text glow.")
+            .examples(
+                "set {_m::1} to mini message from \"<rainbow>OOOOOOOO\"",
+                "set {_m::2} to text component from \"Le-Text\"",
+                "make player see sign lines of target block as {_m::*} with color blue")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<Player> players;
@@ -72,10 +70,10 @@ public class EffSendSignChange extends Effect {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        String color = this.color != null ? this.color.toString(e,d) : "";
+        String color = this.color != null ? this.color.toString(e, d) : "";
         String glow = this.glowing ? " and glowing" : "";
-        return "make " + this.players.toString(e,d) + " see sign lines of " + this.blocks.toString(e,d)
-                + " as " + this.components.toString(e,d) + color + glow;
+        return "make " + this.players.toString(e, d) + " see sign lines of " + this.blocks.toString(e, d)
+            + " as " + this.components.toString(e, d) + color + glow;
     }
 
 }

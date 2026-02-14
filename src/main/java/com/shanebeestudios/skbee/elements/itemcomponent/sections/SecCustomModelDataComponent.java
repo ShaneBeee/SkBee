@@ -1,17 +1,13 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -23,27 +19,11 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 
 import java.util.List;
 
-@Name("ItemComponent - CustomModelData Component Apply")
-@Description({"Apply a custom model data component to items.",
-    "Requires Paper 1.21.4+",
-    "See [**CustomModelData Component**](https://minecraft.wiki/w/Data_component_format#custom_model_data) on McWiki for more info.",
-    "",
-    "**Entries**:",
-    "- `floats` = A list of numbers.",
-    "- `flags` = A list of booleans (true/false).",
-    "- `strings` = A list of strings.",
-    "- `colors` = A list of colors."})
-@Examples({"apply custom model data to player's tool:",
-    "\tfloats: 1, 2, 3, 4, 5",
-    "\tstrings: \"hello\", \"yippee\"",
-    "\tflags: true, true, true, false",
-    "\tcolors: blue, green, rgb(1,1,1)"})
-@Since("3.8.0")
 public class SecCustomModelDataComponent extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         VALIDATOR = SimpleEntryValidator.builder()
             .addOptionalEntry("floats", Number.class)
             .addOptionalEntry("flags", Boolean.class)
@@ -51,8 +31,25 @@ public class SecCustomModelDataComponent extends Section {
             .addOptionalEntry("colors", Color.class)
             .build();
 
-        Skript.registerSection(SecCustomModelDataComponent.class,
-            "apply custom model data [component] to %itemstacks/itemtypes/slots%");
+        reg.newSection(SecCustomModelDataComponent.class,
+                "apply custom model data [component] to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - CustomModelData Component Apply")
+            .description("Apply a custom model data component to items.",
+                "Requires Paper 1.21.4+",
+                "See [**CustomModelData Component**](https://minecraft.wiki/w/Data_component_format#custom_model_data) on McWiki for more info.",
+                "",
+                "**Entries**:",
+                "- `floats` = A list of numbers.",
+                "- `flags` = A list of booleans (true/false).",
+                "- `strings` = A list of strings.",
+                "- `colors` = A list of colors.")
+            .examples("apply custom model data to player's tool:",
+                "\tfloats: 1, 2, 3, 4, 5",
+                "\tstrings: \"hello\", \"yippee\"",
+                "\tflags: true, true, true, false",
+                "\tcolors: blue, green, rgb(1,1,1)")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<?> items;

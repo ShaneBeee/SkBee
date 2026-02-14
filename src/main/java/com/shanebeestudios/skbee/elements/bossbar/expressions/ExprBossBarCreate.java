@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.bossbar.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.BossBarUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -24,22 +19,23 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("BossBar - Create")
-@Description({"Create your own custom BossBar.",
-    "**NOTE**: Progress is a number between 0-100.",
-    "**NOTE**: This just creates a new custom bossbar. It will by default not be visible to anyone",
-    "until you actually add players to it. See examples!!!",
-    "**NOTE**: The ID is optional. If excluded, the BossBar will not save to the server."})
-@Examples({"set {_bar} to boss bar with id \"le-bar\" with title \"My BossBar\"",
-    "set {_bar} to boss bar with id \"le-bar\" with title \"Le Title\" with color pink with progress 50",
-    "add all players to {_bar}"})
-@Since("2.14.1")
 public class ExprBossBarCreate extends SimpleExpression<BossBar> {
 
-    static {
-        Skript.registerExpression(ExprBossBarCreate.class, BossBar.class, ExpressionType.COMBINED,
-            "[new] boss[ ]bar [(named|with id) %-string%] with title %string% [with (color|colour) %-color%] " +
-                "[with style %-bossbarstyle%] [with progress %-number%]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprBossBarCreate.class, BossBar.class,
+                "[new] boss[ ]bar [(named|with id) %-string%] with title %string% [with (color|colour) %-color%] " +
+                    "[with style %-bossbarstyle%] [with progress %-number%]")
+            .name("BossBar - Create")
+            .description("Create your own custom BossBar.",
+                "**NOTE**: Progress is a number between 0-100.",
+                "**NOTE**: This just creates a new custom bossbar. It will by default not be visible to anyone",
+                "until you actually add players to it. See examples!!!",
+                "**NOTE**: The ID is optional. If excluded, the BossBar will not save to the server.")
+            .examples("set {_bar} to boss bar with id \"le-bar\" with title \"My BossBar\"",
+                "set {_bar} to boss bar with id \"le-bar\" with title \"Le Title\" with color pink with progress 50",
+                "add all players to {_bar}")
+            .since("2.14.1")
+            .register();
     }
 
     private Expression<String> key;

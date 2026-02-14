@@ -1,27 +1,25 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.vf.api.machine.Machine;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("VirtualFurnace - Machine Name")
-@Description("Get/set the name of a virtual furnace.")
-@Examples({"set {_name} to machine name of {_furnace}",
-        "set machine name of {_furnace} to \"Super Fast Furnace\""})
-@Since("3.3.0")
 public class ExprVirtualFurnaceMachineName extends SimplePropertyExpression<Machine, String> {
 
-    static {
-        register(ExprVirtualFurnaceMachineName.class, String.class,
-                "[virtual] (machine|furnace) name", "machines");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprVirtualFurnaceMachineName.class, String.class,
+                "[virtual] (machine|furnace) name", "machines")
+            .name("VirtualFurnace - Machine Name")
+            .description("Get/set the name of a virtual furnace.")
+            .examples("set {_name} to machine name of {_furnace}",
+                "set machine name of {_furnace} to \"Super Fast Furnace\"")
+            .since("3.3.0")
+            .register();
     }
 
     @Override

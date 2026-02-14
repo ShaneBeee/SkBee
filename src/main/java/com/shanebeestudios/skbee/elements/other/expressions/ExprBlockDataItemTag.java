@@ -2,11 +2,8 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
@@ -19,15 +16,16 @@ import org.bukkit.inventory.meta.BlockDataMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("BlockData - Item BlockData Tag")
-@Description("Get/set the value of a tag in the BlockData of an item.")
-@Examples("")
-@Since("3.4.0")
 public class ExprBlockDataItemTag extends PropertyExpression<ItemType, Object> {
 
-    static {
-        PropertyExpression.register(ExprBlockDataItemTag.class, Object.class,
-            "item [block[ ]](data|state) tag %string%", "itemtypes");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprBlockDataItemTag.class, Object.class,
+                "item [block[ ]](data|state) tag %string%", "itemtypes")
+            .name("BlockData - Item BlockData Tag")
+            .description("Get/set the value of a tag in the BlockData of an item.")
+            .examples("")
+            .since("3.4.0")
+            .register();
     }
 
     private Expression<String> tag;

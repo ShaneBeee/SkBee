@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.bossbar.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Boss;
@@ -22,19 +17,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("BossBar - Entity/Player")
-@Description({"Get a BossBar from an entity (such as a wither) or all BossBars of players.",
-        "NOTE: BossBars from entities cannot be saved in global variables, as the entity may not be loaded on the",
-        "server when that variable is trying to load. Custom BossBars and BossBars from players can be saved in variables."})
-@Examples({"set {_bar} to boss bar of target entity",
-        "set {_bars::*} to boss bars of player"})
-@Since("2.14.1")
 public class ExprBossBarEntity extends SimpleExpression<BossBar> {
 
-    static {
-        Skript.registerExpression(ExprBossBarEntity.class, BossBar.class, ExpressionType.COMBINED,
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprBossBarEntity.class, BossBar.class,
                 "boss[ ]bar of %entity%",
-                "boss[ ]bars of %players%");
+                "boss[ ]bars of %players%")
+            .name("BossBar - Entity/Player")
+            .description("Get a BossBar from an entity (such as a wither) or all BossBars of players.",
+                "NOTE: BossBars from entities cannot be saved in global variables, as the entity may not be loaded on the",
+                "server when that variable is trying to load. Custom BossBars and BossBars from players can be saved in variables.")
+            .examples("set {_bar} to boss bar of target entity",
+                "set {_bars::*} to boss bars of player")
+            .since("2.14.1")
+            .register();
     }
 
     private int pattern;

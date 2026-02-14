@@ -1,28 +1,25 @@
 package com.shanebeestudios.skbee.elements.fishing.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("Fish Hook - Pull In")
-@Description("Pulls in the entity hooked to this fish hook.")
-@Examples("pull in hooked entity of {_fishHook}")
-@Since("2.8.0")
 public class EffFishHookPullIn extends Effect {
 
-    static {
-        Skript.registerEffect(EffFishHookPullIn.class, "pull in hooked entit(y|ies) of %entities%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffFishHookPullIn.class, "pull in hooked entit(y|ies) of %entities%")
+            .name("Fish Hook - Pull In")
+            .description("Pulls in the entity hooked to this fish hook.")
+            .examples("pull in hooked entity of {_fishHook}")
+            .since("2.8.0")
+            .register();
     }
 
     private Expression<Entity> entities;
@@ -46,7 +43,7 @@ public class EffFishHookPullIn extends Effect {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "pull in " + this.entities.toString(e,d);
+        return "pull in " + this.entities.toString(e, d);
     }
 
 }

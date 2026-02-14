@@ -1,14 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.entity.RangedEntity;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.entity.LivingEntity;
@@ -16,17 +12,18 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Ranged Attack")
-@Description({"Make a RangedEntity perform a ranged attack. Requires PaperMC.",
-    "\n`with charge` = How \"charged\" the attack is (how far back the bow was pulled for Bow attacks).",
-    "This should be a value between 0 and 1, represented as targetDistance/maxDistance.",
-    "\nRangedEntities: Drowned, Illusioner, Llama, Piglin, Pillager, Skeleton, Snowman, Stray, TraderLlama, Witch, Wither, WitherSkeleton."})
-@Examples("make last spawned entity range attack player with charge 0.5")
-@Since("2.17.0")
 public class EffRangedAttack extends Effect {
 
-    static {
-        Skript.registerEffect(EffRangedAttack.class, "make %livingentity% range attack %livingentities% [with charge %-number%]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffRangedAttack.class, "make %livingentity% range attack %livingentities% [with charge %-number%]")
+            .name("Ranged Attack")
+            .description("Make a RangedEntity perform a ranged attack. Requires PaperMC.",
+                "\n`with charge` = How \"charged\" the attack is (how far back the bow was pulled for Bow attacks).",
+                "This should be a value between 0 and 1, represented as targetDistance/maxDistance.",
+                "\nRangedEntities: Drowned, Illusioner, Llama, Piglin, Pillager, Skeleton, Snowman, Stray, TraderLlama, Witch, Wither, WitherSkeleton.")
+            .examples("make last spawned entity range attack player with charge 0.5")
+            .since("2.17.0")
+            .register();
     }
 
     private Expression<LivingEntity> entity;
