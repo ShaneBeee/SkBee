@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.nbt.effects;
 
-import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.entity.EntityType;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
@@ -10,19 +9,14 @@ import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.registration.Registration;
-import com.shanebeestudios.skbee.api.util.Util;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.FallingBlock;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 
 public class EffSpawnEntityNBT extends Effect {
 
@@ -87,13 +81,7 @@ public class EffSpawnEntityNBT extends Effect {
             if (this.entityTypes != null) {
                 for (final EntityType entityType : this.entityTypes.getArray(event)) {
                     for (int i = 0; i < amount * entityType.getAmount(); i++) {
-                        Entity spawn;
-                        if (Util.IS_RUNNING_SKRIPT_2_13) {
-                            spawn = entityType.data.spawn(loc, entity -> NBTApi.addNBTToEntity(entity, compound));
-                        } else {
-                            spawn = oldSpawn(entityType, loc, compound);
-                        }
-                        EffSecSpawn.lastSpawned = spawn;
+                        EffSecSpawn.lastSpawned = entityType.data.spawn(loc, entity -> NBTApi.addNBTToEntity(entity, compound));
                     }
                 }
             } else if (this.blockdata != null) {
@@ -118,34 +106,6 @@ public class EffSpawnEntityNBT extends Effect {
             return "spawn " + (this.amount != null ? this.amount.toString(e, d) + " " : "") +
                 this.entityTypes.toString(e, d) + locAndNBT;
         }
-    }
-
-    // TODO remove once Skript 2.13 is the min version for SkBee
-    private static final Method SPAWN_METHOD;
-
-    static {
-        try {
-            if (Util.IS_RUNNING_SKRIPT_2_13) {
-                SPAWN_METHOD = null;
-            } else {
-                //noinspection removal,JavaReflectionMemberAccess
-                SPAWN_METHOD = EntityData.class.getMethod("spawn", Location.class, org.bukkit.util.Consumer.class);
-            }
-        } catch (NoSuchMethodException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    @SuppressWarnings({"removal"})
-    private static Entity oldSpawn(EntityType entityType, Location location, NBTCompound compound) {
-        org.bukkit.util.Consumer<Entity> consumer = (entity -> NBTApi.addNBTToEntity(entity, compound));
-        try {
-            Object spawnedEntity = SPAWN_METHOD.invoke(entityType.data, location, consumer);
-            return (Entity) spawnedEntity;
-        } catch (IllegalAccessException | InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
-
     }
 
 }

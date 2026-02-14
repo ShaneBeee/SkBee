@@ -78,10 +78,8 @@ public class RegistryHolders {
         register(RegistryKey.ATTRIBUTE, Attribute.class);
         register(RegistryKey.BIOME, Biome.class);
         register(RegistryKey.BLOCK, ItemType.class, blockType -> new ItemType(blockType.asMaterial()), itemTypeComparator);
-        if (Util.IS_RUNNING_MC_1_21_5) {
-            register(RegistryKey.CHICKEN_VARIANT, Chicken.Variant.class);
-            register(RegistryKey.COW_VARIANT, Cow.Variant.class);
-        }
+        register(RegistryKey.CHICKEN_VARIANT, Chicken.Variant.class);
+        register(RegistryKey.COW_VARIANT, Cow.Variant.class);
         register(RegistryKey.DAMAGE_TYPE, DamageType.class);
         register(RegistryKey.DATA_COMPONENT_TYPE, DataComponentType.class);
         if (Util.IS_RUNNING_MC_1_21_7) {
@@ -100,9 +98,7 @@ public class RegistryHolders {
         register(RegistryKey.MEMORY_MODULE_TYPE, MemoryKey.class);
         register(RegistryKey.MOB_EFFECT, PotionEffectType.class);
         register(RegistryKey.PARTICLE_TYPE, Particle.class);
-        if (Util.IS_RUNNING_MC_1_21_5) {
-            register(RegistryKey.PIG_VARIANT, Pig.Variant.class);
-        }
+        register(RegistryKey.PIG_VARIANT, Pig.Variant.class);
         register(RegistryKey.POTION, PotionType.class);
         register(RegistryKey.SOUND_EVENT, String.class, soundEvent -> soundEvent.key().toString());
         register(RegistryKey.STRUCTURE, Structure.class);
@@ -111,9 +107,7 @@ public class RegistryHolders {
         register(RegistryKey.TRIM_PATTERN, TrimPattern.class);
         register(RegistryKey.VILLAGER_PROFESSION, Villager.Profession.class);
         register(RegistryKey.VILLAGER_TYPE, Villager.Type.class);
-        if (Util.IS_RUNNING_MC_1_21_5) {
-            register(RegistryKey.WOLF_VARIANT, Wolf.Variant.class);
-        }
+        register(RegistryKey.WOLF_VARIANT, Wolf.Variant.class);
         if (Util.IS_RUNNING_MC_1_21_11) {
             register(RegistryKey.ZOMBIE_NAUTILUS_VARIANT, ZombieNautilus.Variant.class);
         }
