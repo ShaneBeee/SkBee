@@ -1,14 +1,11 @@
 package com.shanebeestudios.skbee.elements.villager.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Villager;
@@ -16,24 +13,25 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Villager - Effects")
-@Description("A few effects to make villagers do things.")
-@Examples({"zombify last spawned villager",
-    "wake up all villagers",
-    "make target entity shake his head",
-    "make target entity sleep at location(100, 64, 100, world \"world\")"})
-@Since("1.17.0")
 public class EffVillagerEffects extends Effect {
 
     private static final boolean CAN_ZOMBIFY = Skript.methodExists(Villager.class, "zombify");
     private static final boolean CAN_WAKEUP = Skript.methodExists(Villager.class, "wakeup");
 
-    static {
-        Skript.registerEffect(EffVillagerEffects.class,
-            "zombify %livingentities%",
-            "wake[ ]up %livingentities%",
-            "make %livingentities% shake [(his|their)] head[s]",
-            "make %livingentities% sleep at %location%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffVillagerEffects.class,
+                "zombify %livingentities%",
+                "wake[ ]up %livingentities%",
+                "make %livingentities% shake [(his|their)] head[s]",
+                "make %livingentities% sleep at %location%")
+            .name("Villager - Effects")
+            .description("A few effects to make villagers do things.")
+            .examples("zombify last spawned villager",
+                "wake up all villagers",
+                "make target entity shake his head",
+                "make target entity sleep at location(100, 64, 100, world \"world\")")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<LivingEntity> entities;

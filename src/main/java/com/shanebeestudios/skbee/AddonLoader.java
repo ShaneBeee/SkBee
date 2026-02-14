@@ -36,6 +36,7 @@ import com.shanebeestudios.skbee.elements.switchcase.SwitchCaseElementRegistrati
 import com.shanebeestudios.skbee.elements.testing.TestingElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
 import com.shanebeestudios.skbee.elements.tickmanager.TickManagerElementRegistration;
+import com.shanebeestudios.skbee.elements.villager.VillagerElementRegistration;
 import com.shanebeestudios.skbee.elements.worldcreator.WorldCreatorElementRegistration;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
@@ -128,7 +129,7 @@ public class AddonLoader {
         loadSwitchCaseElements();
         loadTextElements();
         loadTickManagerElements();
-//        loadVillagerElements();
+        loadVillagerElements();
 //        loadVirtualFurnaceElements();
         loadWorldCreatorElements();
         loadChunkGenElements();
@@ -415,19 +416,19 @@ public class AddonLoader {
             logFailure("Statistic", ex);
         }
     }
-//
-//    private void loadVillagerElements() {
-//        if (!this.config.ELEMENTS_VILLAGER) {
-//            Util.logLoading("&5Villager Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.villager");
-//            Util.logLoading("&5Villager Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Villager", ex);
-//        }
-//    }
+
+    private void loadVillagerElements() {
+        if (!this.config.ELEMENTS_VILLAGER) {
+            Util.logLoading("&5Villager Elements &cdisabled via config");
+            return;
+        }
+        try {
+            VillagerElementRegistration.register(this.registration);
+            Util.logLoading("&5Villager Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Villager", ex);
+        }
+    }
 
     private void loadAdvancementElements() {
         if (!this.config.ELEMENTS_ADVANCEMENT) {

@@ -1,42 +1,38 @@
 package com.shanebeestudios.skbee.elements.villager.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Merchant;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("Merchant - Create")
-@Description("Creates a new Merchant object with a title.")
-@Examples("set {_merch} to new merchant named \"Le-Merchant\"")
-@Since("1.17.0")
 public class ExprMerchant extends SimpleExpression<Merchant> {
 
-    static {
-        Skript.registerExpression(ExprMerchant.class, Merchant.class, ExpressionType.SIMPLE,
-                "[new ]merchant named %string%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprMerchant.class, Merchant.class,
+                "[new ]merchant named %string%")
+            .name("Merchant - Create")
+            .description("Creates a new Merchant object with a title.")
+            .examples("set {_merch} to new merchant named \"Le-Merchant\"")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<String> name;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         this.name = (Expression<String>) exprs[0];
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "deprecation"})
+    @SuppressWarnings({"deprecation"})
     @Override
     protected @Nullable Merchant[] get(Event event) {
         String name = this.name.getSingle(event);
