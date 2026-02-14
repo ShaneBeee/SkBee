@@ -25,8 +25,8 @@ public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
     public static void register(Registration reg) {
-        reg.newPropertyExpression(ExprBoundOwnerMember.class, OfflinePlayer.class, "bound",
-                "bound (owner[s]|1:member[s])")
+        reg.newPropertyExpression(ExprBoundOwnerMember.class, OfflinePlayer.class,
+                "bound (owner[s]|1:member[s])", "bound")
             .name("Bound - Owners/Members")
             .description("Represents the owners and members of a bound. Will be saved as UUIDs in the bound config.")
             .examples("add player to bound members of bound with id \"spawn\"",

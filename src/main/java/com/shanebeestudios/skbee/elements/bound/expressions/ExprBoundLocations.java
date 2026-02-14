@@ -22,8 +22,8 @@ public class ExprBoundLocations extends SimplePropertyExpression<Bound, Location
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
     public static void register(Registration reg) {
-        reg.newPropertyExpression(ExprBoundLocations.class, Location.class, "bounds",
-                "bound (0:center|(1:greater|2:lesser) corner)")
+        reg.newPropertyExpression(ExprBoundLocations.class, Location.class,
+                "bound (0:center|(1:greater|2:lesser) corner)", "bounds")
             .name("Bound - Locations")
             .description("Get/modify the locations of a bound.",
                 "Greater will always equal the higher south-east corner. ",

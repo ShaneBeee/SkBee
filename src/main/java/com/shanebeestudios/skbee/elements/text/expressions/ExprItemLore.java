@@ -21,14 +21,14 @@ import java.util.List;
 public class ExprItemLore extends SimpleExpression<ComponentWrapper> {
 
     public static void register(Registration reg) {
-        reg.newCombinedExpression(ExprItemLore.class, ComponentWrapper.class,
+        reg.newSimpleExpression(ExprItemLore.class, ComponentWrapper.class,
                 "[the] component [item] lore of %itemstack/itemtype/slot%",
                 "%itemstack/itemtype/slot%'[s] component [item] lore")
             .name("TextComponent - Item Lore")
             .description("Get/set the lore of an item using text components.")
             .examples("set component lore of player's tool to mini message from \"<rainbow>OOO RAINBOW LORE\"")
             .since("2.4.0")
-        ;
+            .register();
     }
 
     private Expression<?> item;

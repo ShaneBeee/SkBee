@@ -6,9 +6,9 @@ import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
-import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.registration.Registration;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -18,8 +18,8 @@ public class ExprBoundID extends SimplePropertyExpression<Bound, String> {
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
     public static void register(Registration reg) {
-        reg.newPropertyExpression(ExprBoundID.class, String.class, "bounds",
-                "[bound] id")
+        reg.newPropertyExpression(ExprBoundID.class, String.class,
+                "[bound] id", "bounds")
             .name("Bound - ID")
             .description("Get/set the id of a bound. When setting the ID of a bound, if another bound has that ID, this will fail with an error in console.",
                 "You cannot set the IDs of multiple bounds at once.")

@@ -1,17 +1,9 @@
 package com.shanebeestudios.skbee.elements.nbt.conditions;
 
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.PropertyCondition;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 
-@Name("NBT - Is Blank Compound")
-@Description({"Checks whether or not the provided nbt compounds are empty."})
-@Examples({})
-@Since("3.13.2")
 public class CondNBTIsBlank extends PropertyCondition<NBTCompound> {
 
     public static void register(Registration reg) {

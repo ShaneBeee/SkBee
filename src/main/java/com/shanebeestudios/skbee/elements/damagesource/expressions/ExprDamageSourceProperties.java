@@ -15,8 +15,9 @@ import org.jetbrains.annotations.Nullable;
 public class ExprDamageSourceProperties extends SimplePropertyExpression<DamageSource, Object> {
 
     public static void register(Registration reg) {
-        reg.newPropertyExpression(ExprDamageSourceProperties.class, Object.class, "damagesources",
-                "(1:causing entity|2:direct entity|3:damage type|4:damage location|5:food exhaustion|6:source location)")
+        reg.newPropertyExpression(ExprDamageSourceProperties.class, Object.class,
+                "(1:causing entity|2:direct entity|3:damage type|4:damage location|5:food exhaustion|6:source location)",
+                "damagesources")
             .name("DamageSource - Properties")
             .description("Represents different elements you can get from a damage source.")
             .examples("on damage of player:",

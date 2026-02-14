@@ -1,5 +1,7 @@
 package com.shanebeestudios.skbee.elements.nbt.conditions;
 
+import ch.njol.skript.conditions.base.PropertyCondition;
+import ch.njol.skript.conditions.base.PropertyCondition.PropertyType;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
@@ -14,7 +16,7 @@ import org.jetbrains.annotations.Nullable;
 public class CondHasNBTTag extends Condition {
 
     public static void register(Registration reg) {
-        reg.newPropertyCondition(CondHasNBTTag.class,
+        reg.newPropertyCondition(CondHasNBTTag.class, PropertyType.HAVE,
                 "[nbt] tag %string%", "nbtcompounds")
             .name("NBT - Has Tag")
             .description("Check if an NBT Compound contains a tag.")

@@ -12,8 +12,8 @@ import org.jetbrains.annotations.Nullable;
 public class ExprBoundFullState extends SimplePropertyExpression<Bound, Boolean> {
 
     public static void register(Registration reg) {
-        reg.newPropertyExpression(ExprBoundFullState.class, Boolean.class, "bounds",
-                "bound full state")
+        reg.newPropertyExpression(ExprBoundFullState.class, Boolean.class,
+                "bound full state", "bounds")
             .name("Bound - Full State")
             .description("Get/set whether this bound is a full bound (reaches from lowest to highest points of a world).")
             .examples("set bound full state of bound with id \"home\" to true")

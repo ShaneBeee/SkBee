@@ -36,7 +36,7 @@ public class ExprItemName extends SimplePropertyExpression<Object, ComponentWrap
                 "set component item name of player's tool to mini message from \"Stickaxe\"",
                 "delete component item name of player's tool")
             .since("2.4.0")
-        ;
+            .register();
     }
 
     private boolean itemName;

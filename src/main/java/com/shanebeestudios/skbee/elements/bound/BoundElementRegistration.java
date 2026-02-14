@@ -20,6 +20,7 @@ import com.shanebeestudios.skbee.elements.bound.expressions.ExprBoundsAtLocation
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprLastCreatedBound;
 import com.shanebeestudios.skbee.elements.bound.sections.EffSecBoundCopy;
 import com.shanebeestudios.skbee.elements.bound.sections.EffSecBoundCreate;
+import com.shanebeestudios.skbee.elements.bound.types.SkriptTypes;
 
 public class BoundElementRegistration {
 
@@ -50,6 +51,9 @@ public class BoundElementRegistration {
         ExprBoundsAll.register(reg);
         ExprBoundsAtLocation.register(reg);
         ExprLastCreatedBound.register(reg);
+
+        // TYPES
+        SkriptTypes.register(reg);
     }
 
 }

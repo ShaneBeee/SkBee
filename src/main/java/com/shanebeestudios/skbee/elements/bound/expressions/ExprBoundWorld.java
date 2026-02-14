@@ -9,8 +9,8 @@ import org.jetbrains.annotations.NotNull;
 public class ExprBoundWorld extends SimplePropertyExpression<Bound, World> {
 
     public static void register(Registration reg) {
-        reg.newPropertyExpression(ExprBoundWorld.class, World.class, "bounds",
-                "bound world")
+        reg.newPropertyExpression(ExprBoundWorld.class, World.class,
+                "bound world", "bounds")
             .name("Bound - World")
             .description("Get the world of a bound.")
             .examples("set {world} to bound world of bound with id \"el-boundo\"")
