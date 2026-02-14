@@ -30,6 +30,7 @@ import com.shanebeestudios.skbee.elements.raytrace.RayTraceElementRegistration;
 import com.shanebeestudios.skbee.elements.recipe.RecipeElementRegistration;
 import com.shanebeestudios.skbee.elements.registry.RegistryElementRegistration;
 import com.shanebeestudios.skbee.elements.scoreboard.ScoreboardElementRegistration;
+import com.shanebeestudios.skbee.elements.switchcase.SwitchCaseElementRegistration;
 import com.shanebeestudios.skbee.elements.testing.TestingElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
 import com.shanebeestudios.skbee.elements.tickmanager.TickManagerElementRegistration;
@@ -122,7 +123,7 @@ public class AddonLoader {
         loadScoreboardElements();
 //        loadStatisticElements();
 //        loadStructureElements();
-//        loadSwitchCaseElements();
+        loadSwitchCaseElements();
         loadTextElements();
         loadTickManagerElements();
 //        loadVillagerElements();
@@ -525,18 +526,18 @@ public class AddonLoader {
         }
     }
 
-    //    private void loadSwitchCaseElements() {
-//        if (!this.config.ELEMENTS_SWITCH_CASE) {
-//            Util.logLoading("&5SwitchCase Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.switchcase");
-//            Util.logLoading("&5SwitchCase Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("SwitchCase", ex);
-//        }
-//    }
+        private void loadSwitchCaseElements() {
+        if (!this.config.ELEMENTS_SWITCH_CASE) {
+            Util.logLoading("&5SwitchCase Elements &cdisabled via config");
+            return;
+        }
+        try {
+            SwitchCaseElementRegistration.register(this.registration);
+            Util.logLoading("&5SwitchCase Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("SwitchCase", ex);
+        }
+    }
 
     private void loadPropertyElements() {
         if (!this.config.ELEMENTS_PROPERTY) {
