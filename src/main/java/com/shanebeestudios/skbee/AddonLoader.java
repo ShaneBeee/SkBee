@@ -31,6 +31,7 @@ import com.shanebeestudios.skbee.elements.registry.RegistryElementRegistration;
 import com.shanebeestudios.skbee.elements.scoreboard.ScoreboardElementRegistration;
 import com.shanebeestudios.skbee.elements.testing.TestingElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
+import com.shanebeestudios.skbee.elements.tickmanager.TickManagerElementRegistration;
 import com.shanebeestudios.skbee.elements.worldcreator.WorldCreatorElementRegistration;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
@@ -122,7 +123,7 @@ public class AddonLoader {
 //        loadStructureElements();
 //        loadSwitchCaseElements();
         loadTextElements();
-//        loadTickManagerElements();
+        loadTickManagerElements();
 //        loadVillagerElements();
 //        loadVirtualFurnaceElements();
         loadWorldCreatorElements();
@@ -240,19 +241,19 @@ public class AddonLoader {
         }
     }
 
-    //
-//    private void loadTickManagerElements() {
-//        if (!this.config.ELEMENTS_TICK_MANAGER) {
-//            Util.logLoading("&5Tick Manager Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.tickmanager");
-//            Util.logLoading("&5Tick Manager Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Tick Manager", ex);
-//        }
-//    }
+
+    private void loadTickManagerElements() {
+        if (!this.config.ELEMENTS_TICK_MANAGER) {
+            Util.logLoading("&5Tick Manager Elements &cdisabled via config");
+            return;
+        }
+        try {
+            TickManagerElementRegistration.register(this.registration);
+            Util.logLoading("&5Tick Manager Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Tick Manager", ex);
+        }
+    }
 
     private void loadBoundElements() {
         if (!this.config.ELEMENTS_BOUND) {

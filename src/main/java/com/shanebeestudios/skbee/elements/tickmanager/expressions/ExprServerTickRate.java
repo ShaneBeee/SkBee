@@ -1,17 +1,12 @@
 package com.shanebeestudios.skbee.elements.tickmanager.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ServerTickManager;
@@ -19,21 +14,21 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Server Tick - Tick Rate")
-@Description({"Represents the tick rate of the server. Can be a value from `1.0` to `10000.0`.",
-        "Supports fractional numbers, see examples.", "Default = 20.", Util.MCWIKI_TICK_COMMAND,
-        "Requires Minecraft 1.20.4+"})
-@Examples({"set {_rate} to server tick rate",
-        "set server tick rate to 100",
-        "add 1.5 to server tick rate",
-        "remove 3.75 from server tick rate",
-        "reset server tick rate"})
-@Since("3.1.0")
 public class ExprServerTickRate extends SimpleExpression<Number> {
 
-    static {
-        Skript.registerExpression(ExprServerTickRate.class, Number.class, ExpressionType.SIMPLE,
-                "server tick rate");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprServerTickRate.class, Number.class,
+                "server tick rate")
+            .name("Server Tick - Tick Rate")
+            .description("Represents the tick rate of the server. Can be a value from `1.0` to `10000.0`.",
+                "Supports fractional numbers, see examples.", "Default = 20.", Util.MCWIKI_TICK_COMMAND)
+            .examples("set {_rate} to server tick rate",
+                "set server tick rate to 100",
+                "add 1.5 to server tick rate",
+                "remove 3.75 from server tick rate",
+                "reset server tick rate")
+            .since("3.1.0")
+            .register();
     }
 
     @SuppressWarnings("NullableProblems")
