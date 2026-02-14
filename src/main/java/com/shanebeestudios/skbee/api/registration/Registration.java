@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.api.registration;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Cloner;
 import ch.njol.skript.classes.Parser;
@@ -14,12 +15,16 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptEvent;
+import com.shanebeestudios.skbee.SkBeeAddonModule;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Keyed;
 import org.bukkit.Registry;
 import org.bukkit.event.Event;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.addon.SkriptAddon;
+import org.skriptlang.skript.common.function.DefaultFunction;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.structure.Structure;
 import org.skriptlang.skript.registration.SyntaxInfo;
@@ -33,6 +38,7 @@ import java.util.function.Supplier;
 @SuppressWarnings({"rawtypes", "unchecked"})
 public class Registration {
 
+    private final SkriptAddon addon;
     private final List<TypeRegistrar<?>> types = new ArrayList<>();
     private final List<EffectRegistrar> effects = new ArrayList<>();
     private final List<ConditionRegistrar> conditions = new ArrayList<>();
@@ -40,6 +46,15 @@ public class Registration {
     private final List<SectionRegistrar> sections = new ArrayList<>();
     private final List<ExpressionRegistrar> expressions = new ArrayList<>();
     private final List<StructureRegistrar<?>> structures = new ArrayList<>();
+    private final List<FunctionRegistrar> functions = new ArrayList<>();
+
+    public Registration() {
+        this.addon = Skript.instance().registerAddon(SkBeeAddonModule.class, "SkBee");
+    }
+
+    public SkriptAddon getAddon() {
+        return this.addon;
+    }
 
     public List<TypeRegistrar<?>> getTypes() {
         return this.types;
@@ -67,6 +82,10 @@ public class Registration {
 
     public List<StructureRegistrar<?>> getStructures() {
         return this.structures;
+    }
+
+    public List<FunctionRegistrar> getFunctions() {
+        return this.functions;
     }
 
     @SuppressWarnings("unchecked")
@@ -203,16 +222,16 @@ public class Registration {
     public class EnumTypeRegistrar<T extends Enum<T>> extends TypeRegistrar<T> {
         public final String prefix;
         public final String suffix;
-        public final EnumWrapper<T> enumWrapper;
+        public final @NotNull EnumWrapper<T> enumWrapper;
 
-        public EnumTypeRegistrar(Class<T> type, String codename, String prefix, String suffix) {
+        public EnumTypeRegistrar(Class<T> type, String codename, String prefix, String suffix, boolean plurals) {
             super(type, codename);
             this.prefix = prefix;
             this.suffix = suffix;
-            this.enumWrapper = null;
+            this.enumWrapper = new EnumWrapper<>(type, prefix, suffix, plurals);
         }
 
-        public EnumTypeRegistrar(Class<T> type, EnumWrapper<T> enumWrapper, String codename, String prefix, String suffix) {
+        public EnumTypeRegistrar(Class<T> type, @NotNull EnumWrapper<T> enumWrapper, String codename, String prefix, String suffix) {
             super(type, codename);
             this.prefix = prefix;
             this.suffix = suffix;
@@ -221,11 +240,19 @@ public class Registration {
     }
 
     public <T extends Enum<T>> EnumTypeRegistrar<T> newEnumType(Class<T> type, String codename) {
-        return new EnumTypeRegistrar<>(type, codename, null, null);
+        return new EnumTypeRegistrar<>(type, codename, null, null, false);
+    }
+
+    public <T extends Enum<T>> EnumTypeRegistrar<T> newEnumType(Class<T> type, String codename, boolean plurals) {
+        return new EnumTypeRegistrar<>(type, codename, null, null, plurals);
     }
 
     public <T extends Enum<T>> EnumTypeRegistrar<T> newEnumType(Class<T> type, String codename, String prefix, String suffix) {
-        return new EnumTypeRegistrar<>(type, codename, prefix, suffix);
+        return new EnumTypeRegistrar<>(type, codename, prefix, suffix, false);
+    }
+
+    public <T extends Enum<T>> EnumTypeRegistrar<T> newEnumType(Class<T> type, String codename, String prefix, String suffix, boolean plurals) {
+        return new EnumTypeRegistrar<>(type, codename, prefix, suffix, plurals);
     }
 
     public <T extends Enum<T>> EnumTypeRegistrar<T> newEnumType(Class<T> type, EnumWrapper<T> enumWrapper, String codename) {
@@ -285,10 +312,12 @@ public class Registration {
     public class SectionRegistrar extends Registrar<SectionRegistrar> {
         public final Class<? extends Section> section;
         public final String[] patterns;
+        public final @Nullable EntryValidator validator;
 
-        public SectionRegistrar(Class<? extends Section> section, String[] patterns) {
+        public SectionRegistrar(Class<? extends Section> section, String[] patterns, @Nullable EntryValidator validator) {
             this.section = section;
             this.patterns = patterns;
+            this.validator = validator;
         }
 
         public void register() {
@@ -298,7 +327,11 @@ public class Registration {
     }
 
     public SectionRegistrar newSection(Class<? extends Section> section, String... patterns) {
-        return new SectionRegistrar(section, patterns);
+        return new SectionRegistrar(section, patterns, null);
+    }
+
+    public SectionRegistrar newSection(Class<? extends Section> section, EntryValidator validator, String... patterns) {
+        return new SectionRegistrar(section, patterns, validator);
     }
 
     public class ConditionRegistrar extends Registrar<ConditionRegistrar> {
@@ -422,6 +455,24 @@ public class Registration {
 
     public StructureRegistrar<?> newStructure(Class<? extends Structure> structureClass, EntryValidator entryValidator, String... patterns) {
         return new StructureRegistrar<>(structureClass, entryValidator, patterns);
+    }
+
+    public class FunctionRegistrar<T> extends Registrar<FunctionRegistrar<T>> {
+        public final DefaultFunction<T> function;
+
+        public FunctionRegistrar(DefaultFunction<T> function) {
+            this.function = function;
+        }
+
+        @Override
+        public void register() {
+            super.register();
+            Registration.this.functions.add(this);
+        }
+    }
+
+    public <T> FunctionRegistrar<T> newFunction(DefaultFunction<T> function) {
+        return new FunctionRegistrar<T>(function);
     }
 
 }

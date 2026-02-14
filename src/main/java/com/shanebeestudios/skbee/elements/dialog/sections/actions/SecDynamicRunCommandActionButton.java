@@ -28,21 +28,23 @@ import java.util.Optional;
 @SuppressWarnings("UnstableApiUsage")
 public class SecDynamicRunCommandActionButton extends Section {
 
-    private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
+        EntryValidatorBuilder builder = EntryValidator.builder();
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("tooltip", null, true, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(150, true), true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("tooltip", null, true, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(150, true), true, Integer.class));
 
         // DYNAMIC
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("template", null, false, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("template", null, false, String.class));
+        VALIDATOR = builder.build();
     }
 
     public static void register(Registration reg) {
-        reg.newSection(SecDynamicRunCommandActionButton.class, "add dynamic run command action button")
+        reg.newSection(SecDynamicRunCommandActionButton.class, VALIDATOR, "add dynamic run command action button")
             .name("Dialog - Dynamic Run Command Action Button")
             .description("Add a dynamic run command action button to a dialog.",
                 "See [**Dynamic Run Command Action**](https://minecraft.wiki/w/Dialog#dynamic/run_command) on McWiki for more specific info.",
@@ -87,7 +89,7 @@ public class SecDynamicRunCommandActionButton extends Section {
             Skript.error("A dynamic action button can only be used in an 'actions' section.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         // Action button type

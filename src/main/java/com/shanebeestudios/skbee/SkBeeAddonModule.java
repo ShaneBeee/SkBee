@@ -6,15 +6,16 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptEvent;
+import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.registrations.Classes;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registration.Registration.ConditionRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.EffectRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.EnumTypeRegistrar;
+import com.shanebeestudios.skbee.api.registration.Registration.FunctionRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.RegistryTypeRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.TypeRegistrar;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import org.bukkit.Keyed;
 import org.bukkit.Registry;
@@ -50,16 +51,7 @@ public class SkBeeAddonModule implements AddonModule {
             }
             ClassInfo<?> classInfo;
             if (type instanceof EnumTypeRegistrar<?> enumTypeRegistrar) {
-                EnumWrapper<?> enumWrapper;
-                if (enumTypeRegistrar.enumWrapper == null) {
-                    enumWrapper = new EnumWrapper<>(enumTypeRegistrar.type,
-                        enumTypeRegistrar.prefix,
-                        enumTypeRegistrar.suffix);
-                } else {
-                    enumWrapper = enumTypeRegistrar.enumWrapper;
-                }
-
-                classInfo = enumWrapper.getClassInfo(enumTypeRegistrar.codename);
+                classInfo = enumTypeRegistrar.enumWrapper.getClassInfo(enumTypeRegistrar.codename);
             } else if (type instanceof RegistryTypeRegistrar<? extends Keyed> registryTypeRegistrar) {
                 Class<? extends Keyed> registryClass = registryTypeRegistrar.type;
                 Registry<? extends Keyed> registry = registryTypeRegistrar.registry;
@@ -207,6 +199,15 @@ public class SkBeeAddonModule implements AddonModule {
                 .addPatterns(expression.patterns).build();
 
             syntaxInfos.register(SyntaxRegistry.EXPRESSION, (SyntaxInfo.Expression<?, ?>) info);
+        }
+
+        // FUNCTIONS
+        for (FunctionRegistrar function : this.registration.getFunctions()) {
+            if (!function.isRegistered()) {
+                Util.skriptError("Function '%s' is not register", function.function.name());
+            }
+
+            Functions.register(function.function);
         }
 
         // CONDITIONS

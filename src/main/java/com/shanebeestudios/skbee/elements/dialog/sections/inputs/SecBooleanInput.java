@@ -6,11 +6,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import io.papermc.paper.registry.data.dialog.input.BooleanDialogInput;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import net.kyori.adventure.text.Component;
@@ -25,23 +25,23 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public class SecBooleanInput extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
-
-    static {
-        // GENERAL INPUT
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("key", null, false, String.class));
-        @SuppressWarnings("unchecked")
-        Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
-
-        // BOOLEAN INPUT
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("initial", null, true, Boolean.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("on_true", null, true, String.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("on_false", null, true, String.class));
-    }
+    private static EntryValidator VALIDATOR;
 
     public static void register(Registration reg) {
-        reg.newSection(SecBooleanInput.class, "add boolean input")
+        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
+        // GENERAL INPUT
+        builder.addEntryData(new ExpressionEntryData<>("key", null, false, String.class));
+        @SuppressWarnings("unchecked")
+        Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
+        builder.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
+
+        // BOOLEAN INPUT
+        builder.addEntryData(new ExpressionEntryData<>("initial", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("on_true", null, true, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("on_false", null, true, String.class));
+        VALIDATOR = builder.build();
+
+        reg.newSection(SecBooleanInput.class, VALIDATOR, "add boolean input")
             .name("Dialog - Boolean Input")
             .description("A simple checkbox input to be used in an `inputs` section of a dialog.",
                 "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
@@ -78,7 +78,7 @@ public class SecBooleanInput extends Section {
             Skript.error("A boolean input can only be used in an 'inputs' section of a dialog.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.key = (Expression<String>) container.getOptional("key", false);

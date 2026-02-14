@@ -20,6 +20,7 @@ public class CondEntityStorageBlockFull extends Condition {
                 "As of 1.15 this only includes beehives/bee nests!")
             .examples("if entity storage of block at player is full:",
                 "if entity storage of target block is not full:")
+            .since("1.0.0")
             .register();
     }
 

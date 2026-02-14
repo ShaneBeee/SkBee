@@ -37,7 +37,7 @@ public class SecRecipeBrewing extends Section {
         builder.addRequiredEntry("input", RecipeChoice.class);
         VALIDATOR = builder.build();
 
-        reg.newSection(SecRecipeBrewing.class, "register [a] [new] (brewing recipe|potion mix)")
+        reg.newSection(SecRecipeBrewing.class, VALIDATOR, "register [a] [new] (brewing recipe|potion mix)")
             .name("Recipe - Register Brewing Recipe")
             .description("This section allows you to register a brewing recipe, define the ingredient and input. Requires a PaperMC server.",
                 "**Entries**:",

@@ -29,21 +29,23 @@ import java.util.Optional;
 @SuppressWarnings("UnstableApiUsage")
 public class SecStaticActionButton extends Section {
 
-    private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
+        EntryValidatorBuilder builder = EntryValidator.builder();
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("tooltip", null, true, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(150, true), true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("tooltip", null, true, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(150, true), true, Integer.class));
 
         // STATIC
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("action", null, true, ClickEvent.class));
+        builder.addEntryData(new ExpressionEntryData<>("action", null, true, ClickEvent.class));
+        VALIDATOR = builder.build();
     }
 
     public static void register(Registration reg) {
-        reg.newSection(SecStaticActionButton.class, "add static action button")
+        reg.newSection(SecStaticActionButton.class, VALIDATOR, "add static action button")
             .name("Dialog - Static Action Button")
             .description("Add a static action button to a dialog.",
                 "See [**Static Action**](https://minecraft.wiki/w/Dialog#Static_action_types) on McWiki for more detailed info.",
@@ -76,7 +78,7 @@ public class SecStaticActionButton extends Section {
             Skript.error("A static action button can only be used in an 'actions' section.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         // Action button type

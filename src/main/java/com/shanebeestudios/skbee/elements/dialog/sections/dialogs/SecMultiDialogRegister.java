@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.dialog.sections.dialogs;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -31,27 +30,29 @@ import java.util.Objects;
 @SuppressWarnings("UnstableApiUsage")
 public class SecMultiDialogRegister extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
+        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
         // GENERAL DIALOG
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("title", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("external_title", null, true, compClasses));
-        VALIDATOR.addEntryData(new SectionEntryData("body", null, true));
-        VALIDATOR.addEntryData(new SectionEntryData("inputs", null, true));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("can_close_with_escape", null, true, Boolean.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("after_action", null, true, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("title", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("external_title", null, true, compClasses));
+        builder.addEntryData(new SectionEntryData("body", null, true));
+        builder.addEntryData(new SectionEntryData("inputs", null, true));
+        builder.addEntryData(new ExpressionEntryData<>("can_close_with_escape", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("after_action", null, true, String.class));
 
         // MULTI ACTION DIALOG
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("columns", null, true, Integer.class));
-        VALIDATOR.addEntryData(new SectionEntryData("actions", null, false));
-        VALIDATOR.addEntryData(new SectionEntryData("exit_action", null, true));
+        builder.addEntryData(new ExpressionEntryData<>("columns", null, true, Integer.class));
+        builder.addEntryData(new SectionEntryData("actions", null, false));
+        builder.addEntryData(new SectionEntryData("exit_action", null, true));
+        VALIDATOR = builder.build();
     }
 
     public static void register(Registration reg) {
-        reg.newSection(SecMultiDialogRegister.class, "open [new] multi action dialog to %audiences%")
+        reg.newSection(SecMultiDialogRegister.class, VALIDATOR, "open [new] multi action dialog to %audiences%")
             .name("Dialog - Multi Action Dialog")
             .description("Open a dialog screen with a scrollable list of action buttons arranged in columns.",
                 "If `exit_action` is present, a button for it will appear in the footer, otherwise the footer is not present.",
@@ -99,7 +100,7 @@ public class SecMultiDialogRegister extends Section {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.audiences = (Expression<Audience>) exprs[0];
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.title = (Expression<?>) container.getOptional("title", false);

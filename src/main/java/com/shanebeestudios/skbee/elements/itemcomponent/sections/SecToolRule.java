@@ -49,7 +49,7 @@ public class SecToolRule extends Section {
             .addOptionalEntry("correct_for_drops", Boolean.class)
             .build();
 
-        reg.newSection(SecToolRule.class, "apply tool rule")
+        reg.newSection(SecToolRule.class, VALIDATOR, "apply tool rule")
             .name("ItemComponent - Tool Rule Apply")
             .description("Apply rules to a tool component. You can add as many as you'd like.",
                 "See [**McWiki Tool Component**](https://minecraft.wiki/w/Data_component_format#tool) for more details.",

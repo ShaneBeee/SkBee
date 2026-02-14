@@ -35,7 +35,8 @@ public class SecUseCooldownComponent extends Section {
             .addRequiredEntry("seconds", Timespan.class)
             .addOptionalEntry("group", String.class)
             .build();
-        reg.newSection(SecUseCooldownComponent.class, "apply use cooldown [component] to %itemstacks/itemtypes/slots%")
+        reg.newSection(SecUseCooldownComponent.class, VALIDATOR,
+                "apply use cooldown [component] to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Use Cooldown")
             .description("Apply a cooldown to all items of the same type when it has been used.",
                 "See [**Use Cooldown Component**](https://minecraft.wiki/w/Data_component_format#use_cooldown) on McWiki for more details.",

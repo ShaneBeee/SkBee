@@ -29,7 +29,8 @@ public class SecTooltipDisplayComponent extends Section {
             .addOptionalEntry("hide_tooltip", Boolean.class)
             .addOptionalEntry("hidden_components", DataComponentType.class)
             .build();
-        reg.newSection(SecTooltipDisplayComponent.class, "apply tooltip display [component] to %itemstacks/itemtypes/slots%")
+        reg.newSection(SecTooltipDisplayComponent.class, VALIDATOR,
+                "apply tooltip display [component] to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Tooltip Style Component Apply")
             .description("Apply a tooltip style component to any item allowing you to hide the tooltip or specific components.",
                 "You will also require a `consumable` component to actually make the item consumable.",

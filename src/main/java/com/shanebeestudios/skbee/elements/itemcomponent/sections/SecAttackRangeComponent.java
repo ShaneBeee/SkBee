@@ -37,7 +37,7 @@ public class SecAttackRangeComponent extends Section {
                 .addOptionalEntry("mob_factor", Number.class)
                 .build();
 
-            reg.newSection(SecAttackRangeComponent.class,
+            reg.newSection(SecAttackRangeComponent.class, VALIDATOR,
                     "apply attack range component to %itemstacks/itemtypes/slots%")
                 .name("ItemComponent - Attack Range Component Apply")
                 .description("Enables a custom attack range when using the item.",

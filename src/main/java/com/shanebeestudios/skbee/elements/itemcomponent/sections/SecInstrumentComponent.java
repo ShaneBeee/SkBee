@@ -26,7 +26,7 @@ public class SecInstrumentComponent extends Section {
         VALIDATOR = SimpleEntryValidator.builder()
             .addRequiredEntry("instrument", MusicInstrument.class)
             .build();
-        reg.newSection(SecInstrumentComponent.class,
+        reg.newSection(SecInstrumentComponent.class, VALIDATOR,
                 "apply instrument [component] to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Instrument Component Apply")
             .description("Apply an instrument component to an item that supports it (such as a goat horn).",

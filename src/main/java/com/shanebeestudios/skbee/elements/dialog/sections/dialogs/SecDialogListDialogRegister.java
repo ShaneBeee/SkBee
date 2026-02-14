@@ -36,28 +36,30 @@ import java.util.Objects;
 @SuppressWarnings({"UnstableApiUsage"})
 public class SecDialogListDialogRegister extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
+        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
         // GENERAL DIALOG
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("title", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("external_title", null, true, compClasses));
-        VALIDATOR.addEntryData(new SectionEntryData("body", null, true));
-        VALIDATOR.addEntryData(new SectionEntryData("inputs", null, true));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("can_close_with_escape", null, true, Boolean.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("after_action", null, true, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("title", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("external_title", null, true, compClasses));
+        builder.addEntryData(new SectionEntryData("body", null, true));
+        builder.addEntryData(new SectionEntryData("inputs", null, true));
+        builder.addEntryData(new ExpressionEntryData<>("can_close_with_escape", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("after_action", null, true, String.class));
 
         // DIALOG LIST DIALOG
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("dialogs", null, false, String.class));
-        VALIDATOR.addEntryData(new SectionEntryData("exit_action", null, true));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("columns", null, true, Integer.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("button_width", null, true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("dialogs", null, false, String.class));
+        builder.addEntryData(new SectionEntryData("exit_action", null, true));
+        builder.addEntryData(new ExpressionEntryData<>("columns", null, true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("button_width", null, true, Integer.class));
+        VALIDATOR = builder.build();
     }
 
     public static void register(Registration reg) {
-        reg.newSection(SecDialogListDialogRegister.class, "open [new] dialog list dialog to %audiences%")
+        reg.newSection(SecDialogListDialogRegister.class, VALIDATOR, "open [new] dialog list dialog to %audiences%")
             .name("Dialog - Dialog List Dialog")
             .description("A dialog screen with scrollable list of buttons leading directly to other dialogs, arranged in columns.",
                 "Titles of those buttons will be taken from external_title fields of targeted dialogs.",
@@ -113,7 +115,7 @@ public class SecDialogListDialogRegister extends Section {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.audiences = (Expression<Audience>) exprs[0];
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.title = (Expression<?>) container.getOptional("title", false);

@@ -57,7 +57,7 @@ public class SecToolComponent extends Section {
             .addOptionalSection("rules")
             .build();
 
-        reg.newSection(SecToolComponent.class, "apply tool component to %itemstacks/itemtypes/slots%")
+        reg.newSection(SecToolComponent.class, VALIDATOR, "apply tool component to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Tool Component Apply")
             .description("Apply a tool component to any item making it usable tool.",
                 "Requires Paper 1.21.3+",

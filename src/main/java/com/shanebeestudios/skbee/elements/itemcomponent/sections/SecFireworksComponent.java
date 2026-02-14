@@ -52,7 +52,7 @@ public class SecFireworksComponent extends Section {
             .addOptionalEntry("flight_duration", Number.class)
             .build();
 
-        reg.newSection(SecFireworksComponent.class,
+        reg.newSection(SecFireworksComponent.class, VALIDATOR,
                 "apply fireworks [component] to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Fireworks Component Apply")
             .description("Apply a fireworks component to a firework rocket.",

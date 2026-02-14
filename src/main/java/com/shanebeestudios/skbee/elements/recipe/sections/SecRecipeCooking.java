@@ -53,7 +53,7 @@ public class SecRecipeCooking extends Section {
         }
         VALIDATOR = builder.build();
 
-        reg.newSection(SecRecipeCooking.class,
+        reg.newSection(SecRecipeCooking.class, VALIDATOR,
                 "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe")
             .name("Recipe - Register Cooking Recipe")
             .description("This section allows you to register any cooking recipe and define special properties.",

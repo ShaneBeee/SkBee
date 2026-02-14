@@ -34,7 +34,7 @@ public class SecSwingAnimationComponent extends Section {
                 .addOptionalEntry("duration", Timespan.class)
                 .build();
 
-            reg.newSection(SecSwingAnimationComponent.class,
+            reg.newSection(SecSwingAnimationComponent.class, VALIDATOR,
                     "apply swing animation component to %itemstacks/itemtypes/slots%")
                 .name("ItemComponent - Swing Animation Component Apply")
                 .description("Specifies the swing animation to play when attacking or interacting using this item.",

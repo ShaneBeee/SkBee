@@ -7,11 +7,11 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import io.papermc.paper.registry.data.dialog.input.TextDialogInput;
 import io.papermc.paper.registry.data.dialog.input.TextDialogInput.MultilineOptions;
@@ -27,26 +27,26 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public class SecTextInput extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
-
-    static {
-        // GENERAL INPUT
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("key", null, false, String.class));
-        @SuppressWarnings("unchecked")
-        Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
-
-        // TEXT INPUT
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label_visible", null, true, Boolean.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("initial", null, true, String.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("max_length", null, true, Integer.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("multiline_max_lines", null, true, Integer.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("multiline_height", null, true, Integer.class));
-    }
+    private static EntryValidator VALIDATOR;
 
     public static void register(Registration reg) {
-        reg.newSection(SecTextInput.class, "add text input")
+        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
+        // GENERAL INPUT
+        builder.addEntryData(new ExpressionEntryData<>("key", null, false, String.class));
+        @SuppressWarnings("unchecked")
+        Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
+        builder.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
+
+        // TEXT INPUT
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("label_visible", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("initial", null, true, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("max_length", null, true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("multiline_max_lines", null, true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("multiline_height", null, true, Integer.class));
+        VALIDATOR = builder.build();
+
+        reg.newSection(SecTextInput.class, VALIDATOR, "add text input")
             .name("Dialog - Text Input")
             .description("A text input to be used in an `inputs` section of a dialog.",
                 "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
@@ -90,7 +90,7 @@ public class SecTextInput extends Section {
             Skript.error("A text input can only be used in an 'inputs' section of a dialog.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.key = (Expression<String>) container.getOptional("key", false);

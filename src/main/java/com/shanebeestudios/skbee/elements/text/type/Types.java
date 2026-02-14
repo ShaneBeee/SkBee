@@ -4,12 +4,7 @@ import ch.njol.skript.classes.Changer;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.function.Functions;
-import ch.njol.skript.lang.function.Parameter;
-import ch.njol.skript.lang.function.SimpleJavaFunction;
-import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.registration.Registration;
@@ -24,6 +19,8 @@ import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.common.function.DefaultFunction;
+import org.skriptlang.skript.common.function.Parameter;
 import org.skriptlang.skript.lang.comparator.Comparators;
 import org.skriptlang.skript.lang.comparator.Relation;
 import org.skriptlang.skript.lang.converter.Converters;
@@ -33,6 +30,7 @@ import java.io.StreamCorruptedException;
 
 public class Types {
 
+    @SuppressWarnings("PatternValidation")
     public static void register(Registration reg) {
         // Allow components to be used anywhere a string can
         Converters.registerConverter(ComponentWrapper.class, String.class, ComponentWrapper::toString);
@@ -179,21 +177,16 @@ public class Types {
         }
 
         // Functions
-        Functions.registerFunction(new SimpleJavaFunction<>("resolver", new Parameter[]{
-            new Parameter<>("placeholder", DefaultClasses.STRING, true, null),
-            new Parameter<>("replacement", DefaultClasses.OBJECT, true, null),
-            new Parameter<>("parsable", DefaultClasses.BOOLEAN, true, new SimpleLiteral<>(false, true)),
-        }, Classes.getExactClassInfo(TagResolver.class), true) {
-            @SuppressWarnings("PatternValidation")
-            @Override
-            public TagResolver @Nullable [] executeSimple(Object[][] params) {
-                if (params[0].length == 0 || params[1].length == 0) return null;
-
-                String key = (String) params[0][0];
+        DefaultFunction<TagResolver> resolverFunc = DefaultFunction.builder(reg.getAddon(), "resolver", TagResolver.class)
+            .parameter("placeholder", String.class)
+            .parameter("replacement", Object.class)
+            .parameter("parsable", Boolean.class, Parameter.Modifier.OPTIONAL)
+            .build(params -> {
+                String key = params.get("placeholder");
                 if (key == null) return null;
 
-                Object object = params[1][0];
-                Boolean parsable = (Boolean) params[2][0];
+                Object object = params.get("replacement");
+                Boolean parsable = params.get("parsable");
                 if (parsable == null) parsable = false;
 
                 TagResolver resolver;
@@ -206,9 +199,11 @@ public class Types {
                 } else {
                     resolver = Placeholder.component(key, ComponentWrapper.fromText(Classes.toString(object)).getComponent());
                 }
-                return new TagResolver[]{resolver};
-            }
-        }
+                return resolver;
+            });
+
+        reg.newFunction(resolverFunc)
+            .name("TextComponent - Resolver")
             .description("Creates a tag resolver for replacements in mini message.",
                 "`placeholder` = The string that will be replaced in the mini message.",
                 "In the mini message itself this part needs to be surrounded by <>. See examples!",
@@ -227,7 +222,8 @@ public class Types {
                 "on async chat:",
                 "\tset {_chatColor} to resolver(\"chatcolor\", raw ({chatcolor::%player%} ? raw \"<gray>\"), true)",
                 "\tset async chat message to mini message from \"<chatcolor>%async chat message%\" with resolver {_chatColor}")
-            .since("3.5.0"));
+            .since("3.5.0")
+            .register();
     }
 
 }

@@ -31,7 +31,7 @@ public class SecCustomModelDataComponent extends Section {
             .addOptionalEntry("colors", Color.class)
             .build();
 
-        reg.newSection(SecCustomModelDataComponent.class,
+        reg.newSection(SecCustomModelDataComponent.class, VALIDATOR,
                 "apply custom model data [component] to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - CustomModelData Component Apply")
             .description("Apply a custom model data component to items.",

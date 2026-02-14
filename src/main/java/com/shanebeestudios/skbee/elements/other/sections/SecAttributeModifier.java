@@ -52,7 +52,7 @@ public class SecAttributeModifier extends Section {
         builder.addRequiredEntry("amount", Number.class);
         builder.addRequiredEntry("operation", Operation.class);
         VALIDATOR = builder.build();
-        reg.newSection(SecAttributeModifier.class,
+        reg.newSection(SecAttributeModifier.class, VALIDATOR,
                 "apply [:transient] attribute modifier to %itemtypes/livingentities%")
             .name("Attribute Modifier - Apply")
             .description("Apply an attribute modifier to an item or living entity.",

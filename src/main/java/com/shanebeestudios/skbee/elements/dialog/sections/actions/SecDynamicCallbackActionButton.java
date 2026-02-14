@@ -39,9 +39,10 @@ import java.util.UUID;
 @SuppressWarnings("UnstableApiUsage")
 public class SecDynamicCallbackActionButton extends Section {
 
-    private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
+        EntryValidatorBuilder builder = EntryValidator.builder();
         EventValues.registerEventValue(DialogCallbackEvent.class, NBTCompound.class, DialogCallbackEvent::getNbtCompound);
         EventValues.registerEventValue(DialogCallbackEvent.class, Audience.class, DialogCallbackEvent::getAudience);
         EventValues.registerEventValue(DialogCallbackEvent.class, PlayerConnection.class, DialogCallbackEvent::getConnection);
@@ -50,16 +51,17 @@ public class SecDynamicCallbackActionButton extends Section {
         EventValues.registerEventValue(DialogCallbackEvent.class, String.class, DialogCallbackEvent::getName);
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("tooltip", null, true, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(150, true), true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("tooltip", null, true, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(150, true), true, Integer.class));
 
         // DYNAMIC
-        VALIDATOR.addSection("trigger", false);
+        builder.addSection("trigger", false);
+        VALIDATOR = builder.build();
     }
 
     public static void register(Registration reg) {
-        reg.newSection(SecDynamicCallbackActionButton.class, "add [dynamic] callback action button")
+        reg.newSection(SecDynamicCallbackActionButton.class, VALIDATOR, "add [dynamic] callback action button")
             .name("Dialog - Dynamic Callback Action Button")
             .description("Add a dynamic action button to a dialog.",
                 "This action includes a callback section to run code when the action button is clicked.",
@@ -99,7 +101,7 @@ public class SecDynamicCallbackActionButton extends Section {
             Skript.error("A callback action button can only be used in an 'actions' section.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         // Action button type

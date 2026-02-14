@@ -52,7 +52,7 @@ public class SecEquippableComponent extends Section {
             .addOptionalEntry("damage_on_hurt", Boolean.class)
             .addOptionalEntry("camera_overlay", String.class)
             .build();
-        reg.newSection(SecEquippableComponent.class,
+        reg.newSection(SecEquippableComponent.class, VALIDATOR,
             "apply equippable [component] to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Equippable Component Apply")
             .description("Apply an equippable component to any item so it can be equipped in the specified slot.",
