@@ -1,13 +1,10 @@
 package com.shanebeestudios.skbee.elements.damagesource.expressions;
 
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.damage.DamageType;
@@ -15,20 +12,20 @@ import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("DamageSource - Properties")
-@Description("Represents different elements you can get from a damage source.")
-@Examples({"on damage of player:",
-    "\tif damage type of damage source = arrow:",
-    "\t\tbroadcast \"OUCHIE\"",
-    "\tif causing entity of damage source is a chicken:",
-    "\t\tbroadcast \"YOU JERK\""})
-@Since("3.3.0")
 public class ExprDamageSourceProperties extends SimplePropertyExpression<DamageSource, Object> {
 
-    static {
-        register(ExprDamageSourceProperties.class, Object.class,
-            "(1:causing entity|2:direct entity|3:damage type|4:damage location|5:food exhaustion|6:source location)",
-            "damagesources");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprDamageSourceProperties.class, Object.class, "damagesources",
+                "(1:causing entity|2:direct entity|3:damage type|4:damage location|5:food exhaustion|6:source location)")
+            .name("DamageSource - Properties")
+            .description("Represents different elements you can get from a damage source.")
+            .examples("on damage of player:",
+                "\tif damage type of damage source = arrow:",
+                "\t\tbroadcast \"OUCHIE\"",
+                "\tif causing entity of damage source is a chicken:",
+                "\t\tbroadcast \"YOU JERK\"")
+            .since("3.3.0")
+            .register();
     }
 
     private int pattern;

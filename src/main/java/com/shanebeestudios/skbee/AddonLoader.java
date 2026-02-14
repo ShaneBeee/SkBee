@@ -15,6 +15,7 @@ import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.elements.advancement.AdvancementElementRegistration;
 import com.shanebeestudios.skbee.elements.bossbar.BossbarElementRegistration;
 import com.shanebeestudios.skbee.elements.bound.BoundElementRegistration;
+import com.shanebeestudios.skbee.elements.damagesource.DamageSourceElementRegistration;
 import com.shanebeestudios.skbee.elements.fastboard.FastboardElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
@@ -96,7 +97,7 @@ public class AddonLoader {
         loadAdvancementElements();
         loadBossBarElements();
         loadBoundElements();
-//        loadDamageSourceElements();
+        loadDamageSourceElements();
 //        loadDialogElements();
 //        loadDisplayEntityElements();
         loadFastboardElements();
@@ -473,21 +474,21 @@ public class AddonLoader {
 //            logFailure("Display Entity", ex);
 //        }
 //    }
-//
-//    private void loadDamageSourceElements() {
-//        if (!this.config.ELEMENTS_DAMAGE_SOURCE) {
-//            Util.logLoading("&5Damage Source Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.damagesource");
-//            Util.logLoading("&5Damage Source Elements &asuccessfully loaded");
-//            Util.log("&7 - Do note these elements are in Skript as 'Experimental'");
-//            Util.log("&7 - If issues arise, disable this feature and use Skript's elements instead");
-//        } catch (Exception ex) {
-//            logFailure("Damage Source", ex);
-//        }
-//    }
+
+    private void loadDamageSourceElements() {
+        if (!this.config.ELEMENTS_DAMAGE_SOURCE) {
+            Util.logLoading("&5Damage Source Elements &cdisabled via config");
+            return;
+        }
+        try {
+            DamageSourceElementRegistration.register(this.registration);
+            Util.logLoading("&5Damage Source Elements &asuccessfully loaded");
+            Util.log("&7 - Do note these elements are in Skript as 'Experimental'");
+            Util.log("&7 - If issues arise, disable this feature and use Skript's elements instead");
+        } catch (Exception ex) {
+            logFailure("Damage Source", ex);
+        }
+    }
 //
 //    private void loadItemComponentElements() {
 //        if (!this.config.ELEMENTS_ITEM_COMPONENT) {
