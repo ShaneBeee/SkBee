@@ -1,16 +1,12 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -24,38 +20,40 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ItemComponent - Food Component Apply")
-@Description({"Apply a food component to any item giving it food properties.",
-    "You will also require a `consumable` component to actually make the item consumable.",
-    "Requires Paper 1.21.3+",
-    "See [**Food Component**](https://minecraft.wiki/w/Data_component_format#food) on McWiki for more details.",
-    "",
-    "**Entries/Sections**:",
-    "- `nutrition` = The number of food points restored by this item when eaten. Must be a non-negative integer.",
-    "- `saturation` = The amount of saturation restored by this item when eaten.",
-    "- `can always eat` = If true, this item can be eaten even if the player is not hungry. Defaults to false. [Optional]"})
-@Examples({"apply food component to player's tool:",
-    "\tnutrition: 5",
-    "\tsaturation: 3",
-    "",
-    "set {_i} to 1 of book",
-    "apply food component to {_i}:",
-    "\tnutrition: 5",
-    "\tsaturation: 3",
-    "\tcan_always_eat: true",
-    "give player 1 of {_i}"})
-@Since("3.5.8")
 public class SecFoodComponent extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         VALIDATOR = SimpleEntryValidator.builder()
             .addRequiredEntry("nutrition", Number.class)
             .addRequiredEntry("saturation", Number.class)
             .addOptionalEntry("can_always_eat", Boolean.class)
             .build();
-        Skript.registerSection(SecFoodComponent.class, "apply food component to %itemstacks/itemtypes/slots%");
+
+        reg.newSection(SecFoodComponent.class, "apply food component to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Food Component Apply")
+            .description("Apply a food component to any item giving it food properties.",
+                "You will also require a `consumable` component to actually make the item consumable.",
+                "Requires Paper 1.21.3+",
+                "See [**Food Component**](https://minecraft.wiki/w/Data_component_format#food) on McWiki for more details.",
+                "",
+                "**Entries/Sections**:",
+                "- `nutrition` = The number of food points restored by this item when eaten. Must be a non-negative integer.",
+                "- `saturation` = The amount of saturation restored by this item when eaten.",
+                "- `can always eat` = If true, this item can be eaten even if the player is not hungry. Defaults to false. [Optional]")
+            .examples("apply food component to player's tool:",
+                "\tnutrition: 5",
+                "\tsaturation: 3",
+                "",
+                "set {_i} to 1 of book",
+                "apply food component to {_i}:",
+                "\tnutrition: 5",
+                "\tsaturation: 3",
+                "\tcan_always_eat: true",
+                "give player 1 of {_i}")
+            .since("3.5.8")
+            .register();
     }
 
     private Expression<Object> items;

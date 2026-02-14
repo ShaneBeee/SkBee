@@ -1,17 +1,10 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.util.Kleenean;
 import ch.njol.util.Math2;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.event.Event;
@@ -20,20 +13,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ItemComponent - repair cost component")
-@Description({"The number of experience levels to add to the base level cost when repairing, combining, or renaming this item with an anvil.",
-    "Must be a non-negative integer, defaults to 0."})
-@Examples({"set repair cost component of player's tool to 3",
-    "add 2 to repair cost component of player's tool",
-    "subtract 1 from repair cost component of player's tool",
-    "reset repair cost component of player's tool",
-    "delete repair cost component of {_item}",
-    "if repair cost component of player's tool > 0:"})
-@Since("3.6.0")
 public class ExprRepairCost extends SimplePropertyExpression<Object, Number> {
 
-    static {
-        register(ExprRepairCost.class, Number.class, "repair cost component", "itemstacks/itemtypes/slots");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprRepairCost.class, Number.class, "repair cost component", "itemstacks/itemtypes/slots")
+            .name("ItemComponent - repair cost component")
+            .description("The number of experience levels to add to the base level cost when repairing, combining, or renaming this item with an anvil.",
+                "Must be a non-negative integer, defaults to 0.")
+            .examples("set repair cost component of player's tool to 3",
+                "add 2 to repair cost component of player's tool",
+                "subtract 1 from repair cost component of player's tool",
+                "reset repair cost component of player's tool",
+                "delete repair cost component of {_item}",
+                "if repair cost component of player's tool > 0:")
+            .since("3.6.0")
+            .register();
     }
 
     @Override

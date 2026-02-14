@@ -1,18 +1,13 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -24,18 +19,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("ItemComponent - Bundle Contents")
-@Description("Represents the contents of a bundle item.")
-@Examples({"add 100 diamonds to bundle contents of player's tool",
-    "remove all diamonds from bundle contents of player's tool",
-    "delete bundle contents of player's tool"})
-@Since("3.6.0")
 public class ExprBundleContents extends SimpleExpression<ItemType> {
 
-    static {
-        Skript.registerExpression(ExprBundleContents.class, ItemType.class, ExpressionType.COMBINED,
-            "bundle contents of %itemtypes%",
-            "%itemtypes%'[s] bundle contents");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprBundleContents.class, ItemType.class,
+                "bundle contents of %itemtypes%",
+                "%itemtypes%'[s] bundle contents")
+            .name("ItemComponent - Bundle Contents")
+            .description("Represents the contents of a bundle item.")
+            .examples("add 100 diamonds to bundle contents of player's tool",
+                "remove all diamonds from bundle contents of player's tool",
+                "delete bundle contents of player's tool")
+            .since("3.6.0")
+            .register();
     }
 
     private Expression<ItemType> itemTypes;

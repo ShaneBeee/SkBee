@@ -1,12 +1,9 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -14,19 +11,20 @@ import io.papermc.paper.datacomponent.item.FoodProperties;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ItemComponent - Food Properties")
-@Description({"Get the food properties of an item.",
-    "This will only return a value if the item has a food component.",
-    "See [Food Component](https://minecraft.wiki/w/Data_component_format#food) on McWiki for more details.",
-    "Requires Paper 1.21.3+"})
-@Examples({"set {_nutrition} to food nutrition of player's tool",
-    "if food saturation of player's tool > 0:"})
-@Since("3.11.2")
 public class ExprFoodComponentProperties extends SimplePropertyExpression<Object, Number> {
 
-    static {
-        register(ExprFoodComponentProperties.class, Number.class,
-            "food (nutrition|:saturation)", "itemstacks/itemtypes/slots");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprFoodComponentProperties.class, Number.class,
+                "food (nutrition|:saturation)", "itemstacks/itemtypes/slots")
+            .name("ItemComponent - Food Properties")
+            .description("Get the food properties of an item.",
+                "This will only return a value if the item has a food component.",
+                "See [Food Component](https://minecraft.wiki/w/Data_component_format#food) on McWiki for more details.",
+                "Requires Paper 1.21.3+")
+            .examples("set {_nutrition} to food nutrition of player's tool",
+                "if food saturation of player's tool > 0:")
+            .since("3.11.2")
+            .register();
     }
 
     private boolean saturation;

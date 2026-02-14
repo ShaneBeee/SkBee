@@ -1,13 +1,10 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
@@ -17,27 +14,28 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Name("ItemComponent - Dyed Color")
-@Description({"Represents the dyed color component of an item.",
-    "This will work on leather armor, or items that have a dye component on their item model.",
-    "See [**ItemModel**](https://minecraft.wiki/w/Data_component_format#dyed_color) on McWiki for more details.",
-    "Requires Paper 1.21.3+",
-    "",
-    "**Changers**:",
-    "`set` = Will set the dyed color of the item.",
-    "`delete` = Will delete the dyed color of this item.",
-    "`reset` = Will reset the dyed color back to the original value."})
-@Examples({"set dyed color of player's tool to red",
-    "set dyed color of player's tool to rgb(255,100,3)",
-    "set dyed color of player's tool to yellow",
-    "delete dyed color of player's tool",
-    "reset dyed color of {_item}"})
-@Since("3.9.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprDyedColorComponent extends SimplePropertyExpression<Object, Color> {
 
-    static {
-        register(ExprDyedColorComponent.class, Color.class, "dyed color [component]", "itemstacks/itemtypes/slots");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprDyedColorComponent.class, Color.class, "dyed color [component]", "itemstacks/itemtypes/slots")
+            .name("ItemComponent - Dyed Color")
+            .description("Represents the dyed color component of an item.",
+                "This will work on leather armor, or items that have a dye component on their item model.",
+                "See [**ItemModel**](https://minecraft.wiki/w/Data_component_format#dyed_color) on McWiki for more details.",
+                "Requires Paper 1.21.3+",
+                "",
+                "**Changers**:",
+                "`set` = Will set the dyed color of the item.",
+                "`delete` = Will delete the dyed color of this item.",
+                "`reset` = Will reset the dyed color back to the original value.")
+            .examples("set dyed color of player's tool to red",
+                "set dyed color of player's tool to rgb(255,100,3)",
+                "set dyed color of player's tool to yellow",
+                "delete dyed color of player's tool",
+                "reset dyed color of {_item}")
+            .since("3.9.0")
+            .register();
     }
 
     @Override

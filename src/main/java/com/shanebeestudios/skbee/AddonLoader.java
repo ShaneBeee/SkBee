@@ -18,6 +18,7 @@ import com.shanebeestudios.skbee.elements.bound.BoundElementRegistration;
 import com.shanebeestudios.skbee.elements.damagesource.DamageSourceElementRegistration;
 import com.shanebeestudios.skbee.elements.dialog.DialogElementRegestration;
 import com.shanebeestudios.skbee.elements.fastboard.FastboardElementRegistration;
+import com.shanebeestudios.skbee.elements.itemcomponent.ItemComponentElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
 import com.shanebeestudios.skbee.elements.property.PropertyElementRegistration;
@@ -104,7 +105,7 @@ public class AddonLoader {
         loadFastboardElements();
 //        loadFishingElements();
 //        loadGameEventElements();
-//        loadItemComponentElements();
+        loadItemComponentElements();
         loadPropertyElements();
 //        loadRayTraceElements();
         loadRecipeElements();
@@ -490,20 +491,20 @@ public class AddonLoader {
             logFailure("Damage Source", ex);
         }
     }
-//
-//    private void loadItemComponentElements() {
-//        if (!this.config.ELEMENTS_ITEM_COMPONENT) {
-//            Util.logLoading("&5Item Component Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.itemcomponent");
-//            Util.logLoading("&5Item Component Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Item Component", ex);
-//        }
-//    }
-//
+
+    private void loadItemComponentElements() {
+        if (!this.config.ELEMENTS_ITEM_COMPONENT) {
+            Util.logLoading("&5Item Component Elements &cdisabled via config");
+            return;
+        }
+        try {
+            ItemComponentElementRegistration.register(this.registration);
+            Util.logLoading("&5Item Component Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Item Component", ex);
+        }
+    }
+
 //    private void loadTestingElements() {
 //        if (!TestMode.ENABLED) return;
 //        try {
