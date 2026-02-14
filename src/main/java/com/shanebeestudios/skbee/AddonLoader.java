@@ -20,6 +20,7 @@ import com.shanebeestudios.skbee.elements.bound.BoundElementRegistration;
 import com.shanebeestudios.skbee.elements.damagesource.DamageSourceElementRegistration;
 import com.shanebeestudios.skbee.elements.dialog.DialogElementRegestration;
 import com.shanebeestudios.skbee.elements.fastboard.FastboardElementRegistration;
+import com.shanebeestudios.skbee.elements.gameevent.GameEventElementRegistration;
 import com.shanebeestudios.skbee.elements.itemcomponent.ItemComponentElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
@@ -109,7 +110,7 @@ public class AddonLoader {
 //        loadDisplayEntityElements();
         loadFastboardElements();
 //        loadFishingElements();
-//        loadGameEventElements();
+        loadGameEventElements();
         loadItemComponentElements();
         loadPropertyElements();
 //        loadRayTraceElements();
@@ -355,20 +356,20 @@ public class AddonLoader {
 //            logFailure("Chunk Generator", ex);
 //        }
 //    }
-//
-//    private void loadGameEventElements() {
-//        if (!this.config.ELEMENTS_GAME_EVENT) {
-//            Util.logLoading("&5Game Event Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.gameevent");
-//            Util.logLoading("&5Game Event Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Game Event", ex);
-//        }
-//
-//    }
+
+    private void loadGameEventElements() {
+        if (!this.config.ELEMENTS_GAME_EVENT) {
+            Util.logLoading("&5Game Event Elements &cdisabled via config");
+            return;
+        }
+        try {
+            GameEventElementRegistration.register(this.registration);
+            Util.logLoading("&5Game Event Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Game Event", ex);
+        }
+
+    }
 
     private void loadBossBarElements() {
         if (!this.config.ELEMENTS_BOSS_BAR) {
