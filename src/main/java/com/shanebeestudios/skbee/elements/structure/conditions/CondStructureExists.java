@@ -1,33 +1,30 @@
 package com.shanebeestudios.skbee.elements.structure.conditions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("Structure - Exists")
-@Description("Check if a structure exists. This can be helpful to prevent overriding structures.")
-@Examples({"if structure \"my_structures:house\" exists:",
-        "if structure \"my_structures:town_hall\" doesn't exist:"})
-@Since("2.3.0")
 public class CondStructureExists extends Condition {
 
-    private static final StructureManager STRUCTURE_MANAGER;
+    private static StructureManager STRUCTURE_MANAGER;
 
-    static {
+    public static void register(Registration reg) {
         STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
-        Skript.registerCondition(CondStructureExists.class, "structure %string% exists",
-                "structure %string% (doesn't|does not) exist");
+        reg.newCondition(CondStructureExists.class, "structure %string% exists",
+                "structure %string% (doesn't|does not) exist")
+            .name("Structure - Exists")
+            .description("Check if a structure exists. This can be helpful to prevent overriding structures.")
+            .examples("if structure \"my_structures:house\" exists:",
+                "if structure \"my_structures:town_hall\" doesn't exist:")
+            .since("2.3.0")
+            .register();
     }
 
     private Expression<String> structure;

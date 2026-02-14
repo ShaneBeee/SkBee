@@ -11,6 +11,7 @@ import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
 import com.shanebeestudios.skbee.api.registration.Registration;
+import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
@@ -32,6 +33,7 @@ import com.shanebeestudios.skbee.elements.recipe.RecipeElementRegistration;
 import com.shanebeestudios.skbee.elements.registry.RegistryElementRegistration;
 import com.shanebeestudios.skbee.elements.scoreboard.ScoreboardElementRegistration;
 import com.shanebeestudios.skbee.elements.statistic.StatisticElementRegistration;
+import com.shanebeestudios.skbee.elements.structure.StructureElementRegistration;
 import com.shanebeestudios.skbee.elements.switchcase.SwitchCaseElementRegistration;
 import com.shanebeestudios.skbee.elements.testing.TestingElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
@@ -125,7 +127,7 @@ public class AddonLoader {
         loadRegistryElements();
         loadScoreboardElements();
         loadStatisticElements();
-//        loadStructureElements();
+        loadStructureElements();
         loadSwitchCaseElements();
         loadTextElements();
         loadTickManagerElements();
@@ -289,22 +291,22 @@ public class AddonLoader {
         }
     }
 
-    //
-//    private void loadStructureElements() {
-//        if (!this.config.ELEMENTS_STRUCTURE) {
-//            Util.logLoading("&5Structure Elements &cdisabled via config");
-//            return;
-//        }
-//
-//        this.plugin.structureManager = new StructureManager();
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.structure");
-//            Util.logLoading("&5Structure Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Structure", ex);
-//        }
-//    }
-//
+
+    private void loadStructureElements() {
+        if (!this.config.ELEMENTS_STRUCTURE) {
+            Util.logLoading("&5Structure Elements &cdisabled via config");
+            return;
+        }
+
+        this.plugin.structureManager = new StructureManager();
+        try {
+            StructureElementRegistration.register(this.registration);
+            Util.logLoading("&5Structure Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Structure", ex);
+        }
+    }
+
 //    private void loadVirtualFurnaceElements() {
 //        if (!this.config.ELEMENTS_VIRTUAL_FURNACE) {
 //            Util.logLoading("&5Virtual Furnace Elements &cdisabled via config");

@@ -1,30 +1,29 @@
 package com.shanebeestudios.skbee.elements.structure.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Structure - Save/Delete")
-@Description("Save a structure to file (will overwrite if file already exists), or delete a structure file. Requires MC 1.17.1+")
-@Examples({"save structure {_s}", "save structures {_s::*}", "delete structure {_s}"})
-@Since("1.12.0")
 public class EffStructureSave extends Effect {
 
     private static final StructureManager STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
 
-    static {
-        Skript.registerEffect(EffStructureSave.class, "(save|1:delete) structure[s] %structures%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffStructureSave.class, "(save|1:delete) structure[s] %structures%")
+            .name("Structure - Save/Delete")
+            .description("Save a structure to file (will overwrite if file already exists), or delete a structure file.")
+            .examples("save structure {_s}",
+                "save structures {_s::*}",
+                "delete structure {_s}")
+            .since("1.12.0")
+            .register();
     }
 
     private Expression<StructureWrapper> structures;
