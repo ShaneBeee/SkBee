@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
@@ -25,6 +26,7 @@ import com.shanebeestudios.skbee.elements.property.PropertyElementRegistration;
 import com.shanebeestudios.skbee.elements.recipe.RecipeElementRegistration;
 import com.shanebeestudios.skbee.elements.registry.RegistryElementRegistration;
 import com.shanebeestudios.skbee.elements.scoreboard.ScoreboardElementRegistration;
+import com.shanebeestudios.skbee.elements.testing.TestingElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.boss.BossBar;
@@ -120,7 +122,7 @@ public class AddonLoader {
 //        loadVirtualFurnaceElements();
 //        loadWorldCreatorElements();
 //        loadChunkGenElements();
-//        loadTestingElements();
+        loadTestingElements();
 
         // Load elements into Skript
         SkBeeAddonModule module = new SkBeeAddonModule(this.registration);
@@ -505,15 +507,15 @@ public class AddonLoader {
         }
     }
 
-//    private void loadTestingElements() {
-//        if (!TestMode.ENABLED) return;
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.testing");
-//            Util.logLoading("&5Testing Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Testing", ex);
-//        }
-//    }
+    private void loadTestingElements() {
+        if (!TestMode.ENABLED) return;
+        try {
+            TestingElementRegistration.register(this.registration);
+            Util.logLoading("&5Testing Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Testing", ex);
+        }
+    }
 
     private void loadRegistryElements() {
         try {

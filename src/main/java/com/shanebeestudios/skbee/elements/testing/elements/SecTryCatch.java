@@ -1,8 +1,6 @@
 package com.shanebeestudios.skbee.elements.testing.elements;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.Trigger;
@@ -12,21 +10,23 @@ import ch.njol.skript.log.RetainingLogHandler;
 import ch.njol.skript.log.SkriptLogger;
 import ch.njol.skript.test.runner.TestTracker;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@NoDoc
 public class SecTryCatch extends Section {
 
-    static {
-        Skript.registerSection(SecTryCatch.class,
-            "try", // Used to test for runtime errors
-            "catch" // Used to catch the runtime errrors
-            // If no catch block is used, runtime errors are sent to TestTracker
-        );
+    public static void register(Registration reg) {
+        reg.newSection(SecTryCatch.class,
+                "try", // Used to test for runtime errors
+                "catch" // Used to catch the runtime errrors
+                // If no catch block is used, runtime errors are sent to TestTracker
+            )
+            .noDoc()
+            .register();
     }
 
     private Trigger trigger;
