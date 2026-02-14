@@ -25,6 +25,7 @@ import com.shanebeestudios.skbee.elements.itemcomponent.ItemComponentElementRegi
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
 import com.shanebeestudios.skbee.elements.property.PropertyElementRegistration;
+import com.shanebeestudios.skbee.elements.raytrace.RayTraceElementRegistration;
 import com.shanebeestudios.skbee.elements.recipe.RecipeElementRegistration;
 import com.shanebeestudios.skbee.elements.registry.RegistryElementRegistration;
 import com.shanebeestudios.skbee.elements.scoreboard.ScoreboardElementRegistration;
@@ -113,7 +114,7 @@ public class AddonLoader {
         loadGameEventElements();
         loadItemComponentElements();
         loadPropertyElements();
-//        loadRayTraceElements();
+        loadRayTraceElements();
         loadRecipeElements();
         loadRegistryElements();
         loadScoreboardElements();
@@ -436,18 +437,18 @@ public class AddonLoader {
         }
     }
 
-//    private void loadRayTraceElements() {
-//        if (!this.config.ELEMENTS_RAYTRACE) {
-//            Util.logLoading("&5RayTrace Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.raytrace");
-//            Util.logLoading("&5RayTrace Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("RayTrace", ex);
-//        }
-//    }
+    private void loadRayTraceElements() {
+        if (!this.config.ELEMENTS_RAYTRACE) {
+            Util.logLoading("&5RayTrace Elements &cdisabled via config");
+            return;
+        }
+        try {
+            RayTraceElementRegistration.register(this.registration);
+            Util.logLoading("&5RayTrace Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("RayTrace", ex);
+        }
+    }
 //
 //    private void loadFishingElements() {
 //        if (!this.config.ELEMENTS_FISHING) {
