@@ -2,16 +2,13 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -21,25 +18,26 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-@Name("Chat Completions")
-@Description({"Represents the chat completions of a player.",
-        "\n`set` = Set the list of chat completion suggestions shown to the player while typing a message.",
-        "If completions were set previously, this method will remove them all and replace them with the provided completions.",
-        "\n`add` = Add custom chat completion suggestions shown to the player while typing a message.",
-        "\n`remove` = Remove custom chat completion suggestions shown to the player while typing a message. Online player names cannot be removed with this method.",
-        "This will affect only custom completions added by add/set.",
-        "\n`reset` = Will remove all custom chat completions.",
-        "\nNOTE: Supports all objects, will be stringified based on however Skript does it."})
-@Examples({"add \"i like cheese\" to chat completions of player",
-        "add all worlds to chat completions of player",
-        "set chat completions of player to \"potatoes\" and \"popcorn\"",
-        "reset chat completions of player"})
-@Since("2.17.0")
 public class ExprChatCompletions extends PropertyExpression<Player, String> {
 
-    static {
+    public static void register(Registration reg) {
         if (Skript.methodExists(Player.class, "setCustomChatCompletions", Collection.class)) {
-            register(ExprChatCompletions.class, String.class, "[custom] chat completions", "players");
+            reg.newPropertyExpression(ExprChatCompletions.class, String.class, "[custom] chat completions", "players")
+                .name("Chat Completions")
+                .description("Represents the chat completions of a player.",
+                    "\n`set` = Set the list of chat completion suggestions shown to the player while typing a message.",
+                    "If completions were set previously, this method will remove them all and replace them with the provided completions.",
+                    "\n`add` = Add custom chat completion suggestions shown to the player while typing a message.",
+                    "\n`remove` = Remove custom chat completion suggestions shown to the player while typing a message. Online player names cannot be removed with this method.",
+                    "This will affect only custom completions added by add/set.",
+                    "\n`reset` = Will remove all custom chat completions.",
+                    "\nNOTE: Supports all objects, will be stringified based on however Skript does it.")
+                .examples("add \"i like cheese\" to chat completions of player",
+                    "add all worlds to chat completions of player",
+                    "set chat completions of player to \"potatoes\" and \"popcorn\"",
+                    "reset chat completions of player")
+                .since("2.17.0")
+                .register();
         }
     }
 

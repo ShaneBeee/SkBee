@@ -2,16 +2,12 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ObjectConverter;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.NamespacedKey;
@@ -23,31 +19,32 @@ import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("NamespacedKey - Object From")
-@Description({"Get an object from a namespaced key.",
-    "This may come in handy in an instance you have a string version that doesn't match Skript and can't be parsed.",
-    "Also supports some custom objects such as custom Enchantments in Minecraft 1.21+",
-    "Currently supported types: attribute, biome, damage type, enchantment, entity type, game event, item type,",
-    "particle, potion effect type, statistic, world."})
-@Examples({"set {_n} to mc key from \"minecraft:zombie\"",
-    "set {_e} to entity type from key {_n}",
-    "set {_e} to entity type from key \"armadillo\"",
-    "set {_e} to entity type from key \"minecraft:breeze\"",
-    "spawn 1 of {_e} above target block",
-    "",
-    "set {_i} to itemtype from key \"minecraft:stone_sword\"",
-    "give player 1 of {_i}",
-    "",
-    "set {_e} to enchantment from key \"minecraft:breach\"",
-    "set {_e} to enchantment from key \"custom:my_custom_enchant\"",
-    "set enchantment level of {_e} of player's tool to 3",
-    "set {_e::*} to enchantments from keys \"minecraft:sharpness\" and \"bloop:shiver\""})
-@Since("2.17.0")
 public class ExprNamespacedKeyObjectFrom extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprNamespacedKeyObjectFrom.class, Object.class, ExpressionType.COMBINED,
-            "%*classinfo% from key[s] %namespacedkeys/strings%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprNamespacedKeyObjectFrom.class, Object.class,
+            "%*classinfo% from key[s] %namespacedkeys/strings%")
+            .name("NamespacedKey - Object From")
+            .description("Get an object from a namespaced key.",
+                "This may come in handy in an instance you have a string version that doesn't match Skript and can't be parsed.",
+                "Also supports some custom objects such as custom Enchantments in Minecraft 1.21+",
+                "Currently supported types: attribute, biome, damage type, enchantment, entity type, game event, item type,",
+                "particle, potion effect type, statistic, world.")
+            .examples("set {_n} to mc key from \"minecraft:zombie\"",
+                "set {_e} to entity type from key {_n}",
+                "set {_e} to entity type from key \"armadillo\"",
+                "set {_e} to entity type from key \"minecraft:breeze\"",
+                "spawn 1 of {_e} above target block",
+                "",
+                "set {_i} to itemtype from key \"minecraft:stone_sword\"",
+                "give player 1 of {_i}",
+                "",
+                "set {_e} to enchantment from key \"minecraft:breach\"",
+                "set {_e} to enchantment from key \"custom:my_custom_enchant\"",
+                "set enchantment level of {_e} of player's tool to 3",
+                "set {_e::*} to enchantments from keys \"minecraft:sharpness\" and \"bloop:shiver\"")
+            .since("2.17.0")
+            .register();
     }
 
     private Literal<ClassInfo<?>> classInfo;

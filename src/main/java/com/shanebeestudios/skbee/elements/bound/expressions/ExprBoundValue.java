@@ -1,20 +1,15 @@
 package com.shanebeestudios.skbee.elements.bound.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
@@ -23,27 +18,28 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Bound - Values")
-@Description({"Get/set/delete custom values for bounds.",
-        "Some objects will be serialized as their type, others will serialize as just a string.",
-        "Numbers/Locations/Booleans/(Offline)Players/Items will be serialized as their type.",
-        "Entities will be serialized as a string version of their UUID.",
-        "All other objects will be serialized as a string.",
-        "All bound values will return a list of the values, all bound keys will return a list of keys for these values.",
-        "Deleting all bound values/keys will clear the list."})
-@Examples({"set bound value \"king\" of bound with id \"the_garden\" to player",
-        "set {_v} to bound value \"king\" of {_bound}",
-        "delete bound value \"spawn\" of {_bound}",
-        "set {_values::*} to all bound values of bound with id \"ma_bound\"",
-        "set {_keys::*} to all bound keys of bound with id \"look_mah_imma_bound\"",
-        "delete all bound values from bound with id \"now_im_a_sad_valueless_bound\""})
-@Since("2.2.0")
 public class ExprBoundValue extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprBoundValue.class, Object.class, ExpressionType.COMBINED,
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprBoundValue.class, Object.class,
                 "bound value %string% (of|from) %bound%",
-                "all [[of] the] bound (values|1:keys) (of|from) %bound%");
+                "all [[of] the] bound (values|1:keys) (of|from) %bound%")
+            .name("Bound - Values")
+            .description("Get/set/delete custom values for bounds.",
+                "Some objects will be serialized as their type, others will serialize as just a string.",
+                "Numbers/Locations/Booleans/(Offline)Players/Items will be serialized as their type.",
+                "Entities will be serialized as a string version of their UUID.",
+                "All other objects will be serialized as a string.",
+                "All bound values will return a list of the values, all bound keys will return a list of keys for these values.",
+                "Deleting all bound values/keys will clear the list.")
+            .examples("set bound value \"king\" of bound with id \"the_garden\" to player",
+                "set {_v} to bound value \"king\" of {_bound}",
+                "delete bound value \"spawn\" of {_bound}",
+                "set {_values::*} to all bound values of bound with id \"ma_bound\"",
+                "set {_keys::*} to all bound keys of bound with id \"look_mah_imma_bound\"",
+                "delete all bound values from bound with id \"now_im_a_sad_valueless_bound\"")
+            .since("2.2.0")
+            .register();
     }
 
     private int pattern;

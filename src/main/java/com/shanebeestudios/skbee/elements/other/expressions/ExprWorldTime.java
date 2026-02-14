@@ -1,37 +1,35 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("World Time")
-@Description({"Get/set the time of world, represented as an integer.",
-    "`world time` = The 24000 tick day cycle of a world.",
-    "`full world time` = The time of a world over all days."})
-@Examples({"set {_time} to world time of world of player",
-    "set {_time} to full world time of world of player",
-    "set time of world of player to 12000",
-    "set full time of world of player to 1000000",
-    "add 1000 to world time of world of player",
-    "add 1000 to full world time of world of player",
-    "remove 100 from world time of world of player",
-    "remove 50 from full world time of world of player"})
-@Since("3.11.0")
 public class ExprWorldTime extends SimplePropertyExpression<World, Long> {
 
-    static {
-        register(ExprWorldTime.class, Long.class,
-            "[:full] world time", "worlds");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprWorldTime.class, Long.class,
+                "[:full] world time", "worlds")
+            .name("World Time")
+            .description("Get/set the time of world, represented as an integer.",
+                "`world time` = The 24000 tick day cycle of a world.",
+                "`full world time` = The time of a world over all days.")
+            .examples("set {_time} to world time of world of player",
+                "set {_time} to full world time of world of player",
+                "set time of world of player to 12000",
+                "set full time of world of player to 1000000",
+                "add 1000 to world time of world of player",
+                "add 1000 to full world time of world of player",
+                "remove 100 from world time of world of player",
+                "remove 50 from full world time of world of player")
+            .since("3.11.0")
+            .register();
     }
 
     private boolean full;

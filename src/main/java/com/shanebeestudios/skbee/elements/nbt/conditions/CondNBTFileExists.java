@@ -1,27 +1,24 @@
 package com.shanebeestudios.skbee.elements.nbt.conditions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("NBT - File Exists")
-@Description("Check if an NBT file already exists.")
-@Examples("if nbt file \"plugins/MyPlugin/test.nbt\" exists:")
-@Since("2.10.0")
 public class CondNBTFileExists extends Condition {
 
-    static {
-        Skript.registerCondition(CondNBTFileExists.class, "nbt file %string% (exists|1:doesn't exist)");
+    public static void register(Registration reg) {
+        reg.newCondition(CondNBTFileExists.class, "nbt file %string% (exists|1:doesn't exist)")
+            .name("NBT - File Exists")
+            .description("Check if an NBT file already exists.")
+            .examples("if nbt file \"plugins/MyPlugin/test.nbt\" exists:")
+            .since("2.10.0")
+            .register();
     }
 
     private Expression<String> fileName;

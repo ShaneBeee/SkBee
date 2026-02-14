@@ -1,31 +1,29 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Entity Memory")
-@Description("Get/set memories of entities.")
-@Examples({"set {_home} to home memory of {_villager}",
-    "set home memory of last spawned villager to location of player"})
-@Since("3.4.0")
 public class ExprMemoryValue extends SimplePropertyExpression<LivingEntity, Object> {
 
-    static {
-        register(ExprMemoryValue.class, Object.class, "%*memory% memory", "livingentities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprMemoryValue.class, Object.class, "%*memory% memory", "livingentities")
+                .name("Entity Memory")
+                .description("Get/set memories of entities.")
+                .examples("set {_home} to home memory of {_villager}",
+                        "set home memory of last spawned villager to location of player")
+                .since("3.4.0")
+                .register();
     }
 
     private Literal<MemoryKey<?>> memory;

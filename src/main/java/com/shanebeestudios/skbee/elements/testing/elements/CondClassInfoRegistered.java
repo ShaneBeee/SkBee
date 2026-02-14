@@ -1,25 +1,25 @@
 package com.shanebeestudios.skbee.elements.testing.elements;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
-import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.VerboseAssert;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Condition;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@NoDoc
 public class CondClassInfoRegistered extends Condition implements VerboseAssert {
 
-    static {
-        Skript.registerCondition(CondClassInfoRegistered.class,
-            "class info (by class|id:with codename) %string% (is|neg:isn't) registered");
+    public static void register(Registration reg) {
+        reg.newCondition(CondClassInfoRegistered.class,
+                "class info (by class|id:with codename) %string% (is|neg:isn't) registered")
+            .noDoc()
+            .register();
     }
 
     private Expression<String> name;

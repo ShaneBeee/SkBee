@@ -2,34 +2,32 @@ package com.shanebeestudios.skbee.elements.other.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Break Blocks with Effects")
-@Description({"Breaks blocks as if a player had broken them. Will drop items, play particles and sounds. Requires PaperMC.",
-    "Optionally you can trigger it to drop experience as well.",
-    "Optionally you can include an item which is used to determine which drops the block will drop."})
-@Examples({"break blocks in radius 2 around target block with effects",
-    "break {_blocks::*} with effects and with xp",
-    "break {_blocks::*} with effects and with xp using player's tool"})
-@Since("3.6.1")
 public class EffBreakBlocksWithEffects extends Effect {
 
     private static final boolean HAS_EFFECTS = Skript.methodExists(Block.class, "breakNaturally", boolean.class, boolean.class);
 
-    static {
-        Skript.registerEffect(EffBreakBlocksWithEffects.class,
-            "break %blocks% [naturally] with effects [exp:[and] with (experience|exp|xp)] [using %-itemtype%]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffBreakBlocksWithEffects.class,
+                "break %blocks% [naturally] with effects [exp:[and] with (experience|exp|xp)] [using %-itemtype%]")
+            .name("Break Blocks with Effects")
+            .description("Breaks blocks as if a player had broken them. Will drop items, play particles and sounds. Requires PaperMC.",
+                "Optionally you can trigger it to drop experience as well.",
+                "Optionally you can include an item which is used to determine which drops the block will drop.")
+            .examples("break blocks in radius 2 around target block with effects",
+                "break {_blocks::*} with effects and with xp",
+                "break {_blocks::*} with effects and with xp using player's tool")
+            .since("3.6.1")
+            .register();
     }
 
     private boolean exp;

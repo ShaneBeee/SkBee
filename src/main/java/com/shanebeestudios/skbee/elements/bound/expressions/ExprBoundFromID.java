@@ -1,17 +1,12 @@
 package com.shanebeestudios.skbee.elements.bound.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import org.jetbrains.annotations.NotNull;
@@ -19,15 +14,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Bound - From ID")
-@Description("Get a bound object from a bound ID")
-@Examples("set {_b} to bound from id \"%player%.home\"")
-@Since("1.0.0")
 public class ExprBoundFromID extends SimpleExpression<Bound> {
 
-    static {
-        Skript.registerExpression(ExprBoundFromID.class, Bound.class, ExpressionType.SIMPLE,
-                "bound[s] (of|from|with) id[s] %strings%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprBoundFromID.class, Bound.class,
+                "bound[s] (of|from|with) id[s] %strings%")
+            .name("Bound - From ID")
+            .description("Get a bound object from a bound ID")
+            .examples("set {_b} to bound from id \"%player%.home\"")
+            .since("1.0.0")
+            .register();
     }
 
     private Expression<String> ids;

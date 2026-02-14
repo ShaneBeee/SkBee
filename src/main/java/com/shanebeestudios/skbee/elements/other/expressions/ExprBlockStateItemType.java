@@ -1,30 +1,26 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("BlockState - ItemType")
-@Description("Represents the itemtype of a block state.")
-@Examples({"set {_type} to blockstate itemtype of {_blockstate}",
-        "set blockstate itemtype of {_blockstate} to stone"})
-@Since("2.13.0")
 public class ExprBlockStateItemType extends SimplePropertyExpression<BlockState, ItemType> {
 
-    static {
-        Skript.registerExpression(ExprBlockStateItemType.class, ItemType.class, ExpressionType.PROPERTY,
-                "block[ ]state [item[ ]]type of %blockstates%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprBlockStateItemType.class, ItemType.class,
+                "block[ ]state [item[ ]]type of %blockstates%")
+            .name("BlockState - ItemType")
+            .description("Represents the itemtype of a block state.")
+            .examples("set {_type} to blockstate itemtype of {_blockstate}",
+                "set blockstate itemtype of {_blockstate} to stone")
+            .since("2.13.0")
+            .register();
     }
 
     @Override

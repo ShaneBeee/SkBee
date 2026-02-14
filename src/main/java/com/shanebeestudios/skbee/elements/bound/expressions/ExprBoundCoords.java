@@ -2,19 +2,15 @@ package com.shanebeestudios.skbee.elements.bound.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -22,23 +18,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @Deprecated
-@Name("Bound - Coords")
-@Description({"DEPRECATED - Use bound locations/world expressions instead",
-    "The coords and world of a bounding box. You can get the world/coords for a specific bound, you can also " +
-        "set the coords of a bounding box. You can NOT set the world of a bounding box. ",
-    "Greater will always equal the higher south-east corner. ",
-    "Lesser will always equal the lower north-west corner."})
-@Examples({"set lesser y coord of {bound} to 10", "set {_x} to greater x coord of bound with id \"my.bound\""})
-@Since("1.0.0")
 public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
 
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
-    static {
-        Skript.registerExpression(ExprBoundCoords.class, Object.class, ExpressionType.PROPERTY,
-            "lesser (x|1:y|2:z) coord[inate] of [bound] %bound%",
-            "greater (x|1:y|2:z) coord[inate] of [bound] %bound%",
-            "world of bound %bound%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprBoundCoords.class, Object.class, "bound",
+                "lesser (x|1:y|2:z) coord[inate]",
+                "greater (x|1:y|2:z) coord[inate]",
+                "world of bound")
+            .name("Bound - Coords")
+            .description("DEPRECATED - Use bound locations/world expressions instead",
+                "The coords and world of a bounding box. You can get the world/coords for a specific bound, you can also " +
+                    "set the coords of a bounding box. You can NOT set the world of a bounding box. ",
+                "Greater will always equal the higher south-east corner. ",
+                "Lesser will always equal the lower north-west corner.")
+            .examples("set lesser y coord of {bound} to 10", "set {_x} to greater x coord of bound with id \"my.bound\"")
+            .since("1.0.0")
+            .register();
     }
 
     private boolean WORLD;

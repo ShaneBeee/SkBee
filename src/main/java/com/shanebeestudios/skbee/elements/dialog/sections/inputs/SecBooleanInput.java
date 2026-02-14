@@ -2,14 +2,11 @@ package com.shanebeestudios.skbee.elements.dialog.sections.inputs;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
@@ -26,23 +23,6 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Boolean Input")
-@Description({"A simple checkbox input to be used in an `inputs` section of a dialog.",
-    "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
-        "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
-    "**Entries**:",
-    "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
-    "- `label` = A string/text component to be displayed to the left of the input.",
-    "- `initial` = The initial boolean value of the checkbox. Defaults to false (unchecked).",
-    "- `on_true` = The string value to send when true. Defaults to \"true\".",
-    "- `on_false` = The string value to send when false. Defaults to \"false\"."})
-@Examples({"add boolean input:",
-    "\tkey: \"some_bool_key\"",
-    "\tlabel: \"Want some cheese?\"",
-    "\tinitial: true",
-    "\ton_true: \"true was selected\"",
-    "\ton_false: \"false was selected\""})
-@Since("3.16.0")
 public class SecBooleanInput extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
@@ -58,8 +38,28 @@ public class SecBooleanInput extends Section {
         VALIDATOR.addEntryData(new ExpressionEntryData<>("initial", null, true, Boolean.class));
         VALIDATOR.addEntryData(new ExpressionEntryData<>("on_true", null, true, String.class));
         VALIDATOR.addEntryData(new ExpressionEntryData<>("on_false", null, true, String.class));
+    }
 
-        Skript.registerSection(SecBooleanInput.class, "add boolean input");
+    public static void register(Registration reg) {
+        reg.newSection(SecBooleanInput.class, "add boolean input")
+            .name("Dialog - Boolean Input")
+            .description("A simple checkbox input to be used in an `inputs` section of a dialog.",
+                "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
+                    "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
+                "**Entries**:",
+                "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
+                "- `label` = A string/text component to be displayed to the left of the input.",
+                "- `initial` = The initial boolean value of the checkbox. Defaults to false (unchecked).",
+                "- `on_true` = The string value to send when true. Defaults to \"true\".",
+                "- `on_false` = The string value to send when false. Defaults to \"false\".")
+            .examples("add boolean input:",
+                "\tkey: \"some_bool_key\"",
+                "\tlabel: \"Want some cheese?\"",
+                "\tinitial: true",
+                "\ton_true: \"true was selected\"",
+                "\ton_false: \"false was selected\"")
+            .since("3.16.0")
+            .register();
     }
 
     // GENERAL INPUT

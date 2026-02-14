@@ -1,31 +1,27 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.vf.api.property.FurnaceProperties;
 import com.shanebeestudios.vf.api.property.Properties;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("VirtualFurnace - Default Furnace Properties")
-@Description("Represents furnace properties that mimic vanilla Minecraft properties.")
-@Examples({"set {_prop} to default furnace properties",
-        "set {_furnace} to virtual furnace named \"Potato\" with properties {_prop}"})
-@Since("3.3.0")
 public class ExprVirtualFurnacePropertiesDefault extends SimpleExpression<Properties> {
 
-    static {
-        Skript.registerExpression(ExprVirtualFurnacePropertiesDefault.class, Properties.class, ExpressionType.SIMPLE,
-                "default (furnace|1:blast furnace|2:smoker) properties");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprVirtualFurnacePropertiesDefault.class, Properties.class,
+                "default (furnace|1:blast furnace|2:smoker) properties")
+            .name("VirtualFurnace - Default Furnace Properties")
+            .description("Represents furnace properties that mimic vanilla Minecraft properties.")
+            .examples("set {_prop} to default furnace properties",
+                "set {_furnace} to virtual furnace named \"Potato\" with properties {_prop}")
+            .since("3.3.0")
+            .register();
     }
 
     private int pattern;

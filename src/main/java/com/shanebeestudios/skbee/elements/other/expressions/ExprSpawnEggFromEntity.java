@@ -3,13 +3,9 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.EntityUtils;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.registrations.Classes;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.Entity;
@@ -19,19 +15,19 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Spawn Egg from Entity")
-@Description("Gets a spawn egg from an entity/entityType. Requires Paper, or Spigot 1.20.1+.")
-@Examples({"set {_egg} to spawn egg of last spawned entity",
-    "set {_egg} to spawn egg of (spawner type of target block)"})
-@Since("2.14.0")
 public class ExprSpawnEggFromEntity extends SimplePropertyExpression<Object, ItemType> {
 
     private static final ItemFactory ITEM_FACTORY = Bukkit.getItemFactory();
 
-
-    static {
+    public static void register(Registration reg) {
         if (Skript.methodExists(ItemFactory.class, "getSpawnEgg", EntityType.class)) {
-            register(ExprSpawnEggFromEntity.class, ItemType.class, "spawn egg", "entities/entitydatas");
+            reg.newPropertyExpression(ExprSpawnEggFromEntity.class, ItemType.class, "spawn egg", "entities/entitydatas")
+                .name("Spawn Egg from Entity")
+                .description("Gets a spawn egg from an entity/entityType. Requires Paper, or Spigot 1.20.1+.")
+                .examples("set {_egg} to spawn egg of last spawned entity",
+                    "set {_egg} to spawn egg of (spawner type of target block)")
+                .since("2.14.0")
+                .register();
         }
     }
 

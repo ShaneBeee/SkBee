@@ -1,17 +1,13 @@
 package com.shanebeestudios.skbee.elements.recipe.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.inventory.CraftItemEvent;
@@ -22,26 +18,25 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Recipe - Result Slot")
-@Description({"Represents the result slot of a crafting event.",
-    "This can be changed."})
-@Examples({"on crafter craft:",
-    "\tif event-string = \"minecraft:diamond_sword\":",
-    "\t\tset name of recipe result to \"Señor Sword\"",
-    "\telse:",
-    "\t\tset recipe result to a stick named \"&cNice Try\"",
-    "",
-    "on preparing craft:",
-    "\tset {_e} to event-string",
-    "\tif {_e} = \"minecraft:diamond_shovel\":",
-    "\t\tset name of recipe result to \"&cMr Shovel\""})
-@Since("3.6.1")
 public class ExprRecipeResultSlot extends SimpleExpression<Slot> {
 
-
-    static {
-        Skript.registerExpression(ExprRecipeResultSlot.class, Slot.class, ExpressionType.SIMPLE,
-            "recipe result [slot]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprRecipeResultSlot.class, Slot.class,
+                "recipe result [slot]")
+            .name("Recipe - Result Slot")
+            .description("Represents the result slot of a crafting event.")
+            .examples("on crafter craft:",
+                "\tif event-string = \"minecraft:diamond_sword\":",
+                "\t\tset name of recipe result to \"Señor Sword\"",
+                "\telse:",
+                "\t\tset recipe result to a stick named \"&cNice Try\"",
+                "",
+                "on preparing craft:",
+                "\tset {_e} to event-string",
+                "\tif {_e} = \"minecraft:diamond_shovel\":",
+                "\t\tset name of recipe result to \"&cMr Shovel\"")
+            .since("3.6.1")
+            .register();
     }
 
     @SuppressWarnings("NullableProblems")

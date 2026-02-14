@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -22,18 +17,19 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-@Name("Entities Sorted by Distance")
-@Description("Sort entities by distance from a central location.")
-@Examples({"loop all entities sorted by distance from player:",
-    "set {_sort::*} to all mobs sorted by distance from {_loc}",
-    "set {_p::*} to all players sorted by distance from {spawn}",
-    "loop all mobs sorted by distance from player:"})
-@Since("3.0.0")
 public class ExprSortedEntities extends SimpleExpression<Entity> {
 
-    static {
-        Skript.registerExpression(ExprSortedEntities.class, Entity.class, ExpressionType.COMBINED,
-            "%entities% sorted by distance from %location%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprSortedEntities.class, Entity.class,
+                "%entities% sorted by distance from %location%")
+            .name("Entities Sorted by Distance")
+            .description("Sort entities by distance from a central location.")
+            .examples("loop all entities sorted by distance from player:",
+                "set {_sort::*} to all mobs sorted by distance from {_loc}",
+                "set {_p::*} to all players sorted by distance from {spawn}",
+                "loop all mobs sorted by distance from player:")
+            .since("3.0.0")
+            .register();
     }
 
     private Expression<Entity> entities;

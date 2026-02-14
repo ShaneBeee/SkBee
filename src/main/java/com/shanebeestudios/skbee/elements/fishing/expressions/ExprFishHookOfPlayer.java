@@ -1,26 +1,25 @@
 package com.shanebeestudios.skbee.elements.fishing.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Fish Hook - Current")
-@Description("Get the current fish hook attached to a player's fishing rod.")
-@Examples("delete current fish hook of player")
-@Since("2.8.4")
 public class ExprFishHookOfPlayer extends SimplePropertyExpression<Player, Entity> {
 
-    static {
+    public static void register(Registration reg) {
         if (Skript.methodExists(HumanEntity.class, "getFishHook")) {
-            register(ExprFishHookOfPlayer.class, Entity.class, "(current|attached) fish[ing] hook[s]", "players");
+            reg.newPropertyExpression(ExprFishHookOfPlayer.class, Entity.class,
+                "(current|attached) fish[ing] hook[s]", "players")
+                .name("Fish Hook - Current")
+                .description("Get the current fish hook attached to a player's fishing rod.")
+                .examples("delete current fish hook of player")
+                .since("2.8.4")
+                .register();
         }
     }
 

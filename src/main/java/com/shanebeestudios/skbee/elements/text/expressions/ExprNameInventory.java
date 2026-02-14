@@ -1,17 +1,9 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.HumanEntity;
@@ -22,19 +14,18 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Name("TextComponent - Inventory Name")
-@Description({"Get/set the name of an inventory using components.",
-    "NOTE: This will only rename OPEN inventories, not inventories saved in variables.",
-    "NOTE: Internally the component is stringified, so things like fonts wont work.",
-    "Requires Minecraft 1.21+",
-    "For versions below 1.21, just use Skript's inventory title expression."})
-@Examples("set component inventory title of player's current inventory to {_t}")
-@Since("2.4.0")
 public class ExprNameInventory extends SimplePropertyExpression<Inventory, ComponentWrapper> {
 
-    static {
-        register(ExprNameInventory.class, ComponentWrapper.class,
-            "component inventory (name|title)", "inventories");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprNameInventory.class, ComponentWrapper.class,
+                "component inventory (name|title)", "inventories")
+            .name("TextComponent - Inventory Name")
+            .description("Get/set the name of an inventory using components.",
+                "NOTE: This will only rename OPEN inventories, not inventories saved in variables.",
+                "NOTE: Internally the component is stringified, so things like fonts wont work.")
+            .examples("set component inventory title of player's current inventory to {_t}")
+            .since("2.4.0")
+            .register();
     }
 
     @Override

@@ -1,23 +1,21 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.expressions;
 
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.vf.api.machine.Machine;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("VirtualFurnace - UUID")
-@Description("Get the id/uuid of a virtual furnace.")
-@Examples("set {_uuid} to machine uuid of {_furnace}")
-@Since("3.3.0")
 public class ExprVirtualFurnaceMachineID extends SimplePropertyExpression<Machine, String> {
 
-    static {
-        register(ExprVirtualFurnaceMachineID.class, String.class,
-                "[virtual] (machine|furnace) (id|uuid)", "machines");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprVirtualFurnaceMachineID.class, String.class,
+                "[virtual] (machine|furnace) (id|uuid)", "machines")
+            .name("VirtualFurnace - UUID")
+            .description("Get the id/uuid of a virtual furnace.")
+            .examples("set {_uuid} to machine uuid of {_furnace}")
+            .since("3.3.0")
+            .register();
     }
 
     @Override

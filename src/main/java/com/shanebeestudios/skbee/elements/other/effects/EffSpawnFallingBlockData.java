@@ -1,15 +1,11 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.sections.EffSecSpawn;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -19,16 +15,17 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Spawn Falling BlockData")
-@Description({"Spawn a falling block data.",
-    "This is a temp effect until Skript properly handles block data with spawning of falling blocks."})
-@Examples("le spawn falling snow[layers=3] above target block of player")
-@Since("2.10.0")
 public class EffSpawnFallingBlockData extends Effect {
 
-    static {
-        Skript.registerEffect(EffSpawnFallingBlockData.class,
-            "(skbee|le) spawn falling %blockdata% [%directions% %locations%]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffSpawnFallingBlockData.class,
+                "(skbee|le) spawn falling %blockdata% [%directions% %locations%]")
+            .name("Spawn Falling BlockData")
+            .description("Spawn a falling block data.",
+                "This is a temp effect until Skript properly handles block data with spawning of falling blocks.")
+            .examples("le spawn falling snow[layers=3] above target block of player")
+            .since("2.10.0")
+            .register();
     }
 
     private Expression<BlockData> blockData;

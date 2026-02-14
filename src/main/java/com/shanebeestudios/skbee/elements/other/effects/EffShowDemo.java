@@ -1,31 +1,26 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("Show Demo Screen")
-@Description({"Shows the demo screen to the player, this screen is normally only seen in the demo version of the game.",
-        "Servers can modify the text on this screen using a resource pack."})
-@Examples({"show demo screen to all players",
-        "show demo screen to player"})
-@Since("1.17.0")
 public class EffShowDemo extends Effect {
 
-    static {
-        if (Skript.methodExists(Player.class, "showDemoScreen")) {
-            Skript.registerEffect(EffShowDemo.class, "show demo screen to %players%");
-        }
+    public static void register(Registration reg) {
+        reg.newEffect(EffShowDemo.class, "show demo screen to %players%")
+            .name("Show Demo Screen")
+            .description("Shows the demo screen to the player, this screen is normally only seen in the demo version of the game.",
+                "Servers can modify the text on this screen using a resource pack.")
+            .examples("show demo screen to all players",
+                "show demo screen to player")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<Player> players;

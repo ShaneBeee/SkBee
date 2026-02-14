@@ -1,11 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
@@ -13,6 +8,7 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.CookingRecipeType;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -37,51 +33,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-@Name("Recipe - Register Cooking Recipe")
-@Description({"This section allows you to register any cooking recipe and define special properties.",
-    "\n`id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
-    "\n`result` = The resulting ItemStack of this recipe.",
-    "\n`input` = The item the recipe requires as an input to output the result (Accepts an ItemStack or RecipeChoice) (Required).",
-    "\n`cooktime` = How long the recipe will take to finish cooking before result is given (Optional).",
-    "\n`experience` = The amount of experience gained when the recipe is finished cooking (Optional).",
-    "Default cook times are, furnace = 10 seconds, smoking/blasting = 5 seconds and campfire = 30 seconds.",
-    "\n`group` = You can define a group in which all recipes under this are sorted together in the recipe book (Optional).",
-    "Examples of this in game are beds and wood types.",
-    "\n`category` = Which category in the recipe book this recipe should appear within (Optional 1.19.4+).",
-    "Valid category types are \"food\", \"blocks\", \"misc\", if no category is defined it defaults to \"misc\"."})
-@Examples({"register new furnace recipe:",
-    "\tid: \"sieve:gravel_to_sand\"",
-    "\tresult: sand",
-    "\tinput: gravel",
-    "\tgroup: \"sieve\"",
-    "\tcooktime: 1 minecraft day # 20 minutes",
-    "\texperience: 6",
-    "\tcategory: \"blocks\"",
-    "",
-    "register new campfire recipe:",
-    "\tid: \"sieve:cobblestone_to_gravel\"",
-    "\tresult: gravel",
-    "\tinput: cobblestone",
-    "\tgroup: \"sieve\"",
-    "\tcategory: \"blocks\"",
-    "",
-    "register new smoking recipe:",
-    "\tid: \"chef:beef_jerky\"",
-    "\tresult: cooked mutton named \"&oBeef&r Jerky\"",
-    "\tinput: rotten flesh",
-    "\tcategory: \"food\"",
-    "",
-    "register a new blasting recipe:",
-    "\tid: \"firery_sword\"",
-    "\tresult: diamond sword of fire aspect named \"Flaming Sword\"",
-    "\tinput: diamond sword"})
-@Since("3.0.0")
 public class SecRecipeCooking extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
     private static final Map<String, CookingBookCategory> CATEGORY_MAP = new HashMap<>();
 
-    static {
+    public static void register(Registration reg) {
         SimpleEntryValidator builder = SimpleEntryValidator.builder();
         builder.addRequiredEntry("id", String.class);
         builder.addRequiredEntry("result", ItemStack.class);
@@ -96,7 +53,49 @@ public class SecRecipeCooking extends Section {
         }
         VALIDATOR = builder.build();
 
-        Skript.registerSection(SecRecipeCooking.class, "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe");
+        reg.newSection(SecRecipeCooking.class,
+                "register [a] [new] (furnace|1:smoking|2:blasting|3:campfire) recipe")
+            .name("Recipe - Register Cooking Recipe")
+            .description("This section allows you to register any cooking recipe and define special properties.",
+                "**Entries**:",
+                " - `id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
+                " - `result` = The resulting ItemStack of this recipe.",
+                " - `input` = The item the recipe requires as an input to output the result (Accepts an ItemStack or RecipeChoice) (Required).",
+                " - `cooktime` = How long the recipe will take to finish cooking before result is given (Optional).",
+                " - `experience` = The amount of experience gained when the recipe is finished cooking (Optional) " +
+                    "Default cook times are, furnace = 10 seconds, smoking/blasting = 5 seconds and campfire = 30 seconds.",
+                " - `group` = You can define a group in which all recipes under this are sorted together in the recipe book (Optional). " +
+                    "Examples of this in game are beds and wood types.",
+                " - `category` = Which category in the recipe book this recipe should appear within (Optional 1.19.4+). " +
+                    "Valid category types are \"food\", \"blocks\", \"misc\", if no category is defined it defaults to \"misc\".")
+            .examples("register new furnace recipe:",
+                "\tid: \"sieve:gravel_to_sand\"",
+                "\tresult: sand",
+                "\tinput: gravel",
+                "\tgroup: \"sieve\"",
+                "\tcooktime: 1 minecraft day # 20 minutes",
+                "\texperience: 6",
+                "\tcategory: \"blocks\"",
+                "",
+                "register new campfire recipe:",
+                "\tid: \"sieve:cobblestone_to_gravel\"",
+                "\tresult: gravel",
+                "\tinput: cobblestone",
+                "\tgroup: \"sieve\"",
+                "\tcategory: \"blocks\"",
+                "",
+                "register new smoking recipe:",
+                "\tid: \"chef:beef_jerky\"",
+                "\tresult: cooked mutton named \"&oBeef&r Jerky\"",
+                "\tinput: rotten flesh",
+                "\tcategory: \"food\"",
+                "",
+                "register a new blasting recipe:",
+                "\tid: \"firery_sword\"",
+                "\tresult: diamond sword of fire aspect named \"Flaming Sword\"",
+                "\tinput: diamond sword")
+            .since("3.0.0")
+            .register();
     }
 
     private CookingRecipeType recipeType;

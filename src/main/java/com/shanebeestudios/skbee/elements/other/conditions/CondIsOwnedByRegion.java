@@ -1,35 +1,33 @@
 package com.shanebeestudios.skbee.elements.other.conditions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.region.RegionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Condition;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Folia - Object Owned by Current Region")
-@Description({"Returns whether the current thread is ticking a region and that the region being ticked owns the " +
-    "entity/block/location/chunk at the specified world/position as included in the specified object.",
-    "The chunk pattern accepts Chunk X/Z, not world position.",
-    "This is useful to check before manipulating entities/blocks/ect which may not be in the same region as the caller."})
-@Examples({"on break:",
-    "\tif block at location(1,1,1) is owned by current region:",
-    "\t\tset block at location(1,1,1) to stone"})
-@Since("3.10.0")
 public class CondIsOwnedByRegion extends Condition {
 
-    static {
-        Skript.registerCondition(CondIsOwnedByRegion.class,
-            "%entities/blocks/locations% (is|are)[neg:n't] owned by current region",
-            "chunk at %integer%,[ ]%integer% (in|of) %world% is[neg:n't] owned by current region");
+    public static void register(Registration reg) {
+        reg.newCondition(CondIsOwnedByRegion.class,
+                "%entities/blocks/locations% (is|are)[neg:n't] owned by current region",
+                "chunk at %integer%,[ ]%integer% (in|of) %world% is[neg:n't] owned by current region")
+            .name("Folia - Object Owned by Current Region")
+            .description("Returns whether the current thread is ticking a region and that the region being ticked owns the " +
+                    "entity/block/location/chunk at the specified world/position as included in the specified object.",
+                "The chunk pattern accepts Chunk X/Z, not world position.",
+                "This is useful to check before manipulating entities/blocks/ect which may not be in the same region as the caller.")
+            .examples(
+                "on break:",
+                "\tif block at location(1,1,1) is owned by current region:",
+                "\t\tset block at location(1,1,1) to stone")
+            .since("3.10.0")
+            .register();
     }
 
     private int pattern;

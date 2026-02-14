@@ -1,36 +1,32 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Chest Inventory")
-@Description("Create a chest inventory with a component name.")
-@Examples({"set {_t} to mini message from \"<rainbow>THIS IS A CHEST\"",
-        "set {_i} to chest inventory with component name {_t} with 2 rows",
-        "set slot 1 of {_i} to diamond sword",
-        "open {_i} to player"})
-@Since("2.4.0")
 public class ExprChestInventory extends SimpleExpression<Inventory> {
 
-    static {
-        Skript.registerExpression(ExprChestInventory.class, Inventory.class, ExpressionType.COMBINED,
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprChestInventory.class, Inventory.class,
                 "[a [new]] chest inventory with component name %textcomponent% [with %-number% row[s]]",
-                "[a [new]] chest inventory with %number% row[s] with component name %textcomponent%");
+                "[a [new]] chest inventory with %number% row[s] with component name %textcomponent%")
+            .name("TextComponent - Chest Inventory")
+            .description("Create a chest inventory with a component name.")
+            .examples("set {_t} to mini message from \"<rainbow>THIS IS A CHEST\"",
+                "set {_i} to chest inventory with component name {_t} with 2 rows",
+                "set slot 1 of {_i} to diamond sword",
+                "open {_i} to player")
+            .since("2.4.0")
+            .register();
     }
 
     private Expression<Number> rows;

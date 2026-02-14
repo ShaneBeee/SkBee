@@ -1,14 +1,10 @@
 package com.shanebeestudios.skbee.elements.tickmanager.conditions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.ServerTickManager;
@@ -16,20 +12,21 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Server Tick - Is Server Frozen/Running Normally")
-@Description({"Checks if the server is currently frozen/running normally.",
-        "When the server is running normally it indicates that the server is not currently frozen.",
-        Util.MCWIKI_TICK_COMMAND, "Requires Minecraft 1.20.4+"})
-@Examples({"if server is frozen:",
-        "\tteleport all players to spawn of world \"world\"",
-        "if server is running normally:",
-        "\tkill all sheep"})
-@Since("3.1.0")
 public class CondServerTickServerFrozen extends Condition {
 
-    static {
-        Skript.registerCondition(CondServerTickServerFrozen.class,
-                "(server|game) (is|neg:(isn't|is not)) [currently] (frozen|normal:running normally)");
+    public static void register(Registration reg) {
+        reg.newCondition(CondServerTickServerFrozen.class,
+                "(server|game) (is|neg:(isn't|is not)) [currently] (frozen|normal:running normally)")
+            .name("Server Tick - Is Server Frozen/Running Normally")
+            .description("Checks if the server is currently frozen/running normally.",
+                "When the server is running normally it indicates that the server is not currently frozen.",
+                Util.MCWIKI_TICK_COMMAND)
+            .examples("if server is frozen:",
+                "\tteleport all players to spawn of world \"world\"",
+                "if server is running normally:",
+                "\tkill all sheep")
+            .since("3.1.0")
+            .register();
     }
 
     private boolean normal;

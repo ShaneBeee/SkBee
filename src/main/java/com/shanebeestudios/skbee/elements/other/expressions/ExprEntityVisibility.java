@@ -2,15 +2,12 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
@@ -20,12 +17,6 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-@Name("Entity Visibility")
-@Description("Get/set visibility for entities. Armor stands on all versions, ItemFrames on 1.15+ and LivingEntities on 1.16.3+")
-@Examples({"set visibility of target entity to false",
-    "set {_v} to visibility of target entity",
-    "if visibility of target entity is true:"})
-@Since("1.7.0")
 public class ExprEntityVisibility extends PropertyExpression<Entity, Boolean> {
 
     private static final boolean ITEM_FRAME;
@@ -40,7 +31,17 @@ public class ExprEntityVisibility extends PropertyExpression<Entity, Boolean> {
         } else {
             LIVING_ENTITY = false;
         }
-        register(ExprEntityVisibility.class, Boolean.class, "visibility", "entities");
+    }
+
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprEntityVisibility.class, Boolean.class, "visibility", "entities")
+            .name("Entity Visibility")
+            .description("Get/set visibility for entities. Armor stands on all versions, ItemFrames on 1.15+ and LivingEntities on 1.16.3+")
+            .examples("set visibility of target entity to false",
+                "set {_v} to visibility of target entity",
+                "if visibility of target entity is true:")
+            .since("1.7.0")
+            .register();
     }
 
     @SuppressWarnings({"unchecked", "null"})

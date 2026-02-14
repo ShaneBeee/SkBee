@@ -1,33 +1,29 @@
 package com.shanebeestudios.skbee.elements.tickmanager.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Server Tick - Frozen State")
-@Description({"Get/set the frozen tick state of the server.", Util.MCWIKI_TICK_COMMAND, "Requires Minecraft 1.20.4+"})
-@Examples({"set server frozen state to true",
-        "if server frozen state = false:"})
-@Since("3.1.0")
 public class ExprServerTickFrozenState extends SimpleExpression<Boolean> {
 
-    static {
-        Skript.registerExpression(ExprServerTickFrozenState.class, Boolean.class, ExpressionType.SIMPLE,
-                "server (frozen|freeze) state");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprServerTickFrozenState.class, Boolean.class,
+                "server (frozen|freeze) state")
+            .name("Server Tick - Frozen State")
+            .description("Get/set the frozen tick state of the server.", Util.MCWIKI_TICK_COMMAND)
+            .examples("set server frozen state to true",
+                "if server frozen state = false:")
+            .since("3.1.0")
+            .register();
     }
 
     @SuppressWarnings("NullableProblems")

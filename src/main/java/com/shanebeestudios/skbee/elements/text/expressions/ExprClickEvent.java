@@ -1,17 +1,13 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.legacy.DialogUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -30,33 +26,31 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-@Name("TextComponent - Click Event")
-@Description({"Create a new click event to add to a text component.",
-    "Supports run command, suggest command, open link, copy to clipboard, change book page, open dialog and custom payload.",
-    "Open dialog and custom payload require Minecraft 1.21.6+"})
-@Examples({"set {_t} to text component from \"Check out my cool website\"",
-    "add hover event showing \"Clicky clicky to go to spawn!\" to {_t}",
-    "add click event to open url \"https://my.cool.website\" to {_t}",
-    "send component {_t} to player",
-    "",
-    "add click event to show dialog with key \"some:dialog\" to {_t}",
-    "add click event to run custom payload with key \"some:key\" with custom data {_nbt} to {_t}"})
-@Since("1.5.0")
 public class ExprClickEvent extends SimpleExpression<ClickEvent> {
 
-    // TODO see below things to remove
     private static final boolean SUPPORTS_CUSTOM_PAYLOAD = Util.IS_RUNNING_MC_1_21_7;
 
-    static {
+    public static void register(Registration reg) {
         String nbtClickEvent = NBTApi.isEnabled() ? "[a] [new] click event to run custom payload with key %string/namespacedkey% [and] with [custom] data %nbtcompound%" : "";
-        Skript.registerExpression(ExprClickEvent.class, ClickEvent.class, ExpressionType.COMBINED,
-            "[a] [new] click event to run command %string%",
-            "[a] [new] click event to suggest command %string%",
-            "[a] [new] click event to open (link|url) %string%",
-            "[a] [new] click event to copy %string% to clipboard",
-            "[a] [new] click event to change to page %number%",
-            "[a] [new] click event to (open|show) dialog [with key] %string/namespacedkey%",
-            nbtClickEvent);
+        reg.newCombinedExpression(ExprClickEvent.class, ClickEvent.class,
+                "[a] [new] click event to run command %string%",
+                "[a] [new] click event to suggest command %string%",
+                "[a] [new] click event to open (link|url) %string%",
+                "[a] [new] click event to copy %string% to clipboard",
+                "[a] [new] click event to change to page %number%",
+                "[a] [new] click event to (open|show) dialog [with key] %string/namespacedkey%",
+                nbtClickEvent)
+            .name("TextComponent - Click Event")
+            .description("Create a new click event to add to a text component.", "Supports run command, suggest command, open link, copy to clipboard, change book page, open dialog and custom payload.", "Open dialog and custom payload require Minecraft 1.21.6+")
+            .examples("set {_t} to text component from \"Check out my cool website\"",
+                "add hover event showing \"Clicky clicky to go to spawn!\" to {_t}",
+                "add click event to open url \"https://my.cool.website\" to {_t}",
+                "send component {_t} to player",
+                "",
+                "add click event to show dialog with key \"some:dialog\" to {_t}",
+                "add click event to run custom payload with key \"some:key\" with custom data {_nbt} to {_t}")
+            .since("1.5.0")
+            .register();
     }
 
     private int pattern;
@@ -104,7 +98,6 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
                     Dialog dialog = dialogRegistry.get(key);
                     if (dialog == null) yield null;
 
-                    // TODO remove util when old versions no longer supported
                     yield DialogUtil.showDialog(dialog);
                 }
                 case 6 -> {
@@ -123,7 +116,6 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
             };
             return new ClickEvent[]{clickEvent};
         } else {
-            // TODO - OLD VERSION ... remove in the future
             Action action;
             switch (this.pattern) {
                 case 1 -> action = Action.SUGGEST_COMMAND;

@@ -2,17 +2,13 @@ package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
@@ -26,24 +22,24 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Scoreboard - Objective Score Custom Name")
-@Description({"Get/change the custom name of the score of an objective for an entry.",
-    "Supports both components and strings.",
-    "Requires Paper 1.20.4+",
-    "- `[component]` = Will return as a text component (for set this doesn't matter).",
-    "- `delete` = Will set the name to an empty component.",
-    "- `reset` = Will reset back to the original name."})
-@Examples({"set component custom score name of player for {_someObjective} to mini message from \"Some Name\"",
-    "set custom score name of player for {_someObjective} to \"Some Name\"",
-    "delete custom score name of \"bob\" for {_someObjective}",
-    "reset custom score name of all entities for {_someObjective}"})
-@Since("3.9.0")
 public class ExprObjectiveScoreCustomName extends SimpleExpression<Object> {
 
-    static {
+    public static void register(Registration reg) {
         if (!Util.IS_RUNNING_FOLIA && SkBee.getPlugin().getPluginConfig().ELEMENTS_SCOREBOARD && Skript.methodExists(Score.class, "customName")) {
-            Skript.registerExpression(ExprObjectiveScoreCustomName.class, Object.class, ExpressionType.COMBINED,
-                "[:component] custom score name of %entities/strings% for %objective%");
+            reg.newCombinedExpression(ExprObjectiveScoreCustomName.class, Object.class,
+                    "[:component] custom score name of %entities/strings% for %objective%")
+                .name("Scoreboard - Objective Score Custom Name")
+                .description("Get/change the custom name of the score of an objective for an entry.",
+                    "Supports both components and strings.",
+                    "- `[component]` = Will return as a text component (for set this doesn't matter).",
+                    "- `delete` = Will set the name to an empty component.",
+                    "- `reset` = Will reset back to the original name.")
+                .examples("set component custom score name of player for {_someObjective} to mini message from \"Some Name\"",
+                    "set custom score name of player for {_someObjective} to \"Some Name\"",
+                    "delete custom score name of \"bob\" for {_someObjective}",
+                    "reset custom score name of all entities for {_someObjective}")
+                .since("3.9.0")
+                .register();
         }
     }
 

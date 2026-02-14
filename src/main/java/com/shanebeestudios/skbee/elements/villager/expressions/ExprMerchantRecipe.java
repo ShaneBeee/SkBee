@@ -2,51 +2,52 @@ package com.shanebeestudios.skbee.elements.villager.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Merchant Recipe - Create")
-@Description({"Create a merchant recipe.",
-        "\nNOTE: You will need to use the merchant recipe ingredients expression to add ingredients.",
-        "\nmax uses = A trade has a maximum number of uses. A Villager may periodically replenish it's trades",
-        "by resetting the uses of it's merchant recipes to 0, allowing them to be used again.",
-        "\nexperience reward = A trade may or may not reward experience for being completed.",
-        "\nDemand & Special Price were added in MC 1.18.x:",
-        "\ndemand = This value is periodically updated by the villager that owns this merchant recipe based on",
-        "how often the recipe has been used since it has been last restocked in relation to its maximum uses.",
-        "The amount by which the demand influences the amount of the first ingredient is scaled by the recipe's",
-        "price multiplier, and can never be below zero.",
-        "\nspecial price =  This value is dynamically updated whenever a player starts and stops trading with a",
-        "villager that owns this merchant recipe. It is based on the player's individual reputation with the villager,",
-        "and the player's currently active status effects (ex: hero of the village).",
-        "The influence of the player's reputation on the special price is scaled by the recipe's price multiplier."})
-@Examples("set {_m} to merchant recipe with result diamond sword with max uses 10")
-@Since("1.17.0")
 public class ExprMerchantRecipe extends SimpleExpression<MerchantRecipe> {
 
     private static final boolean SUPPORTS_SPECIAL_PRICE = Skript.methodExists(MerchantRecipe.class, "getDemand");
-    static {
+
+    public static void register(Registration reg) {
         String pattern = "[new] merchant recipe with result %itemtype% with max uses %number% [with uses %-number%] " +
-                "[(|1:with experience reward)] [with villager experience %-number%] [with price multiplier %-number%]";
+            "[(|1:with experience reward)] [with villager experience %-number%] [with price multiplier %-number%]";
+
+        Registration.ExpressionRegistrar<?, ?> registeredExpression;
         if (SUPPORTS_SPECIAL_PRICE) {
-            Skript.registerExpression(ExprMerchantRecipe.class, MerchantRecipe.class, ExpressionType.SIMPLE,
-                    pattern + " [with demand %-number%] [with special price %-number%]");
+            registeredExpression = reg.newSimpleExpression(ExprMerchantRecipe.class, MerchantRecipe.class,
+                pattern + " [with demand %-number%] [with special price %-number%]");
         } else {
-            Skript.registerExpression(ExprMerchantRecipe.class, MerchantRecipe.class, ExpressionType.SIMPLE,
-                    pattern);
+            registeredExpression = reg.newSimpleExpression(ExprMerchantRecipe.class, MerchantRecipe.class,
+                pattern);
         }
+        registeredExpression
+            .name("Merchant Recipe - Create")
+            .description("Create a merchant recipe.",
+                "\nNOTE: You will need to use the merchant recipe ingredients expression to add ingredients.",
+                "\nmax uses = A trade has a maximum number of uses. A Villager may periodically replenish it's trades",
+                "by resetting the uses of it's merchant recipes to 0, allowing them to be used again.",
+                "\nexperience reward = A trade may or may not reward experience for being completed.",
+                "\nDemand & Special Price were added in MC 1.18.x:",
+                "\ndemand = This value is periodically updated by the villager that owns this merchant recipe based on",
+                "how often the recipe has been used since it has been last restocked in relation to its maximum uses.",
+                "The amount by which the demand influences the amount of the first ingredient is scaled by the recipe's",
+                "price multiplier, and can never be below zero.",
+                "\nspecial price =  This value is dynamically updated whenever a player starts and stops trading with a",
+                "villager that owns this merchant recipe. It is based on the player's individual reputation with the villager,",
+                "and the player's currently active status effects (ex: hero of the village).",
+                "The influence of the player's reputation on the special price is scaled by the recipe's price multiplier.")
+            .examples("set {_m} to merchant recipe with result diamond sword with max uses 10")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<ItemType> result;

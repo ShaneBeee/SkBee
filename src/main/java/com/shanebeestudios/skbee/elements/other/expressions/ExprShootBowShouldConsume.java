@@ -2,34 +2,30 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Entity Shoot Bow - Should Consume")
-@Description("Get/set whether or not the consumable item should be consumed in an entity shoot bow event.")
-@Examples({"on entity shoot bow:",
-        "\tif shot bow is a bow:",
-        "\t\tset should consume item to false"})
-@Since("2.16.0")
 public class ExprShootBowShouldConsume extends SimpleExpression<Boolean> {
 
-    static {
-        Skript.registerExpression(ExprShootBowShouldConsume.class, Boolean.class, ExpressionType.SIMPLE,
-                "should consume item");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprShootBowShouldConsume.class, Boolean.class, "should consume item")
+                .name("Entity Shoot Bow - Should Consume")
+                .description("Get/set whether or not the consumable item should be consumed in an entity shoot bow event.")
+                .examples("on entity shoot bow:",
+                        "\tif shot bow is a bow:",
+                        "\t\tset should consume item to false")
+                .since("2.16.0")
+                .register();
     }
 
     @SuppressWarnings("NullableProblems")

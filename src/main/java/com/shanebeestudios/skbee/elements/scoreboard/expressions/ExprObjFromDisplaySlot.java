@@ -1,17 +1,12 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.DisplaySlot;
@@ -22,18 +17,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Scoreboard - Objective from DisplaySlot")
-@Description("Get/clear objectives from specific display slots of scoreboards.")
-@Examples({"set {_obj} to objectives from slot sidebar of scoreboard of player",
-    "set {_obj} to objectives from slot player list",
-    "set {_obj} to objectives from slot below name from main scoreboard",
-    "clear objectives from slot player list of main scoreboard"})
-@Since("3.9.0")
 public class ExprObjFromDisplaySlot extends SimpleExpression<Objective> {
 
-    static {
-        Skript.registerExpression(ExprObjFromDisplaySlot.class, Objective.class, ExpressionType.COMBINED,
-            "objective[s] (from|by) [display[ ]]slot[s] %displayslots% [(of|from) %scoreboards%]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprObjFromDisplaySlot.class, Objective.class,
+                "objective[s] (from|by) [display[ ]]slot[s] %displayslots% [(of|from) %scoreboards%]")
+            .name("Scoreboard - Objective from DisplaySlot")
+            .description("Get/clear objectives from specific display slots of scoreboards.")
+            .examples("set {_obj} to objectives from slot sidebar of scoreboard of player",
+                "set {_obj} to objectives from slot player list",
+                "set {_obj} to objectives from slot below name from main scoreboard",
+                "clear objectives from slot player list of main scoreboard")
+            .since("3.9.0")
+            .register();
     }
 
     private Expression<DisplaySlot> displaySlots;

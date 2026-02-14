@@ -2,30 +2,28 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Entity Ticking State")
-@Description({"Represents whether or not an entity will tick.",
-        "Currently this only works for ArmorStands and requies a PaperMC server."})
-@Examples({"spawn an armor stand at player:",
-        "\tset ticking state of entity to false"})
-@Since("2.13.0")
 public class ExprTickingState extends SimplePropertyExpression<Entity, Boolean> {
 
     private static final boolean ARMOR_STAND_HAS_TICKING = Skript.methodExists(ArmorStand.class, "canTick");
 
-    static {
-        register(ExprTickingState.class, Boolean.class, "tick[ing] state", "entities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprTickingState.class, Boolean.class, "tick[ing] state", "entities")
+            .name("Entity Ticking State")
+            .description("Represents whether or not an entity will tick.",
+                "Currently this only works for ArmorStands and requies a PaperMC server.")
+            .examples("spawn an armor stand at player:",
+                "\tset ticking state of entity to false")
+            .since("2.13.0")
+            .register();
     }
 
     @Override

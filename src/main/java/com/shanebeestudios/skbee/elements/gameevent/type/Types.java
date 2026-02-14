@@ -1,16 +1,16 @@
 package com.shanebeestudios.skbee.elements.gameevent.type;
 
 import ch.njol.skript.registrations.Classes;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import org.bukkit.GameEvent;
 import org.bukkit.Registry;
 
 public class Types {
 
-    static {
+    public static void register(Registration reg) {
         if (Classes.getExactClassInfo(GameEvent.class) == null) {
-            Classes.registerClass(RegistryClassInfo.create(Registry.GAME_EVENT, GameEvent.class, "gameevent")
+            reg.newRegistryType(Registry.GAME_EVENT, GameEvent.class, "gameevent")
                 .name("Game Event")
                 .user("game ?events?")
                 .description("Represents a Minecraft 'GameEvent', mainly used by Skulk Sensors. Requires MC 1.17+.",
@@ -18,7 +18,8 @@ public class Types {
                     Util.AUTO_GEN_NOTE)
                 .after("itemtype")
                 .examples("")
-                .since("1.14.0"));
+                .since("1.14.0")
+                .register();
         }
     }
 

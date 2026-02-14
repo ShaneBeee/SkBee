@@ -2,15 +2,12 @@ package com.shanebeestudios.skbee.elements.worldcreator.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.Location;
@@ -21,26 +18,27 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-@Name("World Creator Options")
-@Description({"Set different options for world creators. See SkBee wiki for more details.",
-    "NOTE: 'load on start' will bypass 'auto-load-custom-worlds' in SkBee config.",
-    "`fixed spawn location` = This is used to override Minecraft attempting to find a spawn location (Which takes a LONG time), " +
-        "this option can greatly speed up world creation."})
-@Examples({"set {_w} to a new world creator named \"my-world\"",
-    "set environment option of {_w} to nether",
-    "set world type option of {_w} to flat",
-    "set should generate structures option of {_w} to true",
-    "set load on start option of {_w} to false",
-    "set fixed spawn location option of {_w} to location(1,100,1)",
-    "load world from creator {_w}"})
-@Since("1.8.0")
 public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCreator, Object> {
 
-    static {
-        register(ExprWorldCreatorOption.class, Object.class,
-            "(environment|1:world type|2:world seed|3:gen[erator] settings|4:generator" +
-                "|5:should gen[erate] structures|6:[is] hardcore|7:keep spawn loaded|8:load on start|9:fixed spawn location) [option]",
-            "worldcreator");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprWorldCreatorOption.class, Object.class,
+                "(environment|1:world type|2:world seed|3:gen[erator] settings|4:generator" +
+                    "|5:should gen[erate] structures|6:[is] hardcore|7:keep spawn loaded|8:load on start|9:fixed spawn location) [option]",
+                "worldcreator")
+            .name("World Creator Options")
+            .description("Set different options for world creators. See SkBee wiki for more details.",
+                "NOTE: 'load on start' will bypass 'auto-load-custom-worlds' in SkBee config.",
+                "`fixed spawn location` = This is used to override Minecraft attempting to find a spawn location (Which takes a LONG time), " +
+                    "this option can greatly speed up world creation.")
+            .examples("set {_w} to a new world creator named \"my-world\"",
+                "set environment option of {_w} to nether",
+                "set world type option of {_w} to flat",
+                "set should generate structures option of {_w} to true",
+                "set load on start option of {_w} to false",
+                "set fixed spawn location option of {_w} to location(1,100,1)",
+                "load world from creator {_w}")
+            .since("1.8.0")
+            .register();
     }
 
     private int pattern;

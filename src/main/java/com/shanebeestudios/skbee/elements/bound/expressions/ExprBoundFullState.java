@@ -1,25 +1,24 @@
 package com.shanebeestudios.skbee.elements.bound.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Bound - Full State")
-@Description("Get/set whether this bound is a full bound (reaches from lowest to highest points of a world).")
-@Examples("set bound full state of bound with id \"home\" to true")
-@Since("3.8.0")
 public class ExprBoundFullState extends SimplePropertyExpression<Bound, Boolean> {
 
-    static {
-        register(ExprBoundFullState.class, Boolean.class, "bound full state", "bounds");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprBoundFullState.class, Boolean.class,
+                "bound full state", "bounds")
+            .name("Bound - Full State")
+            .description("Get/set whether this bound is a full bound (reaches from lowest to highest points of a world).")
+            .examples("set bound full state of bound with id \"home\" to true")
+            .since("3.8.0")
+            .register();
     }
 
     @Override

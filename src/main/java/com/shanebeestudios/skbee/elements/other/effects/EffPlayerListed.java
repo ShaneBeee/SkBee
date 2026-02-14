@@ -1,30 +1,25 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("List/Unlist Players")
-@Description("List/unlist a player for a player. (show/hide them in PlayerList for each other). Requires PaperMC 1.20.1+")
-@Examples({"unlist all players for player",
-    "list (all players in world of player) for player"})
-@Since("2.17.0")
 public class EffPlayerListed extends Effect {
 
-    static {
-        if (Skript.methodExists(Player.class, "isListed", Player.class)) {
-            Skript.registerEffect(EffPlayerListed.class, "[:un]list %players% for %players%");
-        }
+    public static void register(Registration reg) {
+        reg.newEffect(EffPlayerListed.class, "[:un]list %players% for %players%")
+            .name("List/Unlist Players")
+            .description("List/unlist a player for a player. (show/hide them in PlayerList for each other).")
+            .examples("unlist all players for player",
+                "list (all players in world of player) for player")
+            .since("2.17.0")
+            .register();
     }
 
     private boolean unlist;

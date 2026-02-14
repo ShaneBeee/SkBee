@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import org.bukkit.Material;
@@ -21,27 +16,28 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("BlockData - All Variations")
-@Description({"Returns a list of all possible blockdatas for a particular block type.",
-    "Requires Paper 1.21.4+"})
-@Examples({"set {_states::*} to blockdata states of oak log",
-    "# output:",
-    "# minecraft:oak_log[axis=x]",
-    "# minecraft:oak_log[axis=y]",
-    "# minecraft:oak_log[axis=z]",
-    "loop all blockdata variations of wall torch:",
-    "# output:",
-    "# minecraft:wall_torch[facing=north]",
-    "# minecraft:wall_torch[facing=south]",
-    "# minecraft:wall_torch[facing=west]",
-    "# minecraft:wall_torch[facing=east]"})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprBlockDataAllStates extends SimpleExpression<BlockData> {
 
-    static {
-        Skript.registerExpression(ExprBlockDataAllStates.class, BlockData.class, ExpressionType.COMBINED,
-            "[all] [possible] block[ ]data (states|variations) of %itemtypes/blockdatas%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprBlockDataAllStates.class, BlockData.class,
+                "[all] [possible] block[ ]data (states|variations) of %itemtypes/blockdatas%")
+            .name("BlockData - All Variations")
+            .description("Returns a list of all possible blockdatas for a particular block type.",
+                "Requires Paper 1.21.4+")
+            .examples("set {_states::*} to blockdata states of oak log",
+                "# output:",
+                "# minecraft:oak_log[axis=x]",
+                "# minecraft:oak_log[axis=y]",
+                "# minecraft:oak_log[axis=z]",
+                "loop all blockdata variations of wall torch:",
+                "# output:",
+                "# minecraft:wall_torch[facing=north]",
+                "# minecraft:wall_torch[facing=south]",
+                "# minecraft:wall_torch[facing=west]",
+                "# minecraft:wall_torch[facing=east]")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<?> objects;

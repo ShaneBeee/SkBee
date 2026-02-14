@@ -1,31 +1,27 @@
 package com.shanebeestudios.skbee.elements.villager.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.MerchantRecipe;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Merchant Recipe - Values")
-@Description("Represents different number values of a merchant recipe.")
-@Examples({"set {_uses} to merchant recipe uses of {_recipe}",
-    "set merchant recipe demand of {_recipe} to 2"})
-@Since("3.12.0")
 public class ExprMerchantRecipeValues extends SimpleExpression<Number> {
 
-    static {
-        Skript.registerExpression(ExprMerchantRecipeValues.class, Number.class, ExpressionType.PROPERTY,
-            "merchant recipe (0:demand|1:max uses|2:price multiplier|3:special price|4:uses|5:villager experience) of %merchantrecipe%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprMerchantRecipeValues.class, Number.class,
+                "merchant recipe (0:demand|1:max uses|2:price multiplier|3:special price|4:uses|5:villager experience) of %merchantrecipe%")
+            .name("Merchant Recipe - Values")
+            .description("Represents different number values of a merchant recipe.")
+            .examples("set {_uses} to merchant recipe uses of {_recipe}",
+                "set merchant recipe demand of {_recipe} to 2")
+            .since("3.12.0")
+            .register();
     }
 
     private int pattern;

@@ -1,24 +1,22 @@
 package com.shanebeestudios.skbee.elements.raytrace.expressions;
 
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.util.RayTraceResult;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("RayTrace - Hit Entity")
-@Description("Gets the hit entity resulting from a RayTrace.")
-@Examples("set {_hit} to raytrace hit entity of {_ray}")
-@Since("2.6.0")
 public class ExprRayTraceHitEntity extends SimplePropertyExpression<RayTraceResult, Entity> {
 
-    static {
-        register(ExprRayTraceHitEntity.class, Entity.class,
-                "[ray[ ]trace] hit entity", "raytraceresults");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprRayTraceHitEntity.class, Entity.class,
+                "[ray[ ]trace] hit entity", "raytraceresults")
+            .name("RayTrace - Hit Entity")
+            .description("Gets the hit entity resulting from a RayTrace.")
+            .examples("set {_hit} to raytrace hit entity of {_ray}")
+            .since("2.6.0")
+            .register();
     }
 
     @Override

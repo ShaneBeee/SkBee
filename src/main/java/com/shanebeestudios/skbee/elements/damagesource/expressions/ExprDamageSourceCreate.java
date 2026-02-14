@@ -1,14 +1,9 @@
 package com.shanebeestudios.skbee.elements.damagesource.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Location;
 import org.bukkit.damage.DamageSource;
@@ -18,24 +13,25 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("DamageSource - Create")
-@Description({"Create a new damage source which includes a damage type and some optional values.",
-    "Optional Values:",
-    "`caused by %entity%` = The entity that caused the damage.",
-    "`directly by %entity%` = The entity that directly inflicted the damage.",
-    "`at %location%` = The source of the damage."})
-@Examples({"set {_source} to damage source from arrow directly by (random element of all entities)",
-    "set {_source} to damage source of dragon breath",
-    "set {_source} to damage source of magic",
-    "set {_source} to damage source of mob_attack_no_aggro caused by target entity of player",
-    "damage player by 100 with {_source}"})
-@Since("3.3.0")
 public class ExprDamageSourceCreate extends SimpleExpression<DamageSource> {
 
-    static {
-        Skript.registerExpression(ExprDamageSourceCreate.class, DamageSource.class, ExpressionType.COMBINED,
-            "[[a] new] damage source (of|from) %damagetype% [caused by %-entity%] " +
-                "[directly (by|from) %-entity%] [at %-location%]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprDamageSourceCreate.class, DamageSource.class,
+                "[[a] new] damage source (of|from) %damagetype% [caused by %-entity%] " +
+                    "[directly (by|from) %-entity%] [at %-location%]")
+            .name("DamageSource - Create")
+            .description("Create a new damage source which includes a damage type and some optional values.",
+                "Optional Values:",
+                "`caused by %entity%` = The entity that caused the damage.",
+                "`directly by %entity%` = The entity that directly inflicted the damage.",
+                "`at %location%` = The source of the damage.")
+            .examples("set {_source} to damage source from arrow directly by (random element of all entities)",
+                "set {_source} to damage source of dragon breath",
+                "set {_source} to damage source of magic",
+                "set {_source} to damage source of mob_attack_no_aggro caused by target entity of player",
+                "damage player by 100 with {_source}")
+            .since("3.3.0")
+            .register();
     }
 
     private Expression<DamageType> damageType;

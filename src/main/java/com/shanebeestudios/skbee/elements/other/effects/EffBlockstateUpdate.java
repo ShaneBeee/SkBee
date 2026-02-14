@@ -1,15 +1,11 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -17,26 +13,27 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("BlockState - Update/Apply")
-@Description({"Attempts to update the block represented by this state.",
-    "Unless force is applied, this will not modify the state of a block if it is no longer",
-    "the same type as it was when this state was taken.",
-    "You can optionally apply this blockstate to another block.",
-    "If done without physics updates, it will not trigger a physics update on surrounding blocks which",
-    "could cause them to update or disappear."})
-@Examples({"set {_state} to blockstate of event-block",
-    "set event-block to air",
-    "wait 1 minute",
-    "force update {_state} without physics updates",
-    "",
-    "force apply {_state} to target block"})
-@Since("2.13.0")
 public class EffBlockstateUpdate extends Effect {
 
-    static {
-        Skript.registerEffect(EffBlockstateUpdate.class,
+    public static void register(Registration reg) {
+        reg.newEffect(EffBlockstateUpdate.class,
             "[:force] update %blockstates% [physics:without (neighbour|physics) updates]",
-            "[:force] apply %blockstates% (to|into|onto) %block/location% [physics:without (neighbour|physics) updates]");
+            "[:force] apply %blockstates% (to|into|onto) %block/location% [physics:without (neighbour|physics) updates]")
+            .name("Blockstate - Update/Apply")
+            .description("Attempts to update the block represented by this state.",
+                "Unless force is applied, this will not modify the state of a block if it is no longer",
+                "the same type as it was when this state was taken.",
+                "You can optionally apply this blockstate to another block.",
+                "If done without physics updates, it will not trigger a physics update on surrounding blocks which",
+                "could cause them to update or disappear.")
+            .examples("set {_state} to blockstate of event-block",
+                "set event-block to air",
+                "wait 1 minute",
+                "force update {_state} without physics updates",
+                "",
+                "force apply {_state} to target block")
+            .since("2.13.0")
+            .register();
     }
 
     private boolean force;

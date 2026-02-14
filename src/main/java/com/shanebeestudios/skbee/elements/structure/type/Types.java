@@ -1,15 +1,14 @@
 package com.shanebeestudios.skbee.elements.structure.type;
 
 import ch.njol.skript.classes.Changer;
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
@@ -23,8 +22,8 @@ public class Types {
 
     private static final StructureManager STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
 
-    static {
-        Classes.registerClass(new ClassInfo<>(StructureWrapper.class, "structure")
+    public static void register(Registration reg) {
+        reg.newType(StructureWrapper.class, "structure")
             .user("structures?")
             .name("Structure")
             .description("Represents a structure that can be saved or pasted into a world.",
@@ -70,26 +69,27 @@ public class Types {
                         }
                     }
                 }
-            }));
+            })
+            .register();
 
         if (Classes.getExactClassInfo(Mirror.class) == null) {
-            EnumWrapper<Mirror> MIRROR_ENUM = new EnumWrapper<>(Mirror.class);
-            Classes.registerClass(MIRROR_ENUM.getClassInfo("mirror")
+            reg.newEnumType(Mirror.class, "mirror")
                 .user("mirrors?")
                 .name("Structure - Mirror")
                 .description("Represents the different states of mirroring for a structure. Requires MC 1.17.1+")
                 .examples("set structure mirror of structure {_s} to front back")
-                .since("1.12.0"));
+                .since("1.12.0")
+                .register();
         }
 
         if (Classes.getExactClassInfo(StructureRotation.class) == null) {
-            EnumWrapper<StructureRotation> ROTATION_ENUM = new EnumWrapper<>(StructureRotation.class);
-            Classes.registerClass(ROTATION_ENUM.getClassInfo("structurerotation")
+            reg.newEnumType(StructureRotation.class, "structurerotation")
                 .user("structure ?rotations?")
                 .name("Structure - Rotation")
                 .description("Represents the different states of rotation for a structure. Requires MC 1.17.1+")
                 .examples("set structure rotation of structure {_s} to clockwise 90")
-                .since("1.12.0"));
+                .since("1.12.0")
+                .register();
         }
     }
 

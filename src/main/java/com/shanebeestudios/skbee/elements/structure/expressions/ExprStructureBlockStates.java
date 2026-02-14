@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.structure.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
@@ -17,16 +12,16 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Name("Structure - BlockStates")
-@Description({"Get a list of the blockstates in a structure. This represents the palette of blocks a structure holds.",
-        "Requires MC 1.17.1+"})
-@Examples("set {_list::*} to blockstates of structure {_structure}")
-@Since("1.12.3")
 public class ExprStructureBlockStates extends SimpleExpression<BlockState> {
 
-    static {
-        Skript.registerExpression(ExprStructureBlockStates.class, BlockState.class, ExpressionType.PROPERTY,
-                "blockstates of [structure] %structure%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprStructureBlockStates.class, BlockState.class,
+                "blockstates of [structure] %structure%")
+            .name("Structure - BlockStates")
+            .description("Get a list of the blockstates in a structure. This represents the palette of blocks a structure holds.")
+            .examples("set {_list::*} to blockstates of structure {_structure}")
+            .since("1.12.3")
+            .register();
     }
 
     private Expression<StructureWrapper> structure;

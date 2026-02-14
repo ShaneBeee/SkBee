@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.dialog.sections.actions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
@@ -13,6 +9,7 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.registry.data.dialog.ActionButton;
@@ -30,21 +27,6 @@ import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Static Action Button")
-@Description({"Add a static action button to a dialog.",
-    "See [**Static Action**](https://minecraft.wiki/w/Dialog#Static_action_types) on McWiki for more detailed info.",
-    "**Entries**:",
-    "- `label` = The name on your button, accepts a string or text component/mini message.",
-    "- `tooltip` = The hover message, accepts a string or text component/mini message.",
-    "- `width` = The width of the button. Value between 1 and 1024 — Defaults to 150.",
-    "- `action` = A click event, also called a [**Static Action**](https://minecraft.wiki/w/Dialog#Static_action_types). " +
-        "This is what happens when the player clicks the button."})
-@Examples({"add static action button:",
-    "\tlabel: mini message from \"Creative Gamemode\"",
-    "\ttooltip: mini message from \"Switch to creative gamemode\"",
-    "\twidth: 200",
-    "\taction: click event to run command \"gamemode creative\""})
-@Since("3.16.0")
 public class SecStaticActionButton extends Section {
 
     private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
@@ -58,7 +40,26 @@ public class SecStaticActionButton extends Section {
 
         // STATIC
         VALIDATOR.addEntryData(new ExpressionEntryData<>("action", null, true, ClickEvent.class));
-        Skript.registerSection(SecStaticActionButton.class, "add static action button");
+    }
+
+    public static void register(Registration reg) {
+        reg.newSection(SecStaticActionButton.class, "add static action button")
+            .name("Dialog - Static Action Button")
+            .description("Add a static action button to a dialog.",
+                "See [**Static Action**](https://minecraft.wiki/w/Dialog#Static_action_types) on McWiki for more detailed info.",
+                "**Entries**:",
+                "- `label` = The name on your button, accepts a string or text component/mini message.",
+                "- `tooltip` = The hover message, accepts a string or text component/mini message.",
+                "- `width` = The width of the button. Value between 1 and 1024 — Defaults to 150.",
+                "- `action` = A click event, also called a [**Static Action**](https://minecraft.wiki/w/Dialog#Static_action_types). " +
+                    "This is what happens when the player clicks the button.")
+            .examples("add static action button:",
+                "\tlabel: mini message from \"Creative Gamemode\"",
+                "\ttooltip: mini message from \"Switch to creative gamemode\"",
+                "\twidth: 200",
+                "\taction: click event to run command \"gamemode creative\"")
+            .since("3.16.0")
+            .register();
     }
 
     private boolean exitAction;

@@ -2,12 +2,9 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.BrushableBlock;
@@ -16,15 +13,16 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Suspicious Block - Item")
-@Description({"Represents the item hiding in a Suspicious Block. Requires Minecraft 1.19.4+"})
-@Examples({"set suspicious item of target block to a diamond",
-    "delete suspicious item of block at location(199,10,-199, \"very_goodNames\")"})
-@Since("2.8.1, 2.14.0 (suspicious gravel)")
 public class ExprSuspiciousBlock extends SimplePropertyExpression<Block, ItemType> {
 
-    static {
-        register(ExprSuspiciousBlock.class, ItemType.class, "suspicious item", "blocks");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprSuspiciousBlock.class, ItemType.class, "suspicious item", "blocks")
+            .name("Suspicious Block - Item")
+            .description("Represents the item hiding in a Suspicious Block. Requires Minecraft 1.19.4+")
+            .examples("set suspicious item of target block to a diamond",
+                "delete suspicious item of block at location(199,10,-199, \"very_goodNames\")")
+            .since("2.8.1, 2.14.0 (suspicious gravel)")
+            .register();
     }
 
     @Override

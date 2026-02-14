@@ -1,13 +1,10 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecConsumableComponent.ConsumeEffectsEvent;
@@ -31,31 +28,32 @@ import java.util.List;
 import static com.shanebeestudios.skbee.elements.itemcomponent.sections.SecDeathProtectionComponent.DeathProtectionEvent;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ItemComponent - Apply Effects")
-@Description({"Used to apply potion/consume effects in a potion contents's `custom_effects` section, " +
-    "death protection's' `death_effects` section and consumable's `on_consume_effects` section.",
-    "",
-    "**Patterns**:",
-    "- `%potioneffects%` = Used to apply a potion effect in a potion contents section.",
-    "- `%potioneffects% with probability %-number%` = " +
-        "Used to apply a potion/consume effect in a death protection/consumable section.",
-    "- `remove effects %potioneffecttypes/typedkeys%` = Used to apply a `remove effects` consume effect in a death protection/consumable section.",
-    "- `clear all effects` = Used to apply a `clear all effects` consume effect in a death protection/consumable section.",
-    "- `teleport randomly within [[a] diameter [of]] %number% [blocks|meters]` = " +
-        "Used to apply a `teleport randomly` consume effect in a death protection/consumable section.",
-    "- `play sound %string/typedkey%` - Used to apply a `play sound` consume effect in a death protection/consumable section."})
-@Examples("See examples of the respective sections that use this effect.")
-@Since("3.8.1")
 public class EffApplyToComponent extends Effect {
 
-    static {
-        Skript.registerEffect(EffApplyToComponent.class,
-            "apply -> %potioneffects%",
-            "apply -> %potioneffects% with probability %-number%",
-            "apply -> remove effects %potioneffecttypes/typedkeys%",
-            "apply -> clear all effects",
-            "apply -> teleport randomly within [[a] diameter [of]] %number% [blocks|meters]",
-            "apply -> play sound %string/typedkey%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffApplyToComponent.class,
+                "apply -> %potioneffects%",
+                "apply -> %potioneffects% with probability %-number%",
+                "apply -> remove effects %potioneffecttypes/typedkeys%",
+                "apply -> clear all effects",
+                "apply -> teleport randomly within [[a] diameter [of]] %number% [blocks|meters]",
+                "apply -> play sound %string/typedkey%")
+            .name("ItemComponent - Apply Effects")
+            .description("Used to apply potion/consume effects in a potion contents's `custom_effects` section, " +
+                    "death protection's' `death_effects` section and consumable's `on_consume_effects` section.",
+                "",
+                "**Patterns**:",
+                "- `%potioneffects%` = Used to apply a potion effect in a potion contents section.",
+                "- `%potioneffects% with probability %-number%` = " +
+                    "Used to apply a potion/consume effect in a death protection/consumable section.",
+                "- `remove effects %potioneffecttypes/typedkeys%` = Used to apply a `remove effects` consume effect in a death protection/consumable section.",
+                "- `clear all effects` = Used to apply a `clear all effects` consume effect in a death protection/consumable section.",
+                "- `teleport randomly within [[a] diameter [of]] %number% [blocks|meters]` = " +
+                    "Used to apply a `teleport randomly` consume effect in a death protection/consumable section.",
+                "- `play sound %string/typedkey%` - Used to apply a `play sound` consume effect in a death protection/consumable section.")
+            .examples("See examples of the respective sections that use this effect.")
+            .since("3.8.1")
+            .register();
     }
 
     private int pattern;

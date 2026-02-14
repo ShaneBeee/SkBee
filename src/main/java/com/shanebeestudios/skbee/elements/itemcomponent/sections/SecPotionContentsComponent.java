@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -13,6 +9,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -28,36 +25,6 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 
 import java.util.List;
 
-@Name("ItemComponent - Potion Contents Component Apply")
-@Description({"Apply a potion contents component to an item (can be used on a potion/arrow or any consumable item).",
-    "Requires Paper 1.21.3+",
-    "See [**Potion Contents Component**](https://minecraft.wiki/w/Data_component_format#potion_contents) on McWiki for more info.",
-    "Note: `potion` and `custom_effects` entries cannot be used together.",
-    "",
-    "**Entries**:",
-    "- `potion` = The base potion of the item.",
-    "- `custom_color` = The overriding color of this potion texture, and/or the particles of the area effect cloud created.",
-    "- `custom_name` = An optional string used to generate containing stack name. (See McWiki for more details on this) [Optional]",
-    "- `custom_effects` = A list of the additional effects that this item should apply. [Optional]"})
-@Examples({"apply potion contents to {_i}:",
-    "\tpotion: long_swiftness",
-    "\tcustom_color: rgb(126, 207, 243)",
-    "",
-    "apply potion contents component to {_i}:",
-    "\tcustom_color: pink",
-    "\tcustom_name: \"harming\"",
-    "\tcustom_effects:",
-    "\t\tapply -> potion effect of night vision for 5 minutes",
-    "\t\tapply -> potion effect of slowness for 6 minutes",
-    "",
-    "set {_i} to 1 of potion",
-    "set {_pe::*} to active potion effects of player",
-    "apply potion contents to {_i}:",
-    "\tcustom_color: rgb(126, 207, 243)",
-    "\tcustom_effects:",
-    "\t\tapply effects {_pe::*}",
-    "give {_i} to player"})
-@Since("3.8.1")
 @SuppressWarnings("UnstableApiUsage")
 public class SecPotionContentsComponent extends Section {
 
@@ -79,17 +46,47 @@ public class SecPotionContentsComponent extends Section {
         }
     }
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         VALIDATOR = SimpleEntryValidator.builder()
             .addOptionalEntry("potion", PotionType.class)
             .addOptionalEntry("custom_color", Color.class)
             .addOptionalEntry("custom_name", String.class)
             .addOptionalSection("custom_effects")
             .build();
-        Skript.registerSection(SecPotionContentsComponent.class,
-            "apply potion contents [component] to %itemstacks/itemtypes/slots%");
+        reg.newSection(SecPotionContentsComponent.class,
+                "apply potion contents [component] to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Potion Contents Component Apply")
+            .description("Apply a potion contents component to an item (can be used on a potion/arrow or any consumable item).",
+                "See [**Potion Contents Component**](https://minecraft.wiki/w/Data_component_format#potion_contents) on McWiki for more info.",
+                "Note: `potion` and `custom_effects` entries cannot be used together.",
+                "",
+                "**Entries**:",
+                "- `potion` = The base potion of the item.",
+                "- `custom_color` = The overriding color of this potion texture, and/or the particles of the area effect cloud created.",
+                "- `custom_name` = An optional string used to generate containing stack name. (See McWiki for more details on this) [Optional]",
+                "- `custom_effects` = A list of the additional effects that this item should apply. [Optional]")
+            .examples("apply potion contents to {_i}:",
+                "\tpotion: long_swiftness",
+                "\tcustom_color: rgb(126, 207, 243)",
+                "",
+                "apply potion contents component to {_i}:",
+                "\tcustom_color: pink",
+                "\tcustom_name: \"harming\"",
+                "\tcustom_effects:",
+                "\t\tapply -> potion effect of night vision for 5 minutes",
+                "\t\tapply -> potion effect of slowness for 6 minutes",
+                "",
+                "set {_i} to 1 of potion",
+                "set {_pe::*} to active potion effects of player",
+                "apply potion contents to {_i}:",
+                "\tcustom_color: rgb(126, 207, 243)",
+                "\tcustom_effects:",
+                "\t\tapply effects {_pe::*}",
+                "give {_i} to player")
+            .since("3.8.1")
+            .register();
     }
 
     private Expression<?> items;

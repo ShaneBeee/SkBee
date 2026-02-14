@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.elements.scoreboard.type;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
@@ -11,10 +10,10 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.ScoreboardUtils;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Entity;
@@ -38,7 +37,7 @@ public class Types {
 
     private static final List<Criteria> CRITERIAS = new ArrayList<>();
 
-    static {
+    public static void register(Registration reg) {
         Class<?> craftCriteriaClass = ReflectionUtils.getOBCClass("scoreboard.CraftCriteria");
         assert craftCriteriaClass != null;
         Object defaults = ReflectionUtils.getField("DEFAULTS", craftCriteriaClass, null);
@@ -47,7 +46,7 @@ public class Types {
         CRITERIAS.addAll(map.values());
 
         if (Classes.getExactClassInfo(Scoreboard.class) == null) {
-            Classes.registerClass(new ClassInfo<>(Scoreboard.class, "scoreboard")
+            reg.newType(Scoreboard.class, "scoreboard")
                 .user("scoreboards?")
                 .name("Scoreboard")
                 .description("Represents the vanilla scoreboard of the server/players.",
@@ -78,14 +77,15 @@ public class Types {
                     public String toVariableNameString(Scoreboard scoreboard) {
                         return toString(scoreboard, 0);
                     }
-                }));
+                })
+                .register();
         } else {
             Util.logLoading("It looks like another addon registered 'scoreboard' already.");
             Util.logLoading("You may have to use their Scoreboards in SkBee's scoreboard elements.");
         }
 
         if (Classes.getExactClassInfo(Objective.class) == null) {
-            Classes.registerClass(new ClassInfo<>(Objective.class, "objective")
+            reg.newType(Objective.class, "objective")
                 .user("objectives?")
                 .name("Scoreboard - Objective")
                 .description("Represents an objective in a scoreboard.",
@@ -127,14 +127,15 @@ public class Types {
                             }
                         }
                     }
-                }));
+                })
+                .register();
         } else {
             Util.logLoading("It looks like another addon registered 'objective' already.");
             Util.logLoading("You may have to use their Objectives in SkBee's scoreboard elements.");
         }
 
         if (Classes.getExactClassInfo(Criteria.class) == null) {
-            Classes.registerClass(new ClassInfo<>(Criteria.class, "criteria")
+            reg.newType(Criteria.class, "criteria")
                 .user("criterias?")
                 .name("Scoreboard - Criteria")
                 .description("Represents a criteria for a scoreboard objective.",
@@ -156,32 +157,33 @@ public class Types {
                     public @NotNull String toVariableNameString(Criteria o) {
                         return "criteria{name=" + o.getName() + "}";
                     }
-                }));
+                })
+                .register();
         } else {
             Util.logLoading("It looks like another addon registered 'criteria' already.");
             Util.logLoading("You may have to use their Criterias in SkBee's scoreboard elements.");
         }
 
         if (Classes.getExactClassInfo(RenderType.class) == null) {
-            EnumWrapper<RenderType> RENDER_ENUM = new EnumWrapper<>(RenderType.class);
-            Classes.registerClass(RENDER_ENUM.getClassInfo("rendertype")
+            reg.newEnumType(RenderType.class, "rendertype")
                 .user("render ?types?")
                 .name("Scoreboard - Objective Render Type")
                 .description("Controls the way in which an Objective is rendered client side.")
-                .since("2.6.0"));
+                .since("2.6.0")
+                .register();
         }
 
         if (Classes.getExactClassInfo(DisplaySlot.class) == null) {
-            EnumWrapper<DisplaySlot> DISPLAY_ENUM = new EnumWrapper<>(DisplaySlot.class);
-            Classes.registerClass(DISPLAY_ENUM.getClassInfo("displayslot")
+            reg.newEnumType(DisplaySlot.class, "displayslot")
                 .user("display ?slots?")
                 .name("Scoreboard - Objective Display Slot")
                 .description("Locations for displaying objectives to the player")
-                .since("2.6.0"));
+                .since("2.6.0")
+                .register();
         }
 
         if (Classes.getExactClassInfo(Team.class) == null) {
-            Classes.registerClass(new ClassInfo<>(Team.class, "team")
+            reg.newType(Team.class, "team")
                 .user("teams?")
                 .name("Team")
                 .description("Represents a scoreboard team. Teams can be deleted (unregistered).",
@@ -289,31 +291,32 @@ public class Types {
                             }
                         }
                     }
-                }));
+                })
+                .register();
         } else {
             Util.logLoading("It looks like another addon registered 'team' already.");
             Util.logLoading("You may have to use their Team in SkBee's scoreboard elements.");
         }
 
         if (Classes.getExactClassInfo(Team.Option.class) == null) {
-            EnumWrapper<Team.Option> TEAM_OPTIONS = new EnumWrapper<>(Team.Option.class);
-            Classes.registerClass(TEAM_OPTIONS.getClassInfo("teamoption")
+            reg.newEnumType(Team.Option.class, "teamoption")
                 .user("team ?options?")
                 .name("Team - Option")
                 .description("Represents an option for a team.")
-                .since("1.16.0"));
+                .since("1.16.0")
+                .register();
         } else {
             Util.logLoading("It looks like another addon registered 'teamoption' already.");
             Util.logLoading("You may have to use their Team Option in SkBee's scoreboard elements.");
         }
 
         if (Classes.getExactClassInfo(Team.OptionStatus.class) == null) {
-            EnumWrapper<Team.OptionStatus> TEAM_OPTION_STATUS = new EnumWrapper<>(Team.OptionStatus.class);
-            Classes.registerClass(TEAM_OPTION_STATUS.getClassInfo("teamoptionstatus")
+            reg.newEnumType(Team.OptionStatus.class, "teamoptionstatus")
                 .user("team ?option ?status")
                 .name("Team - Option Status")
                 .description("Represents an option status for a team option")
-                .since("1.16.0"));
+                .since("1.16.0")
+                .register();
         } else {
             Util.logLoading("It looks like another addon registered 'teamoptionstatus' already.");
             Util.logLoading("You may have to use their Team Option Status in SkBee's scoreboard elements.");

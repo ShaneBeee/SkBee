@@ -1,19 +1,14 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.EntityUtils;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.Statistic;
@@ -27,30 +22,28 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Scoreboard - Criteria Create")
-@Description({"Get one of the default Minecraft scoreboard criterias.",
-    "You can also get a criteria bassed off a statistic.",
-    "(see [**Scoreboard Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki) or create your own."})
-@Examples({"set {_c} to criteria with id \"health\"",
-    "set {_c} to criteria from sprint_one_cm",
-    "set {_c} to criteria from mine_block using diamond ore",
-    "set {_c} to criteria from interact_with_anvil using diamond",
-    "set {_c} to criteria from craft_item using diamond sword",
-    "set {_c} to criteria from mob_kills using a player"})
-@Since("2.6.0")
 public class ExprCriteriaCreate extends SimpleExpression<Criteria> {
 
-    static {
-        List<String> patterns = new ArrayList<>() {
-            {
-                add("criteria with id %string%");
-                if (SkBee.getPlugin().getPluginConfig().ELEMENTS_STATISTIC) {
-                    add("criteria from [statistic] %statistic% [(using|with) %-itemtype/blockdata/entitydata%]");
-                }
-            }
-        };
-        Skript.registerExpression(ExprCriteriaCreate.class, Criteria.class, ExpressionType.COMBINED,
-            patterns.toArray(new String[0]));
+    public static void register(Registration reg) {
+        List<String> patterns = new ArrayList<>();
+        patterns.add("criteria with id %string%");
+        if (SkBee.getPlugin().getPluginConfig().ELEMENTS_STATISTIC) {
+            patterns.add("criteria from [statistic] %statistic% [(using|with) %-itemtype/blockdata/entitydata%]");
+        }
+
+        reg.newCombinedExpression(ExprCriteriaCreate.class, Criteria.class, patterns.toArray(new String[0]))
+            .name("Scoreboard - Criteria Create")
+            .description("Get one of the default Minecraft scoreboard criterias.",
+                "You can also get a criteria bassed off a statistic.",
+                "(see [**Scoreboard Criteria**](https://minecraft.wiki/w/Scoreboard#Criteria) on McWiki) or create your own.")
+            .examples("set {_c} to criteria with id \"health\"",
+                "set {_c} to criteria from sprint_one_cm",
+                "set {_c} to criteria from mine_block using diamond ore",
+                "set {_c} to criteria from interact_with_anvil using diamond",
+                "set {_c} to criteria from craft_item using diamond sword",
+                "set {_c} to criteria from mob_kills using a player")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<String> id;

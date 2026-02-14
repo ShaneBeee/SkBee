@@ -1,37 +1,34 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Tab Completion Argument")
-@Description("Get the argument or a list of all arguments in a tab complete event.")
-@Examples({"on tab complete of \"/breakfast\":",
-        "\tset tab completions for position 1 to \"toast\", \"eggs\" and \"waffles\"",
-        "\tif tab arg-1 = \"toast\":",
-        "\t\tset tab completions for position 2 to \"butter\", \"peanut_butter\" and \"jam\"",
-        "\telse if tab arg-1 = \"eggs\":",
-        "\t\tset tab completions for position 2 to \"sunny_side_up\", \"scrambled\" and \"over_easy\"",
-        "", "set {_l::*} to tab args"})
-@Since("1.7.0")
 public class ExprTabCompletionArgs extends SimpleExpression<String> {
 
-    static {
-        Skript.registerExpression(ExprTabCompletionArgs.class, String.class, ExpressionType.SIMPLE,
-                "tab [complete] arg[ument](s|1:[(-| )]%number%)");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprTabCompletionArgs.class, String.class,
+                "tab [complete] arg[ument](s|1:[(-| )]%number%)")
+            .name("Tab Completion Argument")
+            .description("Get the argument or a list of all arguments in a tab complete event.")
+            .examples("on tab complete of \"/breakfast\":",
+                "\tset tab completions for position 1 to \"toast\", \"eggs\" and \"waffles\"",
+                "\tif tab arg-1 = \"toast\":",
+                "\t\tset tab completions for position 2 to \"butter\", \"peanut_butter\" and \"jam\"",
+                "\telse if tab arg-1 = \"eggs\":",
+                "\t\tset tab completions for position 2 to \"sunny_side_up\", \"scrambled\" and \"over_easy\"",
+                "", "set {_l::*} to tab args")
+            .since("1.7.0")
+            .register();
     }
 
     private int pattern;

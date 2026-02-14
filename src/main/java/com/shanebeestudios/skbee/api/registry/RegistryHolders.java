@@ -61,7 +61,7 @@ public class RegistryHolders {
     private static final Map<String, RegistryHolder> REGISTRY_HOLDERS_BY_NAME = new HashMap<>();
     private static final Map<RegistryKey, RegistryHolder> REGISTRY_HOLDERS_BY_REGISTRY_KEY = new HashMap<>();
 
-    static {
+    public static void init() {
         // Only register once
         Comparator<TagKey, ItemType> itemTypeComparator = (tagKey, itemType) -> {
             Key key = itemType.getMaterial().key();

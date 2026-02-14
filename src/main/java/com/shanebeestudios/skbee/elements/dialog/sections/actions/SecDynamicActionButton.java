@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.dialog.sections.actions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
@@ -13,6 +9,7 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -32,22 +29,6 @@ import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Dynamic Action Button")
-@Description({"Add a dynamic action button to a dialog.",
-    "See [**Custom Dynmaic Action**](https://minecraft.wiki/w/Dialog#dynamic/custom) on McWiki for more specific info.",
-    "This action will fire the 'Player Custom Click' event along with the id and additions.",
-    "**Entries**:",
-    "- `label` = The name on your button, accepts a string or text component/mini message.",
-    "- `tooltip` = The hover message, accepts a string or text component/mini message.",
-    "- `width` = The width of the button. Value between 1 and 1024 — Defaults to 150.",
-    "- `id` = The id of the action.",
-    "- `additions` = An additional NBT compound to go along with your custom dynamic action."})
-@Examples({"add dynamic action button:",
-    "\tlabel: \"Spawn\"",
-    "\ttooltip: \"Teleport yoursel to spawn!\"",
-    "\tid: \"custom:teleport_to_spawn\"",
-    "\tadditions: nbt from \"{some_tag:\"\"some extra info\"\"}\""})
-@Since("3.16.0")
 public class SecDynamicActionButton extends Section {
 
     private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
@@ -64,8 +45,27 @@ public class SecDynamicActionButton extends Section {
         Class<Object>[] idClasses = new Class[]{String.class, NamespacedKey.class};
         VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, true, idClasses));
         VALIDATOR.addEntryData(new ExpressionEntryData<>("additions", null, true, NBTCompound.class));
+    }
 
-        Skript.registerSection(SecDynamicActionButton.class, "add dynamic action button");
+    public static void register(Registration reg) {
+        reg.newSection(SecDynamicActionButton.class, "add dynamic action button")
+            .name("Dialog - Dynamic Action Button")
+            .description("Add a dynamic action button to a dialog.",
+                "See [**Custom Dynmaic Action**](https://minecraft.wiki/w/Dialog#dynamic/custom) on McWiki for more specific info.",
+                "This action will fire the 'Player Custom Click' event along with the id and additions.",
+                "**Entries**:",
+                "- `label` = The name on your button, accepts a string or text component/mini message.",
+                "- `tooltip` = The hover message, accepts a string or text component/mini message.",
+                "- `width` = The width of the button. Value between 1 and 1024 — Defaults to 150.",
+                "- `id` = The id of the action.",
+                "- `additions` = An additional NBT compound to go along with your custom dynamic action.")
+            .examples("add dynamic action button:",
+                "\tlabel: \"Spawn\"",
+                "\ttooltip: \"Teleport yoursel to spawn!\"",
+                "\tid: \"custom:teleport_to_spawn\"",
+                "\tadditions: nbt from \"{some_tag:\"\"some extra info\"\"}\"")
+            .since("3.16.0")
+            .register();
     }
 
     private boolean exitAction;

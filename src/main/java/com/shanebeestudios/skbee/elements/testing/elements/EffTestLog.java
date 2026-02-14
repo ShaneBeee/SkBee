@@ -1,19 +1,19 @@
 package com.shanebeestudios.skbee.elements.testing.elements;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.event.Event;
 
-@NoDoc
 public class EffTestLog extends Effect {
 
-    static {
-        Skript.registerEffect(EffTestLog.class, "skbee [test] (log|:debug) %strings%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffTestLog.class, "skbee [test] (log|:debug) %strings%")
+            .noDoc()
+            .register();
     }
 
     private Expression<String> logs;

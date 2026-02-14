@@ -1,29 +1,27 @@
 package com.shanebeestudios.skbee.elements.other.conditions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Is Player Listed")
-@Description("Check if a player is listed (shown in PlayerList) for another player. Requires PaperMC 1.20.1+")
-@Examples("if player is listed for {_p}:")
-@Since("2.17.0")
 public class CondIsPlayerListed extends Condition {
 
-    static {
+    public static void register(Registration reg) {
         if (Skript.methodExists(Player.class, "isListed", Player.class)) {
-            Skript.registerCondition(CondIsPlayerListed.class, "%players% (is|are) listed for %players%",
-                    "%players% (is|are)(n't| not) listed for %players%");
+            reg.newCondition(CondIsPlayerListed.class, "%players% (is|are) listed for %players%",
+                    "%players% (is|are)(n't| not) listed for %players%")
+                .name("Is Player Listed")
+                .description("Check if a player is listed (shown in PlayerList) for another player.")
+                .examples("if player is listed for {_p}:")
+                .since("2.17.0")
+                .register();
         }
     }
 

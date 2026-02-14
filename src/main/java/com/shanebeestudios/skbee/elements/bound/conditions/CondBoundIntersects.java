@@ -1,35 +1,32 @@
 package com.shanebeestudios.skbee.elements.bound.conditions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Bound - Intersects")
-@Description("Check if a bound intersects with another bound or a potential bound at 2 locations.")
-@Examples({"if {_bound} intersects with {_loc1} and {_loc2}:",
-        "if {_bound} intersects with {_bound2}:",
-        "if {_bound} doesn't intersect with {_loc1} and {_loc2}:",
-        "if {_bound} doesn't intersect with {_bound2}:"})
-@Since("2.3.0")
 public class CondBoundIntersects extends Condition {
 
-    static {
-        Skript.registerCondition(CondBoundIntersects.class,
+    public static void register(Registration reg) {
+        reg.newCondition(CondBoundIntersects.class,
                 "%bound% (intersects with|overlaps) %location% and %location%",
                 "%bound% (intersects with|overlaps) %bound%",
                 "%bound% doesn't (intersect with|overlap) %location% and %location%",
-                "%bound% doesn't (intersect with|overlap) %bound%");
+                "%bound% doesn't (intersect with|overlap) %bound%")
+            .name("Bound - Intersects")
+            .description("Check if a bound intersects with another bound or a potential bound at 2 locations.")
+            .examples("if {_bound} intersects with {_loc1} and {_loc2}:",
+                "if {_bound} intersects with {_bound2}:",
+                "if {_bound} doesn't intersect with {_loc1} and {_loc2}:",
+                "if {_bound} doesn't intersect with {_bound2}:")
+            .since("2.3.0")
+            .register();
     }
 
     private Expression<Bound> bound1, bound2;

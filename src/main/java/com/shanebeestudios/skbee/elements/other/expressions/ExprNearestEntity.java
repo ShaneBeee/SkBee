@@ -2,15 +2,11 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -25,27 +21,28 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Name("Nearest Entity")
-@Description({"Returns the nearest entity around a location/entity. Requires PaperMC.",
-    "\nNOTE: When using `around entity`, this will exclude that entity in the search.",
-    "\nNOTE: When radius is excluded, the distance will default to Skript's `maximum target block distance`."})
-@Examples({"kill nearest player in radius 10 around player",
-    "damage nearest mob in radius 5 around player",
-    "set {_near} to nearest entity in radius 50 around {_loc}",
-    "set {_near} to nearest entity in radius 100 around location(100,100,100,world \"world\")",
-    "teleport player to nearest player in radius 10 around player",
-    "damage 10 nearest entity in radius 10 around player by 2",
-    "set {_p} to nearest player around player excluding (all player's where [input doesn't have permission \"some.perm\"])"})
-@Since("2.7.2")
 public class ExprNearestEntity extends SimpleExpression<Entity> {
 
     private static final int MAX_TARGET_BLOCK_DISTANCE = SkriptConfig.maxTargetBlockDistance.value();
 
-    static {
+    public static void register(Registration reg) {
         if (Skript.methodExists(World.class, "getNearbyEntitiesByType", Class.class, Location.class, double.class)) {
-            Skript.registerExpression(ExprNearestEntity.class, Entity.class, ExpressionType.COMBINED,
+            reg.newSimpleExpression(ExprNearestEntity.class, Entity.class,
                 "[num:%number%] nearest %entitydata% [in radius %-number%] (at|of|around) %location/entity%" +
-                    " [excluding %-entities%]");
+                    " [excluding %-entities%]")
+                .name("Nearest Entity")
+                .description("Returns the nearest entity around a location/entity. Requires PaperMC.",
+                    "\nNOTE: When using `around entity`, this will exclude that entity in the search.",
+                    "\nNOTE: When radius is excluded, the distance will default to Skript's `maximum target block distance`.")
+                .examples("kill nearest player in radius 10 around player",
+                    "damage nearest mob in radius 5 around player",
+                    "set {_near} to nearest entity in radius 50 around {_loc}",
+                    "set {_near} to nearest entity in radius 100 around location(100,100,100,world \"world\")",
+                    "teleport player to nearest player in radius 10 around player",
+                    "damage 10 nearest entity in radius 10 around player by 2",
+                    "set {_p} to nearest player around player excluding (all player's where [input doesn't have permission \"some.perm\"])")
+                .since("2.7.2")
+                .register();
         }
     }
 

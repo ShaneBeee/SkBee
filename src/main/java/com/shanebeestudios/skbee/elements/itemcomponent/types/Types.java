@@ -9,6 +9,7 @@ import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.util.Math2;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import io.papermc.paper.datacomponent.DataComponentType;
@@ -37,7 +38,7 @@ public class Types {
     private static final ClassInfo<PotionEffect> POTION_EFFECTS = Classes.getExactClassInfo(PotionEffect.class);
     private static final ClassInfo<PotionEffectType> POTION_EFFECT_TYPE = Classes.getExactClassInfo(PotionEffectType.class);
 
-    static {
+    public static void register(Registration reg) {
         ClassInfo<ConsumeEffect> CONSUME_EFFECT_INFO = new ClassInfo<>(ConsumeEffect.class, "consumeeffect")
             .user("consume ?effects?")
             .name("ItemComponent - Consume Effect")

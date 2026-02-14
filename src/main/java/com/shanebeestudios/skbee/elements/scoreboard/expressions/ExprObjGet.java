@@ -1,14 +1,9 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Objective;
@@ -16,17 +11,18 @@ import org.bukkit.scoreboard.Scoreboard;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Scoreboard - Objective Get")
-@Description({"Get an already registered objective.",
-    "Optionally can input a scoreboard (will default to main scoreboard)."})
-@Examples({"set {_obj} to objective with id \"le-objective\"",
-    "set {_obj} to objective with id \"my_objective\" from player's scoreboard"})
-@Since("2.6.0")
 public class ExprObjGet extends SimpleExpression<Objective> {
 
-    static {
-        Skript.registerExpression(ExprObjGet.class, Objective.class, ExpressionType.COMBINED,
-            "objective (with id|from [id]) %string% [(from|of) %scoreboard%]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprObjGet.class, Objective.class,
+                "objective (with id|from [id]) %string% [(from|of) %scoreboard%]")
+            .name("Scoreboard - Objective Get")
+            .description("Get an already registered objective.",
+                "Optionally can input a scoreboard (will default to main scoreboard).")
+            .examples("set {_obj} to objective with id \"le-objective\"",
+                "set {_obj} to objective with id \"my_objective\" from player's scoreboard")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<String> id;

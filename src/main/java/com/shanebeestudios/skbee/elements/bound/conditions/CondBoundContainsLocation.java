@@ -1,33 +1,34 @@
 package com.shanebeestudios.skbee.elements.bound.conditions;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Bound - Contains Location")
-@Description("Check if a location is within the bounds of a bounding box.")
-@Examples({"on break:",
-    "\tif location of event-block is within bound with id \"spawn.bound\":",
-    "\t\tcancel event", "",
-    "on damage of a player:",
-    "\tif victim is within bound {spawn}:",
-    "\t\tcancel event"})
-@Since("1.0.0")
 public class CondBoundContainsLocation extends Condition {
 
-    static {
+    public static void register(Registration reg) {
         PropertyCondition.register(CondBoundContainsLocation.class, "[with]in [bound[s]] %bounds%", "locations");
+        reg.newCondition(CondBoundContainsLocation.class,
+                "%locations% (is|are) [with]in [bound[s]] %bounds%",
+                "%locations% (isn't|is not|aren't|are not) [with]in [bound[s]] %bounds%")
+            .name("Bound - Contains Location")
+            .description("Check if a location is within the bounds of a bounding box.")
+            .examples("on break:",
+                "\tif location of event-block is within bound with id \"spawn.bound\":",
+                "\t\tcancel event", "",
+                "on damage of a player:",
+                "\tif victim is within bound {spawn}:",
+                "\t\tcancel event")
+            .since("1.0.0")
+            .register();
     }
 
     private Expression<Bound> bounds;
