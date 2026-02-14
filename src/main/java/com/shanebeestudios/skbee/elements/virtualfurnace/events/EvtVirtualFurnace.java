@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
@@ -8,6 +7,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.registrations.EventConverter;
 import ch.njol.skript.registrations.EventValues;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.vf.api.event.machine.FurnaceCookEvent;
 import com.shanebeestudios.vf.api.event.machine.FurnaceExtractEvent;
 import com.shanebeestudios.vf.api.event.machine.FurnaceFuelBurnEvent;
@@ -23,28 +23,32 @@ import org.skriptlang.skript.lang.converter.Converter;
 @SuppressWarnings("unused")
 public class EvtVirtualFurnace extends SkriptEvent {
 
-    static {
+    public static void register(Registration reg) {
         // SMELT EVENT
-        Skript.registerEvent("VirtualFurnace - Smelt", EvtVirtualFurnace.class, FurnaceCookEvent.class,
+        reg.newEvent(EvtVirtualFurnace.class, FurnaceCookEvent.class,
                 "virtual furnace (smelt|cook)[ed|ing] [of %-itemtypes%]")
+            .name("VirtualFurnace - Smelt")
             .description("Called when a virtual furnace smelts an item in its input slot.")
             .examples("on virtual furnace smelt:",
                 "\tif event-item is a diamond:",
                 "\t\tcancel event")
-            .since("3.15.0");
+            .since("3.15.0")
+            .register();
 
         EventValues.registerEventValue(FurnaceCookEvent.class, Machine.class, FurnaceCookEvent::getFurnace);
         EventValues.registerEventValue(FurnaceCookEvent.class, ItemStack.class, FurnaceCookEvent::getSource);
         EventValues.registerEventValue(FurnaceCookEvent.class, ItemType.class, from -> new ItemType(from.getSource()));
 
         // EXTRACT EVENT
-        Skript.registerEvent("VirtualFurnace - Extract", EvtVirtualFurnace.class, FurnaceExtractEvent.class,
+        reg.newEvent(EvtVirtualFurnace.class, FurnaceExtractEvent.class,
                 "virtual furnace [item] extract[ion] [of %-itemtypes%]")
+            .name("VirtualFurnace - Extract")
             .description("Called when a player extracts an item from a virtual furnace.")
             .examples("on virtual furnace extract:",
                 "\tif event-item is an iron nugget:",
                 "\t\tsend \"Congrats\" to player")
-            .since("3.15.0");
+            .since("3.15.0")
+            .register();
 
         EventValues.registerEventValue(FurnaceExtractEvent.class, Machine.class, FurnaceExtractEvent::getFurnace);
         EventValues.registerEventValue(FurnaceExtractEvent.class, Player.class, FurnaceExtractEvent::getPlayer);
@@ -76,13 +80,15 @@ public class EvtVirtualFurnace extends SkriptEvent {
         });
 
         // FUEL BURN EVENT
-        Skript.registerEvent("VirtualFurnace - Fuel Burn", EvtVirtualFurnace.class, FurnaceFuelBurnEvent.class,
+        reg.newEvent(EvtVirtualFurnace.class, FurnaceFuelBurnEvent.class,
                 "virtual furnace fuel burn[ing] [of %-itemtypes%]")
+            .name("VirtualFurnace - Fuel Burn")
             .description("Called when a virtual furnace burns its fuel.")
             .examples("on virtual furnace fuel burn:",
                 "\tif event-item is coal:",
                 "\t\tset event-item to charcoal")
-            .since("3.15.0");
+            .since("3.15.0")
+            .register();
 
         EventValues.registerEventValue(FurnaceFuelBurnEvent.class, Machine.class, FurnaceFuelBurnEvent::getFurnace);
         EventValues.registerEventValue(FurnaceFuelBurnEvent.class, Fuel.class, FurnaceFuelBurnEvent::getFuel);
