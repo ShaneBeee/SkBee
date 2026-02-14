@@ -464,6 +464,7 @@ public class Types {
 
         if (Classes.getExactClassInfo(PlayerFailMoveEvent.FailReason.class) == null) {
             reg.newEnumType(PlayerFailMoveEvent.FailReason.class, "failmovereason")
+                .name("Fail Reason")
                 .user("fail ?move ?reasons?")
                 .description("The reason a player failed to move in a `player fail move` event.")
                 .since("3.11.0")

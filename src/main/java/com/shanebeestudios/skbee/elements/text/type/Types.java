@@ -162,6 +162,7 @@ public class Types {
 
         if (Classes.getExactClassInfo(TagResolver.class) == null) {
             reg.newType(TagResolver.class, "tagresolver")
+                .name("Tag Resolver")
                 .user("tag ?resolvers?")
                 .description("Represents an object to replace text in a mini message.")
                 .examples("# Create a component",
