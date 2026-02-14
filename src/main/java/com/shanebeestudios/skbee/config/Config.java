@@ -59,7 +59,6 @@ public class Config {
     public boolean ELEMENTS_ADVANCEMENT;
     public boolean ELEMENTS_RAYTRACE;
     public boolean ELEMENTS_FISHING;
-    public boolean ELEMENTS_DISPLAY;
     public boolean ELEMENTS_TICK_MANAGER;
     public boolean ELEMENTS_DAMAGE_SOURCE;
     public boolean ELEMENTS_ITEM_COMPONENT;
@@ -186,7 +185,6 @@ public class Config {
         this.ELEMENTS_ADVANCEMENT = getElement("advancement");
         this.ELEMENTS_RAYTRACE = getElement("raytrace");
         this.ELEMENTS_FISHING = getElement("fishing");
-        this.ELEMENTS_DISPLAY = getElement("display-entity");
         this.ELEMENTS_TICK_MANAGER = getElement("tick-manager");
         this.ELEMENTS_DAMAGE_SOURCE = getElement("damage-source");
         this.ELEMENTS_CHUNK_GEN = getElement("chunk-generator");

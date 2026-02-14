@@ -111,7 +111,6 @@ public class AddonLoader {
         loadBoundElements();
         loadDamageSourceElements();
         loadDialogElements();
-//        loadDisplayEntityElements();
         loadFastboardElements();
 //        loadFishingElements();
         loadGameEventElements();
@@ -463,19 +462,6 @@ public class AddonLoader {
 //            Util.logLoading("&5Fishing Elements &asuccessfully loaded");
 //        } catch (Exception ex) {
 //            logFailure("Fishing", ex);
-//        }
-//    }
-//
-//    private void loadDisplayEntityElements() {
-//        if (!this.config.ELEMENTS_DISPLAY) {
-//            Util.logLoading("&5Display Entity Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.display");
-//            Util.logLoading("&5Display Entity Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Display Entity", ex);
 //        }
 //    }
 
