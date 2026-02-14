@@ -121,6 +121,7 @@ public class SkBeeAddonModule implements AddonModule {
             DefaultSyntaxInfos.Structure<Structure> build = DefaultSyntaxInfos.Structure.builder(
                 (Class<Structure>) structure.structureClass)
                 .addPatterns(structure.patterns)
+                .entryValidator(structure.validator)
                 .build();
 
             syntaxInfos.register(SyntaxRegistry.STRUCTURE, build);

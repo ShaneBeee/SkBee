@@ -1,15 +1,12 @@
 package com.shanebeestudios.skbee.elements.generator.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.Location;
@@ -21,16 +18,17 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Random;
 
-@Name("ChunkGenerator - Populate Tree")
-@Description({"Grow a tree in a ChunkGenerator `block pop` section.",
-    "The vector represents chunk position not world position."})
-@Examples("populate cherry tree at vector(0, 64, 15)")
-@Since("3.5.3")
 public class EffPopulateTree extends Effect {
 
-    static {
-        Skript.registerEffect(EffPopulateTree.class,
-            "populate %bukkittreetype% at %vectors%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffPopulateTree.class,
+                "populate %bukkittreetype% at %vectors%")
+            .name("ChunkGenerator - Populate Tree")
+            .description("Grow a tree in a ChunkGenerator `block pop` section.",
+                "The vector represents chunk position not world position.")
+            .examples("populate cherry tree at vector(0, 64, 15)")
+            .since("3.5.3")
+            .register();
     }
 
     private Expression<TreeType> treeType;

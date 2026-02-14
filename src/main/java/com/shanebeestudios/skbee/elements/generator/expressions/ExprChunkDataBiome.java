@@ -2,12 +2,7 @@ package com.shanebeestudios.skbee.elements.generator.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
@@ -15,6 +10,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.generator.event.BiomeGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.World;
@@ -26,25 +22,26 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("ChunkGenerator - ChunkData Biome")
-@Description({"Represents the biome in ChunkData.",
-    "The first pattern is used to set the biome in the `biome gen` section.",
-    "The second pattern is used to retrieve biomes in the `chunk gen` and `block pop` sections.",
-    "NOTE: The vector represents the position of the biome in the chunk, not the world."})
-@Examples({"biome gen:",
-    "\tset chunkdata biome to plains",
-    "",
-    "chunk gen:",
-    "\tset {_biome} to chunkdata biome at vector(0,0,0)",
-    "\tif {_biome} is plains:",
-    "\t\tset chunkdata block at vector(0,0,0) to grass[]"})
-@Since("3.5.0")
 public class ExprChunkDataBiome extends SimpleExpression<Biome> {
 
-    static {
-        Skript.registerExpression(ExprChunkDataBiome.class, Biome.class, ExpressionType.COMBINED,
-            "chunk[ ]data biome",
-            "chunk[ ]data biome at %vector%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprChunkDataBiome.class, Biome.class,
+                "chunk[ ]data biome",
+                "chunk[ ]data biome at %vector%")
+            .name("ChunkGenerator - ChunkData Biome")
+            .description("Represents the biome in ChunkData.",
+                "The first pattern is used to set the biome in the `biome gen` section.",
+                "The second pattern is used to retrieve biomes in the `chunk gen` and `block pop` sections.",
+                "NOTE: The vector represents the position of the biome in the chunk, not the world.")
+            .examples("biome gen:",
+                "\tset chunkdata biome to plains",
+                "",
+                "chunk gen:",
+                "\tset {_biome} to chunkdata biome at vector(0,0,0)",
+                "\tif {_biome} is plains:",
+                "\t\tset chunkdata block at vector(0,0,0) to grass[]")
+            .since("3.5.0")
+            .register();
     }
 
     private Expression<Vector> vector;

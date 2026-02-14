@@ -21,6 +21,7 @@ import com.shanebeestudios.skbee.elements.damagesource.DamageSourceElementRegist
 import com.shanebeestudios.skbee.elements.dialog.DialogElementRegestration;
 import com.shanebeestudios.skbee.elements.fastboard.FastboardElementRegistration;
 import com.shanebeestudios.skbee.elements.gameevent.GameEventElementRegistration;
+import com.shanebeestudios.skbee.elements.generator.ChunkGeneratorElementRegistration;
 import com.shanebeestudios.skbee.elements.itemcomponent.ItemComponentElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
@@ -127,7 +128,7 @@ public class AddonLoader {
 //        loadVillagerElements();
 //        loadVirtualFurnaceElements();
         loadWorldCreatorElements();
-//        loadChunkGenElements();
+        loadChunkGenElements();
         loadTestingElements();
 
         // Load elements into Skript
@@ -337,27 +338,27 @@ public class AddonLoader {
             logFailure("World Creator", ex);
         }
     }
-//
-//    private void loadChunkGenElements() {
-//        if (!this.config.ELEMENTS_CHUNK_GEN) {
-//            Util.logLoading("&5Chunk Generator Elements &cdisabled via config");
-//            return;
-//        }
-//        if (!this.config.ELEMENTS_WORLD_CREATOR) {
-//            Util.logLoading("&5Chunk Generator &cdisabled via World Creator config");
-//            return;
-//        }
-//        if (Util.IS_RUNNING_FOLIA) {
-//            Util.logLoading("&5Chunk Generator Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.generator");
-//            Util.logLoading("&5Chunk Generator Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Chunk Generator", ex);
-//        }
-//    }
+
+    private void loadChunkGenElements() {
+        if (!this.config.ELEMENTS_CHUNK_GEN) {
+            Util.logLoading("&5Chunk Generator Elements &cdisabled via config");
+            return;
+        }
+        if (!this.config.ELEMENTS_WORLD_CREATOR) {
+            Util.logLoading("&5Chunk Generator &cdisabled via World Creator config");
+            return;
+        }
+        if (Util.IS_RUNNING_FOLIA) {
+            Util.logLoading("&5Chunk Generator Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
+            return;
+        }
+        try {
+            ChunkGeneratorElementRegistration.register(this.registration);
+            Util.logLoading("&5Chunk Generator Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Chunk Generator", ex);
+        }
+    }
 
     private void loadGameEventElements() {
         if (!this.config.ELEMENTS_GAME_EVENT) {

@@ -20,6 +20,7 @@ import org.bukkit.Keyed;
 import org.bukkit.Registry;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.structure.Structure;
 import org.skriptlang.skript.registration.SyntaxInfo;
 import org.skriptlang.skript.util.Priority;
@@ -397,9 +398,11 @@ public class Registration {
     public class StructureRegistrar<E extends Structure> extends Registrar<StructureRegistrar<E>> {
         public final Class<E> structureClass;
         public final String[] patterns;
+        public final EntryValidator validator;
 
-        public StructureRegistrar(Class<E> structureClass, String[] patterns) {
+        public StructureRegistrar(Class<E> structureClass, EntryValidator validator, String[] patterns) {
             this.structureClass = structureClass;
+            this.validator = validator;
             this.patterns = patterns;
         }
 
@@ -410,7 +413,11 @@ public class Registration {
     }
 
     public StructureRegistrar<?> newStructure(Class<? extends Structure> structureClass, String... patterns) {
-        return new StructureRegistrar<>(structureClass, patterns);
+        return new StructureRegistrar<>(structureClass, null, patterns);
+    }
+
+    public StructureRegistrar<?> newStructure(Class<? extends Structure> structureClass, EntryValidator entryValidator, String... patterns) {
+        return new StructureRegistrar<>(structureClass, entryValidator, patterns);
     }
 
 }
