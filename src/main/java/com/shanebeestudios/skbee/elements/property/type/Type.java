@@ -39,6 +39,7 @@ public class Type {
                     return "property:" + property.getName();
                 }
             })
+            .since("3.10.0")
             .register();
     }
 

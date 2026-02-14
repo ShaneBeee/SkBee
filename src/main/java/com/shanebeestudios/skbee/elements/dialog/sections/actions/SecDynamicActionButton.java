@@ -31,24 +31,25 @@ import java.util.Optional;
 @SuppressWarnings("UnstableApiUsage")
 public class SecDynamicActionButton extends Section {
 
-    private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
-        @SuppressWarnings("unchecked")
+        EntryValidatorBuilder builder = EntryValidator.builder();
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("tooltip", null, true, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(150, true), true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("tooltip", null, true, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(150, true), true, Integer.class));
 
         // DYNAMIC
         @SuppressWarnings("unchecked")
         Class<Object>[] idClasses = new Class[]{String.class, NamespacedKey.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, true, idClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("additions", null, true, NBTCompound.class));
+        builder.addEntryData(new ExpressionEntryData<>("id", null, true, idClasses));
+        builder.addEntryData(new ExpressionEntryData<>("additions", null, true, NBTCompound.class));
+        VALIDATOR = builder.build();
     }
 
     public static void register(Registration reg) {
-        reg.newSection(SecDynamicActionButton.class, "add dynamic action button")
+        reg.newSection(SecDynamicActionButton.class, VALIDATOR, "add dynamic action button")
             .name("Dialog - Dynamic Action Button")
             .description("Add a dynamic action button to a dialog.",
                 "See [**Custom Dynmaic Action**](https://minecraft.wiki/w/Dialog#dynamic/custom) on McWiki for more specific info.",
@@ -83,7 +84,7 @@ public class SecDynamicActionButton extends Section {
             Skript.error("A dynamic action button can only be used in an 'actions' section.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         // Action button type

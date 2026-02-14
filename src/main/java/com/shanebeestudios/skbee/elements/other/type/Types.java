@@ -2,17 +2,12 @@ package com.shanebeestudios.skbee.elements.other.type;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.BukkitUtils;
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.expressions.base.EventValueExpression;
 import ch.njol.skript.lang.ParseContext;
-import ch.njol.skript.lang.function.Functions;
-import ch.njol.skript.lang.function.Parameter;
-import ch.njol.skript.lang.function.SimpleJavaFunction;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.DefaultClasses;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
@@ -21,7 +16,6 @@ import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
@@ -52,11 +46,12 @@ import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.common.function.DefaultFunction;
 
 import java.io.StreamCorruptedException;
 import java.util.Map;
 
-@SuppressWarnings({"removal", "deprecation", "rawtypes", "UnstableApiUsage"})
+//@SuppressWarnings({"removal", "deprecation", "rawtypes", "UnstableApiUsage"})
 public class Types {
 
     public static void register(Registration reg) {
@@ -372,6 +367,7 @@ public class Types {
                         return slot.toString();
                     }
                 })
+                .since("3.5.9")
                 .register();
         } else {
             Util.logLoading("It looks like another addon registered 'equipmentSlotGroup' already.");
@@ -400,6 +396,7 @@ public class Types {
                         return toString(o, 0);
                     }
                 })
+                .since("3.5.9")
                 .register();
         } else {
             Util.logLoading("It looks like another addon registered 'attributeModifier' already.");
@@ -411,6 +408,7 @@ public class Types {
                 .user("attribute ?operations?")
                 .name("Attribute Modifier Operation")
                 .description("Represents the different operations of an attribute modifer.", Util.AUTO_GEN_NOTE)
+                .since("3.5.9")
                 .register();
         } else {
             Util.logLoading("It looks like another addon registered 'attributeOperation' already.");
@@ -509,68 +507,63 @@ public class Types {
             Util.logLoading("It looks like another addon registered 'knockbackcause' already.");
             Util.logLoading("You may have to use their KnockbackCause in SkBee's syntaxes.");
         }
-    }
 
-    // FUNCTIONS
-    static {
-        Functions.registerFunction(new SimpleJavaFunction<>("bukkitColor", new Parameter[]{
-            new Parameter<>("alpha", DefaultClasses.NUMBER, true, null),
-            new Parameter<>("red", DefaultClasses.NUMBER, true, null),
-            new Parameter<>("green", DefaultClasses.NUMBER, true, null),
-            new Parameter<>("blue", DefaultClasses.NUMBER, true, null)
-        }, Classes.getExactClassInfo(Color.class), true) {
-            @Override
-            public @Nullable Color[] executeSimple(Object[][] params) {
-                int alpha = ((Number) params[0][0]).intValue();
-                int red = ((Number) params[1][0]).intValue();
-                int green = ((Number) params[2][0]).intValue();
-                int blue = ((Number) params[3][0]).intValue();
+        // FUNCTIONS
+        DefaultFunction<Color> bukkitColor = DefaultFunction.builder(reg.getAddon(), "bukkitColor", Color.class)
+            .parameter("alpha", Number.class)
+            .parameter("red", Number.class)
+            .parameter("green", Number.class)
+            .parameter("blue", Number.class)
+            .build(args -> {
+                int alpha = ((Number) args.get("alpha")).intValue();
+                int red = ((Number) args.get("red")).intValue();
+                int green = ((Number) args.get("green")).intValue();
+                int blue = ((Number) args.get("blue")).intValue();
+
                 alpha = MathUtil.clamp(alpha, 0, 255);
                 red = MathUtil.clamp(red, 0, 255);
                 green = MathUtil.clamp(green, 0, 255);
                 blue = MathUtil.clamp(blue, 0, 255);
-                return new Color[]{Color.fromARGB(alpha, red, green, blue)};
-            }
-        }
+                return Color.fromARGB(alpha, red, green, blue);
+            });
+
+        reg.newFunction(bukkitColor)
+            .name("Bukkit Color")
             .description("Creates a new Bukkit Color using alpha (transparency), red, green and blue channels.",
                 "Number values must be between 0 and 255.")
             .examples("set {_color} to bukkitColor(50,155,100,10)")
-            .since("2.8.0"));
-    }
+            .since("2.8.0")
+            .register();
 
-    static {
-        ClassInfo<Timespan.TimePeriod> timePeriodInfo = Classes.getExactClassInfo(Timespan.TimePeriod.class);
-        if (timePeriodInfo == null) {
-            timePeriodInfo = new EnumWrapper<>(Timespan.TimePeriod.class, true)
-                .getClassInfo("timespanperiod")
+        if (Classes.getExactClassInfo(Timespan.TimePeriod.class) == null) {
+            reg.newEnumType(Timespan.TimePeriod.class, "timespanperiod", true)
+                .name("Time Period")
                 .user("time ?span ?periods?")
-                .name("Timespan Period")
                 .description("Represents the time periods of a Timespan.")
-                .since("3.9.0");
-            Classes.registerClass(timePeriodInfo);
+                .since("3.9.0")
+                .register();
         }
 
-        // Temporary until Skript (maybe) adds this.
-        Functions.registerFunction(new SimpleJavaFunction<>("timespan", new Parameter[]{
-            new Parameter<>("time", DefaultClasses.NUMBER, true, null),
-            new Parameter<>("timeperiod", timePeriodInfo, true, null),
-        }, DefaultClasses.TIMESPAN, true) {
-            @Override
-            public Timespan @Nullable [] executeSimple(Object[][] params) {
-                long time = ((Number) params[0][0]).longValue();
-                Timespan.TimePeriod timePeriod = ((Timespan.TimePeriod) params[1][0]);
+        DefaultFunction<Timespan> timeFunc = DefaultFunction.builder(reg.getAddon(), "timespan", Timespan.class)
+            .parameter("time", Number.class)
+            .parameter("timePeriod", Timespan.TimePeriod.class)
+            .build(args -> {
+                long time = ((Number) args.get("time")).longValue();
+                Timespan.TimePeriod timePeriod = args.get("timePeriod");
                 if (time >= 0) {
-                    return new Timespan[]{new Timespan(timePeriod, time)};
+                    return new Timespan(timePeriod, time);
                 }
                 return null;
-            }
-        }
+            });
+        reg.newFunction(timeFunc)
+            .name("TimeSpan")
             .description("Create a new Timespan.")
             .examples("set {_time} to timespan(1, minute)",
                 "set {_time} to timespan(10, minutes)",
                 "set {_time} to timespan(3, ticks)",
                 "set {_time} to timespan(1, hour) + timespan(10, minutes)")
-            .since("3.9.0"));
+            .since("3.9.0")
+            .register();
     }
 
 }
