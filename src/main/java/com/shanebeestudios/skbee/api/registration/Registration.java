@@ -15,7 +15,6 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptEvent;
-import ch.njol.skript.lang.function.Function;
 import com.shanebeestudios.skbee.SkBeeAddonModule;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;

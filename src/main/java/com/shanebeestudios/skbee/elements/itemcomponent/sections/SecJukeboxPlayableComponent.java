@@ -28,7 +28,7 @@ public class SecJukeboxPlayableComponent extends Section {
         VALIDATOR = SimpleEntryValidator.builder()
             .addRequiredEntry("song", JukeboxSong.class)
             .build();
-        reg.newSection(SecJukeboxPlayableComponent.class,
+        reg.newSection(SecJukeboxPlayableComponent.class, VALIDATOR,
                 "apply jukebox playable [component] to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - JukeboxPlayable Component Apply")
             .description("Apply an jukebox playable component to an item.",

@@ -6,10 +6,10 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.event.dialog.OptionsEvent;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.OptionsEvent;
 import io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput.OptionEntry;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.Event;
@@ -23,18 +23,18 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public class SecSingleOptionInputOptions extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
-
-    static {
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
-        @SuppressWarnings("unchecked")
-        Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("display", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("initial", null, true, Boolean.class));
-    }
+    private static EntryValidator VALIDATOR;
 
     public static void register(Registration reg) {
-        reg.newSection(SecSingleOptionInputOptions.class, "add options entry")
+        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
+        builder.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
+        @SuppressWarnings("unchecked")
+        Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
+        builder.addEntryData(new ExpressionEntryData<>("display", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("initial", null, true, Boolean.class));
+        VALIDATOR = builder.build();
+
+        reg.newSection(SecSingleOptionInputOptions.class, VALIDATOR, "add options entry")
             .name("Dialog - Single Option Input - Option Entry")
             .description("An option to be used in an options section of a single option input.",
                 "See [**Single Option Input on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#single-option-input) for more info.",
@@ -69,7 +69,7 @@ public class SecSingleOptionInputOptions extends Section {
             Skript.error("An options entry can only be used in an 'options' section of a single option input.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.id = (Expression<String>) container.getOptional("id", false);

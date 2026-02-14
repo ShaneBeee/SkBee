@@ -33,7 +33,7 @@ public class SecUseEffectsComponent extends Section {
                 .addOptionalEntry("interact_vibrations", Boolean.class)
                 .build();
 
-            reg.newSection(SecUseEffectsComponent.class,
+            reg.newSection(SecUseEffectsComponent.class, VALIDATOR,
                     "apply use effects component to %itemstacks/itemtypes/slots%")
                 .name("ItemComponent - Use Effects Component Apply")
                 .description("Controls how the player behaves when using an item (right mouse click).",

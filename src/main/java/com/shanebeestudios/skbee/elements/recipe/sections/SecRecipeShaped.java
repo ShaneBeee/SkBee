@@ -50,7 +50,7 @@ public class SecRecipeShaped extends Section {
         }
         builder.addRequiredSection("ingredients");
         VALIDATOR = builder.build();
-        reg.newSection(SecRecipeShaped.class, "register [a] [new] shaped recipe")
+        reg.newSection(SecRecipeShaped.class, VALIDATOR, "register [a] [new] shaped recipe")
             .name("Recipe - Register Shaped Recipe")
             .description("This section allows you to register a shaped recipe, define the shape and set ingredients.",
                 "You can optionally add a group and category.",

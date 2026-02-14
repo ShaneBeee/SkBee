@@ -50,7 +50,7 @@ public class SecAdventureComponent extends Section {
     }
 
     public static void register(Registration reg) {
-        reg.newSection(SecAdventureComponent.class,
+        reg.newSection(SecAdventureComponent.class, VALIDATOR,
                 "apply (place:can place on|can break) [adventure] predicate to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Adventure Predicate Apply")
             .description("Apply an adventure can break/can place on predicate to items.",

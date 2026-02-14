@@ -55,7 +55,7 @@ public class SecPotionContentsComponent extends Section {
             .addOptionalEntry("custom_name", String.class)
             .addOptionalSection("custom_effects")
             .build();
-        reg.newSection(SecPotionContentsComponent.class,
+        reg.newSection(SecPotionContentsComponent.class, VALIDATOR,
                 "apply potion contents [component] to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Potion Contents Component Apply")
             .description("Apply a potion contents component to an item (can be used on a potion/arrow or any consumable item).",

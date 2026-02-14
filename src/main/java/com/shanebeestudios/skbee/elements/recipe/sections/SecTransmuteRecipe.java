@@ -38,7 +38,7 @@ public class SecTransmuteRecipe extends Section {
 
         VALIDATOR = builder.build();
 
-        reg.newSection(SecTransmuteRecipe.class,
+        reg.newSection(SecTransmuteRecipe.class, VALIDATOR,
                 "register transmute recipe")
             .name("Recipe - Register Transmute Recipe")
             .description("Represents a recipe which will change the type of the input material when combined with an additional material, " +
