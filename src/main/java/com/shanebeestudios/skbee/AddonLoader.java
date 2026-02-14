@@ -20,6 +20,7 @@ import com.shanebeestudios.skbee.elements.bound.BoundElementRegistration;
 import com.shanebeestudios.skbee.elements.damagesource.DamageSourceElementRegistration;
 import com.shanebeestudios.skbee.elements.dialog.DialogElementRegestration;
 import com.shanebeestudios.skbee.elements.fastboard.FastboardElementRegistration;
+import com.shanebeestudios.skbee.elements.fishing.FishingElementRegistration;
 import com.shanebeestudios.skbee.elements.gameevent.GameEventElementRegistration;
 import com.shanebeestudios.skbee.elements.generator.ChunkGeneratorElementRegistration;
 import com.shanebeestudios.skbee.elements.itemcomponent.ItemComponentElementRegistration;
@@ -112,7 +113,7 @@ public class AddonLoader {
         loadDamageSourceElements();
         loadDialogElements();
         loadFastboardElements();
-//        loadFishingElements();
+        loadFishingElements();
         loadGameEventElements();
         loadItemComponentElements();
         loadPropertyElements();
@@ -451,19 +452,19 @@ public class AddonLoader {
             logFailure("RayTrace", ex);
         }
     }
-//
-//    private void loadFishingElements() {
-//        if (!this.config.ELEMENTS_FISHING) {
-//            Util.logLoading("&5Fishing Elements &cdisabled via config");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.fishing");
-//            Util.logLoading("&5Fishing Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Fishing", ex);
-//        }
-//    }
+
+    private void loadFishingElements() {
+        if (!this.config.ELEMENTS_FISHING) {
+            Util.logLoading("&5Fishing Elements &cdisabled via config");
+            return;
+        }
+        try {
+            FishingElementRegistration.register(this.registration);
+            Util.logLoading("&5Fishing Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Fishing", ex);
+        }
+    }
 
     private void loadDamageSourceElements() {
         if (!this.config.ELEMENTS_DAMAGE_SOURCE) {
