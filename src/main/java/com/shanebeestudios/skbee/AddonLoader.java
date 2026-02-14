@@ -31,6 +31,7 @@ import com.shanebeestudios.skbee.elements.raytrace.RayTraceElementRegistration;
 import com.shanebeestudios.skbee.elements.recipe.RecipeElementRegistration;
 import com.shanebeestudios.skbee.elements.registry.RegistryElementRegistration;
 import com.shanebeestudios.skbee.elements.scoreboard.ScoreboardElementRegistration;
+import com.shanebeestudios.skbee.elements.statistic.StatisticElementRegistration;
 import com.shanebeestudios.skbee.elements.switchcase.SwitchCaseElementRegistration;
 import com.shanebeestudios.skbee.elements.testing.TestingElementRegistration;
 import com.shanebeestudios.skbee.elements.text.TextElementRegistration;
@@ -38,6 +39,7 @@ import com.shanebeestudios.skbee.elements.tickmanager.TickManagerElementRegistra
 import com.shanebeestudios.skbee.elements.worldcreator.WorldCreatorElementRegistration;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
+import org.bukkit.Statistic;
 import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
@@ -121,7 +123,7 @@ public class AddonLoader {
         loadRecipeElements();
         loadRegistryElements();
         loadScoreboardElements();
-//        loadStatisticElements();
+        loadStatisticElements();
 //        loadStructureElements();
         loadSwitchCaseElements();
         loadTextElements();
@@ -395,24 +397,24 @@ public class AddonLoader {
 
     }
 
-//    private void loadStatisticElements() {
-//        if (!this.config.ELEMENTS_STATISTIC) {
-//            Util.logLoading("&5Statistic Elements &cdisabled via config");
-//            return;
-//        }
-//        if (Classes.getClassInfoNoError("statistic") != null || Classes.getExactClassInfo(Statistic.class) != null) {
-//            Util.logLoading("&5Statistic Elements &cdisabled");
-//            Util.logLoading("&7It appears another Skript addon may have registered Statistic syntax.");
-//            Util.logLoading("&7To use SkBee Statistics, please remove the addon which has registered Statistic already.");
-//            return;
-//        }
-//        try {
-//            this.addon.loadClasses("com.shanebeestudios.skbee.elements.statistic");
-//            Util.logLoading("&5Statistic Elements &asuccessfully loaded");
-//        } catch (Exception ex) {
-//            logFailure("Statistic", ex);
-//        }
-//    }
+    private void loadStatisticElements() {
+        if (!this.config.ELEMENTS_STATISTIC) {
+            Util.logLoading("&5Statistic Elements &cdisabled via config");
+            return;
+        }
+        if (Classes.getClassInfoNoError("statistic") != null || Classes.getExactClassInfo(Statistic.class) != null) {
+            Util.logLoading("&5Statistic Elements &cdisabled");
+            Util.logLoading("&7It appears another Skript addon may have registered Statistic syntax.");
+            Util.logLoading("&7To use SkBee Statistics, please remove the addon which has registered Statistic already.");
+            return;
+        }
+        try {
+            StatisticElementRegistration.register(this.registration);
+            Util.logLoading("&5Statistic Elements &asuccessfully loaded");
+        } catch (Exception ex) {
+            logFailure("Statistic", ex);
+        }
+    }
 //
 //    private void loadVillagerElements() {
 //        if (!this.config.ELEMENTS_VILLAGER) {

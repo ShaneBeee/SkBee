@@ -255,6 +255,10 @@ public class Registration {
         return new RegistryTypeRegistrar<>(registry, type, codename, true, null, null);
     }
 
+    public <T extends Keyed> RegistryTypeRegistrar<T> newRegistryType(Registry<T> registry, Class<T> type, boolean createUsage, String codename) {
+        return new RegistryTypeRegistrar<>(registry, type, codename, createUsage, null, null);
+    }
+
     public <T extends Keyed> RegistryTypeRegistrar<T> newRegistryType(Registry<T> registry, Class<T> type, String codename, String prefix, String suffix) {
         return new RegistryTypeRegistrar<>(registry, type, codename, true, prefix, suffix);
     }
