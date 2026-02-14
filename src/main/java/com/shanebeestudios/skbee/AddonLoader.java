@@ -16,6 +16,7 @@ import com.shanebeestudios.skbee.elements.advancement.AdvancementElementRegistra
 import com.shanebeestudios.skbee.elements.bossbar.BossbarElementRegistration;
 import com.shanebeestudios.skbee.elements.bound.BoundElementRegistration;
 import com.shanebeestudios.skbee.elements.damagesource.DamageSourceElementRegistration;
+import com.shanebeestudios.skbee.elements.dialog.DialogElementRegestration;
 import com.shanebeestudios.skbee.elements.fastboard.FastboardElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
@@ -98,7 +99,7 @@ public class AddonLoader {
         loadBossBarElements();
         loadBoundElements();
         loadDamageSourceElements();
-//        loadDialogElements();
+        loadDialogElements();
 //        loadDisplayEntityElements();
         loadFastboardElements();
 //        loadFishingElements();
@@ -544,24 +545,20 @@ public class AddonLoader {
         Util.logLoading("&5Property Elements &asuccessfully loaded");
     }
 
-    //    private void loadDialogElements() {
-//        if (!this.config.ELEMENTS_DIALOG) {
-//            Util.logLoading("&5Dialog elements &cdisabled via config");
-//            return;
-//        }
-//        if (!Util.IS_RUNNING_MC_1_21_7) {
-//            Util.logLoading("&5Dialog elements &cdisabled &7(&rRequires Paper 1.21.7+&7)");
-//            return;
-//        }
-//        try {
-//            addon.loadClasses("com.shanebeestudios.skbee.elements.dialog");
-//            Util.logLoading("&5Dialog Elements &asuccessfully loaded");
-//        } catch (IOException e) {
-//            throw new RuntimeException(e);
-//        }
-//    }
-//
-//    @SuppressWarnings("ThrowableNotThrown")
+    private void loadDialogElements() {
+        if (!this.config.ELEMENTS_DIALOG) {
+            Util.logLoading("&5Dialog elements &cdisabled via config");
+            return;
+        }
+        if (!Util.IS_RUNNING_MC_1_21_7) {
+            Util.logLoading("&5Dialog elements &cdisabled &7(&rRequires Paper 1.21.7+&7)");
+            return;
+        }
+        DialogElementRegestration.register(this.registration);
+        Util.logLoading("&5Dialog Elements &asuccessfully loaded");
+    }
+
+    @SuppressWarnings("ThrowableNotThrown")
     private void logFailure(String element, Exception ex) {
         Skript.exception(ex);
         Util.logLoading("&e%s Elements &7failed to load due to &r'&c%s&r'", element, ex.getCause().getMessage());

@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.dialog.sections.bodies;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -13,6 +9,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import com.shanebeestudios.skbee.api.event.dialog.PlainMessageEvent;
@@ -30,25 +27,6 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Item Body")
-@Description({"An item with optional description. " +
-    "It appears like it is in the inventory slot when the mouse hovers over the item. " +
-    "The size does not scale even if width and height are set to other values than the default. " +
-    "If the description is present, then it appears next to the right side of the item.",
-    "See [**Item Body**](https://minecraft.wiki/w/Dialog#item) on McWiki for further details.",
-    "NOTE: Not all entiries will be discussed here, see McWiki link above for all entries.",
-    "**Entries**:",
-    "- `item` = An ItemStack/ItemType that will show in the body of a dialog.",
-    "- `description` = Accepts a Plain Message Body section to describe the item."})
-@Examples({"add item body:",
-    "\titem: diamond sword of unbreaking 3 damaged by 500",
-    "\tdescription:",
-    "\t\tadd plain message body:",
-    "\t\t\tcontents: \"A Cool Item!\"",
-    "\t\t\twidth: 300",
-    "\tshow_decoration: true",
-    "\tshow_tooltip: false"})
-@Since("3.16.0")
 public class SecItemBody extends Section {
 
     private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
@@ -60,7 +38,30 @@ public class SecItemBody extends Section {
         VALIDATOR.addEntryData(new ExpressionEntryData<>("show_tooltip", null, true, Boolean.class));
         VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(16, true), true, Integer.class));
         VALIDATOR.addEntryData(new ExpressionEntryData<>("height", new SimpleLiteral<>(16, true), true, Integer.class));
-        Skript.registerSection(SecItemBody.class, "add item body");
+    }
+
+    public static void register(Registration reg) {
+        reg.newSection(SecItemBody.class, "add item body")
+            .name("Dialog - Item Body")
+            .description("An item with optional description. " +
+                "It appears like it is in the inventory slot when the mouse hovers over the item. " +
+                "The size does not scale even if width and height are set to other values than the default. " +
+                "If the description is present, then it appears next to the right side of the item.",
+                "See [**Item Body**](https://minecraft.wiki/w/Dialog#item) on McWiki for further details.",
+                "NOTE: Not all entiries will be discussed here, see McWiki link above for all entries.",
+                "**Entries**:",
+                "- `item` = An ItemStack/ItemType that will show in the body of a dialog.",
+                "- `description` = Accepts a Plain Message Body section to describe the item.")
+            .examples("add item body:",
+                "\titem: diamond sword of unbreaking 3 damaged by 500",
+                "\tdescription:",
+                "\t\tadd plain message body:",
+                "\t\t\tcontents: \"A Cool Item!\"",
+                "\t\t\twidth: 300",
+                "\tshow_decoration: true",
+                "\tshow_tooltip: false")
+            .since("3.16.0")
+            .register();
     }
 
     private Expression<ItemStack> item;
