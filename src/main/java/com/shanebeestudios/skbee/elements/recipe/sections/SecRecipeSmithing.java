@@ -40,7 +40,7 @@ public class SecRecipeSmithing extends Section {
         builder.addOptionalEntry("copynbt", Boolean.class);
         VALIDATOR = builder.build();
 
-        reg.newSection(SecRecipeSmithing.class,
+        reg.newSection(SecRecipeSmithing.class, VALIDATOR,
                 "register [a] [new] smithing [transform] recipe")
             .name("Recipe - Register Smithing Recipe")
             .description("This section allows you to register a smithing transform recipe, define the output as well as the template, ",

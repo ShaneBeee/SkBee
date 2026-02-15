@@ -60,7 +60,7 @@ public class SecConsumableComponent extends EffectSection {
             .addOptionalEntry("on_consume_effect", ConsumeEffect.class)
             .addOptionalSection("on_consume_effects")
             .build();
-        reg.newSection(SecConsumableComponent.class,
+        reg.newSection(SecConsumableComponent.class, VALIDATOR,
                 "apply consumable [component] to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Consumable Component Apply")
             .description("Apply a consumable component to an item.",

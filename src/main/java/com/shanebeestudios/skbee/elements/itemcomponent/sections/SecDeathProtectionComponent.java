@@ -51,7 +51,7 @@ public class SecDeathProtectionComponent extends EffectSection {
             .addOptionalEntry("death_effect", ConsumeEffect.class)
             .addOptionalSection("death_effects")
             .build();
-        reg.newSection(SecDeathProtectionComponent.class,
+        reg.newSection(SecDeathProtectionComponent.class, VALIDATOR,
                 "apply death protection [component] to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Death Protection Component Apply")
             .description("Apply a death protection component to an item.",

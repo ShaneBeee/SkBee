@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.dialog.sections.dialogs;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -32,25 +31,25 @@ import java.util.Objects;
 @SuppressWarnings("UnstableApiUsage")
 public class SecNoticeDialogRegister extends Section {
 
-    private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
+        EntryValidatorBuilder builder = EntryValidator.builder();
         // GENERAL DIALOG
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("title", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("external_title", null, true, compClasses));
-        VALIDATOR.addEntryData(new SectionEntryData("body", null, true));
-        VALIDATOR.addEntryData(new SectionEntryData("inputs", null, true));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("can_close_with_escape", null, true, Boolean.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("after_action", null, true, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("title", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("external_title", null, true, compClasses));
+        builder.addEntryData(new SectionEntryData("body", null, true));
+        builder.addEntryData(new SectionEntryData("inputs", null, true));
+        builder.addEntryData(new ExpressionEntryData<>("can_close_with_escape", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("after_action", null, true, String.class));
 
         // NOTICE DIALOG STUFF
-        VALIDATOR.addEntryData(new SectionEntryData("action", null, true));
-    }
+        builder.addEntryData(new SectionEntryData("action", null, true));
+        VALIDATOR = builder.build();
 
-    public static void register(Registration reg) {
-        reg.newSection(SecNoticeDialogRegister.class, "open [new] notice dialog to %audiences%")
+        reg.newSection(SecNoticeDialogRegister.class, VALIDATOR, "open [new] notice dialog to %audiences%")
             .name("Dialog - Notice Dialog")
             .description("Open a dialog screen with a single action button in footer, specified by an action button.",
                 "By default, the exit action (which returns the player back to gameplay) is the same as the action button.",
@@ -94,7 +93,7 @@ public class SecNoticeDialogRegister extends Section {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.audiences = (Expression<Audience>) exprs[0];
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         // GENERAL DIALOG

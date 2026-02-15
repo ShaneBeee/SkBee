@@ -36,7 +36,7 @@ public class SecPiercingWeapon extends Section {
                 .addOptionalEntry("sound", String.class)
                 .addOptionalEntry("hit_sound", String.class)
                 .build();
-            reg.newSection(SecPiercingWeapon.class,
+            reg.newSection(SecPiercingWeapon.class, VALIDATOR,
                     "apply piercing weapon component to %itemstacks/itemtypes/slots%")
                 .name("ItemComponent - Piercing Weapon Component Apply")
                 .description("Melee attacks using this item damage multiple entities along a ray, " +

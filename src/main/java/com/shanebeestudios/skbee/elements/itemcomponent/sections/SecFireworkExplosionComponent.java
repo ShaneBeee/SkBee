@@ -35,7 +35,7 @@ public class SecFireworkExplosionComponent extends Section {
             .addOptionalEntry("has_twinkle", Boolean.class)
             .build();
 
-        reg.newSection(SecFireworkExplosionComponent.class,
+        reg.newSection(SecFireworkExplosionComponent.class, VALIDATOR,
                 "apply firework explosion [component] [to %-itemstacks/itemtypes/slots%]")
             .name("ItemComponent - Firework Explosion Component Apply")
             .description("Apply a firework explosion effect to a firework star.",

@@ -31,7 +31,7 @@ public class SecFoodComponent extends Section {
             .addOptionalEntry("can_always_eat", Boolean.class)
             .build();
 
-        reg.newSection(SecFoodComponent.class, "apply food component to %itemstacks/itemtypes/slots%")
+        reg.newSection(SecFoodComponent.class, VALIDATOR, "apply food component to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Food Component Apply")
             .description("Apply a food component to any item giving it food properties.",
                 "You will also require a `consumable` component to actually make the item consumable.",

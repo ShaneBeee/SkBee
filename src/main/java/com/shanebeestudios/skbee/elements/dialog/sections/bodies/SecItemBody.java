@@ -29,19 +29,21 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public class SecItemBody extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("item", null, false, ItemStack.class));
-        VALIDATOR.addEntryData(new SectionEntryData("description", null, true));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("show_decoration", null, true, Boolean.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("show_tooltip", null, true, Boolean.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(16, true), true, Integer.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("height", new SimpleLiteral<>(16, true), true, Integer.class));
+        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
+        builder.addEntryData(new ExpressionEntryData<>("item", null, false, ItemStack.class));
+        builder.addEntryData(new SectionEntryData("description", null, true));
+        builder.addEntryData(new ExpressionEntryData<>("show_decoration", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("show_tooltip", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(16, true), true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("height", new SimpleLiteral<>(16, true), true, Integer.class));
+        VALIDATOR = builder.build();
     }
 
     public static void register(Registration reg) {
-        reg.newSection(SecItemBody.class, "add item body")
+        reg.newSection(SecItemBody.class, VALIDATOR, "add item body")
             .name("Dialog - Item Body")
             .description("An item with optional description. " +
                 "It appears like it is in the inventory slot when the mouse hovers over the item. " +
@@ -78,7 +80,7 @@ public class SecItemBody extends Section {
             Skript.error("Item body can only be applied in a body section.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.item = (Expression<ItemStack>) container.getOptional("item", false);

@@ -83,6 +83,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprChargingAttack;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChatCompletions;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChunkAt;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChunkCoords;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprChunkInhabitedTime;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChunkLoadLevel;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChunksWithinCuboid;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprClassInfoOf;
@@ -241,6 +242,7 @@ public class OtherElementRegistration {
         ExprChatCompletions.register(registration);
         ExprChunkAt.register(registration);
         ExprChunkCoords.register(registration);
+        ExprChunkInhabitedTime.register(registration);
         ExprChunkLoadLevel.register(registration);
         ExprChunksWithinCuboid.register(registration);
         ExprClassInfoOf.register(registration);

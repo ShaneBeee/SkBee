@@ -9,12 +9,12 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.api.event.dialog.OptionsEvent;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
-import com.shanebeestudios.skbee.api.event.dialog.OptionsEvent;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput;
 import net.kyori.adventure.text.Component;
@@ -30,23 +30,23 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public class SecSingleOptionInput extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
-
-    static {
-        // GENERAL INPUT
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("key", null, false, String.class));
-        @SuppressWarnings("unchecked")
-        Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
-
-        // SINGLE OPTION INPUT
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label_visible", null, true, Boolean.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
-        VALIDATOR.addEntryData(new SectionEntryData("options", null, false));
-    }
+    private static EntryValidator VALIDATOR;
 
     public static void register(Registration reg) {
-        reg.newSection(SecSingleOptionInput.class, "add single option input")
+        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
+        // GENERAL INPUT
+        builder.addEntryData(new ExpressionEntryData<>("key", null, false, String.class));
+        @SuppressWarnings("unchecked")
+        Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
+        builder.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
+
+        // SINGLE OPTION INPUT
+        builder.addEntryData(new ExpressionEntryData<>("label_visible", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
+        builder.addEntryData(new SectionEntryData("options", null, false));
+        VALIDATOR = builder.build();
+
+        reg.newSection(SecSingleOptionInput.class, VALIDATOR, "add single option input")
             .name("Dialog - Single Option Input")
             .description("A preset option selection input to be used in an `inputs` section of a dialog.",
                 "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
@@ -89,7 +89,7 @@ public class SecSingleOptionInput extends Section {
             Skript.error("A single option input can only be used in an 'inputs' section of a dialog.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.key = (Expression<String>) container.getOptional("key", false);

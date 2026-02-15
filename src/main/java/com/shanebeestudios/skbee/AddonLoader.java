@@ -59,16 +59,23 @@ public class AddonLoader {
 
     private final PluginManager pluginManager;
     private final SkBee plugin;
-    private final Registration registration = new Registration();
+    private final Registration registration;
     private final Config config;
     private final Plugin skriptPlugin;
+    private final SkriptAddon addon;
 
     public AddonLoader(SkBee plugin) {
         this.plugin = plugin;
+        this.registration = plugin.getRegistration();
         this.pluginManager = plugin.getServer().getPluginManager();
         this.config = plugin.getPluginConfig();
         MinecraftVersion.replaceLogger(LoggerBee.getLogger());
         this.skriptPlugin = pluginManager.getPlugin("Skript");
+        this.addon = this.registration.getAddon();
+    }
+
+    public SkriptAddon getAddon() {
+        return this.addon;
     }
 
     boolean canLoadPlugin() {
@@ -107,8 +114,7 @@ public class AddonLoader {
     }
 
     private void loadSkriptElements() {
-        SkriptAddon addon = Skript.instance().registerAddon(SkBeeAddonModule.class, "SkBee");
-        addon.localizer().setSourceDirectories("lang", null);
+        this.addon.localizer().setSourceDirectories("lang", null);
 
         // Load first as these are the base for many things
         loadOtherElements();

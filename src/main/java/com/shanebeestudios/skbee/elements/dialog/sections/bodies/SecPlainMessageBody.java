@@ -20,6 +20,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
+import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
@@ -27,17 +28,19 @@ import java.util.List;
 @SuppressWarnings("UnstableApiUsage")
 public class SecPlainMessageBody extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
+        EntryValidatorBuilder builder = EntryValidator.builder();
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("contents", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("contents", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
+        VALIDATOR = builder.build();
     }
 
     public static void register(Registration reg) {
-        reg.newSection(SecPlainMessageBody.class, "add (text|plain message) body")
+        reg.newSection(SecPlainMessageBody.class, VALIDATOR, "add (text|plain message) body")
             .name("Dialog - Plain Message Body")
             .description("A multiline label for a dialog.",
                 "See [**Plain Message**](https://minecraft.wiki/w/Dialog#plain_message) on McWiki for further details.",
@@ -61,7 +64,7 @@ public class SecPlainMessageBody extends Section {
             Skript.error("Plain message body can only be applied in a 'body' section or 'description' section of an item body.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.contents = (Expression<?>) container.getOptional("contents", false);

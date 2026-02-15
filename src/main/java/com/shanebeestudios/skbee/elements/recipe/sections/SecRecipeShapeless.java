@@ -47,7 +47,7 @@ public class SecRecipeShapeless extends Section {
         builder.addRequiredSection("ingredients");
         VALIDATOR = builder.build();
 
-        reg.newSection(SecRecipeShapeless.class, "register [a] [new] shapeless recipe")
+        reg.newSection(SecRecipeShapeless.class, VALIDATOR, "register [a] [new] shapeless recipe")
             .name("Recipe - Register Shapeless Recipe")
             .description("This section allows you to register a shapeless recipe and add ingredients.",
                 "**Entries**:",
