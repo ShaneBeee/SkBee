@@ -51,7 +51,7 @@ public class ExprBoundsAtLocation extends SimpleExpression<Object> {
         List<String> ids = new ArrayList<>();
         for (Location location : this.locations.getArray(event)) {
             for (Bound bound : boundConfig.getBoundsAt(location)) {
-                if (bounds.contains(bound) || bounds.contains(bound.getId())) continue;
+                if (bounds.contains(bound) || ids.contains(bound.getId())) continue;
                 if (boundType == Kleenean.FALSE && !bound.isTemporary()) continue;
                 if (boundType == Kleenean.TRUE && bound.isTemporary()) continue;
                 if (ID) {

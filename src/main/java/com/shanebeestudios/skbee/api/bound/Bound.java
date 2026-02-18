@@ -95,7 +95,7 @@ public class Bound implements ConfigurationSerializable {
      */
     public boolean isInRegion(@NotNull Location loc) {
         World w = loc.getWorld();
-        if (w != null && w.getName().equals(worldName)) {
+        if (w != null && w.getKey().equals(this.worldKey)) {
             return getCachedBoundingBox().contains(loc.toVector());
         }
         return false;
@@ -108,7 +108,7 @@ public class Bound implements ConfigurationSerializable {
      * @return True if bound overlaps
      */
     public boolean overlaps(Bound bound) {
-        if (bound.worldName.equals(worldName)) {
+        if (bound.worldKey.equals(this.worldKey)) {
             return getCachedBoundingBox().overlaps(bound.getCachedBoundingBox());
         }
         return false;
@@ -237,7 +237,7 @@ public class Bound implements ConfigurationSerializable {
 
     public void resize(Location loc1, Location loc2, boolean usingBlocks) {
         Preconditions.checkArgument(loc1.getWorld() == loc2.getWorld(), "Worlds have to match");
-        Preconditions.checkArgument(loc1.getWorld().getName().equalsIgnoreCase(this.worldName), "World cannot be changed!");
+        Preconditions.checkArgument(loc1.getWorld().getKey().equals(this.worldKey), "World cannot be changed!");
         if (usingBlocks) {
             this.boundingBox = BoundingBox.of(loc1.getBlock(), loc2.getBlock());
         } else {
