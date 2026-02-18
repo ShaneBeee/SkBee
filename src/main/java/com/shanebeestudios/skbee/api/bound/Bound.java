@@ -478,7 +478,7 @@ public class Bound implements ConfigurationSerializable {
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Bound other)) return false;
-        return this.worldName.equals(other.worldName) && this.id.equals(other.id);
+        return this.worldKey.equals(other.worldKey) && this.id.equals(other.id);
     }
 
     /**
