@@ -37,7 +37,7 @@ public class SkriptTypes {
                 public @NotNull String toString(Bound bound, int flags) {
                     String greater = getLoc(bound.getGreaterCorner());
                     String lesser = getLoc(bound.getLesserCorner());
-                    String world = bound.getWorldName();
+                    String world = bound.getWorldKey().toString();
                     return String.format((bound.isTemporary() ? "temporary bound" : "bound") + " '%s' between %s and %s in world \"%s\"",
                         bound.getId(), lesser, greater, world);
                 }

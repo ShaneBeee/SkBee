@@ -75,7 +75,7 @@ public class Bound implements ConfigurationSerializable {
      */
     public Bound(Location location, Location location2, String id, boolean temporary, boolean usingBlocks) {
         Preconditions.checkArgument(location.getWorld() == location2.getWorld(), "Worlds have to match");
-        this.worldName = location.getWorld().getName();
+        this.worldKey = location.getWorld().getKey();
         this.id = id;
         if (usingBlocks) {
             Block block1 = location.getBlock();
@@ -256,7 +256,7 @@ public class Bound implements ConfigurationSerializable {
     public Bound copy(String newId) {
         Location lesserCorner = this.getLesserCorner().clone();
         Location greaterCorner = this.getGreaterCorner().clone();
-        Bound newBound = new Bound(this.worldName, newId, this.boundingBox.clone(), this.temporary);
+        Bound newBound = new Bound(this.worldKey, newId, this.boundingBox.clone(), this.temporary);
         newBound.setOwners(this.getOwners());
         newBound.setMembers(this.getMembers());
         newBound.values = this.values;
