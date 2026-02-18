@@ -4,6 +4,7 @@ import com.google.common.base.Preconditions;
 import com.shanebeestudios.skbee.api.wrapper.LazyLocation;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
@@ -30,7 +31,10 @@ import java.util.UUID;
 @SerializableAs("Bound")
 public class Bound implements ConfigurationSerializable {
 
-    private final String world;
+    @Deprecated(forRemoval = true)
+    private String worldName;
+
+    private NamespacedKey worldKey;
     private String id;
     private final boolean temporary;
     private boolean full;
@@ -43,8 +47,19 @@ public class Bound implements ConfigurationSerializable {
     /**
      * @hidden only used to deserialize
      */
+    @Deprecated(forRemoval = true)
     public Bound(String world, String id, BoundingBox boundingBox, boolean temporary) {
-        this.world = world;
+        this.worldName = world;
+        this.id = id;
+        this.boundingBox = boundingBox;
+        this.temporary = temporary;
+    }
+
+    /**
+     * @hidden only used to deserialize
+     */
+    public Bound(NamespacedKey worldKey, String id, BoundingBox boundingBox, boolean temporary) {
+        this.worldKey = worldKey;
         this.id = id;
         this.boundingBox = boundingBox;
         this.temporary = temporary;
@@ -60,7 +75,7 @@ public class Bound implements ConfigurationSerializable {
      */
     public Bound(Location location, Location location2, String id, boolean temporary, boolean usingBlocks) {
         Preconditions.checkArgument(location.getWorld() == location2.getWorld(), "Worlds have to match");
-        this.world = location.getWorld().getName();
+        this.worldName = location.getWorld().getName();
         this.id = id;
         if (usingBlocks) {
             Block block1 = location.getBlock();
@@ -80,7 +95,7 @@ public class Bound implements ConfigurationSerializable {
      */
     public boolean isInRegion(@NotNull Location loc) {
         World w = loc.getWorld();
-        if (w != null && w.getName().equals(world)) {
+        if (w != null && w.getName().equals(worldName)) {
             return getCachedBoundingBox().contains(loc.toVector());
         }
         return false;
@@ -93,7 +108,7 @@ public class Bound implements ConfigurationSerializable {
      * @return True if bound overlaps
      */
     public boolean overlaps(Bound bound) {
-        if (bound.world.equals(world)) {
+        if (bound.worldName.equals(worldName)) {
             return getCachedBoundingBox().overlaps(bound.getCachedBoundingBox());
         }
         return false;
@@ -162,11 +177,28 @@ public class Bound implements ConfigurationSerializable {
      */
     @Nullable
     public World getWorld() {
-        return Bukkit.getWorld(this.world);
+        if (this.worldKey != null) {
+            return Bukkit.getWorld(this.worldKey);
+        } else {
+            return Bukkit.getWorld(this.worldName);
+        }
     }
 
-    public String getWorldName() {
-        return this.world;
+    public NamespacedKey getWorldKey() {
+        return this.worldKey;
+    }
+
+    @Deprecated(forRemoval = true)
+    public @Nullable String getWorldName() {
+        return this.worldName;
+    }
+
+    @Deprecated(forRemoval = true)
+    public void updateKey() {
+        if (this.worldKey != null) return;
+        World world = getWorld();
+        NamespacedKey key = world.getKey();
+        this.worldKey = key;
     }
 
     /**
@@ -205,7 +237,7 @@ public class Bound implements ConfigurationSerializable {
 
     public void resize(Location loc1, Location loc2, boolean usingBlocks) {
         Preconditions.checkArgument(loc1.getWorld() == loc2.getWorld(), "Worlds have to match");
-        Preconditions.checkArgument(loc1.getWorld().getName().equalsIgnoreCase(this.world), "World cannot be changed!");
+        Preconditions.checkArgument(loc1.getWorld().getName().equalsIgnoreCase(this.worldName), "World cannot be changed!");
         if (usingBlocks) {
             this.boundingBox = BoundingBox.of(loc1.getBlock(), loc2.getBlock());
         } else {
@@ -224,7 +256,7 @@ public class Bound implements ConfigurationSerializable {
     public Bound copy(String newId) {
         Location lesserCorner = this.getLesserCorner().clone();
         Location greaterCorner = this.getGreaterCorner().clone();
-        Bound newBound = new Bound(this.world, newId, this.boundingBox.clone(), this.temporary);
+        Bound newBound = new Bound(this.worldName, newId, this.boundingBox.clone(), this.temporary);
         newBound.setOwners(this.getOwners());
         newBound.setMembers(this.getMembers());
         newBound.values = this.values;
@@ -446,7 +478,7 @@ public class Bound implements ConfigurationSerializable {
     @Override
     public boolean equals(Object obj) {
         if (!(obj instanceof Bound other)) return false;
-        return this.world.equals(other.world) && this.id.equals(other.id);
+        return this.worldName.equals(other.worldName) && this.id.equals(other.id);
     }
 
     /**
@@ -460,7 +492,12 @@ public class Bound implements ConfigurationSerializable {
         Map<String, Object> result = new LinkedHashMap<>();
 
         result.put("id", this.id);
-        result.put("world", this.world);
+        if (this.worldKey != null) {
+            result.put("world_key", this.worldKey.toString());
+        } else {
+            // TODO remove world name stuff in the future (feb 18/2026)
+            result.put("world_name", this.worldName);
+        }
         result.put("boundingbox", this.boundingBox);
         result.put("full", this.full);
 
@@ -484,22 +521,26 @@ public class Bound implements ConfigurationSerializable {
      */
     @SuppressWarnings("unchecked")
     public static Bound deserialize(Map<String, Object> args) {
-        String world = ((String) args.get("world"));
+
         String id = String.valueOf(args.get("id"));
+        BoundingBox box = ((BoundingBox) args.get("boundingbox"));
         Bound bound;
-        if (args.containsKey("boundingbox")) {
-            BoundingBox box = ((BoundingBox) args.get("boundingbox"));
+
+        // TODO remove world name stuff in the future (feb 18/2026)
+        if (args.containsKey("world")) {
+            String world = ((String) args.get("world"));
             bound = new Bound(world, id, box, false);
+        } else if (args.containsKey("world_name")) {
+            String world = ((String) args.get("world_name"));
+            bound = new Bound(world, id, box, false);
+        } else if (args.containsKey("world_key")) {
+            String world = ((String) args.get("world_key"));
+            NamespacedKey key = NamespacedKey.fromString(world);
+            bound = new Bound(key, id, box, false);
         } else {
-            int x = ((Number) args.get("x1")).intValue();
-            int y = ((Number) args.get("y1")).intValue();
-            int z = ((Number) args.get("z1")).intValue();
-            int x2 = ((Number) args.get("x2")).intValue();
-            int y2 = ((Number) args.get("y2")).intValue();
-            int z2 = ((Number) args.get("z2")).intValue();
-            BoundingBox box = new BoundingBox(x, y, z, x2, y2, z2);
-            bound = new Bound(world, id, box, false);
+            throw new IllegalStateException("Bound with id '" + id + "' is missing a world.");
         }
+
 
         if (args.containsKey("full")) {
             bound.setFull((Boolean) args.get("full"));
