@@ -1,15 +1,11 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
@@ -28,32 +24,11 @@ import java.util.List;
 import static ch.njol.skript.classes.Changer.ChangeMode.SET;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ItemComponent - Piercing Weapon Component Apply")
-@Description({"Melee attacks using this item damage multiple entities along a ray, " +
-    "instead of only a single entity. Also prevents this item from being used to mine blocks.",
-    "See [**Piercing Weapon Component**](https://minecraft.wiki/w/Data_component_format#piercing_weapon) on McWiki for more details.",
-    "Requires Minecraft 1.21.11+",
-    "",
-    "**ENTRIES**:",
-    "All entries are optional and will use their defaults when omitted.",
-    "- `deals_knockback` = Boolean, whether the attack deals knockback. Defaults to true.",
-    "- `dismounts` = Boolean, whether the attack dismounts the target. Defaults to false.",
-    "- `sound` = String, sound key to play when a player attacks with the weapon.",
-    "- `hit_sound` = String, sound key to play when the weapon hits an entity."})
-@Examples({"set {_i} to 1 of stick",
-    "apply piercing weapon component to {_i}:",
-    "\tdeals_knockback: true",
-    "\tdismounts: true",
-    "\tsound: \"minecraft:item.spear.attack\"",
-    "\thit_sound: \"minecraft:item.spear.hit\"",
-    "",
-    "give player 1 of {_i}"})
-@Since("3.16.0")
 public class SecPiercingWeapon extends Section {
 
     private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         if (Util.IS_RUNNING_MC_1_21_11) {
             VALIDATOR = SimpleEntryValidator.builder()
                 .addOptionalEntry("deals_knockback", Boolean.class)
@@ -61,9 +36,30 @@ public class SecPiercingWeapon extends Section {
                 .addOptionalEntry("sound", String.class)
                 .addOptionalEntry("hit_sound", String.class)
                 .build();
-
-            Skript.registerSection(SecPiercingWeapon.class,
-                "apply piercing weapon component to %itemstacks/itemtypes/slots%");
+            reg.newSection(SecPiercingWeapon.class, VALIDATOR,
+                    "apply piercing weapon component to %itemstacks/itemtypes/slots%")
+                .name("ItemComponent - Piercing Weapon Component Apply")
+                .description("Melee attacks using this item damage multiple entities along a ray, " +
+                        "instead of only a single entity. Also prevents this item from being used to mine blocks.",
+                    "See [**Piercing Weapon Component**](https://minecraft.wiki/w/Data_component_format#piercing_weapon) on McWiki for more details.",
+                    "Requires Minecraft 1.21.11+",
+                    "",
+                    "**ENTRIES**:",
+                    "All entries are optional and will use their defaults when omitted.",
+                    "- `deals_knockback` = Boolean, whether the attack deals knockback. Defaults to true.",
+                    "- `dismounts` = Boolean, whether the attack dismounts the target. Defaults to false.",
+                    "- `sound` = String, sound key to play when a player attacks with the weapon.",
+                    "- `hit_sound` = String, sound key to play when the weapon hits an entity.")
+                .examples("set {_i} to 1 of stick",
+                    "apply piercing weapon component to {_i}:",
+                    "\tdeals_knockback: true",
+                    "\tdismounts: true",
+                    "\tsound: \"minecraft:item.spear.attack\"",
+                    "\thit_sound: \"minecraft:item.spear.hit\"",
+                    "",
+                    "give player 1 of {_i}")
+                .since("3.16.0")
+                .register();
         }
     }
 

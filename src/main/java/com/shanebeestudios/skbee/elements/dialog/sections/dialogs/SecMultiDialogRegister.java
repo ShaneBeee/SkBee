@@ -1,11 +1,6 @@
 package com.shanebeestudios.skbee.elements.dialog.sections.dialogs;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -13,6 +8,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.dialog.Dialog;
@@ -32,53 +28,58 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Multi Action Dialog")
-@Description({"Open a dialog screen with a scrollable list of action buttons arranged in columns.",
-    "If `exit_action` is present, a button for it will appear in the footer, otherwise the footer is not present.",
-    "`exit_action` is also used for the Escape action.",
-    "See [**Multi Action Dialog**](https://minecraft.wiki/w/Dialog#multi_action) on McWiki for further details.",
-    "See [**snippets**](https://github.com/ShaneBeee/SkriptSnippets/tree/master/snippets/dialog) for comprehensive examples.",
-    "",
-    "**Entries**:",
-    "- `title` = Screen title, appearing at the top of the dialog, accepts a string/text component.",
-    "- `external_title` = Name to be used for a button leading to this dialog (for example, on the pause menu), accepts a string.text component. " +
-        "If not present, `title` will be used instead. [Optional]",
-    "- `body` = Optional section for body elements or a single body element. " +
-        "See [**Body Format on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#body-format) " +
-        "and [**Body Format on McWiki**](https://minecraft.wiki/w/Dialog#Body_format) for further info.",
-    "- `inputs` = Optional section for input controls. " +
-        "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
-        "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
-    "- `can_close_with_escape` = Can dialog be dismissed with Escape key. Defaults to true. [Optional]",
-    "- `after_action` = An additional operation performed on the dialog after click or submit actions (accepts a string)." +
-        "Options are \"close\", \"none\" and \"wait_for_response\"." +
-        "See [**Common Entries on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#common-entries) for further info.",
-    "- `actions` = Similar to above, but you can include as many [action buttons](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#action-format) in this section as you want.",
-    "- `columns` = Positive integer describing number of columns. Defaults to 2. [Optional]",
-    "- `exit_action` = Action for leaving the dialog. Same as action sections but will only accept one action. [Optional]"})
-@Examples("")
-@Since("3.16.0")
 public class SecMultiDialogRegister extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
+        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
         // GENERAL DIALOG
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("title", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("external_title", null, true, compClasses));
-        VALIDATOR.addEntryData(new SectionEntryData("body", null, true));
-        VALIDATOR.addEntryData(new SectionEntryData("inputs", null, true));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("can_close_with_escape", null, true, Boolean.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("after_action", null, true, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("title", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("external_title", null, true, compClasses));
+        builder.addEntryData(new SectionEntryData("body", null, true));
+        builder.addEntryData(new SectionEntryData("inputs", null, true));
+        builder.addEntryData(new ExpressionEntryData<>("can_close_with_escape", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("after_action", null, true, String.class));
 
         // MULTI ACTION DIALOG
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("columns", null, true, Integer.class));
-        VALIDATOR.addEntryData(new SectionEntryData("actions", null, false));
-        VALIDATOR.addEntryData(new SectionEntryData("exit_action", null, true));
+        builder.addEntryData(new ExpressionEntryData<>("columns", null, true, Integer.class));
+        builder.addEntryData(new SectionEntryData("actions", null, false));
+        builder.addEntryData(new SectionEntryData("exit_action", null, true));
+        VALIDATOR = builder.build();
+    }
 
-        Skript.registerSection(SecMultiDialogRegister.class, "open [new] multi action dialog to %audiences%");
+    public static void register(Registration reg) {
+        reg.newSection(SecMultiDialogRegister.class, VALIDATOR, "open [new] multi action dialog to %audiences%")
+            .name("Dialog - Multi Action Dialog")
+            .description("Open a dialog screen with a scrollable list of action buttons arranged in columns.",
+                "If `exit_action` is present, a button for it will appear in the footer, otherwise the footer is not present.",
+                "`exit_action` is also used for the Escape action.",
+                "See [**Multi Action Dialog**](https://minecraft.wiki/w/Dialog#multi_action) on McWiki for further details.",
+                "See [**snippets**](https://github.com/ShaneBeee/SkriptSnippets/tree/master/snippets/dialog) for comprehensive examples.",
+                "",
+                "**Entries**:",
+                "- `title` = Screen title, appearing at the top of the dialog, accepts a string/text component.",
+                "- `external_title` = Name to be used for a button leading to this dialog (for example, on the pause menu), accepts a string.text component. " +
+                    "If not present, `title` will be used instead. [Optional]",
+                "- `body` = Optional section for body elements or a single body element. " +
+                    "See [**Body Format on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#body-format) " +
+                    "and [**Body Format on McWiki**](https://minecraft.wiki/w/Dialog#Body_format) for further info.",
+                "- `inputs` = Optional section for input controls. " +
+                    "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
+                    "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
+                "- `can_close_with_escape` = Can dialog be dismissed with Escape key. Defaults to true. [Optional]",
+                "- `after_action` = An additional operation performed on the dialog after click or submit actions (accepts a string)." +
+                    "Options are \"close\", \"none\" and \"wait_for_response\"." +
+                    "See [**Common Entries on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#common-entries) for further info.",
+                "- `actions` = Similar to above, but you can include as many [action buttons](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#action-format) in this section as you want.",
+                "- `columns` = Positive integer describing number of columns. Defaults to 2. [Optional]",
+                "- `exit_action` = Action for leaving the dialog. Same as action sections but will only accept one action. [Optional]")
+            .examples("")
+            .since("3.16.0")
+            .register();
     }
 
     // GENERAL DIALOG
@@ -99,7 +100,7 @@ public class SecMultiDialogRegister extends Section {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.audiences = (Expression<Audience>) exprs[0];
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.title = (Expression<?>) container.getOptional("title", false);

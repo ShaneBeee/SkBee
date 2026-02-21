@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.virtualfurnace.type.Types;
 import com.shanebeestudios.vf.api.machine.Machine;
 import org.bukkit.event.Event;
@@ -19,15 +14,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("VirtualFurnace - All Machines")
-@Description("Get all registered machines.")
-@Examples("set {_machines::*} to all virtual furnaces")
-@Since("3.3.0")
 public class ExprVirtualFurnaceAllFurnaces extends SimpleExpression<Machine> {
 
-    static {
-        Skript.registerExpression(ExprVirtualFurnaceAllFurnaces.class, Machine.class, ExpressionType.SIMPLE,
-            "all virtual (machines|furnaces)");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprVirtualFurnaceAllFurnaces.class, Machine.class,
+                "all virtual (machines|furnaces)")
+            .name("VirtualFurnace - All Machines")
+            .description("Get all registered machines.")
+            .examples("set {_machines::*} to all virtual furnaces")
+            .since("3.3.0")
+            .register();
     }
 
     @Override

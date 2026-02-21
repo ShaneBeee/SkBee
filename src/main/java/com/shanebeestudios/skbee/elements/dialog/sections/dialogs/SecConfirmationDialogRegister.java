@@ -1,20 +1,16 @@
 package com.shanebeestudios.skbee.elements.dialog.sections.dialogs;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.DialogBase;
@@ -26,6 +22,7 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
+import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 import org.skriptlang.skript.lang.entry.SectionEntryData;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
@@ -33,51 +30,56 @@ import java.util.List;
 import java.util.Objects;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Confirmation Dialog")
-@Description({"Open a dialog screen with two action buttons in footer, specified by 'yes' and 'no' actions.",
-    "By default, the exit action is 'no' button.",
-    "See [**Confirmation Dialog**](https://minecraft.wiki/w/Dialog#confirmation) on McWiki for further details.",
-    "See [**snippets**](https://github.com/ShaneBeee/SkriptSnippets/tree/master/snippets/dialog) for comprehensive examples.",
-    "",
-    "**Entries**:",
-    "- `title` = Screen title, appearing at the top of the dialog, accepts a string/text component.",
-    "- `external_title` = Name to be used for a button leading to this dialog (for example, on the pause menu), accepts a string.text component. " +
-        "If not present, `title` will be used instead. [Optional]",
-    "- `body` = Optional section for body elements or a single body element. " +
-        "See [**Body Format on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#body-format) " +
-        "and [**Body Format on McWiki**](https://minecraft.wiki/w/Dialog#Body_format) for further info.",
-    "- `inputs` = Optional section for input controls. " +
-        "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
-        "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
-    "- `can_close_with_escape` = Can dialog be dismissed with Escape key. Defaults to true. [Optional]",
-    "- `after_action` = An additional operation performed on the dialog after click or submit actions (accepts a string)." +
-        "Options are \"close\", \"none\" and \"wait_for_response\"." +
-        "See [**Common Entries on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#common-entries) for further info.",
-    "- `actions` = Section for action buttons." +
-        "See [**Action Format on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#action-format)" +
-        "and [**Action Format on McWiki**](https://minecraft.wiki/w/Dialog#Action_format) for further info."})
-@Examples("")
-@Since("3.16.0")
 public class SecConfirmationDialogRegister extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
+        EntryValidatorBuilder builder = EntryValidator.builder();
         // GENERAL DIALOG
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("title", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("external_title", null, true, compClasses));
-        VALIDATOR.addEntryData(new SectionEntryData("body", null, true));
-        VALIDATOR.addEntryData(new SectionEntryData("inputs", null, true));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("can_close_with_escape", null, true, Boolean.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("after_action", null, true, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("title", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("external_title", null, true, compClasses));
+        builder.addEntryData(new SectionEntryData("body", null, true));
+        builder.addEntryData(new SectionEntryData("inputs", null, true));
+        builder.addEntryData(new ExpressionEntryData<>("can_close_with_escape", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("after_action", null, true, String.class));
 
         // CONFIRMATION DIALOG
-        VALIDATOR.addEntryData(new SectionEntryData("actions", null, false));
+        builder.addEntryData(new SectionEntryData("actions", null, false));
 
-        Skript.registerSection(SecConfirmationDialogRegister.class,
-            "open [new] confirmation dialog to %audiences%");
+        VALIDATOR = builder.build();
+    }
+
+    public static void register(Registration reg) {
+        reg.newSection(SecConfirmationDialogRegister.class, VALIDATOR, "open [new] confirmation dialog to %audiences%")
+            .name("Dialog - Confirmation Dialog")
+            .description("Open a dialog screen with two action buttons in footer, specified by 'yes' and 'no' actions.",
+                "By default, the exit action is 'no' button.",
+                "See [**Confirmation Dialog**](https://minecraft.wiki/w/Dialog#confirmation) on McWiki for further details.",
+                "See [**snippets**](https://github.com/ShaneBeee/SkriptSnippets/tree/master/snippets/dialog) for comprehensive examples.",
+                "",
+                "**Entries**:",
+                "- `title` = Screen title, appearing at the top of the dialog, accepts a string/text component.",
+                "- `external_title` = Name to be used for a button leading to this dialog (for example, on the pause menu), accepts a string.text component. " +
+                    "If not present, `title` will be used instead. [Optional]",
+                "- `body` = Optional section for body elements or a single body element. " +
+                    "See [**Body Format on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#body-format) " +
+                    "and [**Body Format on McWiki**](https://minecraft.wiki/w/Dialog#Body_format) for further info.",
+                "- `inputs` = Optional section for input controls. " +
+                    "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
+                    "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
+                "- `can_close_with_escape` = Can dialog be dismissed with Escape key. Defaults to true. [Optional]",
+                "- `after_action` = An additional operation performed on the dialog after click or submit actions (accepts a string)." +
+                    "Options are \"close\", \"none\" and \"wait_for_response\"." +
+                    "See [**Common Entries on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#common-entries) for further info.",
+                "- `actions` = Section for action buttons." +
+                    "See [**Action Format on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#action-format)" +
+                    "and [**Action Format on McWiki**](https://minecraft.wiki/w/Dialog#Action_format) for further info.")
+            .examples("")
+            .since("3.16.0")
+            .register();
     }
 
     // GENERAL DIALOG
@@ -96,7 +98,7 @@ public class SecConfirmationDialogRegister extends Section {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.audiences = (Expression<Audience>) exprs[0];
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.title = (Expression<?>) container.getOptional("title", false);

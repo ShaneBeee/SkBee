@@ -1,30 +1,28 @@
 package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Team;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Team - State")
-@Description("Represents the friendly fire and can see friendly invisibles states of a team.")
-@Examples({"set allow friendly fire team state of team named \"a-team\" to true",
-        "set can see friendly invisbles team state of team of player to false"})
-@Since("1.16.0")
 public class ExprTeamState extends SimplePropertyExpression<Team, Boolean> {
 
-    static {
-        register(ExprTeamState.class, Boolean.class,
-                "(allow friendly fire|1:can see friendly invisibles) team state", "teams");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprTeamState.class, Boolean.class,
+                "(allow friendly fire|1:can see friendly invisibles) team state", "teams")
+            .name("Team - State")
+            .description("Represents the friendly fire and can see friendly invisibles states of a team.")
+            .examples("set allow friendly fire team state of team named \"a-team\" to true",
+                "set can see friendly invisbles team state of team of player to false")
+            .since("1.16.0")
+            .register();
     }
 
     private int pattern;

@@ -1,12 +1,7 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -14,6 +9,7 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -38,23 +34,6 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("ItemComponent - Adventure Predicate Apply")
-@Description({"Apply an adventure can break/can place on predicate to items.",
-    "Requires Paper 1.21.3+",
-    "See [**Can Break**](https://minecraft.wiki/w/Data_component_format#can_break)/" +
-        "[**Can Place On**](https://minecraft.wiki/w/Data_component_format#can_place_on) components on McWiki for more info.",
-    "",
-    "**Entries**:",
-    "- `blocks` = The blocks this item can place on/can break. (Accepts ItemTypes, BlockDatas, Tags, TagKeys and RegistryKeySets(soon™))"})
-@Examples({"apply can break adventure predicate to player's tool:",
-    "\tblocks: grass block, dirt, stone, gravel",
-    "",
-    "apply can break adventure predicate to player's tool:",
-    "\tblocks: minecraft block tag \"minecraft:mineable/pickaxe\"",
-    "",
-    "apply can place on adventure predicate to player's tool:",
-    "\tblocks: minecraft block tag \"minecraft:logs\""})
-@Since("3.8.0")
 @SuppressWarnings({"UnstableApiUsage", "NullableProblems"})
 public class SecAdventureComponent extends Section {
 
@@ -68,9 +47,29 @@ public class SecAdventureComponent extends Section {
         VALIDATOR = SimpleEntryValidator.builder()
             .addRequiredEntry("blocks", classes)
             .build();
-        Skript.registerSection(SecAdventureComponent.class,
-            "apply (place:can place on|can break) [adventure] predicate to %itemstacks/itemtypes/slots%");
+    }
 
+    public static void register(Registration reg) {
+        reg.newSection(SecAdventureComponent.class, VALIDATOR,
+                "apply (place:can place on|can break) [adventure] predicate to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Adventure Predicate Apply")
+            .description("Apply an adventure can break/can place on predicate to items.",
+                "Requires Paper 1.21.3+",
+                "See [**Can Break**](https://minecraft.wiki/w/Data_component_format#can_break)/" +
+                    "[**Can Place On**](https://minecraft.wiki/w/Data_component_format#can_place_on) components on McWiki for more info.",
+                "",
+                "**Entries**:",
+                "- `blocks` = The blocks this item can place on/can break. (Accepts ItemTypes, BlockDatas, Tags, TagKeys and RegistryKeySets(soon™))")
+            .examples("apply can break adventure predicate to player's tool:",
+                "\tblocks: grass block, dirt, stone, gravel",
+                "",
+                "apply can break adventure predicate to player's tool:",
+                "\tblocks: minecraft block tag \"minecraft:mineable/pickaxe\"",
+                "",
+                "apply can place on adventure predicate to player's tool:",
+                "\tblocks: minecraft block tag \"minecraft:logs\"")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<?> items;

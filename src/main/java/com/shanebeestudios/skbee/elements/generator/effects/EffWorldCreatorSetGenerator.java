@@ -1,33 +1,30 @@
 package com.shanebeestudios.skbee.elements.generator.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.generator.ChunkGen;
 import com.shanebeestudios.skbee.api.generator.ChunkGenManager;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("ChunkGenerator - WorldCreator Generator")
-@Description("Set the chunk generator of a world creator.")
-@Examples({"on load:",
-    "\tif world \"mars\" is not loaded:",
-    "\t\tset {_w} to world creator named \"mars\"",
-    "\t\tset chunk generator of {_w} to chunk generator with id \"mars\"",
-    "\t\tload world from creator {_w}"})
-@Since("3.5.0")
 public class EffWorldCreatorSetGenerator extends Effect {
 
-    static {
-        Skript.registerEffect(EffWorldCreatorSetGenerator.class,
-            "set chunk generator of %worldcreator% to chunk generator with id %string%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffWorldCreatorSetGenerator.class,
+                "set chunk generator of %worldcreator% to chunk generator with id %string%")
+            .name("ChunkGenerator - WorldCreator Generator")
+            .description("Set the chunk generator of a world creator.")
+            .examples("on load:",
+                "\tif world \"mars\" is not loaded:",
+                "\t\tset {_w} to world creator named \"mars\"",
+                "\t\tset chunk generator of {_w} to chunk generator with id \"mars\"",
+                "\t\tload world from creator {_w}")
+            .since("3.5.0")
+            .register();
     }
 
     private Expression<BeeWorldCreator> worldCreator;

@@ -1,14 +1,11 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -18,20 +15,21 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Send Block Damage")
-@Description({"Send fake block damage to a player.",
-        "\nNumber = The amount of damage (a number between 0 and 1) to be applied to the block.",
-        "\nEntity = the entity who is damaging the block. An entity can only damage 1 block at a time.",
-        "\nBy Entity/Number = The entity/entityID which damaged the block."})
-@Examples({"make player see damage of target block as 0.5",
-        "make player see damage of target block as 0.5 by random element of all entities",
-        "make player see damage of target block as 0.5 from random integer between 1 and 10000"})
-@Since("2.6.0")
 public class EffSendBlockDamage extends Effect {
 
-    static {
-        Skript.registerEffect(EffSendBlockDamage.class,
-                "make %players% see damage of %block% as %number% [(by|from) %-entity/number%]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffSendBlockDamage.class,
+                "make %players% see damage of %block% as %number% [(by|from) %-entity/number%]")
+            .name("Send Block Damage")
+            .description("Send fake block damage to a player.",
+                "\nNumber = The amount of damage (a number between 0 and 1) to be applied to the block.",
+                "\nEntity = the entity who is damaging the block. An entity can only damage 1 block at a time.",
+                "\nBy Entity/Number = The entity/entityID which damaged the block.")
+            .examples("make player see damage of target block as 0.5",
+                "make player see damage of target block as 0.5 by random element of all entities",
+                "make player see damage of target block as 0.5 from random integer between 1 and 10000")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<Player> players;
@@ -88,7 +86,7 @@ public class EffSendBlockDamage extends Effect {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String ent = this.damager != null ? " from " + this.damager.toString(e, d) : "";
         return "make " + this.players.toString(e, d) + " see damage of " + this.block.toString(e, d)
-                + " as " + this.damage.toString(e, d) + ent;
+            + " as " + this.damage.toString(e, d) + ent;
     }
 
 }

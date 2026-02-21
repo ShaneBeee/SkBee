@@ -2,15 +2,12 @@ package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.datacomponent.DataComponentType;
@@ -22,23 +19,24 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("TextComponent - Item Name")
-@Description({"Get/set the component name of an Item.",
-    "`(custom|display) name` = Get/set the `custom_name` component of an item just like you would with Skript's name expression.",
-    "`item name` = Get/set the `item_name` component of an item (Requires Minecraft 1.20.5+).",
-    "Unlike setting the custom/display name of an item, this name cannot be changed through an anvil,",
-    "and does not show in some labels, such as banner markers and item frames.",
-    "See [**McWiki**](https://minecraft.wiki/w/Data_component_format#item_name) for more details."})
-@Examples({"set component custom name of player's tool to translate component of \"item.minecraft.diamond_sword\"",
-    "delete component custom name of player's tool",
-    "set component item name of player's tool to mini message from \"Stickaxe\"",
-    "delete component item name of player's tool"})
-@Since("2.4.0")
 public class ExprItemName extends SimplePropertyExpression<Object, ComponentWrapper> {
 
-    static {
-        register(ExprItemName.class, ComponentWrapper.class,
-            "component (:item|(custom|display)) name", "itemstacks/itemtypes/slots");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprItemName.class, ComponentWrapper.class,
+                "component (:item|(custom|display)) name", "itemstacks/itemtypes/slots")
+            .name("TextComponent - Item Name")
+            .description("Get/set the component name of an Item.",
+                "`(custom|display) name` = Get/set the `custom_name` component of an item just like you would with Skript's name expression.",
+                "`item name` = Get/set the `item_name` component of an item (Requires Minecraft 1.20.5+).",
+                "Unlike setting the custom/display name of an item, this name cannot be changed through an anvil,",
+                "and does not show in some labels, such as banner markers and item frames.",
+                "See [**McWiki**](https://minecraft.wiki/w/Data_component_format#item_name) for more details.")
+            .examples("set component custom name of player's tool to translate component of \"item.minecraft.diamond_sword\"",
+                "delete component custom name of player's tool",
+                "set component item name of player's tool to mini message from \"Stickaxe\"",
+                "delete component item name of player's tool")
+            .since("2.4.0")
+            .register();
     }
 
     private boolean itemName;

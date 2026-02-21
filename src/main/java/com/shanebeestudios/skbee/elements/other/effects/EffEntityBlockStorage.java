@@ -1,16 +1,12 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Beehive;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -21,22 +17,23 @@ import org.bukkit.event.Event;
 
 import java.util.List;
 
-@Name("EntityBlockStorage - Add/Release entities")
-@Description({"Add/release entities to/from blocks which can store entities.",
-        "When releasing bees at night/during rain, they will immediately go back in their hive, use the optional timespan to keep them outside.",
-        "You can optionally put the released entities into a variable (see examples).",
-        "As of 1.15 this only includes beehives/bee nests! Requires Spigot/Paper 1.15.2+"})
-@Examples({"add last spawned bee to storage of target block of player",
-        "release all entities from storage of target block of player",
-        "release all entities from storage of event-block for 2 minutes",
-        "release all entities from storage of target block of player for 1 minute into {_bees::*}"})
-@Since("1.0.0")
 public class EffEntityBlockStorage extends Effect {
 
-    static {
-        Skript.registerEffect(EffEntityBlockStorage.class,
+    public static void register(Registration reg) {
+        reg.newEffect(EffEntityBlockStorage.class,
                 "release [all] entities from [storage of] %blocks% [for %-timespan%] [into %-objects%]",
-                "add %entities% to storage of %block%");
+                "add %entities% to storage of %block%")
+            .name("EntityBlockStorage - Add/Release Entities")
+            .description("Add/release entities to/from blocks which can store entities.",
+                "When releasing bees at night/during rain, they will immediately go back in their hive, use the optional timespan to keep them outside.",
+                "You can optionally put the released entities into a variable (see examples).",
+                "As of 1.15 this only includes beehives/bee nests!")
+            .examples("add last spawned bee to storage of target block of player",
+                "release all entities from storage of target block of player",
+                "release all entities from storage of event-block for 2 minutes",
+                "release all entities from storage of target block of player for 1 minute into {_bees::*}")
+            .since("1.0.0")
+            .register();
     }
 
     @SuppressWarnings("null")
@@ -103,7 +100,7 @@ public class EffEntityBlockStorage extends Effect {
         String time = this.timespan != null ? " for " + this.timespan.toString(e, d) : "";
         String var = this.var != null ? " into " + this.var.toString(e, d) : "";
         return this.release ? "Release all entities from " + this.blocks.toString(e, d) + time + var :
-                "Add " + this.entities.toString(e, d) + " to storage of " + this.blocks.toString(e, d);
+            "Add " + this.entities.toString(e, d) + " to storage of " + this.blocks.toString(e, d);
     }
 
 }

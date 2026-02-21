@@ -1,16 +1,12 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
@@ -26,35 +22,11 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ItemComponent - Attack Range Component Apply")
-@Description({"Enables a custom attack range when using the item.",
-    "See [**Attack Range Component**](https://minecraft.wiki/w/Data_component_format#attack_range) on McWiki for more details.",
-    "Requires Minecraft 1.21.11+",
-    "",
-    "**ENTRIES**:",
-    "All entries are optional and will use their defaults when omitted.",
-    "- `min_reach` = The minimum distance in blocks from the attacker to the target to be considered valid. Default = 0, valid range = 0 to 64",
-    "- `max_reach` = The maximum distance in blocks from the attacker to the target to be considered valid. Default = 3, valid range = 0 to 64",
-    "- `min_creative_reach` = The minimum distance in blocks from the attacker to the target to be considered valid in creative mode. Default = 0, valid range = 0 to 64",
-    "- `max_creative_reach` = The maximum distance in blocks from the attacker to the target to be considered valid in creative mode. Default = 5, valid range = 0 to 64",
-    "- `hitbox_margin` = Tthe margin applied to the target bounding box when checking for valid hitbox collision. Default = 0.3, valid range = 0 to 1",
-    "- `mob_factor` = The multiplier applied to the min_range and max_range when checking for valid distance when item is used by a mob. Default = 1, valid range = 0 to 2"})
-@Examples({"set {_i} to 1 of diamond shovel",
-    "apply attack range component to {_i}:",
-    "\tmin_reach: 0.0",
-    "\tmax_reach: 64.0",
-    "\tmin_creative_reach: 0",
-    "\tmax_creative_reach: 64",
-    "\thitbox_margin: 0.3",
-    "\tmob_factor: 1",
-    "",
-    "give player 1 of {_i}"})
-@Since("3.16.0")
 public class SecAttackRangeComponent extends Section {
 
     private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         if (Util.IS_RUNNING_MC_1_21_11) {
             VALIDATOR = SimpleEntryValidator.builder()
                 .addOptionalEntry("min_reach", Number.class)
@@ -65,8 +37,33 @@ public class SecAttackRangeComponent extends Section {
                 .addOptionalEntry("mob_factor", Number.class)
                 .build();
 
-            Skript.registerSection(SecAttackRangeComponent.class,
-                "apply attack range component to %itemstacks/itemtypes/slots%");
+            reg.newSection(SecAttackRangeComponent.class, VALIDATOR,
+                    "apply attack range component to %itemstacks/itemtypes/slots%")
+                .name("ItemComponent - Attack Range Component Apply")
+                .description("Enables a custom attack range when using the item.",
+                    "See [**Attack Range Component**](https://minecraft.wiki/w/Data_component_format#attack_range) on McWiki for more details.",
+                    "Requires Minecraft 1.21.11+",
+                    "",
+                    "**ENTRIES**:",
+                    "All entries are optional and will use their defaults when omitted.",
+                    "- `min_reach` = The minimum distance in blocks from the attacker to the target to be considered valid. Default = 0, valid range = 0 to 64",
+                    "- `max_reach` = The maximum distance in blocks from the attacker to the target to be considered valid. Default = 3, valid range = 0 to 64",
+                    "- `min_creative_reach` = The minimum distance in blocks from the attacker to the target to be considered valid in creative mode. Default = 0, valid range = 0 to 64",
+                    "- `max_creative_reach` = The maximum distance in blocks from the attacker to the target to be considered valid in creative mode. Default = 5, valid range = 0 to 64",
+                    "- `hitbox_margin` = Tthe margin applied to the target bounding box when checking for valid hitbox collision. Default = 0.3, valid range = 0 to 1",
+                    "- `mob_factor` = The multiplier applied to the min_range and max_range when checking for valid distance when item is used by a mob. Default = 1, valid range = 0 to 2")
+                .examples("set {_i} to 1 of diamond shovel",
+                    "apply attack range component to {_i}:",
+                    "\tmin_reach: 0.0",
+                    "\tmax_reach: 64.0",
+                    "\tmin_creative_reach: 0",
+                    "\tmax_creative_reach: 64",
+                    "\thitbox_margin: 0.3",
+                    "\tmob_factor: 1",
+                    "",
+                    "give player 1 of {_i}")
+                .since("3.16.0")
+                .register();
         }
     }
 

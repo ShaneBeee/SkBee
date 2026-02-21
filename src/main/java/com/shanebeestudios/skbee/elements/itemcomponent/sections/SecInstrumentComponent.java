@@ -1,15 +1,11 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -22,29 +18,30 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 
 import java.util.List;
 
-@Name("ItemComponent - Instrument Component Apply")
-@Description({"Apply an instrument component to an item that supports it (such as a goat horn).",
-    "It may seem silly that this is a section with only 1 value, " +
-        "but I'm hoping that Paper updates the API to support all the features Minecraft has for this.",
-    "Requires Paper 1.21.3+",
-    "See [**Instrument Component**](https://minecraft.wiki/w/Data_component_format#instrument) on McWiki for more info.",
-    "",
-    "**Entries**:",
-    "- `instrument` = The instrument to be played."})
-@Examples({"set {_i} to 1 of goat horn",
-    "apply instrument to {_i}:",
-    "\tinstrument: admire_goat_horn"})
-@Since("3.8.0")
 public class SecInstrumentComponent extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         VALIDATOR = SimpleEntryValidator.builder()
             .addRequiredEntry("instrument", MusicInstrument.class)
             .build();
-        Skript.registerSection(SecInstrumentComponent.class,
-            "apply instrument [component] to %itemstacks/itemtypes/slots%");
+        reg.newSection(SecInstrumentComponent.class, VALIDATOR,
+                "apply instrument [component] to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Instrument Component Apply")
+            .description("Apply an instrument component to an item that supports it (such as a goat horn).",
+                "It may seem silly that this is a section with only 1 value, " +
+                    "but I'm hoping that Paper updates the API to support all the features Minecraft has for this.",
+                "Requires Paper 1.21.3+",
+                "See [**Instrument Component**](https://minecraft.wiki/w/Data_component_format#instrument) on McWiki for more info.",
+                "",
+                "**Entries**:",
+                "- `instrument` = The instrument to be played.")
+            .examples("set {_i} to 1 of goat horn",
+                "apply instrument to {_i}:",
+                "\tinstrument: admire_goat_horn")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<?> items;

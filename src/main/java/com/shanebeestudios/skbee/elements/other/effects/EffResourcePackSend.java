@@ -1,14 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -16,22 +12,20 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.UUID;
 
-@Name("Resource Pack Send")
-@Description({"Send a resource pack to a player with a UUID, optional hash, optional prompt message, and the option to force it.",
-    "The uuid is used to later remove the pack from the player if need be. Requires Minecraft 1.20.4+"})
-@Examples({"set {pack::1} to random uuid",
-    "send resource pack from url \"some.url\" with uuid {pack::1} to all players",
-    "send resource pack from url \"some.url\" with uuid {pack::1} to all players with force",
-    "send resource pack from url \"some.url\" with uuid {pack::1} with prompt \"This Adds Cool Stuff!!!\" to player with force"})
-@Since("3.4.0")
 public class EffResourcePackSend extends Effect {
 
-    static {
-        if (Skript.methodExists(Player.class, "removeResourcePacks")) {
-            Skript.registerEffect(EffResourcePackSend.class,
+    public static void register(Registration reg) {
+        reg.newEffect(EffResourcePackSend.class,
                 "send [the] resource pack [from [[the] URL]] %string% with (uuid|id) %string% " +
-                    "[with hash %-string%] [with prompt %-string%] to %players% [force:with force]");
-        }
+                    "[with hash %-string%] [with prompt %-string%] to %players% [force:with force]")
+            .name("Resource Pack Send")
+            .description("Send a resource pack to a player with a UUID, optional hash, optional prompt message, and the option to force it.",
+                "The uuid is used to later remove the pack from the player if need be.")
+            .examples("send resource pack from url \"some.url\" with uuid {pack::1} to all players",
+                "send resource pack from url \"some.url\" with uuid {pack::1} to all players with force",
+                "send resource pack from url \"some.url\" with uuid {pack::1} with prompt \"This Adds Cool Stuff!!!\" to player with force")
+            .since("3.4.0")
+            .register();
     }
 
     private Expression<String> url;

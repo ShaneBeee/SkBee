@@ -1,11 +1,11 @@
 package com.shanebeestudios.skbee.elements.advancement.type;
 
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.yggdrasil.Fields;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
@@ -22,10 +22,10 @@ import java.io.StreamCorruptedException;
 
 public class Types {
 
-    static {
+    public static void register(Registration reg) {
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(Advancement.class) == null) {
-            Classes.registerClass(new ClassInfo<>(Advancement.class, "advancement")
+            reg.newType(Advancement.class, "advancement")
                 .user("advancements?")
                 .name("Advancement")
                 .description("Represents an advancement. These CAN be parsed, see examples.")
@@ -90,7 +90,8 @@ public class Types {
                     protected boolean canBeInstantiated() {
                         return false;
                     }
-                }));
+                })
+                .register();
 
             Comparators.registerComparator(Advancement.class, String.class, (advancement, s) ->
                 Relation.get(advancement.getKey().toString().equalsIgnoreCase(s)));
@@ -101,14 +102,15 @@ public class Types {
 
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(AdvancementProgress.class) == null) {
-            Classes.registerClass(new ClassInfo<>(AdvancementProgress.class, "advancementpro")
+            reg.newType(AdvancementProgress.class, "advancementpro")
                 .user("advancement ?progress(es)?")
                 .name("Advancement Progress")
                 .description("Represents the advancement progress of a player.",
                     "You will see `%advancementpro%` in the docs, this is due to a silly issue with Skript",
                     "where I couldn't use `progress` in expressions.")
                 .parser(SkriptUtils.getDefaultParser())
-                .since("1.17.0"));
+                .since("1.17.0")
+                .register();
         } else {
             Util.logLoading("It looks like another addon registered 'advancementpro' already.");
             Util.logLoading("You may have to use their advancement progresses in SkBee's 'advancement' elements.");

@@ -2,17 +2,13 @@ package com.shanebeestudios.skbee.elements.fastboard.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardBase;
+import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -22,25 +18,25 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("FastBoard - Title")
-@Description({"Get/set the title of a fastboard.",
-    "When running Paper, text components are supported."})
-@Examples({"set title of player's fastboard to \"Le Title\"",
-    "set {_title} to title of fastboard of player",
-    "",
-    "# Component Support",
-    "set title of player's fastboard to mini message from \"<rainbow>Le Title\"",
-    "set title of player's fastboard to mini message from \"<font:uniform>Le Title\""})
-@Since("1.16.0")
 public class ExprFastBoardTitle extends SimpleExpression<Object> {
 
     private static final Class<?>[] CHANGE_TYPES = FastBoardManager.HAS_ADVENTURE ?
         new Class<?>[]{ComponentWrapper.class, String.class} : new Class<?>[]{String.class};
 
-    static {
-        Skript.registerExpression(ExprFastBoardTitle.class, Object.class, ExpressionType.PROPERTY,
-            "title of %players%'[s] [:score|fast]board[s]",
-            "title of [:score|fast]board of %players%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprFastBoardTitle.class, Object.class,
+                "title of %players%'[s] [:score|fast]board[s]",
+                "title of [:score|fast]board of %players%")
+            .name("FastBoard - Title")
+            .description("Get/set the title of a player's fastboard.")
+            .examples("set title of player's fastboard to \"Le Title\"",
+                "set {_title} to title of fastboard of player",
+                "",
+                "# Component Support",
+                "set title of player's fastboard to mini message from \"<rainbow>Le Title\"",
+                "set title of player's fastboard to mini message from \"<font:uniform>Le Title\"")
+            .since("1.16.0")
+            .register();
     }
 
     private Expression<Player> player;

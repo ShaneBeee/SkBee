@@ -1,35 +1,32 @@
 package com.shanebeestudios.skbee.elements.fishing.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("Fish Event Entity")
-@Description("Represents the caught entity or hook in a fish event.")
-@Examples({"on fish:",
-        "\tif fish state = caught fish:",
-        "\t\tset item of fishing caught entity to diamond"})
-@Since("1.15.2")
 public class ExprFishEventEntity extends SimpleExpression<Entity> {
 
-    static {
-        Skript.registerExpression(ExprFishEventEntity.class, Entity.class, ExpressionType.SIMPLE,
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprFishEventEntity.class, Entity.class,
                 "fish[ing] [event] caught entity",
-                "fish[ing] [event] hook");
+                "fish[ing] [event] hook")
+            .name("Fish Event Entity")
+            .description("Represents the caught entity or hook in a fish event.")
+            .examples("on fish:",
+                "\tif fish state = caught fish:",
+                "\t\tset item of fishing caught entity to diamond")
+            .since("1.15.2")
+            .register();
     }
 
     private int pattern;

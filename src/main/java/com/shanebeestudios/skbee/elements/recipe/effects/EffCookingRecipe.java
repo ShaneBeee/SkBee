@@ -1,12 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.RequiredPlugins;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -14,6 +8,7 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -30,26 +25,25 @@ import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.bukkit.inventory.SmokingRecipe;
 
 @SuppressWarnings({"ConstantConditions"})
-@Name("Recipe - Cooking")
-@Description({"Register new cooking recipes. On 1.13+ you can register recipes for furnaces.",
-        "On 1.14+ you can also register recipes for smokers, blast furnaces and campfires.",
-        "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
-        "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
-        "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
-        "You may also include an optional group for recipes. These will group the recipes together in the recipe book.",})
-@Examples({"on skript load:",
-        "\tregister new furnace recipe for diamond using dirt with id \"furnace_diamond\"",
-        "\tregister new blasting recipe for emerald using dirt with id \"my_recipes:blasting_emerald\"",
-        "\tregister new smoking recipe for cooked cod named \"Hot Cod\" using puffer fish with id \"smoking_cod\""})
-@RequiredPlugins("1.13+ for furnaces. 1.14+ for smokers, blast furnaces and campfires.")
-@Since("1.0.0")
 public class EffCookingRecipe extends Effect {
 
-    static {
-        Skript.registerEffect(EffCookingRecipe.class,
+    public static void register(Registration reg) {
+        reg.newEffect(EffCookingRecipe.class,
                 "register [new] (furnace|1:(blast furnace|blasting)|2:smok(er|ing)|3:campfire) recipe for %itemtype% " +
-                        "(using|with ingredient) %itemtype/recipechoice% with id %string% [[and ]with exp[erience] %-number%] " +
-                        "[[and ]with cook[ ]time %-timespan%] [in group %-string%]");
+                    "(using|with ingredient) %itemtype/recipechoice% with id %string% [[and ]with exp[erience] %-number%] " +
+                    "[[and ]with cook[ ]time %-timespan%] [in group %-string%]")
+            .name("Recipe - Cooking Recipe")
+            .description("Register a new cooking recipe for furnaces, blast furnaces, smokers, and campfires.",
+                "The ID will be the name given to this recipe. IDs may only contain letters, numbers, periods, hyphens, a single colon and underscores,",
+                "NOT SPACES!!! By default, if no namespace is provided, recipes will start with the namespace \"skbee:\",",
+                "this can be changed in the config to whatever you want. IDs are used for recipe discovery/unlocking recipes for players.",
+                "You may also include an optional group for recipes. These will group the recipes together in the recipe book.")
+            .examples("on skript load:",
+                "\tregister new furnace recipe for diamond using dirt with id \"furnace_diamond\"",
+                "\tregister new blasting recipe for emerald using dirt with id \"my_recipes:blasting_emerald\"",
+                "\tregister new smoking recipe for cooked cod named \"Hot Cod\" using puffer fish with id \"smoking_cod\"")
+            .since("1.0.0")
+            .register();
     }
 
     @SuppressWarnings("null")
@@ -125,13 +119,13 @@ public class EffCookingRecipe extends Effect {
     private void cookingRecipe(ItemStack result, RecipeChoice ingredient, String group, NamespacedKey key, float xp, int cookTime) {
         CookingRecipe<?> recipe = switch (recipeType) {
             case 1 -> // BLASTING
-                    new BlastingRecipe(key, result, ingredient, xp, cookTime);
+                new BlastingRecipe(key, result, ingredient, xp, cookTime);
             case 2 -> // SMOKING
-                    new SmokingRecipe(key, result, ingredient, xp, cookTime);
+                new SmokingRecipe(key, result, ingredient, xp, cookTime);
             case 3 -> // CAMPFIRE
-                    new CampfireRecipe(key, result, ingredient, xp, cookTime);
+                new CampfireRecipe(key, result, ingredient, xp, cookTime);
             default -> // FURNACE
-                    new FurnaceRecipe(key, result, ingredient, xp, cookTime);
+                new FurnaceRecipe(key, result, ingredient, xp, cookTime);
         };
 
         recipe.setGroup(group);
@@ -144,11 +138,11 @@ public class EffCookingRecipe extends Effect {
     private int getDefaultCookTime(int t) {
         return switch (t) { // BLASTING
             case 1, 2 -> // SMOKING
-                    100;
+                100;
             case 3 -> // CAMPFIRE
-                    600;
+                600;
             default -> // FURNACE
-                    200;
+                200;
         };
     }
 
@@ -163,7 +157,7 @@ public class EffCookingRecipe extends Effect {
         String xp = experience != null ? " and with xp " + experience.toString(e, d) : "";
         String cook = cookTime != null ? " and with cooktime " + cookTime.toString(e, d) : "";
         return "register new " + type + " recipe for " + item.toString(e, d) + " using " + ingredient.toString(e, d) +
-                " with id " + key.toString(e, d) + xp + cook;
+            " with id " + key.toString(e, d) + xp + cook;
     }
 
 }

@@ -1,34 +1,30 @@
 package com.shanebeestudios.skbee.elements.bound.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Bound - Last Created Bound")
-@Description("Returns the last created bound.")
-@Examples({"create a bound with id \"\" between {_pos1} and {_pos2}",
-        "broadcast last created bound",
-        "resize last created bound between {_pos1^2} and {_pos2^2}"})
-@Since("2.15.0")
 public class ExprLastCreatedBound extends SimpleExpression<Bound> {
 
     private static final BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
 
-    static {
-        Skript.registerExpression(ExprLastCreatedBound.class, Bound.class, ExpressionType.SIMPLE,
-                "[the] last[ly] created bound");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprLastCreatedBound.class, Bound.class,
+                "[the] last[ly] created bound")
+            .name("Bound - Last Created Bound")
+            .description("Returns the last created bound.")
+            .examples("create a bound with id \"\" between {_pos1} and {_pos2}",
+                "broadcast last created bound",
+                "resize last created bound between {_pos1^2} and {_pos2^2}")
+            .since("2.15.0")
+            .register();
     }
 
     public static Bound lastCreated = null;

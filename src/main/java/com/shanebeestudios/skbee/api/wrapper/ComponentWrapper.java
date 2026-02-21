@@ -34,7 +34,9 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.data.BlockData;
 import org.bukkit.block.sign.Side;
+import org.bukkit.block.sign.SignSide;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
@@ -43,6 +45,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Team;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -460,13 +463,14 @@ public class ComponentWrapper {
 
     /**
      * Replaces a string with a string/component
-     * @param regex Whether the provided pattern string is treated as regex
-     * @param replaceFirst Whether it should only replace the first instance
+     *
+     * @param regex         Whether the provided pattern string is treated as regex
+     * @param replaceFirst  Whether it should only replace the first instance
      * @param caseSensitive Whether the regex should be parsed as case-sensitive
-     * @param patterns The string patterns that will be matched against
-     * @param replacement The string/component that will replace the provided pattern
+     * @param patterns      The string patterns that will be matched against
+     * @param replacement   The string/component that will replace the provided pattern
      */
-    public void replace(boolean regex, boolean replaceFirst, boolean caseSensitive, Object replacement, String ...patterns) {
+    public void replace(boolean regex, boolean replaceFirst, boolean caseSensitive, Object replacement, String... patterns) {
         TextReplacementConfig.Builder replacementConfig = TextReplacementConfig.builder();
         if (replacement instanceof String string) {
             replacementConfig.replacement(string);
@@ -477,7 +481,7 @@ public class ComponentWrapper {
         }
         if (replaceFirst)
             replacementConfig.once();
-        for (String pattern : patterns) {
+        for (@RegExp String pattern : patterns) {
             if (regex) {
                 try {
                     replacementConfig.match(pattern);
@@ -486,7 +490,7 @@ public class ComponentWrapper {
                 }
             } else if (!caseSensitive) {
                 // Java doesn't use a vararg for pattern flags 🙄
-                Pattern compiledPattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE|Pattern.LITERAL);
+                Pattern compiledPattern = Pattern.compile(pattern, Pattern.CASE_INSENSITIVE | Pattern.LITERAL);
                 replacementConfig.match(compiledPattern);
             } else {
                 replacementConfig.matchLiteral(pattern);
@@ -525,7 +529,7 @@ public class ComponentWrapper {
      *
      * @param block Sign to change
      * @param line  Line to change
-     * @param side What side should be modified
+     * @param side  What side should be modified
      */
     public void setBlockLine(Block block, int line, Side side) {
         if (block.getState() instanceof Sign sign) {
@@ -539,7 +543,7 @@ public class ComponentWrapper {
      *
      * @param block Sign to get lines from
      * @param line  Line to get
-     * @param side Whether front or back of sign
+     * @param side  Whether front or back of sign
      * @return Component from sign lines
      */
     @Nullable
@@ -574,7 +578,7 @@ public class ComponentWrapper {
      *
      * @param inventory Inventory to change name
      */
-    @SuppressWarnings("deprecation")
+    @Deprecated(forRemoval = true, since = "INSERT VERSION")
     public void setInventoryName(Inventory inventory) {
         List<HumanEntity> viewers = inventory.getViewers();
         if (viewers.isEmpty()) return;
@@ -640,12 +644,12 @@ public class ComponentWrapper {
      *
      * @param player            Player to send sign change to
      * @param location          Location of the sign
-     * @param componentWrappers Components to show on sign
-     * @param color             Color to show on sign
+     * @param componentWrappers Components to show on the sign
+     * @param side              Side of the sign
+     * @param color             Color to show on the sign
      * @param isGlowing         If the sign should glow
      */
-    @SuppressWarnings("deprecation")
-    public static void sendSignChange(Player player, Location location, ComponentWrapper[] componentWrappers, @Nullable DyeColor color, boolean isGlowing) {
+    public static void sendSignChange(Player player, Location location, ComponentWrapper[] componentWrappers, Side side, @Nullable DyeColor color, boolean isGlowing) {
         List<Component> components = new ArrayList<>();
         for (int i = 0; i < 4; i++) {
             if (componentWrappers.length > i) {
@@ -654,11 +658,20 @@ public class ComponentWrapper {
                 components.add(Component.text(""));
             }
         }
-        if (color == null) {
-            player.sendSignChange(location, components, isGlowing);
-        } else {
-            player.sendSignChange(location, components, color, isGlowing);
+        BlockData blockData = location.getBlock().getBlockData();
+        if (blockData.createBlockState() instanceof Sign sign) {
+            SignSide signSide = sign.getSide(side);
+            for (int i = 0; i < components.size(); i++) {
+                signSide.line(i, components.get(i));
+                signSide.setGlowingText(isGlowing);
+            }
+
+            if (color == null) {
+                signSide.setColor(color);
+            }
+            player.sendBlockUpdate(location, sign);
         }
+
     }
 
     @Override

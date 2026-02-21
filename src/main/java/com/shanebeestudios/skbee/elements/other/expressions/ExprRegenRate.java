@@ -2,36 +2,34 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Regeneration Rate")
-@Description({"Represents the regeneration rate (1 health per x ticks) of the Player.",
-    "\nSaturated = When they have saturation and their food level >= 20. Default is 10 ticks.",
-    "\nUnsaturated = When they have no saturation and their food level >= 18. Default is 80 ticks."})
-@Examples({"set {_regen} to saturated regen rate of player",
-    "set unsaturated regen rate of player to 10 ticks",
-    "add 1 second to unsaturated regen rate of player"})
-@Since("3.0.2")
 public class ExprRegenRate extends SimplePropertyExpression<Player, Timespan> {
 
-    static {
+    public static void register(Registration reg) {
         if (Skript.methodExists(HumanEntity.class, "getSaturatedRegenRate")) {
-            register(ExprRegenRate.class, Timespan.class,
-                "[:un]saturated regen[eration] rate", "players");
+            reg.newPropertyExpression(ExprRegenRate.class, Timespan.class,
+                    "[:un]saturated regen[eration] rate", "players")
+                .name("Regeneration Rate")
+                .description("Represents the regeneration rate (1 health per x ticks) of the Player.",
+                    "\nSaturated = When they have saturation and their food level >= 20. Default is 10 ticks.",
+                    "\nUnsaturated = When they have no saturation and their food level >= 18. Default is 80 ticks.")
+                .examples("set {_regen} to saturated regen rate of player",
+                    "set unsaturated regen rate of player to 10 ticks",
+                    "add 1 second to unsaturated regen rate of player")
+                .since("3.0.2")
+                .register();
         }
     }
 

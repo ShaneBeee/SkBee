@@ -1,14 +1,9 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import ch.njol.util.Kleenean;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -19,16 +14,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Block - Relative")
-@Description("Get a block relative to another block using a BlockFace.")
-@Examples({"set {_rel} to block relative to target block using {_blockFace}",
-        "set block relative to target block using north to stone"})
-@Since("2.6.0")
 public class ExprBlockRelative extends SimpleExpression<Block> {
 
-    static {
-        Skript.registerExpression(ExprBlockRelative.class, Block.class, ExpressionType.COMBINED,
-                "block[s] relative to %block% (from|using) %blockfaces%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprBlockRelative.class, Block.class,
+                "block[s] relative to %block% (from|using) %blockfaces%")
+            .name("Block - Relative")
+            .description("Get a block relative to another block using a BlockFace.")
+            .examples("set {_rel} to block relative to target block using {_blockFace}",
+                "set block relative to target block using north to stone")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<Block> block;

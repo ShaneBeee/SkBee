@@ -1,41 +1,37 @@
 package com.shanebeestudios.skbee.elements.damagesource.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
+import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.skript.base.Effect;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Damageable;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("DamageSource - Damage Entity")
-@Description({"Damage entities using a damage source.",
-    "This has the same functionality as Minecraft's `/damage` command.",
-    "Requires MC 1.20.4+"})
-@Examples({"set {_source} to damage source from arrow directly by (random element of all entities)",
-    "set {_source} to damage source of dragon breath",
-    "set {_source} to damage source of magic",
-    "set {_source} to damage source of mob_attack_no_aggro caused by target entity of player",
-    "damage player by 100 with {_source}"})
-@Since("3.3.0")
 public class EffEntityDamageSource extends Effect {
 
-    static {
-        Skript.registerEffect(EffEntityDamageSource.class,
-            "[skbee|le] damage %entities% by %number% (with|using) %damagesource%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffEntityDamageSource.class,
+                "[skbee|le] damage %entities% by %number% (with|using) %damagesource%")
+            .name("DamageSource - Damage Entity")
+            .description("Damage entities using a damage source.",
+                "This has the same functionality as Minecraft's `/damage` command.",
+                "Requires MC 1.20.4+")
+            .examples("set {_source} to damage source from arrow directly by (random element of all entities)",
+                "set {_source} to damage source of dragon breath",
+                "set {_source} to damage source of magic",
+                "set {_source} to damage source of mob_attack_no_aggro caused by target entity of player",
+                "damage player by 100 with {_source}")
+            .since("3.3.0")
+            .register();
     }
 
     private Expression<Entity> entities;
     private Expression<Number> amount;
     private Expression<DamageSource> damageSource;
-
 
     @SuppressWarnings("unchecked")
     @Override

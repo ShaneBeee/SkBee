@@ -1,14 +1,9 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Chunk;
 import org.bukkit.Location;
@@ -20,16 +15,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Chunks Within Locations")
-@Description("Get a list of all chunks within 2 locations.")
-@Examples({"loop all chunks within {_l1} and {_l2}:",
-    "refresh all chunks within {_l1} and {_l2}"})
-@Since("3.6.1")
 public class ExprChunksWithinCuboid extends SimpleExpression<Chunk> {
 
-    static {
-        Skript.registerExpression(ExprChunksWithinCuboid.class, Chunk.class, ExpressionType.COMBINED,
-            "all chunks within %location% and %location%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprChunksWithinCuboid.class, Chunk.class,
+                "all chunks within %location% and %location%")
+            .name("Chunks Within Locations")
+            .description("Get a list of all chunks within 2 locations.")
+            .examples("loop all chunks within {_l1} and {_l2}:",
+                "refresh all chunks within {_l1} and {_l2}")
+            .since("3.6.1")
+            .register();
     }
 
     private Expression<Location> loc1, loc2;

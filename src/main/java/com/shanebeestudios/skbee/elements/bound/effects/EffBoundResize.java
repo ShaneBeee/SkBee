@@ -1,41 +1,38 @@
 package com.shanebeestudios.skbee.elements.bound.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Bound - Resize")
-@Description({"Resize a current bound.",
-    "Full will mark the bound to use the lowest/highest points of the world.",
-    "The second pattern will mark as a full bound without changing the locations.",
-    "",
-    "NOTE: World of a bound cannot be changed.",
-    "",
-    "**SPECIAL NOTE**:",
-    "- When using locations = The bound resizing will use the locations you pass thru",
-    "- When using blocks = The bound resizing will extend the x/y/z axes by 1 to fully include those blocks."})
-@Examples({"resize bound bound with id \"test\" between {_l1} and {_l1}",
-    "resize bound bound with id \"test\" between block at{_l1} and block at {_l1}",
-    "resize full bound bound with id \"test\""})
-@Since("2.5.3")
 public class EffBoundResize extends Effect {
 
-    static {
-        Skript.registerEffect(EffBoundResize.class,
-            "resize [:full] bound %bound% (within|between) %block/location% and %block/location%",
-            "resize full bound %bound%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffBoundResize.class,
+                "resize [:full] bound %bound% (within|between) %block/location% and %block/location%",
+                "resize full bound %bound%")
+            .name("Bound - Resize")
+            .description("Resize a current bound.",
+                "Full will mark the bound to use the lowest/highest points of the world.",
+                "The second pattern will mark as a full bound without changing the locations.",
+                "",
+                "NOTE: World of a bound cannot be changed.",
+                "",
+                "**SPECIAL NOTE**:",
+                "- When using locations = The bound resizing will use the locations you pass thru",
+                "- When using blocks = The bound resizing will extend the x/y/z axes by 1 to fully include those blocks.")
+            .examples("resize bound bound with id \"test\" between {_l1} and {_l1}",
+                "resize bound bound with id \"test\" between block at{_l1} and block at {_l1}",
+                "resize full bound bound with id \"test\"")
+            .since("2.5.3")
+            .register();
     }
 
     private Expression<Bound> bound;

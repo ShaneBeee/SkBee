@@ -1,31 +1,29 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mob;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Mob Awareness")
-@Description({"Represents whether this mob is aware of its surroundings.",
-        "Turning this off is essentially like turning off the mobs AI.",
-        "Unaware mobs will still move if pushed, attacked, etc. but will not move or perform any actions on their own.",
-        "Unaware mobs will still be affected by gravity.",
-        "Unaware mobs may also have other unspecified behaviours disabled, such as drowning."})
-@Examples({"if mob awareness of target entity = true:",
-        "set mob awareness of target entity to false"})
-@Since("2.8.3")
 public class ExprMobAwareness extends SimplePropertyExpression<Entity, Boolean> {
 
-    static {
-        register(ExprMobAwareness.class, Boolean.class, "mob awareness", "entities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprMobAwareness.class, Boolean.class, "mob awareness", "entities")
+                .name("Mob Awareness")
+                .description("Represents whether this mob is aware of its surroundings.",
+                        "Turning this off is essentially like turning off the mobs AI.",
+                        "Unaware mobs will still move if pushed, attacked, etc. but will not move or perform any actions on their own.",
+                        "Unaware mobs will still be affected by gravity.",
+                        "Unaware mobs may also have other unspecified behaviours disabled, such as drowning.")
+                .examples("if mob awareness of target entity = true:",
+                        "set mob awareness of target entity to false")
+                .since("2.8.3")
+                .register();
     }
 
     @Override

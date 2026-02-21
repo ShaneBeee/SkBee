@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.recipe.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
@@ -22,16 +17,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Recipe - All Recipes")
-@Description({"Get a list of all recipes. May be from a specific item, may be just Minecraft recipes or custom recipes.",
-    "Due to some items having more than 1 recipe this may return multiple recipes. Requires 1.13+"})
-@Examples("set {_recipes::*} to all recipes of iron ingot")
-@Since("1.4.0")
 public class ExprAllRecipes extends SimpleExpression<String> {
 
-    static {
-        Skript.registerExpression(ExprAllRecipes.class, String.class, ExpressionType.COMBINED,
-            "[(all [[of] the]|the)] [(1:(mc|minecraft)|2:custom)] recipe[s] [(for|of) %-itemtypes%]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprAllRecipes.class, String.class,
+                "[(all [[of] the]|the)] [(1:(mc|minecraft)|2:custom)] recipe[s] [(for|of) %-itemtypes%]")
+            .name("Recipe - All Recipes")
+            .description("Get a list of all recipes. May be from a specific item, may be just Minecraft recipes or custom recipes.",
+                "Due to some items having more than 1 recipe this may return multiple recipes.")
+            .examples("set {_recipes::*} to all recipes of iron ingot")
+            .since("1.4.0")
+            .register();
     }
 
     private int pattern;

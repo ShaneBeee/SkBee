@@ -2,9 +2,6 @@ package com.shanebeestudios.skbee.elements.dialog.sections.actions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
@@ -12,6 +9,7 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.registry.data.dialog.ActionButton;
@@ -28,48 +26,54 @@ import java.util.List;
 import java.util.Optional;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Dynamic Run Command Action Button")
-@Description({"Add a dynamic run command action button to a dialog.",
-    "See [**Dynamic Run Command Action**](https://minecraft.wiki/w/Dialog#dynamic/run_command) on McWiki for more specific info.",
-    "This action will run a command using your command template and provided macros.",
-    "The template format looks for `$(dialog_input_key)` to substitute macros (Must include at least ONE macro).",
-    "The `input_key` is the key you used for your inputs.",
-    "**Entries**:",
-    "- `label` = The name on your button, accepts a string or text component/mini message.",
-    "- `tooltip` = The hover message, accepts a string or text component/mini message.",
-    "- `width` = The width of the button. Value between 1 and 1024 — Defaults to 150.",
-    "- `template` = The command template including macros that will run when clicked."})
-@Examples({"command /message:",
-    "\trigger:",
-    "\t\topen multi action dialog to player:",
-    "\t\t\ttitle: \"Send a message:\"",
-    "\t\t\tinputs:",
-    "\t\t\t\tadd text input:",
-    "\t\t\t\t\tkey: \"name_input\"",
-    "\t\t\t\t\tlabel: \"Player Name\"",
-    "\t\t\t\tadd text input:",
-    "\t\t\t\t\tkey: \"text_input\"",
-    "\t\t\t\t\tlabel: \"Message to send\"",
-    "\t\t\tactions:",
-    "\t\t\t\tadd dynamic run command action button:",
-    "\t\t\t\t\tlabel: \"Send Message\"",
-    "\t\t\t\t\twidth: 100",
-    "\t\t\t\t\ttemplate: \"/msg $(name_input) $(text_input)\""})
 public class SecDynamicRunCommandActionButton extends Section {
 
-    private static final EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
+        EntryValidatorBuilder builder = EntryValidator.builder();
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("tooltip", null, true, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(150, true), true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("tooltip", null, true, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(150, true), true, Integer.class));
 
         // DYNAMIC
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("template", null, false, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("template", null, false, String.class));
+        VALIDATOR = builder.build();
+    }
 
-        Skript.registerSection(SecDynamicRunCommandActionButton.class, "add dynamic run command action button");
+    public static void register(Registration reg) {
+        reg.newSection(SecDynamicRunCommandActionButton.class, VALIDATOR, "add dynamic run command action button")
+            .name("Dialog - Dynamic Run Command Action Button")
+            .description("Add a dynamic run command action button to a dialog.",
+                "See [**Dynamic Run Command Action**](https://minecraft.wiki/w/Dialog#dynamic/run_command) on McWiki for more specific info.",
+                "This action will run a command using your command template and provided macros.",
+                "The template format looks for `$(dialog_input_key)` to substitute macros (Must include at least ONE macro).",
+                "The `input_key` is the key you used for your inputs.",
+                "**Entries**:",
+                "- `label` = The name on your button, accepts a string or text component/mini message.",
+                "- `tooltip` = The hover message, accepts a string or text component/mini message.",
+                "- `width` = The width of the button. Value between 1 and 1024 — Defaults to 150.",
+                "- `template` = The command template including macros that will run when clicked.")
+            .examples("command /message:",
+                "\trigger:",
+                "\t\topen multi action dialog to player:",
+                "\t\t\ttitle: \"Send a message:\"",
+                "\t\t\tinputs:",
+                "\t\t\t\tadd text input:",
+                "\t\t\t\t\tkey: \"name_input\"",
+                "\t\t\t\t\tlabel: \"Player Name\"",
+                "\t\t\t\tadd text input:",
+                "\t\t\t\t\tkey: \"text_input\"",
+                "\t\t\t\t\tlabel: \"Message to send\"",
+                "\t\t\tactions:",
+                "\t\t\t\tadd dynamic run command action button:",
+                "\t\t\t\t\tlabel: \"Send Message\"",
+                "\t\t\t\t\twidth: 100",
+                "\t\t\t\t\ttemplate: \"/msg $(name_input) $(text_input)\"")
+            .since("3.16.0")
+            .register();
     }
 
     private boolean exitAction;
@@ -85,7 +89,7 @@ public class SecDynamicRunCommandActionButton extends Section {
             Skript.error("A dynamic action button can only be used in an 'actions' section.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         // Action button type

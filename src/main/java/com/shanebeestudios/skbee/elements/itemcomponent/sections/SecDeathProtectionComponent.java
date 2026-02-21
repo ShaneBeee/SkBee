@@ -1,11 +1,6 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.EffectSection;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -13,6 +8,7 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -27,32 +23,6 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 
 import java.util.List;
 
-@Name("ItemComponent - Death Protection Component Apply")
-@Description({"Apply a death protection component to an item.",
-    "If present, this item protects the holder from dying by restoring a single health point.",
-    "Requires Paper 1.21.3+",
-    "See [**Death Protection Component**](https://minecraft.wiki/w/Data_component_format#death_protection) on McWiki for more info.",
-    "`death_effect` = A `consume effect` to by applied to the component (supports a list) [Optional].",
-    "`death_effects` = A section to apply `consume effects` [Optional]."})
-@Examples({"set {_p::1} to potion effect of night vision for 10 seconds",
-    "set {_p::2} to potion effect of slow mining for 5 seconds",
-    "set {_effects} to apply_effects({_p::*}, 0.5)",
-    "",
-    "set {_i} to 1 of stick",
-    "apply death protection component to {_i}:",
-    "\tdeath_effects: {_effects}",
-    "give {_i} to player",
-    "",
-    "apply death protection to {_i}:",
-    "\tdeath_effects:",
-    "\t\tapply -> potion effect of slowness for 10 seconds with probability 0.5",
-    "\t\tapply -> clear all effects",
-    "\t\tapply -> remove effects night vision",
-    "\t\tapply -> play sound \"blah.blah\"",
-    "\t\tapply -> teleport randomly within 15",
-    "\t\tapply -> teleport randomly within 20 meters",
-    "\t\tapply -> teleport randomly within 100 blocks"})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class SecDeathProtectionComponent extends EffectSection {
 
@@ -74,15 +44,42 @@ public class SecDeathProtectionComponent extends EffectSection {
         }
     }
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         VALIDATOR = SimpleEntryValidator.builder()
             .addOptionalEntry("death_effect", ConsumeEffect.class)
             .addOptionalSection("death_effects")
             .build();
-        Skript.registerSection(SecDeathProtectionComponent.class,
-            "apply death protection [component] to %itemstacks/itemtypes/slots%");
+        reg.newSection(SecDeathProtectionComponent.class, VALIDATOR,
+                "apply death protection [component] to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Death Protection Component Apply")
+            .description("Apply a death protection component to an item.",
+                "If present, this item protects the holder from dying by restoring a single health point.",
+                "Requires Paper 1.21.3+",
+                "See [**Death Protection Component**](https://minecraft.wiki/w/Data_component_format#death_protection) on McWiki for more info.",
+                "`death_effect` = A `consume effect` to by applied to the component (supports a list) [Optional].",
+                "`death_effects` = A section to apply `consume effects` [Optional].")
+            .examples("set {_p::1} to potion effect of night vision for 10 seconds",
+                "set {_p::2} to potion effect of slow mining for 5 seconds",
+                "set {_effects} to apply_effects({_p::*}, 0.5)",
+                "",
+                "set {_i} to 1 of stick",
+                "apply death protection component to {_i}:",
+                "\tdeath_effects: {_effects}",
+                "give {_i} to player",
+                "",
+                "apply death protection to {_i}:",
+                "\tdeath_effects:",
+                "\t\tapply -> potion effect of slowness for 10 seconds with probability 0.5",
+                "\t\tapply -> clear all effects",
+                "\t\tapply -> remove effects night vision",
+                "\t\tapply -> play sound \"blah.blah\"",
+                "\t\tapply -> teleport randomly within 15",
+                "\t\tapply -> teleport randomly within 20 meters",
+                "\t\tapply -> teleport randomly within 100 blocks")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<Object> items;

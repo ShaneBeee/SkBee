@@ -2,29 +2,27 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Pose;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Entity Pose")
-@Description({"Get/set the pose of an entity.",
-    "Note: While poses affect some things like hitboxes, they do not change the entity's state",
-    "(e.g. having sneaking pose does not guarantee `is sneaking` being true). Set requires PaperMC."})
-@Examples({"set {_pose} to pose of player",
-    "set pose of target entity to sleeping pose"})
-@Since("3.5.4")
 public class ExprEntityPose extends SimplePropertyExpression<Entity, Pose> {
 
-    static {
-        register(ExprEntityPose.class, Pose.class, "pose", "entities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprEntityPose.class, Pose.class, "pose", "entities")
+            .name("Entity Pose")
+            .description("Get/set the pose of an entity.",
+                "Note: While poses affect some things like hitboxes, they do not change the entity's state",
+                "(e.g. having sneaking pose does not guarantee `is sneaking` being true). Set requires PaperMC.")
+            .examples("set {_pose} to pose of player",
+                "set pose of target entity to sleeping pose")
+            .since("3.5.4")
+            .register();
     }
 
     @Override

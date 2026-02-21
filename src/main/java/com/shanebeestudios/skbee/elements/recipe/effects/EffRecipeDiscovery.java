@@ -1,35 +1,32 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 
-@Name("Recipe - Discovery")
-@Description("Lock/Unlock recipes for players. This uses the IDs we created earlier when registering recipes, " +
-    "you can also lock/unlock minecraft recipes. Requires MC 1.13+")
-@Examples({"unlock recipe \"smoking_cod\" for all players",
-    "unlock recipe \"minecraft:baked_potato_from_smoking\" for all players",
-    "unlock minecraft recipe \"baked_potato_from_smoking\" for all players",
-    "unlock recipe \"some_plugin:some_recipe\" for all players",
-    "on pickup of diamonds:",
-    "\tdiscover recipe \"fancy_diamonds\" for player"})
-@Since("1.0.0")
 public class EffRecipeDiscovery extends Effect {
 
-    static {
-        Skript.registerEffect(EffRecipeDiscovery.class,
-            "(discover|unlock) [(custom|mc|minecraft)] recipe[s] [with id[s]] %strings% for %players%",
-            "(undiscover|lock) [(custom|mc|minecraft)] recipe[s] [with id[s]] %strings% for %players%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffRecipeDiscovery.class,
+                "(discover|unlock) [(custom|mc|minecraft)] recipe[s] [with id[s]] %strings% for %players%",
+                "(undiscover|lock) [(custom|mc|minecraft)] recipe[s] [with id[s]] %strings% for %players%")
+            .name("Recipe - Discovery")
+            .description("Lock/Unlock recipes for players. This uses the IDs we created earlier when registering recipes, " +
+                "you can also lock/unlock minecraft recipes.")
+            .examples("unlock recipe \"smoking_cod\" for all players",
+                "unlock recipe \"minecraft:baked_potato_from_smoking\" for all players",
+                "unlock minecraft recipe \"baked_potato_from_smoking\" for all players",
+                "unlock recipe \"some_plugin:some_recipe\" for all players",
+                "on pickup of diamonds:",
+                "\tdiscover recipe \"fancy_diamonds\" for player")
+            .since("1.0.0")
+            .register();
     }
 
     @SuppressWarnings("null")

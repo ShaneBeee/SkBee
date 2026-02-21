@@ -1,14 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
@@ -17,18 +13,19 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Apply Lock to Block")
-@Description("Apply an item as a lock for a block. Requires Minecraft 1.21.2+")
-@Examples({"apply lock to target block using player's tool",
-    "apply lock to {_blocks::*} using stick named \"Mr Locky\"",
-    "remove lock from target block"})
-@Since("3.6.2")
 public class EffBlockLock extends Effect {
 
-    static {
-        Skript.registerEffect(EffBlockLock.class,
+    public static void register(Registration reg) {
+        reg.newEffect(EffBlockLock.class,
             "apply lock to %blocks% using %itemstack%",
-            "(remove|clear) lock (of|from) %blocks%");
+            "(remove|clear) lock (of|from) %blocks%")
+            .name("Apply Lock to Block")
+            .description("Apply an item as a lock for a block.")
+            .examples("apply lock to target block using player's tool",
+                "apply lock to {_blocks::*} using stick named \"Mr Locky\"",
+                "remove lock from target block")
+            .since("3.6.2")
+            .register();
     }
 
     private Expression<Block> blocks;

@@ -1,18 +1,14 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -27,35 +23,36 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 
 import java.util.List;
 
-@Name("ItemComponent - Swing Animation Component Apply")
-@Description({"Specifies the swing animation to play when attacking or interacting using this item.",
-    "See [**Swing Animation Component**](https://minecraft.wiki/w/Data_component_format#swing_animation) on McWiki for more details.",
-    "Requires Minecraft 1.21.11+",
-    "",
-    "**ENTRIES**:",
-    "All entries are optional and will use their defaults when omitted.",
-    "- `type` = String, The type of swinging animation. Can be \"none\", \"whack\", \"stab\". Defaults to \"whack\".",
-    "- `duration` = A timespan that determines the animation's duration. Defaults to 6 ticks."})
-@Examples({"set {_i} to 1 of diamond sword",
-    "apply swing animation component to {_i}:",
-    "\ttype: \"stab\"",
-    "\tduration: 60 ticks",
-    "",
-    "give player 1 of {_i}"})
-@Since("3.16.0")
 public class SecSwingAnimationComponent extends Section {
 
     private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         if (Util.IS_RUNNING_MC_1_21_11) {
             VALIDATOR = SimpleEntryValidator.builder()
                 .addOptionalEntry("type", String.class)
                 .addOptionalEntry("duration", Timespan.class)
                 .build();
 
-            Skript.registerSection(SecSwingAnimationComponent.class,
-                "apply swing animation component to %itemstacks/itemtypes/slots%");
+            reg.newSection(SecSwingAnimationComponent.class, VALIDATOR,
+                    "apply swing animation component to %itemstacks/itemtypes/slots%")
+                .name("ItemComponent - Swing Animation Component Apply")
+                .description("Specifies the swing animation to play when attacking or interacting using this item.",
+                    "See [**Swing Animation Component**](https://minecraft.wiki/w/Data_component_format#swing_animation) on McWiki for more details.",
+                    "Requires Minecraft 1.21.11+",
+                    "",
+                    "**ENTRIES**:",
+                    "All entries are optional and will use their defaults when omitted.",
+                    "- `type` = String, The type of swinging animation. Can be \"none\", \"whack\", \"stab\". Defaults to \"whack\".",
+                    "- `duration` = A timespan that determines the animation's duration. Defaults to 6 ticks.")
+                .examples("set {_i} to 1 of diamond sword",
+                    "apply swing animation component to {_i}:",
+                    "\ttype: \"stab\"",
+                    "\tduration: 60 ticks",
+                    "",
+                    "give player 1 of {_i}")
+                .since("3.16.0")
+                .register();
         }
     }
 

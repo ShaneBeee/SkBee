@@ -1,13 +1,10 @@
 package com.shanebeestudios.skbee.elements.advancement.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Name;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.entity.Player;
@@ -18,13 +15,15 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Advancement - Progress")
-@Description("Returns the advancement progress of a player.")
 public class ExprAdvancementProgress extends SimpleExpression<AdvancementProgress> {
 
-    static {
-        Skript.registerExpression(ExprAdvancementProgress.class, AdvancementProgress.class, ExpressionType.COMBINED,
-                "advancement progress of %advancement% (for|of) %players%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprAdvancementProgress.class, AdvancementProgress.class,
+                "advancement progress of %advancement% (for|of) %players%")
+            .name("Advancement - Progress")
+            .description("Returns the advancement progress of a player.")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<Advancement> advancement;

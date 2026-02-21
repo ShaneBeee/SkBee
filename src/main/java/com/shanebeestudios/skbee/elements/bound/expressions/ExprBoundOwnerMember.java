@@ -1,13 +1,7 @@
 package com.shanebeestudios.skbee.elements.bound.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
@@ -15,6 +9,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
@@ -25,21 +20,22 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Name("Bound - Owners/Members")
-@Description("Represents the owners and members of a bound. Will be saved as UUIDs in the bound config.")
-@Examples({"add player to bound members of bound with id \"spawn\"",
-        "remove player from bound owners of bound with id \"spawn\"",
-        "loop bound owners of bound with id \"beach\":",
-        "\tif loop-offline player is online:",
-        "\t\tteleport loop-offline player to spawn of world \"world\""})
-@Since("1.15.0")
 public class ExprBoundOwnerMember extends SimpleExpression<OfflinePlayer> {
 
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
-    static {
-        Skript.registerExpression(ExprBoundOwnerMember.class, OfflinePlayer.class, ExpressionType.PROPERTY,
-                "bound (owner[s]|1:member[s]) of %bound%");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprBoundOwnerMember.class, OfflinePlayer.class,
+                "bound (owner[s]|1:member[s])", "bound")
+            .name("Bound - Owners/Members")
+            .description("Represents the owners and members of a bound. Will be saved as UUIDs in the bound config.")
+            .examples("add player to bound members of bound with id \"spawn\"",
+                "remove player from bound owners of bound with id \"spawn\"",
+                "loop bound owners of bound with id \"beach\":",
+                "\tif loop-offline player is online:",
+                "\t\tteleport loop-offline player to spawn of world \"world\"")
+            .since("1.15.0")
+            .register();
     }
 
     private Expression<Bound> bound;

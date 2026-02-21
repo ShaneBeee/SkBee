@@ -1,19 +1,14 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
-import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.TooltipDisplay;
@@ -25,35 +20,34 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ItemComponent - Tooltip Style Component Apply")
-@Description({"Apply a tooltip style component to any item allowing you to hide the tooltip or specific components.",
-    "You will also require a `consumable` component to actually make the item consumable.",
-    "Requires Paper 1.21.5+",
-    "See [**Tooltip Style Component**](https://minecraft.wiki/w/Data_component_format#tooltip_style) on McWiki for more details.",
-    "",
-    "**Entries/Sections**:",
-    "- `hide_tooltip` = If true, the item will have no tooltip when hovered (optional, boolean).",
-    "- `hidden_components` = The tooltips provided by any component in this list will be hidden. If that component provides no tooltip, it will have no effect (optional, data component types)."})
-@Examples({"apply tooltip display component to {_i}:",
-    "\thide_tooltip: false",
-    "\thidden_components: minecraft:attribute_modifiers, minecraft:enchantments",
-    "apply tooltip display component to {_i}:",
-    "\thide_tooltip: true"})
-@Since("3.11.0")
 public class SecTooltipDisplayComponent extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
-        if (Util.IS_RUNNING_MC_1_21_5) {
-            VALIDATOR = SimpleEntryValidator.builder()
-                .addOptionalEntry("hide_tooltip", Boolean.class)
-                .addOptionalEntry("hidden_components", DataComponentType.class)
-                .build();
-            Skript.registerSection(SecTooltipDisplayComponent.class, "apply tooltip display [component] to %itemstacks/itemtypes/slots%");
-        } else {
-            VALIDATOR = null;
-        }
+    public static void register(Registration reg) {
+        VALIDATOR = SimpleEntryValidator.builder()
+            .addOptionalEntry("hide_tooltip", Boolean.class)
+            .addOptionalEntry("hidden_components", DataComponentType.class)
+            .build();
+        reg.newSection(SecTooltipDisplayComponent.class, VALIDATOR,
+                "apply tooltip display [component] to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Tooltip Style Component Apply")
+            .description("Apply a tooltip style component to any item allowing you to hide the tooltip or specific components.",
+                "You will also require a `consumable` component to actually make the item consumable.",
+                "Requires Paper 1.21.5+",
+                "See [**Tooltip Style Component**](https://minecraft.wiki/w/Data_component_format#tooltip_style) on McWiki for more details.",
+                "",
+                "**Entries/Sections**:",
+                "- `hide_tooltip` = If true, the item will have no tooltip when hovered (optional, boolean).",
+                "- `hidden_components` = The tooltips provided by any component in this list will be hidden. " +
+                    "If that component provides no tooltip, it will have no effect (optional, data component types).")
+            .examples("apply tooltip display component to {_i}:",
+                "\thide_tooltip: false",
+                "\thidden_components: minecraft:attribute_modifiers, minecraft:enchantments",
+                "apply tooltip display component to {_i}:",
+                "\thide_tooltip: true")
+            .since("3.11.0")
+            .register();
     }
 
     private Expression<Object> items;

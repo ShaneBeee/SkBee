@@ -3,10 +3,6 @@ package com.shanebeestudios.skbee.elements.switchcase.sections;
 import ch.njol.skript.Skript;
 import ch.njol.skript.conditions.CondCompare;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionSection;
 import ch.njol.skript.lang.Literal;
@@ -19,6 +15,7 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchBaseEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import org.bukkit.event.Event;
@@ -28,40 +25,41 @@ import org.skriptlang.skript.lang.comparator.Relation;
 
 import java.util.List;
 
-@Name("SwitchCase - Case")
-@Description({"In a switch section/expression, you can manage different actions based on the case matching the switched value.",
-    "Multiple objects are supported in cases.",
-    "Default will run if all other cases fail to match. Default must go last or all cases after it will be ignored."})
-@Examples({"on break:",
-    "\tswitch event-block:",
-    "\t\tcase dirt:",
-    "\t\t\tgive player a stick named \"Dirt\"",
-    "\t\tcase stone:",
-    "\t\t\tgive player an apple named \"Stone\"",
-    "\t\tcase grass block:",
-    "\t\t\tgive player an iron ingot named \"Iron Ingot\"",
-    "\t\tdefault:",
-    "\t\t\tkill player",
-    "",
-    "on damage of a mob by a player:",
-    "\tswitch type of victim:",
-    "\t\tcase zombie, husk, a drowned:",
-    "\t\t\tspawn 3 baby zombies at victim",
-    "\t\tcase skeleton, stray:",
-    "\t\t\tspawn a skeleton horse at victim:",
-    "\t\t\t\tset {_h} to entity",
-    "\t\t\tspawn a skeleton at victim:",
-    "\t\t\t\tset {_s} to entity",
-    "\t\t\tmake {_s} ride {_h}",
-    "\t\tcase sheep, cow, chicken, pig:",
-    "\t\t\tkill attacker",
-    "\t\tdefault:",
-    "\t\t\tgive attacker a diamond"})
-@Since("3.8.0")
 public class SecCase extends Section implements ReturnHandler<Object> {
 
-    static {
-        Skript.registerSection(SecCase.class, "case %objects%", "(default [case]|case default)");
+    public static void register(Registration reg) {
+        reg.newSection(SecCase.class, "case %objects%", "(default [case]|case default)")
+            .name("SwitchCase - Case")
+            .description("In a switch section/expression, you can manage different actions based on the case matching the switched value.",
+                "Multiple objects are supported in cases.",
+                "Default will run if all other cases fail to match. Default must go last or all cases after it will be ignored.")
+            .examples("on break:",
+                "\tswitch event-block:",
+                "\t\tcase dirt:",
+                "\t\t\tgive player a stick named \"Dirt\"",
+                "\t\tcase stone:",
+                "\t\t\tgive player an apple named \"Stone\"",
+                "\t\tcase grass block:",
+                "\t\t\tgive player an iron ingot named \"Iron Ingot\"",
+                "\t\tdefault:",
+                "\t\t\tkill player",
+                "",
+                "on damage of a mob by a player:",
+                "\tswitch type of victim:",
+                "\t\tcase zombie, husk, a drowned:",
+                "\t\t\tspawn 3 baby zombies at victim",
+                "\t\tcase skeleton, stray:",
+                "\t\t\tspawn a skeleton horse at victim:",
+                "\t\t\t\tset {_h} to entity",
+                "\t\t\tspawn a skeleton at victim:",
+                "\t\t\t\tset {_s} to entity",
+                "\t\t\tmake {_s} ride {_h}",
+                "\t\tcase sheep, cow, chicken, pig:",
+                "\t\t\tkill attacker",
+                "\t\tdefault:",
+                "\t\t\tgive attacker a diamond")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<Object> caseObject;

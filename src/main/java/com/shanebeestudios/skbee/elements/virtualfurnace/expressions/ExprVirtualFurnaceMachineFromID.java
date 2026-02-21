@@ -1,17 +1,11 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.virtualfurnace.type.Types;
-import com.shanebeestudios.vf.api.machine.Furnace;
 import com.shanebeestudios.vf.api.machine.Machine;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -21,15 +15,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Name("VirtualFurnace - Machine from ID")
-@Description("Get a virtual furnace from a uuid.")
-@Examples("set {_furnace} to virtual furnace from id {_uuid}")
-@Since("3.3.0")
 public class ExprVirtualFurnaceMachineFromID extends SimpleExpression<Machine> {
 
-    static {
-        Skript.registerExpression(ExprVirtualFurnaceMachineFromID.class, Machine.class, ExpressionType.COMBINED,
-                "[virtual] (machine|furnace)[s] (from|with) (id|uuid)[s] %strings%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprVirtualFurnaceMachineFromID.class, Machine.class,
+                "[virtual] (machine|furnace)[s] (from|with) (id|uuid)[s] %strings%")
+            .name("VirtualFurnace - Machine from ID")
+            .description("Get a virtual furnace from a uuid.")
+            .examples("set {_furnace} to virtual furnace from id {_uuid}")
+            .since("3.3.0")
+            .register();
     }
 
     private Expression<String> ids;

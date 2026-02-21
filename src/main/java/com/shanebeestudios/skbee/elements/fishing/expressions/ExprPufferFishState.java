@@ -1,28 +1,27 @@
 package com.shanebeestudios.skbee.elements.fishing.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.PufferFish;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("PufferFish - Puff State")
-@Description("Represents the puff state of a puffer fish. An integer between 0 and 2")
-@Examples({"set puff state of target entity to 1",
-        "add 1 to puff state of target entity",
-        "reset puff state of target entity"})
-@Since("2.8.0")
-public class ExprPufferFishState extends SimplePropertyExpression<Entity,Integer> {
+public class ExprPufferFishState extends SimplePropertyExpression<Entity, Integer> {
 
-    static {
-        register(ExprPufferFishState.class, Integer.class, "puff state", "entities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprPufferFishState.class, Integer.class,
+                "puff state", "entities")
+            .name("PufferFish - Puff State")
+            .description("Represents the puff state of a puffer fish. An integer between 0 and 2")
+            .examples("set puff state of target entity to 1",
+                "add 1 to puff state of target entity",
+                "reset puff state of target entity")
+            .since("2.8.0")
+            .register();
     }
 
     @Override
@@ -37,7 +36,7 @@ public class ExprPufferFishState extends SimplePropertyExpression<Entity,Integer
     @Override
     public @Nullable Class<?>[] acceptChange(ChangeMode mode) {
         return switch (mode) {
-            case ADD,SET, RESET, REMOVE -> CollectionUtils.array(Integer.class);
+            case ADD, SET, RESET, REMOVE -> CollectionUtils.array(Integer.class);
             case REMOVE_ALL, DELETE -> null;
         };
     }

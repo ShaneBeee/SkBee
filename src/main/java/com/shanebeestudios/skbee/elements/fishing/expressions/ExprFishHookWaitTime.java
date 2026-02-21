@@ -1,36 +1,35 @@
 package com.shanebeestudios.skbee.elements.fishing.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Fish Hook - Wait time")
-@Description({"Represents the min/max wait time for a fish hook to catch a fish.",
-    "\nNOTE: this is before applying lure.",
-    "\nNOTE: min wait time must be less than max wait time. Both must be greater than 0.",
-    "\nDefaults: min = 100 ticks (5 seconds), max = 600 ticks (30 seconds)."})
-@Examples({"on fish:",
-    "\tif fish state = fishing:",
-    "\t\tset min wait time of fish hook to 1 second",
-    "\t\tset max wait time of fish hook to 2 seconds"})
-@Since("2.8.0")
 public class ExprFishHookWaitTime extends SimplePropertyExpression<Entity, Timespan> {
 
-    static {
-        register(ExprFishHookWaitTime.class, Timespan.class, "(min|:max) wait time", "entities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprFishHookWaitTime.class, Timespan.class,
+                "(min|:max) wait time", "entities")
+            .name("Fish Hook - Wait time")
+            .description("Represents the min/max wait time for a fish hook to catch a fish.",
+                "NOTE: this is before applying lure.",
+                "NOTE: min wait time must be less than max wait time. Both must be greater than 0.",
+                "Defaults: min = 100 ticks (5 seconds), max = 600 ticks (30 seconds).")
+            .examples("on fish:",
+                "\tif fish state = fishing:",
+                "\t\tset min wait time of fish hook to 1 second",
+                "\t\tset max wait time of fish hook to 2 seconds")
+            .since("2.8.0")
+            .register();
     }
 
     private boolean max;

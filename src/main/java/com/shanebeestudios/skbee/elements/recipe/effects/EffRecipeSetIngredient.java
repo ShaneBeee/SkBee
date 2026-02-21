@@ -1,10 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -13,6 +9,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.recipe.ShapedRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.ShapedRecipe;
@@ -22,19 +19,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-@Name("Recipe - Ingredients")
-@Description({"Set/add to the ingredients of a shaped/shapeless recipe.",
-    "This is specifically used in the ingredients section of shaped/shapeless recipe section.",
-    "`set ingredient` is used for shaped recipes.",
-    "`add ingredient` is used for shapeless recipes."})
-@Examples("see shaped/shapeless recipe sections.")
-@Since("3.0.0")
 public class EffRecipeSetIngredient extends Effect {
 
-    static {
-        Skript.registerEffect(EffRecipeSetIngredient.class,
-            "set ingredient (of|for) %string% to %itemstack/recipechoice/minecrafttag%",
-            "add %itemstack/recipechoice/minecrafttag% to ingredients");
+    public static void register(Registration reg) {
+        reg.newEffect(EffRecipeSetIngredient.class,
+                "set ingredient (of|for) %string% to %itemstack/recipechoice/minecrafttag%",
+                "add %itemstack/recipechoice/minecrafttag% to ingredients")
+            .name("Recipe - Ingredient")
+            .description("Set/add to the ingredients of a shaped/shapeless recipe.",
+                "This is specifically used in the ingredients section of shaped/shapeless recipe section.",
+                "`set ingredient` is used for shaped recipes.",
+                "`add ingredient` is used for shapeless recipes.")
+            .examples("see shaped/shapeless recipe sections.")
+            .since("3.0.0")
+            .register();
     }
 
     private int pattern;

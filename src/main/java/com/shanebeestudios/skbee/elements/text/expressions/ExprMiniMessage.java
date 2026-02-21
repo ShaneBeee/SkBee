@@ -1,47 +1,42 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.VariableString;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - MiniMessage")
-@Description({"Get a mini message from a string.",
-    "These messages are still components, which you can still apply hover/click events to.",
-    "You can also add optional tag resolvers. Essential you create a resolver to replace `<someString>` ",
-    "in mini message with something else (See examples for more details).",
-    "For more info check out the [**Mini Message Format**](https://docs.adventure.kyori.net/minimessage/format.html) page."})
-@Examples({"set {_m} to mini message from \"<rainbow>this is a rainbow message\"",
-    "set {_m} to mini message from \"<gradient:##F30A0A:##0A2AF3>PRETTY MESSAGE FROM RED TO BLUE\"",
-    "set {_m} to mini message from \"<red>This is a <green>test!\"",
-    "send component mini message from \"<red>This is a <green>test!\" to all players",
-    "",
-    "# Create a component",
-    "set {_t} to translate component of player's tool",
-    "add hover event showing player's tool to {_t}",
-    "# Use this component in the resolver to replace \"<item>\" in the mini message",
-    "set {_r} to resolver(\"item\", {_t})",
-    "# Setup the mini message with the replacement placeholder",
-    "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r}",
-    "send component {_m}"})
-@Since("2.4.0")
 public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
 
-    static {
-        Skript.registerExpression(ExprMiniMessage.class, ComponentWrapper.class, ExpressionType.SIMPLE,
-            "mini[ ]message from %string% [with [resolver[s]] %-tagresolvers%]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprMiniMessage.class, ComponentWrapper.class, "mini[ ]message from %string% [with [resolver[s]] %-tagresolvers%]")
+            .name("TextComponent - MiniMessage")
+            .description("Get a mini message from a string.",
+                "These messages are still components, which you can still apply hover/click events to.",
+                "You can also add optional tag resolvers. Essential you create a resolver to replace `<someString>` ",
+                "in mini message with something else (See examples for more details).",
+                "For more info check out the [**Mini Message Format**](https://docs.adventure.kyori.net/minimessage/format.html) page.")
+            .examples("set {_m} to mini message from \"<rainbow>this is a rainbow message\"",
+                "set {_m} to mini message from \"<gradient:##F30A0A:##0A2AF3>PRETTY MESSAGE FROM RED TO BLUE\"",
+                "set {_m} to mini message from \"<red>This is a <green>test!\"",
+                "send component mini message from \"<red>This is a <green>test!\" to all players",
+                "",
+                "# Create a component",
+                "set {_t} to translate component of player's tool",
+                "add hover event showing player's tool to {_t}",
+                "# Use this component in the resolver to replace \"<item>\" in the mini message",
+                "set {_r} to resolver(\"item\", {_t})",
+                "# Setup the mini message with the replacement placeholder",
+                "set {_m} to mini message from \"<rainbow> Hey guys check out my <item> aint she a beaut?\" with {_r}",
+                "send component {_m}")
+            .since("2.4.0")
+            .register();
     }
 
     private Expression<String> string;

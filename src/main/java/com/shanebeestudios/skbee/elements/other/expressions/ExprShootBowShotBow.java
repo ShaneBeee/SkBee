@@ -2,33 +2,29 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Entity Shoot Bow - Shot Bow")
-@Description("Gets the bow Item used to fire the arrow in an entity shoot bow event.")
-@Examples({"on entity shoot bow:",
-        "\tif name of shot bow != \"Mr Bow\":",
-        "\t\tcancel event"})
-@Since("2.16.0")
 public class ExprShootBowShotBow extends SimpleExpression<ItemType> {
 
-    static {
-        Skript.registerExpression(ExprShootBowShotBow.class, ItemType.class, ExpressionType.SIMPLE,
-                "shot bow");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprShootBowShotBow.class, ItemType.class, "shot bow")
+                .name("Entity Shoot Bow - Shot Bow")
+                .description("Gets the bow Item used to fire the arrow in an entity shoot bow event.")
+                .examples("on entity shoot bow:",
+                        "\tif name of shot bow != \"Mr Bow\":",
+                        "\t\tcancel event")
+                .since("2.16.0")
+                .register();
     }
 
     @SuppressWarnings("NullableProblems")

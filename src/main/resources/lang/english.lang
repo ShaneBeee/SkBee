@@ -7,6 +7,7 @@ types:
     attributemodifier: attribute modifier¦s
     attributeoperation: attribute operation¦s
     audience: audience¦s
+    biomeparameterpoint: biome parameter point¦s
     blockaction: block action¦s
     blockface: blockface¦s
     blockstate: blockstate¦s
@@ -41,6 +42,7 @@ types:
     itemdisplaytransform: item display transform¦s
     itemflag: item flag¦s
     jukeboxsong: jukebox song¦s
+    knockbackcause: knockback cause¦s
     loottable: loot table¦s
     machine: machine¦s
     machineproperty: machine propert¦y¦ies
@@ -75,6 +77,7 @@ types:
     spell: spell¦s
     scoreboard: scoreboard¦s
     signedmessage: signed message¦s
+    spellcasterspell: spell¦s
     statistic: statistic¦s
     structure: structure¦s
     structurerotation: structure rotation¦s
@@ -85,6 +88,7 @@ types:
     teamoptionstatus: team option status¦es
     textalignment: text alignment¦s
     textcomponent: text component¦s @-
+    timespanperiod: time period¦s
     trail: trail¦s
     transformation: transformation¦s
     transformreason: transform reason¦s

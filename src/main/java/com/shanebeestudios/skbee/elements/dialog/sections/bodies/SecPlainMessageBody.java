@@ -2,16 +2,13 @@ package com.shanebeestudios.skbee.elements.dialog.sections.bodies;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
@@ -23,31 +20,38 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
+import org.skriptlang.skript.lang.entry.EntryValidator.EntryValidatorBuilder;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Plain Message Body")
-@Description({"A multiline label for a dialog.",
-    "See [**Plain Message**](https://minecraft.wiki/w/Dialog#plain_message) on McWiki for further details.",
-    "**Entries**:",
-    "- `contents` = A string/text component that will be seen in a dialog.",
-    "- `width` = Integer value between 1 and 1024 — Maximum width of message. Defaults to 200. [Optional]"})
-@Examples({"add plain message body:",
-    "\tcontents: mini message from \"Do you want to break this block?\"",
-    "\twidth: 150"})
-@Since("3.16.0")
 public class SecPlainMessageBody extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static final EntryValidator VALIDATOR;
 
     static {
+        EntryValidatorBuilder builder = EntryValidator.builder();
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("contents", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
-        Skript.registerSection(SecPlainMessageBody.class, "add (text|plain message) body");
+        builder.addEntryData(new ExpressionEntryData<>("contents", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
+        VALIDATOR = builder.build();
+    }
+
+    public static void register(Registration reg) {
+        reg.newSection(SecPlainMessageBody.class, VALIDATOR, "add (text|plain message) body")
+            .name("Dialog - Plain Message Body")
+            .description("A multiline label for a dialog.",
+                "See [**Plain Message**](https://minecraft.wiki/w/Dialog#plain_message) on McWiki for further details.",
+                "**Entries**:",
+                "- `contents` = A string/text component that will be seen in a dialog.",
+                "- `width` = Integer value between 1 and 1024 — Maximum width of message. Defaults to 200. [Optional]")
+            .examples("add plain message body:",
+                "\tcontents: mini message from \"Do you want to break this block?\"",
+                "\twidth: 150")
+            .since("3.16.0")
+            .register();
     }
 
     private Expression<?> contents;
@@ -60,7 +64,7 @@ public class SecPlainMessageBody extends Section {
             Skript.error("Plain message body can only be applied in a 'body' section or 'description' section of an item body.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.contents = (Expression<?>) container.getOptional("contents", false);

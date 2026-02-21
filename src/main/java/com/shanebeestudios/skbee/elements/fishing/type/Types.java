@@ -1,21 +1,20 @@
 package com.shanebeestudios.skbee.elements.fishing.type;
 
 import ch.njol.skript.registrations.Classes;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.entity.FishHook.HookState;
-import org.bukkit.event.player.PlayerFishEvent;
 
 public class Types {
 
-    static {
+    public static void register(Registration reg) {
         // Only register if no other addons have registered this class
         if (Classes.getExactClassInfo(HookState.class) == null) {
-            EnumWrapper<HookState> FISH_HOOK_STATE_ENUM = new EnumWrapper<>(HookState.class);
-            Classes.registerClass(FISH_HOOK_STATE_ENUM.getClassInfo("fishhookstate")
-                    .user("fish ?hook ?states?")
-                    .name("Fish Hook State")
-                    .since("2.8.0"));
+            reg.newEnumType(HookState.class, "fishhookstate")
+                .user("fish ?hook ?states?")
+                .name("Fish Hook State")
+                .since("2.8.0")
+                .register();
         } else {
             Util.logLoading("It looks like another addon registered 'fishhookstate' already.");
             Util.logLoading("You may have to use their fish hook states in SkBee's fish hook state expression.");

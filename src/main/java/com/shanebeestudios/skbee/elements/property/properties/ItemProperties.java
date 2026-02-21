@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.property.properties;
 import ch.njol.skript.aliases.ItemType;
 import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.tag.DamageTypeTags;
@@ -15,7 +16,7 @@ import java.util.Locale;
 @SuppressWarnings({"UnstableApiUsage", "unused"})
 public class ItemProperties {
 
-    static {
+    public static void register(Registration reg) {
         PropertyRegistry.registerProperty("blast resistance", new Property<>(ItemType.class, Float.class) {
                 @Override
                 public Float get(ItemType itemType) {

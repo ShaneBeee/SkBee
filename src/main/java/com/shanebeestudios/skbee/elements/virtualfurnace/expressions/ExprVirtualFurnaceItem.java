@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.virtualfurnace.type.Types;
 import com.shanebeestudios.vf.api.property.FurnaceProperties;
 import com.shanebeestudios.vf.api.property.Properties;
@@ -19,23 +14,24 @@ import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("VirtualFurnace - Furnace Item")
-@Description("Get a virtual furnace item. This will be any item with a linked virtual furnace, allowing players " +
-        "to access a portable furnace wherever they go. The speed multipliers will allow your furnace item to cook faster " +
-        "or burn fuel faster. Ex: 1.0 will burn at normal speed as defined by the recipes, where as 2.0 will burn twice as fast. " +
-        "Omitting these values will default to 1.0." +
-        "GUI name will be the name that shows up in the furnace GUI")
-@Examples("give player a virtual furnace item as diamond named \"MyFurnace\" with gui name \"PORTABLE FURNACE\" with " +
-        "cook speed multiplier 1.5")
-@Since("1.3.0")
 public class ExprVirtualFurnaceItem extends SimpleExpression<ItemType> {
 
-    static {
-        Skript.registerExpression(ExprVirtualFurnaceItem.class, ItemType.class, ExpressionType.COMBINED,
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprVirtualFurnaceItem.class, ItemType.class,
                 "[a] [(:glowing)] virtual furnace item as %itemtype% with (inventory|gui) name %string%" +
-                        " [[and ]with cook speed multiplier %number%] [[and ]with fuel speed multiplier %number%]",
+                    " [[and ]with cook speed multiplier %number%] [[and ]with fuel speed multiplier %number%]",
                 "[a] [(:glowing)] virtual furnace item as %itemtype% with (inventory|gui) name %string% ",
-                "with [[furnace ]properties] %-machineproperty%");
+                "with [[furnace ]properties] %-machineproperty%")
+            .name("VirtualFurnace - Furnace Item")
+            .description("Get a virtual furnace item. This will be any item with a linked virtual furnace, allowing players " +
+                "to access a portable furnace wherever they go. The speed multipliers will allow your furnace item to cook faster " +
+                "or burn fuel faster. Ex: 1.0 will burn at normal speed as defined by the recipes, where as 2.0 will burn twice as fast. " +
+                "Omitting these values will default to 1.0." +
+                "GUI name will be the name that shows up in the furnace GUI")
+            .examples("give player a virtual furnace item as diamond named \"MyFurnace\" with gui name \"PORTABLE FURNACE\" with " +
+                "cook speed multiplier 1.5")
+            .since("1.3.0")
+            .register();
     }
 
     private int pattern;
@@ -82,10 +78,10 @@ public class ExprVirtualFurnaceItem extends SimpleExpression<ItemType> {
         }
         String name = this.name != null ? this.name.getSingle(event) : "uh-oh";
         ItemStack furnaceItem = Types.FURNACE_MANAGER.createItemWithFurnace(
-                name,
-                furnaceProperties,
-                itemStack,
-                glowing);
+            name,
+            furnaceProperties,
+            itemStack,
+            glowing);
         return new ItemType[]{new ItemType(furnaceItem)};
     }
 
@@ -105,13 +101,13 @@ public class ExprVirtualFurnaceItem extends SimpleExpression<ItemType> {
         String properties;
         if (this.pattern == 0) {
             properties = (this.cookSpeed != null ? " with cook speed " + this.cookSpeed.toString(e, d) : "")
-                    + (this.fuelSpeed != null ? " with fuel speed " + this.fuelSpeed.toString(e, d) : "");
+                + (this.fuelSpeed != null ? " with fuel speed " + this.fuelSpeed.toString(e, d) : "");
         } else {
             properties = " with properties " + this.properties.toString(e, d);
         }
         return (glowing ? "glowing " : "") + "virtual furnace item as " + this.itemType.toString(e, d)
-                + " with inventory name " + this.name.toString(e, d)
-                + properties;
+            + " with inventory name " + this.name.toString(e, d)
+            + properties;
     }
 
 }

@@ -1,11 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -14,6 +9,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -33,49 +29,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-@Name("Recipe - Register Shapeless Recipe")
-@Description({"This section allows you to register a shapeless recipe and add ingredients.",
-    "\n`id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
-    "\n`result` = The resulting item of this recipe.",
-    "\n`group` = Define a group to group your recipes together in the recipe book",
-    "(an example would be having 3 recipes with the same outcome but a variety of ingredients) (optional).",
-    "\n`category` = The recipe book category your recipe will be in (optional) [Requires MC 1.19+].",
-    "Options are \"building\", \"redstone\", \"equiptment\", \"misc\".",
-    "\n`ingredients` = This section is where you will add the ingredients."})
-@Examples({"on load:",
-    "\tregister shapeless recipe:",
-    "\t\tid: \"custom:string\"",
-    "\t\tresult: 4 string",
-    "\t\tingredients:",
-    "\t\t\tadd material choice of every wool to ingredients",
-    "",
-    "\tregister shapeless recipe:",
-    "\t\tid: \"custom:totem_of_undying\"",
-    "\t\tresult: totem of undying",
-    "\t\tgroup: \"custom tools\"",
-    "\t\tcategory: \"redstone\"",
-    "\t\tingredients:",
-    "\t\t\tadd diamond block to ingredients",
-    "\t\t\tadd material choice of minecraft item tag \"minecraft:planks\" to ingredients",
-    "\t\t\tadd emerald block to ingredients",
-    "\t\t\tadd end rod to ingredients",
-    "\t\t\tadd wither skeleton skull to ingredients",
-    "",
-    "\tregister shapeless recipe:",
-    "\t\tid: \"custom:end_rod\"",
-    "\t\tresult: end rod",
-    "\t\tgroup: \"custom tools\"",
-    "\t\tcategory: \"redstone\"",
-    "\t\tingredients:",
-    "\t\t\tadd diamond block to ingredients",
-    "\t\t\tadd emerald block to ingredients"})
-@Since("3.0.0")
 public class SecRecipeShapeless extends Section {
 
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>(); // TODO this will cause errors on lower versions, will fix later
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         SimpleEntryValidator builder = SimpleEntryValidator.builder();
         builder.addRequiredEntry("id", String.class);
         builder.addRequiredEntry("result", ItemStack.class);
@@ -88,7 +47,46 @@ public class SecRecipeShapeless extends Section {
         builder.addRequiredSection("ingredients");
         VALIDATOR = builder.build();
 
-        Skript.registerSection(SecRecipeShapeless.class, "register [a] [new] shapeless recipe");
+        reg.newSection(SecRecipeShapeless.class, VALIDATOR, "register [a] [new] shapeless recipe")
+            .name("Recipe - Register Shapeless Recipe")
+            .description("This section allows you to register a shapeless recipe and add ingredients.",
+                "**Entries**:",
+                " - `id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
+                " - `result` = The resulting item of this recipe.",
+                " - `group` = Define a group to group your recipes together in the recipe book " +
+                    "(an example would be having 3 recipes with the same outcome but a variety of ingredients) (optional).",
+                " - `category` = The recipe book category your recipe will be in (optional) " +
+                    "Options are \"building\", \"redstone\", \"equiptment\", \"misc\".",
+                " - `ingredients` = This section is where you will add the ingredients.")
+            .examples("on load:",
+                "\tregister shapeless recipe:",
+                "\t\tid: \"custom:string\"",
+                "\t\tresult: 4 string",
+                "\t\tingredients:",
+                "\t\t\tadd material choice of every wool to ingredients",
+                "",
+                "\tregister shapeless recipe:",
+                "\t\tid: \"custom:totem_of_undying\"",
+                "\t\tresult: totem of undying",
+                "\t\tgroup: \"custom tools\"",
+                "\t\tcategory: \"redstone\"",
+                "\t\tingredients:",
+                "\t\t\tadd diamond block to ingredients",
+                "\t\t\tadd material choice of minecraft item tag \"minecraft:planks\" to ingredients",
+                "\t\t\tadd emerald block to ingredients",
+                "\t\t\tadd end rod to ingredients",
+                "\t\t\tadd wither skeleton skull to ingredients",
+                "",
+                "\tregister shapeless recipe:",
+                "\t\tid: \"custom:end_rod\"",
+                "\t\tresult: end rod",
+                "\t\tgroup: \"custom tools\"",
+                "\t\tcategory: \"redstone\"",
+                "\t\tingredients:",
+                "\t\t\tadd diamond block to ingredients",
+                "\t\t\tadd emerald block to ingredients")
+            .since("3.0.0")
+            .register();
     }
 
     private Expression<String> id;

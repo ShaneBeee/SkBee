@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.advancement.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -18,16 +13,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Advancement - Criteria")
-@Description("Get a list of the criteria for an advancement.")
-@Examples("set {_c::*} to criteria of {_advancement}")
-@Since("1.17.0")
 public class ExprAdvancementCriteria extends SimpleExpression<String> {
 
-    static {
-        Skript.registerExpression(ExprAdvancementCriteria.class, String.class, ExpressionType.SIMPLE,
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprAdvancementCriteria.class, String.class,
                 "criteria of %advancements%",
-                "%advancement%'[s] criteria");
+                "%advancement%'[s] criteria")
+            .name("Advancement - Criteria")
+            .description("Get a list of the criteria for an advancement.")
+            .examples("set {_c::*} to criteria of {_advancement}")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<Advancement> advancement;

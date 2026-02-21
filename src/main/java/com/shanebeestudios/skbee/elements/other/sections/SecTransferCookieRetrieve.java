@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.other.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.effects.Delay;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -13,6 +9,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprTransferCookie;
@@ -24,34 +21,35 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Name("Transfer - Retrieve Cookie")
-@Description({"Retrieve a cookie from a player. Requires Minecraft 1.20.5+",
-    "Due to the retrieval process happening async, this will delay proceeding code.",
-    "While the cookie is being retrieved, the following code will wait.",
-    "NOTE: Cookies are stored across server transfers."})
-@Examples({"command /server <string>:",
-    "\ttrigger:",
-    "\t\tstore cookie \"%uuid of player%-transfer\" with key \"transfer\" on player",
-    "\t\ttransfer player to arg-1",
-    "",
-    "# Connect event is recommended over join event",
-    "# This way if you have to kick the player it's done before they join",
-    "on connect:",
-    "\t# only do a cookie check if player was transferred",
-    "\tif player is transferred:",
-    "\t\tretrieve cookie with key \"transfer\" from player:",
-    "\t\t\tif transfer cookie = \"%uuid of player%-transfer\":",
-    "\t\t\t\t# stop code if cookie is correct",
-    "\t\t\t\tstop",
-    "\t\t# kick player if cookie is missing or incorrect",
-    "\t\tkick player due to \"&cIllegal Transfer\""})
-@Since("3.5.3")
 public class SecTransferCookieRetrieve extends Section {
 
-    static {
+    public static void register(Registration reg) {
         if (Skript.methodExists(Player.class, "retrieveCookie", NamespacedKey.class)) {
-            Skript.registerSection(SecTransferCookieRetrieve.class,
-                "retrieve cookie with key %namespacedkey/string% [from %player%]");
+            reg.newSection(SecTransferCookieRetrieve.class,
+                    "retrieve cookie with key %namespacedkey/string% [from %player%]")
+                .name("Transfer - Retrieve Cookie")
+                .description("Retrieve a cookie from a player.",
+                    "Due to the retrieval process happening async, this will delay proceeding code.",
+                    "While the cookie is being retrieved, the following code will wait.",
+                    "NOTE: Cookies are stored across server transfers.")
+                .examples("command /server <string>:",
+                    "\ttrigger:",
+                    "\t\tstore cookie \"%uuid of player%-transfer\" with key \"transfer\" on player",
+                    "\t\ttransfer player to arg-1",
+                    "",
+                    "# Connect event is recommended over join event",
+                    "# This way if you have to kick the player it's done before they join",
+                    "on connect:",
+                    "\t# only do a cookie check if player was transferred",
+                    "\tif player is transferred:",
+                    "\t\tretrieve cookie with key \"transfer\" from player:",
+                    "\t\t\tif transfer cookie = \"%uuid of player%-transfer\":",
+                    "\t\t\t\t# stop code if cookie is correct",
+                    "\t\t\t\tstop",
+                    "\t\t# kick player if cookie is missing or incorrect",
+                    "\t\tkick player due to \"&cIllegal Transfer\"")
+                .since("3.5.3")
+                .register();
         }
     }
 
