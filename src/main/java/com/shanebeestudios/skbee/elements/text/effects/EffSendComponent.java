@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.text.effects;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -19,19 +18,16 @@ public class EffSendComponent extends Effect {
 
     public static void register(Registration reg) {
         reg.newEffect(EffSendComponent.class,
-                "send [(text|1:action[[ ]bar])] component[s] %objects% [to %audiences%] [from:from %-player%]",
-                "broadcast [text] component[s] %objects% [from:from %-player%]")
+                "send [(text|1:action[[ ]bar])] component[s] %objects% [to %audiences%]",
+                "broadcast [text] component[s] %objects%")
             .name("TextComponent - Send")
-            .description(
-                "Send text components to audiences. You can also broadcast components as well.",
+            .description("Send text components to audiences. You can also broadcast components as well.",
                 "As of 1.16.0 you can also send action bar components to players and you can also send normal strings.",
                 "`to %audiences%` = An audience is anything that can receieve a component (players, entities, console, worlds, server, etc).",
                 "",
                 "The optional sender (supported in Minecraft 1.16.4+) allows you to send components from a specific player.",
-                "This is useful to make sure players can block messages using MC 1.16.4's new player chat ignore system.",
-                "**NOTE**: `from %player%` is now deprecated (apparently hasn't worked in a long time)")
-            .examples(
-                "set {_comp::1} to text component of \"hi player \"",
+                "This is useful to make sure players can block messages using MC 1.16.4's new player chat ignore system.")
+            .examples("set {_comp::1} to text component of \"hi player \"",
                 "set {_comp::2} to text component of \"hover over me for a special message!\"",
                 "set hover event of {_comp::2} to hover event showing \"OoO look ma I'm hovering!\"",
                 "send component {_comp::*} to player",
@@ -58,9 +54,6 @@ public class EffSendComponent extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.components = LiteralUtils.defendExpression(exprs[0]);
         this.audiences = matchedPattern == 0 ? (Expression<Audience>) exprs[1] : null;
-        if (parseResult.hasTag("from")) {
-            Skript.warning("'from %player%' is no longer supported and will do nothing.");
-        }
         this.action = matchedPattern == 0 && parseResult.mark == 1;
         this.broadcast = matchedPattern == 1;
         return LiteralUtils.canInitSafely(components);

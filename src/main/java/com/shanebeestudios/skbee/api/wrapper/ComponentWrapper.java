@@ -45,6 +45,7 @@ import org.bukkit.inventory.InventoryView;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.scoreboard.Team;
+import org.intellij.lang.annotations.RegExp;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -480,7 +481,7 @@ public class ComponentWrapper {
         }
         if (replaceFirst)
             replacementConfig.once();
-        for (String pattern : patterns) {
+        for (@RegExp String pattern : patterns) {
             if (regex) {
                 try {
                     replacementConfig.match(pattern);
@@ -577,6 +578,7 @@ public class ComponentWrapper {
      *
      * @param inventory Inventory to change name
      */
+    @Deprecated(forRemoval = true, since = "INSERT VERSION")
     public void setInventoryName(Inventory inventory) {
         List<HumanEntity> viewers = inventory.getViewers();
         if (viewers.isEmpty()) return;
