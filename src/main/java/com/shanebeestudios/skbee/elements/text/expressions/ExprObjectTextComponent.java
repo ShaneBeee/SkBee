@@ -25,8 +25,9 @@ public class ExprObjectTextComponent extends SimpleExpression<ComponentWrapper> 
                 .description("Create a text component using an atlas/sprite or a player head.",
                     "The atlas is optional and will default to the \"minecraft:blocks\" atlas.",
                     "Requires Minecraft 1.21.9+",
-                    "See [**Text Component Format on McWiki**](https://minecraft.wiki/w/Text_component_format#Object) for more information.")
-                .examples("set {_ds} to object text component with sprite \"item/diamond_sword\"",
+                    "See [**Text Component Format on McWiki**](https://minecraft.wiki/w/Text_component_format#Object) for more information.",
+                    "See [**Atlas on McWiki**](https://minecraft.wiki/w/Atlas) for more information on Atlases.")
+                .examples("set {_ds} to object text component with sprite \"block/diamond_block\"",
                     "set {_head} to object text component with player head from player",
                     "set {_head} to object text component with player head from \"Notch\"",
                     "set {_head} to object text component with player head from {_uuid}")
