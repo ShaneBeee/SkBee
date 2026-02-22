@@ -9,6 +9,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
+import com.shanebeestudios.skbee.api.particle.ParticleWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.EntityEffect;
 import org.bukkit.GameEvent;
@@ -104,9 +105,9 @@ public class ExprAvailableMaterials extends SimpleExpression<Object> {
         });
         Registration.registerList("loot tables", LootTable.class, lootTables.stream().sorted(Comparator.comparing(lootTable -> lootTable.getKey().getKey())).toList());
 
-        List<Particle> particles = ParticleUtil.getAvailableParticles();
-        particles = particles.stream().sorted(Comparator.comparing(ParticleUtil::getName)).collect(Collectors.toList());
-        Registration.registerList("particles", Particle.class, particles);
+        List<ParticleWrapper> particles = ParticleWrapper.getAvailableParticles();
+        particles = particles.stream().sorted(Comparator.comparing(ParticleWrapper::getName)).collect(Collectors.toList());
+        Registration.registerList("minecraftparticles", ParticleWrapper.class, particles);
 
         @SuppressWarnings("deprecation")
         List<PotionEffectType> potions = Arrays.asList(PotionEffectType.values());

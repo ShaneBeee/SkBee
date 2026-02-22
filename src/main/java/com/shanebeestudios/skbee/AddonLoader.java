@@ -27,6 +27,7 @@ import com.shanebeestudios.skbee.elements.generator.ChunkGeneratorElementRegistr
 import com.shanebeestudios.skbee.elements.itemcomponent.ItemComponentElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
+import com.shanebeestudios.skbee.elements.particle.ParticleElementRegistration;
 import com.shanebeestudios.skbee.elements.property.PropertyElementRegistration;
 import com.shanebeestudios.skbee.elements.raytrace.RayTraceElementRegistration;
 import com.shanebeestudios.skbee.elements.recipe.RecipeElementRegistration;
@@ -353,6 +354,8 @@ public class AddonLoader {
     private void loadOtherElements() {
         this.pluginManager.registerEvents(new EntityListener(), this.plugin);
         OtherElementRegistration.register(this.registration);
+        // We're not going to add a config value for ONE effect
+        ParticleElementRegistration.register(this.registration);
     }
 
     private void loadPropertyElements() {
