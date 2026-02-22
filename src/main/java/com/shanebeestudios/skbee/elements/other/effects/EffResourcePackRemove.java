@@ -1,13 +1,9 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -17,20 +13,19 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-@Name("Resource Pack Remove")
-@Description("Remove all resource packs from a player or remove resource packs from uuids. Requires Minecraft 1.20.4+")
-@Examples({"remove all resource packs from player",
-    "remove resource pack with uuid {pack::1} from player",
-    "remove resource packs with uuids {pack::*} from player"})
-@Since("3.4.0")
 public class EffResourcePackRemove extends Effect {
 
-    static {
-        if (Skript.methodExists(Player.class, "removeResourcePacks")) {
-            Skript.registerEffect(EffResourcePackRemove.class,
+    public static void register(Registration reg) {
+        reg.newEffect(EffResourcePackRemove.class,
                 "remove all resource packs from %players%",
-                "remove resource pack[s] with (uuid|id)[s] %strings% from %players%");
-        }
+                "remove resource pack[s] with (uuid|id)[s] %strings% from %players%")
+            .name("Resource Pack Remove")
+            .description("Remove all resource packs from a player or remove resource packs from uuids.")
+            .examples("remove all resource packs from player",
+                "remove resource pack with uuid {pack::1} from player",
+                "remove resource packs with uuids {pack::*} from player")
+            .since("3.4.0")
+            .register();
     }
 
     private boolean removeAll;

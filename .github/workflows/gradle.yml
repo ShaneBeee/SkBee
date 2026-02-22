@@ -5,7 +5,7 @@
 # This workflow will build a Java project with Gradle and cache/restore any dependencies to improve the workflow execution time
 # For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-java-with-gradle
 
-name: Java CI with Gradle
+name: Build, Test & Upload Artifact
 
 on:
   push:
@@ -54,12 +54,5 @@ jobs:
         with:
           test_script_directory: src/test/scripts
           skript_repo_ref: master
-          extra_plugins_directory: extra-plugins/
-          run_vanilla_tests: 'false' # temporarily disable due to vanilla Skript tests failing
-      - name: Run tests - Skript 2.12.2
-        uses: SkriptLang/skript-test-action@v1.2
-        with:
-          test_script_directory: src/test/scripts
-          skript_repo_ref: 2.12.2
           extra_plugins_directory: extra-plugins/
           run_vanilla_tests: 'false' # temporarily disable due to vanilla Skript tests failing

@@ -1,17 +1,12 @@
 package com.shanebeestudios.skbee.elements.nbt.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Material;
@@ -19,25 +14,26 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("NBT - Item with NBT")
-@Description({"Get an item with nbt.",
-    "NOTE: The NBT in the examples represents NBT for Minecraft 1.20.5+",
-    "NOTE: The optional `custom` syntax will place nbt in the `\"minecraft:custom_data\"` component (1.20.5+ only)."})
-@Examples({"give player diamond sword with nbt from \"{\"\"minecraft:food\"\":{nutrition:10,saturation:2.0f}}\"",
-    "set {_n} to nbt from \"{custom_data:{points:10}}\"",
-    "set {_i} to netherite axe with nbt {_n}",
-    "give player diamond pickaxe with nbt from \"{\"\"minecraft:damage\"\":500}\"",
-    "give player 30 apples with nbt from \"{\"\"minecraft:max_stack_size\"\":10}\"",
-    "",
-    "#These two have the same outcome, just showing the use of `custom` and how it places in the custom_data component.",
-    "give player diamond sword with nbt from \"{\"\"minecraft:custom_data\"\":{points:10}}\"",
-    "give player diamond sword with custom nbt from \"{points:10}\"",})
-@Since("1.0.0")
 public class ExprItemWithNBT extends SimpleExpression<ItemType> {
 
-    static {
-        Skript.registerExpression(ExprItemWithNBT.class, ItemType.class, ExpressionType.PROPERTY,
-            "%itemtype% with [:custom] [[item( |-)]nbt] %nbtcompound%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprItemWithNBT.class, ItemType.class,
+                "%itemtype% with [:custom] [[item( |-)]nbt] %nbtcompound%")
+            .name("NBT - Item with NBT")
+            .description("Get an item with nbt.",
+                "NOTE: The NBT in the examples represents NBT for Minecraft 1.20.5+",
+                "NOTE: The optional `custom` syntax will place nbt in the `\"minecraft:custom_data\"` component (1.20.5+ only).")
+            .examples("give player diamond sword with nbt from \"{\"\"minecraft:food\"\":{nutrition:10,saturation:2.0f}}\"",
+                "set {_n} to nbt from \"{custom_data:{points:10}}\"",
+                "set {_i} to netherite axe with nbt {_n}",
+                "give player diamond pickaxe with nbt from \"{\"\"minecraft:damage\"\":500}\"",
+                "give player 30 apples with nbt from \"{\"\"minecraft:max_stack_size\"\":10}\"",
+                "",
+                "#These two have the same outcome, just showing the use of `custom` and how it places in the custom_data component.",
+                "give player diamond sword with nbt from \"{\"\"minecraft:custom_data\"\":{points:10}}\"",
+                "give player diamond sword with custom nbt from \"{points:10}\"")
+            .since("1.0.0")
+            .register();
     }
 
     private Expression<ItemType> item;

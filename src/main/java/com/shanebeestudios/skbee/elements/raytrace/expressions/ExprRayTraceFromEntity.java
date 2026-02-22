@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.raytrace.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.EntityUtils;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
@@ -25,25 +20,26 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("RayTrace - From Entity")
-@Description({"RayTrace from an entity.",
-    "Default max distance = 'maximum target block distance' in Skript's config.",
-    "RaySize = entity bounding boxes will be uniformly expanded (or shrunk)",
-    "by this value before doing collision checks (default = 0.0).",
-    "IngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..).",
-    "Ignoring/Only Allowing Entities/EntityTypes = Will ignore/only allow the entities/entitytypes from the final ray.",
-    "Going through Blocks/ItemTypes = Will ignore the blocks/itemtypes from the final ray."})
-@Examples({"set {_ray} to ray trace from player with max distance 25",
-    "set {_ray} to ray trace from player with max distance 25 while ignoring passable blocks",
-    "set {_rays::*} to raytrace from all players with ray size 0.1"})
-@Since("2.6.0")
 public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
 
-    static {
-        Skript.registerExpression(ExprRayTraceFromEntity.class, RayTraceResult.class, ExpressionType.COMBINED,
-            "ray[ ]trace from %livingentities% [with max distance %-number%] [with ray size %-number%] " +
-                "[ignore:while ignoring passable blocks] [while (ignoring|allowing:only allowing) %-entities/entitydatas%]" +
-                "[while going through %-blocks/itemtypes%]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprRayTraceFromEntity.class, RayTraceResult.class,
+                "ray[ ]trace from %livingentities% [with max distance %-number%] [with ray size %-number%] " +
+                    "[ignore:while ignoring passable blocks] [while (ignoring|allowing:only allowing) %-entities/entitydatas%]" +
+                    "[while going through %-blocks/itemtypes%]")
+            .name("RayTrace - From Entity")
+            .description("RayTrace from an entity.",
+                "Default max distance = 'maximum target block distance' in Skript's config.",
+                "RaySize = entity bounding boxes will be uniformly expanded (or shrunk)",
+                "by this value before doing collision checks (default = 0.0).",
+                "IngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..).",
+                "Ignoring/Only Allowing Entities/EntityTypes = Will ignore/only allow the entities/entitytypes from the final ray.",
+                "Going through Blocks/ItemTypes = Will ignore the blocks/itemtypes from the final ray.")
+            .examples("set {_ray} to ray trace from player with max distance 25",
+                "set {_ray} to ray trace from player with max distance 25 while ignoring passable blocks",
+                "set {_rays::*} to raytrace from all players with ray size 0.1")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<LivingEntity> entities;

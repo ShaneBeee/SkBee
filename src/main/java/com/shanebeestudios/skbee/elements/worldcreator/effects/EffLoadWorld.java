@@ -1,10 +1,6 @@
 package com.shanebeestudios.skbee.elements.worldcreator.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -12,6 +8,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.Bukkit;
@@ -22,30 +19,31 @@ import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 
-@Name("Load/Unload/Delete World")
-@Description({"Load a world from a world creator.",
-        "Worlds created/loaded with a world creator, are saved in the 'plugins/SkBee/worlds.yml' file",
-        "and automatically loaded on server start if auto-load is enabled in the config.",
-        "If you wish to import a world, just use a world creator with a name that matches that world folder.",
-        "You can load a world from a name (assuming this world is in your world directory and not loaded).",
-        "You can unload a world with an option to save/not save (defaults to saving).",
-        "You can also delete a world, but only a custom world."})
-@Examples({"set {_w} to a new world creator named \"my-world\"",
-        "load world from world creator {_w}", "",
-        "load world \"my-world\"",
-        "unload world world(\"my-world\")"})
-@Since("1.8.0")
 public class EffLoadWorld extends Effect {
 
-    private static final BeeWorldConfig BEE_WORLD_CONFIG;
+    private static BeeWorldConfig BEE_WORLD_CONFIG;
 
-    static {
+    public static void register(Registration reg) {
         BEE_WORLD_CONFIG = SkBee.getPlugin().getBeeWorldConfig();
-        Skript.registerEffect(EffLoadWorld.class,
+        reg.newEffect(EffLoadWorld.class,
                 "load world from [[world] creator] %worldcreator%",
                 "load world %string%",
                 "unload [world] %world% [and (save|1:(do not|don't) save)]",
-                "delete world file for [world] %string%");
+                "delete world file for [world] %string%")
+            .name("Load/Unload/Delete World")
+            .description("Load a world from a world creator.",
+                "Worlds created/loaded with a world creator, are saved in the 'plugins/SkBee/worlds.yml' file",
+                "and automatically loaded on server start if auto-load is enabled in the config.",
+                "If you wish to import a world, just use a world creator with a name that matches that world folder.",
+                "You can load a world from a name (assuming this world is in your world directory and not loaded).",
+                "You can unload a world with an option to save/not save (defaults to saving).",
+                "You can also delete a world, but only a custom world.")
+            .examples("set {_w} to a new world creator named \"my-world\"",
+                "load world from world creator {_w}", "",
+                "load world \"my-world\"",
+                "unload world world(\"my-world\")")
+            .since("1.8.0")
+            .register();
     }
 
     private int pattern;

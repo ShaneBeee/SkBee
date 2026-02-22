@@ -3,10 +3,6 @@ package com.shanebeestudios.skbee.elements.nbt.sections;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -16,6 +12,7 @@ import ch.njol.skript.util.slot.Slot;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTCustom;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import de.tr7zw.changeme.nbtapi.NBT;
@@ -33,36 +30,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Name("NBT - Modify NBT")
-@Description({"Modify NBT of an entity/block(TileEntity)/item.",
-    "This method is faster than the old NBT expressions, as the changes aren't applied to the object until the section is done.",
-    "This section creates its own internal event, which means previous event-values will not work.",
-    "**OPTIONS**:",
-    "`entity` = Will modify the base nbt of an entity/player.",
-    "`block` = Will modify the base nbt of a block, must be a tile entity block.",
-    "`item` = Will modify the base nbt of an item (the components section of an item).",
-    "`custom` = Will modify the custom nbt of an item (the \"minecraft:custom_data\" component), entity or block."})
-@Examples({"# Item",
-    "modify nbt of player's tool:",
-    "\tset int tag \"test\" of nbt to 1",
-    "# Item - Custom",
-    "modify custom nbt of player's tool:",
-    "\tset double tag \"points\" of nbt to 10.5",
-    "",
-    "# Entity",
-    "modify nbt of player:",
-    "\tset int tag \"SomeRealNbtTag\" of nbt to 5",
-    "# Entity - Custom",
-    "modify custom nbt of player:",
-    "\tset string tag \"blah\" of nbt to \"ooo a string\"",
-    "",
-    "# Block",
-    "modify nbt of target block:",
-    "\tset short tag \"cooking_time_spent\" of nbt to 25",
-    "# Block - Custom",
-    "modify custom nbt of target block:",
-    "\tset string tag \"owner\" of nbt to {_nameOfPlayer}"})
-@Since("3.11.0")
 public class SecModifyNBT extends Section {
 
     public static class NBTEditEvent extends Event {
@@ -83,9 +50,40 @@ public class SecModifyNBT extends Section {
         }
     }
 
-    static {
-        Skript.registerSection(SecModifyNBT.class,
-            "modify [:custom] nbt of %entity/block/itemstack/itemtype/slot%");
+    public static void register(Registration reg) {
+        reg.newSection(SecModifyNBT.class,
+                "modify [:custom] nbt of %entity/block/itemstack/itemtype/slot%")
+            .name("NBT - Modify NBT")
+            .description("Modify NBT of an entity/block(TileEntity)/item.",
+                "This method is faster than the old NBT expressions, as the changes aren't applied to the object until the section is done.",
+                "This section creates its own internal event, which means previous event-values will not work.",
+                "**OPTIONS**:",
+                "`entity` = Will modify the base nbt of an entity/player.",
+                "`block` = Will modify the base nbt of a block, must be a tile entity block.",
+                "`item` = Will modify the base nbt of an item (the components section of an item).",
+                "`custom` = Will modify the custom nbt of an item (the \"minecraft:custom_data\" component), entity or block.")
+            .examples("# Item",
+                "modify nbt of player's tool:",
+                "\tset int tag \"test\" of nbt to 1",
+                "# Item - Custom",
+                "modify custom nbt of player's tool:",
+                "\tset double tag \"points\" of nbt to 10.5",
+                "",
+                "# Entity",
+                "modify nbt of player:",
+                "\tset int tag \"SomeRealNbtTag\" of nbt to 5",
+                "# Entity - Custom",
+                "modify custom nbt of player:",
+                "\tset string tag \"blah\" of nbt to \"ooo a string\"",
+                "",
+                "# Block",
+                "modify nbt of target block:",
+                "\tset short tag \"cooking_time_spent\" of nbt to 25",
+                "# Block - Custom",
+                "modify custom nbt of target block:",
+                "\tset string tag \"owner\" of nbt to {_nameOfPlayer}")
+            .since("3.11.0")
+            .register();
         EventValues.registerEventValue(NBTEditEvent.class, NBTCompound.class, NBTEditEvent::getCompound);
     }
 

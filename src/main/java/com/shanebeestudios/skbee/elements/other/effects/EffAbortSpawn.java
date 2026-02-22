@@ -1,29 +1,27 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Abort Creature Spawn")
-@Description({"Abort a creature spawn event, preventing it from retrying more attempts after canceling.",
-    "Aborting should only be done if you're blanket blocking this entity type from spawning."})
-@Examples({"on pre creature spawn of an animal:",
-    "\tcancel event",
-    "\tabort creature spawn"})
-@Since("2.16.0")
 public class EffAbortSpawn extends Effect {
 
-    static {
-        Skript.registerEffect(EffAbortSpawn.class, "[:un]abort creature spawn");
+    public static void register(Registration reg) {
+        reg.newEffect(EffAbortSpawn.class, "[:un]abort creature spawn")
+            .name("Abort Creature Spawn")
+            .description("Abort a creature spawn event, preventing it from retrying more attempts after canceling.",
+                "Aborting should only be done if you're blanket blocking this entity type from spawning.")
+            .examples("on pre creature spawn of an animal:",
+                "\tcancel event",
+                "\tabort creature spawn")
+            .since("2.16.0")
+            .register();
     }
 
     private boolean abort;

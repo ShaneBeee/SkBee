@@ -2,19 +2,16 @@ package com.shanebeestudios.skbee.elements.dialog.sections.inputs;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import io.papermc.paper.registry.data.dialog.input.DialogInput;
 import io.papermc.paper.registry.data.dialog.input.NumberRangeDialogInput;
 import net.kyori.adventure.text.Component;
@@ -27,49 +24,52 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Number Range Input")
-@Description({"A number slider input to be used in an `inputs` section of a dialog.",
-    "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
-        "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
-    "**Entries**:",
-    "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
-    "- `label` = A string/text component to be displayed to the left of the input.",
-    "- `label_format` = A translation key to be used for building label (first argument is contents of label field, second argument is current value). ",
-    "Defaults to \"options.generic_value\".",
-    "- `width` = Integer value between 1 and 1024 — The width of the input. Defaults to 200. [Optional]",
-    "- `start` = The minimum number of the slider.",
-    "- `end` = The maximum number of the slider.",
-    "- `step` = Step size (If present, only values of initial+<anyinteger>*step will be allowed. If absent, any value from the range is allowed). [Optional]",
-    "- `initial` = The initial increment value of the slider. Defaults to the middle of the range. [Optional]"})
-@Examples({"add number range input:",
-    "\tkey: \"some_key\"",
-    "\tlabel: \"Slide for Health\"",
-    "\twidth: 300",
-    "\tstart: 0",
-    "\tend: 20",
-    "\tstep: 1",
-    "\tinitial: 20"})
-@Since("3.16.0")
 public class SecNumberRangeInput extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
+        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
         // GENERAL INPUT
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("key", null, false, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("key", null, false, String.class));
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
 
         // NUMBER RANGE INPUT
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("label_format", null, true, String.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("start", null, false, Float.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("end", null, false, Float.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("step", null, true, Float.class));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("initial", null, false, Float.class));
+        builder.addEntryData(new ExpressionEntryData<>("label_format", null, true, String.class));
+        builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
+        builder.addEntryData(new ExpressionEntryData<>("start", null, false, Float.class));
+        builder.addEntryData(new ExpressionEntryData<>("end", null, false, Float.class));
+        builder.addEntryData(new ExpressionEntryData<>("step", null, true, Float.class));
+        builder.addEntryData(new ExpressionEntryData<>("initial", null, false, Float.class));
+        VALIDATOR = builder.build();
 
-        Skript.registerSection(SecNumberRangeInput.class, "add number range input");
+        reg.newSection(SecNumberRangeInput.class, VALIDATOR, "add number range input")
+            .name("Dialog - Number Range Input")
+            .description("A number slider input to be used in an `inputs` section of a dialog.",
+                "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
+                    "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
+                "**Entries**:",
+                "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
+                "- `label` = A string/text component to be displayed to the left of the input.",
+                "- `label_format` = A translation key to be used for building label (first argument is contents of label field, second argument is current value). ",
+                "Defaults to \"options.generic_value\".",
+                "- `width` = Integer value between 1 and 1024 — The width of the input. Defaults to 200. [Optional]",
+                "- `start` = The minimum number of the slider.",
+                "- `end` = The maximum number of the slider.",
+                "- `step` = Step size (If present, only values of initial+<anyinteger>*step will be allowed. If absent, any value from the range is allowed). [Optional]",
+                "- `initial` = The initial increment value of the slider. Defaults to the middle of the range. [Optional]")
+            .examples("add number range input:",
+                "\tkey: \"some_key\"",
+                "\tlabel: \"Slide for Health\"",
+                "\twidth: 300",
+                "\tstart: 0",
+                "\tend: 20",
+                "\tstep: 1",
+                "\tinitial: 20")
+            .since("3.16.0")
+            .register();
     }
 
     // GENERAL INPUT
@@ -91,7 +91,7 @@ public class SecNumberRangeInput extends Section {
             Skript.error("A number range input can only be used in an 'inputs' section of a dialog.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.key = (Expression<String>) container.getOptional("key", false);

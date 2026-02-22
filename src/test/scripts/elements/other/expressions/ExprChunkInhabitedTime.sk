@@ -1,0 +1,11 @@
+test "SkBee - ExprChunkInhabitedTime":
+	set {_chunk} to chunk at location(0, 0, 0, event-world)
+	set {_in} to inhabited time of {_chunk}
+	assert {_in} is set with "The inhabited time of the chunk should be set"
+
+	set inhabited time of {_chunk} to 1 minute
+	assert inhabited time of {_chunk} = 1 minute with "The inhabited time should now be 1 minute"
+	add 10 minute to inhabited time of {_chunk}
+	assert inhabited time of {_chunk} = 11 minutes with "The inhabited time should now be 1 minutes"
+	remove 1 minute from inhabited time of {_chunk}
+	assert inhabited time of {_chunk} = 10 minutes with "The inhabited time should now be 0 minutes"

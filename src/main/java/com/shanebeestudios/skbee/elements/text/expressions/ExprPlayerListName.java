@@ -1,15 +1,12 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Player;
@@ -17,18 +14,19 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Player List Name/Header/Footer")
-@Description("Represents the player list name/header/footer of a player.")
-@Examples({"set component player list name of player to mini message from \"<rainbow>%player%\"",
-    "reset component player list name of player",
-    "set {_comp} to component player list name of player",
-    "set component player list header of all players to mini message from \"<rainbow>MY SERVER!!!\""})
-@Since("3.5.8")
 public class ExprPlayerListName extends SimplePropertyExpression<Player, ComponentWrapper> {
 
-    static {
-        register(ExprPlayerListName.class, ComponentWrapper.class,
-            "component (player|tab)[ ]list (name|:header|:footer)", "players");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprPlayerListName.class, ComponentWrapper.class,
+                "component (player|tab)[ ]list (name|:header|:footer)", "players")
+            .name("TextComponent - Player List Name/Header/Footer")
+            .description("Represents the player list name/header/footer of a player.")
+            .examples("set component player list name of player to mini message from \"<rainbow>%player%\"",
+                "reset component player list name of player",
+                "set {_comp} to component player list name of player",
+                "set component player list header of all players to mini message from \"<rainbow>MY SERVER!!!\"")
+            .since("3.5.8")
+            .register();
     }
 
     private int type;

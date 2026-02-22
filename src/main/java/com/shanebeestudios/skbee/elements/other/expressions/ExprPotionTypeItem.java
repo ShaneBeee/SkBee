@@ -1,11 +1,8 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -15,18 +12,19 @@ import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("PotionType of Item")
-@Description({"Get/set/delete the potion type of an item.",
-    "This is not the same as the potion effect type, this is the base potion Minecraft uses for the potion items in the creative menu."})
-@Examples({"set potion type of player's tool to strong_leaping",
-    "if potion type of player's tool = strong leaping:",
-    "delete potion type of player's tool"})
-@Since("3.8.1")
 public class ExprPotionTypeItem extends SimplePropertyExpression<Object, PotionType> {
 
-    static {
-        register(ExprPotionTypeItem.class, PotionType.class,
-            "potion type", "itemstacks/itemtypes/slots");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprPotionTypeItem.class, PotionType.class,
+                "potion type", "itemstacks/itemtypes/slots")
+            .name("PotionType of Item")
+            .description("Get/set/delete the potion type of an item.",
+                "This is not the same as the potion effect type, this is the base potion Minecraft uses for the potion items in the creative menu.")
+            .examples("set potion type of player's tool to strong_leaping",
+                "if potion type of player's tool = strong leaping:",
+                "delete potion type of player's tool")
+            .since("3.8.1")
+            .register();
     }
 
     @Override

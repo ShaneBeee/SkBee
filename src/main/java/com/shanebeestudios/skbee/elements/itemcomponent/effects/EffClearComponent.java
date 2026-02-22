@@ -1,34 +1,31 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentType;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ItemComponent - Clear/Reset Components")
-@Description({"Clear/reset data components of an item. Requires Minecraft 1.21+",
-    "- `clear/remove/unset` = Will remove the component from the item.",
-    "- `reset` = Will reset the data component of the item back to its default value."})
-@Examples({"clear food component of player's tool",
-    "clear tool component of player's tool",
-    "reset attribute modifier component of player's tool"})
-@Since("3.11.0")
 public class EffClearComponent extends Effect {
 
-    static {
-        Skript.registerEffect(EffClearComponent.class,
-            "(clear|remove|unset|:reset) %datacomponenttypes% (item|data) component[s] of %itemstacks/itemtypes/slots%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffClearComponent.class,
+                "(clear|remove|unset|:reset) %datacomponenttypes% (item|data) component[s] of %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Clear/Reset Components")
+            .description("Clear/reset data components of an item. Requires Minecraft 1.21+",
+                "- `clear/remove/unset` = Will remove the component from the item.",
+                "- `reset` = Will reset the data component of the item back to its default value.")
+            .examples("clear food component of player's tool",
+                "clear tool component of player's tool",
+                "reset attribute modifier component of player's tool")
+            .since("3.11.0")
+            .register();
     }
 
     private boolean remove;

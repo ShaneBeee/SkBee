@@ -1,31 +1,28 @@
 package com.shanebeestudios.skbee.elements.structure.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
 import org.bukkit.util.BlockVector;
 
-@Name("Structure - Fill")
-@Description({"Fill a structure with blocks. Requires MC 1.17.1+"})
-@Examples({"set {_s} to structure with id \"my_structure\"",
-    "fill structure {_s} between {loc1} and {loc2}",
-    "fill structure {_s} between location at player and location(10,10,10, world \"world\")"})
-@Since("1.12.0")
 public class EffStructureFill extends Effect {
 
-    static {
-        Skript.registerEffect(EffStructureFill.class,
-            "fill [structure] %structure% (between|within) %location% and %location%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffStructureFill.class,
+                "fill [structure] %structure% (between|within) %location% and %location%")
+            .name("Structure - Fill")
+            .description("Fill a structure with blocks.")
+            .examples("set {_s} to structure with id \"my_structure\"",
+                "fill structure {_s} between {loc1} and {loc2}",
+                "fill structure {_s} between location at player and location(10,10,10, world \"world\")")
+            .since("1.12.0")
+            .register();
     }
 
     private Expression<StructureWrapper> structure;

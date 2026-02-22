@@ -1,14 +1,13 @@
 package com.shanebeestudios.skbee.elements.recipe.type;
 
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.inventory.ItemStack;
@@ -16,8 +15,6 @@ import org.bukkit.inventory.RecipeChoice;
 import org.bukkit.inventory.RecipeChoice.ExactChoice;
 import org.bukkit.inventory.RecipeChoice.MaterialChoice;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
-import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.converter.Converters;
 
 import java.util.ArrayList;
@@ -25,9 +22,9 @@ import java.util.List;
 
 public class Types {
 
-    static {
+    public static void register(Registration reg) {
         if (Classes.getExactClassInfo(RecipeChoice.class) == null) {
-            Classes.registerClass(new ClassInfo<>(RecipeChoice.class, "recipechoice")
+            reg.newType(RecipeChoice.class, "recipechoice")
                 .name("Recipe Choice")
                 .user("recipe ?choices?")
                 .description("Represents an Exact/Material Choice.",
@@ -54,15 +51,16 @@ public class Types {
                     public @NotNull String toVariableNameString(RecipeChoice matChoice) {
                         return "recipechoice:" + toString(matChoice, 0);
                     }
-                }));
+                })
+                .register();
         }
 
-        EnumWrapper<RecipeType> RECIPE_TYPE_ENUM = new EnumWrapper<>(RecipeType.class);
-        Classes.registerClass(RECIPE_TYPE_ENUM.getClassInfo("recipetype")
+        reg.newEnumType(RecipeType.class, "recipetype")
             .user("recipe ?types?")
             .name("Recipe Type")
             .description("Represents the types of recipes.")
-            .since("2.6.0"));
+            .since("2.6.0")
+            .register();
 
         // CONVERTERS
         Converters.registerConverter(ItemStack.class, RecipeChoice.class, from -> {
@@ -75,15 +73,11 @@ public class Types {
             }
             return new ExactChoice(from);
         });
-        Converters.registerConverter(Tag.class, RecipeChoice.class, new Converter<>() {
-            @SuppressWarnings("unchecked")
-            @Override
-            public @Nullable RecipeChoice convert(Tag from) {
-                if (Util.isMaterialTag(from)) {
-                    return new MaterialChoice((Tag<Material>) from);
-                }
-                return null;
+        Converters.registerConverter(Tag.class, RecipeChoice.class, from -> {
+            if (Util.isMaterialTag(from)) {
+                return new MaterialChoice((Tag<Material>) from);
             }
+            return null;
         });
     }
 

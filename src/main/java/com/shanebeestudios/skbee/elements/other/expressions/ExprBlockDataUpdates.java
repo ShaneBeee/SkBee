@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -23,16 +18,17 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("BlockData - Updates")
-@Description({"Set the BlockData of a block without updates (will prevent physics updates of neighbouring blocks)."})
-@Examples({"set blockdata of target block without updates to oak_fence[]",
-        "set blockdata of target block without updates to campfire[lit=false]"})
-@Since("2.6.0")
 public class ExprBlockDataUpdates extends SimpleExpression<BlockData> {
 
-    static {
-        Skript.registerExpression(ExprBlockDataUpdates.class, BlockData.class, ExpressionType.COMBINED,
-                "block[ ](data|state) of %blocks% without update[s]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprBlockDataUpdates.class, BlockData.class,
+                "block[ ](data|state) of %blocks% without update[s]")
+            .name("BlockData - Updates")
+            .description("Set the BlockData of a block without updates (will prevent physics updates of neighbouring blocks).")
+            .examples("set blockdata of target block without updates to oak_fence[]",
+                "set blockdata of target block without updates to campfire[lit=false]")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<Block> blocks;

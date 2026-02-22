@@ -2,12 +2,7 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
@@ -16,6 +11,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import ch.njol.util.StringUtils;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.event.server.TabCompleteEvent;
 import org.jetbrains.annotations.NotNull;
@@ -25,24 +21,25 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-@Name("Tab Completions")
-@Description({"Set the tab completions used in a tab complete event.",
-    "You can specify which position in the command arguments also.",
-    "You can also remove texts from tab completions."})
-@Examples({"on tab complete of \"/mycommand\":",
-    "\tset tab completions for position 1 to \"one\", \"two\" and \"three\"",
-    "\tset tab completions for position 2 to 1, 2 and 3",
-    "\tset tab completions for position 3 to all players",
-    "\tset tab completions for position 4 to (indexes of {blocks::*})", "",
-    "on tab complete:",
-    "\tif event-string contains \"/ver\":",
-    "\t\tremove \"PermissionsEx\" from tab completions"})
-@Since("1.7.0")
 public class ExprTabCompletion extends SimpleExpression<String> {
 
-    static {
-        Skript.registerExpression(ExprTabCompletion.class, String.class, ExpressionType.SIMPLE,
-            "[skbee] tab completion[s] [(of|for) (last:last position|position %-number%)]");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprTabCompletion.class, String.class,
+                "[skbee] tab completion[s] [(of|for) (last:last position|position %-number%)]")
+            .name("Tab Completions")
+            .description("Set the tab completions used in a tab complete event.",
+                "You can specify which position in the command arguments also.",
+                "You can also remove texts from tab completions.")
+            .examples("on tab complete of \"/mycommand\":",
+                "\tset tab completions for position 1 to \"one\", \"two\" and \"three\"",
+                "\tset tab completions for position 2 to 1, 2 and 3",
+                "\tset tab completions for position 3 to all players",
+                "\tset tab completions for position 4 to (indexes of {blocks::*})", "",
+                "on tab complete:",
+                "\tif event-string contains \"/ver\":",
+                "\t\tremove \"PermissionsEx\" from tab completions")
+            .since("1.7.0")
+            .register();
     }
 
     private Expression<Number> position;

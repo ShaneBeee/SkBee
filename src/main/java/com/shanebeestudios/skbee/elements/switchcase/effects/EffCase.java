@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.switchcase.effects;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.conditions.CondCompare;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionSection;
@@ -16,8 +12,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
-import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchSecEvent;
 import com.shanebeestudios.skbee.elements.switchcase.sections.SecCase;
@@ -26,63 +22,64 @@ import com.shanebeestudios.skbee.elements.switchcase.sections.SecSwitch;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("SwitchCase - Case Inline")
-@Description({"Inline version of case section where you can return/run an effect all in one line.",
-    "Multiple objects are supported in cases.",
-    "- **Switch Expression** = Return an object based on the case matching the switched value.",
-    "- **Switch Section** = Run 1 effect based on the case matching the switched value.",
-    "Default will run if all other cases fail to match. Default must go last or all cases after it will be ignored."})
-@Examples({"# As Effect",
-    "on damage of a sheep by a player:",
-    "\tswitch type of attacker's tool:",
-    "\t\tcase wooden sword -> give attacker yellow wool",
-    "\t\tcase stone sword -> give attacker light gray wool",
-    "\t\tcase iron sword -> give attacker gray wool",
-    "\t\tcase golden sword -> give attacker orange wool",
-    "\t\tcase diamond sword -> give attacker light blue wool",
-    "\t\tcase netherite sword -> give attacker black wool",
-    "\t\tdefault -> give attacker white wool",
-    "",
-    "# As Return",
-    "function getRoman(i: number) :: string:",
-    "\treturn switch return {_i}:",
-    "\t\tcase 1 -> \"I\"",
-    "\t\tcase 2 -> \"II\"",
-    "\t\tcase 3 -> \"III\"",
-    "\t\tcase 4 -> \"IV\"",
-    "\t\tcase 5 -> \"V\"",
-    "\t\tdefault -> \"potato\"",
-    "",
-    "function getName(e: entity) :: string:",
-    "\treturn switch return {_e}:",
-    "\t\tcase sheep -> \"Mr Sheepy\"",
-    "\t\tcase cow -> \"Mr Cow\"",
-    "\t\tcase pig -> \"Señor Pig\"",
-    "\t\tdefault -> strict proper case \"%type of {_e}%\"",
-    "",
-    "on break:",
-    "\tset {_b} to event-block",
-    "\tset {_i} to switch return {_b}:",
-    "\t\tcase stone -> 1 of stone named \"Hard Stone\"",
-    "\t\tcase grass block -> 1 of grass block named \"Green Grass\"",
-    "\t\tcase dirt -> 1 of dirt named \"Dry Dirt\"",
-    "\t\tdefault -> 1 of {_b} named \"Some Other Block\"",
-    "\tgive player {_i}",
-    "",
-    "on damage of a mob by a player:",
-    "\tset {_item} to switch return type of victim:",
-    "\t\tcase sheep, cow, pig, chicken -> 1 of potato",
-    "\t\tcase zombie, drowned, husk -> 1 of rotten flesh",
-    "\t\tcase skeleton, stray, wither skeleton, bogged -> 1 of bone",
-    "\t\tdefault -> 1 of stick",
-    "\tgive {_item} to attacker",})
-@Since("3.8.0")
 public class EffCase extends Effect {
 
-    static {
-        Skript.registerEffect(EffCase.class,
-            "case %objects% -> <.+>",
-            "default -> <.+>");
+    public static void register(Registration reg) {
+        reg.newEffect(EffCase.class,
+                "case %objects% -> <.+>",
+                "default -> <.+>")
+            .name("SwitchCase - Case Inline")
+            .description("Inline version of case section where you can return/run an effect all in one line.",
+                "Multiple objects are supported in cases.",
+                "- **Switch Expression** = Return an object based on the case matching the switched value.",
+                "- **Switch Section** = Run 1 effect based on the case matching the switched value.",
+                "Default will run if all other cases fail to match. Default must go last or all cases after it will be ignored.")
+            .examples("# As Effect",
+                "on damage of a sheep by a player:",
+                "\tswitch type of attacker's tool:",
+                "\t\tcase wooden sword -> give attacker yellow wool",
+                "\t\tcase stone sword -> give attacker light gray wool",
+                "\t\tcase iron sword -> give attacker gray wool",
+                "\t\tcase golden sword -> give attacker orange wool",
+                "\t\tcase diamond sword -> give attacker light blue wool",
+                "\t\tcase netherite sword -> give attacker black wool",
+                "\t\tdefault -> give attacker white wool",
+                "",
+                "# As Return",
+                "function getRoman(i: number) :: string:",
+                "\treturn switch return {_i}:",
+                "\t\tcase 1 -> \"I\"",
+                "\t\tcase 2 -> \"II\"",
+                "\t\tcase 3 -> \"III\"",
+                "\t\tcase 4 -> \"IV\"",
+                "\t\tcase 5 -> \"V\"",
+                "\t\tdefault -> \"potato\"",
+                "",
+                "function getName(e: entity) :: string:",
+                "\treturn switch return {_e}:",
+                "\t\tcase sheep -> \"Mr Sheepy\"",
+                "\t\tcase cow -> \"Mr Cow\"",
+                "\t\tcase pig -> \"Señor Pig\"",
+                "\t\tdefault -> strict proper case \"%type of {_e}%\"",
+                "",
+                "on break:",
+                "\tset {_b} to event-block",
+                "\tset {_i} to switch return {_b}:",
+                "\t\tcase stone -> 1 of stone named \"Hard Stone\"",
+                "\t\tcase grass block -> 1 of grass block named \"Green Grass\"",
+                "\t\tcase dirt -> 1 of dirt named \"Dry Dirt\"",
+                "\t\tdefault -> 1 of {_b} named \"Some Other Block\"",
+                "\tgive player {_i}",
+                "",
+                "on damage of a mob by a player:",
+                "\tset {_item} to switch return type of victim:",
+                "\t\tcase sheep, cow, pig, chicken -> 1 of potato",
+                "\t\tcase zombie, drowned, husk -> 1 of rotten flesh",
+                "\t\tcase skeleton, stray, wither skeleton, bogged -> 1 of bone",
+                "\t\tdefault -> 1 of stick",
+                "\tgive {_item} to attacker")
+            .since("3.8.0")
+            .register();
     }
 
     private SecExprSwitchReturn parentSwitch;

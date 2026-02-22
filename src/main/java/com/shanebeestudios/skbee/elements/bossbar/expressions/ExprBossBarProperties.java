@@ -1,19 +1,14 @@
 package com.shanebeestudios.skbee.elements.bossbar.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.BossBarUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.boss.BarColor;
@@ -25,29 +20,29 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings("NullableProblems")
-@Name("BossBar - Properties")
-@Description({"Represents the properties of a BossBar that can be changed.",
-    "Progress of a bar is a number from 0-100."})
-@Examples({"set {_players::*} to bar players of {_bar}",
-    "set bar color of {_bar} to blue",
-    "set bar style of {_bar} to segmented 20",
-    "set bar title of {_bar} to \"Le-Title\"",
-    "reset bar title of {_bar}",
-    "set bar progress of {_bar} to 100",
-    "set bar flag darken sky of {_bar} to true"})
-@Since("2.14.1")
 public class ExprBossBarProperties extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprBossBarProperties.class, Object.class, ExpressionType.COMBINED,
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprBossBarProperties.class, Object.class,
             "[boss[ ]]bar players of %bossbar%",
             "[boss[ ]]bar (color|colour) of %bossbar%",
             "[boss[ ]]bar style of %bossbar%",
             "[boss[ ]]bar title of %bossbar%",
             "[boss[ ]]bar progress of %bossbar%",
             "[boss[ ]]bar flag %bossbarflag% of %bossbar%",
-            "[boss[ ]]bar visibility of %bossbar%");
+            "[boss[ ]]bar visibility of %bossbar%")
+            .name("BossBar - Properties")
+            .description("Represents the properties of a BossBar that can be changed.",
+                "Progress of a bar is a number from 0-100.")
+            .examples("set {_players::*} to bar players of {_bar}",
+                "set bar color of {_bar} to blue",
+                "set bar style of {_bar} to segmented 20",
+                "set bar title of {_bar} to \"Le-Title\"",
+                "reset bar title of {_bar}",
+                "set bar progress of {_bar} to 100",
+                "set bar flag darken sky of {_bar} to true")
+            .since("2.14.1")
+            .register();
     }
 
     private static final int PLAYERS = 0;

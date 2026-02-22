@@ -1,22 +1,21 @@
 package com.shanebeestudios.skbee.elements.bound.expressions;
 
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.World;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Bound - World")
-@Description("Get the world of a bound.")
-@Examples("set {world} to bound world of bound with id \"el-boundo\"")
-@Since("3.8.0")
 public class ExprBoundWorld extends SimplePropertyExpression<Bound, World> {
 
-    static {
-        register(ExprBoundWorld.class, World.class, "bound world", "bounds");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprBoundWorld.class, World.class,
+                "bound world", "bounds")
+            .name("Bound - World")
+            .description("Get the world of a bound.")
+            .examples("set {world} to bound world of bound with id \"el-boundo\"")
+            .since("3.8.0")
+            .register();
     }
 
     @Override

@@ -1,36 +1,32 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Hurt Animation")
-@Description({"Makes this living entity flash red as if they were damaged. Requires MC 1.20.1+",
-        "\nNote: Yaw = The direction the damage is coming from in relation to the entity,",
-        "where 0 is in front of the player, 90 is to the right, 180 is behind, and 270 is to the left"})
-@Examples({"play hurt animation on player",
-        "play hurt animation on all players",
-        "play hurt animation on all players with yaw 270",
-        "play hurt animation on all mobs"})
-@Since("2.15.0")
 public class EffHurtAnimation extends Effect {
 
-    static {
-        if (Skript.methodExists(LivingEntity.class, "playHurtAnimation", float.class)) {
-            Skript.registerEffect(EffHurtAnimation.class,
-                    "play hurt animation on %entities% [with yaw %-number%]");
-        }
+    public static void register(Registration reg) {
+        reg.newEffect(EffHurtAnimation.class,
+                "play hurt animation on %entities% [with yaw %-number%]")
+            .name("Hurt Animation")
+            .description("Makes this living entity flash red as if they were damaged. Requires MC 1.20.1+",
+                "\nNote: Yaw = The direction the damage is coming from in relation to the entity,",
+                "where 0 is in front of the player, 90 is to the right, 180 is behind, and 270 is to the left")
+            .examples("play hurt animation on player",
+                "play hurt animation on all players",
+                "play hurt animation on all players with yaw 270",
+                "play hurt animation on all mobs")
+            .since("2.15.0")
+            .register();
+
     }
 
     private Expression<Entity> entities;

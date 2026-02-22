@@ -10,6 +10,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.test.runner.EvtTestCase;
 import ch.njol.skript.test.runner.TestTracker;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -17,17 +18,18 @@ import org.skriptlang.skript.lang.structure.Structure;
 
 import java.util.List;
 
-@NoDoc
 public class SecTestSections extends Section {
 
-    static {
+    public static void register(Registration reg) {
         // See https://github.com/SkriptLang/Skript/issues/7434
-        Skript.registerSection(SecTestSections.class,
-            "before", // Run before tests (setup stuff)
-            "test", // Run tests here
-            "after", // Run after test for cleanup (will run even if test fails)
-            "after fail[ure]" // Run after failed tests only
-        );
+        reg.newSection(SecTestSections.class,
+                "before", // Run before tests (setup stuff)
+                "test", // Run tests here
+                "after", // Run after test for cleanup (will run even if test fails)
+                "after fail[ure]" // Run after failed tests only
+            )
+            .noDoc()
+            .register();
     }
 
     private String testName;

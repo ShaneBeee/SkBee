@@ -1,33 +1,31 @@
 package com.shanebeestudios.skbee.elements.fastboard.conditions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Condition;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardBase;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("FastBoard - Is On")
-@Description("Check if a player's fastboard is currently toggled on/off.")
-@Examples({"if fastboard of player is on:",
-        "\tsend \"Your scoreboard is on!\""})
-@Since("1.16.0")
 public class CondFastBoardOn extends Condition {
 
-    static {
-        Skript.registerCondition(CondFastBoardOn.class,
+    public static void register(Registration reg) {
+        reg.newCondition(CondFastBoardOn.class,
                 "[:score|fast]board of %player% is (on|true)",
                 "[:score|fast]board of %player% is(n't| not) on",
-                "[:score|fast]board of %player% is (off|false)");
+                "[:score|fast]board of %player% is (off|false)")
+            .name("FastBoard - Is On")
+            .description("Check if a player's fastboard is currently toggled on/off.")
+            .examples("if fastboard of player is on:",
+                "\tsend \"Your scoreboard is on!\"")
+            .since("1.16.0")
+            .register();
     }
 
     private Expression<Player> player;
@@ -48,7 +46,7 @@ public class CondFastBoardOn extends Condition {
     public boolean check(Event event) {
         Player player = this.player.getSingle(event);
         if (player != null) {
-            FastBoardBase<?,?> board = FastBoardManager.getBoard(player);
+            FastBoardBase<?, ?> board = FastBoardManager.getBoard(player);
             if (board == null) return false;
             return board.isOn() ^ isNegated();
         }

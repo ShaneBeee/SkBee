@@ -2,10 +2,6 @@ package com.shanebeestudios.skbee.elements.bound.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.EffectSection;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -17,6 +13,7 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.event.bound.BoundCreateEvent;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprLastCreatedBound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -25,20 +22,21 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Name("Bound - Copy Bound")
-@Description("Create an exact replica of an existing bound with a new id.")
-@Examples({"create a copy of bound with id \"some_bound\" with id \"some_bound_copy\"",
-    "create a copy of bound with id \"some_bound\" with id \"some_bound_copy\":",
-    "\tresize the bound between {_pos1} and {_pos2}",
-    "\tadd {_player} to bound owners of bound"})
-@Since("2.15.0")
 public class EffSecBoundCopy extends EffectSection {
 
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
-    static {
-        Skript.registerSection(EffSecBoundCopy.class,
-            "create [a] copy of [bound] %bound% (with|using) [the] id %string%");
+    public static void register(Registration reg) {
+        reg.newSection(EffSecBoundCopy.class,
+                "create [a] copy of [bound] %bound% (with|using) [the] id %string%")
+            .name("Bound - Copy Bound")
+            .description("Create an exact replica of an existing bound with a new id.")
+            .examples("create a copy of bound with id \"some_bound\" with id \"some_bound_copy\"",
+                "create a copy of bound with id \"some_bound\" with id \"some_bound_copy\":",
+                "\tresize the bound between {_pos1} and {_pos2}",
+                "\tadd {_player} to bound owners of bound")
+            .since("2.15.0")
+            .register();
     }
 
     private Expression<Bound> bound;

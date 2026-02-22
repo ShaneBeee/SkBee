@@ -1,18 +1,13 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Beacon;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;
@@ -22,18 +17,19 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Beacon - Entities in Effect Range")
-@Description("Returns a list of entities in the effect range of a beacon.")
-@Examples({"command /effected_entities:",
-        "\ttrigger:",
-        "\t\tset {_block} to target block of player",
-        "\t\tsend all entities in beacon effect range of {_block}"})
-@Since("2.16.0")
 public class ExprBeaconEntitiesInRange extends SimpleExpression<LivingEntity> {
 
-    static {
-        Skript.registerExpression(ExprBeaconEntitiesInRange.class, LivingEntity.class, ExpressionType.SIMPLE,
-                "[all [[of] the]|the] %*entitydatas% in [beacon] effect range of %blocks%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprBeaconEntitiesInRange.class, LivingEntity.class,
+                "[all [[of] the]|the] %*entitydatas% in [beacon] effect range of %blocks%")
+            .name("Beacon - Entities in Effect Range")
+            .description("Returns a list of entities in the effect range of a beacon.")
+            .examples("command /effected_entities:",
+                "\ttrigger:",
+                "\t\tset {_block} to target block of player",
+                "\t\tsend all entities in beacon effect range of {_block}")
+            .since("2.16.0")
+            .register();
     }
 
     private EntityData<?>[] entities;

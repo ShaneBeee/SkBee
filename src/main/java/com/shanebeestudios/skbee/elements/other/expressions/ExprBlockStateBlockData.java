@@ -1,28 +1,26 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("BlockState - BlockData")
-@Description("Represents the blockdata of a block state.")
-@Examples({"set {_data} to blockstate blockdata of {_blockstate}",
-        "set blockstate blockdata of {_blockstate} to stone[]"})
-@Since("2.13.0")
 public class ExprBlockStateBlockData extends SimplePropertyExpression<BlockState, BlockData> {
 
-    static {
-        register(ExprBlockStateBlockData.class, BlockData.class,
-                "block[ ]state block[ ]data[s]", "blockstates");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprBlockStateBlockData.class, BlockData.class,
+                "block[ ]state block[ ]data[s]", "blockstates")
+            .name("BlockState - BlockData")
+            .description("Represents the blockdata of a block state.")
+            .examples("set {_data} to blockstate blockdata of {_blockstate}",
+                "set blockstate blockdata of {_blockstate} to stone[]")
+            .since("2.13.0")
+            .register();
     }
 
     @Override

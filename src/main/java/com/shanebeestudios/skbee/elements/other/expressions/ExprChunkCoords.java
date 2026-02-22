@@ -1,29 +1,25 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Chunk;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Chunk Coordinates")
-@Description("Represents the coordinates of a chunk.")
-@Examples("set {_x} to chunk x of chunk at player")
-@Since("1.13.0")
 public class ExprChunkCoords extends PropertyExpression<Chunk, Number> {
 
-    static {
-        Skript.registerExpression(ExprChunkCoords.class, Number.class, ExpressionType.PROPERTY,
-                "chunk (:x|z) of %chunk%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprChunkCoords.class, Number.class,
+                "chunk (:x|z) of %chunk%")
+            .name("Chunk Coordinates")
+            .description("Represents the coordinates of a chunk.")
+            .examples("set {_x} to chunk x of chunk at player")
+            .since("1.13.0")
+            .register();
     }
 
     private boolean x;

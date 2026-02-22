@@ -1,18 +1,13 @@
 package com.shanebeestudios.skbee.elements.villager.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
@@ -22,20 +17,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@SuppressWarnings("NullableProblems")
-@Name("Merchant Recipe - Ingredients")
-@Description({"Represents the ingredients/result of a merchant recipe.",
-        "Ingredients can be set, but the result can not be changed.",
-        "If you wish to change the result, you will have to create a new merchant recipe."})
-@Examples({"set {_ing::*} to ingredients of merchant recipe {_recipe}",
-        "set ingredients of merchant recipe {_recipe} to diamond and stone",
-        "set {_result} to result item of merchant recipe {_recipe}"})
-@Since("1.17.0")
 public class ExprMerchantRecipeIngredients extends SimpleExpression<ItemType> {
 
-    static {
-        Skript.registerExpression(ExprMerchantRecipeIngredients.class, ItemType.class, ExpressionType.SIMPLE,
-                "(ingredients|1:result [item]) of merchant recipe %merchantrecipe%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprMerchantRecipeIngredients.class, ItemType.class,
+                "(ingredients|1:result [item]) of merchant recipe %merchantrecipe%")
+            .name("Merchant Recipe - Ingredients")
+            .description("Represents the ingredients/result of a merchant recipe.",
+                "Ingredients can be set, but the result can not be changed.",
+                "If you wish to change the result, you will have to create a new merchant recipe.")
+            .examples("set {_ing::*} to ingredients of merchant recipe {_recipe}",
+                "set ingredients of merchant recipe {_recipe} to diamond and stone",
+                "set {_result} to result item of merchant recipe {_recipe}")
+            .since("1.17.0")
+            .register();
     }
 
     private int pattern;

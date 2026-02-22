@@ -6,6 +6,7 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -29,7 +30,7 @@ public class BoundConfig implements Listener {
     private final FileConfiguration boundConfig;
     private final BoundPostponing boundPostponing;
     private final Map<String, Bound> boundsMap = new HashMap<>();
-    private final Map<World, BoundWorld> boundWorldMap = new HashMap<>();
+    private final Map<NamespacedKey, BoundWorld> boundWorldMap = new HashMap<>();
 
     // Maps scheduled to remove/save later
     private final Map<String, Bound> scheduledToSave = new HashMap<>();
@@ -56,6 +57,9 @@ public class BoundConfig implements Listener {
                     if (bound.getWorld() == null) {
                         this.boundPostponing.postponeLoading(bound);
                     } else {
+                        if (bound.getWorldKey() == null) {
+                            bound.updateKey();
+                        }
                         addBoundToRegionAndMap(bound);
                     }
                 }
@@ -196,14 +200,14 @@ public class BoundConfig implements Listener {
     /**
      * Get a BoundWorld for a world, or create one if it doesn't exist
      *
-     * @param world World to reference BoundWorld to
+     * @param worldKey World to reference BoundWorld to
      * @return BoundWorld for a world
      */
-    public @NotNull BoundWorld getOrCreateBoundWorld(World world) {
-        BoundWorld boundWorld = this.boundWorldMap.get(world);
+    public @NotNull BoundWorld getOrCreateBoundWorld(NamespacedKey worldKey) {
+        BoundWorld boundWorld = this.boundWorldMap.get(worldKey);
         if (boundWorld == null) {
-            boundWorld = new BoundWorld(world);
-            this.boundWorldMap.put(world, boundWorld);
+            boundWorld = new BoundWorld(worldKey);
+            this.boundWorldMap.put(worldKey, boundWorld);
         }
         return boundWorld;
     }
@@ -211,11 +215,11 @@ public class BoundConfig implements Listener {
     /**
      * Get a BoundWorld for a world
      *
-     * @param world World to reference BoundWorld to
+     * @param worldKey World to reference BoundWorld to
      * @return BoundWorld if it exists, else null
      */
-    public @Nullable BoundWorld getBoundWorld(World world) {
-        return this.boundWorldMap.get(world);
+    public @Nullable BoundWorld getBoundWorld(NamespacedKey worldKey) {
+        return this.boundWorldMap.get(worldKey);
     }
 
     /**
@@ -225,7 +229,7 @@ public class BoundConfig implements Listener {
      * @return List of bounds in region
      */
     public List<Bound> getBoundsInRegion(Location location) {
-        BoundWorld boundWorld = getOrCreateBoundWorld(location.getWorld());
+        BoundWorld boundWorld = getOrCreateBoundWorld(location.getWorld().getKey());
         return boundWorld.getBoundsAtLocation(location);
     }
 
@@ -235,7 +239,7 @@ public class BoundConfig implements Listener {
      * @param bound Bound to add
      */
     public void addBoundToRegionAndMap(Bound bound) {
-        BoundWorld boundWorld = getOrCreateBoundWorld(bound.getWorld());
+        BoundWorld boundWorld = getOrCreateBoundWorld(bound.getWorldKey());
         boundWorld.addBoundToRegion(bound);
         this.boundsMap.put(bound.getId(), bound);
     }
@@ -247,9 +251,12 @@ public class BoundConfig implements Listener {
      * @param bound Bound to remove
      */
     public void removeBoundFromRegion(Bound bound) {
-        BoundWorld boundWorld = getBoundWorld(bound.getWorld());
+        BoundWorld boundWorld = getBoundWorld(bound.getWorldKey());
         if (boundWorld != null) {
             boundWorld.removeBoundFromRegion(bound);
+            if (boundWorld.isEmpty()) {
+                this.boundWorldMap.remove(bound.getWorldKey());
+            }
         }
     }
 

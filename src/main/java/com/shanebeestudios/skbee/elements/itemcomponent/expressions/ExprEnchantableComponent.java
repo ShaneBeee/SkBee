@@ -1,16 +1,12 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -19,26 +15,27 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Name("ItemComponent - Enchantable")
-@Description({"If present, and applicable enchantments are available, items with the component can be enchanted in an enchanting table.",
-    "Positive integer representing the item's enchantability. A higher value allows enchantments with a higher cost to be picked.",
-    "Requires Paper 1.21.3+",
-    "See [**Enchantable Component**](https://minecraft.wiki/w/Data_component_format#enchantable) on McWiki for more details.",
-    "",
-    "**Changers**:",
-    "- `set` = Allows you to override the glint.",
-    "- `reset` = Reset back to default state.",
-    "- `delete` = Will delete any value (vanilla or not)."})
-@Examples({"set enchantable component of player's tool to 10",
-    "delete enchantable component of player's tool",
-    "reset enchantable component of {_item}"})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprEnchantableComponent extends SimplePropertyExpression<Object, Number> {
 
-    static {
-        register(ExprEnchantableComponent.class, Number.class,
-            "enchantable component", "itemstacks/itemtypes/slots");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprEnchantableComponent.class, Number.class,
+                "enchantable component", "itemstacks/itemtypes/slots")
+            .name("ItemComponent - Enchantable")
+            .description("If present, and applicable enchantments are available, items with the component can be enchanted in an enchanting table.",
+                "Positive integer representing the item's enchantability. A higher value allows enchantments with a higher cost to be picked.",
+                "Requires Paper 1.21.3+",
+                "See [**Enchantable Component**](https://minecraft.wiki/w/Data_component_format#enchantable) on McWiki for more details.",
+                "",
+                "**Changers**:",
+                "- `set` = Allows you to override the glint.",
+                "- `reset` = Reset back to default state.",
+                "- `delete` = Will delete any value (vanilla or not).")
+            .examples("set enchantable component of player's tool to 10",
+                "delete enchantable component of player's tool",
+                "reset enchantable component of {_item}")
+            .since("3.8.0")
+            .register();
     }
 
     @Override

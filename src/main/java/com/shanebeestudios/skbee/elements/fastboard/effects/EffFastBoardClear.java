@@ -1,33 +1,31 @@
 package com.shanebeestudios.skbee.elements.fastboard.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardBase;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("FastBoard - Clear")
-@Description({"Clear a fastboard of a player.",
-    "NOTE: You do NOT need to clear a fastboard before changing lines."})
-@Examples({"clear fastboard of all players",
-    "clear fastboard of player"})
-@Since("1.16.0")
 public class EffFastBoardClear extends Effect {
 
-    static {
-        Skript.registerEffect(EffFastBoardClear.class,
+    public static void register(Registration reg) {
+        reg.newEffect(EffFastBoardClear.class,
                 "clear [:score|fast]board[s] of %players%",
-                "clear %players%'[s] [:score|fast]board[s]");
+                "clear %players%'[s] [:score|fast]board[s]")
+            .name("FastBoard - Clear")
+            .description("Clear a fastboard of a player.",
+                "NOTE: You do NOT need to clear a fastboard before changing lines.")
+            .examples("clear fastboard of all players",
+                "clear fastboard of player")
+            .since("1.16.0")
+            .register();
     }
 
     private Expression<Player> player;
@@ -45,7 +43,7 @@ public class EffFastBoardClear extends Effect {
     @Override
     protected void execute(Event event) {
         for (Player player : this.player.getArray(event)) {
-            FastBoardBase<?,?> board = FastBoardManager.getBoard(player);
+            FastBoardBase<?, ?> board = FastBoardManager.getBoard(player);
             if (board != null) {
                 board.clear();
             }

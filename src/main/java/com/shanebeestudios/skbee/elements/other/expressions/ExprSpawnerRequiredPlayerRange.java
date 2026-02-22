@@ -1,29 +1,27 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Spawner - Required Player Range")
-@Description({"Get the maximum distance(squared) a player can be in order for a spawner to be active.",
-        "If this value is less than 0, the spawner is always active (given that there are players online).",
-        "Otherwise if the value is 0 the spawner is never active.", // Documentation is incorrect, saying <= 0 is always active
-        "Default value is 16."})
-@Examples({"on place of mob spawner:",
-        "\tset required player range of event-block to 0"})
-@Since("2.16.0")
 public class ExprSpawnerRequiredPlayerRange extends SimplePropertyExpression<Block, Integer> {
 
-    static {
-        register(ExprSpawnerRequiredPlayerRange.class, Integer.class, "required (player|activation) range", "blocks");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprSpawnerRequiredPlayerRange.class, Integer.class, "required (player|activation) range", "blocks")
+                .name("Spawner - Required Player Range")
+                .description("Get the maximum distance(squared) a player can be in order for a spawner to be active.",
+                        "If this value is less than 0, the spawner is always active (given that there are players online).",
+                        "Otherwise if the value is 0 the spawner is never active.",
+                        "Default value is 16.")
+                .examples("on place of mob spawner:",
+                        "\tset required player range of event-block to 0")
+                .since("2.16.0")
+                .register();
     }
 
     private static final int DEFAULT_ACTIVATION_RANGE = 16;

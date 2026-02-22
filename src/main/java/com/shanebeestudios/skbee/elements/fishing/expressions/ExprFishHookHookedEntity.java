@@ -1,28 +1,27 @@
 package com.shanebeestudios.skbee.elements.fishing.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Fish Hook - Hooked Entity")
-@Description("Represents the entity hooked to the fish hook.")
-@Examples({"on fish:",
-        "\tif fish state = caught entity:",
-        "\t\tdelete hooked entity of fish event hook"})
-@Since("2.8.0")
 public class ExprFishHookHookedEntity extends SimplePropertyExpression<FishHook, Entity> {
 
-    static {
-        register(ExprFishHookHookedEntity.class, Entity.class, "hooked entity", "entities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprFishHookHookedEntity.class, Entity.class,
+                "hooked entity", "entities")
+            .name("Fish Hook - Hooked Entity")
+            .description("Represents the entity hooked to the fish hook.")
+            .examples("on fish:",
+                "\tif fish state = caught entity:",
+                "\t\tdelete hooked entity of fish event hook")
+            .since("2.8.0")
+            .register();
     }
 
     @Override

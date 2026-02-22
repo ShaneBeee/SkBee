@@ -2,8 +2,8 @@ package com.shanebeestudios.skbee.elements.statistic.type;
 
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import org.bukkit.Registry;
 import org.bukkit.Statistic;
 import org.bukkit.Statistic.Type;
@@ -14,9 +14,9 @@ import java.util.List;
 
 public class Types {
 
-    static {
+    public static void register(Registration reg) {
         if (Classes.getExactClassInfo(Statistic.class) == null) {
-            Classes.registerClass(RegistryClassInfo.create(Registry.STATISTIC, Statistic.class, false, "statistic")
+            reg.newRegistryType(Registry.STATISTIC, Statistic.class, false, "statistic")
                 .user("statistics?")
                 .name("Statistic")
                 .description("Represents the different statistics for a player.",
@@ -25,7 +25,8 @@ public class Types {
                     "NOTE: 'play_one_minute' stat's name is misleading, it's actually amount of ticks played.",
                     Util.AUTO_GEN_NOTE)
                 .usage(getNames())
-                .since("1.17.0"));
+                .since("1.17.0")
+                .register();
         }
     }
 

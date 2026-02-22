@@ -43,7 +43,7 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 
     @Override
     public NBTCompound getOrCreateCompound(String name) {
-        if (name.equals("data") && Util.IS_RUNNING_MC_1_21_5) {
+        if (name.equals("data")) {
             // NBT-API doesn't properly support the "data" compound in NBTEntity
             // This is probably due to internally Minecraft doesn't straight up use a compound
             // It uses a CustomData class which houses the compound inside

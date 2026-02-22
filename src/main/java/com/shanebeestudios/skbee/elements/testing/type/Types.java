@@ -6,6 +6,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.skript.variables.VariablesStorage;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 
 import java.util.regex.Pattern;
@@ -13,7 +14,7 @@ import java.util.regex.Pattern;
 @SuppressWarnings("UnstableApiUsage")
 public class Types {
 
-    static {
+    public static void register(Registration reg) {
         if (TestMode.DEV_MODE) {
             // If running dev mode, block variables starting with "test_" from saving to file
             // This helps keep the variable file to a minimum when testing on a normal server

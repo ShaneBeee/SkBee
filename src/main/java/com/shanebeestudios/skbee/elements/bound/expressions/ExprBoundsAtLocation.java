@@ -1,18 +1,13 @@
 package com.shanebeestudios.skbee.elements.bound.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -20,18 +15,19 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Bound - Bounds at Location")
-@Description("Get a list of non-temporary, temporary, or all bounds bounds/ids at a location.")
-@Examples({"set {_temporaryBounds::*} to temporary bounds at player",
-        "set {_nonTemporaryBounds::*} to nontemporary bounds at {_loc}",
-        "loop all bounds at {locations::*}:",
-        "\tbroadcast loop-bound"})
-@Since("1.0.0, 2.15.0 (temporary/non-temporary)")
 public class ExprBoundsAtLocation extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprBoundsAtLocation.class, Object.class, ExpressionType.COMBINED,
-                "[all [[of] the]|the] [-1:temporary|1:non[-| ]temporary] bound[s] [:id[s]] at %locations%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprBoundsAtLocation.class, Object.class,
+                "[all [[of] the]|the] [-1:temporary|1:non[-| ]temporary] bound[s] [:id[s]] at %locations%")
+            .name("Bound - Bounds at Location")
+            .description("Get a list of non-temporary, temporary, or all bounds bounds/ids at a location.")
+            .examples("set {_temporaryBounds::*} to temporary bounds at player",
+                "set {_nonTemporaryBounds::*} to nontemporary bounds at {_loc}",
+                "loop all bounds at {locations::*}:",
+                "\tbroadcast loop-bound")
+            .since("1.0.0, 2.15.0 (temporary/non-temporary)")
+            .register();
     }
 
     private static final BoundConfig boundConfig = SkBee.getPlugin().getBoundConfig();
@@ -55,7 +51,7 @@ public class ExprBoundsAtLocation extends SimpleExpression<Object> {
         List<String> ids = new ArrayList<>();
         for (Location location : this.locations.getArray(event)) {
             for (Bound bound : boundConfig.getBoundsAt(location)) {
-                if (bounds.contains(bound) || bounds.contains(bound.getId())) continue;
+                if (bounds.contains(bound) || ids.contains(bound.getId())) continue;
                 if (boundType == Kleenean.FALSE && !bound.isTemporary()) continue;
                 if (boundType == Kleenean.TRUE && bound.isTemporary()) continue;
                 if (ID) {

@@ -2,15 +2,12 @@ package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.entity.Entity;
@@ -19,18 +16,19 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Entity Name")
-@Description({"Get/set the component name of an entity.",
-    "- `name` = The vanilla name of an Entity, or the player's profile name (cannot be changed).",
-    "- `custom name` = The custom name of an entity, will only show when the player's crosshair is pointed at them.",
-    "- `display name` = Same as custom name, but will always show."})
-@Examples("set component entity name of target entity to translate component from \"entity.minecraft.llama\"")
-@Since("2.4.0")
 public class ExprNameEntity extends SimplePropertyExpression<Entity, ComponentWrapper> {
 
-    static {
-        register(ExprNameEntity.class, ComponentWrapper.class,
-            "component entity [:custom|:display] name", "entities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprNameEntity.class, ComponentWrapper.class,
+                "component entity [:custom|:display] name", "entities")
+            .name("TextComponent - Entity Name")
+            .description("Get/set the component name of an entity.",
+                "- `name` = The vanilla name of an Entity, or the player's profile name (cannot be changed).",
+                "- `custom name` = The custom name of an entity, will only show when the player's crosshair is pointed at them.",
+                "- `display name` = Same as custom name, but will always show.")
+            .examples("set component entity name of target entity to translate component from \"entity.minecraft.llama\"")
+            .since("2.4.0")
+            .register();
     }
 
     private boolean custom;

@@ -3,17 +3,13 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.Changer.ChangerUtils;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.EnchantmentType;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -25,19 +21,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@Name("Stored Enchantments")
-@Description("Get/set the stored enchantments of an enchanted book.")
-@Examples({"set {_a::*} to stored enchants of player's tool",
-        "set stored enchants of player's tool to sharpness 3 and unbreaking 2",
-        "add sharpness 1 to stored enchants of player's tool",
-        "delete stored enchants of player's tool",
-        "remove sharpness from stored enchants of player's tool"})
-@Since("1.0.0")
 public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
 
-    static {
-        PropertyExpression.register(ExprStoredEnchant.class, EnchantmentType.class,
-                "stored enchant[ment]s", "itemstacks/itemtypes");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprStoredEnchant.class, EnchantmentType.class,
+                "stored enchant[ment]s", "itemstacks/itemtypes")
+            .name("Stored Enchantments")
+            .description("Get/set the stored enchantments of an enchanted book.")
+            .examples("set {_a::*} to stored enchants of player's tool",
+                "set stored enchants of player's tool to sharpness 3 and unbreaking 2",
+                "add sharpness 1 to stored enchants of player's tool",
+                "delete stored enchants of player's tool",
+                "remove sharpness from stored enchants of player's tool")
+            .since("1.0.0")
+            .register();
     }
 
     private Expression<?> itemTypes;

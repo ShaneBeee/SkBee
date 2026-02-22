@@ -1,17 +1,13 @@
 package com.shanebeestudios.skbee.elements.recipe.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -27,34 +23,11 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 
 import java.util.List;
 
-@Name("Recipe - Register Transmute Recipe")
-@Description({"Represents a recipe which will change the type of the input material when combined with an additional material, " +
-    "but preserve all custom data. ",
-    "Only the material of the result stack will be used.",
-    "Used for dyeing shulker boxes in Vanilla.",
-    "See [**crafting_transmute**](https://minecraft.wiki/w/Recipe#crafting_transmute) on McWiki for more info.",
-    "Requires Minecraft 1.21.2+",
-    "",
-    "**Entries**:",
-    "- `id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
-    "- `result` = The material that will be transmuted in the result slot.",
-    "- `input` = The input ingredient (The item which will have it's data copied to the result).",
-    "- `material` = The item to be applied to the first (like a dye).",
-    "- `group` = Define a group to group your recipes together in the recipe book " +
-        "(an example would be having 3 recipes with the same outcome but a variety of ingredients) [optional].",
-    "- `category` = The recipe book category your recipe will be in [optional]. " +
-        "Options are \"building\", \"redstone\", \"equipment\", \"misc\"."})
-@Examples({"register transmute recipe:",
-    "\tid: \"custom:better_swords\"",
-    "\tresult: netherite sword",
-    "\tinput: minecraft item tag \"minecraft:swords\"",
-    "\tmaterial: netherite ingot"})
-@Since("3.8.0")
 public class SecTransmuteRecipe extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         SimpleEntryValidator builder = SimpleEntryValidator.builder();
         builder.addRequiredEntry("id", String.class);
         builder.addRequiredEntry("result", ItemType.class);
@@ -64,7 +37,32 @@ public class SecTransmuteRecipe extends Section {
         builder.addOptionalEntry("category", String.class);
 
         VALIDATOR = builder.build();
-        Skript.registerSection(SecTransmuteRecipe.class, "register transmute recipe");
+
+        reg.newSection(SecTransmuteRecipe.class, VALIDATOR,
+                "register transmute recipe")
+            .name("Recipe - Register Transmute Recipe")
+            .description("Represents a recipe which will change the type of the input material when combined with an additional material, " +
+                    "but preserve all custom data. ",
+                "Only the material of the result stack will be used.",
+                "Used for dyeing shulker boxes in Vanilla.",
+                "See [**crafting_transmute**](https://minecraft.wiki/w/Recipe#crafting_transmute) on McWiki for more info.",
+                "",
+                "**Entries**:",
+                "- `id` = The ID for your recipe. This is used for recipe discovery and Minecraft's /recipe command.",
+                "- `result` = The material that will be transmuted in the result slot.",
+                "- `input` = The input ingredient (The item which will have it's data copied to the result).",
+                "- `material` = The item to be applied to the first (like a dye).",
+                "- `group` = Define a group to group your recipes together in the recipe book " +
+                    "(an example would be having 3 recipes with the same outcome but a variety of ingredients) [optional].",
+                "- `category` = The recipe book category your recipe will be in [optional]. " +
+                    "Options are \"building\", \"redstone\", \"equipment\", \"misc\".")
+            .examples("register transmute recipe:",
+                "\tid: \"custom:better_swords\"",
+                "\tresult: netherite sword",
+                "\tinput: minecraft item tag \"minecraft:swords\"",
+                "\tmaterial: netherite ingot")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<String> id;

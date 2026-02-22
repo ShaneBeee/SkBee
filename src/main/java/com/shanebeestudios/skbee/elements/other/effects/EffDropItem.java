@@ -1,36 +1,33 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("Drop Held Item")
-@Description({"Forces the player to drop their currently held item.",
-        "By default it will drop one of their held item, or you can optionally drop the whole stack."})
-@Examples({"make player drop all of held item",
-        "force all players to drop all of their held items"})
-@Since("1.17.0")
 public class EffDropItem extends Effect {
 
-    static {
-        Skript.registerEffect(EffDropItem.class,
-                "(make|force) %players% [to] drop [all:all of] [their] held item[s]");
+    public static void register(Registration reg) {
+        reg.newEffect(EffDropItem.class,
+                "(make|force) %players% [to] drop [all:all of] [their] held item[s]")
+            .name("Drop Held Item")
+            .description("Forces the player to drop their currently held item.",
+                "By default it will drop one of their held item, or you can optionally drop the whole stack.")
+            .examples("make player drop all of held item",
+                "force all players to drop all of their held items")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<Player> players;
     private boolean all;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.players = (Expression<Player>) exprs[0];
@@ -38,7 +35,6 @@ public class EffDropItem extends Effect {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         for (Player player : this.players.getArray(event)) {

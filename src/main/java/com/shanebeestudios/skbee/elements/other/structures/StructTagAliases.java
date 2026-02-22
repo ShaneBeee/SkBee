@@ -7,13 +7,10 @@ import ch.njol.skript.aliases.ScriptAliases;
 import ch.njol.skript.config.EntryNode;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -30,47 +27,48 @@ import org.skriptlang.skript.lang.structure.Structure;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Tag Aliases")
-@Description({"Create item/block aliases that use Minecraft tags.",
-    "Supports paper and datapack tags as well.",
-    "Custom Skript tags will not work here as they're registered after this structure loads.",
-    "",
-    "**Global vs Local**:",
-    "Global will add your aliases to Skript's aliases and can be used in any script/effect commands.",
-    "Local will add your aliases to the aliases of that specific script.",
-    "Will default to local if not specified."})
-@Examples({"item tag aliases:",
-    "\t[any] tool[s] = minecraft:axes, minecraft:pickaxes, minecraft:shovels, minecraft:hoes, minecraft:bundles, paper:buckets",
-    "\t[any] enchantable[s] = paper:enchantable",
-    "\t[any] cool item = my_pack:cool_items",
-    "",
-    "block tag aliases:",
-    "\t[any] wall[s] = minecraft:walls",
-    "\t[any] leaves = minecraft:leaves",
-    "\t[any] log[s] = minecraft:logs",
-    "",
-    "# Using the same alias in Skript's aliases structure will add to your tag alias",
-    "aliases:",
-    "\t[any] tool[s] = shears, brush",
-    "",
-    "# Aliases can be used to compare items/blocks",
-    "on break:",
-    "\tif player's tool is any tool:",
-    "\tif player's tool is any enchantable:",
-    "\tif event-block is any log:",
-    "",
-    "# Aliases can be used in events",
-    "on right click holding any tool:",
-    "on break of any wall:",
-    "on break of any leaves:",
-    "on break of any logs:"})
-@Since("3.9.0")
 public class StructTagAliases extends Structure {
 
     public static final Priority PRIORITY = new Priority(201);
 
-    static {
-        Skript.registerStructure(StructTagAliases.class, "[:global|local] [(:block|item)] tag aliases");
+    public static void register(Registration reg) {
+        reg.newStructure(StructTagAliases.class, "[:global|local] [(:block|item)] tag aliases")
+            .name("Tag Aliases")
+            .description("Create item/block aliases that use Minecraft tags.",
+                "Supports paper and datapack tags as well.",
+                "Custom Skript tags will not work here as they're registered after this structure loads.",
+                "",
+                "**Global vs Local**:",
+                "Global will add your aliases to Skript's aliases and can be used in any script/effect commands.",
+                "Local will add your aliases to the aliases of that specific script.",
+                "Will default to local if not specified.")
+            .examples("item tag aliases:",
+                "\t[any] tool[s] = minecraft:axes, minecraft:pickaxes, minecraft:shovels, minecraft:hoes, minecraft:bundles, paper:buckets",
+                "\t[any] enchantable[s] = paper:enchantable",
+                "\t[any] cool item = my_pack:cool_items",
+                "",
+                "block tag aliases:",
+                "\t[any] wall[s] = minecraft:walls",
+                "\t[any] leaves = minecraft:leaves",
+                "\t[any] log[s] = minecraft:logs",
+                "",
+                "# Using the same alias in Skript's aliases structure will add to your tag alias",
+                "aliases:",
+                "\t[any] tool[s] = shears, brush",
+                "",
+                "# Aliases can be used to compare items/blocks",
+                "on break:",
+                "\tif player's tool is any tool:",
+                "\tif player's tool is any enchantable:",
+                "\tif event-block is any log:",
+                "",
+                "# Aliases can be used in events",
+                "on right click holding any tool:",
+                "on break of any wall:",
+                "on break of any leaves:",
+                "on break of any logs:")
+            .since("3.9.0")
+            .register();
     }
 
     private TagType<Material> tagType;

@@ -1,12 +1,11 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.type;
 
 import ch.njol.skript.classes.Changer;
-import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Serializer;
-import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.vf.api.FurnaceManager;
 import com.shanebeestudios.vf.api.machine.Furnace;
@@ -22,8 +21,8 @@ public class Types {
 
     public static final FurnaceManager FURNACE_MANAGER = SkBee.getPlugin().getVirtualFurnaceAPI().getFurnaceManager();
 
-    static {
-        Classes.registerClass(new ClassInfo<>(Machine.class, "machine")
+    public static void register(Registration reg) {
+        reg.newType(Machine.class, "machine")
             .user("machines?")
             .name("VirtualFurnace - Machine")
             .description("Represents a virtual machine. These machines tick on their own like a regular",
@@ -31,7 +30,6 @@ public class Types {
             .since("3.3.0")
             .parser(SkriptUtils.getDefaultParser())
             .changer(new Changer<>() {
-                @SuppressWarnings({"NullableProblems", "DataFlowIssue"})
                 @Override
                 @Nullable
                 public Class<?>[] acceptChange(@NotNull ChangeMode changeMode) {
@@ -39,7 +37,6 @@ public class Types {
                     return null;
                 }
 
-                @SuppressWarnings("NullableProblems")
                 @Override
                 public void change(Machine[] machines, @Nullable Object[] objects, ChangeMode changeMode) {
                     if (changeMode != ChangeMode.DELETE) return;
@@ -63,12 +60,10 @@ public class Types {
                     return fields;
                 }
 
-                @SuppressWarnings("NullableProblems")
                 @Override
                 public void deserialize(Machine o, Fields f) {
                 }
 
-                @SuppressWarnings("NullableProblems")
                 @Override
                 protected Machine deserialize(Fields fields) throws StreamCorruptedException {
                     String type = fields.getObject("type", String.class);
@@ -92,15 +87,16 @@ public class Types {
                 protected boolean canBeInstantiated() {
                     return false;
                 }
-            }));
+            })
+            .register();
 
-        Classes.registerClass(new ClassInfo<>(Properties.class, "machineproperty")
+        reg.newType(Properties.class, "machineproperty")
             .user("machine ?propert(y|ies)")
             .name("VirtualFurnace - Machine Properties")
             .description("Represents the machine properties of a virtual machine.")
             .since("3.3.0")
             .parser(SkriptUtils.getDefaultParser())
-        );
+            .register();
     }
 
 }

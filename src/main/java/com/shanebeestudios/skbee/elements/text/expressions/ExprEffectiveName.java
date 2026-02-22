@@ -1,28 +1,26 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Effective Name")
-@Description({"Gets the effective name of an item stack shown to the player.",
-    "It takes into account the display name (with italics) from the item meta, the potion effect, translatable name, rarity etc.",
-    "Requires PaperMC 1.21.4+"})
-@Examples("broadcast effective name of player's tool")
-@Since("3.13.0")
 public class ExprEffectiveName extends SimplePropertyExpression<ItemStack, ComponentWrapper> {
 
     private static final boolean HAS_EFFECTIVE_NAME = Skript.methodExists(ItemStack.class, "effectiveName");
 
-    static {
+    public static void register(Registration reg) {
         if (HAS_EFFECTIVE_NAME)
-            registerDefault(ExprEffectiveName.class, ComponentWrapper.class, "[component] effective name", "itemstacks");
+            reg.newPropertyExpression(ExprEffectiveName.class, ComponentWrapper.class,
+                    "[component] effective name", "itemstacks")
+                .name("TextComponent - Effective Name")
+                .description("Gets the effective name of an item stack shown to the player. " +
+                    "It takes into account the display name (with italics) from the item meta, the potion effect, translatable name, rarity etc.")
+                .examples("broadcast effective name of player's tool")
+                .since("3.13.0")
+                .register();
     }
 
     @Override

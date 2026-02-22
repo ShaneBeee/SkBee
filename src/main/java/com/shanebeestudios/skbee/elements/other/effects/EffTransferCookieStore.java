@@ -1,13 +1,9 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.NamespacedKey;
@@ -15,19 +11,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Transfer - Store Cookie")
-@Description({"Store a cookie on a player for transfer. Requires Minecraft 1.20.5+",
-    "NOTE: Only a string less than 5120 characters is accepted.",
-    "NOTE: Cookies are stored on players across server transfers."})
-@Examples("store cookie \"look mah imma cookie\" with key \"my_id:super_mom_cookie\" on player")
-@Since("3.5.0")
 public class EffTransferCookieStore extends Effect {
 
-    static {
-        if (Skript.methodExists(Player.class, "isTransferred")) {
-            Skript.registerEffect(EffTransferCookieStore.class,
-                "store cookie %string% with key %namespacedkey/string% on %players%");
-        }
+    public static void register(Registration reg) {
+        reg.newEffect(EffTransferCookieStore.class,
+                "store cookie %string% with key %namespacedkey/string% on %players%")
+            .name("Transfer - Store Cookie")
+            .description("Store a cookie on a player for transfer. Requires Minecraft 1.20.5+",
+                "NOTE: Only a string less than 5120 characters is accepted.",
+                "NOTE: Cookies are stored on players across server transfers.")
+            .examples("store cookie \"look mah imma cookie\" with key \"my_id:super_mom_cookie\" on player")
+            .since("3.5.0")
+            .register();
     }
 
     private Expression<String> cookie;

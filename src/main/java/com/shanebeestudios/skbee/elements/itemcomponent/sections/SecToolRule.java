@@ -3,16 +3,13 @@ package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecToolComponent.ToolComponentApplyRulesEvent;
@@ -37,36 +34,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings({"DataFlowIssue", "UnstableApiUsage"})
-@Name("ItemComponent - Tool Rule Apply")
-@Description({"Apply rules to a tool component. You can add as many as you'd like.",
-    "See [**McWiki Tool Component**](https://minecraft.wiki/w/Data_component_format#tool) for more details.",
-    "",
-    "**Entries/Sections**:",
-    "NOTE: One of either `block_types` or `block_tag` MUST be used.",
-    "`blocks` = The blocks to match for this rule to apply (Supports ItemTypes, BlockDatas, Minecraft Tags and TagKeys).",
-    "`speed` = If the blocks match, overrides the default mining speed (Must be a positive number). [Optional]",
-    "`correct for drops` = If the blocks match, overrides whether or not this tool is " +
-        "considered correct to mine at its most efficient speed, and to drop items if the block's loot table requires it. [Optional]"})
-@Examples({"set {_i} to a stick",
-    "apply tool component to {_i}:",
-    "\tdefault_mining_speed: 2.3",
-    "\tdamage_per_block: 2",
-    "\trules:",
-    "\t\tapply tool rule:",
-    "\t\t\tblocks: minecraft block tag \"minecraft:all_signs\" # Shown as a Minecraft block tag",
-    "\t\t\tspeed: 1.0",
-    "\t\t\tcorrect_for_drops: true",
-    "\t\tapply tool rule:",
-    "\t\t\tblocks: stone, granite, andesite and gravel # Shown as a list of ItemTypes",
-    "\t\t\tspeed: 0.5",
-    "\t\t\tcorrect_for_drops: false",
-    "give {_i} to player"})
-@Since("3.8.0")
 public class SecToolRule extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         @SuppressWarnings("unchecked")
         Class<Object>[] classes = (Class<Object>[]) CollectionUtils.array(ItemType.class, BlockData.class,
             Tag.class, RegistryKeySet.class, TagKey.class);
@@ -76,7 +48,34 @@ public class SecToolRule extends Section {
             .addOptionalEntry("speed", Number.class)
             .addOptionalEntry("correct_for_drops", Boolean.class)
             .build();
-        Skript.registerSection(SecToolRule.class, "apply tool rule");
+
+        reg.newSection(SecToolRule.class, VALIDATOR, "apply tool rule")
+            .name("ItemComponent - Tool Rule Apply")
+            .description("Apply rules to a tool component. You can add as many as you'd like.",
+                "See [**McWiki Tool Component**](https://minecraft.wiki/w/Data_component_format#tool) for more details.",
+                "",
+                "**Entries/Sections**:",
+                "NOTE: One of either `block_types` or `block_tag` MUST be used.",
+                "`blocks` = The blocks to match for this rule to apply (Supports ItemTypes, BlockDatas, Minecraft Tags and TagKeys).",
+                "`speed` = If the blocks match, overrides the default mining speed (Must be a positive number). [Optional]",
+                "`correct for drops` = If the blocks match, overrides whether or not this tool is " +
+                    "considered correct to mine at its most efficient speed, and to drop items if the block's loot table requires it. [Optional]")
+            .examples("set {_i} to a stick",
+                "apply tool component to {_i}:",
+                "\tdefault_mining_speed: 2.3",
+                "\tdamage_per_block: 2",
+                "\trules:",
+                "\t\tapply tool rule:",
+                "\t\t\tblocks: minecraft block tag \"minecraft:all_signs\" # Shown as a Minecraft block tag",
+                "\t\t\tspeed: 1.0",
+                "\t\t\tcorrect_for_drops: true",
+                "\t\tapply tool rule:",
+                "\t\t\tblocks: stone, granite, andesite and gravel # Shown as a list of ItemTypes",
+                "\t\t\tspeed: 0.5",
+                "\t\t\tcorrect_for_drops: false",
+                "give {_i} to player")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<?> blocks;

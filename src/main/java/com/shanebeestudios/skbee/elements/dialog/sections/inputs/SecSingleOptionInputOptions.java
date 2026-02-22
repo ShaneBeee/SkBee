@@ -2,17 +2,14 @@ package com.shanebeestudios.skbee.elements.dialog.sections.inputs;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.event.dialog.OptionsEvent;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.OptionsEvent;
 import io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput.OptionEntry;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.Event;
@@ -24,38 +21,41 @@ import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 import java.util.List;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("Dialog - Single Option Input - Option Entry")
-@Description({"An option to be used in an options section of a single option input.",
-    "See [**Single Option Input on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#single-option-input) for more info.",
-    "**Entries**:",
-    "- `display` = A string/text component for what is displayed as the option.",
-    "- `initial` = Only one option can have this set to true. " +
-        "If true, the option chosen will be the initial one. Defaults to the first option being true, and all others false."})
-@Examples({"add single option input:",
-    "\tkey: \"le_key\"",
-    "\tlabel: \"Choose favorite animal\"",
-    "\toptions:",
-    "\t\tadd options entry:",
-    "\t\t\tdisplay: \"cat\"",
-    "\t\tadd options entry:",
-    "\t\t\tdisplay: \"dog\"",
-    "\t\tadd options entry:",
-    "\t\t\tdisplay: \"turtle\"",
-    "\t\tadd options entry:",
-    "\t\t\tdisplay: \"spider\""})
-@Since("3.16.0")
 public class SecSingleOptionInputOptions extends Section {
 
-    private static final EntryValidator.EntryValidatorBuilder VALIDATOR = EntryValidator.builder();
+    private static EntryValidator VALIDATOR;
 
-    static {
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
+    public static void register(Registration reg) {
+        EntryValidator.EntryValidatorBuilder builder = EntryValidator.builder();
+        builder.addEntryData(new ExpressionEntryData<>("id", null, false, String.class));
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("display", null, false, compClasses));
-        VALIDATOR.addEntryData(new ExpressionEntryData<>("initial", null, true, Boolean.class));
+        builder.addEntryData(new ExpressionEntryData<>("display", null, false, compClasses));
+        builder.addEntryData(new ExpressionEntryData<>("initial", null, true, Boolean.class));
+        VALIDATOR = builder.build();
 
-        Skript.registerSection(SecSingleOptionInputOptions.class, "add options entry");
+        reg.newSection(SecSingleOptionInputOptions.class, VALIDATOR, "add options entry")
+            .name("Dialog - Single Option Input - Option Entry")
+            .description("An option to be used in an options section of a single option input.",
+                "See [**Single Option Input on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#single-option-input) for more info.",
+                "**Entries**:",
+                "- `display` = A string/text component for what is displayed as the option.",
+                "- `initial` = Only one option can have this set to true. " +
+                    "If true, the option chosen will be the initial one. Defaults to the first option being true, and all others false.")
+            .examples("add single option input:",
+                "\tkey: \"le_key\"",
+                "\tlabel: \"Choose favorite animal\"",
+                "\toptions:",
+                "\t\tadd options entry:",
+                "\t\t\tdisplay: \"cat\"",
+                "\t\tadd options entry:",
+                "\t\t\tdisplay: \"dog\"",
+                "\t\tadd options entry:",
+                "\t\t\tdisplay: \"turtle\"",
+                "\t\tadd options entry:",
+                "\t\t\tdisplay: \"spider\"")
+            .since("3.16.0")
+            .register();
     }
 
     private Expression<String> id;
@@ -69,7 +69,7 @@ public class SecSingleOptionInputOptions extends Section {
             Skript.error("An options entry can only be used in an 'options' section of a single option input.");
             return false;
         }
-        EntryContainer container = VALIDATOR.build().validate(sectionNode);
+        EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
         this.id = (Expression<String>) container.getOptional("id", false);

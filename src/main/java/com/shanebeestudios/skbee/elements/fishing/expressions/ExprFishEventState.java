@@ -1,34 +1,31 @@
 package com.shanebeestudios.skbee.elements.fishing.expressions;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerFishEvent.State;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("Fish Event State")
-@Description("Represents the state of a fishing event.")
-@Examples({"on fish:",
-        "\tif fish event state = caught fish:",
-        "\t\tcancel event"})
-@Since("1.15.2")
 public class ExprFishEventState extends SimpleExpression<State> {
 
-    static {
-        Skript.registerExpression(ExprFishEventState.class, State.class, ExpressionType.SIMPLE,
-                "fish[ing] [event] state");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprFishEventState.class, State.class,
+                "fish[ing] [event] state")
+            .name("Fish Event State")
+            .description("Represents the state of a fishing event.")
+            .examples("on fish:",
+                "\tif fish event state = caught fish:",
+                "\t\tcancel event")
+            .since("1.15.2")
+            .register();
     }
 
     @SuppressWarnings("NullableProblems")

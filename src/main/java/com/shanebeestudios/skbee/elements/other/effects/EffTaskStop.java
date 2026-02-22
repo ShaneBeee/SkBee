@@ -1,39 +1,36 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Task - Cancel Task")
-@Description({"Stop a task by ID.",
-    "If running Folia, this effect will do nothing."})
-@Examples({"run 0 ticks later repeating every second:",
-    "\tset {-id} to current task id",
-    "\tadd 1 to {_a}",
-    "\tif {_a} > 10:",
-    "\t\texit loop",
-    "",
-    "on break:",
-    "\tstop task with id {-id}"})
-@Since("3.3.0")
 public class EffTaskStop extends Effect {
 
     private static final BukkitScheduler SCHEDULER = Bukkit.getScheduler();
 
-    static {
+    public static void register(Registration reg) {
         if (!Util.IS_RUNNING_FOLIA) { // Folia does not have task IDs
-            Skript.registerEffect(EffTaskStop.class, "(stop|cancel) task[s] with id[s] %numbers%");
+            reg.newEffect(EffTaskStop.class, "(stop|cancel) task[s] with id[s] %numbers%")
+                .name("Task - Cancel Task")
+                .description("Stop a task by ID.",
+                    "If running Folia, this effect will do nothing.")
+                .examples("run 0 ticks later repeating every second:",
+                    "\tset {-id} to current task id",
+                    "\tadd 1 to {_a}",
+                    "\tif {_a} > 10:",
+                    "\t\texit loop",
+                    "",
+                    "on break:",
+                    "\tstop task with id {-id}")
+                .since("3.3.0")
+                .register();
         }
     }
 

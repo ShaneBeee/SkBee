@@ -1,10 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
@@ -12,6 +7,7 @@ import ch.njol.skript.paperlib.PaperLib;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -21,39 +17,40 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Chunk - Load/Unload")
-@Description({"Load or unload a chunk.",
-    "**Options**:",
-    "- `%number%,[ ]%number%` = Represents the X/Z coords of a chunk. Not to be confused with a location. " +
-        "Chunk coords are essentially a location divided by 16, example: Chunk 1/1 = Location 16/16",
-    "- `async` = Will load the chunk off the main thread (Requires PaperMC). Your code will halt whilst waiting for the chunk to load.",
-    "- `with ticket` = Will add a ticket to the chunk, preventing it from unloading until you explicitly unload it or the server stops.",
-    "- `without saving` = Will prevent the chunk from saving when unloading."})
-@Examples({"load chunk at 1,1 in world \"world\"",
-    "load chunk at location(1,1,1, world \"world\")",
-    "load chunk at 150,150 in world \"world\"",
-    "load chunk at 150,150 in world \"world\" with ticket",
-    "async load chunk at {_loc}",
-    "async load chunk at 100,100 in world \"world\"",
-    "async load chunk at 1,1 in world of player with ticket",
-    "unload chunk at 1,1 in world \"world\""})
-@Since("1.17.0, 2.11.0 (async)")
 public class EffLoadChunk extends Effect {
 
     private static final SkBee PLUGIN = SkBee.getPlugin();
 
-    static {
-        Skript.registerEffect(EffLoadChunk.class,
-            // Chunk coords
-            "[:async] load chunk at %number%,[ ]%number% (in|of) [world] %world% [ticket:with ticket]",
-            "unload chunk at %number%,[ ]%number% (in|of) [world] %world%",
+    public static void register(Registration reg) {
+        reg.newEffect(EffLoadChunk.class,
+                // Chunk coords
+                "[:async] load chunk at %number%,[ ]%number% (in|of) [world] %world% [ticket:with ticket]",
+                "unload chunk at %number%,[ ]%number% (in|of) [world] %world%",
 
-            // Location
-            "[:async] load chunk at %location% [ticket:with ticket]",
-            "unload chunk at %location% [nosave:without saving]",
+                // Location
+                "[:async] load chunk at %location% [ticket:with ticket]",
+                "unload chunk at %location% [nosave:without saving]",
 
-            // Chunk
-            "unload %chunks% [nosave:without saving]");
+                // Chunk
+                "unload %chunks% [nosave:without saving]")
+            .name("Chunk - Load/Unload")
+            .description("Load or unload a chunk.",
+                "**Options**:",
+                "- `%number%,[ ]%number%` = Represents the X/Z coords of a chunk. Not to be confused with a location. " +
+                    "Chunk coords are essentially a location divided by 16, example: Chunk 1/1 = Location 16/16",
+                "- `async` = Will load the chunk off the main thread (Requires PaperMC). Your code will halt whilst waiting for the chunk to load.",
+                "- `with ticket` = Will add a ticket to the chunk, preventing it from unloading until you explicitly unload it or the server stops.",
+                "- `without saving` = Will prevent the chunk from saving when unloading.")
+            .examples("load chunk at 1,1 in world \"world\"",
+                "load chunk at location(1,1,1, world \"world\")",
+                "load chunk at 150,150 in world \"world\"",
+                "load chunk at 150,150 in world \"world\" with ticket",
+                "async load chunk at {_loc}",
+                "async load chunk at 100,100 in world \"world\"",
+                "async load chunk at 1,1 in world of player with ticket",
+                "unload chunk at 1,1 in world \"world\"")
+            .since("1.17.0, 2.11.0 (async)")
+            .register();
     }
 
     private int pattern;

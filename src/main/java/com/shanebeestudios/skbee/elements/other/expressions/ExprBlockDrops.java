@@ -2,13 +2,9 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
@@ -21,19 +17,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Block Dropped Items")
-@Description({"Represents the dropped items in a block drop item event.",
-        "`block dropped items` = The dropped item entities.",
-        "`block dropped itemtypes` = The dropped item."})
-@Examples({"on block drop item:",
-        "\tteleport block dropped items to player"})
-@Since("2.6.0")
 public class ExprBlockDrops extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprBlockDrops.class, Object.class, ExpressionType.SIMPLE,
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprBlockDrops.class, Object.class,
                 "block dropped (items|item entities)",
-                "block dropped itemtypes");
+                "block dropped itemtypes")
+            .name("Block Dropped Items")
+            .description("Represents the dropped items in a block drop item event.",
+                "`block dropped items` = The dropped item entities.",
+                "`block dropped itemtypes` = The dropped item.")
+            .examples("on block drop item:",
+                "\tteleport block dropped items to player")
+            .since("2.6.0")
+            .register();
     }
 
     private boolean itemType;

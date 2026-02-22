@@ -1,27 +1,29 @@
 package com.shanebeestudios.skbee.elements.recipe.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.registrations.EventValues;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.player.PlayerRecipeDiscoverEvent;
 
 public class EvtRecipe extends SimpleEvent {
 
-    static {
-        Skript.registerEvent("Recipe - Discover Event", EvtRecipe.class, PlayerRecipeDiscoverEvent.class,
+    public static void register(Registration reg) {
+        reg.newEvent(EvtRecipe.class, PlayerRecipeDiscoverEvent.class,
                 "recipe discover[y]")
+            .name("Recipe - Discover Event")
             .description("Called when a player unlocks a recipe. ",
                 "`event-string` = the recipe namespace (this will also include either \"minecraft:\" or \"mykeyhere:\")",
                 "Requires MC 1.13+")
             .examples("on recipe discover:",
                 "\tif event-string = \"minecraft:diamond_block\"",
                 "\t\tcancel event")
-            .requiredPlugins("1.13+")
-            .since("1.0.0");
+            .since("1.0.0")
+            .register();
         EventValues.registerEventValue(PlayerRecipeDiscoverEvent.class, String.class, event -> event.getRecipe().toString(), EventValues.TIME_NOW);
 
-        Skript.registerEvent("Recipe - Crafter Craft Event", EvtRecipe.class, CrafterCraftEvent.class, "crafter craft")
+        reg.newEvent(EvtRecipe.class, CrafterCraftEvent.class, "crafter craft")
+            .name("Recipe - Crafter Craft Event")
             .description("Called when a Crafter is about to craft an item. Requires Minecraft 1.21.1+",
                 "`event-string` = The key for the recipe used in this event.",
                 "`recipe result` = An expression that reprsents the result slot (can be changed).")

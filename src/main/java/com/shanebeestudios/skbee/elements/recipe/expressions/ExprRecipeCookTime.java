@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.recipe.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -23,15 +18,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Recipe - CookTime")
-@Description("Get the cooktime of a cooking recipes.")
-@Examples("set {_time} to cooktime of recipe with id \"minecraft:cooked_chicken\"")
-@Since("2.18.0")
 public class ExprRecipeCookTime extends SimpleExpression<Timespan> {
 
-    static {
-        Skript.registerExpression(ExprRecipeCookTime.class, Timespan.class, ExpressionType.COMBINED,
-            "cook[ ]time of recipe[s] [with id[s]] %strings%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprRecipeCookTime.class, Timespan.class,
+                "cook[ ]time of recipe[s] [with id[s]] %strings%")
+            .name("Recipe - CookTime")
+            .description("Get the cooktime of a cooking recipes.")
+            .examples("set {_time} to cooktime of recipe with id \"minecraft:cooked_chicken\"")
+            .since("2.18.0")
+            .register();
     }
 
     private Expression<String> key;

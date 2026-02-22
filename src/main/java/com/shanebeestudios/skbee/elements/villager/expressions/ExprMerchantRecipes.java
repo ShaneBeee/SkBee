@@ -2,16 +2,12 @@ package com.shanebeestudios.skbee.elements.villager.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantRecipe;
@@ -21,19 +17,20 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Merchant - Recipes")
-@Description({"Represents the recipes of a merchant. All recipes returns a list of all the recipes this merchant offers.",
-        "You can also set/delete them or add to them. You can also get/set/delete a specific recipe.",
-        "<b>note: when setting/deleting a specific merchant recipe the merchant MUST have a recipe in that slot</b>"})
-@Examples({"add {_recipe} to merchant recipes of {_merchant}",
-        "set merchant recipe 1 of {_merchant} to {_recipe}"})
-@Since("1.17.0")
 public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
 
-    static {
-        Skript.registerExpression(ExprMerchantRecipes.class, MerchantRecipe.class, ExpressionType.COMBINED,
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprMerchantRecipes.class, MerchantRecipe.class,
                 "[all] merchant recipes of %merchants/entities%",
-                "merchant recipe %number% of %merchants/entities%");
+                "merchant recipe %number% of %merchants/entities%")
+            .name("Merchant - Recipes")
+            .description("Represents the recipes of a merchant. All recipes returns a list of all the recipes this merchant offers.",
+                "You can also set/delete them or add to them. You can also get/set/delete a specific recipe.",
+                "<b>note: when setting/deleting a specific merchant recipe the merchant MUST have a recipe in that slot</b>")
+            .examples("add {_recipe} to merchant recipes of {_merchant}",
+                "set merchant recipe 1 of {_merchant} to {_recipe}")
+            .since("1.17.0")
+            .register();
     }
 
     private Expression<?> merchants;
@@ -92,7 +89,7 @@ public class ExprMerchantRecipes extends SimpleExpression<MerchantRecipe> {
     }
 
     @Override
-    public void change(Event event, Object@Nullable [] delta, ChangeMode mode) {
+    public void change(Event event, Object @Nullable [] delta, ChangeMode mode) {
         if (this.recipe == null) {
             List<MerchantRecipe> recipes = new ArrayList<>();
             if (delta != null) {

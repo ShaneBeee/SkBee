@@ -1,15 +1,12 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.block.Block;
 import org.bukkit.block.sign.Side;
@@ -17,19 +14,21 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Sign Line")
-@Description({"Get/set lines of a sign with text components. Optionally set the front/back of a sign. (Defaults to front)",
-    "\nNOTE: Setting the back of a sign requires Minecraft 1.20+"})
-@Examples({"set sign line 1 of target block to mini message from \"<rainbow>LINE ONE\"",
-    "set sign line 2 of target block to translate component from \"item.minecraft.diamond_sword\"",
-    "set {_line1} to sign line 1 of target block",
-    "set {_line1} to front sign line 1 of target block",
-    "set back sign line 1 of {_sign} to mini message from \"<rainbow>LINE ONE\""})
-@Since("2.4.0, 2.11.0 (front|back)")
 public class ExprSignLines extends PropertyExpression<Block, ComponentWrapper> {
 
-    static {
-        register(ExprSignLines.class, ComponentWrapper.class, "[front|:back] sign line %number%", "blocks");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprSignLines.class, ComponentWrapper.class,
+                "[front|:back] sign line %number%", "blocks")
+            .name("TextComponent - Sign Line")
+            .description("Get/set lines of a sign with text components.",
+                "Optionally set the front/back of a sign. (Defaults to front)")
+            .examples("set sign line 1 of target block to mini message from \"<rainbow>LINE ONE\"",
+                "set sign line 2 of target block to translate component from \"item.minecraft.diamond_sword\"",
+                "set {_line1} to sign line 1 of target block",
+                "set {_line1} to front sign line 1 of target block",
+                "set back sign line 1 of {_sign} to mini message from \"<rainbow>LINE ONE\"")
+            .since("2.4.0", " 2.11.0 (front|back)")
+            .register();
     }
 
     private Expression<Number> signLine;

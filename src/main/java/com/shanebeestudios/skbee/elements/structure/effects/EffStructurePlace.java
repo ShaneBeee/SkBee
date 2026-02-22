@@ -1,33 +1,29 @@
 package com.shanebeestudios.skbee.elements.structure.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 
-@Name("Structure - Place")
-@Description({"Place an already created structure into the world.",
-    "Palette = The palette index of the structure to use, starting at 0, or -1 to pick a random palette.",
-    "A palette represents a variation of a structure.",
-    "Most structures, like the ones generated with structure blocks, only have a single variant.",
-    "Requires MC 1.17.1+"})
-@Examples({"set {_s} to structure with id \"minecraft:village/taiga/houses/taiga_cartographer_house_1\"",
-    "place structure {_s} above target block of player"})
-@Since("1.12.0")
 public class EffStructurePlace extends Effect {
 
-    static {
-        Skript.registerEffect(EffStructurePlace.class,
-            "place [structure] %structure% [using palette %-number%] %directions% %locations%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffStructurePlace.class,
+                "place [structure] %structure% [using palette %-number%] %directions% %locations%")
+            .name("Structure - Place")
+            .description("Place an already created structure into the world.",
+                "Palette = The palette index of the structure to use, starting at 0, or -1 to pick a random palette.",
+                "A palette represents a variation of a structure.",
+                "Most structures, like the ones generated with structure blocks, only have a single variant.")
+            .examples("set {_s} to structure with id \"minecraft:village/taiga/houses/taiga_cartographer_house_1\"",
+                "place structure {_s} above target block of player")
+            .since("1.12.0")
+            .register();
     }
 
     private Expression<StructureWrapper> structure;

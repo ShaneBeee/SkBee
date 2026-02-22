@@ -1,36 +1,32 @@
 package com.shanebeestudios.skbee.elements.nbt.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTReflection;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("NBT - Pretty NBT String")
-@Description({"Get a 'pretty' NBT string. This is colored the same as when using the vanilla Minecraft '/data' command. ",
-    "Splitting it will output kind of like a JSON output. Requires 1.13.2+"})
-@Examples({"set {_pretty} to pretty nbt from nbt compound of player's tool",
-    "send pretty nbt from nbt compound of player's tool",
-    "set {_nbt} to nbt of player's tool",
-    "send pretty nbt from {_nbt} to player",
-    "send pretty nbt from {_nbt} with split \" \" to console"})
-@Since("1.6.0")
 public class ExprPrettyNBT extends PropertyExpression<Object, String> {
 
-    static {
-        Skript.registerExpression(ExprPrettyNBT.class, String.class, ExpressionType.PROPERTY,
-            "pretty nbt (of|from) %nbtcompounds% [(with|using) split %-string%]",
-            "%nbtcompounds%'[s] pretty nbt [(with|using) split %-string%]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprPrettyNBT.class, String.class,
+                "pretty nbt (of|from) %nbtcompounds% [(with|using) split %-string%]",
+                "%nbtcompounds%'[s] pretty nbt [(with|using) split %-string%]")
+            .name("NBT - Pretty NBT String")
+            .description("Get a 'pretty' NBT string. This is colored the same as when using the vanilla Minecraft '/data' command. ",
+                "Splitting it will output kind of like a JSON output. Requires 1.13.2+")
+            .examples("set {_pretty} to pretty nbt from nbt compound of player's tool",
+                "send pretty nbt from nbt compound of player's tool",
+                "set {_nbt} to nbt of player's tool",
+                "send pretty nbt from {_nbt} to player",
+                "send pretty nbt from {_nbt} with split \" \" to console")
+            .since("1.6.0")
+            .register();
     }
 
     private Expression<String> split;

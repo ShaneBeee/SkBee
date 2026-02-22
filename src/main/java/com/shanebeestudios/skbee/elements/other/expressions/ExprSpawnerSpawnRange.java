@@ -1,29 +1,27 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Spawner - Spawn Range")
-@Description({"Get the radius around which a spawner will attempt to spawn mobs in.",
-        "This area is square, includes the block the spawner is in, and is centered on the spawner's x,z coordinates - not the spawner itself.",
-        "It is 2 blocks high, centered on the spawner's y-coordinate (its bottom); thus allowing mobs to spawn as high as its top surface and as low as 1 block below its bottom surface.",
-        "Default value is 4."})
-@Examples({"on place of mob spawner:",
-        "\tset spawn range of event-block to random integer between 0 and 10"})
-@Since("2.16.0")
 public class ExprSpawnerSpawnRange extends SimplePropertyExpression<Block, Integer> {
 
-    static {
-        register(ExprSpawnerSpawnRange.class, Integer.class, "[spawner] spawn range", "blocks");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprSpawnerSpawnRange.class, Integer.class, "[spawner] spawn range", "blocks")
+                .name("Spawner - Spawn Range")
+                .description("Get the radius around which a spawner will attempt to spawn mobs in.",
+                        "This area is square, includes the block the spawner is in, and is centered on the spawner's x,z coordinates - not the spawner itself.",
+                        "It is 2 blocks high, centered on the spawner's y-coordinate (its bottom); thus allowing mobs to spawn as high as its top surface and as low as 1 block below its bottom surface.",
+                        "Default value is 4.")
+                .examples("on place of mob spawner:",
+                        "\tset spawn range of event-block to random integer between 0 and 10")
+                .since("2.16.0")
+                .register();
     }
 
     private static final int DEFAULT_SPAWN_RANGE = 4;

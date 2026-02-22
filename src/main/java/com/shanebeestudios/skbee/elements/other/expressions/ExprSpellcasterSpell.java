@@ -1,12 +1,9 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.entity.Spellcaster.Spell;
@@ -14,15 +11,16 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Spellcaster Spell")
-@Description("Get/set/reset the spell of a spell casting entity (Illusioner, Evoker).")
-@Examples({"set spell of target entity to fangs",
-        "reset spell of target entity"})
-@Since("1.17.0")
 public class ExprSpellcasterSpell extends SimplePropertyExpression<Entity, Spell> {
 
-    static {
-        register(ExprSpellcasterSpell.class, Spell.class, "[spellcaster] spell", "entities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprSpellcasterSpell.class, Spell.class, "[spellcaster] spell", "entities")
+            .name("Spellcaster Spell")
+            .description("Get/set/reset the spell of a spell casting entity (Illusioner, Evoker).")
+            .examples("set spell of target entity to fangs",
+                "reset spell of target entity")
+            .since("1.17.0")
+            .register();
     }
 
     @Override

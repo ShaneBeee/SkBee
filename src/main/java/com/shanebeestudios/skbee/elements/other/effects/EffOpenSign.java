@@ -1,15 +1,12 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import io.papermc.paper.math.Position;
 import org.bukkit.Location;
@@ -21,27 +18,28 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Open Sign")
-@Description({"Open a sign's GUI to a player, to allow them to edit it.",
-    "`virtual`: (Added in Paper 1.21.5)",
-    " - Allows opening a client side sign to a player.",
-    " - You will have to send a client side sign to the player.",
-    " - The sign must be within 9 blocks of the player.",
-    " - You can use the `unchecked sign change` event to listen for changes to virtual signs.",
-    "If not using `virtual`, the block must be placed in the world.",
-    "Front/Back support added in MC 1.20.",})
-@Examples({"open sign gui of target block to player",
-    "open target block's sign gui to player",
-    "open sign back of target block to player"})
-@Since({"1.5.2", "2.14.0 (sides)", "3.11.3 (virtual)"})
 public class EffOpenSign extends Effect {
 
     private static final boolean HAS_VIRTUAL = Skript.classExists("io.papermc.paper.event.packet.UncheckedSignChangeEvent");
 
-    static {
-        Skript.registerEffect(EffOpenSign.class,
-            "open [:virtual] sign [gui] [(front|back:back)] [(for|of)] [%direction%] %location% to %players%",
-            "open [%direction%] %location%'[s] [:virtual] sign [gui] [(front|back:back)] to %players%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffOpenSign.class,
+                "open [:virtual] sign [gui] [(front|back:back)] [(for|of)] [%direction%] %location% to %players%",
+                "open [%direction%] %location%'[s] [:virtual] sign [gui] [(front|back:back)] to %players%")
+            .name("Open Sign")
+            .description("Open a sign's GUI to a player, to allow them to edit it.",
+                "`virtual`: (Added in Paper 1.21.5)",
+                " - Allows opening a client side sign to a player.",
+                " - You will have to send a client side sign to the player.",
+                " - The sign must be within 9 blocks of the player.",
+                " - You can use the `unchecked sign change` event to listen for changes to virtual signs.",
+                "If not using `virtual`, the block must be placed in the world.",
+                "Front/Back support added in MC 1.20.")
+            .examples("open sign gui of target block to player",
+                "open target block's sign gui to player",
+                "open sign back of target block to player")
+            .since("1.5.2", "2.14.0 (sides)", "3.11.3 (virtual)")
+            .register();
     }
 
     @SuppressWarnings("null")

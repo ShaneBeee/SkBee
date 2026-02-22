@@ -1,24 +1,23 @@
 package com.shanebeestudios.skbee.elements.fishing.expressions;
 
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.FishHook;
 import org.bukkit.entity.FishHook.HookState;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-@Name("Fish Hook - Hooked State")
-@Description("Represents the hooked state of a fish hook.")
-@Examples("if hook state of fish hook = bobbing:")
-@Since("2.8.0")
 public class ExprFishHookState extends SimplePropertyExpression<Entity, HookState> {
 
-    static {
-        register(ExprFishHookState.class, HookState.class, "[fish] hook[ed] state", "entities");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprFishHookState.class, HookState.class,
+                "[fish] hook[ed] state", "entities")
+            .name("Fish Hook - Hooked State")
+            .description("Represents the hooked state of a fish hook.")
+            .examples("if hook state of fish hook = bobbing:")
+            .since("2.8.0")
+            .register();
     }
 
     @Override

@@ -1,12 +1,7 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
@@ -14,6 +9,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ChargedProjectiles;
@@ -24,26 +20,27 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("ItemComponent - Charged Projectiles")
-@Description({"The items loaded as projectiles into a crossbow. If not present, the crossbow is not charged.",
-    "See [**Charged Projectiles Component**](https://minecraft.wiki/w/Data_component_format#charged_projectiles) on McWiki for more details.",
-    "Requires Paper 1.21.3+",
-    "",
-    "**Changers**:",
-    "- `set` = Set the items to be loaded by the crossbow.",
-    "- `reset` = Reset back to default state.",
-    "- `delete` = Will delete any value (vanilla or not)."})
-@Examples({"set charged projectiles of player's tool to an arrow and a stick",
-    "delete charged projectiles component of player's tool",
-    "reset charged projectiles component of player's tool"})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprChargedProjectilesComponent extends SimpleExpression<Object> {
 
-    static {
-        Skript.registerExpression(ExprChargedProjectilesComponent.class, Object.class, ExpressionType.COMBINED,
-            "charged projectiles [component] of %itemstacks/itemtypes/slots%",
-            "%itemstacks/itemtypes/slots%'[s] charged projectiles [component]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprChargedProjectilesComponent.class, Object.class,
+                "charged projectiles [component] of %itemstacks/itemtypes/slots%",
+                "%itemstacks/itemtypes/slots%'[s] charged projectiles [component]")
+            .name("ItemComponent - Charged Projectiles")
+            .description("The items loaded as projectiles into a crossbow. If not present, the crossbow is not charged.",
+                "See [**Charged Projectiles Component**](https://minecraft.wiki/w/Data_component_format#charged_projectiles) on McWiki for more details.",
+                "Requires Paper 1.21.3+",
+                "",
+                "**Changers**:",
+                "- `set` = Set the items to be loaded by the crossbow.",
+                "- `reset` = Reset back to default state.",
+                "- `delete` = Will delete any value (vanilla or not).")
+            .examples("set charged projectiles of player's tool to an arrow and a stick",
+                "delete charged projectiles component of player's tool",
+                "reset charged projectiles component of player's tool")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<?> items;

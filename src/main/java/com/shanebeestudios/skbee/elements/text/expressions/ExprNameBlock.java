@@ -2,11 +2,8 @@ package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
@@ -17,21 +14,21 @@ import org.bukkit.block.Skull;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Block Name")
-@Description({"Get/set/delete the custom name of a block. This will work on container blocks and skulls.",
-    "Skulls require Paper 1.21.4(Build 214)+",
-    "Even though the custom name of any skull can be set, only a player head will retain its name when broken (Skeleton/creeper/etc skulls will not)."})
-@Examples({"set {_name} to component block name of target block",
-    "set component block name of target block to mini message from \"<rainbow>Mr Potato Head!\"",
-    "delete component block name of target block"})
-@Since("3.10.1")
 public class ExprNameBlock extends SimplePropertyExpression<Block, ComponentWrapper> {
 
     private static final boolean HAS_SKULL_NAME = Skript.methodExists(Skull.class, "customName");
 
-    static {
-        register(ExprNameBlock.class, ComponentWrapper.class,
-            "component [custom] block name", "block");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprNameBlock.class, ComponentWrapper.class,
+                "component [custom] block name", "block")
+            .name("TextComponent - Block Name")
+            .description("Get/set/delete the custom name of a block. This will work on container blocks and skulls.",
+                "Even though the custom name of any skull can be set, only a player head will retain its name when broken (Skeleton/creeper/etc skulls will not).")
+            .examples("set {_name} to component block name of target block",
+                "set component block name of target block to mini message from \"<rainbow>Mr Potato Head!\"",
+                "delete component block name of target block")
+            .since("3.10.1")
+            .register();
     }
 
     @Override

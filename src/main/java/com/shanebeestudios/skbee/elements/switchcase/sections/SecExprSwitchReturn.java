@@ -3,20 +3,15 @@ package com.shanebeestudios.skbee.elements.switchcase.sections;
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.Node;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SectionExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchSecEvent;
 import org.bukkit.event.Event;
@@ -24,42 +19,43 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Name("SwitchCase - Switch Return")
-@Description("Switch an object and have it return a value.")
-@Examples({"function getRoman(i: number) :: string:",
-    "\treturn switch return {_i}:",
-    "\t\tcase 1 -> \"I\"",
-    "\t\tcase 2 -> \"II\"",
-    "\t\tcase 3 -> \"III\"",
-    "\t\tcase 4 -> \"IV\"",
-    "\t\tcase 5 -> \"V\"",
-    "\t\tdefault -> \"potato\"",
-    "",
-    "function getName(e: entity) :: string:",
-    "\treturn switch return {_e}:",
-    "\t\tcase sheep -> \"Mr Sheepy\"",
-    "\t\tcase cow -> \"Mr Cow\"",
-    "\t\tcase pig -> \"Señor Pig\"",
-    "\t\tdefault -> strict proper case \"%type of {_e}%\"",
-    "",
-    "on break:",
-    "\tset {_i} to switch return event-block:",
-    "\t\tcase stone -> \"Stoney Stone\"",
-    "\t\tcase dirt -> \"Dirty Dirt\"",
-    "\t\tcase grass block -> \"Grassy Grass\"",
-    "\t\tdefault:",
-    "\t\t\tif gamemode of player = creative:",
-    "\t\t\t\treturn \"&c%type of switched object%\"",
-    "\t\t\telse:",
-    "\t\t\t\treturn \"&a%type of switched object%\"",
-    "",
-    "\tsend \"Broken: %{_i}%\" to player"})
-@Since("3.8.0")
 public class SecExprSwitchReturn extends SectionExpression<Object> {
 
-    static {
-        Skript.registerExpression(SecExprSwitchReturn.class, Object.class, ExpressionType.COMBINED,
-            "(switch return|return switch) %object%"); // TODO better pattern? (can't use `switch object` again)
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(SecExprSwitchReturn.class, Object.class,
+                "(switch return|return switch) %object%")
+            .name("SwitchCase - Switch Return")
+            .description("Switch an object and have it return a value.")
+            .examples("function getRoman(i: number) :: string:",
+                "\treturn switch return {_i}:",
+                "\t\tcase 1 -> \"I\"",
+                "\t\tcase 2 -> \"II\"",
+                "\t\tcase 3 -> \"III\"",
+                "\t\tcase 4 -> \"IV\"",
+                "\t\tcase 5 -> \"V\"",
+                "\t\tdefault -> \"potato\"",
+                "",
+                "function getName(e: entity) :: string:",
+                "\treturn switch return {_e}:",
+                "\t\tcase sheep -> \"Mr Sheepy\"",
+                "\t\tcase cow -> \"Mr Cow\"",
+                "\t\tcase pig -> \"Señor Pig\"",
+                "\t\tdefault -> strict proper case \"%type of {_e}%\"",
+                "",
+                "on break:",
+                "\tset {_i} to switch return event-block:",
+                "\t\tcase stone -> \"Stoney Stone\"",
+                "\t\tcase dirt -> \"Dirty Dirt\"",
+                "\t\tcase grass block -> \"Grassy Grass\"",
+                "\t\tdefault:",
+                "\t\t\tif gamemode of player = creative:",
+                "\t\t\t\treturn \"&c%type of switched object%\"",
+                "\t\t\telse:",
+                "\t\t\t\treturn \"&a%type of switched object%\"",
+                "",
+                "\tsend \"Broken: %{_i}%\" to player")
+            .since("3.8.0")
+            .register();
     }
 
     private boolean isSingle = true;

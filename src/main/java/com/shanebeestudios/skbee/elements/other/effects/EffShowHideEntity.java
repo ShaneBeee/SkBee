@@ -1,38 +1,32 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
-import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Show/Hide Entities")
-@Description({"Show/hide entities to/from players. Requires Minecraft 1.18+",
-    "NOTE: This is not persistent across server restarts and/or chunk unloading!"})
-@Examples({"make all entities disappear from player",
-    "make all mobs appear to all players",
-    "make target entity of player disappear from all players"})
-@Since("2.10.0")
 public class EffShowHideEntity extends Effect {
 
     private static final SkBee PLUGIN = SkBee.getPlugin();
 
-    static {
-        if (Skript.methodExists(Player.class, "showEntity", Plugin.class, Entity.class)) {
-            Skript.registerEffect(EffShowHideEntity.class,
-                "make %entities% (1:appear|disappear) (for|to|from) %players%");
-        }
+    public static void register(Registration reg) {
+        reg.newEffect(EffShowHideEntity.class,
+                "make %entities% (1:appear|disappear) (for|to|from) %players%")
+            .name("Show/Hide Entities")
+            .description("Show/hide entities to/from players.",
+                "NOTE: This is not persistent across server restarts and/or chunk unloading!")
+            .examples("make all entities disappear from player",
+                "make all mobs appear to all players",
+                "make target entity of player disappear from all players")
+            .since("2.10.0")
+            .register();
     }
 
     private Expression<Entity> entities;

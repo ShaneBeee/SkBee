@@ -3,14 +3,11 @@ package com.shanebeestudios.skbee.elements.other.sections;
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.EntityUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
@@ -34,56 +31,11 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import java.util.List;
 import java.util.UUID;
 
-@SuppressWarnings({"DataFlowIssue", "UnstableApiUsage"})
-@Name("Attribute Modifier Apply")
-@Description({"Apply an attribute modifier to an item or living entity.",
-    "If running Minecraft 1.21+ use `id`",
-    "If running Minecraft 1.20.6 and below, use `name` and `uuid` (uuid is optional, will default to random).",
-    "See [**McWiki Component**](https://minecraft.wiki/w/Data_component_format#attribute_modifiers) and " +
-        "[**McWiki Modifiers**](https://minecraft.wiki/w/Attribute#Modifiers) for further details.",
-    "",
-    "`transient` = Non-persisent attribute modifier (LivingEntities only, not Items), will not save to the entity's NBT (Requires PaperMC).",
-    "",
-    "**Entries/Sections**:",
-    "- `attribute` = The attribute this modifier is to act upon.",
-    "- `slot` = Slot Type the item must be in for the modifier to take effect (Minecraft 1.20.6+ uses Equipment Slot Group, other versions use Equipment Slot).",
-    "- `id` = The NamespacedKey to identify this modifier (Minecraft 1.21+).",
-    "- `name` = The name used to identifiy this modifier (Minecraft 1.20.6 and below).",
-    "- `uuid` = The uuid used to identify this modifier [optional] (Minecraft 1.20.6 and below).",
-    "- `amount` = Amount of change from the modifier.",
-    "- `operation` = The operation to decide how to modify. See [**McWiki**](https://minecraft.wiki/w/Attribute#Operations) for more details."})
-@Examples({"#Apply Attribute Modifiers to Items",
-    "set {_i} to a stick",
-    "apply attribute modifier to {_i}:",
-    "\tattribute: scale",
-    "\tid: \"minecraft:my_hand_scale\"",
-    "\tslot: mainhand_slot_group",
-    "\tamount: 2",
-    "\toperation: add_number",
-    "apply attribute modifier to {_i}:",
-    "\tattribute: scale",
-    "\tid: \"minecraft:my_hand_scale_off\"",
-    "\tslot: offhand_slot_group",
-    "\tamount: -0.9",
-    "\toperation: add_number",
-    "give player 1 of {_i}",
-    "#Apply Attribute Modifiers to LivingEntities",
-    "apply transient attribute modifier to player:",
-    "\tid: \"my_mods:mining\"",
-    "\tattribute: player mining efficiency",
-    "\tamount: 50",
-    "\toperation: add_number",
-    "apply transient attribute modifier to player:",
-    "\tid: \"my_mods:scale\"",
-    "\tattribute: scale",
-    "\tamount: -0.5",
-    "\toperation: add_number"})
-@Since("3.5.9")
 public class SecAttributeModifier extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         SimpleEntryValidator builder = SimpleEntryValidator.builder();
         builder.addRequiredEntry("attribute", Attribute.class);
         if (ItemUtils.HAS_EQUIPMENT_SLOT_GROUP) {
@@ -100,7 +52,53 @@ public class SecAttributeModifier extends Section {
         builder.addRequiredEntry("amount", Number.class);
         builder.addRequiredEntry("operation", Operation.class);
         VALIDATOR = builder.build();
-        Skript.registerSection(SecAttributeModifier.class, "apply [:transient] attribute modifier to %itemtypes/livingentities%");
+        reg.newSection(SecAttributeModifier.class, VALIDATOR,
+                "apply [:transient] attribute modifier to %itemtypes/livingentities%")
+            .name("Attribute Modifier - Apply")
+            .description("Apply an attribute modifier to an item or living entity.",
+                "If running Minecraft 1.21+ use `id`",
+                "If running Minecraft 1.20.6 and below, use `name` and `uuid` (uuid is optional, will default to random).",
+                "See [**McWiki Component**](https://minecraft.wiki/w/Data_component_format#attribute_modifiers) and " +
+                    "[**McWiki Modifiers**](https://minecraft.wiki/w/Attribute#Modifiers) for further details.",
+                "",
+                "`transient` = Non-persisent attribute modifier (LivingEntities only, not Items), will not save to the entity's NBT (Requires PaperMC).",
+                "",
+                "**Entries/Sections**:",
+                "- `attribute` = The attribute this modifier is to act upon.",
+                "- `slot` = Slot Type the item must be in for the modifier to take effect (Minecraft 1.20.6+ uses Equipment Slot Group, other versions use Equipment Slot).",
+                "- `id` = The NamespacedKey to identify this modifier (Minecraft 1.21+).",
+                "- `name` = The name used to identifiy this modifier (Minecraft 1.20.6 and below).",
+                "- `uuid` = The uuid used to identify this modifier [optional] (Minecraft 1.20.6 and below).",
+                "- `amount` = Amount of change from the modifier.",
+                "- `operation` = The operation to decide how to modify. See [**McWiki**](https://minecraft.wiki/w/Attribute#Operations) for more details.")
+            .examples("#Apply Attribute Modifiers to Items",
+                "set {_i} to a stick",
+                "apply attribute modifier to {_i}:",
+                "\tattribute: scale",
+                "\tid: \"minecraft:my_hand_scale\"",
+                "\tslot: mainhand_slot_group",
+                "\tamount: 2",
+                "\toperation: add_number",
+                "apply attribute modifier to {_i}:",
+                "\tattribute: scale",
+                "\tid: \"minecraft:my_hand_scale_off\"",
+                "\tslot: offhand_slot_group",
+                "\tamount: -0.9",
+                "\toperation: add_number",
+                "give player 1 of {_i}",
+                "#Apply Attribute Modifiers to LivingEntities",
+                "apply transient attribute modifier to player:",
+                "\tid: \"my_mods:mining\"",
+                "\tattribute: player mining efficiency",
+                "\tamount: 50",
+                "\toperation: add_number",
+                "apply transient attribute modifier to player:",
+                "\tid: \"my_mods:scale\"",
+                "\tattribute: scale",
+                "\tamount: -0.5",
+                "\toperation: add_number")
+            .since("3.5.9")
+            .register();
     }
 
     private boolean trans;

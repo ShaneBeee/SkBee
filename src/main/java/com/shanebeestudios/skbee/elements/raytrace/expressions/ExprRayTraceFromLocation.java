@@ -1,16 +1,11 @@
 package com.shanebeestudios.skbee.elements.raytrace.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptConfig;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.util.EntityUtils;
 import org.bukkit.Bukkit;
@@ -28,23 +23,24 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Predicate;
 
-@Name("RayTrace - From Location")
-@Description({"RayTrace from a location along a vector.",
-    "Default max distance = 'maximum target block distance' in Skript's config.",
-    "RaySize = entity bounding boxes will be uniformly expanded (or shrunk)",
-    "by this value before doing collision checks (default = 0.0).",
-    "IngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..).",
-    "Ignoring/Only Allowing Entities/EntityTypes = Will ignore/only allow the entities/entitytypes from the final ray.",
-    "Going through Blocks/ItemTypes = Will ignore the blocks/itemtypes from the final ray."})
-@Examples("set {_ray} to ray trace from location of target block along vector(0.25,0.3,0) with max distance 50")
-@Since("2.6.0")
 public class ExprRayTraceFromLocation extends SimpleExpression<RayTraceResult> {
 
-    static {
-        Skript.registerExpression(ExprRayTraceFromLocation.class, RayTraceResult.class, ExpressionType.COMBINED,
-            "ray[ ]trace from %location% along %vectors% [with max distance %-number%] [with ray size %-number%] " +
-                "[ignore:while ignoring passable blocks] [while (ignoring|allowing:only allowing) %-entities/entitydatas%] " +
-                "[while going through %-blocks/itemtypes%]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprRayTraceFromLocation.class, RayTraceResult.class,
+                "ray[ ]trace from %location% along %vectors% [with max distance %-number%] [with ray size %-number%] " +
+                    "[ignore:while ignoring passable blocks] [while (ignoring|allowing:only allowing) %-entities/entitydatas%] " +
+                    "[while going through %-blocks/itemtypes%]")
+            .name("RayTrace - From Location")
+            .description("RayTrace from a location along a vector.",
+                "Default max distance = 'maximum target block distance' in Skript's config.",
+                "RaySize = entity bounding boxes will be uniformly expanded (or shrunk)",
+                "by this value before doing collision checks (default = 0.0).",
+                "IngorePassableBlocks = Will ignore passable but collidable blocks (ex. tall grass, signs, fluids, ..).",
+                "Ignoring/Only Allowing Entities/EntityTypes = Will ignore/only allow the entities/entitytypes from the final ray.",
+                "Going through Blocks/ItemTypes = Will ignore the blocks/itemtypes from the final ray.")
+            .examples("set {_ray} to ray trace from location of target block along vector(0.25,0.3,0) with max distance 50")
+            .since("2.6.0")
+            .register();
     }
 
     private Expression<Location> location;

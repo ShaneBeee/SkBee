@@ -2,15 +2,12 @@ package com.shanebeestudios.skbee.elements.recipe.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -28,29 +25,12 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 
 import java.util.List;
 
-@Name("Recipe - Register Smithing Recipe")
-@Description({"This section allows you to register a smithing transform recipe, define the output as well as the template, ",
-    "base and addition items. Requires MC 1.20+",
-    "\n`id` = The ID for your recipe.",
-    "\n`result` = The resulting ItemStack of this recipe.",
-    "\n`template` = Represents the first slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
-    "\n`base` = Represents the second slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
-    "\n`addition` = Represents the third slot in the smithing inventory (Optional).",
-    "\n`copynbt` = Represents whether to copy the nbt from the input base item to the output, default = true (Requires PaperMC) (Optional)."})
-@Examples({"on load:",
-    "\tregister smithing transform recipe:",
-    "\t\tid: \"test:smithing\"",
-    "\t\tresult: emerald of unbreaking named \"&cFire Stone\" with all item flags",
-    "\t\ttemplate: paper named \"&cFire Paper\"",
-    "\t\tbase: diamond",
-    "\t\taddition: blaze powder"})
-@Since("3.0.0")
 public class SecRecipeSmithing extends Section {
 
     public static final boolean HAS_NBT_METHOD = Skript.methodExists(SmithingRecipe.class, "willCopyNbt");
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         SimpleEntryValidator builder = SimpleEntryValidator.builder();
         builder.addRequiredEntry("id", String.class);
         builder.addRequiredEntry("result", ItemStack.class);
@@ -58,8 +38,30 @@ public class SecRecipeSmithing extends Section {
         builder.addRequiredEntry("base", RecipeChoice.class);
         builder.addOptionalEntry("addition", RecipeChoice.class);
         builder.addOptionalEntry("copynbt", Boolean.class);
-        Skript.registerSection(SecRecipeSmithing.class, "register [a] [new] smithing [transform] recipe");
         VALIDATOR = builder.build();
+
+        reg.newSection(SecRecipeSmithing.class, VALIDATOR,
+                "register [a] [new] smithing [transform] recipe")
+            .name("Recipe - Register Smithing Recipe")
+            .description("This section allows you to register a smithing transform recipe, define the output as well as the template, ",
+                "base and addition items",
+                "**Entries**:",
+                " - `id` = The ID for your recipe.",
+                " - `result` = The resulting ItemStack of this recipe.",
+                " - `template` = Represents the first slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
+                " - `base` = Represents the second slot in the smithing inventory (Accepts an ItemStack or RecipeChoice).",
+                " - `addition` = Represents the third slot in the smithing inventory (Optional).",
+                " - `copynbt` = Represents whether to copy the nbt from the input base item to the output, default = true (Requires PaperMC) (Optional).")
+            .examples("on load:",
+                "\tregister smithing transform recipe:",
+                "\t\tid: \"test:smithing\"",
+                "\t\tresult: emerald of unbreaking named \"&cFire Stone\" with all item flags",
+                "\t\ttemplate: paper named \"&cFire Paper\"",
+                "\t\tbase: diamond",
+                "\t\taddition: blaze powder")
+            .since("3.0.0")
+            .register();
+
     }
 
     private Expression<String> id;

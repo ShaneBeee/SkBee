@@ -2,17 +2,13 @@ package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.Event;
@@ -25,27 +21,28 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("TextComponent - Join/Quit/Kick/Death Message")
-@Description("Get/set the join, quit, kick, death, unknown command messages.")
-@Examples({"on join:",
-    "\tset component join message to mini message from \"<hover:show_entity:player:%uuid of player%><gradient:##FAA401:##5FFA01>%player%<reset><green> joined the game\"",
-    "",
-    "on quit:",
-    "\tset component quit message to mini message from \"<hover:show_entity:player:%uuid of player%><gradient:##FAA401:##5FFA01>%player%<reset><red> left the game\"",
-    "",
-    "on death of player:",
-    "\tif attacker is a player:",
-    "\t\tset {_t} to translate component of attacker's tool",
-    "\t\tset {_m} to mini message from \"<##FA1F01>%victim% <##FAD401>was slain by <##72FA01>%attacker% <##FAD401>using <grey>[<##03FCEA><lang:%{_t}%><grey>]\"",
-    "\t\tset component death message to {_m}"})
-@Since("3.4.0")
 public class ExprMessageComponent extends SimpleExpression<ComponentWrapper> {
 
     private static final String[] PATTERNS = new String[]{"component join message", "component (quit|kick) message",
         "component death message", "component unknown command message"};
 
-    static {
-        Skript.registerExpression(ExprMessageComponent.class, ComponentWrapper.class, ExpressionType.SIMPLE, PATTERNS);
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprMessageComponent.class, ComponentWrapper.class, PATTERNS)
+            .name("TextComponent - Join/Quit/Kick/Death Message")
+            .description("Get/set the join, quit, kick, death, unknown command messages.")
+            .examples("on join:",
+                "\tset component join message to mini message from \"<hover:show_entity:player:%uuid of player%><gradient:##FAA401:##5FFA01>%player%<reset><green> joined the game\"",
+                "",
+                "on quit:",
+                "\tset component quit message to mini message from \"<hover:show_entity:player:%uuid of player%><gradient:##FAA401:##5FFA01>%player%<reset><red> left the game\"",
+                "",
+                "on death of player:",
+                "\tif attacker is a player:",
+                "\t\tset {_t} to translate component of attacker's tool",
+                "\t\tset {_m} to mini message from \"<##FA1F01>%victim% <##FAD401>was slain by <##72FA01>%attacker% <##FAD401>using <grey>[<##03FCEA><lang:%{_t}%><grey>]\"",
+                "\t\tset component death message to {_m}")
+            .since("3.4.0")
+            .register();
     }
 
     private int pattern;

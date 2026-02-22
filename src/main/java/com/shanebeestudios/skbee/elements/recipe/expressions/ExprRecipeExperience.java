@@ -1,16 +1,10 @@
 package com.shanebeestudios.skbee.elements.recipe.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -23,15 +17,16 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("Recipe - Experience")
-@Description("Get the experience gained from a cooking recipe.")
-@Examples("set {_time} to experience of recipe with id \"minecraft:cooked_chicken\"")
-@Since("2.18.0")
 public class ExprRecipeExperience extends SimpleExpression<Number> {
 
-    static {
-        Skript.registerExpression(ExprRecipeExperience.class, Number.class, ExpressionType.COMBINED,
-                "(experience|[e]xp) of recipe[s] [with id[s]] %strings%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprRecipeExperience.class, Number.class,
+                "(experience|[e]xp) of recipe[s] [with id[s]] %strings%")
+            .name("Recipe - Experience")
+            .description("Get the experience gained from a cooking recipe.")
+            .examples("set {_time} to experience of recipe with id \"minecraft:cooked_chicken\"")
+            .since("2.18.0")
+            .register();
     }
 
     private Expression<String> key;

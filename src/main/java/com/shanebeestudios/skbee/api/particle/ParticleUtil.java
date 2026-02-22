@@ -34,100 +34,10 @@ public class ParticleUtil {
     private ParticleUtil() {
     }
 
-    private static final Map<String, Particle> PARTICLES = new HashMap<>();
-    private static final Map<Particle, String> PARTICLE_NAMES = new HashMap<>();
     private static final boolean HAS_PLAYER_FORCE = Skript.methodExists(Player.class, "spawnParticle",
         Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class);
     // Added in Minecraft 1.21.9
     public static final boolean HAS_SPELL = Util.IS_RUNNING_MC_1_21_9;
-
-    static {
-        Registry.PARTICLE_TYPE.forEach(particle -> {
-            String key = particle.getKey().getKey();
-            PARTICLES.put(key, particle);
-            PARTICLE_NAMES.put(particle, key);
-        });
-    }
-
-    /**
-     * Returns a string for docs of all names of particles
-     *
-     * @return Names of all particles in one long string
-     */
-    public static String getNamesAsString() {
-        List<String> names = new ArrayList<>();
-        PARTICLES.forEach((s, particle) -> {
-            String name = s;
-
-            if (particle.getDataType() != Void.class) {
-                name = name + " [" + getDataType(particle) + "]";
-            }
-            names.add(name);
-        });
-        Collections.sort(names);
-        return StringUtils.join(names, ", ");
-    }
-
-    /**
-     * Get the Minecraft name of a particle
-     *
-     * @param particle Particle to get name of
-     * @return Minecraft name of particle
-     */
-    public static String getName(Particle particle) {
-        return PARTICLE_NAMES.get(particle);
-    }
-
-    /**
-     * Get a list of all available particles
-     *
-     * @return List of all available particles
-     */
-    public static List<Particle> getAvailableParticles() {
-        return new ArrayList<>(PARTICLES.values());
-    }
-
-    /**
-     * Parse a particle by its Minecraft name
-     *
-     * @param key Minecraft name of particle
-     * @return Bukkit particle from Minecraft name (null if not available)
-     */
-    @Nullable
-    public static Particle parse(String key) {
-        if (PARTICLES.containsKey(key)) {
-            return PARTICLES.get(key);
-        }
-        return null;
-    }
-
-    private static String getDataType(Particle particle) {
-        Class<?> dataType = particle.getDataType();
-        if (dataType == ItemStack.class) {
-            return "itemtype";
-        } else if (dataType == DustOptions.class) {
-            return "dust-option";
-        } else if (dataType == BlockData.class) {
-            return "blockdata/itemtype";
-        } else if (dataType == DustTransition.class) {
-            return "dust-transition";
-        } else if (dataType == Vibration.class) {
-            return "vibration";
-        } else if (dataType == Integer.class) {
-            return "number(int)";
-        } else if (dataType == Float.class) {
-            return "number(float)";
-        } else if (dataType == Color.class) {
-            return "color/bukkitcolor";
-        } else if (dataType == Particle.Trail.class) {
-            return "trail";
-        } else if (HAS_SPELL && dataType == Particle.Spell.class) {
-            return "spell";
-        }
-        // For future particle data additions that haven't been added here yet
-        Util.debug("Missing particle data type: '&e" + dataType.getName() + "&7'");
-        return "UNKNOWN";
-    }
 
     public static void spawnParticle(@NotNull Particle particle, @Nullable Player[] players, @NotNull Location location, int count, Object data, Vector offset, double extra, boolean force) {
         Object particleData = getData(particle, data);
@@ -152,8 +62,36 @@ public class ParticleUtil {
         }
     }
 
+    public static String getDataType(Particle particle) {
+        Class<?> dataType = particle.getDataType();
+        if (dataType == ItemStack.class) {
+            return "itemtype";
+        } else if (dataType == Particle.DustOptions.class) {
+            return "dust-option";
+        } else if (dataType == BlockData.class) {
+            return "blockdata/itemtype";
+        } else if (dataType == Particle.DustTransition.class) {
+            return "dust-transition";
+        } else if (dataType == Vibration.class) {
+            return "vibration";
+        } else if (dataType == Integer.class) {
+            return "number(int)";
+        } else if (dataType == Float.class) {
+            return "number(float)";
+        } else if (dataType == Color.class) {
+            return "color/bukkitcolor";
+        } else if (dataType == Particle.Trail.class) {
+            return "trail";
+        } else if (ParticleUtil.HAS_SPELL && dataType == Particle.Spell.class) {
+            return "spell";
+        }
+        // For future particle data additions that haven't been added here yet
+        Util.debug("Missing particle data type: '&e" + dataType.getName() + "&7'");
+        return "UNKNOWN";
+    }
+
     @Nullable
-    private static Object getData(Particle particle, Object data) {
+    public static Object getData(Particle particle, Object data) {
         Class<?> dataType = particle.getDataType();
         if (dataType == Void.class) {
             return null;

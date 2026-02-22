@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
@@ -17,16 +12,17 @@ import org.bukkit.inventory.meta.trim.TrimPattern;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("ArmorTrim - Create")
-@Description("Create a new armor trim to be applied to an item. Requires MC 1.19.4+")
-@Examples({"set {_trim} to armor trim using gold_material with eye_pattern",
-    "add armor trim using gold_material with eye_pattern to armor trim of player's helmet"})
-@Since("2.13.0")
 public class ExprArmorTrim extends SimpleExpression<ArmorTrim> {
 
-    static {
-        Skript.registerExpression(ExprArmorTrim.class, ArmorTrim.class, ExpressionType.COMBINED,
-            "[new] armor trim (of|from|using) %trimmaterial% (and|with) %trimpattern%");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprArmorTrim.class, ArmorTrim.class,
+                "[new] armor trim (of|from|using) %trimmaterial% (and|with) %trimpattern%")
+            .name("ArmorTrim - Create")
+            .description("Create a new armor trim to be applied to an item.")
+            .examples("set {_trim} to armor trim using gold_material with eye_pattern",
+                "add armor trim using gold_material with eye_pattern to armor trim of player's helmet")
+            .since("2.13.0")
+            .register();
     }
 
     private Expression<TrimMaterial> trimMaterial;

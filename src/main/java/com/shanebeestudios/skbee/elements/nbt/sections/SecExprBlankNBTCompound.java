@@ -2,15 +2,14 @@ package com.shanebeestudios.skbee.elements.nbt.sections;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.*;
 import ch.njol.skript.expressions.base.SectionExpression;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.nbt.sections.SecModifyNBT.NBTEditEvent;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -21,23 +20,23 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-@Name("NBT - Empty Compound")
-@Description({"Returns an empty/new NBT compound.",
-    "Optionally you can define this as a section to modify the created nbt compound directly"})
-@Examples({"set {_nbt} to blank nbt compound",
-    "set tag \"points\" of {_nbt} to 10",
-    "",
-    "set {_data} to empty nbt compound:",
-    "\tset string tag \"name\" of nbt to \"Jimmy\"",
-    "\tset int tag \"points\" of nbt to 99",
-    "\tset compound tag \"extra\" of nbt to empty nbt compound"})
-@Since("2.8.0")
-@DocumentationId("ExprBlankNBTCompound")
 public class SecExprBlankNBTCompound extends SectionExpression<NBTCompound> {
 
-    static {
-        Skript.registerExpression(SecExprBlankNBTCompound.class, NBTCompound.class, ExpressionType.SIMPLE,
-            "[a[n]] (blank|empty|new) nbt compound");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(SecExprBlankNBTCompound.class, NBTCompound.class,
+                "[a[n]] (blank|empty|new) nbt compound")
+            .name("NBT - Empty Compound")
+            .description("Returns an empty/new NBT compound.",
+                "Optionally you can define this as a section to modify the created nbt compound directly")
+            .examples("set {_nbt} to blank nbt compound",
+                "set tag \"points\" of {_nbt} to 10",
+                "",
+                "set {_data} to empty nbt compound:",
+                "\tset string tag \"name\" of nbt to \"Jimmy\"",
+                "\tset int tag \"points\" of nbt to 99",
+                "\tset compound tag \"extra\" of nbt to empty nbt compound")
+            .since("2.8.0")
+            .register();
     }
 
     private @Nullable Trigger trigger;

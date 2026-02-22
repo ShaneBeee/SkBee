@@ -1,12 +1,7 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.sections;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.bukkitutil.EntityUtils;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.Section;
@@ -14,6 +9,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
@@ -37,37 +33,12 @@ import org.skriptlang.skript.lang.entry.EntryValidator;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("ItemComponent - Equippable Component Apply")
-@Description({"Apply an equippable component to any item so it can be equipped in the specified slot.",
-    "Requires Paper 1.21.3+",
-    "See [**Equippable Component**](https://minecraft.wiki/w/Data_component_format#equippable) on McWiki for more info.",
-    "",
-    "**Entries**:",
-    "- `slot` = The slot the item can be put on (See Equipment Slot).",
-    "- `equip_sound` = The sound to be played when equipped. [Optional]",
-    "- `asset_id` = The key of the equipment model to use when equipped. [Optional]",
-    "- `allowed_entities` = A list of entity types or a Minecraft entity tag that can equip this item. [Optional]",
-    "- `dispensable` = Whether the item can be dispensed by using a dispenser. Defaults to true. [Optional]",
-    "- `swappable` = Whether the item can be equipped into the relevant slot by right-clicking. Defaults to true. [Optional]",
-    "- `damage_on_hurt` = Whether this item is damaged when the wearing entity is damaged. Defaults to true. [Optional]",
-    "- `camera_overlay` = The key of the overlay texture to use when equipped. [Optional]"})
-@Examples({"apply equippable component to {_item}:",
-    "\tslot: hand_slot",
-    "\tequip_sound: \"entity.player.burp\"",
-    "\tasset_id: \"my_pack:some_asset\"",
-    "\tallowed_entities: player, evoker, zombie # Shown as list of entity types.",
-    "\tallowed_entities: minecraft entity tag \"undead\" # Shown as Minecraft entity tag",
-    "\tdispensable: false",
-    "\tswappable: true",
-    "\tdamage_on_hurt: true",
-    "\tcamera_overlay: \"my_pack:some_overlay\""})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class SecEquippableComponent extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         @SuppressWarnings("unchecked")
         Class<Object>[] classes = (Class<Object>[]) CollectionUtils.array(EntityData.class, EntityType.class, Tag.class, TagKey.class, RegistryKeySet.class);
 
@@ -81,8 +52,34 @@ public class SecEquippableComponent extends Section {
             .addOptionalEntry("damage_on_hurt", Boolean.class)
             .addOptionalEntry("camera_overlay", String.class)
             .build();
-        Skript.registerSection(SecEquippableComponent.class,
-            "apply equippable [component] to %itemstacks/itemtypes/slots%");
+        reg.newSection(SecEquippableComponent.class, VALIDATOR,
+            "apply equippable [component] to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Equippable Component Apply")
+            .description("Apply an equippable component to any item so it can be equipped in the specified slot.",
+                "Requires Paper 1.21.3+",
+                "See [**Equippable Component**](https://minecraft.wiki/w/Data_component_format#equippable) on McWiki for more info.",
+                "",
+                "**Entries**:",
+                "- `slot` = The slot the item can be put on (See Equipment Slot).",
+                "- `equip_sound` = The sound to be played when equipped. [Optional]",
+                "- `asset_id` = The key of the equipment model to use when equipped. [Optional]",
+                "- `allowed_entities` = A list of entity types or a Minecraft entity tag that can equip this item. [Optional]",
+                "- `dispensable` = Whether the item can be dispensed by using a dispenser. Defaults to true. [Optional]",
+                "- `swappable` = Whether the item can be equipped into the relevant slot by right-clicking. Defaults to true. [Optional]",
+                "- `damage_on_hurt` = Whether this item is damaged when the wearing entity is damaged. Defaults to true. [Optional]",
+                "- `camera_overlay` = The key of the overlay texture to use when equipped. [Optional]")
+            .examples("apply equippable component to {_item}:",
+                "\tslot: hand_slot",
+                "\tequip_sound: \"entity.player.burp\"",
+                "\tasset_id: \"my_pack:some_asset\"",
+                "\tallowed_entities: player, evoker, zombie # Shown as list of entity types.",
+                "\tallowed_entities: minecraft entity tag \"undead\" # Shown as Minecraft entity tag",
+                "\tdispensable: false",
+                "\tswappable: true",
+                "\tdamage_on_hurt: true",
+                "\tcamera_overlay: \"my_pack:some_overlay\"")
+            .since("3.8.0")
+            .register();
     }
 
     private Expression<Object> items;

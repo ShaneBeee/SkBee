@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.virtualfurnace.type.Types;
 import com.shanebeestudios.vf.api.machine.Furnace;
 import com.shanebeestudios.vf.api.property.FurnaceProperties;
@@ -18,18 +13,19 @@ import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("VirtualFurnace - Create")
-@Description("Create a virtual furnace. When properties are not defined, default vanilla Minecraft properties are used.")
-@Examples({"set {_furnace} to virtual furnace named \"Le Furnace\"",
-        "",
-        "set {_prop} to default furnace properties",
-        "set {_furnace} to virtual furnace named \"Potato\" with properties {_prop}"})
-@Since("3.3.0")
 public class ExprVirtualFurnaceCreate extends SimpleExpression<Furnace> {
 
-    static {
-        Skript.registerExpression(ExprVirtualFurnaceCreate.class, Furnace.class, ExpressionType.COMBINED,
-                "virtual furnace (named|with name) %string% [with [[furnace ]properties] %-machineproperty%]");
+    public static void register(Registration reg) {
+        reg.newCombinedExpression(ExprVirtualFurnaceCreate.class, Furnace.class,
+                "virtual furnace (named|with name) %string% [with [[furnace ]properties] %-machineproperty%]")
+            .name("VirtualFurnace - Create")
+            .description("Create a virtual furnace. When properties are not defined, default vanilla Minecraft properties are used.")
+            .examples("set {_furnace} to virtual furnace named \"Le Furnace\"",
+                "",
+                "set {_prop} to default furnace properties",
+                "set {_furnace} to virtual furnace named \"Potato\" with properties {_prop}")
+            .since("3.3.0")
+            .register();
     }
 
     private Expression<String> name;

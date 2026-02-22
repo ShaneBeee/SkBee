@@ -3,18 +3,14 @@ package com.shanebeestudios.skbee.elements.property.expressions;
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.ClassInfo;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.property.Property;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -25,18 +21,19 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@Name("Property - Property of Object")
-@Description({"Represents different properties of an object.",
-    "See [**Property Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Properties) for available properties and examples."})
-@Examples("")
-@Since("3.10.0")
 @SuppressWarnings("unchecked")
-public class ExprProperty<F, T> extends SimpleExpression<T> {
+public class ExprProperty<F extends Object, T extends Object> extends SimpleExpression<T> {
 
-    static {
-        Skript.registerExpression(ExprProperty.class, Object.class, ExpressionType.COMBINED,
-            "%*property% property of %objects%",
-            "%objects%'[s] %*property% property");
+    public static void register(Registration reg) {
+        // TODO this one won't work, figure out later
+        reg.newCombinedExpression( ExprProperty.class, Object.class,
+                "%*property% property of %objects%",
+                "%objects%'[s] %*property% property")
+            .name("Property - Property of Object")
+            .description("Represents different properties of an object.",
+                "See [**Property Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Properties) for available properties and examples.")
+            .since("3.10.0")
+            .register();
     }
 
     private Literal<Property<F, T>> property;
@@ -46,7 +43,7 @@ public class ExprProperty<F, T> extends SimpleExpression<T> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.property = (Literal<Property<F, T>>) exprs[matchedPattern];
-        this.objects = LiteralUtils.defendExpression( exprs[matchedPattern == 0 ? 1 : 0]);
+        this.objects = LiteralUtils.defendExpression(exprs[matchedPattern == 0 ? 1 : 0]);
         if (this.objects.getReturnType().isAssignableFrom(this.property.getSingle().getPropertyHolder())) return true;
         if (this.property.getSingle().getPropertyHolder().isAssignableFrom(this.objects.getReturnType())) return true;
         if (Converters.converterExists(this.objects.getReturnType(), this.property.getSingle().getPropertyHolder()))

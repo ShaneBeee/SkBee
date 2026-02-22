@@ -1,16 +1,9 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
@@ -20,25 +13,26 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Name("ItemComponent - Tooltip Style")
-@Description({"The key of the custom sprites for the tooltip background and frame which references textures.",
-    "See [**Tooltip Style Component**](https://minecraft.wiki/w/Data_component_format#tooltip_style) on McWiki for more details.",
-    "Requires Paper 1.21.3+",
-    "",
-    "**Changers**:",
-    "- `set` = Set the key of the texture to use.",
-    "- `reset` = Reset back to default state.",
-    "- `delete` = Will delete any value (vanilla or not)."})
-@Examples({"set tooltip style of {_item} to \"my_pack:some_style\"",
-    "delete tooltip style of player's tool",
-    "reset tooltip style of player's tool"})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprTooltipStyleComponent extends SimplePropertyExpression<Object, String> {
 
-    static {
-        register(ExprTooltipStyleComponent.class, String.class,
-            "tool[ ]tip style [component]", "itemstacks/itemtypes/slots");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprTooltipStyleComponent.class, String.class,
+                "tool[ ]tip style [component]", "itemstacks/itemtypes/slots")
+            .name("ItemComponent - Tooltip Style")
+            .description("The key of the custom sprites for the tooltip background and frame which references textures.",
+                "See [**Tooltip Style Component**](https://minecraft.wiki/w/Data_component_format#tooltip_style) on McWiki for more details.",
+                "Requires Paper 1.21.3+",
+                "",
+                "**Changers**:",
+                "- `set` = Set the key of the texture to use.",
+                "- `reset` = Reset back to default state.",
+                "- `delete` = Will delete any value (vanilla or not).")
+            .examples("set tooltip style of {_item} to \"my_pack:some_style\"",
+                "delete tooltip style of player's tool",
+                "reset tooltip style of player's tool")
+            .since("3.8.0")
+            .register();
     }
 
     @Override

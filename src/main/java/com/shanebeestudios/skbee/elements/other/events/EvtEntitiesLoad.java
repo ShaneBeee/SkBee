@@ -1,11 +1,11 @@
 package com.shanebeestudios.skbee.elements.other.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.world.EntitiesLoadEvent;
@@ -13,10 +13,12 @@ import org.bukkit.event.world.EntitiesUnloadEvent;
 import org.jetbrains.annotations.NotNull;
 
 public class EvtEntitiesLoad extends SkriptEvent {
-    static {
-        Skript.registerEvent("Entities Loading", EvtEntitiesLoad.class,
+
+    public static void register(Registration reg) {
+        reg.newEvent(EvtEntitiesLoad.class,
                 CollectionUtils.array(EntitiesLoadEvent.class, EntitiesUnloadEvent.class),
                 "entities [:un]load[ed]")
+            .name("Entities Loading")
             .description("Called when entities are loaded/unloaded.",
                 "Event-Values:",
                 "`event-entities` = The entities that were loaded.",
@@ -25,7 +27,8 @@ public class EvtEntitiesLoad extends SkriptEvent {
                 "\tif event-entities is set:",
                 "\t\tdelete event-entities",
                 "\t\tbroadcast \"REMOVED ENTITIES!\"")
-            .since("3.5.0");
+            .since("3.5.0")
+            .register();
 
         EventValues.registerEventValue(EntitiesLoadEvent.class, Entity[].class, event -> event.getEntities().toArray(new Entity[0]), EventValues.TIME_NOW);
         EventValues.registerEventValue(EntitiesUnloadEvent.class, Entity[].class, event -> event.getEntities().toArray(new Entity[0]), EventValues.TIME_NOW);

@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -22,16 +17,17 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Name("ItemType From NamespacedKey/BlockData")
-@Description("Get an ItemType from a Minecraft namespaced key or BlockData.")
-@Examples({"set {_i} to itemtype from namespaced key from \"minecraft:stone\"",
-    "set {_i} to itemtype from block data of target block"})
-@Since("2.10.0")
 public class ExprItemFromNamespacedKey extends SimpleExpression<ItemType> {
 
-    static {
-        Skript.registerExpression(ExprItemFromNamespacedKey.class, ItemType.class, ExpressionType.PROPERTY,
-            "item[ ]type[s] (from|of) %namespacedkeys/blockdatas%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprItemFromNamespacedKey.class, ItemType.class, "property",
+                        "item[ ]type[s] (from|of) %namespacedkeys/blockdatas%")
+                .name("ItemType From NamespacedKey/BlockData")
+                .description("Get an ItemType from a Minecraft namespaced key or BlockData.")
+                .examples("set {_i} to itemtype from namespaced key from \"minecraft:stone\"",
+                        "set {_i} to itemtype from block data of target block")
+                .since("2.10.0")
+                .register();
     }
 
     private Expression<?> objects;

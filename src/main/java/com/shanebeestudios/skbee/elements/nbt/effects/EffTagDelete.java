@@ -1,28 +1,27 @@
 package com.shanebeestudios.skbee.elements.nbt.effects;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("NBT - Tag Delete")
-@Description("Delete an NBT tag without having to specify a tag type.")
-@Examples({"delete tag \"minecraft:enchantments\" of nbt of player's tool",
-    "delete tag \"custom;level\" of nbt of player"})
-@Since("3.5.0")
 public class EffTagDelete extends Effect {
 
-    static {
-        Skript.registerEffect(EffTagDelete.class, "delete tag[s] %strings% of %nbtcompound%");
+    public static void register(Registration reg) {
+        reg.newEffect(EffTagDelete.class,
+                "delete tag[s] %strings% of %nbtcompound%")
+            .name("NBT - Tag Delete")
+            .description("Delete an NBT tag without having to specify a tag type.")
+            .examples(
+                "delete tag \"minecraft:enchantments\" of nbt of player's tool",
+                "delete tag \"custom;level\" of nbt of player")
+            .since("3.5.0")
+            .register();
     }
 
     private Expression<String> tags;

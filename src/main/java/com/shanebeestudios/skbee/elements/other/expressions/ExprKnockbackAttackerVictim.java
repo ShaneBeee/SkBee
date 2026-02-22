@@ -1,34 +1,30 @@
 package com.shanebeestudios.skbee.elements.other.expressions;
 
-import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.EventRestrictedSyntax;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.entity.EntityPushedByEntityAttackEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
-@Name("Knockback Attacker/Victim")
-@Description("The attacker/victim in an entity knockback event.")
-@Examples({"on entity knockback:",
-        "\tif knockback attacker is a player:",
-        "\t\tif knockback victim is a sheep:",
-        "\t\t\tcancel event"})
-@Since("1.8.0")
 public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> implements EventRestrictedSyntax {
 
-    static {
-        Skript.registerExpression(ExprKnockbackAttackerVictim.class, Entity.class, ExpressionType.SIMPLE,
-                "[the] knockback (:attacker|victim)");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprKnockbackAttackerVictim.class, Entity.class, "simple",
+                        "[the] knockback (:attacker|victim)")
+                .name("Knockback Attacker/Victim")
+                .description("The attacker/victim in an entity knockback event.")
+                .examples("on entity knockback:",
+                        "\tif knockback attacker is a player:",
+                        "\t\tif knockback victim is a sheep:",
+                        "\t\t\tcancel event")
+                .since("1.8.0")
+                .register();
     }
 
     private boolean useAttacker;

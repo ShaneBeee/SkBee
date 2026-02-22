@@ -1,15 +1,12 @@
 package com.shanebeestudios.skbee.elements.other.effects;
 
 import ch.njol.skript.Skript;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
@@ -24,43 +21,44 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 
-@SuppressWarnings("UnstableApiUsage")
-@Name("Freeze Player Connection")
-@Description({"Freeze/unfreeze a player connect.",
-    "**FREEZING**:",
-    "You can freeze a player connection in the async player connection configure event.",
-    "There is a built in 2 minute timeout just incase you don't handle unfreezing the connection.",
-    "There is an optional timeout message (Will default to \"Timeout\").",
-    "This will freeze the thread, so make sure to run it last.",
-    "",
-    "**UNFREEZING**:",
-    "You can unfreeze the connection with an option to disconnect.",
-    "If not disconnecting, the player will join the server after the connection is unfrozen.",
-    "This can be done in the async player connection configure event and the player custom click event."})
-@Examples({"on async player connection configure:",
-    "\t# open your dialog",
-    "\topenDialog(event-audience)",
-    "",
-    "\t# Freeze the connection and wait for the player to respond",
-    "\tfreeze connection event-playerconnection",
-    "",
-    "on player custom click:",
-    "\tif event-namespacedkey contains \"custom:accept_rules\":",
-    "\t\t# Unfreeze the connection and join the player to the server if they accept rules",
-    "\t\tunfreeze connection event-playerconnection",
-    "\tif event-namespacedkey contains \"custom:decline_rules\":",
-    "\t\t# Unfreeze the connection and kick the player if they decline the rules",
-    "\t\tunfreeze connection event-playerconnection and disconnect due to mini message from \"<red>You decided to leave!\""})
-@Since("3.16.0")
 public class EffFreezePlayerConnection extends Effect {
 
     private static final Map<UUID, CompletableFuture<Component>> AWAITING_RESPONSE = new ConcurrentHashMap<>();
 
-    static {
-        if (Skript.classExists("io.papermc.paper.connection.PlayerConfigurationConnection"))
-            Skript.registerEffect(EffFreezePlayerConnection.class,
+    public static void register(Registration reg) {
+        if (!Skript.classExists("io.papermc.paper.connection.PlayerConfigurationConnection")) return;
+
+        reg.newEffect(EffFreezePlayerConnection.class,
                 "freeze connection %playerconnection/audience% [with timeout message %-textcomponent%]",
-                "unfreeze connection %playerconnection/audience% [and disconnect due to %-textcomponent%]");
+                "unfreeze connection %playerconnection/audience% [and disconnect due to %-textcomponent%]")
+            .name("Player Connection - Freeze/Unfreeze")
+            .description("Freeze/unfreeze a player connect.",
+                "**FREEZING**:",
+                "You can freeze a player connection in the async player connection configure event.",
+                "There is a built in 2 minute timeout just incase you don't handle unfreezing the connection.",
+                "There is an optional timeout message (Will default to \"Timeout\").",
+                "This will freeze the thread, so make sure to run it last.",
+                "",
+                "**UNFREEZING**:",
+                "You can unfreeze the connection with an option to disconnect.",
+                "If not disconnecting, the player will join the server after the connection is unfrozen.",
+                "This can be done in the async player connection configure event and the player custom click event.")
+            .examples("on async player connection configure:",
+                "\t# open your dialog",
+                "\topenDialog(event-audience)",
+                "",
+                "\t# Freeze the connection and wait for the player to respond",
+                "\tfreeze connection event-playerconnection",
+                "",
+                "on player custom click:",
+                "\tif event-namespacedkey contains \"custom:accept_rules\":",
+                "\t\t# Unfreeze the connection and join the player to the server if they accept rules",
+                "\t\tunfreeze connection event-playerconnection",
+                "\tif event-namespacedkey contains \"custom:decline_rules\":",
+                "\t\t# Unfreeze the connection and kick the player if they decline the rules",
+                "\t\tunfreeze connection event-playerconnection and disconnect due to mini message from \"<red>You decided to leave!\"")
+            .since("3.16.0")
+            .register();
     }
 
     private boolean freeze;

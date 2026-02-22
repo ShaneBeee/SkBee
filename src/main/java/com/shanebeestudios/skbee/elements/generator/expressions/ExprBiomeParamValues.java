@@ -1,47 +1,15 @@
 package com.shanebeestudios.skbee.elements.generator.expressions;
 
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import org.bukkit.generator.BiomeParameterPoint;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.StringJoiner;
 
-@Name("ChunkGenerator - Biome Parameter Point Values")
-@Description({"Represents the different values of a Biome Parameter Point.",
-    "This is used in the `biome gen` section of a chunk generator.",
-    "`fixed` = Will return the grouped ranged value of a param point, example for continentalness:",
-    "- `-1.2~-1.05` = 0 (Mushroom fields)",
-    "- `-1.05~-0.455` = 1 (Deep ocean)",
-    "- `-0.455~-0.19` = 2 (Ocean)",
-    "- `-0.19~-0.11` = 3 (Coast)",
-    "- `-0.11~0.03` = 4 (Near-inland)",
-    "- `0.03~0.3` = 5 (Mid-inland)",
-    "- `0.3~1.0` = 6 (Far-inland)",
-    "See [**World Generation/Biomes**](https://minecraft.wiki/w/World_generation#Biomes) on McWiki for more details."})
-@Examples({"register chunk generator with id \"test\":",
-    "\tbiome gen:",
-    "\t\tif biome continentalness of biome parameter point <= -0.19:",
-    "\t\t\tset chunkdata biome to ocean",
-    "\t\telse:",
-    "\t\t\tset {_temp} to biome temp of biome parameter point",
-    "\t\t\tif {_temp} > 0.55:",
-    "\t\t\t\tset chunkdata biome to badlands",
-    "\t\t\telse if {_temp} > 0.2:",
-    "\t\t\t\tset chunkdata biome to desert",
-    "\t\t\telse if {_temp} > -0.15:",
-    "\t\t\t\tset chunkdata biome to jungle",
-    "\t\t\telse if {_temp} < -0.45:",
-    "\t\t\t\tset chunkdata biome to plains",
-    "\t\t\telse:",
-    "\t\t\t\tset chunkdata biome to snowy taiga"})
-@Since("3.9.0")
 public class ExprBiomeParamValues extends SimplePropertyExpression<BiomeParameterPoint, Number> {
 
     private enum ParamPoints {
@@ -210,14 +178,44 @@ public class ExprBiomeParamValues extends SimplePropertyExpression<BiomeParamete
         public abstract int getFixedPoint(BiomeParameterPoint point);
     }
 
-    static {
+    public static void register(Registration reg) {
         StringJoiner joiner = new StringJoiner("|");
         for (int i = 0; i < ParamPoints.values().length; i++) {
             joiner.add(i + ":" + ParamPoints.values()[i].getPattern());
         }
-        register(ExprBiomeParamValues.class, Number.class,
-            "[:min|:max|:fixed] biome [parameter] (" + joiner + ")",
-            "biomeparameterpoint");
+        reg.newPropertyExpression(ExprBiomeParamValues.class, Number.class,
+                "[:min|:max|:fixed] biome [parameter] (" + joiner + ")",
+                "biomeparameterpoint")
+            .name("ChunkGenerator - Biome Parameter Point Values")
+            .description("Represents the different values of a Biome Parameter Point.",
+                "This is used in the `biome gen` section of a chunk generator.",
+                "`fixed` = Will return the grouped ranged value of a param point, example for continentalness:",
+                "- `-1.2~-1.05` = 0 (Mushroom fields)",
+                "- `-1.05~-0.455` = 1 (Deep ocean)",
+                "- `-0.455~-0.19` = 2 (Ocean)",
+                "- `-0.19~-0.11` = 3 (Coast)",
+                "- `-0.11~0.03` = 4 (Near-inland)",
+                "- `0.03~0.3` = 5 (Mid-inland)",
+                "- `0.3~1.0` = 6 (Far-inland)",
+                "See [**World Generation/Biomes**](https://minecraft.wiki/w/World_generation#Biomes) on McWiki for more details.")
+            .examples("register chunk generator with id \"test\":",
+                "\tbiome gen:",
+                "\t\tif biome continentalness of biome parameter point <= -0.19:",
+                "\t\t\tset chunkdata biome to ocean",
+                "\t\telse:",
+                "\t\t\tset {_temp} to biome temp of biome parameter point",
+                "\t\t\tif {_temp} > 0.55:",
+                "\t\t\t\tset chunkdata biome to badlands",
+                "\t\t\telse if {_temp} > 0.2:",
+                "\t\t\t\tset chunkdata biome to desert",
+                "\t\t\telse if {_temp} > -0.15:",
+                "\t\t\t\tset chunkdata biome to jungle",
+                "\t\t\telse if {_temp} < -0.45:",
+                "\t\t\t\tset chunkdata biome to plains",
+                "\t\t\telse:",
+                "\t\t\t\tset chunkdata biome to snowy taiga")
+            .since("3.9.0")
+            .register();
     }
 
     private int minMax;

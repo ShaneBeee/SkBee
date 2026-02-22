@@ -1,16 +1,9 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
-import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -19,25 +12,26 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.Nullable;
 
-@Name("ItemComponent - Use Remainder")
-@Description({"If present, replaces the item with a remainder item if its stack count has decreased after use.",
-    "Requires Paper 1.21.3+",
-    "See [**Use Remainder Component**](https://minecraft.wiki/w/Data_component_format#use_remainder) on McWiki for more details.",
-    "",
-    "**Changers**:",
-    "- `set` = Set the item to be replaced with.",
-    "- `reset` = Reset back to default state.",
-    "- `delete` = Will delete any value (vanilla or not)."})
-@Examples({"set use remainder of player's tool to 1 of glass bottle",
-    "delete use remainder of {_item}",
-    "reset use remainder of {_item}"})
-@Since("3.8.0")
 @SuppressWarnings("UnstableApiUsage")
 public class ExprUseRemainderComponent extends SimplePropertyExpression<Object, ItemStack> {
 
-    static {
-        register(ExprUseRemainderComponent.class, ItemStack.class,
-            "use remainder [component]", "itemstacks/itemtypes/slots");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprUseRemainderComponent.class, ItemStack.class,
+                "use remainder [component]", "itemstacks/itemtypes/slots")
+            .name("ItemComponent - Use Remainder")
+            .description("If present, replaces the item with a remainder item if its stack count has decreased after use.",
+                "Requires Paper 1.21.3+",
+                "See [**Use Remainder Component**](https://minecraft.wiki/w/Data_component_format#use_remainder) on McWiki for more details.",
+                "",
+                "**Changers**:",
+                "- `set` = Set the item to be replaced with.",
+                "- `reset` = Reset back to default state.",
+                "- `delete` = Will delete any value (vanilla or not).")
+            .examples("set use remainder of player's tool to 1 of glass bottle",
+                "delete use remainder of {_item}",
+                "reset use remainder of {_item}")
+            .since("3.8.0")
+            .register();
     }
 
     @Override

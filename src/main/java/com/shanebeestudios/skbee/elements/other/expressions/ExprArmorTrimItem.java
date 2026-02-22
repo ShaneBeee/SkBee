@@ -2,12 +2,9 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ItemArmorTrim;
@@ -18,20 +15,21 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("UnstableApiUsage")
-@Name("ArmorTrim - Item")
-@Description({"Represents the armor trim of an item. You can get, set, add or delete/reset.",
-    "Reset will reset the trim back to any default vanilla value.",
-    "Delete will remove any trim on the item.",
-    "Requires Minecraft 1.19.4+"})
-@Examples({"add armor trim from gold_material and eye_pattern to armor trim of player's leggings",
-    "set armor trim of player's helmet to armor trim from gold_material and eye_pattern",
-    "delete armor trim of player's leggings",
-    "reset armor trim of player's boots"})
-@Since("2.13.0")
 public class ExprArmorTrimItem extends SimplePropertyExpression<ItemType, ArmorTrim> {
 
-    static {
-        register(ExprArmorTrimItem.class, ArmorTrim.class, "armor trim", "itemtypes");
+    public static void register(Registration reg) {
+        reg.newPropertyExpression(ExprArmorTrimItem.class, ArmorTrim.class,
+                "armor trim", "itemtypes")
+            .name("ArmorTrim - Item")
+            .description("Represents the armor trim of an item. You can get, set, add or delete/reset.",
+                "Reset will reset the trim back to any default vanilla value.",
+                "Delete will remove any trim on the item.")
+            .examples("add armor trim from gold_material and eye_pattern to armor trim of player's leggings",
+                "set armor trim of player's helmet to armor trim from gold_material and eye_pattern",
+                "delete armor trim of player's leggings",
+                "reset armor trim of player's boots")
+            .since("2.13.0")
+            .register();
     }
 
     @Override

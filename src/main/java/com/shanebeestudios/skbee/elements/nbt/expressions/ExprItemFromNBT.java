@@ -1,15 +1,10 @@
 package com.shanebeestudios.skbee.elements.nbt.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
@@ -17,21 +12,22 @@ import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-@Name("NBT - Item from NBT")
-@Description({"This expression allows you to grab an item from NBT compounds.",
-    "This can be useful when wanting to grab items from file nbt, or nbt of an entity or an inventory holding block (like a chest or furnace).",
-    "It can also be useful for creating your own serializing system.",
-    "NOTE: Items previously serialized in MC versions 1.20.4 and below, will properly upgrade for MC 1.20.5."})
-@Examples({"set {_nbt::*} to compound list tag \"Inventory\" of file nbt of \"world/playerdata/some-players-uuid.dat\"",
-    "loop {_nbt::*}",
-    "\tset {_i} to item from nbt loop-value"})
-@Since("1.4.10")
 public class ExprItemFromNBT extends PropertyExpression<NBTCompound, ItemType> {
 
-    static {
-        Skript.registerExpression(ExprItemFromNBT.class, ItemType.class, ExpressionType.PROPERTY,
-            "item[s] (from|of) nbt[s] %nbtcompounds%",
-            "nbt item[s] (from|of) %nbtcompounds%");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprItemFromNBT.class, ItemType.class,
+                "item[s] (from|of) nbt[s] %nbtcompounds%",
+                "nbt item[s] (from|of) %nbtcompounds%")
+            .name("NBT - Item from NBT")
+            .description("This expression allows you to grab an item from NBT compounds.",
+                "This can be useful when wanting to grab items from file nbt, or nbt of an entity or an inventory holding block (like a chest or furnace).",
+                "It can also be useful for creating your own serializing system.",
+                "NOTE: Items previously serialized in MC versions 1.20.4 and below, will properly upgrade for MC 1.20.5.")
+            .examples("set {_nbt::*} to compound list tag \"Inventory\" of file nbt of \"world/playerdata/some-players-uuid.dat\"",
+                "loop {_nbt::*}",
+                "\tset {_i} to item from nbt loop-value")
+            .since("1.4.10")
+            .register();
     }
 
     @SuppressWarnings({"null", "unchecked"})

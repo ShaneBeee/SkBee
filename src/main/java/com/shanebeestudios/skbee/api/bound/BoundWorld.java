@@ -1,7 +1,9 @@
 package com.shanebeestudios.skbee.api.bound;
 
 import com.google.common.base.Preconditions;
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.util.BoundingBox;
 import org.jetbrains.annotations.NotNull;
@@ -19,12 +21,16 @@ public class BoundWorld {
 
     private static final long SHIFT_VALUE = 8;
 
-    private final @NotNull World world;
+    private final @NotNull NamespacedKey worldKey;
     private final Map<Long, BoundRegion> regions = new HashMap<>();
 
-    public BoundWorld(@NotNull World world) {
-        Preconditions.checkArgument(world != null, "World cannot be null");
-        this.world = world;
+    public BoundWorld(@NotNull NamespacedKey worldKey) {
+        Preconditions.checkArgument(worldKey != null, "WorldKey cannot be null");
+        this.worldKey = worldKey;
+    }
+
+    public boolean isEmpty() {
+        return this.regions.isEmpty();
     }
 
     /**
@@ -101,6 +107,8 @@ public class BoundWorld {
     private List<Location> getLocationList(Bound bound) {
         List<Location> locations = new ArrayList<>();
 
+        World world = Bukkit.getWorld(this.worldKey);
+
         BoundingBox box = bound.getBoundingBox();
         int minBlockX = box.getMin().getBlockX();
         int minBlockZ = box.getMin().getBlockZ();
@@ -109,7 +117,7 @@ public class BoundWorld {
         int shift = 1 << SHIFT_VALUE;
         for (int x = minBlockX; x <= (maxBlockX + shift); x += shift) {
             for (int z = minBlockZ; z <= (maxBlockZ + shift); z += shift) {
-                locations.add(new Location(this.world, Math.min(x, maxBlockX), 0, Math.min(z, maxBlockZ)));
+                locations.add(new Location(world, Math.min(x, maxBlockX), 0, Math.min(z, maxBlockZ)));
             }
         }
 

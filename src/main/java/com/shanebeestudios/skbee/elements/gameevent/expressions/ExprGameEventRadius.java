@@ -2,33 +2,30 @@ package com.shanebeestudios.skbee.elements.gameevent.expressions;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.doc.Description;
-import ch.njol.skript.doc.Examples;
-import ch.njol.skript.doc.Name;
-import ch.njol.skript.doc.Since;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.event.world.GenericGameEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@Name("Game Event - Radius")
-@Description("Get/set the radius a game event will broadcast. Requires MC 1.17+")
-@Examples({"on game event:",
-        "\tset game event radius to 20"})
-@Since("1.14.0")
 public class ExprGameEventRadius extends SimpleExpression<Number> {
 
-    static {
-        Skript.registerExpression(ExprGameEventRadius.class, Number.class, ExpressionType.SIMPLE,
-                "game[ ]event radius");
+    public static void register(Registration reg) {
+        reg.newSimpleExpression(ExprGameEventRadius.class, Number.class,
+                "game[ ]event radius")
+            .name("Game Event - Radius")
+            .description("Get/set the radius a game event will broadcast.")
+            .examples("on game event:",
+                "\tset game event radius to 20")
+            .since("1.14.0")
+            .register();
     }
 
 
