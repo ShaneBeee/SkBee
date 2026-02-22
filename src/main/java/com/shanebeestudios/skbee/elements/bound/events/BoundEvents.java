@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.bound.events;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
@@ -11,6 +10,7 @@ import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
 import com.shanebeestudios.skbee.api.event.bound.BoundEvent;
 import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
 import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
+import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -22,8 +22,9 @@ public class BoundEvents extends SkriptEvent {
 
     private static BoundBorderListener boundBorderListener;
 
-    static {
-        Skript.registerEvent("Bound - Enter", BoundEvents.class, BoundEnterEvent.class, "(bound enter|enter bound) [with id %-string%]")
+    public static void register(Registration reg) {
+        reg.newEvent( BoundEvents.class, BoundEnterEvent.class, "(bound enter|enter bound) [with id %-string%]")
+            .name("Bound - Enter")
             .description("Called when a player enters a bound. Optional ID of bound. 'event-string' = bound ID.",
                 "NOTE: Due to breaking changes in Bukkit API, enter/exit events will not be called when a player mounts/dismounts an entity if running SkBee 3.5.0+ on MC 1.20.4 and below.")
             .examples("on bound enter:",
@@ -31,9 +32,11 @@ public class BoundEvents extends SkriptEvent {
                 "\t\tsend \"You entered spawn!\"",
                 "on enter bound with id \"spawn\":",
                 "\tcancel event")
-            .since("1.0.0, 1.12.2 (Bound IDs)");
+            .since("1.0.0, 1.12.2 (Bound IDs)")
+            .register();
 
-        Skript.registerEvent("Bound - Exit", BoundEvents.class, BoundExitEvent.class, "(bound exit|exit bound) [with id %-string%]")
+        reg.newEvent( BoundEvents.class, BoundExitEvent.class, "(bound exit|exit bound) [with id %-string%]")
+            .name("Bound - Exit")
             .description("Called when a player exits a bound. Optional ID of bound. 'event-string' = bound ID.",
                 "NOTE: Due to breaking changes in Bukkit API, enter/exit events will not be called when a player mounts/dismounts an entity if running SkBee 3.5.0+ on MC 1.20.4 and below.")
             .examples("on bound exit:",
@@ -42,7 +45,8 @@ public class BoundEvents extends SkriptEvent {
                 "\t\tsend \"You left Spawn!\"",
                 "on exit bound with id \"spawn\":",
                 "\tcancel event")
-            .since("1.0.0, 1.12.2 (Bound IDs)");
+            .since("1.0.0, 1.12.2 (Bound IDs)")
+            .register();
 
         EventValues.registerEventValue(BoundEvent.class, Bound.class, BoundEvent::getBound, EventValues.TIME_NOW);
         EventValues.registerEventValue(BoundEvent.class, String.class, event -> event.getBound().getId(), EventValues.TIME_NOW);
