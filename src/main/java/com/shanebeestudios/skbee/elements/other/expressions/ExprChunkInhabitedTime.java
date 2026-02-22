@@ -20,7 +20,7 @@ public class ExprChunkInhabitedTime extends SimplePropertyExpression<Chunk, Time
                 "set inhabited time of chunk at player to 1 day",
                 "add 10 minutes to inhabited time of {_chunks::*}",
                 "remove 3 minutes from inhabited time of {_c}")
-            .since("INSERT VERSION")
+            .since("3.17.0")
             .register();
     }
 

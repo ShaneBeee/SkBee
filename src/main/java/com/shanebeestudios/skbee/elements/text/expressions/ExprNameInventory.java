@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-@Deprecated(forRemoval = true, since = "INSERT VERSION")
+@Deprecated(forRemoval = true, since = "3.17.0")
 public class ExprNameInventory extends SimplePropertyExpression<Inventory, ComponentWrapper> {
 
     public static void register(Registration reg) {
