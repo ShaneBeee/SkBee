@@ -26,8 +26,8 @@ import org.jetbrains.annotations.Nullable;
 public class ExprNamespacedKeyObject extends SimplePropertyExpression<Object, NamespacedKey> {
 
     public static void register(Registration reg) {
-        reg.newPropertyExpression(ExprNamespacedKeyObject.class, NamespacedKey.class,
-            "(minecraft|mc|namespaced|resource)[ ](key|id[entifier]|location)[s] [(from|of)]", "objects")
+        reg.newSimpleExpression(ExprNamespacedKeyObject.class, NamespacedKey.class,
+            "(minecraft|mc|namespaced|resource)[ ](key|id[entifier]|location)[s] [(from|of)] %objects%")
             .name("NamespacedKey - Get")
             .description("Get the namespaced key of an object or from a string.",
                 "\nNote when getting key from string:",
