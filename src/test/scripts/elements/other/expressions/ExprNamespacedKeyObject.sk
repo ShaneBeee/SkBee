@@ -12,3 +12,19 @@ test "SkBee - ExprNamespacedKeyObject":
 	testNamespacedKey(mob attack no aggro, "minecraft:mob_attack_no_aggro")
 	testNamespacedKey(world "world", "minecraft:overworld")
 	testNamespacedKey(librarian profession, "minecraft:librarian")
+
+	# Test to make sure patterns work
+	assert namespaced key of "a" = "minecraft:a" with "Invalid namespaced key"
+	assert namespaced key from "b" = "minecraft:b" with "Invalid namespaced key"
+	assert minecraft key of "c" = "minecraft:c" with "Invalid namespaced key"
+	assert minecraft key from "d" = "minecraft:d" with "Invalid namespaced key"
+	assert mc key of "e" = "minecraft:e" with "Invalid namespaced key"
+	assert mc key from "f" = "minecraft:f" with "Invalid namespaced key"
+	assert resource key of "g" = "minecraft:g" with "Invalid namespaced key"
+	assert resource key from "h" = "minecraft:h" with "Invalid namespaced key"
+	assert minecraft id of "i" = "minecraft:i" with "Invalid namespaced key"
+	assert minecraft id from "j" = "minecraft:j" with "Invalid namespaced key"
+	assert minecraft identifier of "k" = "minecraft:k" with "Invalid namespaced key"
+	assert minecraft identifier from "l" = "minecraft:l" with "Invalid namespaced key"
+	assert minecraft location of "m" = "minecraft:m" with "Invalid namespaced key"
+	assert minecraft location from "n" = "minecraft:n" with "Invalid namespaced key"
