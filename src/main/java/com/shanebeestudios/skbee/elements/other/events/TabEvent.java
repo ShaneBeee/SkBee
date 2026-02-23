@@ -18,7 +18,7 @@ public class TabEvent extends SkriptEvent {
 
     public static void register(Registration reg) {
         reg.newEvent(TabEvent.class, TabCompleteEvent.class,
-                "[skbee] tab complete [(of|for) %strings%]")
+                "[skbee] tab complete [(of|for) %-strings%]")
             .name("Tab Complete")
             .description("Called when a player attempts to tab complete the arguments of a command. ",
                 "\nNOTE: Tab complete event is only called for the ARGUMENTS of a command, NOT the command itself.",

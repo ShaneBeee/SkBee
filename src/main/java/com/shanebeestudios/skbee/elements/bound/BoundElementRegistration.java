@@ -5,6 +5,7 @@ import com.shanebeestudios.skbee.elements.bound.conditions.CondBoundContainsLoca
 import com.shanebeestudios.skbee.elements.bound.conditions.CondBoundIntersects;
 import com.shanebeestudios.skbee.elements.bound.conditions.CondBoundIsTemporary;
 import com.shanebeestudios.skbee.elements.bound.effects.EffBoundResize;
+import com.shanebeestudios.skbee.elements.bound.events.BoundEvents;
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprBoundBlocks;
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprBoundCoords;
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprBoundEntities;
@@ -36,6 +37,9 @@ public class BoundElementRegistration {
 
         // EFFECTS
         EffBoundResize.register(reg);
+
+        // EVENTS
+        BoundEvents.register(reg);
 
         // EXPRESSIONS
         ExprBoundBlocks.register(reg);

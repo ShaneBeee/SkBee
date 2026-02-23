@@ -21,7 +21,7 @@ public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
                 "These messages are still components, which you can still apply hover/click events to.",
                 "You can also add optional tag resolvers. Essential you create a resolver to replace `<someString>` ",
                 "in mini message with something else (See examples for more details).",
-                "For more info check out the [**Mini Message Format**](https://docs.adventure.kyori.net/minimessage/format.html) page.")
+                "For more info check out the [**Mini Message Format**](https://docs.papermc.io/adventure/minimessage/format/) page.")
             .examples("set {_m} to mini message from \"<rainbow>this is a rainbow message\"",
                 "set {_m} to mini message from \"<gradient:##F30A0A:##0A2AF3>PRETTY MESSAGE FROM RED TO BLUE\"",
                 "set {_m} to mini message from \"<red>This is a <green>test!\"",
