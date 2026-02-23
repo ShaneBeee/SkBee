@@ -37,7 +37,8 @@ public class EvtRecipe extends SimpleEvent {
                 "\tset {_e} to event-string",
                 "\tif {_e} = \"minecraft:diamond_shovel\":",
                 "\t\tset name of recipe result to \"&cMr Shovel\"")
-            .since("3.6.1");
+            .since("3.6.1")
+            .register();
 
         EventValues.registerEventValue(CrafterCraftEvent.class, String.class, event -> event.getRecipe().getKey().toString(), EventValues.TIME_NOW);
     }
