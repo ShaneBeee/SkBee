@@ -57,7 +57,7 @@ types:
     nbtcompound: nbt compound¦s @an
     nbttype: nbt type¦s @an
     objective: objective¦s
-    particle: particle¦s @-
+    minecraftparticle: minecraft particle¦s @-
     particlespell: particle spell¦s @-
     playerconnection: player connection¦s
     playerspawnchangereason: player spawn change reason¦s
