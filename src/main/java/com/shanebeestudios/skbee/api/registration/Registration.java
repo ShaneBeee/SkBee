@@ -58,6 +58,7 @@ public class Registration {
 
     public Registration() {
         this.addon = Skript.instance().registerAddon(SkBeeAddonModule.class, "SkBee");
+        this.addon.localizer().setSourceDirectories("lang", null);
     }
 
     public SkriptAddon getAddon() {
