@@ -126,7 +126,7 @@ public class Types {
 
         // Function to create DustOptions
         DefaultFunction<DustOptions> dustFunc = DefaultFunction.builder(reg.getAddon(),
-                "dustoption", DustOptions.class)
+                "dustOption", DustOptions.class)
             .parameter("color", Color.class)
             .parameter("size", Number.class)
             .build(args -> {
@@ -147,7 +147,7 @@ public class Types {
 
 
         // Function to create DustTransition
-        DefaultFunction<DustTransition> transitionFunc = DefaultFunction.builder(reg.getAddon(), "dusttransition", DustTransition.class)
+        DefaultFunction<DustTransition> transitionFunc = DefaultFunction.builder(reg.getAddon(), "dustTransition", DustTransition.class)
             .parameter("fromColor", Color.class)
             .parameter("toColor", Color.class)
             .parameter("size", Number.class)
