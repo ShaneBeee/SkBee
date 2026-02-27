@@ -86,7 +86,14 @@ public class JsonDocGenerator {
             }
 
             // Generic
-            gemerateGeneric("type", documentation, syntaxObject, type.user);
+            List<String> patterns = new ArrayList<>();
+            for (String s : type.user) {
+                String usage = s
+                    .replaceAll("\\((.*?)\\)\\?", "[$1]")
+                    .replaceAll("(.)\\?", "[$1]");
+                patterns.add(usage);
+            }
+            gemerateGeneric("type", documentation, syntaxObject, patterns.toArray(new String[0]));
 
             // Usage
             if (type.usage != null) {
@@ -155,7 +162,11 @@ public class JsonDocGenerator {
             }
 
             // Generic
-            gemerateGeneric("type", documentation, syntaxObject, event.patterns);
+            List<String> patterns = new ArrayList<>();
+            for (String pattern : event.patterns) {
+                patterns.add("[on] " + pattern);
+            }
+            gemerateGeneric("type", documentation, syntaxObject, patterns.toArray(new String[0]));
 
             // EventValues
             List<String> eventValueList = new ArrayList<>();
@@ -164,8 +175,20 @@ public class JsonDocGenerator {
                     if (aClass.isAssignableFrom(eventClass)) {
                         ClassInfo<?> exactClassInfo = Classes.getExactClassInfo(eventValueInfo.valueClass());
                         if (exactClassInfo == null) return;
+
                         String singular = exactClassInfo.getName().getSingular();
-                        eventValueList.add("event-" + singular);
+                        int time = eventValueInfo.time();
+                        String eventValueString;
+                        if (time == -1) {
+                            eventValueString = "past event-" + singular;
+                        } else if (time == 1) {
+                            eventValueString = "future event-" + singular;
+                        } else {
+                            eventValueString = "event-" + singular;
+                        }
+                        if (!eventValueList.contains(eventValueString)) {
+                            eventValueList.add(eventValueString);
+                        }
                     }
                 });
             }
@@ -433,7 +456,6 @@ public class JsonDocGenerator {
             }
         }
 
-
         stringBuilder.append(")");
         return stringBuilder.toString();
     }
@@ -442,10 +464,7 @@ public class JsonDocGenerator {
         String[] returns = new String[patterns.length];
 
         for (int i = 0; i < patterns.length; i++) {
-            //Pattern compile = Pattern.compile(patterns[i]);
-            returns[i] = patterns[i]
-                .replaceAll("\\((.+?)\\)\\?", "[$1]")
-                .replaceAll("(.)\\?", "[$1]");
+            returns[i] = patterns[i].replaceAll("[^()\\[\\]|:\\s]*:", "");
         }
         return returns;
     }

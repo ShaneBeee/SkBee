@@ -232,12 +232,15 @@ public class Registration {
         public final String prefix;
         public final String suffix;
         public final @NotNull EnumWrapper<T> enumWrapper;
+        public final ClassInfo<T> classInfo;
 
         public EnumTypeRegistrar(Class<T> type, String codename, String prefix, String suffix, boolean plurals) {
             super(type, codename);
             this.prefix = prefix;
             this.suffix = suffix;
             this.enumWrapper = new EnumWrapper<>(type, prefix, suffix, plurals);
+            this.usage = this.enumWrapper.getAllNames();
+            this.classInfo = this.enumWrapper.getClassInfo(codename);
         }
 
         public EnumTypeRegistrar(Class<T> type, @NotNull EnumWrapper<T> enumWrapper, String codename, String prefix, String suffix) {
@@ -245,6 +248,8 @@ public class Registration {
             this.prefix = prefix;
             this.suffix = suffix;
             this.enumWrapper = enumWrapper;
+            this.usage = this.enumWrapper.getAllNames();
+            this.classInfo = this.enumWrapper.getClassInfo(codename);
         }
     }
 
@@ -277,6 +282,7 @@ public class Registration {
         public final String prefix;
         public final String suffix;
         public final boolean createUsage;
+        public final ClassInfo<T> classInfo;
 
         public RegistryTypeRegistrar(Registry<T> registry, Class<T> type, String codename, boolean createUsage, String prefix, String suffix) {
             super(type, codename);
@@ -284,6 +290,12 @@ public class Registration {
             this.prefix = prefix;
             this.suffix = suffix;
             this.createUsage = createUsage;
+
+            this.classInfo = RegistryClassInfo.create(registry, type, createUsage, codename, prefix, suffix);
+            @Nullable String[] classInfoUsage = this.classInfo.getUsage();
+            if (classInfoUsage != null) {
+                this.usage = String.join(", ", classInfoUsage);
+            }
         }
     }
 
@@ -493,16 +505,9 @@ public class Registration {
             }
             ClassInfo<?> classInfo;
             if (type instanceof EnumTypeRegistrar<?> enumTypeRegistrar) {
-                classInfo = enumTypeRegistrar.enumWrapper.getClassInfo(enumTypeRegistrar.codename);
+                classInfo = enumTypeRegistrar.classInfo;
             } else if (type instanceof RegistryTypeRegistrar<? extends Keyed> registryTypeRegistrar) {
-                Class<? extends Keyed> registryClass = registryTypeRegistrar.type;
-                Registry<? extends Keyed> registry = registryTypeRegistrar.registry;
-                String codename = registryTypeRegistrar.codename;
-                String prefix = registryTypeRegistrar.prefix;
-                String suffix = registryTypeRegistrar.suffix;
-                boolean usage = registryTypeRegistrar.createUsage;
-
-                classInfo = RegistryClassInfo.create(registry, registryClass, usage, codename, prefix, suffix);
+                classInfo = registryTypeRegistrar.classInfo;
             } else {
                 classInfo = new ClassInfo<>(type.type, type.codename);
             }

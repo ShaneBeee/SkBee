@@ -99,7 +99,7 @@ public final class EnumWrapper<E extends Enum<E>> {
         return names[e.ordinal()];
     }
 
-    private String getAllNames() {
+    public String getAllNames() {
         List<String> names = new ArrayList<>();
         Collections.addAll(names, this.names);
         Collections.sort(names);
