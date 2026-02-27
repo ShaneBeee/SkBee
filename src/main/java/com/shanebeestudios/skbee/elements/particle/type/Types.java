@@ -32,7 +32,7 @@ public class Types {
     private static void registerTypes(Registration reg) {
         reg.newType(ParticleWrapper.class, "minecraftparticle")
             .user("minecraft ?particles?")
-            .name("Particle")
+            .name("Minecraft Particle")
             .description("Represents a particle which can be used in the 'Particle Spawn' effect.",
                 "Some particles require extra data, these are distinguished by their data type within the square brackets.",
                 "DustOption, DustTransition and Vibration each have their own functions to build the appropriate data for these particles.",
@@ -139,6 +139,7 @@ public class Types {
             });
 
         reg.newFunction(dustFunc)
+            .name("Dust Option")
             .description("Creates a new dust option to be used with 'dust' particle. Color can either be a regular color or an RGB color using",
                 "Skript's rgb() function. Size is the size the particle will be.")
             .examples("set {_c} to dustOption(red, 1.5)", "set {_c} to dustOption(rgb(1, 255, 1), 3)")
@@ -162,6 +163,7 @@ public class Types {
             });
 
         reg.newFunction(transitionFunc)
+            .name("Dust Transition")
             .description("Creates a new dust transition to be used with 'dust_color_transition' particle.",
                 "Color can either be a regular color or an RGB color using Skript's rgb() function.",
                 "Size is the size the particle will be.")
@@ -181,6 +183,7 @@ public class Types {
             });
 
         reg.newFunction(vibeFunc)
+            .name("Vibration")
             .description("Creates a new vibration to be used with 'vibration' particle.",
                 "`to` = The destination location the particle will travel to.",
                 "`arrivalTime` = The time it will take to arrive at the destination location.")
@@ -200,6 +203,7 @@ public class Types {
             });
 
         reg.newFunction(trailFunc)
+            .name("Trail")
             .description("Creates a new trail to be used with 'trail' particle.",
                 "Takes in a location for the target (where the trail heads to), the color and duration.",
                 "Requires Minecraft 1.21.4+")
@@ -222,6 +226,7 @@ public class Types {
                 });
 
             reg.newFunction(spellFunc)
+                .name("Particle Spell")
                 .description("Creates a new spell data to be used with the 'effect'/'instant_effect' particles.",
                     "Takes in a color and a number(float - which represents the power of the effect.)",
                     "Requires Minecraft 1.21.9+")
