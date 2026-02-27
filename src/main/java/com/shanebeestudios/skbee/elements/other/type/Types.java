@@ -548,10 +548,10 @@ public class Types {
             .parameter("time", Number.class)
             .parameter("timePeriod", Timespan.TimePeriod.class)
             .build(args -> {
-                long time = ((Number) args.get("time")).longValue();
                 Timespan.TimePeriod timePeriod = args.get("timePeriod");
-                if (time >= 0) {
-                    return new Timespan(timePeriod, time);
+                long millis = (long) (timePeriod.getTime() * ((Number) args.get("time")).floatValue());
+                if (millis >= 0) {
+                    return new Timespan(Timespan.TimePeriod.MILLISECOND, millis);
                 }
                 return null;
             });

@@ -47,6 +47,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 
+import java.util.List;
 import java.util.Locale;
 
 public class OtherEvents extends SimpleEvent {
@@ -185,7 +186,7 @@ public class OtherEvents extends SimpleEvent {
             if (event.getEntity() instanceof LivingEntity livingEntity) {
                 ticks = livingEntity.getRemainingAir();
             }
-            return Timespan.fromTicks(ticks);
+            return new Timespan(TimePeriod.TICK, ticks);
         }, EventValues.TIME_PAST);
         EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, new EventConverter<>() {
             @Override
@@ -297,8 +298,9 @@ public class OtherEvents extends SimpleEvent {
                 "The event isn't called if the gamerule MOB_GRIEFING is disabled as no block interaction will occur.",
                 "The Block returned by this event is not necessarily the block that caused the explosion,",
                 "just the block at the location where the explosion originated.",
-                "\n`past event-itemtype` will return the type of the block which exploded.",
-                "\n`past event-blockdata` will return the blockdata of the block which exploded.")
+                "`event-blocks` = The blocks which exploded (can be set).",
+                "`past event-itemtype` will return the type of the block which exploded.",
+                "`past event-blockdata` will return the blockdata of the block which exploded.")
             .examples("")
             .since("3.2.0")
             .register();
@@ -319,6 +321,20 @@ public class OtherEvents extends SimpleEvent {
                 return new ItemType(explodedBlockState.getType());
             }
         }, EventValues.TIME_PAST);
+        EventValues.registerEventValue(BlockExplodeEvent.class, Block[].class, new EventConverter<>() {
+            @Override
+            public void set(BlockExplodeEvent event, @Nullable Block[] value) {
+                event.blockList().clear();
+                if (value != null && value.length > 0) {
+                    event.blockList().addAll(List.of(value));
+                }
+            }
+
+            @Override
+            public @Nullable Block[] convert(BlockExplodeEvent from) {
+                return from.blockList().toArray(new Block[0]);
+            }
+        });
 
         // Leash Events
         reg.newEvent(OtherEvents.class, PlayerLeashEntityEvent.class, "player leash entity")

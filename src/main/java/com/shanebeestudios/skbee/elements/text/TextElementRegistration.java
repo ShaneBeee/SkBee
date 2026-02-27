@@ -35,6 +35,7 @@ import com.shanebeestudios.skbee.elements.text.expressions.ExprSignLines;
 import com.shanebeestudios.skbee.elements.text.expressions.ExprSignedMessage;
 import com.shanebeestudios.skbee.elements.text.expressions.ExprTeamPrefixComp;
 import com.shanebeestudios.skbee.elements.text.expressions.ExprTextComponent;
+import com.shanebeestudios.skbee.elements.text.expressions.ExprTextDisplayTextComponent;
 import com.shanebeestudios.skbee.elements.text.expressions.ExprTooltipLines;
 import com.shanebeestudios.skbee.elements.text.sections.SecClickEventCallback;
 import com.shanebeestudios.skbee.elements.text.type.Types;
@@ -81,6 +82,7 @@ public class TextElementRegistration {
         ExprSignLines.register(reg);
         ExprTeamPrefixComp.register(reg);
         ExprTextComponent.register(reg);
+        ExprTextDisplayTextComponent.register(reg);
         ExprTooltipLines.register(reg);
 
         // SECTIONS

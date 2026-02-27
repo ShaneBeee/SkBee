@@ -15,7 +15,6 @@ import org.jetbrains.annotations.NotNull;
 public class CondBoundContainsLocation extends Condition {
 
     public static void register(Registration reg) {
-        PropertyCondition.register(CondBoundContainsLocation.class, "[with]in [bound[s]] %bounds%", "locations");
         reg.newCondition(CondBoundContainsLocation.class,
                 "%locations% (is|are) [with]in [bound[s]] %bounds%",
                 "%locations% (isn't|is not|aren't|are not) [with]in [bound[s]] %bounds%")

@@ -115,8 +115,6 @@ public class AddonLoader {
     }
 
     private void loadSkriptElements() {
-        this.addon.localizer().setSourceDirectories("lang", null);
-
         // Load first as these are the base for many things
         loadOtherElements();
         loadNBTElements();

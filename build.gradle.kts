@@ -110,7 +110,7 @@ tasks {
 publishing {
     publications {
         create<MavenPublication>("maven") {
-            groupId = "com.github.shanebeestudios"
+            groupId = "com.github.ShaneBeee"
             artifactId = "SkBee"
             version = projectVersion
 

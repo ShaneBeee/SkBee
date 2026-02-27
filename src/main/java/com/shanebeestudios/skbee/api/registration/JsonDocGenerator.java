@@ -30,7 +30,9 @@ import org.skriptlang.skript.lang.entry.SectionEntryData;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 public class JsonDocGenerator {
@@ -84,7 +86,14 @@ public class JsonDocGenerator {
             }
 
             // Generic
-            gemerateGeneric("type", documentation, syntaxObject, type.user);
+            List<String> patterns = new ArrayList<>();
+            for (String s : type.user) {
+                String usage = s
+                    .replaceAll("\\((.*?)\\)\\?", "[$1]")
+                    .replaceAll("(.)\\?", "[$1]");
+                patterns.add(usage);
+            }
+            gemerateGeneric("type", documentation, syntaxObject, patterns.toArray(new String[0]));
 
             // Usage
             if (type.usage != null) {
@@ -153,21 +162,40 @@ public class JsonDocGenerator {
             }
 
             // Generic
-            gemerateGeneric("type", documentation, syntaxObject, event.patterns);
+            List<String> patterns = new ArrayList<>();
+            for (String pattern : event.patterns) {
+                patterns.add("[on] " + pattern);
+            }
+            gemerateGeneric("type", documentation, syntaxObject, patterns.toArray(new String[0]));
 
             // EventValues
-            JsonArray eventValuesArray = new JsonArray();
+            List<String> eventValueList = new ArrayList<>();
             for (Class<? extends Event> eventClass : event.eventClasses) {
                 EventValues.getPerEventEventValues().forEach((aClass, eventValueInfo) -> {
                     if (aClass.isAssignableFrom(eventClass)) {
                         ClassInfo<?> exactClassInfo = Classes.getExactClassInfo(eventValueInfo.valueClass());
                         if (exactClassInfo == null) return;
+
                         String singular = exactClassInfo.getName().getSingular();
-                        eventValuesArray.add("event-" + singular);
+                        int time = eventValueInfo.time();
+                        String eventValueString;
+                        if (time == -1) {
+                            eventValueString = "past event-" + singular;
+                        } else if (time == 1) {
+                            eventValueString = "future event-" + singular;
+                        } else {
+                            eventValueString = "event-" + singular;
+                        }
+                        if (!eventValueList.contains(eventValueString)) {
+                            eventValueList.add(eventValueString);
+                        }
                     }
                 });
             }
-            if (!eventValuesArray.isEmpty()) {
+            if (!eventValueList.isEmpty()) {
+                eventValueList.sort(String::compareTo);
+                JsonArray eventValuesArray = new JsonArray();
+                eventValueList.forEach(eventValuesArray::add);
                 syntaxObject.add("event values", eventValuesArray);
             }
 
@@ -428,7 +456,6 @@ public class JsonDocGenerator {
             }
         }
 
-
         stringBuilder.append(")");
         return stringBuilder.toString();
     }
@@ -437,10 +464,7 @@ public class JsonDocGenerator {
         String[] returns = new String[patterns.length];
 
         for (int i = 0; i < patterns.length; i++) {
-            //Pattern compile = Pattern.compile(patterns[i]);
-            returns[i] = patterns[i]
-                .replaceAll("\\((.+?)\\)\\?", "[$1]")
-                .replaceAll("(.)\\?", "[$1]");
+            returns[i] = patterns[i].replaceAll("[^()\\[\\]|:\\s]*:", "");
         }
         return returns;
     }

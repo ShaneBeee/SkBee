@@ -7,7 +7,6 @@ import com.shanebeestudios.skbee.api.registration.Registration;
 public class CondBoundIsTemporary extends PropertyCondition<Bound> {
 
     public static void register(Registration reg) {
-        PropertyCondition.register(CondBoundIsTemporary.class, "[a] temporary bound[s]", "bounds");
         reg.newCondition(CondBoundIsTemporary.class,
                 "%bounds% (is|are) [a] temporary bound[s]",
                 "%bounds% (isn't|is not|aren't|are not) [a] temporary bound[s]")
