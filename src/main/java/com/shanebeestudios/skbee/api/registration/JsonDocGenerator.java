@@ -30,7 +30,9 @@ import org.skriptlang.skript.lang.entry.SectionEntryData;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Locale;
 
 public class JsonDocGenerator {
@@ -156,18 +158,21 @@ public class JsonDocGenerator {
             gemerateGeneric("type", documentation, syntaxObject, event.patterns);
 
             // EventValues
-            JsonArray eventValuesArray = new JsonArray();
+            List<String> eventValueList = new ArrayList<>();
             for (Class<? extends Event> eventClass : event.eventClasses) {
                 EventValues.getPerEventEventValues().forEach((aClass, eventValueInfo) -> {
                     if (aClass.isAssignableFrom(eventClass)) {
                         ClassInfo<?> exactClassInfo = Classes.getExactClassInfo(eventValueInfo.valueClass());
                         if (exactClassInfo == null) return;
                         String singular = exactClassInfo.getName().getSingular();
-                        eventValuesArray.add("event-" + singular);
+                        eventValueList.add("event-" + singular);
                     }
                 });
             }
-            if (!eventValuesArray.isEmpty()) {
+            if (!eventValueList.isEmpty()) {
+                eventValueList.sort(String::compareTo);
+                JsonArray eventValuesArray = new JsonArray();
+                eventValueList.forEach(eventValuesArray::add);
                 syntaxObject.add("event values", eventValuesArray);
             }
 
