@@ -6,9 +6,9 @@ import ch.njol.skript.util.Direction;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
+import com.shanebeestudios.skbee.api.particle.ParticleWrapper;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
-import com.shanebeestudios.skbee.api.particle.ParticleWrapper;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -19,11 +19,12 @@ import org.jetbrains.annotations.Nullable;
 public class EffParticle extends Effect {
 
     public static void register(Registration reg) {
-        reg.newEffect( EffParticle.class,
-            "(lerp|draw|make) %number% [of] %minecraftparticle% [particle] [using %-object%] %directions% %locations% " +
-                "[with (delta|offset) %-vector%] [with extra %-number%] [(1:with force)] [(for|to) %-players%]")
+        reg.newEffect(EffParticle.class,
+                "(lerp|draw|make) %number% [of] %minecraftparticle% [particle] [using %-object%] %directions% %locations% " +
+                    "[with (delta|offset) %-vector%] [with extra %-number%] [(1:with force)] [(for|to) %-players%]")
             .name("Particle Spawn")
-            .description("Spawn a particle. This system is more inline with how Bukkit deals with particles, hence the choices in the pattern.",
+            .description("Spawn a [**particle**](https://skripthub.net/docs/?id=14494).",
+                "This system is more inline with how Bukkit deals with particles, hence the choices in the pattern.",
                 "Some particles may be affected differently by these values, so let's break them down:",
                 "`first number` = count, how many particles to spawn at once. (use '0' if you notice the particle kinda flies away.)",
                 "`particle` = the particle to spawn.",
