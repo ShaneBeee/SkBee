@@ -5,7 +5,7 @@ plugins {
 }
 
 // Version of SkBee
-val projectVersion = "3.17.0"
+val projectVersion = "3.17.1"
 // Minimum version of Minecraft that SkBee supports
 val apiVersion = "1.21.8"
 // Where this builds on the server
