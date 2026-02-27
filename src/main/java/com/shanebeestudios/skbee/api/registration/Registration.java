@@ -514,7 +514,7 @@ public class Registration {
             if (type.user != null) {
                 classInfo.user(type.user);
             }
-            if (type.usage != null) {
+            if (type.usage != null && classInfo.getUsage() == null) {
                 classInfo.usage(type.usage);
             }
             if (type.before != null) {
