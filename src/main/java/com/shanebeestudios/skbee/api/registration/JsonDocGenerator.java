@@ -363,7 +363,7 @@ public class JsonDocGenerator {
 
             // Generic
             String pattern = generateFunctionPattern(function.function);
-            gemerateGeneric("function", documentation, syntaxObject, new String[]{pattern});
+            gemerateGeneric("function", documentation, syntaxObject, new String[]{pattern}, false);
 
             // Return Type
             ClassInfo<?> returnInfo = Classes.getExactClassInfo(function.function.signature().returnType());
@@ -385,8 +385,13 @@ public class JsonDocGenerator {
         mainDoc.add("metadata", meta);
     }
 
+    private void gemerateGeneric(String type, Documentation documentation,
+                                 JsonObject syntaxObject, @Nullable String[] patterns) {
+        gemerateGeneric(type, documentation, syntaxObject, patterns, true);
+    }
+
     private void gemerateGeneric(String type, Documentation documentation, JsonObject syntaxObject,
-                                 @Nullable String[] patterns) {
+                                 @Nullable String[] patterns, boolean removeParseMarks) {
         // Generate ID
         String id = generateId(type, documentation.getName());
         syntaxObject.addProperty("id", id);
@@ -429,7 +434,7 @@ public class JsonDocGenerator {
 
         if (patterns != null) {
             JsonArray patternArray = new JsonArray();
-            for (String pattern : parsePatterns(patterns)) {
+            for (String pattern : parsePatterns(patterns, removeParseMarks)) {
                 patternArray.add(pattern);
             }
             syntaxObject.add("patterns", patternArray);
@@ -460,11 +465,15 @@ public class JsonDocGenerator {
         return stringBuilder.toString();
     }
 
-    private String[] parsePatterns(String[] patterns) {
+    private String[] parsePatterns(String[] patterns, boolean removeParseMarks) {
         String[] returns = new String[patterns.length];
 
         for (int i = 0; i < patterns.length; i++) {
-            returns[i] = patterns[i].replaceAll("[^()\\[\\]|:\\s]*:", "");
+            if (removeParseMarks) {
+                returns[i] = patterns[i].replaceAll("[^()\\[\\]|:\\s]*:", "");
+            } else {
+                returns[i] = patterns[i];
+            }
         }
         return returns;
     }
