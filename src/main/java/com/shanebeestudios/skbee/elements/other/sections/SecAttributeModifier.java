@@ -138,7 +138,7 @@ public class SecAttributeModifier extends Section {
         return this.attribute != null && this.amount != null;
     }
 
-    @SuppressWarnings("removal")
+    @SuppressWarnings({"removal", "DataFlowIssue"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Attribute attribute = this.attribute.getSingle(event);
@@ -200,20 +200,29 @@ public class SecAttributeModifier extends Section {
             if (object instanceof ItemType itemType) {
                 ItemMeta itemMeta = itemType.getItemMeta();
 
-                if (!ItemUtils.hasAttributeModifier(itemMeta, attribute, attributeModifier)) {
-                    itemMeta.addAttributeModifier(attribute, attributeModifier);
+                if (ItemUtils.hasAttributeModifier(itemMeta, attribute, attributeModifier)) {
+                    // Remove the old modifier so we can override
+                    for (AttributeModifier modifier : itemMeta.getAttributeModifiers(attribute)) {
+                        if (modifier.getKey().equals(attributeModifier.getKey()))  {
+                            itemMeta.removeAttributeModifier(attribute, modifier);
+                        }
+                    }
                 }
+                itemMeta.addAttributeModifier(attribute, attributeModifier);
 
                 itemType.setItemMeta(itemMeta);
             } else if (object instanceof LivingEntity entity) {
                 AttributeInstance attributeInstance = entity.getAttribute(attribute);
                 if (attributeInstance == null) continue;
-                if (!EntityUtils.hasAttributeModifier(entity, attribute, attributeModifier)) {
-                    if (this.trans) {
-                        attributeInstance.addTransientModifier(attributeModifier);
-                    } else {
-                        attributeInstance.addModifier(attributeModifier);
-                    }
+
+                if (EntityUtils.hasAttributeModifier(entity, attribute, attributeModifier)) {
+                    attributeInstance.removeModifier(attributeModifier.key());
+                }
+
+                if (this.trans) {
+                    attributeInstance.addTransientModifier(attributeModifier);
+                } else {
+                    attributeInstance.addModifier(attributeModifier);
                 }
             }
         }
