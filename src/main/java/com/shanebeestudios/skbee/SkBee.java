@@ -107,7 +107,7 @@ public class SkBee extends JavaPlugin {
             Version version = new Version(this.getPluginMeta().getVersion());
             Table<String, String, Integer> table = HashBasedTable.create(1, 1);
             table.put(
-                version.getMajor() + "." + version.getMinor(), // upper label
+                version.getMajor() + "." + version.getMinor() + ".x", // upper label
                 version.toString(), // lower label
                 1 // weight
             );
@@ -117,7 +117,7 @@ public class SkBee extends JavaPlugin {
             Version version = Skript.getVersion();
             Table<String, String, Integer> table = HashBasedTable.create(1, 1);
             table.put(
-                version.getMajor() + "." + version.getMinor(), // upper label
+                version.getMajor() + "." + version.getMinor() + ".x", // upper label
                 version.toString(), // lower label
                 1 // weight
             );
@@ -130,14 +130,14 @@ public class SkBee extends JavaPlugin {
             if (version.getMajor() == 1) {
                 // Minecraft 1.x.x versioning
                 table.put(
-                    version.getMajor() + "." + version.getMinor(), // upper label
+                    version.getMajor() + "." + version.getMinor() + ".x", // upper label
                     version.toString(), // lower label
                     1 // weight
                 );
             } else {
                 // Minecraft (year).x.x versioning
                 table.put(
-                    "" + version.getMajor(), // upper label
+                    version.getMajor() + ".x", // upper label
                     version.toString(), // lower label
                     1 // weight
                 );
