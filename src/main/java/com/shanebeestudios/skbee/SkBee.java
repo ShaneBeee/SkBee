@@ -9,7 +9,6 @@ import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.command.SkBeeInfo;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.update.UpdateChecker;
@@ -43,7 +42,6 @@ public class SkBee extends JavaPlugin {
     VirtualFurnaceAPI virtualFurnaceAPI;
     BeeWorldConfig beeWorldConfig;
     StructureManager structureManager = null;
-    private Registration registration;
     private AddonLoader addonLoader = null;
 
     /**
@@ -65,10 +63,9 @@ public class SkBee extends JavaPlugin {
         TaskUtils.initialize(this, Util.IS_RUNNING_FOLIA || this.config.settings_use_paper_schedulers);
 
 
-        this.registration = new Registration();
         this.addonLoader = new AddonLoader(this);
         // Check if SkriptAddon can actually load
-        this.properlyEnabled = addonLoader.canLoadPlugin();
+        this.properlyEnabled = this.addonLoader.canLoadPlugin();
 
         loadCommands();
         loadMetrics();
@@ -243,10 +240,6 @@ public class SkBee extends JavaPlugin {
      */
     public StructureManager getStructureManager() {
         return structureManager;
-    }
-
-    public Registration getRegistration() {
-        return this.registration;
     }
 
     /**

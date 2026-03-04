@@ -18,15 +18,13 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.registrations.Classes;
-import com.shanebeestudios.skbee.SkBeeAddonModule;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.EnumWrapper;
-import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
 import org.bukkit.Keyed;
 import org.bukkit.Registry;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.common.function.DefaultFunction;
@@ -47,6 +45,7 @@ import java.util.function.Supplier;
 public class Registration {
 
     private final SkriptAddon addon;
+    private final RegistrationAddonModule module;
     private final List<TypeRegistrar<?>> types = new ArrayList<>();
     private final List<EffectRegistrar> effects = new ArrayList<>();
     private final List<ConditionRegistrar> conditions = new ArrayList<>();
@@ -56,9 +55,12 @@ public class Registration {
     private final List<StructureRegistrar<?>> structures = new ArrayList<>();
     private final List<FunctionRegistrar> functions = new ArrayList<>();
 
-    public Registration() {
-        this.addon = Skript.instance().registerAddon(SkBeeAddonModule.class, "SkBee");
-        this.addon.localizer().setSourceDirectories("lang", null);
+    public Registration(String name, boolean includeLang) {
+        this.addon = Skript.instance().registerAddon(RegistrationAddonModule.class, name);
+        if (includeLang) {
+            this.addon.localizer().setSourceDirectories("lang", null);
+        }
+        this.module = new RegistrationAddonModule(name, this);
     }
 
     public SkriptAddon getAddon() {
@@ -142,7 +144,7 @@ public class Registration {
 
         public void register() {
             if (this.registered) {
-                Util.skriptError("Syntax '%s' is already registered!", this.documentation.getName());
+                skriptError("Syntax '%s' is already registered!", this.documentation.getName());
                 return;
             }
             this.registered = true;
@@ -496,11 +498,15 @@ public class Registration {
         return new FunctionRegistrar<T>(function);
     }
 
+    public void finalizeRegistration() {
+        this.addon.loadModules(this.module);
+    }
+
     public void registerInit() {
         // TYPES
         for (TypeRegistrar type : getTypes()) {
             if (!type.isRegistered()) {
-                Util.skriptError("Type '" + type.codename + "' is not registered!");
+                skriptError("Type '" + type.codename + "' is not registered!");
                 continue;
             }
             ClassInfo<?> classInfo;
@@ -552,7 +558,7 @@ public class Registration {
         // STRUCTURES
         for (Registration.StructureRegistrar<?> structure : getStructures()) {
             if (!structure.isRegistered()) {
-                Util.skriptError("Structure '%s' is not registered!", structure.structureClass.getSimpleName());
+                skriptError("Structure '%s' is not registered!", structure.structureClass.getSimpleName());
                 continue;
             }
 
@@ -567,7 +573,7 @@ public class Registration {
         // EVENTS
         for (Registration.EventRegistrar event : getEvents()) {
             if (!event.isRegistered()) {
-                Util.skriptError("Event '" + event.getDocumentation().getName() + "' is not registered!");
+                skriptError("Event '" + event.getDocumentation().getName() + "' is not registered!");
                 continue;
             }
             BukkitSyntaxInfos.Event.Builder<? extends BukkitSyntaxInfos.Event.Builder<?, SkriptEvent>, SkriptEvent> builder = BukkitSyntaxInfos.Event.builder(
@@ -584,7 +590,7 @@ public class Registration {
         // SECTIONS
         for (Registration.SectionRegistrar section : getSections()) {
             if (!section.isRegistered()) {
-                Util.skriptError("Section '" + section.section.getSimpleName() + "' is not registered!");
+                skriptError("Section '" + section.section.getSimpleName() + "' is not registered!");
                 continue;
             }
 
@@ -606,7 +612,7 @@ public class Registration {
         // EFFECTS
         for (EffectRegistrar effect : getEffects()) {
             if (!effect.isRegistered()) {
-                Util.skriptError("Effect '" + effect.effect.getSimpleName() + "' is not registered!");
+                skriptError("Effect '" + effect.effect.getSimpleName() + "' is not registered!");
                 continue;
             }
             Supplier<Effect> supplier = () -> {
@@ -628,7 +634,7 @@ public class Registration {
         // EXPRESSIONS
         for (Registration.ExpressionRegistrar<?, ?> expression : getExpressions()) {
             if (!expression.isRegistered()) {
-                Util.skriptError("Expression '%s' is not registered!", expression.expressionClass.getSimpleName());
+                skriptError("Expression '%s' is not registered!", expression.expressionClass.getSimpleName());
                 continue;
             }
             Supplier<Expression> supplier = () -> {
@@ -650,7 +656,7 @@ public class Registration {
         // FUNCTIONS
         for (FunctionRegistrar function : getFunctions()) {
             if (!function.isRegistered()) {
-                Util.skriptError("Function '%s' is not register", function.function.name());
+                skriptError("Function '%s' is not register", function.function.name());
             }
 
             Functions.register(function.function);
@@ -659,7 +665,7 @@ public class Registration {
         // CONDITIONS
         for (ConditionRegistrar condition : getConditions()) {
             if (!condition.isRegistered()) {
-                Util.skriptError("Condition '" + condition.condition.getSimpleName() + "' is not registered!");
+                skriptError("Condition '" + condition.condition.getSimpleName() + "' is not registered!");
                 continue;
             }
             Supplier<Condition> supplier = () -> {
@@ -677,6 +683,37 @@ public class Registration {
                     .build()
             );
         }
+    }
+
+    private static void skriptError(String format, Object... args) {
+        Util.skriptError(format, args);
+    }
+
+    public static class RegistrationAddonModule implements AddonModule {
+
+        private final String name;
+        private final Registration registration;
+
+        public RegistrationAddonModule(String name, Registration registration) {
+            this.name = name;
+            this.registration = registration;
+        }
+
+        @Override
+        public void init(SkriptAddon addon) {
+            this.registration.registerInit();
+        }
+
+        @Override
+        public void load(SkriptAddon addon) {
+            this.registration.registerLoad();
+        }
+
+        @Override
+        public String name() {
+            return this.name;
+        }
+
     }
 
 }

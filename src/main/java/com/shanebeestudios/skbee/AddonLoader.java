@@ -51,7 +51,6 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.scoreboard.Objective;
-import org.skriptlang.skript.addon.SkriptAddon;
 
 /**
  * @hidden
@@ -63,28 +62,26 @@ public class AddonLoader {
     private final Registration registration;
     private final Config config;
     private final Plugin skriptPlugin;
-    private final SkriptAddon addon;
 
     public AddonLoader(SkBee plugin) {
         this.plugin = plugin;
-        this.registration = plugin.getRegistration();
+        this.registration = new Registration("SkBee", true);
         this.pluginManager = plugin.getServer().getPluginManager();
         this.config = plugin.getPluginConfig();
         MinecraftVersion.replaceLogger(LoggerBee.getLogger());
         this.skriptPlugin = pluginManager.getPlugin("Skript");
-        this.addon = this.registration.getAddon();
     }
 
-    public SkriptAddon getAddon() {
-        return this.addon;
+    public Registration getRegistration() {
+        return this.registration;
     }
 
     boolean canLoadPlugin() {
-        if (skriptPlugin == null) {
+        if (this.skriptPlugin == null) {
             Util.logLoading("&cDependency Skript was not found, Skript elements cannot load.");
             return false;
         }
-        if (!skriptPlugin.isEnabled()) {
+        if (!this.skriptPlugin.isEnabled()) {
             Util.logLoading("&cDependency Skript is not enabled, Skript elements cannot load.");
             Util.logLoading("&cThis could mean SkBee is being forced to load before Skript.");
             return false;
@@ -146,8 +143,7 @@ public class AddonLoader {
         loadTestingElements();
 
         // Load elements into Skript
-        SkBeeAddonModule module = new SkBeeAddonModule(this.registration);
-        addon.loadModules(module);
+        this.registration.finalizeRegistration();
 
         // ELEMENT COUNT
         int typeCount = this.registration.getTypes().size();

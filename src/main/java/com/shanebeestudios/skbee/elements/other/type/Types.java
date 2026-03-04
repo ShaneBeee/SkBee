@@ -16,7 +16,7 @@ import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.wrapper.RegistryClassInfo;
+import com.shanebeestudios.skbee.api.registration.RegistryClassInfo;
 import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
