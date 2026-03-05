@@ -552,8 +552,10 @@ public class AddonLoader {
 
     @SuppressWarnings("ThrowableNotThrown")
     private void logFailure(String element, Exception ex) {
+        Throwable cause = ex.getCause();
+        String message = cause != null ? cause.getMessage() : ex.getMessage();
         Skript.exception(ex);
-        Util.logLoading("&e%s Elements &7failed to load due to &r'&c%s&r'", element, ex.getCause().getMessage());
+        Util.logLoading("&e%s Elements &7failed to load due to &r'&c%s&r'", element, message);
     }
 
     private boolean isPlugmanReloaded() {
