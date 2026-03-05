@@ -46,6 +46,7 @@ public class Registration {
 
     private final SkriptAddon addon;
     private final RegistrationAddonModule module;
+    private final List<Registrar<?>> preRegistrations = new ArrayList<>();
     private final List<TypeRegistrar<?>> types = new ArrayList<>();
     private final List<EffectRegistrar> effects = new ArrayList<>();
     private final List<ConditionRegistrar> conditions = new ArrayList<>();
@@ -100,9 +101,13 @@ public class Registration {
     }
 
     @SuppressWarnings("unchecked")
-    public static class Registrar<T extends Registrar<T>> {
+    public class Registrar<T extends Registrar<T>> {
         private final Documentation documentation = new Documentation();
         private boolean registered;
+
+        public Registrar() {
+            Registration.this.preRegistrations.add(this);
+        }
 
         public T noDoc() {
             this.documentation.setNoDoc(true);
@@ -503,12 +508,22 @@ public class Registration {
     }
 
     public void registerInit() {
+        // CHECK REGISTRATION
+        this.preRegistrations.forEach(registrar -> {
+            if (!registrar.isRegistered()) {
+                String name = registrar.documentation.getName();
+                if (name == null) {
+                    name = registrar.getClass().getSimpleName();
+                    skriptError("Unnamed registrar in '%s' not registered!", name);
+                } else {
+                    skriptError("Registrar for '%s' not registered!", name);
+                }
+            }
+        });
+        this.preRegistrations.clear();
+
         // TYPES
         for (TypeRegistrar type : getTypes()) {
-            if (!type.isRegistered()) {
-                skriptError("Type '" + type.codename + "' is not registered!");
-                continue;
-            }
             ClassInfo<?> classInfo;
             if (type instanceof EnumTypeRegistrar<?> enumTypeRegistrar) {
                 classInfo = enumTypeRegistrar.classInfo;
@@ -557,10 +572,6 @@ public class Registration {
 
         // STRUCTURES
         for (Registration.StructureRegistrar<?> structure : getStructures()) {
-            if (!structure.isRegistered()) {
-                skriptError("Structure '%s' is not registered!", structure.structureClass.getSimpleName());
-                continue;
-            }
 
             DefaultSyntaxInfos.Structure<Structure> build = DefaultSyntaxInfos.Structure.builder(
                     (Class<Structure>) structure.structureClass)
@@ -572,10 +583,6 @@ public class Registration {
         }
         // EVENTS
         for (Registration.EventRegistrar event : getEvents()) {
-            if (!event.isRegistered()) {
-                skriptError("Event '" + event.getDocumentation().getName() + "' is not registered!");
-                continue;
-            }
             BukkitSyntaxInfos.Event.Builder<? extends BukkitSyntaxInfos.Event.Builder<?, SkriptEvent>, SkriptEvent> builder = BukkitSyntaxInfos.Event.builder(
                 (Class<SkriptEvent>) event.skriptEventClass,
                 event.getDocumentation().getName());
@@ -589,10 +596,6 @@ public class Registration {
 
         // SECTIONS
         for (Registration.SectionRegistrar section : getSections()) {
-            if (!section.isRegistered()) {
-                skriptError("Section '" + section.section.getSimpleName() + "' is not registered!");
-                continue;
-            }
 
             Supplier<Section> supplier = () -> {
                 try {
@@ -611,10 +614,6 @@ public class Registration {
 
         // EFFECTS
         for (EffectRegistrar effect : getEffects()) {
-            if (!effect.isRegistered()) {
-                skriptError("Effect '" + effect.effect.getSimpleName() + "' is not registered!");
-                continue;
-            }
             Supplier<Effect> supplier = () -> {
                 try {
                     return effect.effect.getConstructor().newInstance();
@@ -633,10 +632,6 @@ public class Registration {
 
         // EXPRESSIONS
         for (Registration.ExpressionRegistrar<?, ?> expression : getExpressions()) {
-            if (!expression.isRegistered()) {
-                skriptError("Expression '%s' is not registered!", expression.expressionClass.getSimpleName());
-                continue;
-            }
             Supplier<Expression> supplier = () -> {
                 try {
                     return expression.expressionClass.getConstructor().newInstance();
@@ -655,19 +650,12 @@ public class Registration {
 
         // FUNCTIONS
         for (FunctionRegistrar function : getFunctions()) {
-            if (!function.isRegistered()) {
-                skriptError("Function '%s' is not register", function.function.name());
-            }
 
             Functions.register(function.function);
         }
 
         // CONDITIONS
         for (ConditionRegistrar condition : getConditions()) {
-            if (!condition.isRegistered()) {
-                skriptError("Condition '" + condition.condition.getSimpleName() + "' is not registered!");
-                continue;
-            }
             Supplier<Condition> supplier = () -> {
                 try {
                     return condition.condition.getConstructor().newInstance();
