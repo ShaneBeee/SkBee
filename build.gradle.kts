@@ -82,7 +82,7 @@ tasks {
         relocate("fr.mrmicky.fastboard", "com.shanebeestudios.skbee.api.fastboard.base")
         relocate("com.shanebeestudios.vf", "com.shanebeestudios.skbee.api.virtualfurnace")
         relocate("org.bstats", "com.shanebeestudios.skbee.metrics")
-        exclude("META-INF/**", "LICENSE")
+        exclude("META-INF/**", "LICENSE", "plugin.yml")
     }
     jar {
         enabled = false
