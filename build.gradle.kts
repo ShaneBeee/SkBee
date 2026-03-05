@@ -59,6 +59,7 @@ tasks {
         dependsOn("shadowJar")
         from("build/libs") {
             include("SkBee-*.jar")
+            exclude("*-sources.jar")
             destinationDir = file("/Users/ShaneBee/Desktop/Server/${serverLocation}/plugins/")
         }
     }
