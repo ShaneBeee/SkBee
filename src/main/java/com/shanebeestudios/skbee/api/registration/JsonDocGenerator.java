@@ -42,6 +42,7 @@ public class JsonDocGenerator {
     private final Registration registration;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private int total = 0;
+    private final List<String> IDS = new ArrayList<>();
 
     public JsonDocGenerator(Plugin plugin, Registration registration) {
         this.plugin = plugin;
@@ -444,7 +445,12 @@ public class JsonDocGenerator {
     private String generateId(String type, String name) {
         type = type.toLowerCase(Locale.ROOT).replace(" ", "_");
         name = name.toLowerCase(Locale.ROOT).replace(" ", "_");
-        return String.format("%s:%s:%s", this.addonName, type, name);
+        String id = String.format("%s:%s:%s", this.addonName, type, name);
+        if (this.IDS.contains(id)) {
+            Util.log("&cID '%s' already exists", id);
+        }
+        this.IDS.add(id);
+        return id;
     }
 
     @SuppressWarnings("UnstableApiUsage")
