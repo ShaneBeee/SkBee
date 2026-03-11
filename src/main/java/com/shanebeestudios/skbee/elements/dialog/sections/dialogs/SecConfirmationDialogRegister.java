@@ -177,7 +177,7 @@ public class SecConfirmationDialogRegister extends Section {
         });
         dialogBaseBuilder.body(dialogEvent.getBodies());
         dialogBaseBuilder.inputs(dialogEvent.getInputs());
-
+        dialogBaseBuilder.pause(false);
 
         DialogAfterAction afterAction = this.afterAction == null ? DialogAfterAction.CLOSE : switch (Objects.requireNonNull(this.afterAction.getSingle(event))) {
             case "none" -> DialogAfterAction.NONE;
