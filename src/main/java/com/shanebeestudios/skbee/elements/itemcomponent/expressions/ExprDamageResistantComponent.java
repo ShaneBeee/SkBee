@@ -29,6 +29,11 @@ public class ExprDamageResistantComponent extends SimplePropertyExpression<Objec
                 "`set` = Will set the damage resistant component of the item (Accepts a DamageType TagKey).",
                 "`delete` = Will delete the damage resistant component of this item.",
                 "`reset` = Will reset the damage resistant component back to the original value.")
+            .examples("set {_key} to damage resistent component of player's tool",
+                "set damage resistent component of player's tool to tag key \"minecraft:is_fire\" from damage_type registry",
+                "reset damage resistent component of player's tool",
+                "delete damage resistent component of player's tool")
+            .since("INSERT VERSION")
             .register();
     }
 
