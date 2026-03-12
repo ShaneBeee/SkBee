@@ -123,9 +123,9 @@ public class Util {
     public static NamespacedKey getNamespacedKey(@Nullable String key, boolean error) {
         if (key == null) return null;
         if (!key.contains(":")) key = "minecraft:" + key;
-        if (key.length() > 255) {
+        if (key.length() > Short.MAX_VALUE) {
             if (error)
-                skriptError("An invalid key was provided, key must be less than 256 characters: %s", key);
+                skriptError("An invalid key was provided, key must be less than 32767 characters: %s", key);
             return null;
         }
         key = key.toLowerCase();
