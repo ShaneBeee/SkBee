@@ -95,6 +95,8 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityBlockStora
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityOrigin;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityPose;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityVisibility;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityWaypointColor;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityWaypointStyle;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprExactBlockLocation;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprGameTick;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprGiveOrReturn;
@@ -254,6 +256,8 @@ public class OtherElementRegistration {
         ExprEntityOrigin.register(registration);
         ExprEntityPose.register(registration);
         ExprEntityVisibility.register(registration);
+        ExprEntityWaypointColor.register(registration);
+        ExprEntityWaypointStyle.register(registration);
         ExprExactBlockLocation.register(registration);
         ExprGameTick.register(registration);
         ExprGiveOrReturn.register(registration);

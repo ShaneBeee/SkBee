@@ -23,7 +23,8 @@ public class EvtSpawnerSpawn extends SkriptEvent {
             .description("Called whenever an entity is spawned via a spawner.")
             .examples("on spawner spawn of zombie:",
                 "\treset spawner timer of event-block")
-            .since("2.16.0");
+            .since("2.16.0")
+            .register();
 
         EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
             CreatureSpawner spawner = event.getSpawner();

@@ -33,6 +33,7 @@ import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockType;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.block.sign.Side;
@@ -659,18 +660,22 @@ public class ComponentWrapper {
             }
         }
         BlockData blockData = location.getBlock().getBlockData();
-        if (blockData.createBlockState() instanceof Sign sign) {
-            SignSide signSide = sign.getSide(side);
-            for (int i = 0; i < components.size(); i++) {
-                signSide.line(i, components.get(i));
-                signSide.setGlowingText(isGlowing);
-            }
-
-            if (color == null) {
-                signSide.setColor(color);
-            }
-            player.sendBlockUpdate(location, sign);
+        Sign sign;
+        if (blockData.createBlockState() instanceof Sign sign1) {
+            sign = sign1;
+        } else {
+            sign = (Sign) BlockType.OAK_SIGN.createBlockData().createBlockState();
         }
+        SignSide signSide = sign.getSide(side);
+        for (int i = 0; i < components.size(); i++) {
+            signSide.line(i, components.get(i));
+            signSide.setGlowingText(isGlowing);
+        }
+
+        if (color != null) {
+            signSide.setColor(color);
+        }
+        player.sendBlockUpdate(location, sign);
 
     }
 

@@ -174,6 +174,7 @@ public class SecNoticeDialogRegister extends Section {
         });
         dialogBaseBuilder.body(dialogEvent.getBodies());
         dialogBaseBuilder.inputs(dialogEvent.getInputs());
+        dialogBaseBuilder.pause(false);
 
         DialogBase.DialogAfterAction afterAction = this.afterAction == null ? DialogBase.DialogAfterAction.CLOSE : switch (Objects.requireNonNull(this.afterAction.getSingle(event))) {
             case "none" -> DialogBase.DialogAfterAction.NONE;

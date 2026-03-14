@@ -33,6 +33,7 @@ public class TabEvent extends SkriptEvent {
                 "\t\tclear tab completions")
             .since("1.7.0")
             .register();
+
         EventValues.registerEventValue(TabCompleteEvent.class, Player.class, event -> {
             CommandSender sender = event.getSender();
             if (sender instanceof Player) {

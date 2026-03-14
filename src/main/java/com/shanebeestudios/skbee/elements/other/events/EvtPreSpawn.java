@@ -68,7 +68,7 @@ public class EvtPreSpawn extends SkriptEvent {
             .since("2.16.0")
             .register();
 
-        EventValues.registerEventValue(PhantomPreSpawnEvent.class, Entity.class, event -> event.getSpawningEntity(), EventValues.TIME_NOW);
+        EventValues.registerEventValue(PhantomPreSpawnEvent.class, Entity.class, PhantomPreSpawnEvent::getSpawningEntity, EventValues.TIME_NOW);
 
     }
 
@@ -77,7 +77,9 @@ public class EvtPreSpawn extends SkriptEvent {
     @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Literal<?>[] literals, int matchedPattern, ParseResult parseResult) {
-        this.spawnedEntities = (Literal<EntityData<?>>) literals[0];
+        if (literals.length > 0) {
+            this.spawnedEntities = (Literal<EntityData<?>>) literals[0];
+        }
         return true;
     }
 

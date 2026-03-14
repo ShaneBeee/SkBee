@@ -6,6 +6,7 @@ import com.shanebeestudios.skbee.elements.itemcomponent.effects.EffApplyToCompon
 import com.shanebeestudios.skbee.elements.itemcomponent.effects.EffClearComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprBundleContents;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprChargedProjectilesComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprDamageResistantComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprDamageTypeComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprDyedColorComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprEnchantableComponent;
@@ -33,6 +34,7 @@ import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecInstrumentCo
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecJukeboxPlayableComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecPiercingWeapon;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecPotionContentsComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecProfileComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecSwingAnimationComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecToolComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecToolRule;
@@ -54,6 +56,7 @@ public class ItemComponentElementRegistration {
         // EXPRESSIONS
         ExprBundleContents.register(reg);
         ExprChargedProjectilesComponent.register(reg);
+        ExprDamageResistantComponent.register(reg);
         ExprDamageTypeComponent.register(reg);
         ExprDyedColorComponent.register(reg);
         ExprEnchantableComponent.register(reg);
@@ -83,6 +86,7 @@ public class ItemComponentElementRegistration {
         SecJukeboxPlayableComponent.register(reg);
         SecPiercingWeapon.register(reg);
         SecPotionContentsComponent.register(reg);
+        SecProfileComponent.register(reg);
         SecSwingAnimationComponent.register(reg);
         SecToolComponent.register(reg);
         SecToolRule.register(reg);

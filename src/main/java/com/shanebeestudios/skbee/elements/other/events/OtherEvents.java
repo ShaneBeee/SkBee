@@ -80,7 +80,8 @@ public class OtherEvents extends SimpleEvent {
                 "\t\t\t\tenchant {_i} with sharpness 6",
                 "\t\t\t\tset event-slot to {_i}",
                 "\t\t\t\tset repair cost of event-inventory to 30")
-            .since("1.11.0");
+            .since("1.11.0")
+            .register();
 
         EventValues.registerEventValue(PrepareAnvilEvent.class, Slot.class, event -> new Slot() {
             final ItemStack result = event.getResult();

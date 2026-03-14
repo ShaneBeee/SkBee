@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.wrapper;
+package com.shanebeestudios.skbee.api.registration;
 
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Parser;

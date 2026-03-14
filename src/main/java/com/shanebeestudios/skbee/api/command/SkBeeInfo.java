@@ -113,7 +113,7 @@ public class SkBeeInfo implements BasicCommand {
 
             // JSON DOCS
             else if (args[0].equalsIgnoreCase("docs")) {
-                JsonDocGenerator docs = new JsonDocGenerator(this.plugin, this.plugin.getRegistration());
+                JsonDocGenerator docs = new JsonDocGenerator(this.plugin, this.plugin.getAddonLoader().getRegistration());
                 docs.generateDocs();
             }
         }

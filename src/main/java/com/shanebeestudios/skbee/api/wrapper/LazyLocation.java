@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.wrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.util.NumberConversions;
 import org.jetbrains.annotations.NotNull;
 
@@ -13,6 +14,7 @@ import java.util.Map;
  * <br>These are used in {@link com.shanebeestudios.skbee.api.bound.Bound Bounds}
  * when a world might not have been loaded yet
  */
+@SerializableAs("LazyLocation")
 public class LazyLocation extends Location {
 
     private String worldName;

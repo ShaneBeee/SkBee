@@ -18,6 +18,7 @@ import com.shanebeestudios.skbee.api.registration.Registration.SectionRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.StructureRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.TypeRegistrar;
 import com.shanebeestudios.skbee.api.util.Util;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
@@ -42,6 +43,7 @@ public class JsonDocGenerator {
     private final Registration registration;
     private final Gson gson = new GsonBuilder().setPrettyPrinting().create();
     private int total = 0;
+    private final List<String> IDS = new ArrayList<>();
 
     public JsonDocGenerator(Plugin plugin, Registration registration) {
         this.plugin = plugin;
@@ -167,6 +169,16 @@ public class JsonDocGenerator {
                 patterns.add("[on] " + pattern);
             }
             gemerateGeneric("type", documentation, syntaxObject, patterns.toArray(new String[0]));
+
+            // Cancelable
+            boolean cancellable = false;
+            for (Class<? extends Event> eventClass : event.eventClasses) {
+                if (Cancellable.class.isAssignableFrom(eventClass)) {
+                    cancellable = true;
+                    break;
+                }
+            }
+            syntaxObject.addProperty("cancellable", cancellable);
 
             // EventValues
             List<String> eventValueList = new ArrayList<>();
@@ -444,7 +456,12 @@ public class JsonDocGenerator {
     private String generateId(String type, String name) {
         type = type.toLowerCase(Locale.ROOT).replace(" ", "_");
         name = name.toLowerCase(Locale.ROOT).replace(" ", "_");
-        return String.format("%s:%s:%s", this.addonName, type, name);
+        String id = String.format("%s:%s:%s", this.addonName, type, name);
+        if (this.IDS.contains(id)) {
+            Util.log("&cID '%s' already exists", id);
+        }
+        this.IDS.add(id);
+        return id;
     }
 
     @SuppressWarnings("UnstableApiUsage")

@@ -202,6 +202,7 @@ public class SecMultiDialogRegister extends Section {
             default -> DialogBase.DialogAfterAction.CLOSE;
         };
         dialogBaseBuilder.afterAction(afterAction);
+        dialogBaseBuilder.pause(false);
 
         List<ActionButton> actions = dialogEvent.getActions();
         if (actions.isEmpty()) {
