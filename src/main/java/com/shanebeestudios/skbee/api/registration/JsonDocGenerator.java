@@ -18,6 +18,7 @@ import com.shanebeestudios.skbee.api.registration.Registration.SectionRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.StructureRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.TypeRegistrar;
 import com.shanebeestudios.skbee.api.util.Util;
+import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
@@ -168,6 +169,16 @@ public class JsonDocGenerator {
                 patterns.add("[on] " + pattern);
             }
             gemerateGeneric("type", documentation, syntaxObject, patterns.toArray(new String[0]));
+
+            // Cancelable
+            boolean cancellable = false;
+            for (Class<? extends Event> eventClass : event.eventClasses) {
+                if (Cancellable.class.isAssignableFrom(eventClass)) {
+                    cancellable = true;
+                    break;
+                }
+            }
+            syntaxObject.addProperty("cancellable", cancellable);
 
             // EventValues
             List<String> eventValueList = new ArrayList<>();
