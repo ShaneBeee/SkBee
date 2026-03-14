@@ -22,7 +22,7 @@ public class ExprEntityWaypointColor extends SimplePropertyExpression<LivingEnti
                 "set waypoint color of all players to red",
                 "set waypoint color of player to rgb(10, 200, 150)",
                 "reset waypoint color of target entity")
-            .since("INSERT VERSION")
+            .since("3.18.0")
             .register();
     }
 

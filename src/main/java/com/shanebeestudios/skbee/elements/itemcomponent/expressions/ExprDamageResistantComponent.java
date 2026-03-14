@@ -33,7 +33,7 @@ public class ExprDamageResistantComponent extends SimplePropertyExpression<Objec
                 "set damage resistent component of player's tool to tag key \"minecraft:is_fire\" from damage_type registry",
                 "reset damage resistent component of player's tool",
                 "delete damage resistent component of player's tool")
-            .since("INSERT VERSION")
+            .since("3.18.0")
             .register();
     }
 

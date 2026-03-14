@@ -80,7 +80,7 @@ public class SecProfileComponent extends Section {
                 "spawn a mannequin above target block of player:",
                 "\tapply profile to entity:",
                 "\t\tname: \"Batman\"")
-            .since("INSERT VERSION")
+            .since("3.18.0")
             .register();
     }
 

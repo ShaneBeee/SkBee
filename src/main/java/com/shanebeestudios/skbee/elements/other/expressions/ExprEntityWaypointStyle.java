@@ -22,7 +22,7 @@ public class ExprEntityWaypointStyle extends SimplePropertyExpression<LivingEnti
             .examples("set {_key} to waypoint style of player",
                 "set waypoint style of target entity to \"minecraft:bowtie\"",
                 "reset waypoint style of all players")
-            .since("INSERT VERSION")
+            .since("3.18.0")
             .register();
     }
 
