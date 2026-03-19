@@ -28,9 +28,12 @@ public class ExprEntityWaypointColor extends SimplePropertyExpression<LivingEnti
 
     @Override
     public @Nullable Color convert(LivingEntity from) {
-        SkriptColor skriptColor = SkriptColor.fromBukkitColor(from.getWaypointColor());
+        org.bukkit.Color waypointColor = from.getWaypointColor();
+        if (waypointColor == null) return null;
+
+        SkriptColor skriptColor = SkriptColor.fromBukkitColor(waypointColor);
         if (skriptColor != null) return skriptColor;
-        return ColorRGB.fromBukkitColor(from.getWaypointColor());
+        return ColorRGB.fromBukkitColor(waypointColor);
     }
 
     @Override
