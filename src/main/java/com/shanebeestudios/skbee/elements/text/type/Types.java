@@ -61,8 +61,8 @@ public class Types {
             }
         };
 
-        reg.newType(ComponentWrapper.class, "textcomponent")
-            .user("text ?components?")
+        reg.newType(ComponentWrapper.class, "textcomp")
+            .user("text ?comps?")
             .name("TextComponent - Text Component")
             .description("Text components used for hover/click events. Due to the complexity of these, ",
                 "they can NOT be long term stored in variables. \n\bRequires a PaperMC server.")

@@ -87,7 +87,7 @@ types:
     teamoption: team options¦s
     teamoptionstatus: team option status¦es
     textalignment: text alignment¦s
-    textcomponent: text component¦s @-
+    textcomp: text comp¦s @-
     timespanperiod: time period¦s
     trail: trail¦s
     transformation: transformation¦s

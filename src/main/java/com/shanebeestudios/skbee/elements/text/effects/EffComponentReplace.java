@@ -16,8 +16,8 @@ public class EffComponentReplace extends Effect {
 
     public static void register(Registration reg) {
         reg.newEffect(EffComponentReplace.class,
-                "component [:regex] replace [:first] %strings% with %object% in %~textcomponents% [case:with case sensitivity]",
-                "component [:regex] replace [:first] %strings% in %~textcomponents% with %object% [case:with case sensitivity]")
+                "component [:regex] replace [:first] %strings% with %object% in %~textcomps% [case:with case sensitivity]",
+                "component [:regex] replace [:first] %strings% in %~textcomps% with %object% [case:with case sensitivity]")
             .name("TextComponent - Replace Text")
             .description(
                 "Replaces a given string with another string/text component.",

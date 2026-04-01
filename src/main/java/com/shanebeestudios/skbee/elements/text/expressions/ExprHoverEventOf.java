@@ -19,7 +19,7 @@ public class ExprHoverEventOf extends PropertyExpression<ComponentWrapper, Hover
 
     public static void register(Registration reg) {
         reg.newPropertyExpression(ExprHoverEventOf.class, HoverEvent.class,
-                "hover event", "textcomponents")
+                "hover event", "textcomps")
             .name("TextComponent - Hover Event Of")
             .description("Set the hover event of a text component.")
             .examples("set {_t} to text component from \"Check out my cool tool!\"",
