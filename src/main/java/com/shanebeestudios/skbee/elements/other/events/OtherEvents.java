@@ -11,6 +11,7 @@ import ch.njol.skript.util.slot.Slot;
 import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import com.shanebeestudios.skbee.api.registration.Registration;
+import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -145,12 +146,14 @@ public class OtherEvents extends SimpleEvent {
             .since("2.5.3")
             .register();
 
-        EventValues.registerEventValue(EntityChangeBlockEvent.class, BlockData.class, new Converter<>() {
-            @Override
-            public @NotNull BlockData convert(EntityChangeBlockEvent event) {
-                return event.getBlockData();
-            }
-        }, EventValues.TIME_NOW);
+        if (!Util.IS_RUNNING_SKRIPT_2_15) {
+            EventValues.registerEventValue(EntityChangeBlockEvent.class, BlockData.class, new Converter<>() {
+                @Override
+                public @NotNull BlockData convert(EntityChangeBlockEvent event) {
+                    return event.getBlockData();
+                }
+            }, EventValues.TIME_NOW);
+        }
 
         // Block Damage Abort Event
         reg.newEvent(OtherEvents.class, BlockDamageAbortEvent.class,
@@ -214,11 +217,13 @@ public class OtherEvents extends SimpleEvent {
             }
         }, EventValues.TIME_NOW);
 
-        EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
-            CreatureSpawner spawner = event.getSpawner();
-            if (spawner == null) return null;
-            return spawner.getBlock();
-        }, EventValues.TIME_NOW);
+        if (!Util.IS_RUNNING_SKRIPT_2_15) {
+            EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
+                CreatureSpawner spawner = event.getSpawner();
+                if (spawner == null) return null;
+                return spawner.getBlock();
+            }, EventValues.TIME_NOW);
+        }
 
         // OTHER EVENT VALUES
         // Click Events
@@ -273,8 +278,11 @@ public class OtherEvents extends SimpleEvent {
             if (consumable != null) return new ItemType(consumable);
             return null;
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(EntityShootBowEvent.class, ItemStack.class, EntityShootBowEvent::getConsumable, EventValues.TIME_NOW);
 
+        if (!Util.IS_RUNNING_SKRIPT_2_15) {
+            EventValues.registerEventValue(EntityShootBowEvent.class, ItemStack.class,
+                EntityShootBowEvent::getConsumable, EventValues.TIME_NOW);
+        }
         // Moisture Change Event
         reg.newEvent(OtherEvents.class, MoistureChangeEvent.class, "moisture change")
             .name("Moisture Change")
@@ -349,9 +357,12 @@ public class OtherEvents extends SimpleEvent {
             .since("3.2.0")
             .register();
 
-        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getEntity, EventValues.TIME_NOW);
+        if (!Util.IS_RUNNING_SKRIPT_2_15) {
+            EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getEntity, EventValues.TIME_NOW);
+            EventValues.registerEventValue(PlayerLeashEntityEvent.class, Player.class, PlayerLeashEntityEvent::getPlayer, EventValues.TIME_NOW);
+        }
         EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getLeashHolder, EventValues.TIME_FUTURE);
-        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Player.class, PlayerLeashEntityEvent::getPlayer, EventValues.TIME_NOW);
+
 
         reg.newEvent(OtherEvents.class, EntityUnleashEvent.class, "entity unleash")
             .name("Entity Unleash")
