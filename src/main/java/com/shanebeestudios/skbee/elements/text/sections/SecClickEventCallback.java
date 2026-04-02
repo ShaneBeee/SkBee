@@ -55,7 +55,7 @@ public class SecClickEventCallback extends Section {
         EventValues.registerEventValue(ComponentCallbackEvent.class, Player.class, ComponentCallbackEvent::getPlayer);
 
         reg.newSection(SecClickEventCallback.class,
-                "create [a] [new] [click event] callback for %textcomponent% " +
+                "create [a] [new] [click event] callback for %textcomp% " +
                     "[with %-number% use[s]] [[and] with [a] (lifetime|duration) of %-timespan%]")
             .name("TextComponent - Click Event Callback")
             .description("Create a click event, that when clicked will run the code in this section.",

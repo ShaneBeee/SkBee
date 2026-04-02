@@ -28,7 +28,7 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
     private static final boolean HAS_SHOW_ENITY = Skript.methodExists(ShowEntity.class, "showEntity", Key.class, UUID.class);
 
     public static void register(Registration reg) {
-        reg.newCombinedExpression(ExprHoverEvent.class, HoverEvent.class, "[a] [new] hover event showing %strings/textcomponents/itemstacks/entities%")
+        reg.newCombinedExpression(ExprHoverEvent.class, HoverEvent.class, "[a] [new] hover event showing %strings/textcomps/itemstacks/entities%")
             .name("TextComponent - Hover Event")
             .description("Create a new hover event. Can show texts, text components, an item or an entity to a player.", "'showing %itemtype%' requires Minecraft 1.18.2+")
             .examples("set {_t} to text component from \"Check out my cool tool!\"",
