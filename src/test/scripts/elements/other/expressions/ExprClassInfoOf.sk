@@ -13,7 +13,7 @@ test "SkBee - ExprClassInfoOf":
 	assert class info of rain = "weather type" with "Should be weather type"
 	assert class info of 10 seconds = "time span" with "Should be time span"
 	assert class info of movement speed = "attribute type" with "Should be attribute type"
-	assert class info of (mini message from "hi") = "text component" with "Should be text component"
+	assert class info of (mini message from "hi") = "text comp" with "Should be text component"
 	assert class info of (nbt from "{test:1}") = "nbt compound" with "Should be nbt compound"
 	assert class info of (chest inventory with 3 rows) = "inventory" with "Should be inventory"
 	assert class info of (chest inventory) = "inventory type" with "Should be inventory type"

@@ -17,7 +17,7 @@ public class ExprComponentChildren extends SimpleExpression<ComponentWrapper> {
 
     public static void register(Registration reg) {
         reg.newSimpleExpression(ExprComponentChildren.class, ComponentWrapper.class,
-                "[text] component children of %textcomponents%")
+                "[text] component children of %textcomps%")
             .name("TextComponent - Children")
             .description("Get the children of a text component. This essentially splits the component up into its parts.")
             .examples("set {_children::*} to component children of {_textcomp}")

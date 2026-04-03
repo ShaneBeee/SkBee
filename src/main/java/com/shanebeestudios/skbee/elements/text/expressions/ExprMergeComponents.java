@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprMergeComponents extends SimpleExpression<ComponentWrapper> {
 
     public static void register(Registration reg) {
-        reg.newSimpleExpression(ExprMergeComponents.class, ComponentWrapper.class, "merge components %textcomponents/strings% [[join[ed]] (with|using) %-textcomponent/string%]")
+        reg.newSimpleExpression(ExprMergeComponents.class, ComponentWrapper.class, "merge components %textcomps/strings% [[join[ed]] (with|using) %-textcomp/string%]")
             .name("TextComponent - Merge Components")
             .description("Merge multiple components into one. If adding strings/texts, they will be converted into components.")
             .examples("set {_t} to merge components {_t::*}", "set {_t} to merge components {_t::*} joined with newline")

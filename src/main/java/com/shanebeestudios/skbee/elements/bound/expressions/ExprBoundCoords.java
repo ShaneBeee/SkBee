@@ -23,10 +23,10 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
     private static final BoundConfig BOUND_CONFIG = SkBee.getPlugin().getBoundConfig();
 
     public static void register(Registration reg) {
-        reg.newSimpleExpression(ExprBoundCoords.class, Object.class, "bound",
-                "lesser (x|1:y|2:z) coord[inate]",
-                "greater (x|1:y|2:z) coord[inate]",
-                "world of bound")
+        reg.newSimpleExpression(ExprBoundCoords.class, Object.class,
+                "lesser (x|1:y|2:z) coord[inate] of %bounds%",
+                "greater (x|1:y|2:z) coord[inate] of %bounds%",
+                "world of bound %bounds%")
             .name("Bound - Coords")
             .description("DEPRECATED - Use bound locations/world expressions instead",
                 "The coords and world of a bounding box. You can get the world/coords for a specific bound, you can also " +
@@ -42,7 +42,7 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
     private boolean LESSER;
     private int parse;
 
-    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
+    @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
         setExpr((Expression<Bound>) exprs[0]);
@@ -57,7 +57,6 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected Object[] get(Event event, Bound[] bounds) {
         return get(bounds, bound -> {
@@ -73,7 +72,6 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
         });
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (!WORLD && (mode == ChangeMode.SET || mode == ChangeMode.ADD || mode == ChangeMode.REMOVE)) {
@@ -82,7 +80,6 @@ public class ExprBoundCoords extends PropertyExpression<Bound, Object> {
         return null;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public void change(Event e, Object[] delta, ChangeMode mode) {
         for (Bound bound : getExpr().getArray(e)) {

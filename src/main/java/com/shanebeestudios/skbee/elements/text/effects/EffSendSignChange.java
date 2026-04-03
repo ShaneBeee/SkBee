@@ -19,7 +19,7 @@ public class EffSendSignChange extends Effect {
 
     public static void register(Registration reg) {
         reg.newEffect(EffSendSignChange.class,
-                "make %players% see [front|:back] sign lines (at|of) %blocks% as %textcomponents% [with color %-color%] [glowing:and glowing]")
+                "make %players% see [front|:back] sign lines (at|of) %blocks% as %textcomps% [with color %-color%] [glowing:and glowing]")
             .name("TextComponent - Sign Change")
             .description("Sends a sign change to the player. You CAN send a block change first.",
                 "Side = Whether to show the front/back change (defaults to front).",
