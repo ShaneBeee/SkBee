@@ -34,6 +34,11 @@ public class Types {
     public static void register(Registration reg) {
         // Allow components to be used anywhere a string can
         Converters.registerConverter(ComponentWrapper.class, String.class, ComponentWrapper::toString);
+
+        // Support for text components in Skript
+        Converters.registerConverter(ComponentWrapper.class, Component.class, ComponentWrapper::getComponent);
+        Converters.registerConverter(Component.class, ComponentWrapper.class, ComponentWrapper::fromComponent);
+
         Comparators.registerComparator(ComponentWrapper.class, ComponentWrapper.class, (o1, o2) -> Relation.get(o1.equals(o2)));
 
         Changer<ComponentWrapper> COMP_CHANGER = new Changer<>() {
@@ -61,8 +66,8 @@ public class Types {
             }
         };
 
-        reg.newType(ComponentWrapper.class, "textcomponent")
-            .user("text ?components?")
+        reg.newType(ComponentWrapper.class, "textcomp")
+            .user("text ?comps?")
             .name("TextComponent - Text Component")
             .description("Text components used for hover/click events. Due to the complexity of these, ",
                 "they can NOT be long term stored in variables. \n\bRequires a PaperMC server.")

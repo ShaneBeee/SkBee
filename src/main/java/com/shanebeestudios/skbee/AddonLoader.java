@@ -477,7 +477,7 @@ public class AddonLoader {
     }
 
     private void loadTextElements() {
-        if (Classes.getClassInfoNoError("textcomponent") != null) {
+        if (Classes.getClassInfoNoError("textcomp") != null) {
             Util.logLoading("&5Text Component Elements &cdisabled");
             Util.logLoading("&7It appears another Skript addon may have registered Text Component syntax.");
             Util.logLoading("&7To use SkBee Text Components, please remove the addon which has registered Text Components already.");

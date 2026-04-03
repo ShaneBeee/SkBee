@@ -21,7 +21,7 @@ public class ExprComponentFormat extends PropertyExpression<ComponentWrapper, Ob
     public static void register(Registration reg) {
         reg.newPropertyExpression(ExprComponentFormat.class, Object.class,
                 "(color|1:bold|2:italic|3:(obfuscate[d]|magic)|4:strikethrough|5:underline[d]|6:font|7:insert[ion]|8:fallback|9:shadow color) format",
-                "textcomponents")
+                "textcomps")
             .name("TextComponent - Format")
             .description("Change formatting options of text components. Most of these are pretty straight forward. ",
                 "Insertion means the text that will copy to chat when a player shift-clicks the component (Might not be available on all versions). ",

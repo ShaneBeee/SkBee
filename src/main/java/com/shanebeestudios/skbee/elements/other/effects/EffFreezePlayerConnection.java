@@ -29,8 +29,8 @@ public class EffFreezePlayerConnection extends Effect {
         if (!Skript.classExists("io.papermc.paper.connection.PlayerConfigurationConnection")) return;
 
         reg.newEffect(EffFreezePlayerConnection.class,
-                "freeze connection %playerconnection/audience% [with timeout message %-textcomponent%]",
-                "unfreeze connection %playerconnection/audience% [and disconnect due to %-textcomponent%]")
+                "freeze connection %playerconnection/audience% [with timeout message %-textcomp%]",
+                "unfreeze connection %playerconnection/audience% [and disconnect due to %-textcomp%]")
             .name("Player Connection - Freeze/Unfreeze")
             .description("Freeze/unfreeze a player connect.",
                 "**FREEZING**:",

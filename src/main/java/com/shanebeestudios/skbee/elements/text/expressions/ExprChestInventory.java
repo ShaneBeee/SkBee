@@ -17,8 +17,8 @@ public class ExprChestInventory extends SimpleExpression<Inventory> {
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprChestInventory.class, Inventory.class,
-                "[a [new]] chest inventory with component name %textcomponent% [with %-number% row[s]]",
-                "[a [new]] chest inventory with %number% row[s] with component name %textcomponent%")
+                "[a [new]] chest inventory with component name %textcomp% [with %-number% row[s]]",
+                "[a [new]] chest inventory with %number% row[s] with component name %textcomp%")
             .name("TextComponent - Chest Inventory")
             .description("Create a chest inventory with a component name.")
             .examples("set {_t} to mini message from \"<rainbow>THIS IS A CHEST\"",

@@ -10,7 +10,7 @@ public class ExprComponentToJson extends SimplePropertyExpression<ComponentWrapp
 
     public static void register(Registration reg) {
         reg.newPropertyExpression(ExprComponentToJson.class, String.class,
-                "serialized json string", "textcomponents")
+                "serialized json string", "textcomps")
             .name("TextComponent - Json String")
             .description("Get the serialized json string of a text component. Useful in NBT.")
             .examples("set {_m} to mini message from \"<rainbow>HI MOM, I MADE IT ON THE DOCS\"",

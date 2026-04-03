@@ -16,7 +16,7 @@ public class EffSendComponentTitle extends Effect {
 
     public static void register(Registration reg) {
         reg.newEffect(EffSendComponentTitle.class,
-                "send title [component] %textcomponent/string% [with subtitle [component] %-textcomponent/string%] [to %audiences%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]")
+                "send title [component] %textcomp/string% [with subtitle [component] %-textcomp/string%] [to %audiences%] [for %-timespan%] [with fade[(-| )]in %-timespan%] [(and|with) fade[(-| )]out %-timespan%]")
             .name("TextComponent - Send Title")
             .description(
                 "Send titles containing components. Supports strings as well.",

@@ -17,7 +17,7 @@ public class ExprClickEventOf extends PropertyExpression<ComponentWrapper, Click
 
     public static void register(Registration reg) {
         reg.newPropertyExpression(ExprClickEventOf.class, ClickEvent.class,
-                "click event", "textcomponents")
+                "click event", "textcomps")
             .name("TextComponent - Click Event Of")
             .description("Set the click event of a text component.")
             .examples(
