@@ -21,6 +21,7 @@ import com.shanebeestudios.skbee.elements.other.effects.EffDispatchCommand;
 import com.shanebeestudios.skbee.elements.other.effects.EffDropItem;
 import com.shanebeestudios.skbee.elements.other.effects.EffEntityBlockStorage;
 import com.shanebeestudios.skbee.elements.other.effects.EffEntityDamageEntity;
+import com.shanebeestudios.skbee.elements.other.effects.EffEntityUseItem;
 import com.shanebeestudios.skbee.elements.other.effects.EffEquipmentChange;
 import com.shanebeestudios.skbee.elements.other.effects.EffFreezePlayerConnection;
 import com.shanebeestudios.skbee.elements.other.effects.EffGiveOrDrop;
@@ -180,6 +181,7 @@ public class OtherElementRegistration {
         EffDispatchCommand.register(registration);
         EffEntityBlockStorage.register(registration);
         EffEntityDamageEntity.register(registration);
+        EffEntityUseItem.register(registration);
         EffEquipmentChange.register(registration);
         EffFreezePlayerConnection.register(registration);
         EffGiveOrDrop.register(registration);
