@@ -112,6 +112,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprNamespacedKeyObj
 import com.shanebeestudios.skbee.elements.other.expressions.ExprNamespacedKeyObjectFrom;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprNearestEntity;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprNoClip;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprParseCondition;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprParseEffect;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPath;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPathTarget;
@@ -274,6 +275,7 @@ public class OtherElementRegistration {
         ExprNamespacedKeyObjectFrom.register(registration);
         ExprNearestEntity.register(registration);
         ExprNoClip.register(registration);
+        ExprParseCondition.register(registration);
         ExprParseEffect.register(registration);
         ExprPath.register(registration);
         ExprPathTarget.register(registration);
