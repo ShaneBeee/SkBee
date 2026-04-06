@@ -1,6 +1,6 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "9.2.0"
+    id("com.gradleup.shadow") version "9.3.0"
     id("maven-publish")
 }
 
@@ -11,7 +11,7 @@ val apiVersion = "1.21.8"
 // Where this builds on the server
 val serverLocation = "Minecraft/Skript/26-1"
 
-java.sourceCompatibility = JavaVersion.VERSION_21
+java.sourceCompatibility = JavaVersion.VERSION_25
 
 repositories {
     mavenCentral()
@@ -32,7 +32,7 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
 
     // Skript
     compileOnly("com.github.SkriptLang:Skript:2.14.0")
@@ -70,7 +70,7 @@ tasks {
 
     }
     compileJava {
-        options.release = 21
+        options.release = 25
         options.compilerArgs.add("-Xlint:unchecked")
         options.compilerArgs.add("-Xlint:deprecation")
     }
@@ -115,14 +115,11 @@ publishing {
             artifactId = "SkBee"
             version = projectVersion
 
-            // 1. Include the Java component (now contains the sources jar)
-            from(components["java"])
+            // For GradleUp Shadow 9.x, use this syntax:
+            from(components["shadow"])
 
-            // 2. Remove the default thin jar to prevent the 'multiple artifacts' error
-            artifacts.removeAll { it.extension == "jar" && it.classifier == null }
-
-            // 3. Add the shadow jar as the primary artifact
-            artifact(tasks["shadowJar"])
+            // This adds the sources jar
+            artifact(tasks["sourcesJar"])
         }
     }
 }
