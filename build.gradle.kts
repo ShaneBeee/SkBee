@@ -4,6 +4,12 @@ plugins {
     id("maven-publish")
 }
 
+configurations.matching { it.isCanBeResolved }.configureEach {
+    attributes {
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+    }
+}
+
 // Version of SkBee
 val projectVersion = "3.18.3"
 // Minimum version of Minecraft that SkBee supports
@@ -70,7 +76,9 @@ tasks {
 
     }
     compileJava {
-        options.release = 25
+        options.release.set(21)
+        // This allows the compiler to see "newer" classes even if targeting an older version
+        options.isIncremental = false
         options.compilerArgs.add("-Xlint:unchecked")
         options.compilerArgs.add("-Xlint:deprecation")
     }
@@ -90,6 +98,9 @@ tasks {
         dependsOn(shadowJar)
     }
     java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(25))
+        }
         withSourcesJar()
     }
     javadoc {
