@@ -79,6 +79,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockStateBlockD
 import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockStateGet;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockStateItemType;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockStateOffset;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockfaceDirection;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChargingAttack;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChatCompletions;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChunkAt;
@@ -233,6 +234,7 @@ public class OtherElementRegistration {
         ExprBlockDataTags.register(registration);
         ExprBlockDataUpdates.register(registration);
         ExprBlockDrops.register(registration);
+        ExprBlockfaceDirection.register(registration);
         ExprBlockInChunk.register(registration);
         ExprBlockRelative.register(registration);
         ExprBlockStateBlock.register(registration);
