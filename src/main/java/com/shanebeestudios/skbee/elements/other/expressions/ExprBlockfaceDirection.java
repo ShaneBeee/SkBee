@@ -22,7 +22,7 @@ public class ExprBlockfaceDirection extends SimpleExpression<Direction> {
             .examples("set {_raytrace} to raytrace from player with max distance {_maxDistance}",
                 "set {_direction} to direction of (hit blockface of {_raytrace})",
                 "spawn zombie {_direction} player")
-            .since("INSERT VERSION")
+            .since("3.19.0")
             .register();
     }
 

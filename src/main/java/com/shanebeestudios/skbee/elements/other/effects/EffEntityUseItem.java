@@ -27,7 +27,7 @@ public class EffEntityUseItem extends Effect {
                 "   When, for example, a skeleton is drawing its bow, this will cause it to release and fire the arrow." +
                     "This method does not make any guarantees about the effect of this method as such depends on the entity and its state.")
             .examples("make target entity start using item in main hand slot")
-            .since("INSERT VERRSION")
+            .since("3.19.0")
             .register();
     }
 

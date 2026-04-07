@@ -594,7 +594,7 @@ public class Types {
             .examples("set {_formatted} to formattedTimespan(1 hour, \"HH:mm:ss\")",
                 "set {_formatted} to formattedTimespan(1 hour, \"HH:mm:ss.SSS\")",
                 "set {_formatted} to formattedTimespan({_ts}, \"H 'hours and' m 'minutes'\")")
-            .since("INSERT VERSION")
+            .since("3.19.0")
             .register();
     }
 

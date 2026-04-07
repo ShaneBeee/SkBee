@@ -28,7 +28,7 @@ public class ExprParseCondition extends SimpleExpression<Boolean> {
                 "\ttrigger:",
                 "\t\tif parse condition arg-1 is false:",
                 "\t\t\tsend \"&4:ERROR&c %arg-1% did not pass\"")
-            .since("INSERT VERSION")
+            .since("3.19.0")
             .register();
     }
 
