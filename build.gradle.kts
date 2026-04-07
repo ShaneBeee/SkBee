@@ -1,17 +1,23 @@
 plugins {
     id("java")
-    id("com.gradleup.shadow") version "9.2.0"
+    id("com.gradleup.shadow") version "9.3.0"
     id("maven-publish")
+}
+
+configurations.matching { it.isCanBeResolved }.configureEach {
+    attributes {
+        attribute(TargetJvmVersion.TARGET_JVM_VERSION_ATTRIBUTE, 25)
+    }
 }
 
 // Version of SkBee
 val projectVersion = "3.18.3"
 // Minimum version of Minecraft that SkBee supports
-val apiVersion = "1.21.8"
+val apiVersion = "1.21.9"
 // Where this builds on the server
 val serverLocation = "Minecraft/Skript/26-1"
 
-java.sourceCompatibility = JavaVersion.VERSION_21
+java.sourceCompatibility = JavaVersion.VERSION_25
 
 repositories {
     mavenCentral()
@@ -32,7 +38,7 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:1.21.11-R0.1-SNAPSHOT")
+    compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
 
     // Skript
     compileOnly("com.github.SkriptLang:Skript:2.14.0")
@@ -42,7 +48,7 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.15.6")
+    implementation("de.tr7zw:item-nbt-api:2.15.7")
 
     // FastBoard
     implementation("fr.mrmicky:fastboard:2.1.5")
@@ -70,7 +76,9 @@ tasks {
 
     }
     compileJava {
-        options.release = 21
+        options.release.set(21)
+        // This allows the compiler to see "newer" classes even if targeting an older version
+        options.isIncremental = false
         options.compilerArgs.add("-Xlint:unchecked")
         options.compilerArgs.add("-Xlint:deprecation")
     }
@@ -90,6 +98,9 @@ tasks {
         dependsOn(shadowJar)
     }
     java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(25))
+        }
         withSourcesJar()
     }
     javadoc {
@@ -115,14 +126,11 @@ publishing {
             artifactId = "SkBee"
             version = projectVersion
 
-            // 1. Include the Java component (now contains the sources jar)
-            from(components["java"])
+            // For GradleUp Shadow 9.x, use this syntax:
+            from(components["shadow"])
 
-            // 2. Remove the default thin jar to prevent the 'multiple artifacts' error
-            artifacts.removeAll { it.extension == "jar" && it.classifier == null }
-
-            // 3. Add the shadow jar as the primary artifact
-            artifact(tasks["shadowJar"])
+            // This adds the sources jar
+            artifact(tasks["sourcesJar"])
         }
     }
 }

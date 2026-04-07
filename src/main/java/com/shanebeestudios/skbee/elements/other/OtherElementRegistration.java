@@ -21,6 +21,7 @@ import com.shanebeestudios.skbee.elements.other.effects.EffDispatchCommand;
 import com.shanebeestudios.skbee.elements.other.effects.EffDropItem;
 import com.shanebeestudios.skbee.elements.other.effects.EffEntityBlockStorage;
 import com.shanebeestudios.skbee.elements.other.effects.EffEntityDamageEntity;
+import com.shanebeestudios.skbee.elements.other.effects.EffEntityUseItem;
 import com.shanebeestudios.skbee.elements.other.effects.EffEquipmentChange;
 import com.shanebeestudios.skbee.elements.other.effects.EffFreezePlayerConnection;
 import com.shanebeestudios.skbee.elements.other.effects.EffGiveOrDrop;
@@ -79,6 +80,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockStateBlockD
 import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockStateGet;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockStateItemType;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockStateOffset;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockfaceDirection;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChargingAttack;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChatCompletions;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprChunkAt;
@@ -111,6 +113,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprNamespacedKeyObj
 import com.shanebeestudios.skbee.elements.other.expressions.ExprNamespacedKeyObjectFrom;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprNearestEntity;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprNoClip;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprParseCondition;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprParseEffect;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPath;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPathTarget;
@@ -178,6 +181,7 @@ public class OtherElementRegistration {
         EffDispatchCommand.register(registration);
         EffEntityBlockStorage.register(registration);
         EffEntityDamageEntity.register(registration);
+        EffEntityUseItem.register(registration);
         EffEquipmentChange.register(registration);
         EffFreezePlayerConnection.register(registration);
         EffGiveOrDrop.register(registration);
@@ -233,6 +237,7 @@ public class OtherElementRegistration {
         ExprBlockDataTags.register(registration);
         ExprBlockDataUpdates.register(registration);
         ExprBlockDrops.register(registration);
+        ExprBlockfaceDirection.register(registration);
         ExprBlockInChunk.register(registration);
         ExprBlockRelative.register(registration);
         ExprBlockStateBlock.register(registration);
@@ -272,6 +277,7 @@ public class OtherElementRegistration {
         ExprNamespacedKeyObjectFrom.register(registration);
         ExprNearestEntity.register(registration);
         ExprNoClip.register(registration);
+        ExprParseCondition.register(registration);
         ExprParseEffect.register(registration);
         ExprPath.register(registration);
         ExprPathTarget.register(registration);

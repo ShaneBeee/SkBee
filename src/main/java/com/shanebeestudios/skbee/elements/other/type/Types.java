@@ -12,15 +12,16 @@ import ch.njol.skript.util.Timespan;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.registration.Registration;
+import com.shanebeestudios.skbee.api.registration.RegistryClassInfo;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.shanebeestudios.skbee.api.registration.RegistryClassInfo;
 import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import net.kyori.adventure.audience.Audience;
+import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.Color;
 import org.bukkit.JukeboxSong;
@@ -565,6 +566,35 @@ public class Types {
                 "set {_time} to timespan(3, ticks)",
                 "set {_time} to timespan(1, hour) + timespan(10, minutes)")
             .since("3.9.0")
+            .register();
+
+        reg.newFunction(DefaultFunction.builder(reg.getAddon(), "formattedTimespan", String.class)
+                .parameter("timespan", Timespan.class)
+                .parameter("format", String.class)
+                .build(args -> {
+                    Timespan timespan = args.get("timespan");
+                    String format = args.get("format");
+                    return DurationFormatUtils.formatDuration(timespan.getAs(Timespan.TimePeriod.MILLISECOND), format);
+                }))
+            .name("Formatted Timespan")
+            .description("Formats a Timespan into a string using a format.",
+                "**Available Formats**:",
+                " - `y` = years",
+                " - `M` = months",
+                " - `d` = days",
+                " - `H` = hours",
+                " - `m` = minutes",
+                " - `s` = seconds",
+                " - `S` = milliseconds",
+                " - `'text'` = arbitrary text content",
+                "**Note**: It's not currently possible to include a single-quote in a format.",
+                "Token values are printed using decimal digits.",
+                "A token character can be repeated to ensure that the field occupies a certain minimum size.",
+                "Values will be left-padded with 0 unless padding is disabled in the method invocation.")
+            .examples("set {_formatted} to formattedTimespan(1 hour, \"HH:mm:ss\")",
+                "set {_formatted} to formattedTimespan(1 hour, \"HH:mm:ss.SSS\")",
+                "set {_formatted} to formattedTimespan({_ts}, \"H 'hours and' m 'minutes'\")")
+            .since("INSERT VERSION")
             .register();
     }
 

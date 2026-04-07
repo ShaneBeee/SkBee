@@ -7,7 +7,6 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.Timespan;
-import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import com.shanebeestudios.skbee.api.particle.ParticleWrapper;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
@@ -108,16 +107,14 @@ public class Types {
             Util.logLoading("You may have to use their Trail in SkBee's syntaxes.");
         }
 
-        if (ParticleUtil.HAS_SPELL) {
-            if (Classes.getExactClassInfo(Particle.Spell.class) == null) {
-                Classes.registerClass(new ClassInfo<>(Particle.Spell.class, "particlespell")
-                    .name(ClassInfo.NO_DOC)
-                    .user("particle ?spells?")
-                    .parser(SkriptUtils.getDefaultParser()));
-            } else {
-                Util.logLoading("It looks like another addon registered 'particlespell' already.");
-                Util.logLoading("You may have to use their Particle Spell in SkBee's syntaxes.");
-            }
+        if (Classes.getExactClassInfo(Particle.Spell.class) == null) {
+            Classes.registerClass(new ClassInfo<>(Particle.Spell.class, "particlespell")
+                .name(ClassInfo.NO_DOC)
+                .user("particle ?spells?")
+                .parser(SkriptUtils.getDefaultParser()));
+        } else {
+            Util.logLoading("It looks like another addon registered 'particlespell' already.");
+            Util.logLoading("You may have to use their Particle Spell in SkBee's syntaxes.");
         }
     }
 
@@ -212,29 +209,27 @@ public class Types {
             .since("3.6.5")
             .register();
 
-        if (ParticleUtil.HAS_SPELL) {
-            DefaultFunction<Particle.Spell> spellFunc = DefaultFunction.builder(reg.getAddon(), "particleSpell", Particle.Spell.class)
-                .parameter("color", Color.class)
-                .parameter("power", Number.class)
-                .build(params -> {
-                    Object color = params.get("color");
-                    Number power = params.get("power");
-                    if (color instanceof Color) {
-                        return new Particle.Spell(((Color) color).asBukkitColor(), power.floatValue());
-                    }
-                    return null;
-                });
+        DefaultFunction<Particle.Spell> spellFunc = DefaultFunction.builder(reg.getAddon(), "particleSpell", Particle.Spell.class)
+            .parameter("color", Color.class)
+            .parameter("power", Number.class)
+            .build(params -> {
+                Object color = params.get("color");
+                Number power = params.get("power");
+                if (color instanceof Color) {
+                    return new Particle.Spell(((Color) color).asBukkitColor(), power.floatValue());
+                }
+                return null;
+            });
 
-            reg.newFunction(spellFunc)
-                .name("Particle Spell")
-                .description("Creates a new spell data to be used with the 'effect'/'instant_effect' particles.",
-                    "Takes in a color and a number(float - which represents the power of the effect.)",
-                    "Requires Minecraft 1.21.9+")
-                .examples("set {_spell} to particleSpell(blue, 0.5)",
-                    "make 10 of effect using {_spell} at location of player's head")
-                .since("3.13.1")
-                .register();
-        }
+        reg.newFunction(spellFunc)
+            .name("Particle Spell")
+            .description("Creates a new spell data to be used with the 'effect'/'instant_effect' particles.",
+                "Takes in a color and a number(float - which represents the power of the effect.)",
+                "Requires Minecraft 1.21.9+")
+            .examples("set {_spell} to particleSpell(blue, 0.5)",
+                "make 10 of effect using {_spell} at location of player's head")
+            .since("3.13.1")
+            .register();
     }
 
 }

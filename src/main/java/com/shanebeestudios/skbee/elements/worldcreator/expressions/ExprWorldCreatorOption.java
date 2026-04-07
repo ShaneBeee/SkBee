@@ -8,7 +8,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.registration.Registration;
-import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.Location;
 import org.bukkit.World.Environment;
@@ -47,7 +46,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         this.pattern = parseResult.mark;
-        if (this.pattern == 7 && Util.IS_RUNNING_MC_1_21_9) {
+        if (this.pattern == 7) {
             // Minecraft no longer has spawn chunks starting in 1.21.9
             Skript.error("'keep spawn loaded' is no longer used by Minecraft.");
             return false;
