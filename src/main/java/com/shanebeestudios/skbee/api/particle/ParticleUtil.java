@@ -36,8 +36,6 @@ public class ParticleUtil {
 
     private static final boolean HAS_PLAYER_FORCE = Skript.methodExists(Player.class, "spawnParticle",
         Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class);
-    // Added in Minecraft 1.21.9
-    public static final boolean HAS_SPELL = Util.IS_RUNNING_MC_1_21_9;
 
     public static void spawnParticle(@NotNull Particle particle, @Nullable Player[] players, @NotNull Location location, int count, Object data, Vector offset, double extra, boolean force) {
         Object particleData = getData(particle, data);
@@ -82,7 +80,7 @@ public class ParticleUtil {
             return "color/bukkitcolor";
         } else if (dataType == Particle.Trail.class) {
             return "trail";
-        } else if (ParticleUtil.HAS_SPELL && dataType == Particle.Spell.class) {
+        } else if (dataType == Particle.Spell.class) {
             return "spell";
         }
         // For future particle data additions that haven't been added here yet
@@ -122,7 +120,7 @@ public class ParticleUtil {
             }
         } else if (dataType == Particle.Trail.class && data instanceof Particle.Trail) {
             return data;
-        } else if (HAS_SPELL && dataType == Particle.Spell.class && data instanceof Particle.Spell) {
+        } else if (dataType == Particle.Spell.class && data instanceof Particle.Spell) {
             return data;
         }
         return null;

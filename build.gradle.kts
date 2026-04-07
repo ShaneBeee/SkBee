@@ -13,7 +13,7 @@ configurations.matching { it.isCanBeResolved }.configureEach {
 // Version of SkBee
 val projectVersion = "3.18.3"
 // Minimum version of Minecraft that SkBee supports
-val apiVersion = "1.21.8"
+val apiVersion = "1.21.9"
 // Where this builds on the server
 val serverLocation = "Minecraft/Skript/26-1"
 
