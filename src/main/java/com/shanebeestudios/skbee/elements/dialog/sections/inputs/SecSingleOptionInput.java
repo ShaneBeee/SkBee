@@ -114,7 +114,7 @@ public class SecSingleOptionInput extends Section {
             return next;
         }
         if (!Util.isValidDialogInputKey(key)) {
-            error("Invalid key. Must only contain letters, numbers and underscores but found: " + key);
+            error("Invalid key. Must only contain letters, numbers, underscores and cannot be \"id\", but found: '" + key + "'");
             return next;
         }
 

@@ -189,6 +189,7 @@ public class Util {
      * @return Whether valid
      */
     public static boolean isValidDialogInputKey(String key) {
+        if (key.equalsIgnoreCase("id")) return false;
         for (int i = 0; i < key.length(); i++) {
             char c = key.charAt(i);
             if (!Character.isLetterOrDigit(c) && c != '_') {
