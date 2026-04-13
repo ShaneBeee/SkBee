@@ -52,7 +52,7 @@ public class SecTextInput extends Section {
                 "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
                     "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
                 "**Entries**:",
-                "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
+                "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _)(\"id\" is reserved).",
                 "- `label` = A string/text component to be displayed to the left of the input.",
                 "- `width` = Integer value between 1 and 1024 — The width of the input. Defaults to 200. [Optional]",
                 "- `label_visible` = Controls if the label is visible. Defaults to true. [Optional]",
