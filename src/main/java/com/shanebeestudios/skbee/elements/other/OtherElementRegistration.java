@@ -55,7 +55,6 @@ import com.shanebeestudios.skbee.elements.other.events.EvtPlayerUseUnknown;
 import com.shanebeestudios.skbee.elements.other.events.EvtPreSpawn;
 import com.shanebeestudios.skbee.elements.other.events.EvtSpawnerSpawn;
 import com.shanebeestudios.skbee.elements.other.events.OtherEvents;
-import com.shanebeestudios.skbee.elements.other.events.PaperEvents;
 import com.shanebeestudios.skbee.elements.other.events.TabEvent;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprAbsorptionAmount;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprArmorTrim;
@@ -220,7 +219,6 @@ public class OtherElementRegistration {
         EvtPreSpawn.register(registration);
         EvtSpawnerSpawn.register(registration);
         OtherEvents.register(registration);
-        PaperEvents.register(registration);
         TabEvent.register(registration);
 
         // EXPRESSIONS
