@@ -32,6 +32,7 @@ import com.shanebeestudios.skbee.elements.other.effects.EffOpenContainerAnimatio
 import com.shanebeestudios.skbee.elements.other.effects.EffOpenRealInventory;
 import com.shanebeestudios.skbee.elements.other.effects.EffOpenSign;
 import com.shanebeestudios.skbee.elements.other.effects.EffParseEffect;
+import com.shanebeestudios.skbee.elements.other.effects.EffPlayerBreakBlock;
 import com.shanebeestudios.skbee.elements.other.effects.EffPlayerListed;
 import com.shanebeestudios.skbee.elements.other.effects.EffRangedAttack;
 import com.shanebeestudios.skbee.elements.other.effects.EffResourcePackRemove;
@@ -194,6 +195,7 @@ public class OtherElementRegistration {
         EffOpenRealInventory.register(registration);
         EffOpenSign.register(registration);
         EffParseEffect.register(registration);
+        EffPlayerBreakBlock.register(registration);
         EffPlayerListed.register(registration);
         EffRangedAttack.register(registration);
         EffResourcePackRemove.register(registration);
