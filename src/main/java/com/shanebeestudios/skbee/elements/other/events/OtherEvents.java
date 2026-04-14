@@ -22,6 +22,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Pose;
 import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.Event;
@@ -32,6 +33,7 @@ import org.bukkit.event.block.MoistureChangeEvent;
 import org.bukkit.event.command.UnknownCommandEvent;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityPoseChangeEvent;
 import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntitySpellCastEvent;
@@ -54,6 +56,8 @@ import java.util.Locale;
 public class OtherEvents extends SimpleEvent {
 
     public static void register(Registration reg) {
+        entityEvents(reg);
+
         reg.newEvent(OtherEvents.class, EntityBlockInteractEvent.class,
                 "block (interact|trample)")
             .name("Block Physical Interact Event")
@@ -428,6 +432,24 @@ public class OtherEvents extends SimpleEvent {
 
         EventValues.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
         EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);
+    }
+
+    private static void entityEvents(Registration reg) {
+        reg.newEvent(OtherEvents.class, EntityPoseChangeEvent.class,
+                "entity pose change", "entity changed pose")
+            .name("Entity Pose Change")
+            .description("Called when an entity changes their pose.",
+                "`event-pose` = The new pose once this event finishes.",
+                "`past event-pose` = The previous pose of the entity.")
+            .examples("on entity pose change:",
+                "\tbroadcast \"%event-entity% changed their pose from %past event-pose% to %event-pose%\"")
+            .since("INSERT VERSION")
+            .register();
+
+        EventValues.registerEventValue(EntityPoseChangeEvent.class, Pose.class,
+            from -> from.getEntity().getPose(), EventValues.TIME_PAST);
+        EventValues.registerEventValue(EntityPoseChangeEvent.class, Pose.class,
+            EntityPoseChangeEvent::getPose, EventValues.TIME_NOW);
     }
 
 }
