@@ -10,6 +10,7 @@ import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
 import com.shanebeestudios.skbee.api.event.bound.BoundEvent;
 import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
 import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
+import com.shanebeestudios.skbee.api.listener.BoundBorderListener.BoundMoveReason;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -31,7 +32,11 @@ public class BoundEvents extends SkriptEvent {
                 "\tif event-bound = {bounds::spawn}:",
                 "\t\tsend \"You entered spawn!\"",
                 "on enter bound with id \"spawn\":",
-                "\tcancel event")
+                "\tcancel event",
+                "",
+                "on bound enter:",
+                "\tif event-bound move reason = teleport:",
+                "\t\tcancel event")
             .since("1.0.0, 1.12.2 (Bound IDs)")
             .register();
 
@@ -52,6 +57,8 @@ public class BoundEvents extends SkriptEvent {
         EventValues.registerEventValue(BoundEvent.class, String.class, event -> event.getBound().getId(), EventValues.TIME_NOW);
         EventValues.registerEventValue(BoundEnterEvent.class, Player.class, BoundEnterEvent::getPlayer, 0);
         EventValues.registerEventValue(BoundExitEvent.class, Player.class, BoundExitEvent::getPlayer, 0);
+        EventValues.registerEventValue(BoundEnterEvent.class, BoundMoveReason.class, BoundEnterEvent::getReason);
+        EventValues.registerEventValue(BoundExitEvent.class, BoundMoveReason.class, BoundExitEvent::getReason);
     }
 
     private Literal<String> boundID;

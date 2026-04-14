@@ -1,6 +1,7 @@
 package com.shanebeestudios.skbee.api.event.bound;
 
 import com.shanebeestudios.skbee.api.bound.Bound;
+import com.shanebeestudios.skbee.api.listener.BoundBorderListener.BoundMoveReason;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
@@ -12,11 +13,13 @@ public class BoundEnterEvent extends BoundEvent implements Cancellable {
 
     private static final HandlerList handlers = new HandlerList();
     private final Player player;
+    private final BoundMoveReason reason;
     private boolean cancelled = false;
 
-    public BoundEnterEvent(Bound bound, Player player) {
+    public BoundEnterEvent(Bound bound, Player player, BoundMoveReason reason) {
         super(bound);
         this.player = player;
+        this.reason = reason;
     }
 
     /**
@@ -26,6 +29,15 @@ public class BoundEnterEvent extends BoundEvent implements Cancellable {
      */
     public Player getPlayer() {
         return player;
+    }
+
+    /**
+     * Get the reason the player moved into this bound.
+     *
+     * @return Reason player moved into bound
+     */
+    public BoundMoveReason getReason() {
+        return this.reason;
     }
 
     /**
