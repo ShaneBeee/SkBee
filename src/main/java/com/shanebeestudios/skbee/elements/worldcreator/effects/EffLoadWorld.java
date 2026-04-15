@@ -12,6 +12,7 @@ import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.event.Event;
@@ -27,9 +28,9 @@ public class EffLoadWorld extends Effect {
         BEE_WORLD_CONFIG = SkBee.getPlugin().getBeeWorldConfig();
         reg.newEffect(EffLoadWorld.class,
                 "load world from [[world] creator] %worldcreator%",
-                "load world %string%",
+                "load world %namespacedkey%",
                 "unload [world] %world% [and (save|1:(do not|don't) save)]",
-                "delete world file for [world] %string%")
+                "delete world file for world with key %namespacedkey%")
             .name("Load/Unload/Delete World")
             .description("Load a world from a world creator.",
                 "Worlds created/loaded with a world creator, are saved in the 'plugins/SkBee/worlds.yml' file",
@@ -48,7 +49,7 @@ public class EffLoadWorld extends Effect {
 
     private int pattern;
     private Expression<BeeWorldCreator> creator;
-    private Expression<String> worldName;
+    private Expression<NamespacedKey> worldKey;
     private Expression<World> world;
     private boolean save;
 
@@ -57,9 +58,13 @@ public class EffLoadWorld extends Effect {
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         this.pattern = matchedPattern;
         creator = pattern == 0 ? (Expression<BeeWorldCreator>) exprs[0] : null;
-        worldName = pattern == 1 || pattern == 3 ? (Expression<String>) exprs[0] : null;
+        worldKey = pattern == 1 || pattern == 3 ? (Expression<NamespacedKey>) exprs[0] : null;
         world = pattern == 2 ? (Expression<World>) exprs[0] : null;
         save = pattern == 2 && parseResult.mark != 1;
+        if (this.pattern == 3) {
+            Skript.error("Temporarily disabled until better handling can be managed.");
+            return false;
+        }
         return true;
     }
 
@@ -97,8 +102,8 @@ public class EffLoadWorld extends Effect {
 
             }
         } else if (pattern == 1) {
-            if (this.worldName != null) {
-                String worldName = this.worldName.getSingle(event);
+            if (this.worldKey != null) {
+                NamespacedKey worldName = this.worldKey.getSingle(event);
                 if (worldName != null) {
                     World world = Bukkit.getWorld(worldName);
                     if (world == null) {
@@ -113,8 +118,8 @@ public class EffLoadWorld extends Effect {
 
             unloadWorld(world);
         } else if (pattern == 3) {
-            if (this.worldName == null) return next;
-            String worldName = this.worldName.getSingle(event);
+            if (this.worldKey == null) return next;
+            NamespacedKey worldName = this.worldKey.getSingle(event);
             if (worldName == null) return next;
 
             World world = Bukkit.getWorld(worldName);
@@ -125,7 +130,7 @@ public class EffLoadWorld extends Effect {
                     return next;
                 }
             }
-            BEE_WORLD_CONFIG.deleteWorld(this.worldName.getSingle(event));
+            BEE_WORLD_CONFIG.deleteWorld(this.worldKey.getSingle(event));
         }
         return next;
     }
@@ -146,14 +151,14 @@ public class EffLoadWorld extends Effect {
     public @NotNull String toString(@Nullable Event e, boolean d) {
         switch (pattern) {
             case 1 -> {
-                return String.format("load world %s", this.worldName.toString(e, d));
+                return String.format("load world %s", this.worldKey.toString(e, d));
             }
             case 2 -> {
                 String save = this.save ? "and save" : "without saving";
                 return String.format("unload world %s %s", this.world.toString(e, d), save);
             }
             case 3 -> {
-                return String.format("delete world file for %s", this.worldName.toString(e, d));
+                return String.format("delete world file for %s", this.worldKey.toString(e, d));
             }
             default -> {
                 return String.format("load world from creator %s", this.creator.toString(e, d));

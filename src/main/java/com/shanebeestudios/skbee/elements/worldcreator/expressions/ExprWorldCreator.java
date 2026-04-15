@@ -1,10 +1,12 @@
 package com.shanebeestudios.skbee.elements.worldcreator.expressions;
 
+import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.registration.Registration;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -16,8 +18,10 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
 
     public static void register(Registration reg) {
         reg.newSimpleExpression(ExprWorldCreator.class, BeeWorldCreator.class,
-                "[a] [new] world creator (with name|named) %string% [with key %-namespacedkey%]",
-                "[a] [new] world creator (with name|named) %string% [with key %-namespacedkey%] to (copy|1:clone) %world% [save:without saving]")
+                "[a] [new] world creator named:(with name|named) %string%",
+                "[a] [new] world creator with key %namespacedkey%",
+                "[a] [new] world creator (with name|named) %string% to (copy|:clone) %world% [no-save:without saving]",
+                "[a] [new] world creator with key %namespacedkey% to (copy|:clone) %world% [no-save:without saving]")
             .name("World Creator")
             .description("Create a new world creator. This will be used to create a new world.",
                 "Name will be the name of your new world.",
@@ -49,32 +53,41 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         this.pattern = matchedPattern;
-        this.name = (Expression<String>) exprs[0];
-        this.key = (Expression<NamespacedKey>) exprs[1];
-        this.world = pattern == 1 ? (Expression<World>) exprs[2] : null;
-        this.clone = pattern == 1 && parseResult.mark == 1;
-        this.save = !parseResult.hasTag("save");
+        if (this.pattern == 0 || this.pattern == 2) {
+            this.name = (Expression<String>) exprs[0];
+            if (Util.IS_RUNNING_MC_26_1_1) {
+                Skript.warning("Named worlds are highly discouraged in Minecraft 26.1+ and you should be using a key instead.");
+            }
+        } else {
+            this.key = (Expression<NamespacedKey>) exprs[0];
+        }
+        this.world = this.pattern > 1 ? (Expression<World>) exprs[1] : null;
+        this.clone = this.pattern > 1 && parseResult.hasTag("clone");
+        this.save = !parseResult.hasTag("no-save");
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected BeeWorldCreator @Nullable [] get(@NotNull Event e) {
-        String name = this.name.getSingle(e);
-        NamespacedKey key = this.key != null ? this.key.getSingle(e) : null;
-        if (name == null) {
+        String name = null;
+        NamespacedKey key = null;
+        World world = null;
+        if (this.name != null) name = this.name.getSingle(e);
+        if (this.key != null) key = this.key.getSingle(e);
+        if (this.world != null) world = this.world.getSingle(e);
+
+        if (name == null && key == null) {
             return null;
         }
-        if (pattern == 0) {
-            return new BeeWorldCreator[]{new BeeWorldCreator(name, key)};
-        } else if (pattern == 1 && this.world != null) {
-            World world = this.world.getSingle(e);
-            if (world == null) return null;
-            BeeWorldCreator beeWorldCreator = new BeeWorldCreator(world, name, key, this.clone);
-            beeWorldCreator.setSaveClone(this.save);
-            return new BeeWorldCreator[]{beeWorldCreator};
+        if (this.pattern > 1 && world == null) {
+            return null;
         }
-        return null;
+        BeeWorldCreator beeWorldCreator = new BeeWorldCreator(world, name, key, this.clone);
+        if (this.pattern > 1) {
+            beeWorldCreator.setSaveClone(this.save);
+        }
+
+        return new BeeWorldCreator[]{beeWorldCreator};
     }
 
     @Override
@@ -89,11 +102,16 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
-        String creator = String.format("new world creator named '%s'", this.name.toString(e, d));
-        String key = this.key != null ? (" with key " + this.key.toString(e, d)) : "";
+        String key;
+        if (this.key != null) {
+            key = " with key " + this.key.toString(e, d);
+        } else {
+            key = " named " + this.name.toString(e, d);
+        }
+
         String copy = this.pattern == 1 ? " to " + (this.clone ? "clone " : "copy ") + this.world.toString(e, d) : "";
         String withoutSaving = this.save ? "" : " without saving";
-        return creator + key + copy + withoutSaving;
+        return "new world creator " + key + copy + withoutSaving;
     }
 
 }
