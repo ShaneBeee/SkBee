@@ -18,7 +18,7 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
 
     public static void register(Registration reg) {
         reg.newSimpleExpression(ExprWorldCreator.class, BeeWorldCreator.class,
-                "[a] [new] world creator named:(with name|named) %string%",
+                "[a] [new] world creator (with name|named) %string%",
                 "[a] [new] world creator with key %namespacedkey/string%",
                 "[a] [new] world creator (with name|named) %string% to (copy|:clone) %world% [no-save:without saving]",
                 "[a] [new] world creator with key %namespacedkey/string% to (copy|:clone) %world% [no-save:without saving]")
