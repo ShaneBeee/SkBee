@@ -112,6 +112,15 @@ public class BeeWorldConfig {
             worldCreator.setHardcore(worldConfig.getBoolean(path + "hardcore"));
         }
 
+        if (name != null) {
+            // Remove old named format from config
+            ConfigurationSection sec = this.worldConfig.getConfigurationSection("worlds." + name);
+            this.worldConfig.set("worlds." + name, null);
+            this.worldConfig.set("worlds." + key, sec);
+            Util.log("&eWorld &r'&b%s&r' &ehas been renamed to &r'&b%s&r' &ein the worlds.yml file.", name, key);
+            save();
+        }
+
         if (this.worldConfig.isSet(path + "load-on-start")) {
             boolean loadOnStart = worldConfig.getBoolean(path + "load-on-start");
             worldCreator.setLoadOnStart(loadOnStart);
