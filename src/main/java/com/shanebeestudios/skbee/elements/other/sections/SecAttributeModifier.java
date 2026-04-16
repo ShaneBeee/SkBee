@@ -151,7 +151,7 @@ public class SecAttributeModifier extends Section {
             return super.walk(event, false);
         }
 
-        EquipmentSlotGroup slotGroup = this.slot.getSingle(event);
+        EquipmentSlotGroup slotGroup = this.slot != null ? this.slot.getSingle(event) : null;
         if (slotGroup == null) {
             slotGroup = EquipmentSlotGroup.ANY;
         }
