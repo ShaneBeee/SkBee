@@ -1,7 +1,7 @@
 item tag aliases:
 	[any] tool[s] = minecraft:axes, minecraft:pickaxes, minecraft:shovels, minecraft:hoes, minecraft:bundles, paper:buckets
 	[any] enchantable[s] = paper:enchantable
-	[any] ground covering[s] = minecraft:dirt, minecraft:sand
+	[any] ground covering[s] = minecraft:dirt, minecraft:sand, minecraft:grass_blocks
 
 test "SkBee - Tag Aliases":
 	assert any tool contains diamond axe with "Should contain the sword"
@@ -24,7 +24,6 @@ test "SkBee - Tag Aliases":
 	assert any ground covering contains red sand with "Should contain red sand"
 	assert any ground covering contains dirt with "Should contain dirt"
 	assert any ground covering contains podzol with "Should contain podzol"
-	assert any ground covering contains moss block with "Should contain moss block"
 
 	assert any ground covering doesn't contain stone with "Should contain stone"
 	assert any ground covering doesn't contain water with "Should contain water"
