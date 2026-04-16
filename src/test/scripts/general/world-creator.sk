@@ -38,7 +38,7 @@ test "SkBee - World Creator":
 		# We run this after to make sure if a test fails, the world still gets unloaded
 		skbee log  "WorldCreator Test: ABOUT TO UNLOAD TEST_WORLD"
 		unload world {_w} and don't save
-		#delete world file for "test_world"
+		delete world file for world with key mc key from "minecraft:test_world"
 		skbee log  "WorldCreator Test: TEST_WORLD UNLOADED_DELETED"
 
 		assert world "test_world" is not loaded with "the world should not be loaded"
