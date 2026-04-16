@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.worldcreator.objects;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
+import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -162,23 +163,45 @@ public class BeeWorldConfig {
         save();
     }
 
+    @Deprecated(forRemoval = true, since = "INSERT VERSION")
+    public void deleteWorld(String worldName) {
+        // Only delete custom worlds, and make sure it's not the plugins folder
+        if (this.worldConfig.isSet("worlds." + worldName) && !worldName.equals("plugins")) {
+            worldConfig.set("worlds." + worldName, null);
+            save();
+
+            File worldFile = new File(Bukkit.getWorldContainer(), worldName);
+            if (worldFile.exists() && worldFile.isDirectory()) {
+                try {
+                    FileUtils.deleteDirectory(worldFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
     public void deleteWorld(NamespacedKey worldKey) {
         // Only delete custom worlds, and make sure it's not the plugins folder
         if (WORLDS.containsKey(worldKey)) {
             WORLDS.remove(worldKey);
             worldConfig.set("worlds." + worldKey, null);
             save();
-            // TODO - Figure out how to delete worlds in 26.1+ and by key
 
+            File worldDirectory = Bukkit.getServer().getLevelDirectory().toFile();
+            File dimensions = new File(worldDirectory, "dimensions");
+            File namespace = new File(dimensions, worldKey.namespace());
+            if (!namespace.exists() || !namespace.isDirectory()) return;
 
-//            File worldFile = new File(Bukkit.getWorldContainer(), worldKey);
-//            if (worldFile.exists() && worldFile.isDirectory()) {
-//                try {
-//                    FileUtils.deleteDirectory(worldFile);
-//                } catch (IOException e) {
-//                    e.printStackTrace();
-//                }
-//            }
+            File dimension = new File(namespace, worldKey.getKey());
+            if (dimension.exists() && dimension.isDirectory()) {
+                try {
+                    FileUtils.deleteDirectory(dimension);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

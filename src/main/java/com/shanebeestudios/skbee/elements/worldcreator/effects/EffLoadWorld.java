@@ -9,6 +9,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.registration.Registration;
+import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.Bukkit;
@@ -30,6 +31,7 @@ public class EffLoadWorld extends Effect {
                 "load world from [[world] creator] %worldcreator%",
                 "load world %namespacedkey%",
                 "unload [world] %world% [and (save|1:(do not|don't) save)]",
+                "delete world file for [world] %string%",
                 "delete world file for world with key %namespacedkey%")
             .name("Load/Unload/Delete World")
             .description("Load a world from a world creator.",
@@ -49,6 +51,7 @@ public class EffLoadWorld extends Effect {
 
     private int pattern;
     private Expression<BeeWorldCreator> creator;
+    private Expression<String> worldName;
     private Expression<NamespacedKey> worldKey;
     private Expression<World> world;
     private boolean save;
@@ -57,12 +60,18 @@ public class EffLoadWorld extends Effect {
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         this.pattern = matchedPattern;
-        creator = pattern == 0 ? (Expression<BeeWorldCreator>) exprs[0] : null;
-        worldKey = pattern == 1 || pattern == 3 ? (Expression<NamespacedKey>) exprs[0] : null;
-        world = pattern == 2 ? (Expression<World>) exprs[0] : null;
-        save = pattern == 2 && parseResult.mark != 1;
-        if (this.pattern == 3) {
-            Skript.error("Temporarily disabled until better handling can be managed.");
+        this.creator = this.pattern == 0 ? (Expression<BeeWorldCreator>) exprs[0] : null;
+        this.worldKey = this.pattern == 1 || this.pattern == 4 ? (Expression<NamespacedKey>) exprs[0] : null;
+        this.worldName = this.pattern == 3 ? (Expression<String>) exprs[0] : null;
+        this.world = this.pattern == 2 ? (Expression<World>) exprs[0] : null;
+        this.save = this.pattern == 2 && parseResult.mark != 1;
+
+        if (this.pattern == 3 && Util.IS_RUNNING_MC_26_1_1) {
+            Skript.error("A world file cannot be deleted by name in Minecraft 26.1+");
+            return false;
+        }
+        if (this.pattern == 4 && !Util.IS_RUNNING_MC_26_1_1) {
+            Skript.error("A world file cannot be deleted by key in Minecraft 1.21.11 or below.");
             return false;
         }
         return true;
@@ -118,8 +127,9 @@ public class EffLoadWorld extends Effect {
 
             unloadWorld(world);
         } else if (pattern == 3) {
-            if (this.worldKey == null) return next;
-            NamespacedKey worldName = this.worldKey.getSingle(event);
+            if (this.worldName == null) return next;
+
+            String worldName = this.worldName.getSingle(event);
             if (worldName == null) return next;
 
             World world = Bukkit.getWorld(worldName);
@@ -130,7 +140,22 @@ public class EffLoadWorld extends Effect {
                     return next;
                 }
             }
-            BEE_WORLD_CONFIG.deleteWorld(this.worldKey.getSingle(event));
+            BEE_WORLD_CONFIG.deleteWorld(worldName);
+        } else if (pattern == 4) {
+            if (this.worldKey == null) return next;
+
+            NamespacedKey worldKey = this.worldKey.getSingle(event);
+            if (worldKey == null) return next;
+
+            World world = Bukkit.getWorld(worldKey);
+            if (world != null) {
+                // Kick players and unload the world before deleting
+                if (!unloadWorld(world)) {
+                    // if world could not unload, we don't want to delete it
+                    return next;
+                }
+            }
+            BEE_WORLD_CONFIG.deleteWorld(worldKey);
         }
         return next;
     }
@@ -149,7 +174,7 @@ public class EffLoadWorld extends Effect {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        switch (pattern) {
+        switch (this.pattern) {
             case 1 -> {
                 return String.format("load world %s", this.worldKey.toString(e, d));
             }
@@ -158,6 +183,9 @@ public class EffLoadWorld extends Effect {
                 return String.format("unload world %s %s", this.world.toString(e, d), save);
             }
             case 3 -> {
+                return String.format("delete world file for %s", this.worldName.toString(e, d));
+            }
+            case 4 -> {
                 return String.format("delete world file for %s", this.worldKey.toString(e, d));
             }
             default -> {
