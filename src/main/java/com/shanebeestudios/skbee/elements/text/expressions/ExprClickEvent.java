@@ -6,7 +6,6 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.registration.Registration;
-import com.shanebeestudios.skbee.api.util.legacy.DialogUtil;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.RegistryAccess;
@@ -85,7 +84,7 @@ public class ExprClickEvent extends SimpleExpression<ClickEvent> {
                 Dialog dialog = dialogRegistry.get(key);
                 if (dialog == null) yield null;
 
-                yield DialogUtil.showDialog(dialog);
+                yield ClickEvent.showDialog(dialog);
             }
             case 6 -> {
                 Key key;
