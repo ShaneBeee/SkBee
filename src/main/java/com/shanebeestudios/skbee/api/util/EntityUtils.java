@@ -49,9 +49,7 @@ public class EntityUtils {
         if (attributeInstance == null) return false;
 
         for (AttributeModifier attributeInstanceModifier : attributeInstance.getModifiers()) {
-            if (ItemUtils.HAS_KEY && attributeInstanceModifier.getKey().equals(modifier.getKey())) {
-                return true;
-            } else if (attributeInstanceModifier.getName().equalsIgnoreCase(modifier.getName())) {
+            if (attributeInstanceModifier.getKey().equals(modifier.getKey())) {
                 return true;
             }
         }

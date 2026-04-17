@@ -18,6 +18,7 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.registrations.EventValues;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Keyed;
 import org.bukkit.Registry;
@@ -28,6 +29,7 @@ import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.common.function.DefaultFunction;
+import org.skriptlang.skript.lang.converter.Converter;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.structure.Structure;
 import org.skriptlang.skript.registration.DefaultSyntaxInfos;
@@ -55,6 +57,7 @@ public class Registration {
     private final List<ExpressionRegistrar> expressions = new ArrayList<>();
     private final List<StructureRegistrar<?>> structures = new ArrayList<>();
     private final List<FunctionRegistrar> functions = new ArrayList<>();
+    private final List<EventValueRegistrar<?, ?>> eventValues = new ArrayList<>();
 
     public Registration(String name, boolean includeLang) {
         this.addon = Skript.instance().registerAddon(RegistrationAddonModule.class, name);
@@ -98,6 +101,10 @@ public class Registration {
 
     public List<FunctionRegistrar> getFunctions() {
         return this.functions;
+    }
+
+    public List<EventValueRegistrar<?, ?>> getEventValues() {
+        return this.eventValues;
     }
 
     @SuppressWarnings("unchecked")
@@ -503,6 +510,59 @@ public class Registration {
         return new FunctionRegistrar<T>(function);
     }
 
+    public class EventValueRegistrar<F extends Event, T> extends Registrar<EventValueRegistrar<F, T>> {
+        public final Class<F> eventClass;
+        public final Class<T> valueClass;
+        public final Converter<F, T> converter;
+        public int time;
+        private Class<F>[] excludedEvents;
+        String excludeErrorMessage;
+
+        public EventValueRegistrar(Class<F> eventClass, Class<T> valueClass, Converter<F, T> converter) {
+            this.eventClass = eventClass;
+            this.valueClass = valueClass;
+            this.converter = converter;
+        }
+
+        public EventValueRegistrar<F, T> time(int time) {
+            this.time = time;
+            return this;
+        }
+
+        @SafeVarargs
+        public final EventValueRegistrar<F, T> excludes(String excludeErrorMessage, Class<F>... excludedEvents) {
+            this.excludeErrorMessage = excludeErrorMessage;
+            this.excludedEvents = excludedEvents;
+            return this;
+        }
+
+        @Override
+        public void register() {
+            super.register();
+            Registration.this.eventValues.add(this);
+        }
+    }
+
+    public <F extends Event, T> EventValueRegistrar<F, T> newEventValue(Class<F> event, Class<T> value, Converter<F, T> converter) {
+        return new EventValueRegistrar<>(event, value, converter);
+    }
+
+    public <F extends Event, T> EventValueRegistrar<F, T> newEventValue(Class<F> event, Class<T> value, Converter<F, T> converter, int time) {
+        EventValueRegistrar<F, T> ftEventValueRegistrar = new EventValueRegistrar<>(event, value, converter);
+        return ftEventValueRegistrar.time(time);
+    }
+
+    @Deprecated(forRemoval = true,since = "INSERT VERSION") // Use newEventValue() instead
+    public <F extends Event, T> void registerEventValue(Class<F> event, Class<T> value, Converter<F, T> converter) {
+        new EventValueRegistrar<>(event, value, converter).register();
+    }
+
+    @Deprecated(forRemoval = true,since = "INSERT VERSION") // Use newEventValue() instead
+    public <F extends Event, T> void registerEventValue(Class<F> event, Class<T> value, Converter<F, T> converter, int time) {
+        EventValueRegistrar<F, T> ftEventValueRegistrar = new EventValueRegistrar<>(event, value, converter);
+        ftEventValueRegistrar.time(time).register();
+    }
+
     public void finalizeRegistration() {
         this.addon.loadModules(this.module);
     }
@@ -594,6 +654,21 @@ public class Registration {
             syntaxInfos.register(BukkitSyntaxInfos.Event.KEY, builder.build());
         }
 
+        // EVENT VALUES
+        for (EventValueRegistrar eventValue : getEventValues()) {
+            // TODO - use Skript's new registration in 2.15+
+            Converter eventValueConverter = EventValues.getExactEventValueConverter(eventValue.eventClass, eventValue.valueClass, eventValue.time);
+            if (eventValueConverter != null) {
+                debug("An event value has already been registered for %s / %s", eventValue.eventClass.getSimpleName(), eventValue.valueClass.getSimpleName());
+                continue;
+            }
+            if (eventValue.excludedEvents == null) {
+                EventValues.registerEventValue(eventValue.eventClass, eventValue.valueClass, eventValue.converter, eventValue.time);
+            } else {
+                EventValues.registerEventValue(eventValue.eventClass, eventValue.valueClass, eventValue.converter, eventValue.time, eventValue.excludeErrorMessage, eventValue.excludedEvents);
+            }
+        }
+
         // SECTIONS
         for (Registration.SectionRegistrar section : getSections()) {
 
@@ -675,6 +750,10 @@ public class Registration {
 
     private static void skriptError(String format, Object... args) {
         Util.skriptError(format, args);
+    }
+
+    private static void debug(String format, Object... args) {
+        Util.debug(format, args);
     }
 
     public static class RegistrationAddonModule implements AddonModule {

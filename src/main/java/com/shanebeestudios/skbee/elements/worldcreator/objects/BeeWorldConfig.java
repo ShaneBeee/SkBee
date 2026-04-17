@@ -31,7 +31,7 @@ public class BeeWorldConfig {
     private File worldConfigFile;
     private final boolean autoLoadWorlds;
 
-    private final Map<String, BeeWorldCreator> WORLDS = new HashMap<>();
+    private final Map<NamespacedKey, BeeWorldCreator> WORLDS = new HashMap<>();
 
     public BeeWorldConfig(SkBee plugin) {
         this.plugin = plugin;
@@ -40,7 +40,7 @@ public class BeeWorldConfig {
     }
 
     private void loadConfig() {
-        if (worldConfigFile == null) {
+        if (this.worldConfigFile == null) {
             worldConfigFile = new File(plugin.getDataFolder(), "worlds.yml");
         }
         if (!worldConfigFile.exists()) {
@@ -50,7 +50,7 @@ public class BeeWorldConfig {
     }
 
     public void loadCustomWorlds() {
-        ConfigurationSection section = worldConfig.getConfigurationSection("worlds");
+        ConfigurationSection section = this.worldConfig.getConfigurationSection("worlds");
         if (section != null) {
             Set<String> keys = section.getKeys(false);
             if (keys.isEmpty()) {
@@ -58,10 +58,10 @@ public class BeeWorldConfig {
             }
             Util.log("&6Loading custom worlds...");
             int loadedWorlds = 0;
-            for (String key : keys) {
-                BeeWorldCreator beeWorldCreator = loadWorld(key);
+            for (String pathKey : keys) {
+                BeeWorldCreator beeWorldCreator = loadWorld(pathKey);
                 if (beeWorldCreator != null) {
-                    WORLDS.put(key, beeWorldCreator);
+                    WORLDS.put(beeWorldCreator.getKey(), beeWorldCreator);
                     if (beeWorldCreator.isLoaded) loadedWorlds++;
                 }
             }
@@ -69,11 +69,18 @@ public class BeeWorldConfig {
         }
     }
 
-    public @Nullable BeeWorldCreator loadWorld(String name) {
-        String path = "worlds." + name + ".";
-        String keyString = worldConfig.getString(path + "key");
-        NamespacedKey key = keyString != null ? Util.getNamespacedKey(keyString, false) : null;
-        BeeWorldCreator worldCreator = new BeeWorldCreator(name, key);
+    public @Nullable BeeWorldCreator loadWorld(String pathKey) {
+        String path = "worlds." + pathKey + ".";
+        String name = null;
+        NamespacedKey key;
+        if (pathKey.contains(":")) {
+            key = Util.getNamespacedKey(pathKey, false);
+        } else {
+            name = pathKey;
+            String keyString = this.worldConfig.getString(path + "key");
+            key = keyString != null ? Util.getNamespacedKey(keyString, false) : null;
+        }
+        BeeWorldCreator worldCreator = new BeeWorldCreator(null, name, key, false);
 
         String type = worldConfig.getString(path + "type");
         if (type != null) {
@@ -85,32 +92,37 @@ public class BeeWorldConfig {
             worldCreator.setEnvironment(getEnvironment(environment));
         }
 
-        if (worldConfig.isSet(path + "seed")) {
+        if (this.worldConfig.isSet(path + "seed")) {
             long seed = worldConfig.getLong(path + "seed");
             worldCreator.setSeed(seed);
         }
 
-        if (worldConfig.isSet(path + "generator-settings")) {
+        if (this.worldConfig.isSet(path + "generator-settings")) {
             worldCreator.setGeneratorSettings(worldConfig.getString(path + "generator-settings"));
         }
 
-        if (worldConfig.isSet(path + "generator")) {
+        if (this.worldConfig.isSet(path + "generator")) {
             worldCreator.setGenerator(worldConfig.getString(path + "generator"));
         }
 
-        if (worldConfig.isSet(path + "structures")) {
+        if (this.worldConfig.isSet(path + "structures")) {
             worldCreator.setGenStructures(worldConfig.getBoolean(path + "structures"));
         }
 
-        if (worldConfig.isSet(path + "hardcore")) {
+        if (this.worldConfig.isSet(path + "hardcore")) {
             worldCreator.setHardcore(worldConfig.getBoolean(path + "hardcore"));
         }
 
-        if (worldConfig.isSet(path + "keep-spawn-loaded")) {
-            worldCreator.setKeepSpawnLoaded(worldConfig.getBoolean(path + "keep-spawn-loaded"));
+        if (name != null) {
+            // Remove old named format from config
+            ConfigurationSection sec = this.worldConfig.getConfigurationSection("worlds." + name);
+            this.worldConfig.set("worlds." + name, null);
+            this.worldConfig.set("worlds." + key, sec);
+            Util.log("&eWorld &r'&b%s&r' &ehas been renamed to &r'&b%s&r' &ein the worlds.yml file.", name, key);
+            save();
         }
 
-        if (worldConfig.isSet(path + "load-on-start")) {
+        if (this.worldConfig.isSet(path + "load-on-start")) {
             boolean loadOnStart = worldConfig.getBoolean(path + "load-on-start");
             worldCreator.setLoadOnStart(loadOnStart);
 
@@ -129,33 +141,32 @@ public class BeeWorldConfig {
     }
 
     public void saveWorldToFile(BeeWorldCreator worldCreator) {
-        if (!WORLDS.containsKey(worldCreator.getWorldName())) {
-            WORLDS.put(worldCreator.getWorldName(), worldCreator);
+        NamespacedKey key = worldCreator.getKey();
+        if (!WORLDS.containsKey(key)) {
+            WORLDS.put(key, worldCreator);
         }
-        String path = "worlds." + worldCreator.getWorldName() + ".";
-        worldConfig.set(path + "key", worldCreator.getKey().toString());
-        worldConfig.set(path + "type", worldCreator.getWorldType().toString());
-        worldConfig.set(path + "environment", worldCreator.getEnvironment().toString());
-        worldConfig.set(path + "seed", worldCreator.seed);
+        String path = "worlds." + key + ".";
+        this.worldConfig.set(path + "type", worldCreator.getWorldType().toString());
+        this.worldConfig.set(path + "environment", worldCreator.getEnvironment().toString());
+        this.worldConfig.set(path + "seed", worldCreator.seed);
         if (worldCreator.getGeneratorSettings() != null) {
-            worldConfig.set(path + "generator-settings", worldCreator.getGeneratorSettings());
+            this.worldConfig.set(path + "generator-settings", worldCreator.getGeneratorSettings());
         }
         if (worldCreator.getGenerator() != null) {
-            worldConfig.set(path + "generator", worldCreator.getGenerator());
+            this.worldConfig.set(path + "generator", worldCreator.getGenerator());
         }
 
-        worldCreator.genStructures.ifPresent(aBoolean -> worldConfig.set(path + "structures", aBoolean));
-        worldCreator.hardcore.ifPresent(aBoolean -> worldConfig.set(path + "hardcore", aBoolean));
-        worldCreator.keepSpawnLoaded.ifPresent(aBoolean -> worldConfig.set(path + "keep-spawn-loaded", aBoolean));
-        worldCreator.loadOnStart.ifPresent(aBoolean -> worldConfig.set(path + "load-on-start", aBoolean));
+        worldCreator.genStructures.ifPresent(aBoolean -> this.worldConfig.set(path + "structures", aBoolean));
+        worldCreator.hardcore.ifPresent(aBoolean -> this.worldConfig.set(path + "hardcore", aBoolean));
+        worldCreator.loadOnStart.ifPresent(aBoolean -> this.worldConfig.set(path + "load-on-start", aBoolean));
 
         save();
     }
 
+    @Deprecated(forRemoval = true, since = "INSERT VERSION")
     public void deleteWorld(String worldName) {
         // Only delete custom worlds, and make sure it's not the plugins folder
-        if (WORLDS.containsKey(worldName) && !worldName.equalsIgnoreCase("plugins")) {
-            WORLDS.remove(worldName);
+        if (this.worldConfig.isSet("worlds." + worldName) && !worldName.equals("plugins")) {
             worldConfig.set("worlds." + worldName, null);
             save();
 
@@ -163,6 +174,30 @@ public class BeeWorldConfig {
             if (worldFile.exists() && worldFile.isDirectory()) {
                 try {
                     FileUtils.deleteDirectory(worldFile);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    @SuppressWarnings("UnstableApiUsage")
+    public void deleteWorld(NamespacedKey worldKey) {
+        // Only delete custom worlds, and make sure it's not the plugins folder
+        if (WORLDS.containsKey(worldKey)) {
+            WORLDS.remove(worldKey);
+            worldConfig.set("worlds." + worldKey, null);
+            save();
+
+            File worldDirectory = Bukkit.getServer().getLevelDirectory().toFile();
+            File dimensions = new File(worldDirectory, "dimensions");
+            File namespace = new File(dimensions, worldKey.namespace());
+            if (!namespace.exists() || !namespace.isDirectory()) return;
+
+            File dimension = new File(namespace, worldKey.getKey());
+            if (dimension.exists() && dimension.isDirectory()) {
+                try {
+                    FileUtils.deleteDirectory(dimension);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -207,7 +242,7 @@ public class BeeWorldConfig {
     public List<World> getLoadedCustomWorlds() {
         List<World> worlds = new ArrayList<>();
         WORLDS.forEach((string, beeWorldCreator) -> {
-            World world = Bukkit.getWorld(beeWorldCreator.getWorldName());
+            World world = Bukkit.getWorld(beeWorldCreator.getKey());
             if (world != null) worlds.add(world);
         });
         return worlds;

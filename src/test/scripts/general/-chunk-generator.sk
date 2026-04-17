@@ -22,7 +22,7 @@ register chunk generator with id "test_generator":
 
 test "SkBee - Chunk Generator":
 	before:
-		set {_creator} to world creator named "test_world_gen"
+		set {_creator} to world creator with key "minecraft:test_world_gen"
 
 	test:
 		set chunk generator of {_creator} to chunk generator with id "test_generator"
@@ -48,4 +48,4 @@ test "SkBee - Chunk Generator":
 
 	after:
 		unload world {_w} and don't save
-		delete world file for "test_world_gen"
+		delete world file for world with key mc key from "minecraft:test_world_gen"

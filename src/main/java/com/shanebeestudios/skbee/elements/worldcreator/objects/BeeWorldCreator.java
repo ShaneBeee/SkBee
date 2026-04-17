@@ -4,7 +4,6 @@ import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.util.Util;
-import net.kyori.adventure.util.TriState;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -30,8 +29,6 @@ import java.util.concurrent.CompletableFuture;
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "CallToPrintStackTrace"})
 public class BeeWorldCreator implements Keyed {
 
-    private static final boolean HAS_KEEP_SPAWN_LOADED = Skript.methodExists(WorldCreator.class, "keepSpawnLoaded");
-
     private final String worldName;
     private NamespacedKey key;
     private WorldType worldType;
@@ -40,47 +37,35 @@ public class BeeWorldCreator implements Keyed {
     private String generator;
     private ChunkGenerator chunkGenerator;
     private BiomeProvider biomeProvider;
-    Optional<Boolean> genStructures;
-    Optional<Boolean> hardcore;
-    Optional<Boolean> keepSpawnLoaded;
+    Optional<Boolean> genStructures = Optional.empty();
+    Optional<Boolean> hardcore = Optional.empty();
     Optional<Boolean> loadOnStart = Optional.empty();
     private Location fixedSpawnLocation;
     boolean isLoaded;
     long seed = -1;
 
     private World world;
-    private boolean clone;
+    private final boolean clone;
     private boolean saveClone;
 
-    public BeeWorldCreator(@NotNull String worldName, @Nullable NamespacedKey key) {
-        this.worldName = worldName;
-        this.key = key;
-        this.genStructures = Optional.empty();
-        this.hardcore = Optional.empty();
-        this.keepSpawnLoaded = Optional.empty();
-    }
-
     @SuppressWarnings("deprecation")
-    public BeeWorldCreator(@NotNull World world, @NotNull String name, @Nullable NamespacedKey key, boolean clone) {
+    public BeeWorldCreator(@Nullable World world, @Nullable String name, @Nullable NamespacedKey key, boolean clone) {
         this.worldName = name;
         this.key = key;
-        this.worldType = world.getWorldType();
-        this.environment = world.getEnvironment();
-        this.genStructures = Optional.of(world.canGenerateStructures());
-        this.hardcore = Optional.of(world.isHardcore());
-        this.keepSpawnLoaded = Optional.of(world.getKeepSpawnInMemory());
-        this.seed = world.getSeed();
-        this.world = world;
+        if (world != null) {
+            this.worldType = world.getWorldType();
+            this.environment = world.getEnvironment();
+            this.genStructures = Optional.of(world.canGenerateStructures());
+            this.hardcore = Optional.of(world.isHardcore());
+            this.seed = world.getSeed();
+            this.world = world;
+        }
         this.clone = clone;
-    }
-
-    public @NotNull String getWorldName() {
-        return worldName;
     }
 
     public @NotNull NamespacedKey getKey() {
         if (this.key == null) {
-            String key = this.worldName.toLowerCase(Locale.ROOT).replaceAll(" ", "_");
+            String key = this.worldName.toLowerCase(Locale.ROOT).replace(" ", "_");
             this.key = NamespacedKey.minecraft(key);
         }
         return this.key;
@@ -150,14 +135,6 @@ public class BeeWorldCreator implements Keyed {
         this.hardcore = Optional.of(hardcore);
     }
 
-    public boolean isKeepSpawnLoaded() {
-        return keepSpawnLoaded.orElse(true);
-    }
-
-    public void setKeepSpawnLoaded(boolean loaded) {
-        this.keepSpawnLoaded = Optional.of(loaded);
-    }
-
     public void setFixedSpawnLocation(Location fixedSpawnLocation) {
         this.fixedSpawnLocation = fixedSpawnLocation;
     }
@@ -182,35 +159,35 @@ public class BeeWorldCreator implements Keyed {
     public CompletableFuture<World> loadWorld() {
         CompletableFuture<WorldCreator> creatorFuture = new CompletableFuture<>();
         CompletableFuture<World> worldFuture = new CompletableFuture<>();
-        // Copy/Clone world
+
         if (this.world != null) {
-            creatorFuture = clone ? cloneWorld() : copyWorld();
-        }
-        // Create new world
-        else {
+            // Copy/Clone world
+            creatorFuture = this.clone ? cloneWorld() : copyWorld();
+        } else {
+            // Create new world
             creatorFuture.complete(getWorldCreator(this.worldName, this.key));
         }
         creatorFuture.thenAccept(worldCreator -> {
             World world = null;
 
-            if (worldType != null) {
-                worldCreator.type(worldType);
+            if (this.worldType != null) {
+                worldCreator.type(this.worldType);
             }
 
-            if (environment != null) {
-                worldCreator.environment(environment);
+            if (this.environment != null) {
+                worldCreator.environment(this.environment);
             }
 
-            if (seed != -1) {
-                worldCreator.seed(seed);
+            if (this.seed != -1) {
+                worldCreator.seed(this.seed);
             }
 
-            if (generatorSettings != null) {
-                worldCreator.generatorSettings(generatorSettings);
+            if (this.generatorSettings != null) {
+                worldCreator.generatorSettings(this.generatorSettings);
             }
 
-            if (generator != null) {
-                worldCreator.generator(generator);
+            if (this.generator != null) {
+                worldCreator.generator(this.generator);
             }
 
             if (this.fixedSpawnLocation != null) {
@@ -223,50 +200,43 @@ public class BeeWorldCreator implements Keyed {
                 }
             }
 
-            if (chunkGenerator != null) {
-                worldCreator.generator(chunkGenerator);
+            if (this.chunkGenerator != null) {
+                worldCreator.generator(this.chunkGenerator);
             }
 
-            if (biomeProvider != null) {
-                worldCreator.biomeProvider(biomeProvider);
+            if (this.biomeProvider != null) {
+                worldCreator.biomeProvider(this.biomeProvider);
             }
 
-            if (this.keepSpawnLoaded.isPresent() && HAS_KEEP_SPAWN_LOADED) {
-                TriState state = this.keepSpawnLoaded.get() ? TriState.TRUE : TriState.FALSE;
-                worldCreator.keepSpawnLoaded(state);
-            }
-
-            genStructures.ifPresent(worldCreator::generateStructures);
-            hardcore.ifPresent(worldCreator::hardcore);
+            this.genStructures.ifPresent(worldCreator::generateStructures);
+            this.hardcore.ifPresent(worldCreator::hardcore);
 
             try {
                 world = worldCreator.createWorld();
             } catch (Exception ex) {
                 ex.printStackTrace();
-                Util.errorForAdmins("Failed to load world '%s' see console for more details.", worldName);
+                Util.errorForAdmins("Failed to load world '%s' see console for more details.", this.worldName);
             }
 
             if (world != null) {
                 // Let's pull some values from the world and update our creator if need be
-                if (worldType == null) {
-                    worldType = world.getWorldType();
+                if (this.worldType == null) {
+                    this.worldType = world.getWorldType();
                 }
-                if (environment == null) {
-                    environment = world.getEnvironment();
+                if (this.environment == null) {
+                    this.environment = world.getEnvironment();
                 }
-                if (seed == -1) {
-                    seed = world.getSeed();
+                if (this.seed == -1) {
+                    this.seed = world.getSeed();
                 }
-                if (genStructures.isEmpty()) {
-                    genStructures = Optional.of(world.canGenerateStructures());
+                if (this.genStructures.isEmpty()) {
+                    this.genStructures = Optional.of(world.canGenerateStructures());
                 }
-                if (hardcore.isEmpty()) {
-                    hardcore = Optional.of(world.isHardcore());
+                if (this.hardcore.isEmpty()) {
+                    this.hardcore = Optional.of(world.isHardcore());
                 }
-
-                // Let's update the world with some other values
-                if (keepSpawnLoaded.isPresent() && !HAS_KEEP_SPAWN_LOADED) {
-                    keepSpawnLoaded.ifPresent(world::setKeepSpawnInMemory);
+                if (this.key == null) {
+                    this.key = world.getKey();
                 }
             }
 
@@ -322,11 +292,14 @@ public class BeeWorldCreator implements Keyed {
         return worldCompletableFuture;
     }
 
-    private static final boolean HAS_KEY = Skript.methodExists(WorldCreator.class, "ofNameAndKey", String.class, NamespacedKey.class);
-
-    private static WorldCreator getWorldCreator(@NotNull String name, @Nullable NamespacedKey key) {
-        if (HAS_KEY && key != null) return new WorldCreator(name, key);
-        return new WorldCreator(name);
+    private static WorldCreator getWorldCreator(@Nullable String name, @Nullable NamespacedKey key) {
+        if (key != null) {
+            return new WorldCreator(key);
+        } else if (name != null) {
+            return new WorldCreator(name);
+        } else {
+            throw new IllegalArgumentException("Either name or key must be specified");
+        }
     }
 
     @Override
@@ -340,7 +313,6 @@ public class BeeWorldCreator implements Keyed {
         sb.append(", generator='").append(generator).append('\'');
         sb.append(", genStructures=").append(genStructures);
         sb.append(", hardcore=").append(hardcore);
-        sb.append(", keepSpawnLoaded=").append(keepSpawnLoaded);
         sb.append(", seed=").append(seed);
         sb.append(", world=").append(world);
         sb.append(", clone=").append(clone);

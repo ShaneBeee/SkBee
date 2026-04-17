@@ -11,6 +11,7 @@ import org.skriptlang.skript.lang.comparator.Relation;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -139,8 +140,10 @@ public final class EnumWrapper<E extends Enum<E>> {
      * @return ClassInfo with default parser and usage
      */
     public @NotNull ClassInfo<E> getClassInfo(String codeName) {
+        List<E> enums = new ArrayList<>(List.of(this.enumClass.getEnumConstants()));
+        enums.sort(Comparator.comparing(Enum::name));
         return new ClassInfo<>(this.enumClass, codeName).usage(getAllNames()).parser(new EnumParser<>(this))
-            .supplier(this.enumClass.getEnumConstants());
+            .supplier(enums::iterator);
     }
 
     /**

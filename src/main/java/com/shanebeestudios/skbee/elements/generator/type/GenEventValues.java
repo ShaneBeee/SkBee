@@ -13,9 +13,9 @@ import org.skriptlang.skript.common.function.DefaultFunction;
 public class GenEventValues {
 
     public static void register(Registration reg) {
-        EventValues.registerEventValue(BiomeGenEvent.class, Location.class, BiomeGenEvent::getLocation, EventValues.TIME_NOW);
-        EventValues.registerEventValue(BiomeGenEvent.class, BiomeParameterPoint.class, BiomeGenEvent::getBiomeParameterPoint, EventValues.TIME_NOW);
-        EventValues.registerEventValue(HeightGenEvent.class, Location.class, HeightGenEvent::getLocation, EventValues.TIME_NOW);
+        reg.registerEventValue(BiomeGenEvent.class, Location.class, BiomeGenEvent::getLocation, EventValues.TIME_NOW);
+        reg.registerEventValue(BiomeGenEvent.class, BiomeParameterPoint.class, BiomeGenEvent::getBiomeParameterPoint, EventValues.TIME_NOW);
+        reg.registerEventValue(HeightGenEvent.class, Location.class, HeightGenEvent::getLocation, EventValues.TIME_NOW);
 
         reg.newType(BiomeParameterPoint.class, "biomeparameterpoint")
             .user("biome ?parameter ?points?")

@@ -20,8 +20,8 @@ import java.util.List;
 public class ExprItemFromNamespacedKey extends SimpleExpression<ItemType> {
 
     public static void register(Registration reg) {
-        reg.newSimpleExpression(ExprItemFromNamespacedKey.class, ItemType.class, "property",
-                        "item[ ]type[s] (from|of) %namespacedkeys/blockdatas%")
+        reg.newSimpleExpression(ExprItemFromNamespacedKey.class, ItemType.class,
+                "item[ ]type[s] (from|of) %namespacedkeys/blockdatas%")
                 .name("ItemType From NamespacedKey/BlockData")
                 .description("Get an ItemType from a Minecraft namespaced key or BlockData.")
                 .examples("set {_i} to itemtype from namespaced key from \"minecraft:stone\"",

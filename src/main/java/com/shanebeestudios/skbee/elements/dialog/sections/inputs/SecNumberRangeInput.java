@@ -51,7 +51,7 @@ public class SecNumberRangeInput extends Section {
                 "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
                     "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
                 "**Entries**:",
-                "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
+                "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _)(\"id\" is reserved).",
                 "- `label` = A string/text component to be displayed to the left of the input.",
                 "- `label_format` = A translation key to be used for building label (first argument is contents of label field, second argument is current value). ",
                 "Defaults to \"options.generic_value\".",
@@ -117,7 +117,7 @@ public class SecNumberRangeInput extends Section {
             return next;
         }
         if (!Util.isValidDialogInputKey(key)) {
-            error("Invalid key. Must only contain letters, numbers and underscores but found: " + key);
+            error("Invalid key. Must only contain letters, numbers, underscores and cannot be \"id\", but found: '" + key + "'");
             return next;
         }
 

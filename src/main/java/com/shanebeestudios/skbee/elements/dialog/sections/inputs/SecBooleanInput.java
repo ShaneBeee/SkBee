@@ -47,7 +47,7 @@ public class SecBooleanInput extends Section {
                 "See [**Input Control on SkBee wiki**](https://github.com/ShaneBeee/SkBee/wiki/Dialogs#input-control)" +
                     "and [**Input Control on McWiki**](https://minecraft.wiki/w/Dialog#Input_control_format) for further info.",
                 "**Entries**:",
-                "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _).",
+                "- `key` = String identifier of value used when submitting data, must be a valid template argument (letters, digits and _)(\"id\" is reserved).",
                 "- `label` = A string/text component to be displayed to the left of the input.",
                 "- `initial` = The initial boolean value of the checkbox. Defaults to false (unchecked).",
                 "- `on_true` = The string value to send when true. Defaults to \"true\".",
@@ -101,7 +101,7 @@ public class SecBooleanInput extends Section {
             return next;
         }
         if (!Util.isValidDialogInputKey(key)) {
-            error("Invalid key. Must only contain letters, numbers and underscores but found: " + key);
+            error("Invalid key. Must only contain letters, numbers, underscores and cannot be \"id\", but found: '" + key + "'");
             return next;
         }
 

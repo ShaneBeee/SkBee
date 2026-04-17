@@ -26,11 +26,11 @@ public class SimpleEvents extends SimpleEvent {
             .since("1.17.0")
             .register();
 
-        EventValues.registerEventValue(TradeSelectEvent.class, MerchantInventory.class, TradeSelectEvent::getInventory, EventValues.TIME_NOW);
-        EventValues.registerEventValue(TradeSelectEvent.class, Number.class, TradeSelectEvent::getIndex, EventValues.TIME_NOW);
-        EventValues.registerEventValue(TradeSelectEvent.class, Merchant.class, TradeSelectEvent::getMerchant, EventValues.TIME_NOW);
-        EventValues.registerEventValue(TradeSelectEvent.class, MerchantRecipe.class, event -> event.getInventory().getSelectedRecipe(), EventValues.TIME_NOW);
-        EventValues.registerEventValue(TradeSelectEvent.class, Player.class, event -> {
+        reg.registerEventValue(TradeSelectEvent.class, MerchantInventory.class, TradeSelectEvent::getInventory, EventValues.TIME_NOW);
+        reg.registerEventValue(TradeSelectEvent.class, Number.class, TradeSelectEvent::getIndex, EventValues.TIME_NOW);
+        reg.registerEventValue(TradeSelectEvent.class, Merchant.class, TradeSelectEvent::getMerchant, EventValues.TIME_NOW);
+        reg.registerEventValue(TradeSelectEvent.class, MerchantRecipe.class, event -> event.getInventory().getSelectedRecipe(), EventValues.TIME_NOW);
+        reg.registerEventValue(TradeSelectEvent.class, Player.class, event -> {
             HumanEntity trader = event.getMerchant().getTrader();
             if (trader instanceof Player player) {
                 return player;
@@ -47,8 +47,8 @@ public class SimpleEvents extends SimpleEvent {
             .since("1.17.1")
             .register();
 
-        EventValues.registerEventValue(PlayerPurchaseEvent.class, MerchantRecipe.class, PlayerPurchaseEvent::getTrade, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerPurchaseEvent.class, Entity.class, event -> {
+        reg.registerEventValue(PlayerPurchaseEvent.class, MerchantRecipe.class, PlayerPurchaseEvent::getTrade, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerPurchaseEvent.class, Entity.class, event -> {
             if (event instanceof PlayerTradeEvent tradeEvent) {
                 return tradeEvent.getVillager();
             }

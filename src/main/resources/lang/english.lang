@@ -15,7 +15,8 @@ types:
     bossbarcolor: boss bar color¦s
     bossbarflag: boss bar flags¦s
     bossbarstyle: boss bar style¦s
-    bound: bound
+    bound: bound¦s
+    boundmovereason: bound move reason¦s
     bukkitcolor: bukkit col(or|our)¦s
     bukkittreetype: bukkit tree type¦s
     chunkloadlevel: chunk load level¦s

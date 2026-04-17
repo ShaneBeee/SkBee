@@ -1,6 +1,6 @@
 test "SkBee - World Creator":
 	before:
-		set {_creator} to world creator named "test_world"
+		set {_creator} to world creator with key mc key from "test:test_world"
 
 	test:
 		# ExprWorldCreatorOption
@@ -29,16 +29,16 @@ test "SkBee - World Creator":
 
 		# Load test world
 		load world from creator {_creator}
-		set {_w} to world "test_world"
+		set {_w} to world("test_test_world")
 		assert {_w} is set with "The world should have loaded"
 
-		assert all loaded skbee worlds contains world("test_world") with "The world should exist"
+		assert all loaded skbee worlds contains world("test_test_world") with "The world should exist"
 
 	after:
 		# We run this after to make sure if a test fails, the world still gets unloaded
 		skbee log  "WorldCreator Test: ABOUT TO UNLOAD TEST_WORLD"
 		unload world {_w} and don't save
-		delete world file for "test_world"
+		delete world file for world with key mc key from "minecraft:test_world"
 		skbee log  "WorldCreator Test: TEST_WORLD UNLOADED_DELETED"
 
 		assert world "test_world" is not loaded with "the world should not be loaded"

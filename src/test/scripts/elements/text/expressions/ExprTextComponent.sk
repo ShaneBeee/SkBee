@@ -1,7 +1,7 @@
 test "SkBee - Text/ExprTextComponent":
 	# Text component
 	set {_text} to text component from "&bHI MOM"
-	assert {_text} = "&bHI MOM" with "Should have set"
+	assert {_text} = "§bHI MOM" with "Should have set"
 	set {_text} to rawtext component from "&aHI DAD"
 	assert raw {_text} = raw "&aHI DAD" with "Should match"
 
@@ -36,9 +36,9 @@ test "SkBee - Text/ExprTextComponent":
 	set {_trans} to translate component from "Test.test" with args "some arg" with fallback "some fallback"
 	assert {_trans} is set with "Component with args and fallback should be set"
 
-	# Json component
+	# Json components
 	set {_t} to json component from "{""color"":""aqua"",""text"":""hello"",""bold"":true}"
-	assert {_t} = "&b&lhello" with "Should match"
+	assert raw {_t} = raw "§b§lhello" with "Should match"
 
 	# MiniMessage Component With Resolvers
 	set {_unparsedResolver} to resolver("unparsed", raw "<yellow>")

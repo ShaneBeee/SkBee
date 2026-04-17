@@ -35,9 +35,9 @@ public class EvtVirtualFurnace extends SkriptEvent {
             .since("3.15.0")
             .register();
 
-        EventValues.registerEventValue(FurnaceCookEvent.class, Machine.class, FurnaceCookEvent::getFurnace);
-        EventValues.registerEventValue(FurnaceCookEvent.class, ItemStack.class, FurnaceCookEvent::getSource);
-        EventValues.registerEventValue(FurnaceCookEvent.class, ItemType.class, from -> new ItemType(from.getSource()));
+        reg.registerEventValue(FurnaceCookEvent.class, Machine.class, FurnaceCookEvent::getFurnace);
+        reg.registerEventValue(FurnaceCookEvent.class, ItemStack.class, FurnaceCookEvent::getSource);
+        reg.registerEventValue(FurnaceCookEvent.class, ItemType.class, from -> new ItemType(from.getSource()));
 
         // EXTRACT EVENT
         reg.newEvent(EvtVirtualFurnace.class, FurnaceExtractEvent.class,
@@ -50,9 +50,9 @@ public class EvtVirtualFurnace extends SkriptEvent {
             .since("3.15.0")
             .register();
 
-        EventValues.registerEventValue(FurnaceExtractEvent.class, Machine.class, FurnaceExtractEvent::getFurnace);
-        EventValues.registerEventValue(FurnaceExtractEvent.class, Player.class, FurnaceExtractEvent::getPlayer);
-        EventValues.registerEventValue(FurnaceExtractEvent.class, ItemStack.class, new EventConverter<>() {
+        reg.registerEventValue(FurnaceExtractEvent.class, Machine.class, FurnaceExtractEvent::getFurnace);
+        reg.registerEventValue(FurnaceExtractEvent.class, Player.class, FurnaceExtractEvent::getPlayer);
+        reg.registerEventValue(FurnaceExtractEvent.class, ItemStack.class, new EventConverter<>() {
             @Override
             public void set(FurnaceExtractEvent event, @Nullable ItemStack value) {
                 event.setItemStack(value);
@@ -63,7 +63,7 @@ public class EvtVirtualFurnace extends SkriptEvent {
                 return event.getItemStack();
             }
         });
-        EventValues.registerEventValue(FurnaceExtractEvent.class, ItemType.class, new EventConverter<>() {
+        reg.registerEventValue(FurnaceExtractEvent.class, ItemType.class, new EventConverter<>() {
             @Override
             public void set(FurnaceExtractEvent event, @Nullable ItemType value) {
                 if (value == null) {
@@ -90,16 +90,16 @@ public class EvtVirtualFurnace extends SkriptEvent {
             .since("3.15.0")
             .register();
 
-        EventValues.registerEventValue(FurnaceFuelBurnEvent.class, Machine.class, FurnaceFuelBurnEvent::getFurnace);
-        EventValues.registerEventValue(FurnaceFuelBurnEvent.class, Fuel.class, FurnaceFuelBurnEvent::getFuel);
-        EventValues.registerEventValue(FurnaceFuelBurnEvent.class, ItemStack.class, FurnaceFuelBurnEvent::getFuelItem);
-        EventValues.registerEventValue(FurnaceFuelBurnEvent.class, ItemType.class, new Converter<>() {
+        reg.registerEventValue(FurnaceFuelBurnEvent.class, Machine.class, FurnaceFuelBurnEvent::getFurnace);
+        reg.registerEventValue(FurnaceFuelBurnEvent.class, Fuel.class, FurnaceFuelBurnEvent::getFuel);
+        reg.registerEventValue(FurnaceFuelBurnEvent.class, ItemStack.class, FurnaceFuelBurnEvent::getFuelItem);
+        reg.registerEventValue(FurnaceFuelBurnEvent.class, ItemType.class, new Converter<>() {
             @Override
             public @NonNull ItemType convert(FurnaceFuelBurnEvent event) {
                 return new ItemType(event.getFuelItem());
             }
         });
-        EventValues.registerEventValue(FurnaceFuelBurnEvent.class, Number.class, new EventConverter<>() {
+        reg.registerEventValue(FurnaceFuelBurnEvent.class, Number.class, new EventConverter<>() {
             @Override
             public void set(FurnaceFuelBurnEvent event, @Nullable Number value) {
                 int burnTime = value != null ? value.intValue() : 0;

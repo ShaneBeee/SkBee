@@ -20,7 +20,6 @@ import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.attribute.AttributeModifier.Operation;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
@@ -29,7 +28,6 @@ import org.skriptlang.skript.lang.entry.EntryContainer;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 
 import java.util.List;
-import java.util.UUID;
 
 public class SecAttributeModifier extends Section {
 
@@ -38,17 +36,8 @@ public class SecAttributeModifier extends Section {
     public static void register(Registration reg) {
         SimpleEntryValidator builder = SimpleEntryValidator.builder();
         builder.addRequiredEntry("attribute", Attribute.class);
-        if (ItemUtils.HAS_EQUIPMENT_SLOT_GROUP) {
-            builder.addOptionalEntry("slot", EquipmentSlotGroup.class);
-        } else {
-            builder.addOptionalEntry("slot", EquipmentSlot.class);
-        }
-        if (ItemUtils.HAS_KEY) {
-            builder.addRequiredEntry("id", String.class);
-        } else {
-            builder.addRequiredEntry("name", String.class);
-            builder.addOptionalEntry("uuid", String.class);
-        }
+        builder.addOptionalEntry("slot", EquipmentSlotGroup.class);
+        builder.addRequiredEntry("id", String.class);
         builder.addRequiredEntry("amount", Number.class);
         builder.addRequiredEntry("operation", Operation.class);
         VALIDATOR = builder.build();
@@ -65,10 +54,8 @@ public class SecAttributeModifier extends Section {
                 "",
                 "**Entries/Sections**:",
                 "- `attribute` = The attribute this modifier is to act upon.",
-                "- `slot` = Slot Type the item must be in for the modifier to take effect (Minecraft 1.20.6+ uses Equipment Slot Group, other versions use Equipment Slot).",
-                "- `id` = The NamespacedKey to identify this modifier (Minecraft 1.21+).",
-                "- `name` = The name used to identifiy this modifier (Minecraft 1.20.6 and below).",
-                "- `uuid` = The uuid used to identify this modifier [optional] (Minecraft 1.20.6 and below).",
+                "- `slot` = EquipmentSlotGroup the item must be in for the modifier to take effect (optional, default = any).",
+                "- `id` = The NamespacedKey to identify this modifier.",
                 "- `amount` = Amount of change from the modifier.",
                 "- `operation` = The operation to decide how to modify. See [**McWiki**](https://minecraft.wiki/w/Attribute#Operations) for more details.")
             .examples("#Apply Attribute Modifiers to Items",
@@ -104,10 +91,8 @@ public class SecAttributeModifier extends Section {
     private boolean trans;
     private Expression<?> objects;
     private Expression<Attribute> attribute;
-    private Expression<?> slot;
+    private Expression<EquipmentSlotGroup> slot;
     private Expression<String> id;
-    private Expression<String> name;
-    private Expression<String> uuid;
     private Expression<Number> amount;
     private Expression<Operation> operation;
 
@@ -124,27 +109,21 @@ public class SecAttributeModifier extends Section {
         }
         this.objects = exprs[0];
         this.attribute = (Expression<Attribute>) container.getOptional("attribute", false);
-        this.slot = (Expression<?>) container.getOptional("slot", false);
-        if (ItemUtils.HAS_KEY) {
-            this.id = (Expression<String>) container.getOptional("id", false);
-            if (this.id == null) return false;
-        } else {
-            this.name = (Expression<String>) container.getOptional("name", false);
-            this.uuid = (Expression<String>) container.getOptional("uuid", false);
-            if (this.name == null) return false;
-        }
+        this.slot = (Expression<EquipmentSlotGroup>) container.getOptional("slot", false);
+        this.id = (Expression<String>) container.getOptional("id", false);
+        if (this.id == null) return false;
+
         this.amount = (Expression<Number>) container.getOptional("amount", false);
         this.operation = (Expression<Operation>) container.getOptional("operation", false);
         return this.attribute != null && this.amount != null;
     }
 
-    @SuppressWarnings({"removal", "DataFlowIssue"})
+    @SuppressWarnings({"DataFlowIssue"})
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         Attribute attribute = this.attribute.getSingle(event);
         Number amountNum = this.amount.getSingle(event);
         Operation operation = this.operation.getSingle(event);
-        Object slot = this.slot != null ? this.slot.getSingle(event) : null;
 
         if (attribute == null) {
             error("Attribute is missing");
@@ -160,41 +139,24 @@ public class SecAttributeModifier extends Section {
         }
 
         AttributeModifier attributeModifier;
-        if (ItemUtils.HAS_KEY) {
-            String id = this.id.getSingle(event);
-            if (id == null) {
-                error("Invalid id: " + this.id.toString(event, true));
-                return super.walk(event, false);
-            }
-
-            NamespacedKey namespacedKey = Util.getNamespacedKey(id, false);
-            if (namespacedKey == null) {
-                error("Invalid id: " + id);
-                return super.walk(event, false);
-            }
-
-            EquipmentSlotGroup slotGroup = slot instanceof EquipmentSlotGroup esg ? esg : EquipmentSlotGroup.ANY;
-            attributeModifier = new AttributeModifier(namespacedKey, amountNum.doubleValue(), operation, slotGroup);
-        } else {
-            String name = this.name.getSingle(event);
-            String uuidString = this.uuid != null ? this.uuid.getSingle(event) : null;
-            UUID uuid;
-            try {
-                uuid = UUID.fromString(uuidString);
-            } catch (IllegalArgumentException | NullPointerException ignore) {
-                uuid = UUID.randomUUID();
-            }
-            if (name == null) return super.walk(event, false);
-
-            if (slot instanceof EquipmentSlot equipmentSlot) {
-                attributeModifier = new AttributeModifier(uuid, name, amountNum.doubleValue(), operation, equipmentSlot);
-            } else if (ItemUtils.HAS_EQUIPMENT_SLOT_GROUP && slot instanceof EquipmentSlotGroup slotGroup) {
-                attributeModifier = new AttributeModifier(uuid, name, amountNum.doubleValue(), operation, slotGroup);
-            } else {
-                attributeModifier = new AttributeModifier(uuid, name, amountNum.doubleValue(), operation);
-            }
-
+        String id = this.id.getSingle(event);
+        if (id == null) {
+            error("Invalid id: " + this.id.toString(event, true));
+            return super.walk(event, false);
         }
+
+        NamespacedKey namespacedKey = Util.getNamespacedKey(id, false);
+        if (namespacedKey == null) {
+            error("Invalid id: " + id);
+            return super.walk(event, false);
+        }
+
+        EquipmentSlotGroup slotGroup = this.slot != null ? this.slot.getSingle(event) : null;
+        if (slotGroup == null) {
+            slotGroup = EquipmentSlotGroup.ANY;
+        }
+        attributeModifier = new AttributeModifier(namespacedKey, amountNum.doubleValue(), operation, slotGroup);
+
 
         for (Object object : this.objects.getArray(event)) {
             if (object instanceof ItemType itemType) {
@@ -203,7 +165,7 @@ public class SecAttributeModifier extends Section {
                 if (ItemUtils.hasAttributeModifier(itemMeta, attribute, attributeModifier)) {
                     // Remove the old modifier so we can override
                     for (AttributeModifier modifier : itemMeta.getAttributeModifiers(attribute)) {
-                        if (modifier.getKey().equals(attributeModifier.getKey()))  {
+                        if (modifier.getKey().equals(attributeModifier.getKey())) {
                             itemMeta.removeAttributeModifier(attribute, modifier);
                         }
                     }

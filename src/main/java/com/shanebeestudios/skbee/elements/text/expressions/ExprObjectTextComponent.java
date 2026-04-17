@@ -6,12 +6,18 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
-import com.shanebeestudios.skbee.api.util.legacy.ObjectTextComponentUtils;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.ObjectComponent;
+import net.kyori.adventure.text.object.ObjectContents;
+import net.kyori.adventure.text.object.PlayerHeadObjectContents;
 import net.kyori.adventure.text.object.SpriteObjectContents;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.UUID;
 
 public class ExprObjectTextComponent extends SimpleExpression<ComponentWrapper> {
 
@@ -67,11 +73,11 @@ public class ExprObjectTextComponent extends SimpleExpression<ComponentWrapper> 
             if (spriteString == null) return null;
             Key sprite = Key.key(spriteString);
 
-            ComponentWrapper componentWrapper = ObjectTextComponentUtils.getSpriteObject(atlas, sprite);
+            ComponentWrapper componentWrapper = getSpriteObject(atlas, sprite);
             return new ComponentWrapper[]{componentWrapper};
         } else if (this.playerData != null) {
             Object playerData = this.playerData.getSingle(event);
-            ComponentWrapper componentWrapper = ObjectTextComponentUtils.getPlayerHead(playerData);
+            ComponentWrapper componentWrapper = getPlayerHead(playerData);
             return new ComponentWrapper[]{componentWrapper};
         }
         return null;
@@ -101,6 +107,27 @@ public class ExprObjectTextComponent extends SimpleExpression<ComponentWrapper> 
             builder.append("with player head from", this.playerData);
         }
         return builder.toString();
+    }
+
+    private static ComponentWrapper getSpriteObject(Key atlas, Key sprite) {
+        SpriteObjectContents spriteObject = ObjectContents.sprite(atlas, sprite);
+        ObjectComponent objectComponent = Component.object(spriteObject);
+        return ComponentWrapper.fromComponent(objectComponent);
+    }
+
+    private static ComponentWrapper getPlayerHead(Object playerData) {
+        PlayerHeadObjectContents playerHeadObject = null;
+        if (playerData instanceof String name) {
+            playerHeadObject = ObjectContents.playerHead(name);
+        } else if (playerData instanceof UUID uuid) {
+            playerHeadObject = ObjectContents.playerHead(uuid);
+        } else if (playerData instanceof OfflinePlayer offlinePlayer) {
+            playerHeadObject = ObjectContents.playerHead(offlinePlayer);
+        }
+        if (playerHeadObject == null) return null;
+
+        ObjectComponent objectComponent = Component.object(playerHeadObject);
+        return ComponentWrapper.fromComponent(objectComponent);
     }
 
 }

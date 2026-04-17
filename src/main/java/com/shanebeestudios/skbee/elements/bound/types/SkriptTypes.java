@@ -10,6 +10,7 @@ import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
+import com.shanebeestudios.skbee.api.listener.BoundBorderListener.BoundMoveReason;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;
@@ -22,7 +23,7 @@ public class SkriptTypes {
 
     public static void register(Registration reg) {
         reg.newType(Bound.class, "bound")
-            .user("bound")
+            .user("bounds?")
             .name("Bound")
             .description("Represents a 3D bounding box between 2 points")
             .defaultExpression(new EventValueExpression<>(Bound.class))
@@ -105,6 +106,13 @@ public class SkriptTypes {
                     }
                 }
             })
+            .register();
+
+        reg.newEnumType(BoundMoveReason.class, "boundmovereason")
+            .user("bound ?move ?reasons?")
+            .name("Bound - Move Reason")
+            .description("Represents the reason a player moved in/out of a bound.")
+            .since("INSERT VERSION")
             .register();
     }
 

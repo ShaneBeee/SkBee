@@ -22,8 +22,8 @@ public class SimpleEvents extends SimpleEvent {
             .since("1.17.0")
             .register();
 
-        EventValues.registerEventValue(PlayerAdvancementDoneEvent.class, String.class, event -> event.getAdvancement().getKey().toString(), EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerAdvancementDoneEvent.class, Advancement.class, PlayerAdvancementDoneEvent::getAdvancement, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerAdvancementDoneEvent.class, String.class, event -> event.getAdvancement().getKey().toString(), EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerAdvancementDoneEvent.class, Advancement.class, PlayerAdvancementDoneEvent::getAdvancement, EventValues.TIME_NOW);
     }
 
 }

@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.worldcreator.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
@@ -22,7 +21,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
     public static void register(Registration reg) {
         reg.newPropertyExpression(ExprWorldCreatorOption.class, Object.class,
                 "(environment|1:world type|2:world seed|3:gen[erator] settings|4:generator" +
-                    "|5:should gen[erate] structures|6:[is] hardcore|7:keep spawn loaded|8:load on start|9:fixed spawn location) [option]",
+                    "|5:should gen[erate] structures|6:[is] hardcore|7:load on start|8:fixed spawn location) [option]",
                 "worldcreator")
             .name("World Creator Options")
             .description("Set different options for world creators. See SkBee wiki for more details.",
@@ -46,11 +45,6 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
         this.pattern = parseResult.mark;
-        if (this.pattern == 7) {
-            // Minecraft no longer has spawn chunks starting in 1.21.9
-            Skript.error("'keep spawn loaded' is no longer used by Minecraft.");
-            return false;
-        }
         setExpr((Expression<BeeWorldCreator>) exprs[0]);
         return true;
     }
@@ -65,9 +59,8 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
             case 4 -> creator.getGenerator();
             case 5 -> creator.isGenStructures();
             case 6 -> creator.isHardcore();
-            case 7 -> creator.isKeepSpawnLoaded();
-            case 8 -> creator.isLoadOnStart();
-            case 9 -> null;
+            case 7 -> creator.isLoadOnStart();
+            case 8 -> null;
             default -> creator.getEnvironment();
         };
     }
@@ -79,8 +72,8 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
                 case 1 -> CollectionUtils.array(WorldType.class);
                 case 2 -> CollectionUtils.array(Number.class);
                 case 3, 4 -> CollectionUtils.array(String.class);
-                case 5, 6, 7, 8 -> CollectionUtils.array(Boolean.class);
-                case 9 -> CollectionUtils.array(Location.class);
+                case 5, 6, 7 -> CollectionUtils.array(Boolean.class);
+                case 8 -> CollectionUtils.array(Location.class);
                 default -> CollectionUtils.array(Environment.class);
             };
         }
@@ -125,16 +118,11 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
                 }
                 break;
             case 7:
-                if (object instanceof Boolean) {
-                    creator.setKeepSpawnLoaded((Boolean) object);
-                }
-                break;
-            case 8:
                 if (object instanceof Boolean loadOnStart) {
                     creator.setLoadOnStart(loadOnStart);
                 }
                 break;
-            case 9:
+            case 8:
                 if (object instanceof Location location) {
                     creator.setFixedSpawnLocation(location);
                 }
@@ -153,6 +141,7 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
             case 2 -> Number.class;
             case 3, 4 -> String.class;
             case 5, 6, 7 -> Boolean.class;
+            case 8 -> Location.class;
             default -> Environment.class;
         };
     }
@@ -166,9 +155,8 @@ public class ExprWorldCreatorOption extends SimplePropertyExpression<BeeWorldCre
             case 4 -> "generator";
             case 5 -> "should generate structures";
             case 6 -> "hardcore";
-            case 7 -> "keep spawn loaded";
-            case 8 -> "load on start";
-            case 9 -> "fixed spawn location";
+            case 7 -> "load on start";
+            case 8 -> "fixed spawn location";
             default -> "environment";
         };
         return option + " option";

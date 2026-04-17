@@ -8,7 +8,6 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.dialog.DialogCallbackEvent;
@@ -39,16 +38,22 @@ import java.util.UUID;
 @SuppressWarnings("UnstableApiUsage")
 public class SecDynamicCallbackActionButton extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
+    public static void register(Registration reg) {
         EntryValidatorBuilder builder = EntryValidator.builder();
-        EventValues.registerEventValue(DialogCallbackEvent.class, NBTCompound.class, DialogCallbackEvent::getNbtCompound);
-        EventValues.registerEventValue(DialogCallbackEvent.class, Audience.class, DialogCallbackEvent::getAudience);
-        EventValues.registerEventValue(DialogCallbackEvent.class, PlayerConnection.class, DialogCallbackEvent::getConnection);
-        EventValues.registerEventValue(DialogCallbackEvent.class, Player.class, DialogCallbackEvent::getPlayer);
-        EventValues.registerEventValue(DialogCallbackEvent.class, UUID.class, DialogCallbackEvent::getUUID);
-        EventValues.registerEventValue(DialogCallbackEvent.class, String.class, DialogCallbackEvent::getName);
+        reg.newEventValue(DialogCallbackEvent.class, NBTCompound.class, DialogCallbackEvent::getNbtCompound)
+            .register();
+        reg.newEventValue(DialogCallbackEvent.class, Audience.class, DialogCallbackEvent::getAudience)
+            .register();
+        reg.newEventValue(DialogCallbackEvent.class, PlayerConnection.class, DialogCallbackEvent::getConnection)
+            .register();
+        reg.newEventValue(DialogCallbackEvent.class, Player.class, DialogCallbackEvent::getPlayer)
+            .register();
+        reg.newEventValue(DialogCallbackEvent.class, UUID.class, DialogCallbackEvent::getUUID)
+            .register();
+        reg.newEventValue(DialogCallbackEvent.class, String.class, DialogCallbackEvent::getName)
+            .register();
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
         builder.addEntryData(new ExpressionEntryData<>("label", null, false, compClasses));
@@ -58,9 +63,7 @@ public class SecDynamicCallbackActionButton extends Section {
         // DYNAMIC
         builder.addSection("trigger", false);
         VALIDATOR = builder.build();
-    }
 
-    public static void register(Registration reg) {
         reg.newSection(SecDynamicCallbackActionButton.class, VALIDATOR, "add [dynamic] callback action button")
             .name("Dialog - Dynamic Callback Action Button")
             .description("Add a dynamic action button to a dialog.",

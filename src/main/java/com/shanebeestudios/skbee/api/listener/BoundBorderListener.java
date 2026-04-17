@@ -47,7 +47,7 @@ public class BoundBorderListener implements Listener {
                 Player player = event.getPlayer();
                 Location from = event.getFrom();
                 Location to = event.getTo();
-                if (preventBoundMovement(player, from, to)) {
+                if (preventBoundMovement(player, from, to, BoundMoveReason.MOVE)) {
                     event.setCancelled(true);
                     Entity vehicle = player.getVehicle();
                     if (vehicle != null) {
@@ -64,7 +64,7 @@ public class BoundBorderListener implements Listener {
                 Player player = event.getPlayer();
                 Location from = event.getFrom();
                 Location to = event.getTo();
-                if (preventBoundMovement(player, from, to, false)) {
+                if (preventBoundMovement(player, from, to, false, BoundMoveReason.TELEPORT)) {
                     event.setCancelled(true);
                 }
             }
@@ -77,7 +77,7 @@ public class BoundBorderListener implements Listener {
                 Player player = event.getPlayer();
                 Location from = player.getLocation();
                 Location to = event.getRespawnLocation();
-                if (preventBoundMovement(player, from, to)) {
+                if (preventBoundMovement(player, from, to, BoundMoveReason.RESPAWN)) {
                     event.setRespawnLocation(Bukkit.getWorlds().getFirst().getSpawnLocation());
                     if (event.isBedSpawn() || event.isAnchorSpawn()) {
                         player.setBedSpawnLocation(null);
@@ -92,7 +92,7 @@ public class BoundBorderListener implements Listener {
                 Player player = event.getPlayer();
                 Location from = player.getLocation();
                 Location to = event.getBed().getLocation();
-                if (preventBoundMovement(player, from, to)) {
+                if (preventBoundMovement(player, from, to, BoundMoveReason.BED_ENTER)) {
                     event.setCancelled(true);
                 }
             }
@@ -107,7 +107,7 @@ public class BoundBorderListener implements Listener {
                     // Find player's new location after leaving bed
                     // have to add a delay as this isn't determinded in the event
                     Location to = player.getLocation();
-                    if (preventBoundMovement(player, from, to)) {
+                    if (preventBoundMovement(player, from, to, BoundMoveReason.BED_EXIT)) {
                         player.teleport(from.clone().add(0, 1, 0));
                     }
                 }, 1);
@@ -120,7 +120,7 @@ public class BoundBorderListener implements Listener {
                 if (event.getEntity() instanceof Player player) {
                     Location from = player.getLocation();
                     Location to = event.getMount().getLocation();
-                    if (preventBoundMovement(player, from, to)) {
+                    if (preventBoundMovement(player, from, to, BoundMoveReason.ENTITY_MOUNT)) {
                         event.setCancelled(true);
                     }
                 }
@@ -134,7 +134,7 @@ public class BoundBorderListener implements Listener {
                     Location from = event.getDismounted().getLocation().clone();
                     TaskUtils.getEntityScheduler(player).runTaskLater(() -> {
                         Location to = player.getLocation();
-                        if (preventBoundMovement(player, from, to)) {
+                        if (preventBoundMovement(player, from, to, BoundMoveReason.ENTITY_DISMOUNT)) {
                             from.setYaw(player.getLocation().getYaw());
                             from.setPitch(player.getLocation().getPitch());
                             player.teleport(from);
@@ -150,7 +150,7 @@ public class BoundBorderListener implements Listener {
                 if (event.getEntered() instanceof Player player) {
                     Location from = player.getLocation();
                     Location to = event.getVehicle().getLocation();
-                    if (preventBoundMovement(player, from, to)) {
+                    if (preventBoundMovement(player, from, to, BoundMoveReason.VEHICLE_ENTER)) {
                         event.setCancelled(true);
                     }
                 }
@@ -164,7 +164,7 @@ public class BoundBorderListener implements Listener {
                 if (event.getExited() instanceof Player player) {
                     TaskUtils.getEntityScheduler(player).runTaskLater(() -> {
                         Location to = player.getLocation();
-                        if (preventBoundMovement(player, from, to)) {
+                        if (preventBoundMovement(player, from, to, BoundMoveReason.VEHICLE_EXIT)) {
                             from.setYaw(player.getLocation().getYaw());
                             from.setPitch(player.getLocation().getPitch());
                             player.teleport(from);
@@ -182,7 +182,7 @@ public class BoundBorderListener implements Listener {
                     if (entity instanceof Player player) {
                         Location from = event.getFrom().clone();
                         Location to = event.getTo();
-                        if (preventBoundMovement(player, from, to)) {
+                        if (preventBoundMovement(player, from, to, BoundMoveReason.VEHICLE_MOVE)) {
                             vehicle.removePassenger(player);
                             // Keep the player looking the same direction
                             from.setYaw(player.getLocation().getYaw());
@@ -203,7 +203,7 @@ public class BoundBorderListener implements Listener {
                     for (Entity passenger : vehicle.getPassengers()) {
                         Location to = passenger.getLocation();
                         if (passenger instanceof Player player) {
-                            if (preventBoundMovement(player, from, to)) {
+                            if (preventBoundMovement(player, from, to, BoundMoveReason.VEHICLE_DESTROY)) {
                                 from.setYaw(player.getLocation().getYaw());
                                 from.setPitch(player.getLocation().getPitch());
                                 player.teleport(from);
@@ -215,11 +215,12 @@ public class BoundBorderListener implements Listener {
         }, plugin);
     }
 
-    private boolean preventBoundMovement(@NotNull Player player, @NotNull Location from, @NotNull Location to) {
-        return preventBoundMovement(player, from, to, true);
+    private boolean preventBoundMovement(@NotNull Player player, @NotNull Location from, @NotNull Location to, BoundMoveReason reason) {
+        return preventBoundMovement(player, from, to, true, reason);
     }
 
-    private boolean preventBoundMovement(@NotNull Player player, @NotNull Location from, @NotNull Location to, boolean ignoreWorldChange) {
+    private boolean preventBoundMovement(@NotNull Player player, @NotNull Location from, @NotNull Location to,
+                                         boolean ignoreWorldChange, BoundMoveReason reason) {
         // Clone to prevent changing event values
         from = from.clone();
         // Only detect body movement not head movement
@@ -232,7 +233,7 @@ public class BoundBorderListener implements Listener {
         for (Bound bound : boundConfig.getBoundsInRegion(from)) {
             // Exit called first, as we'd probably leave one before entering another
             if (!bound.isInRegion(to) && bound.isInRegion(from)) {
-                BoundExitEvent exitEvent = new BoundExitEvent(bound, player);
+                BoundExitEvent exitEvent = new BoundExitEvent(bound, player, reason);
                 Bukkit.getPluginManager().callEvent(exitEvent);
                 if (exitEvent.isCancelled()) {
                     return true;
@@ -242,7 +243,7 @@ public class BoundBorderListener implements Listener {
         }
         for (Bound bound : boundConfig.getBoundsInRegion(to)) {
             if (bound.isInRegion(to) && !bound.isInRegion(from)) {
-                BoundEnterEvent enterEvent = new BoundEnterEvent(bound, player);
+                BoundEnterEvent enterEvent = new BoundEnterEvent(bound, player, reason);
                 Bukkit.getPluginManager().callEvent(enterEvent);
                 if (enterEvent.isCancelled()) {
                     return true;
@@ -250,6 +251,30 @@ public class BoundBorderListener implements Listener {
             }
         }
         return false;
+    }
+
+    public enum BoundMoveReason {
+        MOVE("move"),
+        TELEPORT("teleport"),
+        RESPAWN("respawn"),
+        BED_ENTER("bed enter"),
+        BED_EXIT("bed exit"),
+        ENTITY_MOUNT("entity mount"),
+        ENTITY_DISMOUNT("entity dismount"),
+        VEHICLE_ENTER("vehicle enter"),
+        VEHICLE_EXIT("vehicle exit"),
+        VEHICLE_MOVE("vehicle move"),
+        VEHICLE_DESTROY("vehicle destroy");
+
+        private final String name;
+
+        BoundMoveReason(String name) {
+            this.name = name;
+        }
+
+        public String getName() {
+            return this.name;
+        }
     }
 
 }

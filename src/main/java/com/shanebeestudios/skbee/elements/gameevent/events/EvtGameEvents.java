@@ -46,7 +46,7 @@ public class EvtGameEvents extends SkriptEvent {
             .since("1.14.0")
             .register();
 
-        EventValues.registerEventValue(GenericGameEvent.class, Entity.class, new Converter<>() {
+        reg.registerEventValue(GenericGameEvent.class, Entity.class, new Converter<>() {
             @Nullable
             @Override
             public Entity convert(GenericGameEvent event) {
@@ -54,15 +54,15 @@ public class EvtGameEvents extends SkriptEvent {
             }
         }, EventValues.TIME_NOW);
 
-        EventValues.registerEventValue(GenericGameEvent.class, GameEvent.class, GenericGameEvent::getEvent, EventValues.TIME_NOW);
-        EventValues.registerEventValue(GenericGameEvent.class, Location.class, GenericGameEvent::getLocation, EventValues.TIME_NOW);
-        EventValues.registerEventValue(GenericGameEvent.class, Player.class, event -> {
+        reg.registerEventValue(GenericGameEvent.class, GameEvent.class, GenericGameEvent::getEvent, EventValues.TIME_NOW);
+        reg.registerEventValue(GenericGameEvent.class, Location.class, GenericGameEvent::getLocation, EventValues.TIME_NOW);
+        reg.registerEventValue(GenericGameEvent.class, Player.class, event -> {
             if (event.getEntity() instanceof Player player) return player;
             return null;
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(BlockReceiveGameEvent.class, Entity.class, BlockReceiveGameEvent::getEntity, EventValues.TIME_NOW);
-        EventValues.registerEventValue(BlockReceiveGameEvent.class, GameEvent.class, BlockReceiveGameEvent::getEvent, EventValues.TIME_NOW);
-        EventValues.registerEventValue(BlockReceiveGameEvent.class, Player.class, event -> {
+        reg.registerEventValue(BlockReceiveGameEvent.class, Entity.class, BlockReceiveGameEvent::getEntity, EventValues.TIME_NOW);
+        reg.registerEventValue(BlockReceiveGameEvent.class, GameEvent.class, BlockReceiveGameEvent::getEvent, EventValues.TIME_NOW);
+        reg.registerEventValue(BlockReceiveGameEvent.class, Player.class, event -> {
             if (event.getEntity() instanceof Player player) return player;
             return null;
         }, EventValues.TIME_NOW);
