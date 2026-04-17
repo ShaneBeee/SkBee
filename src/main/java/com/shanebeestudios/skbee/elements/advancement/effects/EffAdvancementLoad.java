@@ -10,8 +10,8 @@ import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public class EffAdvancementLoad extends Effect {
 
@@ -20,12 +20,17 @@ public class EffAdvancementLoad extends Effect {
                 "load advancement %string% with (key|id) %string%")
             .name("Advancement - Load")
             .description("Load an advancement represented by the specified string into the server.",
-                "The advancement format is governed by Minecraft and has no specified layout.",
-                "It is currently a JSON object, as described by [**McWiki**](https://minecraft.wiki/w/Advancement).",
-                "Loaded advancements will be stored and persisted across server restarts and reloads.",
+                "The advancement format is governed by Minecraft.",
+                "It is currently a JSON object, as described by [**McWiki**](https://minecraft.wiki/w/Advancement_definition).",
                 "NOTE: Bukkit has marked this as 'Unsafe', so please use at your own risk.",
                 "Watch console for errors when loading an advancement.")
-            .examples("¯\\_(ツ)_/¯")
+            .examples("# This example was written for Minecraft 26.1.x",
+                "on load:",
+                "\tset {_display} to \"{\"\"icon\"\":{\"\"id\"\":\"\"minecraft:carrot\"\"},\"\"title\"\":\"\"Carrot Picker Upper\"\",\"\"description\"\":\"\"Picked up a carrot\"\",\"\"frame\"\":\"\"challenge\"\"}\"",
+                "\tset {_criteria} to \"{\"\"trigger\"\":\"\"minecraft:inventory_changed\"\",\"\"conditions\"\":{\"\"items\"\":[{\"\"item\"\":\"\"minecraft:carrot\"\"}]}}\"",
+                "\tset {_json} to \"{\"\"parent\"\":\"\"minecraft:story/root\"\",\"\"display\"\":%{_display}%,\"\"criteria\"\":{\"\"test\"\":%{_criteria}%}}\"",
+                "",
+                "\tload advancement {_json} with key \"something:my_advancement\"")
             .since("1.17.0")
             .register();
     }
@@ -33,15 +38,15 @@ public class EffAdvancementLoad extends Effect {
     private Expression<String> advancement;
     private Expression<String> key;
 
-    @SuppressWarnings({"unchecked"})
+    @SuppressWarnings("unchecked")
     @Override
-    public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
-        this.advancement = (Expression<String>) exprs[0];
-        this.key = (Expression<String>) exprs[1];
+    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        this.advancement = (Expression<String>) expressions[0];
+        this.key = (Expression<String>) expressions[1];
         return true;
     }
 
-    @SuppressWarnings({"deprecation"})
+    @SuppressWarnings({"deprecation", "CallToPrintStackTrace"})
     @Override
     protected void execute(Event event) {
         String key = this.key.getSingle(event);
