@@ -19,6 +19,7 @@ import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.DrilldownPie;
 import org.bstats.charts.SimplePie;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -97,6 +98,7 @@ public class SkBee extends JavaPlugin {
         Metrics metrics = new Metrics(this, 6719);
         metrics.addCustomChart(new SimplePie("skript_version", () -> Skript.getVersion().toString()));
         metrics.addCustomChart(new SimplePie("virtual_furnace", () -> String.valueOf(config.ELEMENTS_VIRTUAL_FURNACE)));
+        metrics.addCustomChart(new SimplePie("online_mode_proxy", () -> String.valueOf(Bukkit.getServerConfig().isProxyOnlineMode())));
 
         // New Metrics
         // Many of these are copied from Skript -> SkriptMetrics.class
