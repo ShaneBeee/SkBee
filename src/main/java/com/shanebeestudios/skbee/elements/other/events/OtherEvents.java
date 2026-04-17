@@ -91,7 +91,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings({"UnstableApiUsage", "removal"})
 public class OtherEvents extends SimpleEvent {
 
     private static final boolean HAS_CONFIG = Skript.classExists("io.papermc.paper.connection.PlayerConfigurationConnection");
@@ -117,7 +117,8 @@ public class OtherEvents extends SimpleEvent {
             .since("2.8.3")
             .register();
 
-        EventValues.registerEventValue(BlockDamageAbortEvent.class, Player.class, BlockDamageAbortEvent::getPlayer, EventValues.TIME_NOW);
+        reg.newEventValue(BlockDamageAbortEvent.class, Player.class, BlockDamageAbortEvent::getPlayer)
+            .register();
 
         // Block Explode Event
         reg.newEvent(OtherEvents.class, BlockExplodeEvent.class, "block explode")
@@ -133,23 +134,23 @@ public class OtherEvents extends SimpleEvent {
             .since("3.2.0")
             .register();
 
-        EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, event -> event.getBlock().getBlockData(), EventValues.TIME_NOW);
-        EventValues.registerEventValue(BlockExplodeEvent.class, BlockData.class, new Converter<>() {
+        reg.registerEventValue(BlockExplodeEvent.class, BlockData.class, event -> event.getBlock().getBlockData(), EventValues.TIME_NOW);
+        reg.registerEventValue(BlockExplodeEvent.class, BlockData.class, new Converter<>() {
             @Override
             public @NotNull BlockData convert(BlockExplodeEvent event) {
                 BlockState explodedBlockState = event.getExplodedBlockState();
                 return explodedBlockState.getBlockData();
             }
         }, EventValues.TIME_PAST);
-        EventValues.registerEventValue(BlockExplodeEvent.class, ItemType.class, event -> new ItemType(event.getBlock().getType()), EventValues.TIME_NOW);
-        EventValues.registerEventValue(BlockExplodeEvent.class, ItemType.class, new Converter<>() {
+        reg.registerEventValue(BlockExplodeEvent.class, ItemType.class, event -> new ItemType(event.getBlock().getType()), EventValues.TIME_NOW);
+        reg.registerEventValue(BlockExplodeEvent.class, ItemType.class, new Converter<>() {
             @Override
             public @NotNull ItemType convert(BlockExplodeEvent event) {
                 BlockState explodedBlockState = event.getExplodedBlockState();
                 return new ItemType(explodedBlockState.getType());
             }
         }, EventValues.TIME_PAST);
-        EventValues.registerEventValue(BlockExplodeEvent.class, Block[].class, new EventConverter<>() {
+        reg.registerEventValue(BlockExplodeEvent.class, Block[].class, new EventConverter<>() {
             @Override
             public void set(BlockExplodeEvent event, @Nullable Block[] value) {
                 event.blockList().clear();
@@ -174,7 +175,7 @@ public class OtherEvents extends SimpleEvent {
             .since("3.0.0")
             .register();
 
-        EventValues.registerEventValue(MoistureChangeEvent.class, Block.class, new Converter<>() {
+        reg.registerEventValue(MoistureChangeEvent.class, Block.class, new Converter<>() {
             @Override
             public @NotNull Block convert(MoistureChangeEvent event) {
                 return new BlockStateBlock(event.getNewState());
@@ -210,18 +211,18 @@ public class OtherEvents extends SimpleEvent {
             .since("2.8.4")
             .register();
 
-        EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, event -> {
+        reg.registerEventValue(EntityAirChangeEvent.class, Number.class, event -> {
             if (event.getEntity() instanceof LivingEntity livingEntity) return livingEntity.getRemainingAir();
             return 0;
         }, EventValues.TIME_PAST);
-        EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, event -> {
+        reg.registerEventValue(EntityAirChangeEvent.class, Timespan.class, event -> {
             int ticks = 0;
             if (event.getEntity() instanceof LivingEntity livingEntity) {
                 ticks = livingEntity.getRemainingAir();
             }
             return new Timespan(TimePeriod.TICK, Math.max(ticks, 0));
         }, EventValues.TIME_PAST);
-        EventValues.registerEventValue(EntityAirChangeEvent.class, Number.class, new EventConverter<>() {
+        reg.registerEventValue(EntityAirChangeEvent.class, Number.class, new EventConverter<>() {
             @Override
             public void set(EntityAirChangeEvent event, @Nullable Number value) {
                 int amount = value != null ? value.intValue() : 0;
@@ -233,7 +234,7 @@ public class OtherEvents extends SimpleEvent {
                 return event.getAmount();
             }
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new EventConverter<>() {
+        reg.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new EventConverter<>() {
             @Override
             public void set(EntityAirChangeEvent event, @Nullable Timespan value) {
                 int amount = value != null ? (int) value.getAs(TimePeriod.TICK) : 0;
@@ -258,7 +259,7 @@ public class OtherEvents extends SimpleEvent {
             .since("1.5.0")
             .register();
 
-        EventValues.registerEventValue(EntityBlockInteractEvent.class, Block.class, EntityBlockInteractEvent::getBlock, EventValues.TIME_NOW);
+        reg.registerEventValue(EntityBlockInteractEvent.class, Block.class, EntityBlockInteractEvent::getBlock, EventValues.TIME_NOW);
 
         // Entity Change Block Event
         reg.newEvent(OtherEvents.class, EntityChangeBlockEvent.class,
@@ -277,7 +278,7 @@ public class OtherEvents extends SimpleEvent {
             .register();
 
         if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            EventValues.registerEventValue(EntityChangeBlockEvent.class, BlockData.class, new Converter<>() {
+            reg.registerEventValue(EntityChangeBlockEvent.class, BlockData.class, new Converter<>() {
                 @Override
                 public @NotNull BlockData convert(EntityChangeBlockEvent event) {
                     return event.getBlockData();
@@ -300,7 +301,7 @@ public class OtherEvents extends SimpleEvent {
             .since("3.4.0")
             .register();
 
-        EventValues.registerEventValue(EntityInsideBlockEvent.class, Block.class, EntityInsideBlockEvent::getBlock, EventValues.TIME_NOW);
+        reg.registerEventValue(EntityInsideBlockEvent.class, Block.class, EntityInsideBlockEvent::getBlock, EventValues.TIME_NOW);
 
         // Entity Pathfind Event
         reg.newEvent(OtherEvents.class, new Class[]{EntityPathfindEvent.class, SlimePathfindEvent.class}, "entity start[s] pathfinding")
@@ -313,7 +314,7 @@ public class OtherEvents extends SimpleEvent {
             .since("1.5.0")
             .register();
 
-        EventValues.registerEventValue(EntityPathfindEvent.class, Location.class, EntityPathfindEvent::getLoc, EventValues.TIME_NOW);
+        reg.registerEventValue(EntityPathfindEvent.class, Location.class, EntityPathfindEvent::getLoc, EventValues.TIME_NOW);
 
         // Entity Pose Change Event
         reg.newEvent(OtherEvents.class, EntityPoseChangeEvent.class,
@@ -327,9 +328,9 @@ public class OtherEvents extends SimpleEvent {
             .since("INSERT VERSION")
             .register();
 
-        EventValues.registerEventValue(EntityPoseChangeEvent.class, Pose.class,
+        reg.registerEventValue(EntityPoseChangeEvent.class, Pose.class,
             from -> from.getEntity().getPose(), EventValues.TIME_PAST);
-        EventValues.registerEventValue(EntityPoseChangeEvent.class, Pose.class,
+        reg.registerEventValue(EntityPoseChangeEvent.class, Pose.class,
             EntityPoseChangeEvent::getPose, EventValues.TIME_NOW);
 
         // Entity Remove Event
@@ -344,7 +345,7 @@ public class OtherEvents extends SimpleEvent {
             .since("2.7.2")
             .register();
 
-        EventValues.registerEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class, EntityRemoveEvent::getCause, EventValues.TIME_NOW);
+        reg.registerEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class, EntityRemoveEvent::getCause, EventValues.TIME_NOW);
 
         // Entity Shoot Bow Event
         reg.newEvent(OtherEvents.class, EntityShootBowEvent.class,
@@ -363,18 +364,18 @@ public class OtherEvents extends SimpleEvent {
             .since("2.16.0")
             .register();
 
-        EventValues.registerEventValue(EntityShootBowEvent.class, Projectile.class, event -> {
+        reg.registerEventValue(EntityShootBowEvent.class, Projectile.class, event -> {
             if (event.getProjectile() instanceof Projectile projectile) return projectile;
             return null;
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(EntityShootBowEvent.class, ItemType.class, event -> {
+        reg.registerEventValue(EntityShootBowEvent.class, ItemType.class, event -> {
             ItemStack consumable = event.getConsumable();
             if (consumable != null) return new ItemType(consumable);
             return null;
         }, EventValues.TIME_NOW);
 
         if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            EventValues.registerEventValue(EntityShootBowEvent.class, ItemStack.class,
+            reg.registerEventValue(EntityShootBowEvent.class, ItemStack.class,
                 EntityShootBowEvent::getConsumable, EventValues.TIME_NOW);
         }
 
@@ -390,7 +391,7 @@ public class OtherEvents extends SimpleEvent {
             .since("2.14.0")
             .register();
 
-        EventValues.registerEventValue(EntitySpellCastEvent.class, Spellcaster.Spell.class, EntitySpellCastEvent::getSpell, EventValues.TIME_NOW);
+        reg.registerEventValue(EntitySpellCastEvent.class, Spellcaster.Spell.class, EntitySpellCastEvent::getSpell, EventValues.TIME_NOW);
 
         // Entity Unleash Event
         reg.newEvent(OtherEvents.class, EntityUnleashEvent.class, "entity unleash")
@@ -409,8 +410,8 @@ public class OtherEvents extends SimpleEvent {
             .since("3.2.0")
             .register();
 
-        EventValues.registerEventValue(EntityUnleashEvent.class, String.class, event -> event.getReason().name().toLowerCase(Locale.ROOT), EventValues.TIME_NOW);
-        EventValues.registerEventValue(EntityUnleashEvent.class, Player.class, event -> {
+        reg.registerEventValue(EntityUnleashEvent.class, String.class, event -> event.getReason().name().toLowerCase(Locale.ROOT), EventValues.TIME_NOW);
+        reg.registerEventValue(EntityUnleashEvent.class, Player.class, event -> {
             if (event instanceof PlayerUnleashEntityEvent playerUnleashEntityEvent)
                 return playerUnleashEntityEvent.getPlayer();
             return null;
@@ -425,7 +426,7 @@ public class OtherEvents extends SimpleEvent {
                 "\t\tspawn 3 zombie pigmen at event-location")
             .since("1.8.0")
             .register();
-        EventValues.registerEventValue(EntityZapEvent.class, Location.class, e -> e.getEntity().getLocation(), EventValues.TIME_NOW);
+        reg.registerEventValue(EntityZapEvent.class, Location.class, e -> e.getEntity().getLocation(), EventValues.TIME_NOW);
 
         // Experience Orb Merge Event
         reg.newEvent(OtherEvents.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")
@@ -461,14 +462,14 @@ public class OtherEvents extends SimpleEvent {
                 .since("3.11.3")
                 .register();
 
-            EventValues.registerEventValue(UncheckedSignChangeEvent.class, ComponentWrapper[].class, from -> {
+            reg.registerEventValue(UncheckedSignChangeEvent.class, ComponentWrapper[].class, from -> {
                 ComponentWrapper[] comps = new ComponentWrapper[4];
                 for (int i = 0; i < 4; i++) {
                     comps[i] = ComponentWrapper.fromComponent(from.lines().get(i));
                 }
                 return comps;
             }, EventValues.TIME_NOW);
-            EventValues.registerEventValue(UncheckedSignChangeEvent.class, Location.class, from -> {
+            reg.registerEventValue(UncheckedSignChangeEvent.class, Location.class, from -> {
                 BlockPosition editedBlockPosition = from.getEditedBlockPosition();
                 return editedBlockPosition.toLocation(from.getPlayer().getWorld());
             }, EventValues.TIME_NOW);
@@ -492,9 +493,9 @@ public class OtherEvents extends SimpleEvent {
             .since("3.5.0")
             .register();
 
-        EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, PlayerAttemptPickupItemEvent::getRemaining, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, event -> event.getItem().getItemStack().getAmount(), EventValues.TIME_PAST);
-        EventValues.registerEventValue(PlayerAttemptPickupItemEvent.class, Item.class, PlayerAttemptPickupItemEvent::getItem, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, PlayerAttemptPickupItemEvent::getRemaining, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, event -> event.getItem().getItemStack().getAmount(), EventValues.TIME_PAST);
+        reg.registerEventValue(PlayerAttemptPickupItemEvent.class, Item.class, PlayerAttemptPickupItemEvent::getItem, EventValues.TIME_NOW);
 
         // Prepare Anvil Event
         reg.newEvent(OtherEvents.class, PrepareAnvilEvent.class, "[skbee] anvil prepare")
@@ -513,7 +514,7 @@ public class OtherEvents extends SimpleEvent {
             .since("1.11.0")
             .register();
 
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Slot.class, event -> new Slot() {
+        reg.registerEventValue(PrepareAnvilEvent.class, Slot.class, event -> new Slot() {
             final ItemStack result = event.getResult();
 
             @Nullable
@@ -549,7 +550,7 @@ public class OtherEvents extends SimpleEvent {
                 return "anvil inventory result slot";
             }
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PrepareAnvilEvent.class, Player.class, event -> (Player) event.getView().getPlayer(), EventValues.TIME_NOW);
+        reg.registerEventValue(PrepareAnvilEvent.class, Player.class, event -> (Player) event.getView().getPlayer(), EventValues.TIME_NOW);
 
         // Player Chunk Load Event
         reg.newEvent(OtherEvents.class, PlayerChunkLoadEvent.class,
@@ -566,7 +567,7 @@ public class OtherEvents extends SimpleEvent {
             .since("2.6.1")
             .register();
 
-        EventValues.registerEventValue(PlayerChunkLoadEvent.class, Player.class, PlayerChunkLoadEvent::getPlayer, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerChunkLoadEvent.class, Player.class, PlayerChunkLoadEvent::getPlayer, EventValues.TIME_NOW);
 
         // Player Chunk Unload Event
         reg.newEvent(OtherEvents.class, PlayerChunkUnloadEvent.class,
@@ -580,7 +581,7 @@ public class OtherEvents extends SimpleEvent {
             .since("2.6.1")
             .register();
 
-        EventValues.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, PlayerChunkUnloadEvent::getPlayer, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, PlayerChunkUnloadEvent::getPlayer, EventValues.TIME_NOW);
 
 
         // Player Custom Click Event
@@ -607,7 +608,7 @@ public class OtherEvents extends SimpleEvent {
                 .since("3.13.0")
                 .register();
 
-            EventValues.registerEventValue(PlayerCustomClickEvent.class, UUID.class, from -> {
+            reg.registerEventValue(PlayerCustomClickEvent.class, UUID.class, from -> {
                 PlayerCommonConnection connection = from.getCommonConnection();
                 if (connection instanceof PlayerGameConnection gameConnection) {
                     return gameConnection.getPlayer().getUniqueId();
@@ -616,7 +617,7 @@ public class OtherEvents extends SimpleEvent {
                 }
                 return null;
             });
-            EventValues.registerEventValue(PlayerCustomClickEvent.class, OfflinePlayer.class, event -> {
+            reg.registerEventValue(PlayerCustomClickEvent.class, OfflinePlayer.class, event -> {
                 PlayerCommonConnection connection = event.getCommonConnection();
                 if (connection instanceof PlayerGameConnection gameConnection)
                     return gameConnection.getPlayer();
@@ -628,7 +629,7 @@ public class OtherEvents extends SimpleEvent {
                 }
                 return null;
             });
-            EventValues.registerEventValue(PlayerCustomClickEvent.class, Audience.class, event -> {
+            reg.registerEventValue(PlayerCustomClickEvent.class, Audience.class, event -> {
                 PlayerCommonConnection connection = event.getCommonConnection();
                 if (connection instanceof PlayerGameConnection gameConnection)
                     return gameConnection.getPlayer();
@@ -637,7 +638,7 @@ public class OtherEvents extends SimpleEvent {
                 }
                 return null;
             });
-            EventValues.registerEventValue(PlayerCustomClickEvent.class, String.class, event -> {
+            reg.registerEventValue(PlayerCustomClickEvent.class, String.class, event -> {
                 PlayerCommonConnection connection = event.getCommonConnection();
                 if (connection instanceof PlayerGameConnection gameConnection)
                     return gameConnection.getPlayer().getName();
@@ -646,14 +647,14 @@ public class OtherEvents extends SimpleEvent {
                 }
                 return null;
             });
-            EventValues.registerEventValue(PlayerCustomClickEvent.class, NBTCompound.class, event -> {
+            reg.registerEventValue(PlayerCustomClickEvent.class, NBTCompound.class, event -> {
                 BinaryTagHolder tag = event.getTag();
                 if (tag == null) return null;
 
                 return (NBTCompound) NBT.parseNBT(tag.string());
             });
-            EventValues.registerEventValue(PlayerCustomClickEvent.class, NamespacedKey.class, event -> NamespacedKey.fromString(event.getIdentifier().asString()));
-            EventValues.registerEventValue(PlayerCustomClickEvent.class, PlayerConnection.class, PlayerCustomClickEvent::getCommonConnection);
+            reg.registerEventValue(PlayerCustomClickEvent.class, NamespacedKey.class, event -> NamespacedKey.fromString(event.getIdentifier().asString()));
+            reg.registerEventValue(PlayerCustomClickEvent.class, PlayerConnection.class, PlayerCustomClickEvent::getCommonConnection);
         }
 
         // Player Elytra Boost Event
@@ -664,7 +665,7 @@ public class OtherEvents extends SimpleEvent {
                 "\tpush player forward at speed 50")
             .since("1.8.0")
             .register();
-        EventValues.registerEventValue(PlayerElytraBoostEvent.class, ItemType.class, e -> new ItemType(e.getItemStack()), EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerElytraBoostEvent.class, ItemType.class, e -> new ItemType(e.getItemStack()), EventValues.TIME_NOW);
 
         // PlayerFailMoveEvent
         reg.newEvent(OtherEvents.class, PlayerFailMoveEvent.class, "player fail move")
@@ -684,10 +685,10 @@ public class OtherEvents extends SimpleEvent {
             .since("3.11.0")
             .register();
 
-        EventValues.registerEventValue(PlayerFailMoveEvent.class, PlayerFailMoveEvent.FailReason.class, PlayerFailMoveEvent::getFailReason);
-        EventValues.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getFrom, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getTo, EventValues.TIME_FUTURE);
-        EventValues.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
+        reg.registerEventValue(PlayerFailMoveEvent.class, PlayerFailMoveEvent.FailReason.class, PlayerFailMoveEvent::getFailReason);
+        reg.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getFrom, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getTo, EventValues.TIME_FUTURE);
+        reg.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
             @Override
             public void set(PlayerFailMoveEvent event, @Nullable Boolean allowed) {
                 event.setAllowed(Boolean.TRUE.equals(allowed));
@@ -698,7 +699,7 @@ public class OtherEvents extends SimpleEvent {
                 return event.isAllowed();
             }
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
+        reg.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
             @Override
             public void set(PlayerFailMoveEvent event, @Nullable Boolean allowed) {
                 event.setLogWarning(Boolean.TRUE.equals(allowed));
@@ -723,10 +724,10 @@ public class OtherEvents extends SimpleEvent {
             .register();
 
         if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getEntity, EventValues.TIME_NOW);
-            EventValues.registerEventValue(PlayerLeashEntityEvent.class, Player.class, PlayerLeashEntityEvent::getPlayer, EventValues.TIME_NOW);
+            reg.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getEntity, EventValues.TIME_NOW);
+            reg.registerEventValue(PlayerLeashEntityEvent.class, Player.class, PlayerLeashEntityEvent::getPlayer, EventValues.TIME_NOW);
         }
-        EventValues.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getLeashHolder, EventValues.TIME_FUTURE);
+        reg.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getLeashHolder, EventValues.TIME_FUTURE);
 
         // Player Pickup XP Event
         reg.newEvent(OtherEvents.class, PlayerPickupExperienceEvent.class,
@@ -741,7 +742,7 @@ public class OtherEvents extends SimpleEvent {
             .since("1.8.0")
             .register();
 
-        EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Experience.class, new EventConverter<>() {
+        reg.registerEventValue(PlayerPickupExperienceEvent.class, Experience.class, new EventConverter<>() {
             @Override
             public void set(PlayerPickupExperienceEvent event, @Nullable Experience value) {
                 if (value == null) return;
@@ -753,7 +754,7 @@ public class OtherEvents extends SimpleEvent {
                 return new Experience(event.getExperienceOrb().getExperience());
             }
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Number.class, new EventConverter<>() {
+        reg.registerEventValue(PlayerPickupExperienceEvent.class, Number.class, new EventConverter<>() {
             @Override
             public void set(PlayerPickupExperienceEvent event, @Nullable Number value) {
                 if (value == null) return;
@@ -765,7 +766,7 @@ public class OtherEvents extends SimpleEvent {
                 return event.getExperienceOrb().getExperience();
             }
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerPickupExperienceEvent.class, Entity.class, PlayerPickupExperienceEvent::getExperienceOrb, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerPickupExperienceEvent.class, Entity.class, PlayerPickupExperienceEvent::getExperienceOrb, EventValues.TIME_NOW);
 
         // Player Recipe Book Click Event
         reg.newEvent(OtherEvents.class, PlayerRecipeBookClickEvent.class, "[player] recipe book click")
@@ -777,7 +778,7 @@ public class OtherEvents extends SimpleEvent {
             .since("1.5.0")
             .register();
 
-        EventValues.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, event -> event.getRecipe().toString(), EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, event -> event.getRecipe().toString(), EventValues.TIME_NOW);
 
         // Player Spawn Change Event
         reg.newEvent(OtherEvents.class, PlayerSetSpawnEvent.class, "player spawn change")
@@ -790,9 +791,9 @@ public class OtherEvents extends SimpleEvent {
             .since("3.4.0")
             .register();
 
-        EventValues.registerEventValue(PlayerSetSpawnEvent.class, PlayerSetSpawnEvent.Cause.class, PlayerSetSpawnEvent::getCause, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerSetSpawnEvent.class, Location.class, event -> event.getPlayer().getRespawnLocation(), EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerSetSpawnEvent.class, Location.class, PlayerSetSpawnEvent::getLocation, EventValues.TIME_FUTURE);
+        reg.registerEventValue(PlayerSetSpawnEvent.class, PlayerSetSpawnEvent.Cause.class, PlayerSetSpawnEvent::getCause, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerSetSpawnEvent.class, Location.class, event -> event.getPlayer().getRespawnLocation(), EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerSetSpawnEvent.class, Location.class, PlayerSetSpawnEvent::getLocation, EventValues.TIME_FUTURE);
 
         // Player shear entity event
         reg.newEvent(OtherEvents.class, PlayerShearEntityEvent.class, "[player] shear entity")
@@ -815,10 +816,10 @@ public class OtherEvents extends SimpleEvent {
             .register();
 
         if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            EventValues.registerEventValue(PlayerStopUsingItemEvent.class, ItemType.class, event -> new ItemType(event.getItem()), EventValues.TIME_NOW);
+            reg.registerEventValue(PlayerStopUsingItemEvent.class, ItemType.class, event -> new ItemType(event.getItem()), EventValues.TIME_NOW);
         }
-        EventValues.registerEventValue(PlayerStopUsingItemEvent.class, ItemStack.class, PlayerStopUsingItemEvent::getItem);
-        EventValues.registerEventValue(PlayerStopUsingItemEvent.class, Number.class, PlayerStopUsingItemEvent::getTicksHeldFor, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerStopUsingItemEvent.class, ItemStack.class, PlayerStopUsingItemEvent::getItem);
+        reg.registerEventValue(PlayerStopUsingItemEvent.class, Number.class, PlayerStopUsingItemEvent::getTicksHeldFor, EventValues.TIME_NOW);
 
         // PlayerTrackEntityEvent
         reg.newEvent(OtherEvents.class, PlayerTrackEntityEvent.class, "player track entity")
@@ -834,7 +835,7 @@ public class OtherEvents extends SimpleEvent {
             .since("3.5.1")
             .register();
 
-        EventValues.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, PlayerTrackEntityEvent::getEntity, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, PlayerTrackEntityEvent::getEntity, EventValues.TIME_NOW);
 
     }
 
@@ -882,8 +883,8 @@ public class OtherEvents extends SimpleEvent {
             .since("3.10.0")
             .register();
 
-        EventValues.registerEventValue(ServerTickStartEvent.class, Integer.class, ServerTickStartEvent::getTickNumber);
-        EventValues.registerEventValue(ServerTickEndEvent.class, Number[].class,
+        reg.registerEventValue(ServerTickStartEvent.class, Integer.class, ServerTickStartEvent::getTickNumber);
+        reg.registerEventValue(ServerTickEndEvent.class, Number[].class,
             from -> new Number[]{
                 from.getTickNumber(),
                 from.getTickDuration(),
@@ -901,14 +902,14 @@ public class OtherEvents extends SimpleEvent {
             .since("3.10.0")
             .register();
 
-        EventValues.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
-        EventValues.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);
+        reg.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
+        reg.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);
 
     }
 
     private static void otherEventValues(Registration reg) {
         if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
+            reg.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
                 CreatureSpawner spawner = event.getSpawner();
                 if (spawner == null) return null;
                 return spawner.getBlock();
@@ -916,12 +917,12 @@ public class OtherEvents extends SimpleEvent {
         }
 
         // Click Events
-        EventValues.registerEventValue(PlayerInteractEvent.class, BlockFace.class, PlayerInteractEvent::getBlockFace, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerInteractEvent.class, BlockFace.class, PlayerInteractEvent::getBlockFace, EventValues.TIME_NOW);
 
         // Projectile Hit Event
-        EventValues.registerEventValue(ProjectileHitEvent.class, BlockFace.class, ProjectileHitEvent::getHitBlockFace, EventValues.TIME_NOW);
+        reg.registerEventValue(ProjectileHitEvent.class, BlockFace.class, ProjectileHitEvent::getHitBlockFace, EventValues.TIME_NOW);
 
-        EventValues.registerEventValue(BlockPlaceEvent.class, BlockFace.class, event -> {
+        reg.registerEventValue(BlockPlaceEvent.class, BlockFace.class, event -> {
             Block placed = event.getBlockPlaced();
             Block against = event.getBlockAgainst();
             return against.getFace(placed);

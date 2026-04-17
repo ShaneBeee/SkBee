@@ -33,9 +33,9 @@ public class EvtPlayerUseUnknown extends SkriptEvent {
             .since("2.17.0")
             .register();
 
-        EventValues.registerEventValue(PlayerUseUnknownEntityEvent.class, Number.class, PlayerUseUnknownEntityEvent::getEntityId, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerUseUnknownEntityEvent.class, Number.class, PlayerUseUnknownEntityEvent::getEntityId, EventValues.TIME_NOW);
         if (Skript.methodExists(PlayerUseUnknownEntityEvent.class, "getClickedRelativePosition")) {
-            EventValues.registerEventValue(PlayerUseUnknownEntityEvent.class, Vector.class, event -> {
+            reg.registerEventValue(PlayerUseUnknownEntityEvent.class, Vector.class, event -> {
                 try {
                     return event.getClickedRelativePosition();
                 } catch (NullPointerException ignore) {

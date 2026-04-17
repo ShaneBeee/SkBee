@@ -25,13 +25,13 @@ public class EvtRecipe extends SimpleEvent {
                 "\t\tcancel event")
             .since("1.0.0")
             .register();
-        EventValues.registerEventValue(PlayerRecipeDiscoverEvent.class, String.class,
+        reg.registerEventValue(PlayerRecipeDiscoverEvent.class, String.class,
             event -> event.getRecipe().toString(),
             EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerRecipeDiscoverEvent.class, NamespacedKey.class,
+        reg.registerEventValue(PlayerRecipeDiscoverEvent.class, NamespacedKey.class,
             PlayerRecipeDiscoverEvent::getRecipe,
             EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerRecipeDiscoverEvent.class, Boolean.class, new EventConverter<>() {
+        reg.registerEventValue(PlayerRecipeDiscoverEvent.class, Boolean.class, new EventConverter<>() {
             @Override
             public void set(PlayerRecipeDiscoverEvent event, @Nullable Boolean value) {
                 event.shouldShowNotification(Boolean.TRUE.equals(value));
@@ -61,7 +61,7 @@ public class EvtRecipe extends SimpleEvent {
             .since("3.6.1")
             .register();
 
-        EventValues.registerEventValue(CrafterCraftEvent.class, String.class, event -> event.getRecipe().getKey().toString(), EventValues.TIME_NOW);
+        reg.registerEventValue(CrafterCraftEvent.class, String.class, event -> event.getRecipe().getKey().toString(), EventValues.TIME_NOW);
     }
 
 }

@@ -34,7 +34,7 @@ public class EvtDamageByBlock extends SkriptEvent {
             .since("3.0.2")
             .register();
 
-        EventValues.registerEventValue(EntityDamageByBlockEvent.class, Block.class, EntityDamageByBlockEvent::getDamager, EventValues.TIME_NOW);
+        reg.registerEventValue(EntityDamageByBlockEvent.class, Block.class, EntityDamageByBlockEvent::getDamager, EventValues.TIME_NOW);
     }
 
     private Literal<EntityData<?>> entityType;

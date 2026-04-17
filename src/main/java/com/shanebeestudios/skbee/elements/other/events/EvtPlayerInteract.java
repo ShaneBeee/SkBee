@@ -54,27 +54,27 @@ public class EvtPlayerInteract extends SkriptEvent {
             .since("3.4.0")
             .register();
 
-        EventValues.registerEventValue(PlayerInteractEvent.class, EquipmentSlot.class, new Converter<>() {
+        reg.registerEventValue(PlayerInteractEvent.class, EquipmentSlot.class, new Converter<>() {
             @Override
             public @Nullable EquipmentSlot convert(PlayerInteractEvent event) {
                 return event.getHand();
             }
         }, EventValues.TIME_NOW);
 
-        EventValues.registerEventValue(PlayerInteractEvent.class, Action.class, PlayerInteractEvent::getAction, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerInteractEvent.class, Vector.class, new Converter<>() {
+        reg.registerEventValue(PlayerInteractEvent.class, Action.class, PlayerInteractEvent::getAction, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerInteractEvent.class, Vector.class, new Converter<>() {
             @SuppressWarnings("deprecation")
             @Override
             public @Nullable Vector convert(PlayerInteractEvent from) {
                 return from.getClickedPosition(); // Deprecated, new method in paper to use later
             }
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerInteractEntityEvent.class, EquipmentSlot.class, PlayerInteractEntityEvent::getHand, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerInteractAtEntityEvent.class, Location.class, event -> {
+        reg.registerEventValue(PlayerInteractEntityEvent.class, EquipmentSlot.class, PlayerInteractEntityEvent::getHand, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerInteractAtEntityEvent.class, Location.class, event -> {
             Location location = event.getRightClicked().getLocation();
             return location.add(event.getClickedPosition());
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PlayerInteractAtEntityEvent.class, Vector.class, PlayerInteractAtEntityEvent::getClickedPosition, EventValues.TIME_NOW);
+        reg.registerEventValue(PlayerInteractAtEntityEvent.class, Vector.class, PlayerInteractAtEntityEvent::getClickedPosition, EventValues.TIME_NOW);
     }
 
     private int pattern;

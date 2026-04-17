@@ -34,14 +34,14 @@ public class TabEvent extends SkriptEvent {
             .since("1.7.0")
             .register();
 
-        EventValues.registerEventValue(TabCompleteEvent.class, Player.class, event -> {
+        reg.registerEventValue(TabCompleteEvent.class, Player.class, event -> {
             CommandSender sender = event.getSender();
             if (sender instanceof Player) {
                 return ((Player) sender).getPlayer();
             }
             return null;
         }, EventValues.TIME_NOW);
-        EventValues.registerEventValue(TabCompleteEvent.class, String.class, event -> event.getBuffer().split(" ")[0], EventValues.TIME_NOW);
+        reg.registerEventValue(TabCompleteEvent.class, String.class, event -> event.getBuffer().split(" ")[0], EventValues.TIME_NOW);
     }
 
     private String[] commands;

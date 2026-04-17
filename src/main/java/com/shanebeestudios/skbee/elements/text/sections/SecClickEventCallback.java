@@ -51,8 +51,8 @@ public class SecClickEventCallback extends Section {
     }
 
     public static void register(Registration reg) {
-        EventValues.registerEventValue(ComponentCallbackEvent.class, Audience.class, ComponentCallbackEvent::getAudience);
-        EventValues.registerEventValue(ComponentCallbackEvent.class, Player.class, ComponentCallbackEvent::getPlayer);
+        reg.registerEventValue(ComponentCallbackEvent.class, Audience.class, ComponentCallbackEvent::getAudience);
+        reg.registerEventValue(ComponentCallbackEvent.class, Player.class, ComponentCallbackEvent::getPlayer);
 
         reg.newSection(SecClickEventCallback.class,
                 "create [a] [new] [click event] callback for %textcomp% " +

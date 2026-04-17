@@ -36,9 +36,9 @@ public class EvtPreSpawn extends SkriptEvent {
             .since("2.16.0")
             .register();
 
-        EventValues.registerEventValue(PreCreatureSpawnEvent.class, Location.class, PreCreatureSpawnEvent::getSpawnLocation, EventValues.TIME_NOW);
-        EventValues.registerEventValue(PreCreatureSpawnEvent.class, EntityData.class, event -> EntityUtils.toSkriptEntityData(event.getType()), EventValues.TIME_NOW);
-        EventValues.registerEventValue(PreCreatureSpawnEvent.class, SpawnReason.class, PreCreatureSpawnEvent::getReason, EventValues.TIME_NOW);
+        reg.registerEventValue(PreCreatureSpawnEvent.class, Location.class, PreCreatureSpawnEvent::getSpawnLocation, EventValues.TIME_NOW);
+        reg.registerEventValue(PreCreatureSpawnEvent.class, EntityData.class, event -> EntityUtils.toSkriptEntityData(event.getType()), EventValues.TIME_NOW);
+        reg.registerEventValue(PreCreatureSpawnEvent.class, SpawnReason.class, PreCreatureSpawnEvent::getReason, EventValues.TIME_NOW);
 
         // Paper - PreSpawnerSpawnEvent
         reg.newEvent(EvtPreSpawn.class, PreSpawnerSpawnEvent.class,
@@ -53,7 +53,7 @@ public class EvtPreSpawn extends SkriptEvent {
             .since("2.16.0")
             .register();
 
-        EventValues.registerEventValue(PreSpawnerSpawnEvent.class, Block.class, event -> event.getSpawnerLocation().getBlock(), EventValues.TIME_NOW);
+        reg.registerEventValue(PreSpawnerSpawnEvent.class, Block.class, event -> event.getSpawnerLocation().getBlock(), EventValues.TIME_NOW);
 
         // Paper - PhantomPreSpawnEvent
         reg.newEvent(EvtPreSpawn.class, PhantomPreSpawnEvent.class,
@@ -68,7 +68,7 @@ public class EvtPreSpawn extends SkriptEvent {
             .since("2.16.0")
             .register();
 
-        EventValues.registerEventValue(PhantomPreSpawnEvent.class, Entity.class, PhantomPreSpawnEvent::getSpawningEntity, EventValues.TIME_NOW);
+        reg.registerEventValue(PhantomPreSpawnEvent.class, Entity.class, PhantomPreSpawnEvent::getSpawningEntity, EventValues.TIME_NOW);
 
     }
 

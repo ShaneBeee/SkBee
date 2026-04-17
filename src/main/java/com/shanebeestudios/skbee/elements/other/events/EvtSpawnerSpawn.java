@@ -26,7 +26,7 @@ public class EvtSpawnerSpawn extends SkriptEvent {
             .since("2.16.0")
             .register();
 
-        EventValues.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
+        reg.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
             CreatureSpawner spawner = event.getSpawner();
             if (spawner != null) return spawner.getBlock();
             return null;

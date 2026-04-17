@@ -7,7 +7,6 @@ import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
-import ch.njol.skript.registrations.EventValues;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.entity.EntityPushedByEntityAttackEvent;
@@ -28,9 +27,11 @@ public class EvtEntityKnockback extends SkriptEvent {
             .since("1.8.0")
             .register();
 
-        EventValues.registerEventValue(EntityKnockbackEvent.class, EntityKnockbackEvent.Cause.class, EntityKnockbackEvent::getCause);
-        EventValues.registerEventValue(EntityKnockbackEvent.class, Entity.class, EntityKnockbackEvent::getEntity,
-            EventValues.TIME_NOW, "There may be multiple entities in an entity knockback event use knockback attacker/victim expression.", EntityKnockbackEvent.class);
+        reg.newEventValue(EntityKnockbackEvent.class, EntityKnockbackEvent.Cause.class, EntityKnockbackEvent::getCause)
+            .register();
+        reg.newEventValue(EntityKnockbackEvent.class, Entity.class, EntityKnockbackEvent::getEntity)
+            .excludes("There may be multiple entities in an entity knockback event use knockback attacker/victim expression.", EntityKnockbackEvent.class)
+            .register();
     }
 
     private Literal<EntityData<?>> victims;

@@ -44,13 +44,13 @@ public class AsyncEvents extends SimpleEvent {
                 .since("3.15.0")
                 .register();
 
-            EventValues.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, UUID.class,
+            reg.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, UUID.class,
                 event -> event.getConnection().getProfile().getId());
-            EventValues.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, String.class,
+            reg.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, String.class,
                 event -> event.getConnection().getProfile().getName());
-            EventValues.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, Audience.class,
+            reg.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, Audience.class,
                 event -> event.getConnection().getAudience());
-            EventValues.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, PlayerConnection.class,
+            reg.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, PlayerConnection.class,
                 AsyncPlayerConnectionConfigureEvent::getConnection);
         }
     }

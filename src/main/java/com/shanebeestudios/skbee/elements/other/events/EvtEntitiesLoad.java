@@ -30,8 +30,8 @@ public class EvtEntitiesLoad extends SkriptEvent {
             .since("3.5.0")
             .register();
 
-        EventValues.registerEventValue(EntitiesLoadEvent.class, Entity[].class, event -> event.getEntities().toArray(new Entity[0]), EventValues.TIME_NOW);
-        EventValues.registerEventValue(EntitiesUnloadEvent.class, Entity[].class, event -> event.getEntities().toArray(new Entity[0]), EventValues.TIME_NOW);
+        reg.registerEventValue(EntitiesLoadEvent.class, Entity[].class, event -> event.getEntities().toArray(new Entity[0]), EventValues.TIME_NOW);
+        reg.registerEventValue(EntitiesUnloadEvent.class, Entity[].class, event -> event.getEntities().toArray(new Entity[0]), EventValues.TIME_NOW);
     }
 
     private boolean load;

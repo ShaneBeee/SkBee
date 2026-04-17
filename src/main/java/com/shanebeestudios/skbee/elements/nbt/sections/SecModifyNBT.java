@@ -84,7 +84,7 @@ public class SecModifyNBT extends Section {
                 "\tset string tag \"owner\" of nbt to {_nameOfPlayer}")
             .since("3.11.0")
             .register();
-        EventValues.registerEventValue(NBTEditEvent.class, NBTCompound.class, NBTEditEvent::getCompound);
+        reg.registerEventValue(NBTEditEvent.class, NBTCompound.class, NBTEditEvent::getCompound);
     }
 
     private boolean custom;
