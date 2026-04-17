@@ -21,16 +21,20 @@ public class EffAdvancementLoad extends Effect {
             .name("Advancement - Load")
             .description("Load an advancement represented by the specified string into the server.",
                 "The advancement format is governed by Minecraft.",
-                "It is currently a JSON object, as described by [**McWiki**](https://minecraft.wiki/w/Advancement_definition).",
+                "It is currently a JSON object, as described by [**Advancement Definition**](https://minecraft.wiki/w/Advancement_definition) on McWiki.",
                 "NOTE: Bukkit has marked this as 'Unsafe', so please use at your own risk.",
                 "Watch console for errors when loading an advancement.")
             .examples("# This example was written for Minecraft 26.1.x",
                 "on load:",
-                "\tset {_display} to \"{\"\"icon\"\":{\"\"id\"\":\"\"minecraft:carrot\"\"},\"\"title\"\":\"\"Carrot Picker Upper\"\",\"\"description\"\":\"\"Picked up a carrot\"\",\"\"frame\"\":\"\"challenge\"\"}\"",
-                "\tset {_criteria} to \"{\"\"trigger\"\":\"\"minecraft:inventory_changed\"\",\"\"conditions\"\":{\"\"items\"\":[{\"\"item\"\":\"\"minecraft:carrot\"\"}]}}\"",
-                "\tset {_json} to \"{\"\"parent\"\":\"\"minecraft:story/root\"\",\"\"display\"\":%{_display}%,\"\"criteria\"\":{\"\"test\"\":%{_criteria}%}}\"",
+                "\tset {_display} to \"{\"\"icon\"\":{\"\"id\"\":\"\"minecraft:dirt\"\"},\"\"title\"\":\"\"Custom Stuff\"\",\"\"description\"\":\"\"Some Custom Stuff\"\",\"\"announce_to_chat\"\":false,\"\"show_toast\"\":false,\"\"background\"\":\"\"minecraft:gui/advancements/backgrounds/stone\"\"}\"",
+                "\tset {_criteria} to \"{\"\"trigger\"\":\"\"minecraft:inventory_changed\"\",\"\"conditions\"\":{\"\"items\"\":[{\"\"items\"\":\"\"minecraft:crafting_table\"\"}]}}\"",
+                "\tset {_parent} to \"{\"\"display\"\":%{_display}%,\"\"criteria\"\":{\"\"test\"\":%{_criteria}%}}\"",
+                "\tload advancement {_parent} with key \"something:root\"",
                 "",
-                "\tload advancement {_json} with key \"something:my_advancement\"")
+                "\tset {_display} to \"{\"\"icon\"\":{\"\"id\"\":\"\"minecraft:carrot\"\"},\"\"title\"\":\"\"Carrot Picker Upper\"\",\"\"description\"\":{\"\"color\"\":\"\"green\"\",\"\"text\"\":\"\"Pickup a carrot\"\"},\"\"frame\"\":\"\"task\"\"}\"",
+                "\tset {_criteria} to \"{\"\"trigger\"\":\"\"minecraft:inventory_changed\"\",\"\"conditions\"\":{\"\"items\"\":[{\"\"items\"\":\"\"minecraft:carrot\"\"}]}}\"",
+                "\tset {_json} to \"{\"\"parent\"\":\"\"something:root\"\",\"\"display\"\":%{_display}%,\"\"criteria\"\":{\"\"test_carrot\"\":%{_criteria}%}}\"",
+                "\tload advancement {_json} with key \"something:carrot_picker_upper\"")
             .since("1.17.0")
             .register();
     }
