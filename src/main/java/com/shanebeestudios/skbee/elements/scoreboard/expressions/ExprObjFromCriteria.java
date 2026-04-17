@@ -23,6 +23,7 @@ public class ExprObjFromCriteria extends SimpleExpression<Objective> {
                 "objectives (from|by) criteria[s] %criterias% [(of|from) %scoreboards%]")
             .name("Scoreboard - Objective from Criteria")
             .description("Get objectives from specific criterias of scoreboards.")
+            .since("2.6.0")
             .register();
     }
 

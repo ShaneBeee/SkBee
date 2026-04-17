@@ -25,6 +25,7 @@ public class EffPlayerBreakBlock extends Effect {
                     "if it is invoked on the same block being broken in the event.")
             .examples("make player break target block",
                 "make player break blocks within {_loc1} and {_loc2}")
+            .since("3.20.0")
             .register();
     }
 

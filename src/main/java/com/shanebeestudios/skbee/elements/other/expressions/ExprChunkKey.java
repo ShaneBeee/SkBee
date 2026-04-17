@@ -21,6 +21,7 @@ public class ExprChunkKey extends SimpleExpression<Long> {
             .description("Returns a chunk's chunk coordinates packed into a long.",
                 "Example would be chunk at 0,0 = 0, chunk at 1,1 = 4294967297.",
                 "This can be thought of an ID for chunks.")
+            .since("3.20.0")
             .register();
     }
 
