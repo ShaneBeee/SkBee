@@ -112,7 +112,7 @@ public class SkriptTypes {
             .user("bound ?move ?reasons?")
             .name("Bound - Move Reason")
             .description("Represents the reason a player moved in/out of a bound.")
-            .since("INSERT VERSION")
+            .since("3.20.0")
             .register();
     }
 

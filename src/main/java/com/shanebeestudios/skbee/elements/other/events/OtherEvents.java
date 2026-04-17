@@ -325,7 +325,7 @@ public class OtherEvents extends SimpleEvent {
                 "`past event-pose` = The previous pose of the entity.")
             .examples("on entity pose change:",
                 "\tbroadcast \"%event-entity% changed their pose from %past event-pose% to %event-pose%\"")
-            .since("INSERT VERSION")
+            .since("3.20.0")
             .register();
 
         reg.registerEventValue(EntityPoseChangeEvent.class, Pose.class,

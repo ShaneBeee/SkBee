@@ -163,7 +163,7 @@ public class BeeWorldConfig {
         save();
     }
 
-    @Deprecated(forRemoval = true, since = "INSERT VERSION")
+    @Deprecated(forRemoval = true, since = "3.20.0")
     public void deleteWorld(String worldName) {
         // Only delete custom worlds, and make sure it's not the plugins folder
         if (this.worldConfig.isSet("worlds." + worldName) && !worldName.equals("plugins")) {

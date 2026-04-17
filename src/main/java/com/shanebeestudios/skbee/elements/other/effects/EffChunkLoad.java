@@ -55,7 +55,7 @@ public class EffChunkLoad extends Effect {
                 "async load chunk at 100,100 in world \"world\"",
                 "async load chunk at 1,1 in world of player with ticket",
                 "async load chunks within {_l1} and {_l2} with tickets")
-            .since("INSERT VERSION")
+            .since("3.20.0")
             .register();
     }
 

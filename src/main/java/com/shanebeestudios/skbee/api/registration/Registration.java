@@ -552,12 +552,12 @@ public class Registration {
         return ftEventValueRegistrar.time(time);
     }
 
-    @Deprecated(forRemoval = true,since = "INSERT VERSION") // Use newEventValue() instead
+    @Deprecated(forRemoval = true,since = "3.20.0") // Use newEventValue() instead
     public <F extends Event, T> void registerEventValue(Class<F> event, Class<T> value, Converter<F, T> converter) {
         new EventValueRegistrar<>(event, value, converter).register();
     }
 
-    @Deprecated(forRemoval = true,since = "INSERT VERSION") // Use newEventValue() instead
+    @Deprecated(forRemoval = true,since = "3.20.0") // Use newEventValue() instead
     public <F extends Event, T> void registerEventValue(Class<F> event, Class<T> value, Converter<F, T> converter, int time) {
         EventValueRegistrar<F, T> ftEventValueRegistrar = new EventValueRegistrar<>(event, value, converter);
         ftEventValueRegistrar.time(time).register();

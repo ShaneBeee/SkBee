@@ -38,7 +38,7 @@ public class EffChunkUnload extends Effect {
             .examples("unload chunk at 1,1 in world \"world\"",
                 "unload chunk at 1,1 in world \"world\" without saving",
                 "unload chunk at {_loc}")
-            .since("INSERT VERSION")
+            .since("3.20.0")
             .register();
     }
 

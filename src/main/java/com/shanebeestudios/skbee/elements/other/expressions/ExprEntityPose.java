@@ -26,7 +26,7 @@ public class ExprEntityPose extends SimplePropertyExpression<Entity, Pose> {
             .examples("set {_pose} to pose of player",
                 "set pose of target entity to sleeping pose",
                 "set fixed pose of target entity to swimming pose")
-            .since("3.5.4", "INSERT VERSION (fixed)")
+            .since("3.5.4", "3.20.0 (fixed)")
             .register();
     }
 
