@@ -41,7 +41,7 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
 
     // Skript
-    compileOnly("com.github.SkriptLang:Skript:2.14.0")
+    compileOnly("com.github.SkriptLang:Skript:2.15.0")
 
     // commons-io
     compileOnly("commons-io:commons-io:2.14.0")
