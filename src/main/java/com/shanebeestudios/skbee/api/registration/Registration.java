@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.api.registration;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.classes.Cloner;
 import ch.njol.skript.classes.Parser;
@@ -18,7 +19,7 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.EventValues;
+import ch.njol.skript.registrations.EventConverter;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Keyed;
 import org.bukkit.Registry;
@@ -27,6 +28,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.addon.AddonModule;
 import org.skriptlang.skript.addon.SkriptAddon;
+import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
+import org.skriptlang.skript.bukkit.lang.eventvalue.EventValueRegistry;
 import org.skriptlang.skript.bukkit.registration.BukkitSyntaxInfos;
 import org.skriptlang.skript.common.function.DefaultFunction;
 import org.skriptlang.skript.lang.converter.Converter;
@@ -39,8 +42,10 @@ import org.skriptlang.skript.util.Priority;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Supplier;
 
 @SuppressWarnings({"rawtypes", "unchecked"})
@@ -510,27 +515,48 @@ public class Registration {
         return new FunctionRegistrar<T>(function);
     }
 
-    public class EventValueRegistrar<F extends Event, T> extends Registrar<EventValueRegistrar<F, T>> {
-        public final Class<F> eventClass;
+    public class EventValueRegistrar<E extends Event, T> extends Registrar<EventValueRegistrar<E, T>> {
+        public final Class<E> eventClass;
         public final Class<T> valueClass;
-        public final Converter<F, T> converter;
-        public int time;
-        private Class<F>[] excludedEvents;
-        String excludeErrorMessage;
+        public Converter<E, T> converter;
+        public String[] patterns = null;
+        public final Map<ChangeMode, EventValue.Changer<E, T>> changerMap = new HashMap<>();
+        public EventValue.Time time = EventValue.Time.NOW;
+        public Class<E>[] excludedEvents = null;
+        public String excludeErrorMessage = null;
 
-        public EventValueRegistrar(Class<F> eventClass, Class<T> valueClass, Converter<F, T> converter) {
+        public EventValueRegistrar(Class<E> eventClass, Class<T> valueClass) {
             this.eventClass = eventClass;
             this.valueClass = valueClass;
-            this.converter = converter;
         }
 
-        public EventValueRegistrar<F, T> time(int time) {
+        public EventValueRegistrar<E, T> converter(Converter<E, T> converter) {
+            this.converter = converter;
+            return this;
+        }
+
+        public EventValueRegistrar<E, T> patterns(String... patterns) {
+            this.patterns = patterns;
+            return this;
+        }
+
+        public EventValueRegistrar<E, T> changer(ChangeMode mode, EventValue.Changer<E, T> changer) {
+            this.changerMap.put(mode, changer);
+            return this;
+        }
+
+        public EventValueRegistrar<E, T> time(int time) {
+            this.time = EventValue.Time.of(time);
+            return this;
+        }
+
+        public EventValueRegistrar<E, T> time(EventValue.Time time) {
             this.time = time;
             return this;
         }
 
         @SafeVarargs
-        public final EventValueRegistrar<F, T> excludes(String excludeErrorMessage, Class<F>... excludedEvents) {
+        public final EventValueRegistrar<E, T> excludes(String excludeErrorMessage, Class<E>... excludedEvents) {
             this.excludeErrorMessage = excludeErrorMessage;
             this.excludedEvents = excludedEvents;
             return this;
@@ -543,24 +569,37 @@ public class Registration {
         }
     }
 
+    public <F extends Event, T> EventValueRegistrar<F, T> newEventValue(Class<F> event, Class<T> value) {
+        return new EventValueRegistrar<>(event, value);
+    }
+
+    @Deprecated(forRemoval = true, since = "INSERT VERSION")
     public <F extends Event, T> EventValueRegistrar<F, T> newEventValue(Class<F> event, Class<T> value, Converter<F, T> converter) {
-        return new EventValueRegistrar<>(event, value, converter);
+        EventValueRegistrar<F, T> reg = new EventValueRegistrar<>(event, value);
+        reg.converter(converter);
+        return reg;
     }
 
-    public <F extends Event, T> EventValueRegistrar<F, T> newEventValue(Class<F> event, Class<T> value, Converter<F, T> converter, int time) {
-        EventValueRegistrar<F, T> ftEventValueRegistrar = new EventValueRegistrar<>(event, value, converter);
-        return ftEventValueRegistrar.time(time);
-    }
-
-    @Deprecated(forRemoval = true,since = "3.20.0") // Use newEventValue() instead
+    @Deprecated(forRemoval = true, since = "3.20.0") // Use newEventValue() instead
     public <F extends Event, T> void registerEventValue(Class<F> event, Class<T> value, Converter<F, T> converter) {
-        new EventValueRegistrar<>(event, value, converter).register();
+        new EventValueRegistrar<>(event, value)
+            .converter(converter)
+            .register();
     }
 
-    @Deprecated(forRemoval = true,since = "3.20.0") // Use newEventValue() instead
+    @Deprecated(forRemoval = true, since = "3.20.0") // Use newEventValue() instead
+    public <F extends Event, T> void registerEventValue(Class<F> event, Class<T> value, EventConverter<F, T> converter) {
+        new EventValueRegistrar<>(event, value)
+            .converter(converter)
+            .register();
+    }
+
+    @Deprecated(forRemoval = true, since = "3.20.0") // Use newEventValue() instead
     public <F extends Event, T> void registerEventValue(Class<F> event, Class<T> value, Converter<F, T> converter, int time) {
-        EventValueRegistrar<F, T> ftEventValueRegistrar = new EventValueRegistrar<>(event, value, converter);
-        ftEventValueRegistrar.time(time).register();
+        new EventValueRegistrar<>(event, value)
+            .converter(converter)
+            .time(time)
+            .register();
     }
 
     public void finalizeRegistration() {
@@ -626,7 +665,6 @@ public class Registration {
         }
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     public void registerLoad() {
         SyntaxRegistry syntaxInfos = this.addon.syntaxRegistry();
 
@@ -655,18 +693,32 @@ public class Registration {
         }
 
         // EVENT VALUES
-        for (EventValueRegistrar eventValue : getEventValues()) {
-            // TODO - use Skript's new registration in 2.15+
-            Converter eventValueConverter = EventValues.getExactEventValueConverter(eventValue.eventClass, eventValue.valueClass, eventValue.time);
-            if (eventValueConverter != null) {
-                debug("An event value has already been registered for %s / %s", eventValue.eventClass.getSimpleName(), eventValue.valueClass.getSimpleName());
+        EventValueRegistry eventValueRegistry = this.addon.registry(EventValueRegistry.class);
+        for (EventValueRegistrar<?, ?> eventValue : getEventValues()) {
+            Class eventClass = eventValue.eventClass;
+            Class valueClass = eventValue.valueClass;
+            EventValue.Time time = eventValue.time;
+
+            if (eventValueRegistry.isRegistered(eventClass, valueClass, time)) {
+                debug("An event value has already been registered for %s / %s [%s]",
+                    eventClass.getSimpleName(), valueClass.getSimpleName(), time);
                 continue;
             }
-            if (eventValue.excludedEvents == null) {
-                EventValues.registerEventValue(eventValue.eventClass, eventValue.valueClass, eventValue.converter, eventValue.time);
-            } else {
-                EventValues.registerEventValue(eventValue.eventClass, eventValue.valueClass, eventValue.converter, eventValue.time, eventValue.excludeErrorMessage, eventValue.excludedEvents);
+
+            EventValue.Builder builder = EventValue.builder(eventClass, valueClass);
+            builder.time(time);
+            builder.getter(eventValue.converter);
+            if (eventValue.patterns != null) {
+                builder.patterns(eventValue.patterns);
             }
+            eventValue.changerMap.forEach(builder::registerChanger);
+            if (eventValue.excludedEvents != null) {
+                builder.excludes(eventValue.excludedEvents);
+                if (eventValue.excludeErrorMessage != null) {
+                    builder.excludedErrorMessage(eventValue.excludeErrorMessage);
+                }
+            }
+            eventValueRegistry.register(builder.build());
         }
 
         // SECTIONS
@@ -752,6 +804,7 @@ public class Registration {
         Util.skriptError(format, args);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private static void debug(String format, Object... args) {
         Util.debug(format, args);
     }
