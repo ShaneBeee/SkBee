@@ -4,7 +4,6 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.EventValues;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.CreatureSpawner;
@@ -26,12 +25,13 @@ public class EvtSpawnerSpawn extends SkriptEvent {
             .since("2.16.0")
             .register();
 
-        reg.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
-            CreatureSpawner spawner = event.getSpawner();
-            if (spawner != null) return spawner.getBlock();
-            return null;
-        }, EventValues.TIME_NOW);
-
+        reg.newEventValue(SpawnerSpawnEvent.class, Block.class)
+            .converter(event -> {
+                CreatureSpawner spawner = event.getSpawner();
+                if (spawner != null) return spawner.getBlock();
+                return null;
+            })
+            .register();
     }
 
     private Literal<EntityData<?>> spawnedEntities;

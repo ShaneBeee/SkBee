@@ -27,9 +27,11 @@ public class EvtEntityKnockback extends SkriptEvent {
             .since("1.8.0")
             .register();
 
-        reg.newEventValue(EntityKnockbackEvent.class, EntityKnockbackEvent.Cause.class, EntityKnockbackEvent::getCause)
+        reg.newEventValue(EntityKnockbackEvent.class, EntityKnockbackEvent.Cause.class)
+            .converter(EntityKnockbackEvent::getCause)
             .register();
-        reg.newEventValue(EntityKnockbackEvent.class, Entity.class, EntityKnockbackEvent::getEntity)
+        reg.newEventValue(EntityKnockbackEvent.class, Entity.class)
+            .converter(EntityKnockbackEvent::getEntity)
             .excludes("There may be multiple entities in an entity knockback event use knockback attacker/victim expression.", EntityKnockbackEvent.class)
             .register();
     }

@@ -7,7 +7,6 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
@@ -51,8 +50,12 @@ public class SecClickEventCallback extends Section {
     }
 
     public static void register(Registration reg) {
-        reg.registerEventValue(ComponentCallbackEvent.class, Audience.class, ComponentCallbackEvent::getAudience);
-        reg.registerEventValue(ComponentCallbackEvent.class, Player.class, ComponentCallbackEvent::getPlayer);
+        reg.newEventValue(ComponentCallbackEvent.class, Audience.class)
+            .converter(ComponentCallbackEvent::getAudience)
+            .register();
+        reg.newEventValue(ComponentCallbackEvent.class, Player.class)
+            .converter(ComponentCallbackEvent::getPlayer)
+            .register();
 
         reg.newSection(SecClickEventCallback.class,
                 "create [a] [new] [click event] callback for %textcomp% " +

@@ -3,8 +3,8 @@ package com.shanebeestudios.skbee.api.registration;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.lang.Expression;
+import ch.njol.skript.localization.Noun;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.EventValues;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonArray;
@@ -12,6 +12,7 @@ import com.google.gson.JsonObject;
 import com.shanebeestudios.skbee.api.registration.Registration.ConditionRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.EffectRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.EventRegistrar;
+import com.shanebeestudios.skbee.api.registration.Registration.EventValueRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.ExpressionRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.FunctionRegistrar;
 import com.shanebeestudios.skbee.api.registration.Registration.SectionRegistrar;
@@ -22,6 +23,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.Event;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.common.function.DefaultFunction;
 import org.skriptlang.skript.common.function.Parameter;
 import org.skriptlang.skript.lang.entry.EntryData;
@@ -35,6 +37,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class JsonDocGenerator {
 
@@ -168,7 +171,7 @@ public class JsonDocGenerator {
             for (String pattern : event.patterns) {
                 patterns.add("[on] " + pattern);
             }
-            gemerateGeneric("type", documentation, syntaxObject, patterns.toArray(new String[0]));
+            gemerateGeneric("event", documentation, syntaxObject, patterns.toArray(new String[0]));
 
             // Cancelable
             boolean cancellable = false;
@@ -182,29 +185,49 @@ public class JsonDocGenerator {
 
             // EventValues
             List<String> eventValueList = new ArrayList<>();
-            for (Class<? extends Event> eventClass : event.eventClasses) {
-                EventValues.getPerEventEventValues().forEach((aClass, eventValueInfo) -> {
-                    if (aClass.isAssignableFrom(eventClass)) {
-                        ClassInfo<?> exactClassInfo = Classes.getExactClassInfo(eventValueInfo.valueClass());
-                        if (exactClassInfo == null) return;
+            JsonArray description = syntaxObject.getAsJsonArray("description");
+            description.add(" ");
+            description.add("**Event Values:**");
 
-                        String singular = exactClassInfo.getName().getSingular();
-                        int time = eventValueInfo.time();
-                        String eventValueString;
-                        if (time == -1) {
-                            eventValueString = "past event-" + singular;
-                        } else if (time == 1) {
-                            eventValueString = "future event-" + singular;
-                        } else {
-                            eventValueString = "event-" + singular;
-                        }
-                        if (!eventValueList.contains(eventValueString)) {
-                            eventValueList.add(eventValueString);
-                        }
+            for (Class<? extends Event> eventClass : event.eventClasses) {
+                for (EventValueRegistrar<?, ?> eventValueInfo : this.registration.getEventValues(eventClass)) {
+                    Class<?> valueClass = eventValueInfo.valueClass;
+                    boolean isArray = valueClass.isArray();
+                    if (isArray) {
+                        valueClass = valueClass.getComponentType();
                     }
-                });
+                    ClassInfo<?> valueClassInfo = Classes.getExactClassInfo(valueClass);
+                    if (valueClassInfo == null) continue;
+
+                    Noun name = valueClassInfo.getName();
+                    String singular = isArray ? name.getPlural() : name.getSingular();
+                    EventValue.Time time = eventValueInfo.time;
+                    String timeString = switch (time) {
+                        case NOW -> "event-";
+                        case FUTURE -> "future event-";
+                        case PAST -> "past event-";
+                    };
+
+                    String eventValueString = timeString + singular;
+                    if (!eventValueList.contains(eventValueString)) {
+                        eventValueList.add(eventValueString);
+                    }
+                    description.add(" - `" + eventValueString + "`");
+                    if (eventValueInfo.getDocumentation().getDescription() != null) {
+                        description.add("   - **Description**: " + String.join(" ", eventValueInfo.getDocumentation().getDescription()));
+                    }
+                    if (eventValueInfo.patterns != null) {
+                        description.add("   - **Patterns**: `" + timeString + String.join("`, `" + timeString, eventValueInfo.patterns) + "`");
+                    }
+                    Map<ChangeMode, ? extends EventValue.Changer<?, ?>> changerMap = eventValueInfo.changerMap;
+                    if (!changerMap.isEmpty()) {
+                        description.add("   - **Changers**: " + String.join(", ", changerMap.keySet().stream().map(Enum::name).toList()));
+                    }
+                }
             }
             if (!eventValueList.isEmpty()) {
+                // Only add description if there are event values
+                syntaxObject.add("description", description);
                 eventValueList.sort(String::compareTo);
                 JsonArray eventValuesArray = new JsonArray();
                 eventValueList.forEach(eventValuesArray::add);

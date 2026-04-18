@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.generator.type;
 
-import ch.njol.skript.registrations.EventValues;
 import com.shanebeestudios.skbee.api.generator.event.BiomeGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.HeightGenEvent;
 import com.shanebeestudios.skbee.api.registration.Registration;
@@ -13,9 +12,15 @@ import org.skriptlang.skript.common.function.DefaultFunction;
 public class GenEventValues {
 
     public static void register(Registration reg) {
-        reg.registerEventValue(BiomeGenEvent.class, Location.class, BiomeGenEvent::getLocation, EventValues.TIME_NOW);
-        reg.registerEventValue(BiomeGenEvent.class, BiomeParameterPoint.class, BiomeGenEvent::getBiomeParameterPoint, EventValues.TIME_NOW);
-        reg.registerEventValue(HeightGenEvent.class, Location.class, HeightGenEvent::getLocation, EventValues.TIME_NOW);
+        reg.newEventValue(BiomeGenEvent.class, Location.class)
+            .converter(BiomeGenEvent::getLocation)
+            .register();
+        reg.newEventValue(BiomeGenEvent.class, BiomeParameterPoint.class)
+            .converter(BiomeGenEvent::getBiomeParameterPoint)
+            .register();
+        reg.newEventValue(HeightGenEvent.class, Location.class)
+            .converter(HeightGenEvent::getLocation)
+            .register();
 
         reg.newType(BiomeParameterPoint.class, "biomeparameterpoint")
             .user("biome ?parameter ?points?")
@@ -29,7 +34,7 @@ public class GenEventValues {
         DefaultFunction<Number> peaksAndValleys = DefaultFunction.builder(reg.getAddon(), "peaksAndValleys", Number.class)
             .parameter("number", Number.class)
             .build(params -> {
-                Number number =  params.get("number");
+                Number number = params.get("number");
                 float f = number.floatValue();
                 return -(Math.abs(Math.abs(f) - 0.6666667F) - 0.33333334F) * 3.0F;
             });

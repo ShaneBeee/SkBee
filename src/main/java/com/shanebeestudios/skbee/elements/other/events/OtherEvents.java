@@ -2,10 +2,8 @@ package com.shanebeestudios.skbee.elements.other.events;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.util.SimpleEvent;
-import ch.njol.skript.registrations.EventConverter;
-import ch.njol.skript.registrations.EventValues;
-import ch.njol.skript.util.BlockStateBlock;
 import ch.njol.skript.util.Experience;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.util.Timespan.TimePeriod;
@@ -24,7 +22,6 @@ import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import com.shanebeestudios.skbee.api.registration.Registration;
-import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -85,13 +82,13 @@ import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.lang.converter.Converter;
 
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
 
-@SuppressWarnings({"UnstableApiUsage", "removal"})
 public class OtherEvents extends SimpleEvent {
 
     private static final boolean HAS_CONFIG = Skript.classExists("io.papermc.paper.connection.PlayerConfigurationConnection");
@@ -117,7 +114,8 @@ public class OtherEvents extends SimpleEvent {
             .since("2.8.3")
             .register();
 
-        reg.newEventValue(BlockDamageAbortEvent.class, Player.class, BlockDamageAbortEvent::getPlayer)
+        reg.newEventValue(BlockDamageAbortEvent.class, Player.class)
+            .converter(BlockDamageAbortEvent::getPlayer)
             .register();
 
         // Block Explode Event
@@ -126,44 +124,65 @@ public class OtherEvents extends SimpleEvent {
             .description("Called when a block explodes interacting with blocks.",
                 "The event isn't called if the gamerule MOB_GRIEFING is disabled as no block interaction will occur.",
                 "The Block returned by this event is not necessarily the block that caused the explosion,",
-                "just the block at the location where the explosion originated.",
-                "`event-blocks` = The blocks which exploded (can be set).",
-                "`past event-itemtype` will return the type of the block which exploded.",
-                "`past event-blockdata` will return the blockdata of the block which exploded.")
+                "just the block at the location where the explosion originated.")
             .examples("")
             .since("3.2.0")
             .register();
 
-        reg.registerEventValue(BlockExplodeEvent.class, BlockData.class, event -> event.getBlock().getBlockData(), EventValues.TIME_NOW);
-        reg.registerEventValue(BlockExplodeEvent.class, BlockData.class, new Converter<>() {
-            @Override
-            public @NotNull BlockData convert(BlockExplodeEvent event) {
-                BlockState explodedBlockState = event.getExplodedBlockState();
-                return explodedBlockState.getBlockData();
-            }
-        }, EventValues.TIME_PAST);
-        reg.registerEventValue(BlockExplodeEvent.class, ItemType.class, event -> new ItemType(event.getBlock().getType()), EventValues.TIME_NOW);
-        reg.registerEventValue(BlockExplodeEvent.class, ItemType.class, new Converter<>() {
-            @Override
-            public @NotNull ItemType convert(BlockExplodeEvent event) {
-                BlockState explodedBlockState = event.getExplodedBlockState();
-                return new ItemType(explodedBlockState.getType());
-            }
-        }, EventValues.TIME_PAST);
-        reg.registerEventValue(BlockExplodeEvent.class, Block[].class, new EventConverter<>() {
-            @Override
-            public void set(BlockExplodeEvent event, @Nullable Block[] value) {
+        reg.newEventValue(BlockExplodeEvent.class, BlockData.class)
+            .converter(event -> event.getBlock().getBlockData())
+            .register();
+        reg.newEventValue(BlockExplodeEvent.class, BlockData.class)
+            .description("The blockdata of the block which exploded.")
+            .time(EventValue.Time.PAST)
+            .converter(new Converter<>() {
+                @Override
+                public @NotNull BlockData convert(BlockExplodeEvent event) {
+                    BlockState explodedBlockState = event.getExplodedBlockState();
+                    return explodedBlockState.getBlockData();
+                }
+            })
+            .register();
+        reg.newEventValue(BlockExplodeEvent.class, ItemType.class)
+            .converter(event -> new ItemType(event.getBlock().getType()))
+            .register();
+        reg.newEventValue(BlockExplodeEvent.class, ItemType.class)
+            .description("The item type of the block which exploded.")
+            .time(EventValue.Time.PAST)
+            .converter(new Converter<>() {
+                @Override
+                public @NotNull ItemType convert(BlockExplodeEvent event) {
+                    BlockState explodedBlockState = event.getExplodedBlockState();
+                    return new ItemType(explodedBlockState.getType());
+                }
+            })
+            .register();
+        reg.newEventValue(BlockExplodeEvent.class, Block[].class)
+            .description("The blocks which exploded.")
+            .patterns("exploded-blocks")
+            .converter(from -> from.blockList().toArray(new Block[0]))
+            .changer(ChangeMode.SET, (event, value) -> {
                 event.blockList().clear();
                 if (value != null && value.length > 0) {
                     event.blockList().addAll(List.of(value));
                 }
-            }
-
-            @Override
-            public @Nullable Block[] convert(BlockExplodeEvent from) {
-                return from.blockList().toArray(new Block[0]);
-            }
-        });
+            })
+            .changer(ChangeMode.ADD, (event, value) -> {
+                if (value != null) {
+                    for (Block block : value) {
+                        event.blockList().add(block);
+                    }
+                }
+            })
+            .changer(ChangeMode.REMOVE, (event, value) -> {
+                if (value != null) {
+                    for (Block block : value) {
+                        event.blockList().remove(block);
+                    }
+                }
+            })
+            .changer(ChangeMode.DELETE, (event, value) -> event.blockList().clear())
+            .register();
 
         // Moisture Change Event
         reg.newEvent(OtherEvents.class, MoistureChangeEvent.class, "moisture change")
@@ -175,12 +194,10 @@ public class OtherEvents extends SimpleEvent {
             .since("3.0.0")
             .register();
 
-        reg.registerEventValue(MoistureChangeEvent.class, Block.class, new Converter<>() {
-            @Override
-            public @NotNull Block convert(MoistureChangeEvent event) {
-                return new BlockStateBlock(event.getNewState());
-            }
-        }, EventValues.TIME_FUTURE);
+        reg.newEventValue(MoistureChangeEvent.class, Block.class)
+            .time(EventValue.Time.FUTURE)
+            .converter(MoistureChangeEvent::getBlock)
+            .register();
     }
 
     @SuppressWarnings("unchecked")
@@ -200,58 +217,52 @@ public class OtherEvents extends SimpleEvent {
         reg.newEvent(OtherEvents.class, EntityAirChangeEvent.class,
                 "[entity] air change")
             .name("Entity Air Change")
-            .description("Called when the amount of air an entity has remaining changes.",
-                "\n`event-number` = The amount of air the entity will have left (measured in ticks) (can be set).",
-                "\n`event-timespan` = The amount of air the entity will have left (as a time span) (can be set).",
-                "\n`past event-number` = The amount of air the entity had left before the event (measured in ticks).",
-                "\n`past event-timespan` = The amount of air the entity had left before the event (as a time span).")
+            .description("Called when the amount of air an entity has remaining changes.")
             .examples("on entity air change:",
                 "\tif event-entity is a player:",
                 "\t\tcancel event")
             .since("2.8.4")
             .register();
 
-        reg.registerEventValue(EntityAirChangeEvent.class, Number.class, event -> {
-            if (event.getEntity() instanceof LivingEntity livingEntity) return livingEntity.getRemainingAir();
-            return 0;
-        }, EventValues.TIME_PAST);
-        reg.registerEventValue(EntityAirChangeEvent.class, Timespan.class, event -> {
-            int ticks = 0;
-            if (event.getEntity() instanceof LivingEntity livingEntity) {
-                ticks = livingEntity.getRemainingAir();
-            }
-            return new Timespan(TimePeriod.TICK, Math.max(ticks, 0));
-        }, EventValues.TIME_PAST);
-        reg.registerEventValue(EntityAirChangeEvent.class, Number.class, new EventConverter<>() {
-            @Override
-            public void set(EntityAirChangeEvent event, @Nullable Number value) {
-                int amount = value != null ? value.intValue() : 0;
-                event.setAmount(amount);
-            }
-
-            @Override
-            public Number convert(EntityAirChangeEvent event) {
-                return event.getAmount();
-            }
-        }, EventValues.TIME_NOW);
-        reg.registerEventValue(EntityAirChangeEvent.class, Timespan.class, new EventConverter<>() {
-            @Override
-            public void set(EntityAirChangeEvent event, @Nullable Timespan value) {
+        reg.newEventValue(EntityAirChangeEvent.class, Number.class)
+            .description("The amount of air the entity had left before the event (measured in ticks).")
+            .time(EventValue.Time.PAST)
+            .converter(event -> {
+                if (event.getEntity() instanceof LivingEntity livingEntity) return livingEntity.getRemainingAir();
+                return 0;
+            })
+            .register();
+        reg.newEventValue(EntityAirChangeEvent.class, Timespan.class)
+            .description("The amount of air the entity had left before the event (as a time span).")
+            .time(EventValue.Time.PAST)
+            .converter(event -> {
+                int ticks = 0;
+                if (event.getEntity() instanceof LivingEntity livingEntity) {
+                    ticks = livingEntity.getRemainingAir();
+                }
+                return new Timespan(TimePeriod.TICK, Math.max(ticks, 0));
+            })
+            .register();
+        reg.newEventValue(EntityAirChangeEvent.class, Number.class)
+            .description("The amount of air the entity will have left (measured in ticks).")
+            .converter(EntityAirChangeEvent::getAmount)
+            .changer(ChangeMode.SET, (event, value) ->
+                event.setAmount(value != null ? value.intValue() : 0))
+            .register();
+        reg.newEventValue(EntityAirChangeEvent.class, Timespan.class)
+            .converter(event -> new Timespan(TimePeriod.TICK, Math.max(event.getAmount(), 0)))
+            .changer(ChangeMode.SET, (event, value) -> {
                 int amount = value != null ? (int) value.getAs(TimePeriod.TICK) : 0;
                 event.setAmount(amount);
-            }
-
-            @Override
-            public Timespan convert(EntityAirChangeEvent event) {
-                return new Timespan(TimePeriod.TICK, Math.max(event.getAmount(), 0));
-            }
-        }, EventValues.TIME_NOW);
+            })
+            .description("The amount of air the entity will have left (as a time span).")
+            .register();
 
         // Entity Block Interact Event
         reg.newEvent(OtherEvents.class, EntityBlockInteractEvent.class,
                 "block (interact|trample)")
             .name("Block Physical Interact Event")
-            .description("Called when an entity physically interacts with a block, for example,",
+            .description("Called when an entity physically interacts with a block, for example," +
                 " entities trampling farmland and villagers opening doors.")
             .examples("on block trample:",
                 "\tif type of event-block is farmland:",
@@ -259,7 +270,10 @@ public class OtherEvents extends SimpleEvent {
             .since("1.5.0")
             .register();
 
-        reg.registerEventValue(EntityBlockInteractEvent.class, Block.class, EntityBlockInteractEvent::getBlock, EventValues.TIME_NOW);
+        reg.newEventValue(EntityBlockInteractEvent.class, Block.class)
+            .description("The block which was interacted with.")
+            .converter(EntityBlockInteractEvent::getBlock)
+            .register();
 
         // Entity Change Block Event
         reg.newEvent(OtherEvents.class, EntityChangeBlockEvent.class,
@@ -277,14 +291,9 @@ public class OtherEvents extends SimpleEvent {
             .since("2.5.3")
             .register();
 
-        if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            reg.registerEventValue(EntityChangeBlockEvent.class, BlockData.class, new Converter<>() {
-                @Override
-                public @NotNull BlockData convert(EntityChangeBlockEvent event) {
-                    return event.getBlockData();
-                }
-            }, EventValues.TIME_NOW);
-        }
+        reg.newEventValue(EntityChangeBlockEvent.class, BlockData.class)
+            .converter(EntityChangeBlockEvent::getBlockData)
+            .register();
 
         // EntityInsideBlockEvent
         reg.newEvent(OtherEvents.class, EntityInsideBlockEvent.class, "entity inside block")
@@ -301,7 +310,9 @@ public class OtherEvents extends SimpleEvent {
             .since("3.4.0")
             .register();
 
-        reg.registerEventValue(EntityInsideBlockEvent.class, Block.class, EntityInsideBlockEvent::getBlock, EventValues.TIME_NOW);
+        reg.newEventValue(EntityInsideBlockEvent.class, Block.class)
+            .converter(EntityInsideBlockEvent::getBlock)
+            .register();
 
         // Entity Pathfind Event
         reg.newEvent(OtherEvents.class, new Class[]{EntityPathfindEvent.class, SlimePathfindEvent.class}, "entity start[s] pathfinding")
@@ -314,24 +325,29 @@ public class OtherEvents extends SimpleEvent {
             .since("1.5.0")
             .register();
 
-        reg.registerEventValue(EntityPathfindEvent.class, Location.class, EntityPathfindEvent::getLoc, EventValues.TIME_NOW);
+        reg.newEventValue(EntityPathfindEvent.class, Location.class)
+            .converter(EntityPathfindEvent::getLoc)
+            .register();
 
         // Entity Pose Change Event
         reg.newEvent(OtherEvents.class, EntityPoseChangeEvent.class,
                 "entity pose change", "entity changed pose")
             .name("Entity Pose Change")
-            .description("Called when an entity changes their pose.",
-                "`event-pose` = The new pose once this event finishes.",
-                "`past event-pose` = The previous pose of the entity.")
+            .description("Called when an entity changes their pose.")
             .examples("on entity pose change:",
                 "\tbroadcast \"%event-entity% changed their pose from %past event-pose% to %event-pose%\"")
             .since("3.20.0")
             .register();
 
-        reg.registerEventValue(EntityPoseChangeEvent.class, Pose.class,
-            from -> from.getEntity().getPose(), EventValues.TIME_PAST);
-        reg.registerEventValue(EntityPoseChangeEvent.class, Pose.class,
-            EntityPoseChangeEvent::getPose, EventValues.TIME_NOW);
+        reg.newEventValue(EntityPoseChangeEvent.class, Pose.class)
+            .description("The previous pose of the entity.")
+            .time(EventValue.Time.PAST)
+            .converter(from -> from.getEntity().getPose())
+            .register();
+        reg.newEventValue(EntityPoseChangeEvent.class, Pose.class)
+            .description("The new pose once this event finishes.")
+            .converter(EntityPoseChangeEvent::getPose)
+            .register();
 
         // Entity Remove Event
         reg.newEvent(OtherEvents.class, EntityRemoveEvent.class,
@@ -345,7 +361,9 @@ public class OtherEvents extends SimpleEvent {
             .since("2.7.2")
             .register();
 
-        reg.registerEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class, EntityRemoveEvent::getCause, EventValues.TIME_NOW);
+        reg.newEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class)
+            .converter(EntityRemoveEvent::getCause)
+            .register();
 
         // Entity Shoot Bow Event
         reg.newEvent(OtherEvents.class, EntityShootBowEvent.class,
@@ -364,20 +382,23 @@ public class OtherEvents extends SimpleEvent {
             .since("2.16.0")
             .register();
 
-        reg.registerEventValue(EntityShootBowEvent.class, Projectile.class, event -> {
-            if (event.getProjectile() instanceof Projectile projectile) return projectile;
-            return null;
-        }, EventValues.TIME_NOW);
-        reg.registerEventValue(EntityShootBowEvent.class, ItemType.class, event -> {
-            ItemStack consumable = event.getConsumable();
-            if (consumable != null) return new ItemType(consumable);
-            return null;
-        }, EventValues.TIME_NOW);
+        reg.newEventValue(EntityShootBowEvent.class, Projectile.class)
+            .converter(event -> {
+                if (event.getProjectile() instanceof Projectile projectile) return projectile;
+                return null;
+            })
+            .register();
+        reg.newEventValue(EntityShootBowEvent.class, ItemType.class)
+            .converter(event -> {
+                ItemStack consumable = event.getConsumable();
+                if (consumable != null) return new ItemType(consumable);
+                return null;
+            })
+            .register();
 
-        if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            reg.registerEventValue(EntityShootBowEvent.class, ItemStack.class,
-                EntityShootBowEvent::getConsumable, EventValues.TIME_NOW);
-        }
+        reg.newEventValue(EntityShootBowEvent.class, ItemStack.class)
+            .converter(EntityShootBowEvent::getConsumable)
+            .register();
 
         // Entity Spell Cast Event
         reg.newEvent(OtherEvents.class, EntitySpellCastEvent.class,
@@ -391,7 +412,9 @@ public class OtherEvents extends SimpleEvent {
             .since("2.14.0")
             .register();
 
-        reg.registerEventValue(EntitySpellCastEvent.class, Spellcaster.Spell.class, EntitySpellCastEvent::getSpell, EventValues.TIME_NOW);
+        reg.newEventValue(EntitySpellCastEvent.class, Spellcaster.Spell.class)
+            .converter(EntitySpellCastEvent::getSpell)
+            .register();
 
         // Entity Unleash Event
         reg.newEvent(OtherEvents.class, EntityUnleashEvent.class, "entity unleash")
@@ -410,12 +433,16 @@ public class OtherEvents extends SimpleEvent {
             .since("3.2.0")
             .register();
 
-        reg.registerEventValue(EntityUnleashEvent.class, String.class, event -> event.getReason().name().toLowerCase(Locale.ROOT), EventValues.TIME_NOW);
-        reg.registerEventValue(EntityUnleashEvent.class, Player.class, event -> {
-            if (event instanceof PlayerUnleashEntityEvent playerUnleashEntityEvent)
-                return playerUnleashEntityEvent.getPlayer();
-            return null;
-        }, EventValues.TIME_NOW);
+        reg.newEventValue(EntityUnleashEvent.class, String.class)
+            .converter(event -> event.getReason().name().toLowerCase(Locale.ROOT))
+            .register();
+        reg.newEventValue(EntityUnleashEvent.class, Player.class)
+            .converter(event -> {
+                if (event instanceof PlayerUnleashEntityEvent playerUnleashEntityEvent)
+                    return playerUnleashEntityEvent.getPlayer();
+                return null;
+            })
+            .register();
 
         // Entity Zap Event
         reg.newEvent(OtherEvents.class, EntityZapEvent.class, "entity (zap|struck by lightning)")
@@ -426,7 +453,9 @@ public class OtherEvents extends SimpleEvent {
                 "\t\tspawn 3 zombie pigmen at event-location")
             .since("1.8.0")
             .register();
-        reg.registerEventValue(EntityZapEvent.class, Location.class, e -> e.getEntity().getLocation(), EventValues.TIME_NOW);
+        reg.newEventValue(EntityZapEvent.class, Location.class)
+            .converter(event -> event.getEntity().getLocation())
+            .register();
 
         // Experience Orb Merge Event
         reg.newEvent(OtherEvents.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")
@@ -449,6 +478,7 @@ public class OtherEvents extends SimpleEvent {
             .register();
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     private static void packetEvents(Registration reg) {
         // UncheckedSignChangeEvent
         if (Skript.classExists("io.papermc.paper.event.packet.UncheckedSignChangeEvent")) {
@@ -462,17 +492,21 @@ public class OtherEvents extends SimpleEvent {
                 .since("3.11.3")
                 .register();
 
-            reg.registerEventValue(UncheckedSignChangeEvent.class, ComponentWrapper[].class, from -> {
-                ComponentWrapper[] comps = new ComponentWrapper[4];
-                for (int i = 0; i < 4; i++) {
-                    comps[i] = ComponentWrapper.fromComponent(from.lines().get(i));
-                }
-                return comps;
-            }, EventValues.TIME_NOW);
-            reg.registerEventValue(UncheckedSignChangeEvent.class, Location.class, from -> {
-                BlockPosition editedBlockPosition = from.getEditedBlockPosition();
-                return editedBlockPosition.toLocation(from.getPlayer().getWorld());
-            }, EventValues.TIME_NOW);
+            reg.newEventValue(UncheckedSignChangeEvent.class, ComponentWrapper[].class)
+                .converter(from -> {
+                    ComponentWrapper[] comps = new ComponentWrapper[4];
+                    for (int i = 0; i < 4; i++) {
+                        comps[i] = ComponentWrapper.fromComponent(from.lines().get(i));
+                    }
+                    return comps;
+                })
+                .register();
+            reg.newEventValue(UncheckedSignChangeEvent.class, Location.class)
+                .converter(from -> {
+                    BlockPosition editedBlockPosition = from.getEditedBlockPosition();
+                    return editedBlockPosition.toLocation(from.getPlayer().getWorld());
+                })
+                .register();
         }
     }
 
@@ -481,10 +515,7 @@ public class OtherEvents extends SimpleEvent {
         // PlayerAttemptPickupItemEvent
         reg.newEvent(OtherEvents.class, PlayerAttemptPickupItemEvent.class, "player attempt item pickup")
             .name("Player Attempt Item Pickup")
-            .description("Called when a player attempts to pick an item up from the ground. Requires PaperMC.",
-                "`event-number` = Represents the amount that will remain on the ground, if any.",
-                "`past event-number` = Represents the item amount of the dropped item before pickup.",
-                "`event-dropped item` = Represents the dropped item entity that is attempting to pickup.")
+            .description("Called when a player attempts to pick an item up from the ground.")
             .examples("on player attempt item pickup:",
                 "\tif event-number > 0:",
                 "\t\twait 1 tick",
@@ -493,9 +524,19 @@ public class OtherEvents extends SimpleEvent {
             .since("3.5.0")
             .register();
 
-        reg.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, PlayerAttemptPickupItemEvent::getRemaining, EventValues.TIME_NOW);
-        reg.registerEventValue(PlayerAttemptPickupItemEvent.class, Number.class, event -> event.getItem().getItemStack().getAmount(), EventValues.TIME_PAST);
-        reg.registerEventValue(PlayerAttemptPickupItemEvent.class, Item.class, PlayerAttemptPickupItemEvent::getItem, EventValues.TIME_NOW);
+        reg.newEventValue(PlayerAttemptPickupItemEvent.class, Number.class)
+            .description("Represents the amount that will remain on the ground, if any.")
+            .converter(PlayerAttemptPickupItemEvent::getRemaining)
+            .register();
+        reg.newEventValue(PlayerAttemptPickupItemEvent.class, Number.class)
+            .description("Represents the item amount of the dropped item before pickup.")
+            .time(EventValue.Time.PAST)
+            .converter(event -> event.getItem().getItemStack().getAmount())
+            .register();
+        reg.newEventValue(PlayerAttemptPickupItemEvent.class, Item.class)
+            .description("Represents the dropped item entity that is attempting to pickup.")
+            .converter(PlayerAttemptPickupItemEvent::getItem)
+            .register();
 
         // Prepare Anvil Event
         reg.newEvent(OtherEvents.class, PrepareAnvilEvent.class, "[skbee] anvil prepare")
@@ -514,43 +555,47 @@ public class OtherEvents extends SimpleEvent {
             .since("1.11.0")
             .register();
 
-        reg.registerEventValue(PrepareAnvilEvent.class, Slot.class, event -> new Slot() {
-            final ItemStack result = event.getResult();
+        reg.newEventValue(PrepareAnvilEvent.class, Slot.class)
+            .converter(event -> new Slot() {
+                final ItemStack result = event.getResult();
 
-            @Nullable
-            @Override
-            public ItemStack getItem() {
-                return result;
-            }
+                @Nullable
+                @Override
+                public ItemStack getItem() {
+                    return result;
+                }
 
-            @Override
-            public void setItem(@Nullable ItemStack item) {
-                event.setResult(item);
-            }
+                @Override
+                public void setItem(@Nullable ItemStack item) {
+                    event.setResult(item);
+                }
 
-            @Override
-            public int getAmount() {
-                if (result != null) return result.getAmount();
-                return 0;
-            }
+                @Override
+                public int getAmount() {
+                    if (result != null) return result.getAmount();
+                    return 0;
+                }
 
-            @Override
-            public void setAmount(int amount) {
-                if (result != null) result.setAmount(amount);
-            }
+                @Override
+                public void setAmount(int amount) {
+                    if (result != null) result.setAmount(amount);
+                }
 
-            @Override
-            public boolean isSameSlot(@NotNull Slot o) {
-                ItemStack item = o.getItem();
-                return item != null && item.isSimilar(result);
-            }
+                @Override
+                public boolean isSameSlot(@NotNull Slot o) {
+                    ItemStack item = o.getItem();
+                    return item != null && item.isSimilar(result);
+                }
 
-            @Override
-            public @NotNull String toString(@Nullable Event e, boolean debug) {
-                return "anvil inventory result slot";
-            }
-        }, EventValues.TIME_NOW);
-        reg.registerEventValue(PrepareAnvilEvent.class, Player.class, event -> (Player) event.getView().getPlayer(), EventValues.TIME_NOW);
+                @Override
+                public @NotNull String toString(@Nullable Event e, boolean debug) {
+                    return "anvil inventory result slot";
+                }
+            })
+            .register();
+        reg.newEventValue(PrepareAnvilEvent.class, Player.class)
+            .converter(event -> (Player) event.getView().getPlayer())
+            .register();
 
         // Player Chunk Load Event
         reg.newEvent(OtherEvents.class, PlayerChunkLoadEvent.class,
@@ -558,8 +603,7 @@ public class OtherEvents extends SimpleEvent {
             .name("Player Chunk Load")
             .description("Is called when a Player receives a Chunk.",
                 "Can for example be used for spawning a fake entity when the player receives a chunk. ",
-                "Should only be used for packet/clientside related stuff. Not intended for modifying server side state.",
-                "\nRequires a PaperMC server.")
+                "Should only be used for packet/clientside related stuff. Not intended for modifying server side state.")
             .examples("on player chunk send:",
                 "\tloop all blocks in event-chunk:",
                 "\t\tif loop-block is diamond ore:",
@@ -567,22 +611,24 @@ public class OtherEvents extends SimpleEvent {
             .since("2.6.1")
             .register();
 
-        reg.registerEventValue(PlayerChunkLoadEvent.class, Player.class, PlayerChunkLoadEvent::getPlayer, EventValues.TIME_NOW);
+        reg.newEventValue(PlayerChunkLoadEvent.class, Player.class)
+            .converter(PlayerChunkLoadEvent::getPlayer)
+            .register();
 
         // Player Chunk Unload Event
         reg.newEvent(OtherEvents.class, PlayerChunkUnloadEvent.class,
                 "player chunk unload")
             .name("Player Chunk Unload")
             .description("Is called when a Player receives a chunk unload packet.",
-                "Should only be used for packet/clientside related stuff. Not intended for modifying server side.",
-                "\nRequires a PaperMC server.")
+                "Should only be used for packet/clientside related stuff. Not intended for modifying server side.")
             .examples("on player chunk unload:",
                 "\tsend \"looks like you lost your chunk cowboy!\" to player")
             .since("2.6.1")
             .register();
 
-        reg.registerEventValue(PlayerChunkUnloadEvent.class, Player.class, PlayerChunkUnloadEvent::getPlayer, EventValues.TIME_NOW);
-
+        reg.newEventValue(PlayerChunkUnloadEvent.class, Player.class)
+            .converter(PlayerChunkUnloadEvent::getPlayer)
+            .register();
 
         // Player Custom Click Event
         if (Skript.classExists("io.papermc.paper.event.player.PlayerCustomClickEvent")) {
@@ -590,16 +636,7 @@ public class OtherEvents extends SimpleEvent {
                     "[player] custom (click|payload)")
                 .name("Player Custom Click Event")
                 .description("This event is fired for any custom click events.",
-                    "This is primarily used for dialogs and text component click events with custom payloads.",
-                    "Requires Paper 1.21.6+",
-                    "",
-                    "**Event Values:**",
-                    "- `event-[offline]player` = The player/offlineplayer who sent the payload.",
-                    "- `event-audience` = The audience who sent the payload.",
-                    "- `event-uuid` = The uuid of the player who sent the payload.`",
-                    "- `event-string` = The name of the player (used when a player isn't available yet).",
-                    "- `event-namespacedkey` = The key used to identify the custom payload.",
-                    "- `event-nbt` = The nbt compound passed from the custom payload click.")
+                    "This is primarily used for dialogs and text component click events with custom payloads.")
                 .examples("on custom click:",
                     "\tif event-namespacedkey = \"test:key\":",
                     "\t\tset {_nbt} to event-nbt",
@@ -608,75 +645,92 @@ public class OtherEvents extends SimpleEvent {
                 .since("3.13.0")
                 .register();
 
-            reg.registerEventValue(PlayerCustomClickEvent.class, UUID.class, from -> {
-                PlayerCommonConnection connection = from.getCommonConnection();
-                if (connection instanceof PlayerGameConnection gameConnection) {
-                    return gameConnection.getPlayer().getUniqueId();
-                } else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
-                    return configConnection.getProfile().getId();
-                }
-                return null;
-            });
-            reg.registerEventValue(PlayerCustomClickEvent.class, OfflinePlayer.class, event -> {
-                PlayerCommonConnection connection = event.getCommonConnection();
-                if (connection instanceof PlayerGameConnection gameConnection)
-                    return gameConnection.getPlayer();
-                else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
-                    UUID uuid = configConnection.getProfile().getId();
-                    if (uuid != null) {
-                        return Bukkit.getOfflinePlayer(uuid);
+            reg.newEventValue(PlayerCustomClickEvent.class, UUID.class)
+                .description("The UUID of the player who sent the payload.")
+                .converter(from -> {
+                    PlayerCommonConnection connection = from.getCommonConnection();
+                    if (connection instanceof PlayerGameConnection gameConnection) {
+                        return gameConnection.getPlayer().getUniqueId();
+                    } else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
+                        return configConnection.getProfile().getId();
                     }
-                }
-                return null;
-            });
-            reg.registerEventValue(PlayerCustomClickEvent.class, Audience.class, event -> {
-                PlayerCommonConnection connection = event.getCommonConnection();
-                if (connection instanceof PlayerGameConnection gameConnection)
-                    return gameConnection.getPlayer();
-                else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
-                    return configConnection.getAudience();
-                }
-                return null;
-            });
-            reg.registerEventValue(PlayerCustomClickEvent.class, String.class, event -> {
-                PlayerCommonConnection connection = event.getCommonConnection();
-                if (connection instanceof PlayerGameConnection gameConnection)
-                    return gameConnection.getPlayer().getName();
-                else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
-                    return configConnection.getProfile().getName();
-                }
-                return null;
-            });
-            reg.registerEventValue(PlayerCustomClickEvent.class, NBTCompound.class, event -> {
-                BinaryTagHolder tag = event.getTag();
-                if (tag == null) return null;
+                    return null;
+                })
+                .register();
+            reg.newEventValue(PlayerCustomClickEvent.class, OfflinePlayer.class)
+                .description("The player/offlineplayer who sent the payload")
+                .converter(event -> {
+                    PlayerCommonConnection connection = event.getCommonConnection();
+                    if (connection instanceof PlayerGameConnection gameConnection)
+                        return gameConnection.getPlayer();
+                    else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
+                        UUID uuid = configConnection.getProfile().getId();
+                        if (uuid != null) {
+                            return Bukkit.getOfflinePlayer(uuid);
+                        }
+                    }
+                    return null;
+                })
+                .register();
+            reg.newEventValue(PlayerCustomClickEvent.class, Audience.class)
+                .description("The audience who sent the payload.")
+                .converter(event -> {
+                    PlayerCommonConnection connection = event.getCommonConnection();
+                    if (connection instanceof PlayerGameConnection gameConnection)
+                        return gameConnection.getPlayer();
+                    else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
+                        return configConnection.getAudience();
+                    }
+                    return null;
+                })
+                .register();
+            reg.newEventValue(PlayerCustomClickEvent.class, String.class)
+                .description("The name of the player (used when a player isn't available yet).")
+                .converter(event -> {
+                    PlayerCommonConnection connection = event.getCommonConnection();
+                    if (connection instanceof PlayerGameConnection gameConnection)
+                        return gameConnection.getPlayer().getName();
+                    else if (HAS_CONFIG && connection instanceof PlayerConfigurationConnection configConnection) {
+                        return configConnection.getProfile().getName();
+                    }
+                    return null;
+                })
+                .register();
+            reg.newEventValue(PlayerCustomClickEvent.class, NBTCompound.class)
+                .description("The nbt compound passed from the custom payload click.")
+                .converter(event -> {
+                    BinaryTagHolder tag = event.getTag();
+                    if (tag == null) return null;
 
-                return (NBTCompound) NBT.parseNBT(tag.string());
-            });
-            reg.registerEventValue(PlayerCustomClickEvent.class, NamespacedKey.class, event -> NamespacedKey.fromString(event.getIdentifier().asString()));
-            reg.registerEventValue(PlayerCustomClickEvent.class, PlayerConnection.class, PlayerCustomClickEvent::getCommonConnection);
+                    return (NBTCompound) NBT.parseNBT(tag.string());
+                })
+                .register();
+            reg.newEventValue(PlayerCustomClickEvent.class, NamespacedKey.class)
+                .description("The key used to identify the custom payload.")
+                .converter(event -> NamespacedKey.fromString(event.getIdentifier().asString()))
+                .register();
+            reg.newEventValue(PlayerCustomClickEvent.class, PlayerConnection.class)
+                .description("The connection of the player who sent the payload.")
+                .converter(PlayerCustomClickEvent::getCommonConnection)
+                .register();
         }
 
         // Player Elytra Boost Event
         reg.newEvent(OtherEvents.class, PlayerElytraBoostEvent.class, "[player] elytra boost")
             .name("Player Elytra Boost")
-            .description("Fired when a player boosts elytra flight with a firework. Requires Paper 1.13.2+")
+            .description("Fired when a player boosts elytra flight with a firework.")
             .examples("on elytra boost:",
                 "\tpush player forward at speed 50")
             .since("1.8.0")
             .register();
-        reg.registerEventValue(PlayerElytraBoostEvent.class, ItemType.class, e -> new ItemType(e.getItemStack()), EventValues.TIME_NOW);
+        reg.newEventValue(PlayerElytraBoostEvent.class, ItemType.class)
+            .converter(e -> new ItemType(e.getItemStack()))
+            .register();
 
         // PlayerFailMoveEvent
         reg.newEvent(OtherEvents.class, PlayerFailMoveEvent.class, "player fail move")
             .name("Player Fail Move")
-            .description("Called when a player attempts to move, but is prevented from doing so by the server.",
-                "Requires PaperMC and Skript 2.11+.",
-                "`event-failmovereason` = The reason they failed to move.",
-                "`event-location` = The location they moved from.",
-                "`future event-location` = The location they moved to.",
-                "`event-boolean` = Whether the player is allowed to move (can be set).",
-                "`future event-boolean` = Whether to log warning to console (can be set).")
+            .description("Called when a player attempts to move, but is prevented from doing so by the server.")
             .examples("on player fail move:",
                 "\tset event-boolean to true",
                 "\tset future event-boolean to false",
@@ -685,100 +739,98 @@ public class OtherEvents extends SimpleEvent {
             .since("3.11.0")
             .register();
 
-        reg.registerEventValue(PlayerFailMoveEvent.class, PlayerFailMoveEvent.FailReason.class, PlayerFailMoveEvent::getFailReason);
-        reg.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getFrom, EventValues.TIME_NOW);
-        reg.registerEventValue(PlayerFailMoveEvent.class, Location.class, PlayerFailMoveEvent::getTo, EventValues.TIME_FUTURE);
-        reg.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
-            @Override
-            public void set(PlayerFailMoveEvent event, @Nullable Boolean allowed) {
-                event.setAllowed(Boolean.TRUE.equals(allowed));
-            }
-
-            @Override
-            public Boolean convert(PlayerFailMoveEvent event) {
-                return event.isAllowed();
-            }
-        }, EventValues.TIME_NOW);
-        reg.registerEventValue(PlayerFailMoveEvent.class, Boolean.class, new EventConverter<>() {
-            @Override
-            public void set(PlayerFailMoveEvent event, @Nullable Boolean allowed) {
-                event.setLogWarning(Boolean.TRUE.equals(allowed));
-            }
-
-            @Override
-            public Boolean convert(PlayerFailMoveEvent event) {
-                return event.getLogWarning();
-            }
-        }, EventValues.TIME_FUTURE);
+        reg.newEventValue(PlayerFailMoveEvent.class, PlayerFailMoveEvent.FailReason.class)
+            .description("The reason they failed to move.")
+            .converter(PlayerFailMoveEvent::getFailReason)
+            .register();
+        reg.newEventValue(PlayerFailMoveEvent.class, Location.class)
+            .description("The location they moved from.")
+            .converter(PlayerFailMoveEvent::getFrom)
+            .register();
+        reg.newEventValue(PlayerFailMoveEvent.class, Location.class)
+            .description("The location they moved to.")
+            .time(EventValue.Time.FUTURE)
+            .converter(PlayerFailMoveEvent::getTo)
+            .register();
+        reg.newEventValue(PlayerFailMoveEvent.class, Boolean.class)
+            .description("Whether the player is allowed to move.")
+            .converter(PlayerFailMoveEvent::isAllowed)
+            .changer(ChangeMode.SET, PlayerFailMoveEvent::setAllowed)
+            .register();
+        reg.newEventValue(PlayerFailMoveEvent.class, Boolean.class)
+            .description("Whether to log warning to console.")
+            .time(EventValue.Time.FUTURE)
+            .converter(PlayerFailMoveEvent::getLogWarning)
+            .changer(ChangeMode.SET, PlayerFailMoveEvent::setLogWarning)
+            .register();
 
         // Player Leash Entity Event
         reg.newEvent(OtherEvents.class, PlayerLeashEntityEvent.class, "player leash entity")
             .name("Player Leash")
-            .description("Called immediately prior to a creature being leashed by a player.",
-                "\n`event-entity` = Entity which got leashed.",
-                "\n`future event-entity` = The entity the leashed entity is leashed to (could be a player or leash hitch on a fence).",
-                "\n`event-player` = Player whom leashed the entity.")
+            .description("Called immediately prior to a creature being leashed by a player.")
             .examples("on player leash entity:",
                 "\tkill event-entity")
             .since("3.2.0")
             .register();
 
-        if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            reg.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getEntity, EventValues.TIME_NOW);
-            reg.registerEventValue(PlayerLeashEntityEvent.class, Player.class, PlayerLeashEntityEvent::getPlayer, EventValues.TIME_NOW);
-        }
-        reg.registerEventValue(PlayerLeashEntityEvent.class, Entity.class, PlayerLeashEntityEvent::getLeashHolder, EventValues.TIME_FUTURE);
+        reg.newEventValue(PlayerLeashEntityEvent.class, Entity.class)
+            .description("Entity which got leashed.")
+            .converter(PlayerLeashEntityEvent::getEntity)
+            .register();
+        reg.newEventValue(PlayerLeashEntityEvent.class, Player.class)
+            .description("Player whom leashed the entity.")
+            .converter(PlayerLeashEntityEvent::getPlayer)
+            .register();
+        reg.newEventValue(PlayerLeashEntityEvent.class, Entity.class)
+            .description("The entity the leashed entity is leashed to (could be a player or leash hitch on a fence).")
+            .time(EventValue.Time.FUTURE)
+            .converter(PlayerLeashEntityEvent::getLeashHolder)
+            .register();
 
         // Player Pickup XP Event
         reg.newEvent(OtherEvents.class, PlayerPickupExperienceEvent.class,
                 "player pickup (experience|xp) [orb]")
             .name("Player Pickup Experience Orb")
-            .description("Fired when a player is attempting to pick up an experience orb. Requires Paper 1.12.2+",
-                "\n`event-experience` represents the experience picked up (This is Skript's version of XP) (can be set).",
-                "\n`event-number` represents the experience picked up as a number (can be set).",
-                "\n`event-entity` represents the experience orb entity.")
+            .description("Fired when a player is attempting to pick up an experience orb.")
             .examples("on player pickup xp:",
                 "\tadd 10 to level of player")
             .since("1.8.0")
             .register();
 
-        reg.registerEventValue(PlayerPickupExperienceEvent.class, Experience.class, new EventConverter<>() {
-            @Override
-            public void set(PlayerPickupExperienceEvent event, @Nullable Experience value) {
+        reg.newEventValue(PlayerPickupExperienceEvent.class, Experience.class)
+            .description("Represents the experience picked up (This is Skript's version of XP).")
+            .converter(event -> new Experience(event.getExperienceOrb().getExperience()))
+            .changer(ChangeMode.SET, (event, value) -> {
                 if (value == null) return;
                 event.getExperienceOrb().setExperience(value.getXP());
-            }
-
-            @Override
-            public Experience convert(PlayerPickupExperienceEvent event) {
-                return new Experience(event.getExperienceOrb().getExperience());
-            }
-        }, EventValues.TIME_NOW);
-        reg.registerEventValue(PlayerPickupExperienceEvent.class, Number.class, new EventConverter<>() {
-            @Override
-            public void set(PlayerPickupExperienceEvent event, @Nullable Number value) {
+            })
+            .register();
+        reg.newEventValue(PlayerPickupExperienceEvent.class, Number.class)
+            .description("represents the experience picked up as a number.")
+            .converter(event -> event.getExperienceOrb().getExperience())
+            .changer(ChangeMode.SET, (event, value) -> {
                 if (value == null) return;
                 event.getExperienceOrb().setExperience(value.intValue());
-            }
-
-            @Override
-            public Number convert(PlayerPickupExperienceEvent event) {
-                return event.getExperienceOrb().getExperience();
-            }
-        }, EventValues.TIME_NOW);
-        reg.registerEventValue(PlayerPickupExperienceEvent.class, Entity.class, PlayerPickupExperienceEvent::getExperienceOrb, EventValues.TIME_NOW);
+            })
+            .register();
+        reg.newEventValue(PlayerPickupExperienceEvent.class, Entity.class)
+            .description("Represents the experience orb entity.")
+            .converter(PlayerPickupExperienceEvent::getExperienceOrb)
+            .register();
 
         // Player Recipe Book Click Event
         reg.newEvent(OtherEvents.class, PlayerRecipeBookClickEvent.class, "[player] recipe book click")
             .name("Recipe Book Click Event")
-            .description("Called when the player clicks on a recipe in their recipe book. Requires Paper 1.15+")
+            .description("Called when the player clicks on a recipe in their recipe book.")
             .examples("on recipe book click:",
                 "\tif event-string = \"minecraft:diamond_sword\":",
                 "\t\tcancel event")
             .since("1.5.0")
             .register();
 
-        reg.registerEventValue(PlayerRecipeBookClickEvent.class, String.class, event -> event.getRecipe().toString(), EventValues.TIME_NOW);
+        reg.newEventValue(PlayerRecipeBookClickEvent.class, String.class)
+            .converter(event -> event.getRecipe().toString())
+            .register();
 
         // Player Spawn Change Event
         reg.newEvent(OtherEvents.class, PlayerSetSpawnEvent.class, "player spawn change")
@@ -791,9 +843,18 @@ public class OtherEvents extends SimpleEvent {
             .since("3.4.0")
             .register();
 
-        reg.registerEventValue(PlayerSetSpawnEvent.class, PlayerSetSpawnEvent.Cause.class, PlayerSetSpawnEvent::getCause, EventValues.TIME_NOW);
-        reg.registerEventValue(PlayerSetSpawnEvent.class, Location.class, event -> event.getPlayer().getRespawnLocation(), EventValues.TIME_NOW);
-        reg.registerEventValue(PlayerSetSpawnEvent.class, Location.class, PlayerSetSpawnEvent::getLocation, EventValues.TIME_FUTURE);
+        reg.newEventValue(PlayerSetSpawnEvent.class, PlayerSetSpawnEvent.Cause.class)
+            .converter(PlayerSetSpawnEvent::getCause)
+            .register();
+        reg.newEventValue(PlayerSetSpawnEvent.class, Location.class)
+            .description("The current respawn location of the player.")
+            .converter(event -> event.getPlayer().getRespawnLocation())
+            .register();
+        reg.newEventValue(PlayerSetSpawnEvent.class, Location.class)
+            .description("The location that the spawn is set to.")
+            .time(EventValue.Time.FUTURE)
+            .converter(PlayerSetSpawnEvent::getLocation)
+            .register();
 
         // Player shear entity event
         reg.newEvent(OtherEvents.class, PlayerShearEntityEvent.class, "[player] shear entity")
@@ -807,19 +868,23 @@ public class OtherEvents extends SimpleEvent {
         reg.newEvent(OtherEvents.class, PlayerStopUsingItemEvent.class, "[player] stop using item")
             .name("Player Stop Using Item")
             .description("Called when the server detects a player stopping using an item.",
-                "Examples of this are letting go of the interact button when holding a bow, an edible item, or a spyglass.",
-                "event-number is the number of ticks the item was held for. Requires Paper 1.18+.")
+                "Examples of this are letting go of the interact button when holding a bow, an edible item, or a spyglass.")
             .examples("on player stop using item:",
                 "\tif event-item is a spyglass:",
                 "\t\tkill player")
             .since("1.17.0")
             .register();
 
-        if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            reg.registerEventValue(PlayerStopUsingItemEvent.class, ItemType.class, event -> new ItemType(event.getItem()), EventValues.TIME_NOW);
-        }
-        reg.registerEventValue(PlayerStopUsingItemEvent.class, ItemStack.class, PlayerStopUsingItemEvent::getItem);
-        reg.registerEventValue(PlayerStopUsingItemEvent.class, Number.class, PlayerStopUsingItemEvent::getTicksHeldFor, EventValues.TIME_NOW);
+        reg.newEventValue(PlayerStopUsingItemEvent.class, ItemType.class)
+            .converter(event -> new ItemType(event.getItem()))
+            .register();
+        reg.newEventValue(PlayerStopUsingItemEvent.class, ItemStack.class)
+            .converter(PlayerStopUsingItemEvent::getItem)
+            .register();
+        reg.newEventValue(PlayerStopUsingItemEvent.class, Number.class)
+            .description("The number of ticks the item was held for.")
+            .converter(PlayerStopUsingItemEvent::getTicksHeldFor)
+            .register();
 
         // PlayerTrackEntityEvent
         reg.newEvent(OtherEvents.class, PlayerTrackEntityEvent.class, "player track entity")
@@ -835,7 +900,9 @@ public class OtherEvents extends SimpleEvent {
             .since("3.5.1")
             .register();
 
-        reg.registerEventValue(PlayerTrackEntityEvent.class, Entity.class, PlayerTrackEntityEvent::getEntity, EventValues.TIME_NOW);
+        reg.newEventValue(PlayerTrackEntityEvent.class, Entity.class)
+            .converter(PlayerTrackEntityEvent::getEntity)
+            .register();
 
     }
 
@@ -883,14 +950,17 @@ public class OtherEvents extends SimpleEvent {
             .since("3.10.0")
             .register();
 
-        reg.registerEventValue(ServerTickStartEvent.class, Integer.class, ServerTickStartEvent::getTickNumber);
-        reg.registerEventValue(ServerTickEndEvent.class, Number[].class,
-            from -> new Number[]{
+        reg.newEventValue(ServerTickStartEvent.class, Integer.class)
+            .converter(ServerTickStartEvent::getTickNumber)
+            .register();
+        reg.newEventValue(ServerTickEndEvent.class, Number[].class)
+            .converter(from -> new Number[]{
                 from.getTickNumber(),
                 from.getTickDuration(),
                 from.getTimeRemaining() / 1_000_000,
                 from.getTimeRemaining()
-            });
+            })
+            .register();
 
         // Unknown Command Event
         reg.newEvent(OtherEvents.class, UnknownCommandEvent.class, "unknown command")
@@ -902,31 +972,41 @@ public class OtherEvents extends SimpleEvent {
             .since("3.10.0")
             .register();
 
-        reg.registerEventValue(UnknownCommandEvent.class, String.class, UnknownCommandEvent::getCommandLine);
-        reg.registerEventValue(UnknownCommandEvent.class, CommandSender.class, UnknownCommandEvent::getSender);
+        reg.newEventValue(UnknownCommandEvent.class, String.class)
+            .converter(UnknownCommandEvent::getCommandLine)
+            .register();
+        reg.newEventValue(UnknownCommandEvent.class, CommandSender.class)
+            .converter(UnknownCommandEvent::getSender)
+            .register();
 
     }
 
     private static void otherEventValues(Registration reg) {
-        if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            reg.registerEventValue(SpawnerSpawnEvent.class, Block.class, event -> {
+        reg.newEventValue(SpawnerSpawnEvent.class, Block.class)
+            .converter(event -> {
                 CreatureSpawner spawner = event.getSpawner();
                 if (spawner == null) return null;
                 return spawner.getBlock();
-            }, EventValues.TIME_NOW);
-        }
+            })
+            .register();
 
         // Click Events
-        reg.registerEventValue(PlayerInteractEvent.class, BlockFace.class, PlayerInteractEvent::getBlockFace, EventValues.TIME_NOW);
+        reg.newEventValue(PlayerInteractEvent.class, BlockFace.class)
+            .converter(PlayerInteractEvent::getBlockFace)
+            .register();
 
         // Projectile Hit Event
-        reg.registerEventValue(ProjectileHitEvent.class, BlockFace.class, ProjectileHitEvent::getHitBlockFace, EventValues.TIME_NOW);
+        reg.newEventValue(ProjectileHitEvent.class, BlockFace.class)
+            .converter(ProjectileHitEvent::getHitBlockFace)
+            .register();
 
-        reg.registerEventValue(BlockPlaceEvent.class, BlockFace.class, event -> {
-            Block placed = event.getBlockPlaced();
-            Block against = event.getBlockAgainst();
-            return against.getFace(placed);
-        }, EventValues.TIME_NOW);
+        reg.newEventValue(BlockPlaceEvent.class, BlockFace.class)
+            .converter(event -> {
+                Block placed = event.getBlockPlaced();
+                Block against = event.getBlockAgainst();
+                return against.getFace(placed);
+            })
+            .register();
     }
 
 }

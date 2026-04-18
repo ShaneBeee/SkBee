@@ -5,7 +5,6 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.EventValues;
 import com.destroystokyo.paper.event.entity.PhantomPreSpawnEvent;
 import com.destroystokyo.paper.event.entity.PreCreatureSpawnEvent;
 import com.destroystokyo.paper.event.entity.PreSpawnerSpawnEvent;
@@ -13,6 +12,7 @@ import com.shanebeestudios.skbee.api.registration.Registration;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntityType;
 import org.bukkit.event.Event;
 import org.bukkit.event.entity.CreatureSpawnEvent.SpawnReason;
 import org.jetbrains.annotations.NotNull;
@@ -25,50 +25,64 @@ public class EvtPreSpawn extends SkriptEvent {
         reg.newEvent(EvtPreSpawn.class, PreCreatureSpawnEvent.class,
                 "pre [creature] spawn[ing] [of %entitydatas%]")
             .name("Pre Creature Spawn")
-            .description("Called before an entity is spawned into the world. Requires a PaperMC server.",
-                "\nNote: The spawning entity does not exist when this event is called only the entitytype exists.",
-                "This event is called very frequently, and can cause server lag, use it sparingly.",
-                "\n`event-spawnreason` = the reason the entity is spawned.",
-                "\n`event-location` = the location the spawned entity will appear.",
-                "\n`event-entitytype` = the type of entity being spawned.")
+            .description("Called before an entity is spawned into the world.",
+                "Note: The spawning entity does not exist when this event is called only the entitytype exists.",
+                "This event is called very frequently, and can cause server lag, use it sparingly.")
             .examples("on pre spawn of a pig:",
                 "\tbroadcast \"a %event-entitytype% is spawning in\"")
             .since("2.16.0")
             .register();
 
-        reg.registerEventValue(PreCreatureSpawnEvent.class, Location.class, PreCreatureSpawnEvent::getSpawnLocation, EventValues.TIME_NOW);
-        reg.registerEventValue(PreCreatureSpawnEvent.class, EntityData.class, event -> EntityUtils.toSkriptEntityData(event.getType()), EventValues.TIME_NOW);
-        reg.registerEventValue(PreCreatureSpawnEvent.class, SpawnReason.class, PreCreatureSpawnEvent::getReason, EventValues.TIME_NOW);
+        reg.newEventValue(PreCreatureSpawnEvent.class, Location.class)
+            .description("The location the spawned entity will appear.")
+            .converter(PreCreatureSpawnEvent::getSpawnLocation)
+            .register();
+        reg.newEventValue(PreCreatureSpawnEvent.class, EntityData.class)
+            .description("The type of entity being spawned.")
+            .converter(event -> EntityUtils.toSkriptEntityData(event.getType()))
+            .register();
+        reg.newEventValue(PreCreatureSpawnEvent.class, EntityType.class)
+            .description("The Minecraft EntityType being spawned.")
+            .converter(PreCreatureSpawnEvent::getType)
+            .register();
+        reg.newEventValue(PreCreatureSpawnEvent.class, SpawnReason.class)
+            .description("The reason the entity is spawned.")
+            .converter(PreCreatureSpawnEvent::getReason)
+            .register();
 
         // Paper - PreSpawnerSpawnEvent
         reg.newEvent(EvtPreSpawn.class, PreSpawnerSpawnEvent.class,
                 "pre spawner spawn[ing] [of %entitydatas%]")
             .name("Pre Spawner Spawn")
-            .description("Called before an entity is spawned via a spawner. Requires a PaperMC server.",
-                "\nNote: The spawned entity does not exist when this event is called only the entitytype exists.",
-                "\nView the pre creature spawn event for more event values.",
-                "\n`event-block` = the block location of the spawner spawning the entity.")
+            .description("Called before an entity is spawned via a spawner.",
+                "Note: The spawned entity does not exist when this event is called only the entitytype exists.",
+                "View the pre creature spawn event for more event values.")
             .examples("on pre spawner spawn of a zombie:",
                 "\tbroadcast \"%event-entitytype% is spawning in\"")
             .since("2.16.0")
             .register();
 
-        reg.registerEventValue(PreSpawnerSpawnEvent.class, Block.class, event -> event.getSpawnerLocation().getBlock(), EventValues.TIME_NOW);
+        reg.newEventValue(PreSpawnerSpawnEvent.class, Block.class)
+            .description("The block location of the spawner spawning the entity.")
+            .converter(event -> event.getSpawnerLocation().getBlock())
+            .register();
 
         // Paper - PhantomPreSpawnEvent
         reg.newEvent(EvtPreSpawn.class, PhantomPreSpawnEvent.class,
                 "pre phantom spawn[ing]")
             .name("Pre Phantom Spawn")
-            .description("Called before a phantom is spawned for an entity. Requires a PaperMC server.",
-                "\nNote: The phantom entity does not exist when this event is called only the entitytype exists.",
-                "\nView the pre creature spawn event for more event values.",
-                "\n`event-entity` = the entity the spawned phantom is spawning for.")
+            .description("Called before a phantom is spawned for an entity.",
+                "Note: The phantom entity does not exist when this event is called only the entitytype exists.",
+                "View the pre creature spawn event for more event values.")
             .examples("on pre phantom spawn:",
                 "\tbroadcast \"Watch out %event-entity% a phantom is coming!\"")
             .since("2.16.0")
             .register();
 
-        reg.registerEventValue(PhantomPreSpawnEvent.class, Entity.class, PhantomPreSpawnEvent::getSpawningEntity, EventValues.TIME_NOW);
+        reg.newEventValue(PhantomPreSpawnEvent.class, Entity.class)
+            .description("The entity the spawned phantom is spawning for.")
+            .converter(PhantomPreSpawnEvent::getSpawningEntity)
+            .register();
 
     }
 

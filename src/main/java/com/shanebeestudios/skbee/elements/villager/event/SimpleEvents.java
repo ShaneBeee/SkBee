@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.elements.villager.event;
 
 import ch.njol.skript.lang.util.SimpleEvent;
-import ch.njol.skript.registrations.EventValues;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import io.papermc.paper.event.player.PlayerPurchaseEvent;
 import io.papermc.paper.event.player.PlayerTradeEvent;
@@ -26,17 +25,27 @@ public class SimpleEvents extends SimpleEvent {
             .since("1.17.0")
             .register();
 
-        reg.registerEventValue(TradeSelectEvent.class, MerchantInventory.class, TradeSelectEvent::getInventory, EventValues.TIME_NOW);
-        reg.registerEventValue(TradeSelectEvent.class, Number.class, TradeSelectEvent::getIndex, EventValues.TIME_NOW);
-        reg.registerEventValue(TradeSelectEvent.class, Merchant.class, TradeSelectEvent::getMerchant, EventValues.TIME_NOW);
-        reg.registerEventValue(TradeSelectEvent.class, MerchantRecipe.class, event -> event.getInventory().getSelectedRecipe(), EventValues.TIME_NOW);
-        reg.registerEventValue(TradeSelectEvent.class, Player.class, event -> {
-            HumanEntity trader = event.getMerchant().getTrader();
-            if (trader instanceof Player player) {
-                return player;
-            }
-            return null;
-        }, EventValues.TIME_NOW);
+        reg.newEventValue(TradeSelectEvent.class, MerchantInventory.class)
+            .converter(TradeSelectEvent::getInventory)
+            .register();
+        reg.newEventValue(TradeSelectEvent.class, Number.class)
+            .converter(TradeSelectEvent::getIndex)
+            .register();
+        reg.newEventValue(TradeSelectEvent.class, Merchant.class)
+            .converter(TradeSelectEvent::getMerchant)
+            .register();
+        reg.newEventValue(TradeSelectEvent.class, MerchantRecipe.class)
+            .converter(event -> event.getInventory().getSelectedRecipe())
+            .register();
+        reg.newEventValue(TradeSelectEvent.class, Player.class)
+            .converter(event -> {
+                HumanEntity trader = event.getMerchant().getTrader();
+                if (trader instanceof Player player) {
+                    return player;
+                }
+                return null;
+            })
+            .register();
 
         reg.newEvent(SimpleEvents.class, PlayerPurchaseEvent.class,
                 "player purchase")
@@ -47,13 +56,17 @@ public class SimpleEvents extends SimpleEvent {
             .since("1.17.1")
             .register();
 
-        reg.registerEventValue(PlayerPurchaseEvent.class, MerchantRecipe.class, PlayerPurchaseEvent::getTrade, EventValues.TIME_NOW);
-        reg.registerEventValue(PlayerPurchaseEvent.class, Entity.class, event -> {
-            if (event instanceof PlayerTradeEvent tradeEvent) {
-                return tradeEvent.getVillager();
-            }
-            return null;
-        }, EventValues.TIME_NOW);
+        reg.newEventValue(PlayerPurchaseEvent.class, MerchantRecipe.class)
+            .converter(PlayerPurchaseEvent::getTrade)
+            .register();
+        reg.newEventValue(PlayerPurchaseEvent.class, Entity.class)
+            .converter(event -> {
+                if (event instanceof PlayerTradeEvent tradeEvent) {
+                    return tradeEvent.getVillager();
+                }
+                return null;
+            })
+            .register();
     }
 
 }

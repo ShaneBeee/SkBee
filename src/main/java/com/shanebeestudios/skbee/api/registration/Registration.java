@@ -19,7 +19,6 @@ import ch.njol.skript.lang.Section;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.function.Functions;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.EventConverter;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Keyed;
 import org.bukkit.Registry;
@@ -63,6 +62,7 @@ public class Registration {
     private final List<StructureRegistrar<?>> structures = new ArrayList<>();
     private final List<FunctionRegistrar> functions = new ArrayList<>();
     private final List<EventValueRegistrar<?, ?>> eventValues = new ArrayList<>();
+    private final Map<Class<? extends Event>, List<EventValueRegistrar<?, ?>>> eventValuesByEvent = new HashMap<>();
 
     public Registration(String name, boolean includeLang) {
         this.addon = Skript.instance().registerAddon(RegistrationAddonModule.class, name);
@@ -110,6 +110,10 @@ public class Registration {
 
     public List<EventValueRegistrar<?, ?>> getEventValues() {
         return this.eventValues;
+    }
+
+    public List<EventValueRegistrar<?, ?>> getEventValues(Class<? extends Event> eventClass) {
+        return this.eventValuesByEvent.getOrDefault(eventClass, List.of());
     }
 
     @SuppressWarnings("unchecked")
@@ -565,41 +569,14 @@ public class Registration {
         @Override
         public void register() {
             super.register();
+            Registration.this.eventValuesByEvent.computeIfAbsent(this.eventClass, k -> new ArrayList<>())
+                .add(this);
             Registration.this.eventValues.add(this);
         }
     }
 
     public <F extends Event, T> EventValueRegistrar<F, T> newEventValue(Class<F> event, Class<T> value) {
         return new EventValueRegistrar<>(event, value);
-    }
-
-    @Deprecated(forRemoval = true, since = "INSERT VERSION")
-    public <F extends Event, T> EventValueRegistrar<F, T> newEventValue(Class<F> event, Class<T> value, Converter<F, T> converter) {
-        EventValueRegistrar<F, T> reg = new EventValueRegistrar<>(event, value);
-        reg.converter(converter);
-        return reg;
-    }
-
-    @Deprecated(forRemoval = true, since = "3.20.0") // Use newEventValue() instead
-    public <F extends Event, T> void registerEventValue(Class<F> event, Class<T> value, Converter<F, T> converter) {
-        new EventValueRegistrar<>(event, value)
-            .converter(converter)
-            .register();
-    }
-
-    @Deprecated(forRemoval = true, since = "3.20.0") // Use newEventValue() instead
-    public <F extends Event, T> void registerEventValue(Class<F> event, Class<T> value, EventConverter<F, T> converter) {
-        new EventValueRegistrar<>(event, value)
-            .converter(converter)
-            .register();
-    }
-
-    @Deprecated(forRemoval = true, since = "3.20.0") // Use newEventValue() instead
-    public <F extends Event, T> void registerEventValue(Class<F> event, Class<T> value, Converter<F, T> converter, int time) {
-        new EventValueRegistrar<>(event, value)
-            .converter(converter)
-            .time(time)
-            .register();
     }
 
     public void finalizeRegistration() {
@@ -610,12 +587,20 @@ public class Registration {
         // CHECK REGISTRATION
         this.preRegistrations.forEach(registrar -> {
             if (!registrar.isRegistered()) {
+                String registrarName = registrar.getClass().getSimpleName();
                 String name = registrar.documentation.getName();
                 if (name == null) {
-                    name = registrar.getClass().getSimpleName();
+                    // Try to find a name
+                    if (registrar instanceof EventValueRegistrar<?, ?> evr) {
+                        name = evr.eventClass.getSimpleName() + " " + evr.valueClass.getSimpleName();
+                    } else {
+                        name = registrarName;
+                    }
+                }
+                if (name == null) {
                     skriptError("Unnamed registrar in '%s' not registered!", name);
                 } else {
-                    skriptError("Registrar for '%s' not registered!", name);
+                    skriptError("Registrar for '%s' in '%s' not registered!", name, registrarName);
                 }
             }
         });

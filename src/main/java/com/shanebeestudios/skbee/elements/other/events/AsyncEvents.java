@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.elements.other.events;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.lang.util.SimpleEvent;
-import ch.njol.skript.registrations.EventValues;
 import com.shanebeestudios.skbee.api.registration.Registration;
 import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.event.connection.configuration.AsyncPlayerConnectionConfigureEvent;
@@ -27,11 +26,7 @@ public class AsyncEvents extends SimpleEvent {
                     "This is async and allows you to run configuration code on the player.",
                     "Once this event has finished execution, the player connection will continue.",
                     "Freezing code within this event will pause the player from logging in.",
-                    "**NOTE**: When this event is called, there is no Player object yet, so you will have to rely on name/uuid/audience.",
-                    "**Event Values**:",
-                    "- `event-uuid` = Uuid of the player who is logging in.",
-                    "- `event-string` = Name of the player who is logging in.",
-                    "- `event-audience` = The audience represented by the connection.")
+                    "**NOTE**: When this event is called, there is no Player object yet, so you will have to rely on name/uuid/audience.")
                 .examples("on async player connection configure:",
                     "\tset {-connect::%event-uuid%} to true",
                     "",
@@ -44,14 +39,22 @@ public class AsyncEvents extends SimpleEvent {
                 .since("3.15.0")
                 .register();
 
-            reg.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, UUID.class,
-                event -> event.getConnection().getProfile().getId());
-            reg.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, String.class,
-                event -> event.getConnection().getProfile().getName());
-            reg.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, Audience.class,
-                event -> event.getConnection().getAudience());
-            reg.registerEventValue(AsyncPlayerConnectionConfigureEvent.class, PlayerConnection.class,
-                AsyncPlayerConnectionConfigureEvent::getConnection);
+            reg.newEventValue(AsyncPlayerConnectionConfigureEvent.class, UUID.class)
+                .description("Uuid of the player who is logging in.")
+                .converter(event -> event.getConnection().getProfile().getId())
+                .register();
+            reg.newEventValue(AsyncPlayerConnectionConfigureEvent.class, String.class)
+                .description("Name of the player who is logging in.")
+                .converter(event -> event.getConnection().getProfile().getName())
+                .register();
+            reg.newEventValue(AsyncPlayerConnectionConfigureEvent.class, Audience.class)
+                .description("The audience represented by the connection.")
+                .converter(event -> event.getConnection().getAudience())
+                .register();
+            reg.newEventValue(AsyncPlayerConnectionConfigureEvent.class, PlayerConnection.class)
+                .description("The connection of the player who is logging in.")
+                .converter(AsyncPlayerConnectionConfigureEvent::getConnection)
+                .register();
         }
     }
 
