@@ -87,9 +87,9 @@ public class AddonLoader {
             return false;
         }
         Version skriptVersion = Skript.getVersion();
-        if (skriptVersion.isSmallerThan(new Version(2, 13, 999))) {
+        if (skriptVersion.isSmallerThan(new Version(2, 14, 999))) {
             Util.logLoading("&cDependency Skript outdated, Skript elements cannot load.");
-            Util.logLoading("&eSkBee requires Skript 2.14+ but found Skript " + skriptVersion);
+            Util.logLoading("&eSkBee requires Skript 2.15+ but found Skript " + skriptVersion);
             return false;
         }
         if (!Skript.isAcceptRegistrations()) {
