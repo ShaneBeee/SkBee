@@ -17,9 +17,9 @@ public class CondFastBoardOn extends Condition {
 
     public static void register(Registration reg) {
         reg.newCondition(CondFastBoardOn.class,
-                "[:score|fast]board of %player% is (on|true)",
-                "[:score|fast]board of %player% is(n't| not) on",
-                "[:score|fast]board of %player% is (off|false)")
+                "[score|:fast]board of %player% is (on|true)",
+                "[score|:fast]board of %player% is(n't| not) on",
+                "[score|:fast]board of %player% is (off|false)")
             .name("FastBoard - Is On")
             .description("Check if a player's fastboard is currently toggled on/off.")
             .examples("if fastboard of player is on:",
@@ -30,18 +30,17 @@ public class CondFastBoardOn extends Condition {
 
     private Expression<Player> player;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.player = (Expression<Player>) exprs[0];
         setNegated(matchedPattern >= 1);
-        if (parseResult.hasTag("score")) {
-            Skript.warning("'scoreboard' is deprecated, please use 'fastboard' instead.");
+        if (!parseResult.hasTag("fast")) {
+            Skript.warning("'scoreboard/board' is deprecated, please use 'fastboard' instead.");
         }
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
         Player player = this.player.getSingle(event);
