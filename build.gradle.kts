@@ -93,6 +93,7 @@ tasks {
         relocate("de.tr7zw.annotations", "com.shanebeestudios.skbee.api.nbt.annotations")
         relocate("fr.mrmicky.fastboard", "com.shanebeestudios.skbee.api.fastboard.base")
         relocate("com.shanebeestudios.vf", "com.shanebeestudios.skbee.api.virtualfurnace")
+        relocate("com.github.shanebeee.skr", "com.shanebeestudios.skbee.api.registration")
         relocate("org.bstats", "com.shanebeestudios.skbee.metrics")
         exclude("META-INF/**", "LICENSE", "plugin.yml")
     }
