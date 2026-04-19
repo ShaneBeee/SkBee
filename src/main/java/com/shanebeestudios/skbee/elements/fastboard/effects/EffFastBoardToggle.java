@@ -17,8 +17,8 @@ public class EffFastBoardToggle extends Effect {
 
     public static void register(Registration reg) {
         reg.newEffect(EffFastBoardToggle.class,
-                "toggle [:score|fast]board[s] of %players% [[to ](1:(on|true)|2:(off|false))]",
-                "toggle %players%'[s] [:score|fast]board[s] [[to ](1:(on|true)|2:(off|false))]")
+                "toggle [score|:fast]board[s] of %players% [[to ](1:(on|true)|2:(off|false))]",
+                "toggle %players%'[s] [score|:fast]board[s] [[to ](1:(on|true)|2:(off|false))]")
             .name("FastBoard - Toggle")
             .description("Toggle a fastboard on or off.")
             .examples("toggle fastboards of all players off",
@@ -35,8 +35,8 @@ public class EffFastBoardToggle extends Effect {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.player = (Expression<Player>) exprs[0];
         this.pattern = parseResult.mark;
-        if (parseResult.hasTag("score")) {
-            Skript.warning("'scoreboard' is deprecated, please use 'fastboard' instead.");
+        if (!parseResult.hasTag("fast")) {
+            Skript.warning("'scoreboard/board' is deprecated, please use 'fastboard' instead.");
         }
         return true;
     }

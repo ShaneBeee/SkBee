@@ -25,8 +25,8 @@ public class ExprFastBoardTitle extends SimpleExpression<Object> {
 
     public static void register(Registration reg) {
         reg.newSimpleExpression(ExprFastBoardTitle.class, Object.class,
-                "title of %players%'[s] [:score|fast]board[s]",
-                "title of [:score|fast]board of %players%")
+                "title of %players%'[s] [score|:fast]board[s]",
+                "title of [score|:fast]board of %players%")
             .name("FastBoard - Title")
             .description("Get/set the title of a player's fastboard.")
             .examples("set title of player's fastboard to \"Le Title\"",
@@ -45,8 +45,8 @@ public class ExprFastBoardTitle extends SimpleExpression<Object> {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.player = (Expression<Player>) exprs[0];
-        if (parseResult.hasTag("score")) {
-            Skript.warning("'scoreboard' is deprecated, please use 'fastboard' instead.");
+        if (!parseResult.hasTag("fast")) {
+            Skript.warning("'scoreboard/board' is deprecated, please use 'fastboard' instead.");
         }
         return true;
     }
