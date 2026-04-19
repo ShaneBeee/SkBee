@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.bossbar;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.bossbar.expressions.ExprBossBarAll;
 import com.shanebeestudios.skbee.elements.bossbar.expressions.ExprBossBarByID;
 import com.shanebeestudios.skbee.elements.bossbar.expressions.ExprBossBarCreate;

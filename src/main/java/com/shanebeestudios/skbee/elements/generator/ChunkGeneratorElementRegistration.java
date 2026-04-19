@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.generator;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.generator.effects.EffChunkDataStructurePlace;
 import com.shanebeestudios.skbee.elements.generator.effects.EffPopulateTree;
 import com.shanebeestudios.skbee.elements.generator.effects.EffWorldCreatorSetGenerator;

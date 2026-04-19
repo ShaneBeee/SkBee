@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.scoreboard;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.scoreboard.conditions.CondObjModifiable;
 import com.shanebeestudios.skbee.elements.scoreboard.conditions.CondTeamRegistered;
 import com.shanebeestudios.skbee.elements.scoreboard.expressions.ExprAllTeams;

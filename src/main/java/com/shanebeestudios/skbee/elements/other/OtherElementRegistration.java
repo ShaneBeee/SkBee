@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.other;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.other.conditions.CondBlockCanRandomTick;
 import com.shanebeestudios.skbee.elements.other.conditions.CondChunkContainsBlockData;
 import com.shanebeestudios.skbee.elements.other.conditions.CondCriticalHit;

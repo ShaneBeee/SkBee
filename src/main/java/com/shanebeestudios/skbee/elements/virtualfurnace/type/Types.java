@@ -5,7 +5,7 @@ import ch.njol.skript.classes.Serializer;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.vf.api.FurnaceManager;
 import com.shanebeestudios.vf.api.machine.Furnace;

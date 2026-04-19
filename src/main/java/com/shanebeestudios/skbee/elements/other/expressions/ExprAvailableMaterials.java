@@ -8,7 +8,6 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import com.shanebeestudios.skbee.api.particle.ParticleWrapper;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.EntityEffect;
@@ -16,7 +15,6 @@ import org.bukkit.GameEvent;
 import org.bukkit.GameRule;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
-import org.bukkit.Particle;
 import org.bukkit.Registry;
 import org.bukkit.Statistic;
 import org.bukkit.attribute.Attribute;
@@ -45,7 +43,7 @@ import java.util.stream.Collectors;
 @SuppressWarnings({"NullableProblems", "rawtypes", "deprecation"})
 public class ExprAvailableMaterials extends SimpleExpression<Object> {
 
-    public static void register(com.shanebeestudios.skbee.api.registration.Registration reg) {
+    public static void register(com.github.shanebeee.skr.Registration reg) {
         // Register materials as itemtypes and blockdata
         List<ItemType> materials = new ArrayList<>();
         List<ItemType> itemTypes = new ArrayList<>();

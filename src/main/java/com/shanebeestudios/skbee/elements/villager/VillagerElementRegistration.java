@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.villager;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.villager.effects.EffOpenMerchant;
 import com.shanebeestudios.skbee.elements.villager.effects.EffVillagerEffects;
 import com.shanebeestudios.skbee.elements.villager.event.SimpleEvents;

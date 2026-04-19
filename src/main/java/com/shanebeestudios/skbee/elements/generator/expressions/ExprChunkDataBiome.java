@@ -10,7 +10,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.generator.event.BiomeGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.World;

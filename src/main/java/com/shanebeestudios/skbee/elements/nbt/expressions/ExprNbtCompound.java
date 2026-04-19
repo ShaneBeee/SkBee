@@ -16,7 +16,7 @@ import com.shanebeestudios.skbee.api.nbt.NBTCustomItemStack;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomItemType;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomSlot;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomTileEntity;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
 import com.shanebeestudios.skbee.elements.nbt.conditions.CondHasNBTTag;
 import de.tr7zw.changeme.nbtapi.NBTChunk;

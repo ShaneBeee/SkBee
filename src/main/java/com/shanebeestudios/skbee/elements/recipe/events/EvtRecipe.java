@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.recipe.events;
 
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.lang.util.SimpleEvent;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.block.CrafterCraftEvent;
 import org.bukkit.event.player.PlayerRecipeDiscoverEvent;

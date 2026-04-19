@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.itemcomponent;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.itemcomponent.conditions.CondHasComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.effects.EffApplyToComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.effects.EffClearComponent;

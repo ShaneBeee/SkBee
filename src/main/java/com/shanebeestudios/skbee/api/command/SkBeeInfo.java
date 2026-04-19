@@ -4,7 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.SkriptUpdater;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.property.PropertyPrinter;
-import com.shanebeestudios.skbee.api.registration.JsonDocGenerator;
+import com.github.shanebeee.skr.JsonDocGenerator;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.Config;
 import io.papermc.paper.command.brigadier.BasicCommand;

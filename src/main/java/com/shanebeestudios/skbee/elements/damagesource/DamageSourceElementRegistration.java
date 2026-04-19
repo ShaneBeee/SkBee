@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.damagesource;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.damagesource.conditions.CondDamageSourceProperties;
 import com.shanebeestudios.skbee.elements.damagesource.effects.EffEntityDamageSource;
 import com.shanebeestudios.skbee.elements.damagesource.expressions.ExprDamageSourceCreate;

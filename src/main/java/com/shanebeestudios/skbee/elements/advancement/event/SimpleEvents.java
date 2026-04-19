@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.advancement.event;
 
 import ch.njol.skript.lang.util.SimpleEvent;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 

@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.tickmanager;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.tickmanager.conditions.CondServerTickEntityFrozen;
 import com.shanebeestudios.skbee.elements.tickmanager.conditions.CondServerTickServerFrozen;
 import com.shanebeestudios.skbee.elements.tickmanager.conditions.CondServerTickSprintStep;

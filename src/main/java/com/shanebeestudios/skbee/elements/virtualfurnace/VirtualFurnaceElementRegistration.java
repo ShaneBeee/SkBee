@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.virtualfurnace.effects.EffFurnaceFuel;
 import com.shanebeestudios.skbee.elements.virtualfurnace.effects.EffFurnaceRecipe;
 import com.shanebeestudios.skbee.elements.virtualfurnace.events.EvtVirtualFurnace;

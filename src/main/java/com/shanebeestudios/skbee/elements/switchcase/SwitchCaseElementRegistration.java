@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.switchcase;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.switchcase.effects.EffCase;
 import com.shanebeestudios.skbee.elements.switchcase.sections.SecCase;
 import com.shanebeestudios.skbee.elements.switchcase.sections.SecExprSwitchReturn;

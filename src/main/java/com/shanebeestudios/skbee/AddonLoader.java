@@ -4,13 +4,14 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.test.runner.TestMode;
 import ch.njol.skript.util.Version;
+import com.github.shanebeee.skr.Utils;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.shanebeestudios.skbee.api.listener.EntityListener;
 import com.shanebeestudios.skbee.api.listener.NBTListener;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.LoggerBee;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -65,9 +66,13 @@ public class AddonLoader {
 
     public AddonLoader(SkBee plugin) {
         this.plugin = plugin;
-        this.registration = new Registration("SkBee", true);
-        this.pluginManager = plugin.getServer().getPluginManager();
         this.config = plugin.getPluginConfig();
+        this.registration = new Registration("SkBee", true);
+        Utils.setDebug(this.config.settings_debug);
+        Utils.setPrefix(Util.PREFIX);
+        Utils.setPrefixError(Util.PREFIX_ERROR);
+
+        this.pluginManager = plugin.getServer().getPluginManager();
         MinecraftVersion.replaceLogger(LoggerBee.getLogger());
         this.skriptPlugin = pluginManager.getPlugin("Skript");
     }

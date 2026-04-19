@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.nbt.conditions;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.PropertyCondition;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 

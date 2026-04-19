@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.elements.testing.elements;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.config.SectionNode;
-import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
@@ -10,7 +9,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.test.runner.EvtTestCase;
 import ch.njol.skript.test.runner.TestTracker;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;

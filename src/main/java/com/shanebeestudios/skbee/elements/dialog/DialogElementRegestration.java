@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.dialog;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.dialog.effects.EffOpenDialog;
 import com.shanebeestudios.skbee.elements.dialog.sections.actions.SecDynamicActionButton;
 import com.shanebeestudios.skbee.elements.dialog.sections.actions.SecDynamicCallbackActionButton;

@@ -3,7 +3,7 @@ package com.shanebeestudios.skbee.elements.property.properties;
 import ch.njol.skript.aliases.ItemType;
 import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.inventory.ItemRarity;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.tag.DamageTypeTags;

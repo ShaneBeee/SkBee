@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.registry;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.registry.expression.ExprRegistryTagKeyFrom;
 import com.shanebeestudios.skbee.elements.registry.expression.ExprRegistryTagKeyValues;
 import com.shanebeestudios.skbee.elements.registry.expression.ExprRegistryTagKeys;

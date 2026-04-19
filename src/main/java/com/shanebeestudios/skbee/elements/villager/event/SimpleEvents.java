@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.villager.event;
 
 import ch.njol.skript.lang.util.SimpleEvent;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import io.papermc.paper.event.player.PlayerPurchaseEvent;
 import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.entity.Entity;

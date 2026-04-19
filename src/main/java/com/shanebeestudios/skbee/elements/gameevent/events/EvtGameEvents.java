@@ -3,7 +3,7 @@ package com.shanebeestudios.skbee.elements.gameevent.events;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.GameEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;

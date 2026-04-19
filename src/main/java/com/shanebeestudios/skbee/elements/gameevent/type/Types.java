@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.gameevent.type;
 
 import ch.njol.skript.registrations.Classes;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.GameEvent;
 import org.bukkit.Registry;

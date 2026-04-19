@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.statistic.type;
 
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Registry;
 import org.bukkit.Statistic;

@@ -15,7 +15,7 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchBaseEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import org.bukkit.event.Event;

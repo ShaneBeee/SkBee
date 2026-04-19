@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.generator.type;
 
 import com.shanebeestudios.skbee.api.generator.event.BiomeGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.HeightGenEvent;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import org.bukkit.Location;
 import org.bukkit.generator.BiomeParameterPoint;
