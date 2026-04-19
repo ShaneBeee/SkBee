@@ -63,7 +63,7 @@ public class EffFastBoardToggle extends Effect {
             default -> "";
         };
 
-        return "toggle scoreboard[s] of " + player.toString(e, d) + toggle;
+        return "toggle fastboard[s] of " + player.toString(e, d) + toggle;
     }
 
 }
