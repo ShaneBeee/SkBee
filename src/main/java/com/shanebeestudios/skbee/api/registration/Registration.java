@@ -683,8 +683,9 @@ public class Registration {
             Class eventClass = eventValue.eventClass;
             Class valueClass = eventValue.valueClass;
             EventValue.Time time = eventValue.time;
+            boolean hasPatterns = eventValue.patterns != null;
 
-            if (eventValueRegistry.isRegistered(eventClass, valueClass, time)) {
+            if (!hasPatterns && eventValueRegistry.isRegistered(eventClass, valueClass, time)) {
                 debug("An event value has already been registered for %s / %s [%s]",
                     eventClass.getSimpleName(), valueClass.getSimpleName(), time);
                 continue;
@@ -693,7 +694,7 @@ public class Registration {
             EventValue.Builder builder = EventValue.builder(eventClass, valueClass);
             builder.time(time);
             builder.getter(eventValue.converter);
-            if (eventValue.patterns != null) {
+            if (hasPatterns) {
                 builder.patterns(eventValue.patterns);
             }
             eventValue.changerMap.forEach(builder::registerChanger);

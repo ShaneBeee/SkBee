@@ -199,8 +199,8 @@ public class JsonDocGenerator {
                     ClassInfo<?> valueClassInfo = Classes.getExactClassInfo(valueClass);
                     if (valueClassInfo == null) continue;
 
-                    Noun name = valueClassInfo.getName();
-                    String singular = isArray ? name.getPlural() : name.getSingular();
+                    Noun classInfoName = valueClassInfo.getName();
+                    String infoName = eventValueInfo.patterns != null ? eventValueInfo.patterns[0] : isArray ? classInfoName.getPlural() : classInfoName.getSingular();
                     EventValue.Time time = eventValueInfo.time;
                     String timeString = switch (time) {
                         case NOW -> "event-";
@@ -208,7 +208,7 @@ public class JsonDocGenerator {
                         case PAST -> "past event-";
                     };
 
-                    String eventValueString = timeString + singular;
+                    String eventValueString = timeString + infoName;
                     if (!eventValueList.contains(eventValueString)) {
                         eventValueList.add(eventValueString);
                     }
@@ -216,7 +216,7 @@ public class JsonDocGenerator {
                     if (eventValueInfo.getDocumentation().getDescription() != null) {
                         description.add("   - **Description**: " + String.join(" ", eventValueInfo.getDocumentation().getDescription()));
                     }
-                    if (eventValueInfo.patterns != null) {
+                    if (eventValueInfo.patterns != null && eventValueInfo.patterns.length > 1) {
                         description.add("   - **Patterns**: `" + timeString + String.join("`, `" + timeString, eventValueInfo.patterns) + "`");
                     }
                     Map<ChangeMode, ? extends EventValue.Changer<?, ?>> changerMap = eventValueInfo.changerMap;
