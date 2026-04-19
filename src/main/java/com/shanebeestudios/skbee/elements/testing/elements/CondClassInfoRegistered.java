@@ -53,7 +53,8 @@ public class CondClassInfoRegistered extends Condition implements VerboseAssert 
                 if (parser == null) {
                     this.errorMessage = "Parser for ClassInfo '" + ci.getCodeName() + "' is null";
                     return false;
-                } else if (!parser.getClass().toString().contains("com.shanebeestudios.skbee")) {
+                } else if (!parser.getClass().toString().contains("com.shanebeestudios.skbee") &&
+                    !parser.getClass().toString().contains("com.github.shanebeee.skr")) {
                     this.errorMessage = "ClassInfo '" + ci.getCodeName() + "' does not belong to SkBee!";
                     return false;
                 } else {
