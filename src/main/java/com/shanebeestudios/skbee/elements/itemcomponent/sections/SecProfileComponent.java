@@ -51,6 +51,7 @@ public class SecProfileComponent extends Section {
             .name("ItemComponent - Profile Component Apply")
             .description("Apply a profile component to an item/entity/block.",
                 "This is generally used for player heads and mannequins.",
+                "It can also be used on players but please use with caution.",
                 "See [**Profile Component**](https://minecraft.wiki/w/Data_component_format#profile) on McWiki for more details.",
                 "",
                 "**Entries**:",
