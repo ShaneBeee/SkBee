@@ -20,8 +20,8 @@ import com.destroystokyo.paper.event.player.PlayerRecipeBookClickEvent;
 import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent;
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
 import com.destroystokyo.paper.event.server.ServerTickStartEvent;
-import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -66,6 +66,7 @@ import org.bukkit.event.block.MoistureChangeEvent;
 import org.bukkit.event.command.UnknownCommandEvent;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
+import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.entity.EntityPoseChangeEvent;
 import org.bukkit.event.entity.EntityRemoveEvent;
 import org.bukkit.event.entity.EntityShootBowEvent;
@@ -79,6 +80,7 @@ import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
+import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -327,6 +329,32 @@ public class OtherEvents extends SimpleEvent {
 
         reg.newEventValue(EntityPathfindEvent.class, Location.class)
             .converter(EntityPathfindEvent::getLoc)
+            .register();
+
+        // Entity Place Event
+        reg.newEvent(OtherEvents.class, EntityPlaceEvent.class,
+                "entity place", "player place entity")
+            .name("Entity Place")
+            .description("Triggered when an entity is created in the world by a player \"placing\" an item on a block.",
+                "Note that this event is currently only fired for four specific placements: armor stands, boats, minecarts, and end crystals.")
+            .since("INSERT VERSION")
+            .register();
+
+        reg.newEventValue(EntityPlaceEvent.class, Block.class)
+            .description("Gets the block the entity was placed on.")
+            .converter(EntityPlaceEvent::getBlock)
+            .register();
+        reg.newEventValue(EntityPlaceEvent.class, BlockFace.class)
+            .description("Gets the face of the block the entity was placed on.")
+            .converter(EntityPlaceEvent::getBlockFace)
+            .register();
+        reg.newEventValue(EntityPlaceEvent.class, EquipmentSlot.class)
+            .description("Gets the hand used to place the entity.")
+            .converter(EntityPlaceEvent::getHand)
+            .register();
+        reg.newEventValue(EntityPlaceEvent.class, Player.class)
+            .description("Gets the player who placed the entity.")
+            .converter(EntityPlaceEvent::getPlayer)
             .register();
 
         // Entity Pose Change Event
