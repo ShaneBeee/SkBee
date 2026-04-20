@@ -8,6 +8,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -149,7 +150,9 @@ public class SecProfileComponent extends Section {
                 if (entity instanceof Mannequin mannequin) {
                     mannequin.setProfile(profile);
                 } else if (entity instanceof Player player) {
-                    profile.resolve().thenAccept(player::setPlayerProfile);
+                    profile.resolve().thenAcceptAsync(player::setPlayerProfile,
+                        runnable ->
+                            TaskUtils.getEntityScheduler(player).runTask(runnable));
                 }
             } else if (object instanceof Block block) {
                 if (block.getState() instanceof Skull skull) {
