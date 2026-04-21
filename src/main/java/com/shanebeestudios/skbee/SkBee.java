@@ -99,6 +99,7 @@ public class SkBee extends JavaPlugin {
         metrics.addCustomChart(new SimplePie("skript_version", () -> Skript.getVersion().toString()));
         metrics.addCustomChart(new SimplePie("virtual_furnace", () -> String.valueOf(config.ELEMENTS_VIRTUAL_FURNACE)));
         metrics.addCustomChart(new SimplePie("online_mode_proxy", () -> String.valueOf(Bukkit.getServerConfig().isProxyOnlineMode())));
+        metrics.addCustomChart(new SimplePie("addon_loaded", () -> String.valueOf(this.properlyEnabled)));
 
         // New Metrics
         // Many of these are copied from Skript -> SkriptMetrics.class
@@ -163,6 +164,16 @@ public class SkBee extends JavaPlugin {
             table.put(
                 this.skBeeVersion.getMajor() + "." + this.skBeeVersion.getMinor() + ".x",
                 minecraftVersion.toString(),
+                1
+            );
+            return table.rowMap();
+        }));
+        metrics.addCustomChart(new DrilldownPie("addon_loaded_per_release_drilldown_pie", () -> {
+            Table<String, String, Integer> table = HashBasedTable.create(1, 1);
+
+            table.put(
+                this.skBeeVersion.getMajor() + "." + this.skBeeVersion.getMinor() + ".x",
+                String.valueOf(this.properlyEnabled),
                 1
             );
             return table.rowMap();
