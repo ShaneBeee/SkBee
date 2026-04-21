@@ -32,11 +32,13 @@ public class TabEvent extends SkriptEvent {
             .since("1.7.0")
             .register();
 
+        reg.newEventValue(TabCompleteEvent.class, CommandSender.class)
+            .converter(TabCompleteEvent::getSender)
+            .register();
         reg.newEventValue(TabCompleteEvent.class, Player.class)
             .converter(event -> {
-                CommandSender sender = event.getSender();
-                if (sender instanceof Player) {
-                    return ((Player) sender).getPlayer();
+                if (event.getSender() instanceof Player player) {
+                    return player;
                 }
                 return null;
             })
@@ -44,6 +46,7 @@ public class TabEvent extends SkriptEvent {
         reg.newEventValue(TabCompleteEvent.class, String.class)
             .description("Represents the command that was attempted to be tab completed.")
             .converter(event -> event.getBuffer().split(" ")[0])
+            .patterns("command")
             .register();
     }
 
