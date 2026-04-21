@@ -101,6 +101,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprEnchantment;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEnchantmentLevel;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityBlockStorageCount;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityBlockStorageMax;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityCollision;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityOrigin;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityPose;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityVisibility;
@@ -275,6 +276,7 @@ public class OtherElementRegistration {
         ExprEnchantmentLevel.register(registration);
         ExprEntityBlockStorageCount.register(registration);
         ExprEntityBlockStorageMax.register(registration);
+        ExprEntityCollision.register(registration);
         ExprEntityOrigin.register(registration);
         ExprEntityPose.register(registration);
         ExprEntityVisibility.register(registration);
