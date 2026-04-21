@@ -45,6 +45,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
@@ -52,6 +53,7 @@ import org.bukkit.block.CreatureSpawner;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
@@ -87,6 +89,8 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.lang.converter.Converter;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Locale;
 import java.util.UUID;
@@ -213,6 +217,10 @@ public class OtherEvents extends SimpleEvent {
             .examples("on entity added to world:",
                 "\tdelete event-entity")
             .since("2.7.2")
+            .register();
+
+        reg.newEventValue(EntityAddToWorldEvent.class, World.class)
+            .converter(EntityAddToWorldEvent::getWorld)
             .register();
 
         // Entity Change Air Event
@@ -381,15 +389,14 @@ public class OtherEvents extends SimpleEvent {
         reg.newEvent(OtherEvents.class, EntityRemoveEvent.class,
                 "entity remove[d] [from world]")
             .name("Entity Remove from World")
-            .description("Fired any time an entity is being removed from a world for any reason.",
-                "Requires a PaperMC server or Spigot 1.20.4+ server.",
-                "`event-entityremovecause` = The reason the entity was removed (requires MC 1.20.4+).")
+            .description("Fired any time an entity is being removed from a world for any reason.")
             .examples("on entity removed from world:",
                 "\tbroadcast \"a lonely %event-entity% left the world.\"")
             .since("2.7.2")
             .register();
 
         reg.newEventValue(EntityRemoveEvent.class, EntityRemoveEvent.Cause.class)
+            .description("The reason the entity was removed.")
             .converter(EntityRemoveEvent::getCause)
             .register();
 
@@ -397,35 +404,64 @@ public class OtherEvents extends SimpleEvent {
         reg.newEvent(OtherEvents.class, EntityShootBowEvent.class,
                 "entity shoot bow")
             .name("Entity Shoot Bow")
-            .description("Called when a LivingEntity shoots a bow/crossbow firing an arrow.",
-                "`event-entity` = Entity which shot the bow.",
-                "`event-projectile` = The projectile which was shot.",
-                "`event-item[type]` = The item which will be consumed from the entity's inventory (if any).")
+            .description("Called when a LivingEntity shoots a bow/crossbow firing an arrow.")
             .examples("on entity shoot bow:",
                 "\tif name of shot bow != \"Mr Bow\":",
                 "\t\tcancel event",
+                "",
                 "on entity shoot bow:",
                 "\tif gamemode of player = survival:",
-                "\t\tgive player 1 of event-item")
+                "\t\tgive player 1 of event-item",
+                "",
+                "on entity shoot bow:",
+                "\tif event-shooter is a player:",
+                "\t\tif event-force < 1:",
+                "\t\t\tcancel event")
             .since("2.16.0")
             .register();
 
+        reg.newEventValue(EntityShootBowEvent.class, Number.class)
+            .description("The force of the bow/crossbow firing the arrow (value between 0.0 and 1.0).")
+            .converter(EntityShootBowEvent::getForce)
+            .patterns("force")
+            .register();
         reg.newEventValue(EntityShootBowEvent.class, Projectile.class)
+            .description("The projectile which was shot.")
             .converter(event -> {
                 if (event.getProjectile() instanceof Projectile projectile) return projectile;
                 return null;
             })
             .register();
+        reg.newEventValue(EntityShootBowEvent.class, Entity.class)
+            .description("The entity which fired the bow.")
+            .patterns("shooter")
+            .converter(EntityShootBowEvent::getEntity)
+            .register();
         reg.newEventValue(EntityShootBowEvent.class, ItemType.class)
+            .description("The ItemType which will be consumed from the entity's inventory (if any).")
             .converter(event -> {
                 ItemStack consumable = event.getConsumable();
                 if (consumable != null) return new ItemType(consumable);
                 return null;
             })
             .register();
-
         reg.newEventValue(EntityShootBowEvent.class, ItemStack.class)
+            .description("The ItemStack which will be consumed from the entity's inventory (if any).")
             .converter(EntityShootBowEvent::getConsumable)
+            .register();
+        reg.newEventValue(EntityShootBowEvent.class, ItemType.class)
+            .description("The bow (ItemType) which shot the entity.")
+            .patterns("bow-itemtype")
+            .converter(event -> {
+                ItemStack consumable = event.getBow();
+                if (consumable != null) return new ItemType(consumable);
+                return null;
+            })
+            .register();
+        reg.newEventValue(EntityShootBowEvent.class, ItemStack.class)
+            .description("The bow (ItemStack) which shot the entity.")
+            .patterns("bow-item", "bow-itemstack")
+            .converter(EntityShootBowEvent::getBow)
             .register();
 
         // Entity Spell Cast Event
@@ -488,10 +524,22 @@ public class OtherEvents extends SimpleEvent {
         // Experience Orb Merge Event
         reg.newEvent(OtherEvents.class, ExperienceOrbMergeEvent.class, "(experience|[e]xp) orb merge")
             .name("Experience Orb Merge")
-            .description("Fired anytime the server is about to merge 2 experience orbs into one. Requires Paper 1.12.2+")
+            .description("Fired anytime the server is about to merge 2 experience orbs into one.")
             .examples("on xp merge:",
                 "\tcancel event")
             .since("1.8.0")
+            .register();
+
+        reg.newEventValue(ExperienceOrbMergeEvent.class, ExperienceOrb.class)
+            .description("The orb that is subject to being removed and merged into the target orb.")
+            .converter(ExperienceOrbMergeEvent::getMergeSource)
+            .patterns("merge-source")
+            .register();
+
+        reg.newEventValue(ExperienceOrbMergeEvent.class, ExperienceOrb.class)
+            .description("The orb that will absorb the other experience orb.")
+            .converter(ExperienceOrbMergeEvent::getMergeTarget)
+            .patterns("merge-target")
             .register();
 
         // Skeleton Horse Trap Event
@@ -503,6 +551,11 @@ public class OtherEvents extends SimpleEvent {
                 "\t\tif loop-player is an op:",
                 "\t\t\tcancel event")
             .since("1.5.0")
+            .register();
+
+        reg.newEventValue(SkeletonHorseTrapEvent.class, Player[].class)
+            .converter(event -> event.getEligibleHumans().toArray(new Player[0]))
+            .patterns("eligible-players")
             .register();
     }
 
@@ -555,6 +608,7 @@ public class OtherEvents extends SimpleEvent {
         reg.newEventValue(PlayerAttemptPickupItemEvent.class, Number.class)
             .description("Represents the amount that will remain on the ground, if any.")
             .converter(PlayerAttemptPickupItemEvent::getRemaining)
+            .patterns("remaining")
             .register();
         reg.newEventValue(PlayerAttemptPickupItemEvent.class, Number.class)
             .description("Represents the item amount of the dropped item before pickup.")
@@ -887,9 +941,42 @@ public class OtherEvents extends SimpleEvent {
         // Player shear entity event
         reg.newEvent(OtherEvents.class, PlayerShearEntityEvent.class, "[player] shear entity")
             .name("Shear Entity")
-            .description("Called when a player shears an entity. Requires Minecraft 1.9.4+")
+            .description("Called when a player shears an entity.")
             .examples("on player shear entity:")
             .since("1.8.0")
+            .register();
+
+        reg.newEventValue(PlayerShearEntityEvent.class, Entity.class)
+            .description("The entity that is getting sheared.")
+            .converter(PlayerShearEntityEvent::getEntity)
+            .register();
+        reg.newEventValue(PlayerShearEntityEvent.class, ItemStack.class)
+            .description("The item that was used to shear the entity.")
+            .converter(PlayerShearEntityEvent::getItem)
+            .register();
+        reg.newEventValue(PlayerShearEntityEvent.class, ItemType.class)
+            .description("The item that was used to shear the entity.")
+            .converter(event -> new ItemType(event.getItem()))
+            .register();
+        reg.newEventValue(PlayerShearEntityEvent.class, EquipmentSlot.class)
+            .description("The hand the player used to shear.")
+            .converter(PlayerShearEntityEvent::getHand)
+            .register();
+        reg.newEventValue(PlayerShearEntityEvent.class, ItemStack[].class)
+            .description("Get a list of drops for this shearing.")
+            .converter(event -> event.getDrops().toArray(new ItemStack[0]))
+            .changer(ChangeMode.SET, (event, value) -> event.setDrops(Arrays.asList(value)))
+            .register();
+        reg.newEventValue(PlayerShearEntityEvent.class, ItemType[].class)
+            .description("Get a list of drops for this shearing.")
+            .converter(event -> event.getDrops().stream().map(ItemType::new).toArray(ItemType[]::new))
+            .changer(ChangeMode.SET, (event, value) -> {
+                List<ItemStack> items = new ArrayList<>();
+                for (ItemType itemType : value) {
+                    items.add(itemType.getRandom());
+                }
+                event.setDrops(items);
+            })
             .register();
 
         // Player Stop Using Item Event
@@ -912,6 +999,10 @@ public class OtherEvents extends SimpleEvent {
         reg.newEventValue(PlayerStopUsingItemEvent.class, Number.class)
             .description("The number of ticks the item was held for.")
             .converter(PlayerStopUsingItemEvent::getTicksHeldFor)
+            .register();
+        reg.newEventValue(PlayerStopUsingItemEvent.class, Timespan.class)
+            .description("The span of time the item was held for.")
+            .converter(event -> new Timespan(TimePeriod.TICK, event.getTicksHeldFor()))
             .register();
 
         // PlayerTrackEntityEvent
@@ -960,53 +1051,60 @@ public class OtherEvents extends SimpleEvent {
         reg.newEvent(OtherEvents.class, ServerTickEndEvent.class, "server tick end")
             .name("Tick End Event")
             .description("Called when the server has finished ticking the main loop.",
-                "There may be time left after this event is called, and before the next tick starts.",
-                "`event-numbers` = Represents different numbers in this event, in this order:",
-                "- Current tick number (starts from 0 when the server starts and counts up).",
-                "- Tick duration (in milliseconds) (How long the tick took to tick).",
-                "- Time remaining (in milliseconds) (How long til the next tick executes).",
-                "- Time remaining (in nanoseconds) (How long til the next tick executes).")
+                "There may be time left after this event is called, and before the next tick starts.")
             .examples("")
             .since("3.10.0")
+            .register();
+
+        reg.newEventValue(ServerTickEndEvent.class, Number.class)
+            .description("The current tick number.")
+            .converter(ServerTickEndEvent::getTickNumber)
+            .patterns("tick-number")
+            .register();
+        reg.newEventValue(ServerTickEndEvent.class, Timespan.class)
+            .description("Time of how long this tick took.")
+            .converter(event -> new Timespan(TimePeriod.MILLISECOND, (long) event.getTickDuration()))
+            .patterns("tick-duration")
+            .register();
+        reg.newEventValue(ServerTickEndEvent.class, Timespan.class)
+            .description("Amount of time remaining before the next tick should start.")
+            .converter(event -> new Timespan(TimePeriod.MILLISECOND, event.getTimeRemaining() / 1_000_000))
+            .patterns("tick-remaining")
             .register();
 
         reg.newEvent(OtherEvents.class, ServerTickStartEvent.class, "server tick start")
             .name("Tick Start Event")
-            .description("Called each time the server starts its main tick loop.",
-                "`event-number` = The current tick number.")
+            .description("Called each time the server starts its main tick loop.")
             .examples("")
             .since("3.10.0")
             .register();
-
-        reg.newEventValue(ServerTickStartEvent.class, Integer.class)
+        reg.newEventValue(ServerTickStartEvent.class, Number.class)
+            .description("The current tick number.")
             .converter(ServerTickStartEvent::getTickNumber)
-            .register();
-        reg.newEventValue(ServerTickEndEvent.class, Number[].class)
-            .converter(from -> new Number[]{
-                from.getTickNumber(),
-                from.getTickDuration(),
-                from.getTimeRemaining() / 1_000_000,
-                from.getTimeRemaining()
-            })
+            .patterns("tick-number")
             .register();
 
         // Unknown Command Event
         reg.newEvent(OtherEvents.class, UnknownCommandEvent.class, "unknown command")
             .name("Unknown Command")
-            .description("This event is fired when a player executes a command that is not defined.",
-                "`event-string` = The command that was sent.",
-                "`event-sender/player` = Who sent the command.")
+            .description("This event is fired when a player executes a command that is not defined.")
             .examples("")
             .since("3.10.0")
             .register();
 
         reg.newEventValue(UnknownCommandEvent.class, String.class)
+            .description("The command that was sent.")
             .converter(UnknownCommandEvent::getCommandLine)
             .register();
         reg.newEventValue(UnknownCommandEvent.class, CommandSender.class)
+            .description("Who sent the command.")
             .converter(UnknownCommandEvent::getSender)
             .register();
-
+        reg.newEventValue(UnknownCommandEvent.class, ComponentWrapper.class)
+            .description("The message that will be returned.")
+            .converter(event -> ComponentWrapper.fromComponent(event.message()))
+            .patterns("message")
+            .register();
     }
 
     private static void otherEventValues(Registration reg) {
