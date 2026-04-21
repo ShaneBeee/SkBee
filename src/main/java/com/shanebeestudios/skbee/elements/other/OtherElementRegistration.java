@@ -5,6 +5,7 @@ import com.shanebeestudios.skbee.elements.other.conditions.CondBlockCanRandomTic
 import com.shanebeestudios.skbee.elements.other.conditions.CondChunkContainsBlockData;
 import com.shanebeestudios.skbee.elements.other.conditions.CondCriticalHit;
 import com.shanebeestudios.skbee.elements.other.conditions.CondEntityStorageBlockFull;
+import com.shanebeestudios.skbee.elements.other.conditions.CondEntityWouldCollideWith;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsLocked;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsOwnedByRegion;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsPlayerListed;
@@ -173,6 +174,7 @@ public class OtherElementRegistration {
         CondChunkContainsBlockData.register(registration);
         CondCriticalHit.register(registration);
         CondEntityStorageBlockFull.register(registration);
+        CondEntityWouldCollideWith.register(registration);
         CondIsLocked.register(registration);
         CondIsOwnedByRegion.register(registration);
         CondIsPlayerListed.register(registration);
