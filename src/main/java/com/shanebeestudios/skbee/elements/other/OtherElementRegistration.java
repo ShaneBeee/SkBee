@@ -54,8 +54,13 @@ import com.shanebeestudios.skbee.elements.other.events.EvtPlayerInteract;
 import com.shanebeestudios.skbee.elements.other.events.EvtPlayerUseUnknown;
 import com.shanebeestudios.skbee.elements.other.events.EvtPreSpawn;
 import com.shanebeestudios.skbee.elements.other.events.EvtSpawnerSpawn;
-import com.shanebeestudios.skbee.elements.other.events.OtherEvents;
 import com.shanebeestudios.skbee.elements.other.events.TabEvent;
+import com.shanebeestudios.skbee.elements.other.events.other.BlockEvents;
+import com.shanebeestudios.skbee.elements.other.events.other.EntityEvents;
+import com.shanebeestudios.skbee.elements.other.events.other.OtherEventValues;
+import com.shanebeestudios.skbee.elements.other.events.other.PacketEvents;
+import com.shanebeestudios.skbee.elements.other.events.other.PlayerEvents;
+import com.shanebeestudios.skbee.elements.other.events.other.ServerEvents;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprAbsorptionAmount;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprArmorTrim;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprArmorTrimItem;
@@ -211,6 +216,13 @@ public class OtherElementRegistration {
         EffUpdateRecipeResources.register(registration);
 
         // EVENTS
+        BlockEvents.register(registration);
+        EntityEvents.register(registration);
+        PacketEvents.register(registration);
+        PlayerEvents.register(registration);
+        ServerEvents.register(registration);
+        OtherEventValues.register(registration);
+
         AsyncEvents.register(registration);
         EvtDamageByBlock.register(registration);
         EvtEntitiesLoad.register(registration);
@@ -219,7 +231,6 @@ public class OtherElementRegistration {
         EvtPlayerUseUnknown.register(registration);
         EvtPreSpawn.register(registration);
         EvtSpawnerSpawn.register(registration);
-        OtherEvents.register(registration);
         TabEvent.register(registration);
 
         // EXPRESSIONS
