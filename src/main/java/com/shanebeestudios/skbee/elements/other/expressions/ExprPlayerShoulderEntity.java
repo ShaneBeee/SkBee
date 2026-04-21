@@ -4,6 +4,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import ch.njol.util.coll.CollectionUtils;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import org.bukkit.entity.Entity;
@@ -20,10 +21,11 @@ public class ExprPlayerShoulderEntity extends SimplePropertyExpression<Player, E
             .description("Gets the entity currently perched on the shoulder of a player or null if no entity.",
                 "The returned entity will not be spawned within the world, " +
                     "so most operations are invalid unless the entity is first spawned in.",
-                "Deleting will remove the entity from the player's shoulder.",
                 "When setting, this will remove the entity from the world.",
                 "Note that only a copy of the entity will be set to display on the shoulder.",
-                "Also note that the client will currently only render Parrot entities.")
+                "Also note that the client will currently only render Parrot entities.",
+                "Deleting will remove the entity from the player's shoulder.",
+                "Resetting will release the entity from the player's shoulder.")
             .examples("if right shoulder entity of player is set:",
                 "set left should entity of player to {_parrot}",
                 "delete right shoulder entity of player")
@@ -47,7 +49,9 @@ public class ExprPlayerShoulderEntity extends SimplePropertyExpression<Player, E
 
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
-        if (mode == ChangeMode.SET || mode == ChangeMode.DELETE) return new Class[]{Entity.class};
+        if (mode == ChangeMode.SET || mode == ChangeMode.DELETE || mode == ChangeMode.RESET) {
+            return CollectionUtils.array(Entity.class);
+        }
         return null;
     }
 
@@ -57,8 +61,13 @@ public class ExprPlayerShoulderEntity extends SimplePropertyExpression<Player, E
         Entity entity = delta != null && delta[0] instanceof Entity e ? e : null;
 
         for (Player player : getExpr().getArray(event)) {
-            if (this.right) player.setShoulderEntityRight(entity);
-            else player.setShoulderEntityLeft(entity);
+            if (mode == ChangeMode.RESET) {
+                if (this.right) player.releaseRightShoulderEntity();
+                else player.releaseLeftShoulderEntity();
+            } else {
+                if (this.right) player.setShoulderEntityRight(entity);
+                else player.setShoulderEntityLeft(entity);
+            }
         }
     }
 
