@@ -44,7 +44,7 @@ dependencies {
     compileOnly("com.github.SkriptLang:Skript:2.15.0")
 
     // SkriptRegistration
-    implementation("com.github.shanebeee:SkriptRegistration:1.0.3")
+    implementation("com.github.shanebeee:SkriptRegistration:1.0.4")
 
     // commons-io
     compileOnly("commons-io:commons-io:2.14.0")
