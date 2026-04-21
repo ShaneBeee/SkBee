@@ -120,6 +120,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprParseEffect;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPath;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPathTarget;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerIdleTime;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerShoulderEntity;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerTime;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPotionTypeItem;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprRegenRate;
@@ -286,6 +287,7 @@ public class OtherElementRegistration {
         ExprPath.register(registration);
         ExprPathTarget.register(registration);
         ExprPlayerIdleTime.register(registration);
+        ExprPlayerShoulderEntity.register(registration);
         ExprPlayerTime.register(registration);
         ExprPotionTypeItem.register(registration);
         ExprRegenRate.register(registration);
