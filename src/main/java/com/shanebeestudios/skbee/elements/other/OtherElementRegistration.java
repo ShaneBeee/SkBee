@@ -62,6 +62,7 @@ import com.shanebeestudios.skbee.elements.other.events.other.OtherEventValues;
 import com.shanebeestudios.skbee.elements.other.events.other.PacketEvents;
 import com.shanebeestudios.skbee.elements.other.events.other.PlayerEvents;
 import com.shanebeestudios.skbee.elements.other.events.other.ServerEvents;
+import com.shanebeestudios.skbee.elements.other.events.other.WorldEvents;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprAbsorptionAmount;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprArmorTrim;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprArmorTrimItem;
@@ -225,6 +226,7 @@ public class OtherElementRegistration {
         PacketEvents.register(registration);
         PlayerEvents.register(registration);
         ServerEvents.register(registration);
+        WorldEvents.register(registration);
         OtherEventValues.register(registration);
 
         AsyncEvents.register(registration);
