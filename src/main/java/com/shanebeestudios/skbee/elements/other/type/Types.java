@@ -448,16 +448,14 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(JukeboxSong.class) == null) {
-            if (BukkitUtils.registryExists("JUKEBOX_SONG")) {
-                reg.newRegistryType(RegistryKey.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
-                    .user("jukebox ?songs?")
-                    .name("Jukebox Song")
-                    .description("Represents the songs for jukeboxes.", Util.AUTO_GEN_NOTE)
-                    .since("3.8.0")
-                    .register();
-            }
+            reg.newRegistryType(RegistryKey.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
+                .user("jukebox ?songs?")
+                .name("Jukebox Song")
+                .description("Represents the songs for jukeboxes.", Util.AUTO_GEN_NOTE)
+                .since("3.8.0")
+                .register();
         } else {
-            Util.logLoading("It looks like another addon registered 'jukeboxson' already.");
+            Util.logLoading("It looks like another addon registered 'jukeboxsong' already.");
             Util.logLoading("You may have to use their JukeboxSongs in SkBee's syntaxes.");
         }
 
