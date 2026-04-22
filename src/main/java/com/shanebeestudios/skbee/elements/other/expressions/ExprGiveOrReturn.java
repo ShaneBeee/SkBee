@@ -21,7 +21,7 @@ import java.util.List;
 public class ExprGiveOrReturn extends SimpleExpression<ItemType> {
 
     public static void register(Registration reg) {
-        reg.newSimpleExpression(ExprGiveOrReturn.class, ItemType.class, "combined",
+        reg.newSimpleExpression(ExprGiveOrReturn.class, ItemType.class,
                         "(give|add) or return %itemtypes% to %inventories%")
                 .name("Give or Return Items")
                 .description("Attempts to add items to an inventory and will return a list of items that did not fit in the inventory.")
