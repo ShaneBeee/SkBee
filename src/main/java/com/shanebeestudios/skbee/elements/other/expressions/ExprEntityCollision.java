@@ -21,7 +21,8 @@ public class ExprEntityCollision extends SimplePropertyExpression<LivingEntity, 
                 "Resetting will set the collision status to true.")
             .examples("set collision status of {_entity} to false",
                 "set collision status of all entities to false")
-            .since("INSERT VERSION");
+            .since("INSERT VERSION")
+            .register();
     }
 
     @Override
