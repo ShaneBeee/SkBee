@@ -11,6 +11,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.StringUtils;
 import ch.njol.yggdrasil.Fields;
+import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent;
 import com.github.shanebeee.skr.Registration;
 import com.github.shanebeee.skr.RegistryClassInfo;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
@@ -38,7 +39,6 @@ import org.bukkit.entity.Spellcaster;
 import org.bukkit.entity.memory.MemoryKey;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.entity.EntityRemoveEvent;
-import org.bukkit.event.player.PlayerSpawnChangeEvent;
 import org.bukkit.inventory.EquipmentSlotGroup;
 import org.bukkit.inventory.meta.trim.ArmorTrim;
 import org.bukkit.inventory.meta.trim.TrimMaterial;
@@ -256,8 +256,8 @@ public class Types {
                 .register();
         }
 
-        if (Classes.getExactClassInfo(PlayerSpawnChangeEvent.Cause.class) == null) {
-            reg.newEnumType(PlayerSpawnChangeEvent.Cause.class, "playerspawnchangereason")
+        if (Classes.getExactClassInfo(PlayerSetSpawnEvent.Cause.class) == null) {
+            reg.newEnumType(PlayerSetSpawnEvent.Cause.class, "playerspawnchangereason")
                 .user("player ?spawn ?change ?reasons?")
                 .name("Player Spawn Change Reason")
                 .description("Represents the reasons why a player changed their spawn location.", Util.AUTO_GEN_NOTE)
