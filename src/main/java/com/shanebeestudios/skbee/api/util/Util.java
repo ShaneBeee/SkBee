@@ -40,7 +40,6 @@ public class Util {
     // Shortcut for finding stuff to remove later
     public static final boolean IS_RUNNING_MC_1_21_11 = Skript.isRunningMinecraft(1, 21, 11);
     public static final boolean IS_RUNNING_MC_26_1_1 = Skript.isRunningMinecraft(26, 1, 1);
-    public static final boolean IS_RUNNING_SKRIPT_2_15 = Skript.getVersion().compareTo(new Version(2, 14, 999)) >= 0;
 
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {

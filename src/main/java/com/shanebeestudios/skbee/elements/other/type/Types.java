@@ -470,18 +470,6 @@ public class Types {
                 .register();
         }
 
-        if (!Util.IS_RUNNING_SKRIPT_2_15) {
-            reg.newType(Audience.class, "audience")
-                .user("audiences?")
-                .name("TextComponent - Audience")
-                .description("Represents things in Minecraft (players, entities, worlds, console, etc) which can receive media (messages, bossbars, action bars, etc).")
-                .defaultExpression(new EventValueExpression<>(CommandSender.class))
-                .parser(SkriptUtils.getDefaultParser())
-                .after("commandsender", "player", "livingentity", "entity")
-                .since("3.8.0")
-                .register();
-        }
-
         if (Skript.classExists("io.papermc.paper.connection.PlayerConnection")) {
             if (Classes.getExactClassInfo(PlayerConnection.class) == null) {
                 reg.newType(PlayerConnection.class, "playerconnection")
