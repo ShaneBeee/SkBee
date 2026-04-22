@@ -20,7 +20,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
-import net.kyori.adventure.audience.Audience;
+import io.papermc.paper.registry.RegistryKey;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.Color;
@@ -32,7 +32,6 @@ import org.bukkit.TreeType;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
-import org.bukkit.command.CommandSender;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Pose;
 import org.bukkit.entity.Spellcaster;
@@ -53,6 +52,7 @@ import java.io.StreamCorruptedException;
 import java.util.Map;
 
 //@SuppressWarnings({"removal", "deprecation", "rawtypes", "UnstableApiUsage"})
+@SuppressWarnings("UnstableApiUsage")
 public class Types {
 
     public static void register(Registration reg) {
@@ -192,7 +192,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(TrimMaterial.class) == null) {
-            reg.newRegistryType(Registry.TRIM_MATERIAL, TrimMaterial.class, "trimmaterial", null, "material")
+            reg.newRegistryType(RegistryKey.TRIM_MATERIAL, TrimMaterial.class, "trimmaterial", null, "material")
                 .user("trim ?materials?")
                 .name("ArmorTrim - TrimMaterial")
                 .description("Represents a material that may be used in an ArmorTrim.", Util.AUTO_GEN_NOTE)
@@ -201,7 +201,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(TrimPattern.class) == null) {
-            reg.newRegistryType(Registry.TRIM_PATTERN, TrimPattern.class, "trimpattern", null, "pattern")
+            reg.newRegistryType(RegistryKey.TRIM_PATTERN, TrimPattern.class, "trimpattern", null, "pattern")
                 .user("trim ?patterns?")
                 .name("ArmorTrim - TrimPattern")
                 .description("Represents a pattern that may be used in an ArmorTrim.", Util.AUTO_GEN_NOTE)
@@ -224,7 +224,7 @@ public class Types {
         }
 
         if (Classes.getExactClassInfo(MemoryKey.class) == null) {
-            //noinspection unchecked
+            //noinspection unchecked,rawtypes
             Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, (Class) MemoryKey.class, "memory")
                 .user("memor(y|ies)")
                 .name("Memory")
@@ -435,11 +435,10 @@ public class Types {
 
         if (Classes.getExactClassInfo(MusicInstrument.class) == null) {
             if (BukkitUtils.registryExists("INSTRUMENT")) {
-                reg.newRegistryType(Registry.INSTRUMENT, MusicInstrument.class, "instrument")
+                reg.newRegistryType(RegistryKey.INSTRUMENT, MusicInstrument.class, "instrument")
                     .user("instruments?")
                     .name("Instrument")
-                    .description("Represents the instruments used by goat horns.",
-                        "Requires Minecraft 1.20.6+", Util.AUTO_GEN_NOTE)
+                    .description("Represents the instruments used by goat horns.", Util.AUTO_GEN_NOTE)
                     .since("3.8.0")
                     .register();
             }
@@ -450,11 +449,10 @@ public class Types {
 
         if (Classes.getExactClassInfo(JukeboxSong.class) == null) {
             if (BukkitUtils.registryExists("JUKEBOX_SONG")) {
-                reg.newRegistryType(Registry.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
+                reg.newRegistryType(RegistryKey.JUKEBOX_SONG, JukeboxSong.class, "jukeboxsong")
                     .user("jukebox ?songs?")
                     .name("Jukebox Song")
-                    .description("Represents the songs for jukeboxes.",
-                        "Requires Minecraft 1.21+", Util.AUTO_GEN_NOTE)
+                    .description("Represents the songs for jukeboxes.", Util.AUTO_GEN_NOTE)
                     .since("3.8.0")
                     .register();
             }
