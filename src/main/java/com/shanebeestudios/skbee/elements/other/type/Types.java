@@ -408,7 +408,9 @@ public class Types {
             reg.newEnumType(AttributeModifier.Operation.class, "attributeoperation")
                 .user("attribute ?operations?")
                 .name("Attribute Modifier Operation")
-                .description("Represents the different operations of an attribute modifer.", Util.AUTO_GEN_NOTE)
+                .description("Represents the different operations of an attribute modifer.",
+                    "See [**Attribute Operations**](https://minecraft.wiki/w/Attribute#Operations) on McWiki for more details.",
+                    Util.AUTO_GEN_NOTE)
                 .since("3.5.9")
                 .register();
         } else {

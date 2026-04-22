@@ -55,7 +55,7 @@ public class SecAttributeModifier extends Section {
                 "- `slot` = EquipmentSlotGroup the item must be in for the modifier to take effect (optional, default = any).",
                 "- `id` = The NamespacedKey to identify this modifier.",
                 "- `amount` = Amount of change from the modifier.",
-                "- `operation` = The operation to decide how to modify. See [**McWiki**](https://minecraft.wiki/w/Attribute#Operations) for more details.")
+                "- `operation` = The operation to decide how to modify.")
             .examples("#Apply Attribute Modifiers to Items",
                 "set {_i} to a stick",
                 "apply attribute modifier to {_i}:",
