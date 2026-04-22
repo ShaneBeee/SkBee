@@ -45,8 +45,6 @@ public class SecAttributeModifier extends Section {
                 "apply [:transient] attribute modifier to %itemtypes/livingentities%")
             .name("Attribute Modifier - Apply")
             .description("Apply an attribute modifier to an item or living entity.",
-                "If running Minecraft 1.21+ use `id`",
-                "If running Minecraft 1.20.6 and below, use `name` and `uuid` (uuid is optional, will default to random).",
                 "See [**McWiki Component**](https://minecraft.wiki/w/Data_component_format#attribute_modifiers) and " +
                     "[**McWiki Modifiers**](https://minecraft.wiki/w/Attribute#Modifiers) for further details.",
                 "",
