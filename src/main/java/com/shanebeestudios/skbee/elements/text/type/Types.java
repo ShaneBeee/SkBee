@@ -25,7 +25,6 @@ import org.skriptlang.skript.lang.comparator.Comparators;
 import org.skriptlang.skript.lang.comparator.Relation;
 import org.skriptlang.skript.lang.converter.Converters;
 
-import java.io.NotSerializableException;
 import java.io.StreamCorruptedException;
 
 public class Types {
@@ -69,8 +68,10 @@ public class Types {
         reg.newType(ComponentWrapper.class, "textcomp")
             .user("text ?comps?")
             .name("TextComponent - Text Component")
-            .description("Text components used for hover/click events. Due to the complexity of these, ",
-                "they can NOT be long term stored in variables. \n\bRequires a PaperMC server.")
+            .description("Represents a text component.",
+                "Text components are how Minecraft manages formatted text in game.",
+                "See [**Text Component**](https://minecraft.wiki/w/Text_component_format) on McWiki for more information.",
+                "**NOTE**: These are different than Skript's TextComponent class, as this is a wrapper that holds a component.")
             .examples("set {_t} to text component from \"CLICK FOR OUR DISCORD\"",
                 "add hover event showing \"Clicky Clicky!\" to {_t}",
                 "add click event to open url \"https://OurDiscord.com\" to {_t}",
@@ -96,14 +97,14 @@ public class Types {
             .changer(COMP_CHANGER)
             .serializer(new Serializer<>() {
                 @Override
-                public Fields serialize(ComponentWrapper component) throws NotSerializableException {
+                public Fields serialize(ComponentWrapper component) {
                     Fields fields = new Fields();
                     fields.putObject("json", component.toJsonString());
                     return fields;
                 }
 
                 @Override
-                protected ComponentWrapper deserialize(Fields fields) throws StreamCorruptedException, NotSerializableException {
+                protected ComponentWrapper deserialize(Fields fields) throws StreamCorruptedException {
                     if (!fields.hasField("json"))
                         throw new StreamCorruptedException("TextComponent is missing the 'json' tag");
                     try {
@@ -114,7 +115,7 @@ public class Types {
                 }
 
                 @Override
-                public void deserialize(ComponentWrapper component, Fields fields) throws StreamCorruptedException, NotSerializableException {
+                public void deserialize(ComponentWrapper component, Fields fields) {
                     assert false : "This should never by called by skript";
                 }
 
