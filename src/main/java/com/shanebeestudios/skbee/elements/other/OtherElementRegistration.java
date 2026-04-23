@@ -10,6 +10,7 @@ import com.shanebeestudios.skbee.elements.other.conditions.CondIsLocked;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsOwnedByRegion;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsPlayerListed;
 import com.shanebeestudios.skbee.elements.other.conditions.CondPlayerIsTransferred;
+import com.shanebeestudios.skbee.elements.other.conditions.CondResourcePackStatusIntermediate;
 import com.shanebeestudios.skbee.elements.other.conditions.CondSpawnerIsActivated;
 import com.shanebeestudios.skbee.elements.other.effects.EffAbortSpawn;
 import com.shanebeestudios.skbee.elements.other.effects.EffAttributeModifierRemoveByKey;
@@ -36,6 +37,7 @@ import com.shanebeestudios.skbee.elements.other.effects.EffParseEffect;
 import com.shanebeestudios.skbee.elements.other.effects.EffPlayerBreakBlock;
 import com.shanebeestudios.skbee.elements.other.effects.EffPlayerListed;
 import com.shanebeestudios.skbee.elements.other.effects.EffRangedAttack;
+import com.shanebeestudios.skbee.elements.other.effects.EffResourcePackApply;
 import com.shanebeestudios.skbee.elements.other.effects.EffResourcePackRemove;
 import com.shanebeestudios.skbee.elements.other.effects.EffResourcePackSend;
 import com.shanebeestudios.skbee.elements.other.effects.EffSendBlockDamage;
@@ -159,6 +161,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldAutoSave;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldHeight;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldTime;
 import com.shanebeestudios.skbee.elements.other.sections.SecAttributeModifier;
+import com.shanebeestudios.skbee.elements.other.sections.SecResourcePack;
 import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import com.shanebeestudios.skbee.elements.other.sections.SecSpawnMinecraftEntity;
 import com.shanebeestudios.skbee.elements.other.sections.SecTransferCookieRetrieve;
@@ -180,6 +183,7 @@ public class OtherElementRegistration {
         CondIsOwnedByRegion.register(registration);
         CondIsPlayerListed.register(registration);
         CondPlayerIsTransferred.register(registration);
+        CondResourcePackStatusIntermediate.register(registration);
         CondSpawnerIsActivated.register(registration);
 
         // EFFECTS
@@ -208,6 +212,7 @@ public class OtherElementRegistration {
         EffPlayerBreakBlock.register(registration);
         EffPlayerListed.register(registration);
         EffRangedAttack.register(registration);
+        EffResourcePackApply.register(registration);
         EffResourcePackRemove.register(registration);
         EffResourcePackSend.register(registration);
         EffSendBlockDamage.register(registration);
@@ -338,6 +343,7 @@ public class OtherElementRegistration {
 
         // SECTIONS
         SecAttributeModifier.register(registration);
+        SecResourcePack.register(registration);
         SecRunTaskLater.register(registration);
         SecSpawnMinecraftEntity.register(registration);
         SecTransferCookieRetrieve.register(registration);

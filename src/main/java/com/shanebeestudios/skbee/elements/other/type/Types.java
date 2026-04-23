@@ -22,6 +22,7 @@ import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import io.papermc.paper.registry.RegistryKey;
+import net.kyori.adventure.resource.ResourcePackStatus;
 import org.apache.commons.lang3.time.DurationFormatUtils;
 import org.bukkit.Chunk.LoadLevel;
 import org.bukkit.Color;
@@ -49,6 +50,8 @@ import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.common.function.DefaultFunction;
 
 import java.io.StreamCorruptedException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 //@SuppressWarnings({"removal", "deprecation", "rawtypes", "UnstableApiUsage"})
@@ -496,6 +499,24 @@ public class Types {
             Util.logLoading("It looks like another addon registered 'knockbackcause' already.");
             Util.logLoading("You may have to use their KnockbackCause in SkBee's syntaxes.");
         }
+
+        // Add [intermediate] to status names
+        List<String> status = new ArrayList<>();
+        for (ResourcePackStatus value : ResourcePackStatus.values()) {
+            status.add(value.name().toLowerCase() + "[" + value.intermediate() + "]");
+        }
+        status.sort(String::compareTo);
+        reg.newEnumType(ResourcePackStatus.class, "resourcepackstatus")
+            .name("ResourcePack - Status")
+            .user("resource ?pack ?status(es)?")
+            .description("Represents the status of a resource pack request.",
+                "The values include in square brackets whether they're intermediate " +
+                    "(Whether, after receiving this status, further status events might occur), " +
+                    "this is not actually part of the pattern.",
+                Util.AUTO_GEN_NOTE)
+            .usage(StringUtils.join(status, ", "))
+            .since("INSERT VERSION")
+            .register();
 
         // FUNCTIONS
         DefaultFunction<Color> bukkitColor = DefaultFunction.builder(reg.getAddon(), "bukkitColor", Color.class)
