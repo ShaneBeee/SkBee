@@ -11,7 +11,9 @@ import io.papermc.paper.command.brigadier.BasicCommand;
 import io.papermc.paper.command.brigadier.CommandSourceStack;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
+import org.bukkit.permissions.PermissionDefault;
 import org.bukkit.plugin.PluginDescriptionFile;
+import org.bukkit.util.permissions.DefaultPermissions;
 import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.Nullable;
 
@@ -39,6 +41,9 @@ public class SkBeeInfo implements BasicCommand {
         this.plugin = plugin;
         this.desc = plugin.getDescription();
         this.config = plugin.getPluginConfig();
+        DefaultPermissions.registerPermission("skbee.admin", "Permission to receive error messages", PermissionDefault.OP);
+        DefaultPermissions.registerPermission("skbee.command", "Permission to use SkBee's main command", PermissionDefault.OP);
+
     }
 
     @Override
