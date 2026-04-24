@@ -159,6 +159,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprTransferCookie;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprTranslationKey;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldAutoSave;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldHeight;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldSpawnLimit;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldTime;
 import com.shanebeestudios.skbee.elements.other.sections.SecAttributeModifier;
 import com.shanebeestudios.skbee.elements.other.sections.SecResourcePack;
@@ -169,6 +170,7 @@ import com.shanebeestudios.skbee.elements.other.sections.SecWhileRunnable;
 import com.shanebeestudios.skbee.elements.other.structures.StructTagAliases;
 import com.shanebeestudios.skbee.elements.other.type.Comps;
 import com.shanebeestudios.skbee.elements.other.type.Types;
+import com.shanebeestudios.skbee.elements.other.type.WorldTypes;
 
 public class OtherElementRegistration {
 
@@ -339,6 +341,7 @@ public class OtherElementRegistration {
         ExprTranslationKey.register(registration);
         ExprWorldAutoSave.register(registration);
         ExprWorldHeight.register(registration);
+        ExprWorldSpawnLimit.register(registration);
         ExprWorldTime.register(registration);
 
         // SECTIONS
@@ -355,6 +358,7 @@ public class OtherElementRegistration {
         // TYPES
         Comps.register(registration);
         Types.register(registration);
+        WorldTypes.register(registration);
     }
 
 }
