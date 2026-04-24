@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.util.SkriptColor;
 import org.bukkit.boss.BarColor;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Util class for translating BarColor to/from Skript Color
@@ -20,7 +21,8 @@ public class BossBarUtils {
         };
     }
 
-    public static BarColor getBossBarColor(SkriptColor skriptColor) {
+    public static BarColor getBossBarColor(@Nullable SkriptColor skriptColor) {
+        if (skriptColor == null) return BarColor.PURPLE;
         return switch (skriptColor) {
             case DARK_GREY, LIGHT_GREY, WHITE -> BarColor.WHITE;
             case DARK_BLUE, DARK_CYAN, LIGHT_CYAN -> BarColor.BLUE;
