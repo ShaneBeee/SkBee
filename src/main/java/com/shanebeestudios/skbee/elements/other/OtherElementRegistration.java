@@ -168,8 +168,14 @@ import com.shanebeestudios.skbee.elements.other.sections.SecSpawnMinecraftEntity
 import com.shanebeestudios.skbee.elements.other.sections.SecTransferCookieRetrieve;
 import com.shanebeestudios.skbee.elements.other.sections.SecWhileRunnable;
 import com.shanebeestudios.skbee.elements.other.structures.StructTagAliases;
+import com.shanebeestudios.skbee.elements.other.type.BlockTypes;
 import com.shanebeestudios.skbee.elements.other.type.Comps;
-import com.shanebeestudios.skbee.elements.other.type.Types;
+import com.shanebeestudios.skbee.elements.other.type.EntityTypes;
+import com.shanebeestudios.skbee.elements.other.type.EventTypes;
+import com.shanebeestudios.skbee.elements.other.type.ItemTypes;
+import com.shanebeestudios.skbee.elements.other.type.PlayerTypes;
+import com.shanebeestudios.skbee.elements.other.type.ServerTypes;
+import com.shanebeestudios.skbee.elements.other.type.Functions;
 import com.shanebeestudios.skbee.elements.other.type.WorldTypes;
 
 public class OtherElementRegistration {
@@ -355,9 +361,15 @@ public class OtherElementRegistration {
         // STRUCTURES
         StructTagAliases.register(registration);
 
-        // TYPES
+        // COMPARATORS/FUNCTIONS/TYPES
         Comps.register(registration);
-        Types.register(registration);
+        Functions.register(registration);
+        BlockTypes.register(registration);
+        EntityTypes.register(registration);
+        EventTypes.register(registration);
+        ItemTypes.register(registration);
+        PlayerTypes.register(registration);
+        ServerTypes.register(registration);
         WorldTypes.register(registration);
     }
 
