@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.api.structure;
 
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.PDCWrapper;
 import org.bukkit.Bukkit;
@@ -62,7 +61,7 @@ public class StructureWrapper {
         this.rotation = StructureRotation.values()[this.pdcWrapper.getByte(ROTATION_KEY)];
         this.mirror = Mirror.values()[this.pdcWrapper.getByte(MIRROR_KEY)];
         if (this.pdcWrapper.hasKey(INTEGRITY_KEY)) {
-            this.integrity = MathUtil.clamp(this.pdcWrapper.getFloat(INTEGRITY_KEY), 0f, 1f);
+            this.integrity = Math.clamp(this.pdcWrapper.getFloat(INTEGRITY_KEY), 0f, 1f);
         }
         if (this.pdcWrapper.hasKey(INCLUDE_ENTITIES_KEY)) {
             this.includeEntities = this.pdcWrapper.getBoolean(INCLUDE_ENTITIES_KEY);
@@ -89,13 +88,13 @@ public class StructureWrapper {
     public void place(Location location, int palette) {
         this.lastPlacedLocation = location;
         this.pdcWrapper.setLocation(LAST_SAVED_LOCATION_KEY, location);
-        palette = MathUtil.clamp(palette, -1, this.structure.getPaletteCount() - 1);
+        palette = Math.clamp(palette, -1, this.structure.getPaletteCount() - 1);
         structure.place(location, includeEntities, rotation, mirror, palette, integrity, new Random());
     }
 
     public void place(LimitedRegion region, Vector vector) {
         structure.place(region, new BlockVector(vector),
-                this.includeEntities, this.rotation, this.mirror, -1, this.integrity, new Random());
+            this.includeEntities, this.rotation, this.mirror, -1, this.integrity, new Random());
     }
 
     /**
@@ -238,7 +237,7 @@ public class StructureWrapper {
      * @param integrity Integrity of this structure
      */
     public void setIntegrity(float integrity) {
-        this.integrity = MathUtil.clamp(integrity, 0, 1);
+        this.integrity = Math.clamp(integrity, 0, 1);
         this.pdcWrapper.setFloat(INTEGRITY_KEY, this.integrity);
     }
 
@@ -296,7 +295,7 @@ public class StructureWrapper {
     @Override
     public String toString() {
         return String.format("Structure{key=\"%s\", rotation=%s, mirror=%s, integrity=%s, includeEntities=%s (%s), size=[%s]}",
-                key, rotation, mirror, integrity, includeEntities, structure.getEntityCount(), structure.getSize());
+            key, rotation, mirror, integrity, includeEntities, structure.getEntityCount(), structure.getSize());
     }
 
 }

@@ -17,6 +17,9 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
+/**
+ * Utility class for Items
+ */
 public class ItemUtils {
 
     /**

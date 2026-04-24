@@ -9,7 +9,6 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
@@ -101,27 +100,27 @@ public class SecAttackRangeComponent extends Section {
 
         if (this.minReach != null) {
             Number single = this.minReach.getSingle(event);
-            if (single != null) builder.minReach(MathUtil.clamp(single.floatValue(), 0.0f, 64.0f));
+            if (single != null) builder.minReach(Math.clamp(single.floatValue(), 0.0f, 64.0f));
         }
         if (this.maxReach != null) {
             Number single = this.maxReach.getSingle(event);
-            if (single != null) builder.maxReach(MathUtil.clamp(single.floatValue(), 0.0f, 64.0f));
+            if (single != null) builder.maxReach(Math.clamp(single.floatValue(), 0.0f, 64.0f));
         }
         if (this.minCreativeReach != null) {
             Number single = this.minCreativeReach.getSingle(event);
-            if (single != null) builder.minCreativeReach(MathUtil.clamp(single.floatValue(), 0.0f, 64.0f));
+            if (single != null) builder.minCreativeReach(Math.clamp(single.floatValue(), 0.0f, 64.0f));
         }
         if (this.maxCreativeReach != null) {
             Number single = this.maxCreativeReach.getSingle(event);
-            if (single != null) builder.maxCreativeReach(MathUtil.clamp(single.floatValue(), 0.0f, 64.0f));
+            if (single != null) builder.maxCreativeReach(Math.clamp(single.floatValue(), 0.0f, 64.0f));
         }
         if (this.hitboxMargin != null) {
             Number single = this.hitboxMargin.getSingle(event);
-            if (single != null) builder.hitboxMargin(MathUtil.clamp(single.floatValue(), 0.0f, 1.0f));
+            if (single != null) builder.hitboxMargin(Math.clamp(single.floatValue(), 0.0f, 1.0f));
         }
         if (this.mobFactor != null) {
             Number single = this.mobFactor.getSingle(event);
-            if (single != null) builder.mobFactor(MathUtil.clamp(single.floatValue(), 0.0f, 2.0f));
+            if (single != null) builder.mobFactor(Math.clamp(single.floatValue(), 0.0f, 2.0f));
         }
 
         ItemComponentUtils.modifyComponent(this.items.getArray(event), ChangeMode.SET, DataComponentTypes.ATTACK_RANGE, builder.build());

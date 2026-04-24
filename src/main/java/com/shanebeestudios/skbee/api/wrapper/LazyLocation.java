@@ -11,7 +11,7 @@ import java.util.Map;
 
 /**
  * Represents a lazy version of {@link Location}
- * <br>These are used in {@link com.shanebeestudios.skbee.api.bound.Bound Bounds}
+ * <p>These are used in {@link com.shanebeestudios.skbee.api.bound.Bound Bounds}
  * when a world might not have been loaded yet
  */
 @SerializableAs("LazyLocation")
@@ -34,8 +34,8 @@ public class LazyLocation extends Location {
     }
 
     /**
-     * Get the {@link Location} this LazyLocation holds
-     * <br>Will attempt to check/update the world
+     * Get the {@link Location} this LazyLocation holds.
+     * <p>Will attempt to check/update the world
      *
      * @return Location with hopefully updated world
      */
@@ -48,8 +48,7 @@ public class LazyLocation extends Location {
     }
 
     /**
-     * hidden
-     * Copied from {@link Location Bukkit Location}
+     * @hidden Copied from {@link Location Bukkit Location}
      */
     @Override
     public @NotNull Map<String, Object> serialize() {
@@ -63,8 +62,7 @@ public class LazyLocation extends Location {
     }
 
     /**
-     * hidden
-     * Copied from {@link Location Bukkit Location}
+     * @hidden Copied from {@link Location Bukkit Location}
      */
     @NotNull
     public static Location deserialize(@NotNull Map<String, Object> args) {

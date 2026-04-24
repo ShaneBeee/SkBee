@@ -5,10 +5,9 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.Location;
 import org.bukkit.TreeType;
 import org.bukkit.event.Event;
@@ -58,8 +57,8 @@ public class EffPopulateTree extends Effect {
         LimitedRegion region = popEvent.getLimitedRegion();
         Random random = popEvent.getRandom();
         for (Vector vector : this.vector.getArray(event)) {
-            int x = (popEvent.getChunkX() << 4) + MathUtil.clamp(vector.getBlockX(), 0, 15);
-            int z = (popEvent.getChunkZ() << 4) + MathUtil.clamp(vector.getBlockZ(), 0, 15);
+            int x = (popEvent.getChunkX() << 4) + Math.clamp(vector.getBlockX(), 0, 15);
+            int z = (popEvent.getChunkZ() << 4) + Math.clamp(vector.getBlockZ(), 0, 15);
             Location location = new Location(null, x, vector.getBlockY(), z);
             region.generateTree(location, random, treeType);
         }

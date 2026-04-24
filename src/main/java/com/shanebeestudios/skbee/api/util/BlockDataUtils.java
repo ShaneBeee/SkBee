@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * Utility class for {@link BlockData}
+ */
 public class BlockDataUtils {
 
     /**

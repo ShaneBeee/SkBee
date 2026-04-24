@@ -10,7 +10,6 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.BossBarUtils;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarFlag;
 import org.bukkit.boss.BarStyle;
@@ -24,13 +23,13 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprBossBarProperties.class, Object.class,
-            "[boss[ ]]bar players of %bossbar%",
-            "[boss[ ]]bar (color|colour) of %bossbar%",
-            "[boss[ ]]bar style of %bossbar%",
-            "[boss[ ]]bar title of %bossbar%",
-            "[boss[ ]]bar progress of %bossbar%",
-            "[boss[ ]]bar flag %bossbarflag% of %bossbar%",
-            "[boss[ ]]bar visibility of %bossbar%")
+                "[boss[ ]]bar players of %bossbar%",
+                "[boss[ ]]bar (color|colour) of %bossbar%",
+                "[boss[ ]]bar style of %bossbar%",
+                "[boss[ ]]bar title of %bossbar%",
+                "[boss[ ]]bar progress of %bossbar%",
+                "[boss[ ]]bar flag %bossbarflag% of %bossbar%",
+                "[boss[ ]]bar visibility of %bossbar%")
             .name("BossBar - Properties")
             .description("Represents the properties of a BossBar that can be changed.",
                 "Progress of a bar is a number from 0-100.")
@@ -182,7 +181,7 @@ public class ExprBossBarProperties extends SimpleExpression<Object> {
                     newProgress = oldProgress - progress;
                 }
 
-                newProgress = MathUtil.clamp((float) newProgress, 0, 1);
+                newProgress = Math.clamp((float) newProgress, 0, 1);
                 if (Double.isNaN(newProgress)) newProgress = 0;
                 bossBar.setProgress(newProgress);
             }

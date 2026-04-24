@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Reprents a bounding box object
+ * Represents a region like bound that contains a {@link BoundingBox}
  */
 @SuppressWarnings("unused")
 @SerializableAs("Bound")

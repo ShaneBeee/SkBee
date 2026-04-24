@@ -7,12 +7,11 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.generator.event.BiomeGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
-import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.World;
 import org.bukkit.block.Biome;
 import org.bukkit.event.Event;
@@ -68,9 +67,9 @@ public class ExprChunkDataBiome extends SimpleExpression<Biome> {
             if (vector == null) {
                 return null;
             }
-            int x = MathUtil.clamp(vector.getBlockX(), 0, 15);
+            int x = Math.clamp(vector.getBlockX(), 0, 15);
             int y = vector.getBlockY();
-            int z = MathUtil.clamp(vector.getBlockZ(), 0, 15);
+            int z = Math.clamp(vector.getBlockZ(), 0, 15);
             if (event instanceof ChunkGenEvent chunkGenEvent) {
                 ChunkData chunkData = chunkGenEvent.getChunkData();
                 Biome biome = chunkData.getBiome(x, y, z);
@@ -120,7 +119,7 @@ public class ExprChunkDataBiome extends SimpleExpression<Biome> {
         World world = limitedRegion.getWorld();
         int minHeight = world.getMinHeight();
         int maxHeight = world.getMaxHeight() - 1;
-        return MathUtil.clamp(y, minHeight, maxHeight);
+        return Math.clamp(y, minHeight, maxHeight);
     }
 
 }

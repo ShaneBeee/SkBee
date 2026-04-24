@@ -15,7 +15,6 @@ import com.destroystokyo.paper.event.player.PlayerSetSpawnEvent;
 import com.github.shanebeee.skr.Registration;
 import com.github.shanebeee.skr.RegistryClassInfo;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.connection.PlayerConnection;
@@ -530,10 +529,10 @@ public class Types {
                 int green = ((Number) args.get("green")).intValue();
                 int blue = ((Number) args.get("blue")).intValue();
 
-                alpha = MathUtil.clamp(alpha, 0, 255);
-                red = MathUtil.clamp(red, 0, 255);
-                green = MathUtil.clamp(green, 0, 255);
-                blue = MathUtil.clamp(blue, 0, 255);
+                alpha = Math.clamp(alpha, 0, 255);
+                red = Math.clamp(red, 0, 255);
+                green = Math.clamp(green, 0, 255);
+                blue = Math.clamp(blue, 0, 255);
                 return Color.fromARGB(alpha, red, green, blue);
             });
 

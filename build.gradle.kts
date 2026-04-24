@@ -108,12 +108,15 @@ tasks {
         withSourcesJar()
     }
     javadoc {
+        val options = options as StandardJavadocDocletOptions
+        options.docTitle = "SkBee API - $projectVersion"
+        //options.overview = "src/main/javadoc/overview.html"
         options.encoding = Charsets.UTF_8.name()
         exclude(
             "com/shanebeestudios/skbee/api/listener", "com/shanebeestudios/skbee/elements",
             "com/shanebeestudios/skbee/api/command", "com/shanebeestudios/skbee/game"
         )
-        (options as StandardJavadocDocletOptions).links(
+        options.links(
             "https://javadoc.io/doc/org.jetbrains/annotations/latest/",
             "https://jd.papermc.io/paper/1.21.10/",
             "https://docs.skriptlang.org/javadocs/",

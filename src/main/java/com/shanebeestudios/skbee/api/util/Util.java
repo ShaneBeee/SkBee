@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.SkBee;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;

@@ -5,7 +5,7 @@ import org.bukkit.boss.BarColor;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Util class for translating BarColor to/from Skript Color
+ * Utility class for translating BarColor to/from Skript Color
  */
 public class BossBarUtils {
 

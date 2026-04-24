@@ -6,7 +6,6 @@ import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.entity.RangedEntity;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -51,7 +50,7 @@ public class EffRangedAttack extends Effect {
             Number chargeNum = this.charge.getSingle(event);
             if (chargeNum != null) charge = chargeNum.floatValue();
         }
-        charge = MathUtil.clamp(charge, 0, 1);
+        charge = Math.clamp(charge, 0, 1);
 
         for (LivingEntity livingEntity : this.targets.getArray(event)) {
             rangedEntity.rangedAttack(livingEntity, charge);

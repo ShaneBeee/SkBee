@@ -6,7 +6,6 @@ import ch.njol.util.coll.CollectionUtils;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -52,7 +51,7 @@ public class ExprMaxStackSizeComponent extends SimplePropertyExpression<Object, 
 
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
-        Integer maxStackSize = delta != null && delta[0] instanceof Number num ? MathUtil.clamp(num.intValue(), 1, 99) : null;
+        Integer maxStackSize = delta != null && delta[0] instanceof Number num ? Math.clamp(num.intValue(), 1, 99) : null;
 
         ItemComponentUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.MAX_STACK_SIZE, maxStackSize);
     }
