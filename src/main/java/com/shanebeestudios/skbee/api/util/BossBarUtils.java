@@ -9,6 +9,12 @@ import org.jetbrains.annotations.Nullable;
  */
 public class BossBarUtils {
 
+    /**
+     * Convert a BarColor to a Skript Color
+     *
+     * @param barColor BarColor to convert
+     * @return SkriptColor representation of the BarColor
+     */
     public static SkriptColor getSkriptColor(BarColor barColor) {
         return switch (barColor) {
             case RED -> SkriptColor.DARK_RED;
@@ -21,6 +27,12 @@ public class BossBarUtils {
         };
     }
 
+    /**
+     * Convert a Skript Color to a BarColor
+     *
+     * @param skriptColor SkriptColor to convert
+     * @return BarColor representation of the SkriptColor
+     */
     public static BarColor getBossBarColor(@Nullable SkriptColor skriptColor) {
         if (skriptColor == null) return BarColor.PURPLE;
         return switch (skriptColor) {

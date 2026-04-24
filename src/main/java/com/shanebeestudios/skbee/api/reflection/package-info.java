@@ -1,4 +1,4 @@
 /**
- * General reflection classes for Minecraft and Spigot Server
+ * General utility classes for reflection
  */
 package com.shanebeestudios.skbee.api.reflection;

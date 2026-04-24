@@ -23,6 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Configuration class for bounds
+ * <p>
+ * You can get an instance of this class using {@link SkBee#getBoundConfig()}
+ * </p>
+ */
 @SuppressWarnings("FieldCanBeLocal")
 public class BoundConfig implements Listener {
 
