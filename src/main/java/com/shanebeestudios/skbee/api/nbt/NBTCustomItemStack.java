@@ -40,10 +40,6 @@ public class NBTCustomItemStack extends NBTContainer implements NBTCustom {
 
     private static NBTCompound getContainer(NBTCompound itemContainer, boolean isFull) {
         if (isFull) {
-            // TODO temp solution until NBT API handles this
-            // DataVersion is used for deserializing and running thru DataFixerUpper
-            //itemContainer.setInteger("DataVersion", NBTApi.getDataVersion());
-            // TODO end
             return itemContainer;
         }
         return itemContainer.getOrCreateCompound("components");
