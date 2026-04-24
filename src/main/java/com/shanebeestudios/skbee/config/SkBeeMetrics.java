@@ -10,6 +10,9 @@ import org.bstats.charts.DrilldownPie;
 import org.bstats.charts.SimplePie;
 import org.bukkit.Bukkit;
 
+/**
+ * @hidden
+ */
 public class SkBeeMetrics {
 
     public static void loadMetrics(SkBee plugin, boolean enabled, Version skbeeVersion) { //6719
