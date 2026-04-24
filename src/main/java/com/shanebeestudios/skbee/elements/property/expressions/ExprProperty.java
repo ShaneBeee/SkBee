@@ -25,7 +25,6 @@ import java.util.List;
 public class ExprProperty<F extends Object, T extends Object> extends SimpleExpression<T> {
 
     public static void register(Registration reg) {
-        // TODO this one won't work, figure out later
         reg.newCombinedExpression( ExprProperty.class, Object.class,
                 "%*property% property of %objects%",
                 "%objects%'[s] %*property% property")
