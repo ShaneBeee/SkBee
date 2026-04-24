@@ -197,8 +197,7 @@ public class Bound implements ConfigurationSerializable {
     public void updateKey() {
         if (this.worldKey != null) return;
         World world = getWorld();
-        NamespacedKey key = world.getKey();
-        this.worldKey = key;
+        this.worldKey = world.getKey();
     }
 
     /**
