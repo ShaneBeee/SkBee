@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.other.events.other;
 
-import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.util.Timespan;
@@ -18,24 +17,20 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.BlockData;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.ExperienceOrb;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.Pose;
-import org.bukkit.entity.Projectile;
 import org.bukkit.entity.Spellcaster;
 import org.bukkit.event.entity.EntityAirChangeEvent;
 import org.bukkit.event.entity.EntityChangeBlockEvent;
 import org.bukkit.event.entity.EntityPlaceEvent;
 import org.bukkit.event.entity.EntityPoseChangeEvent;
 import org.bukkit.event.entity.EntityRemoveEvent;
-import org.bukkit.event.entity.EntityShootBowEvent;
 import org.bukkit.event.entity.EntitySpellCastEvent;
 import org.bukkit.event.entity.EntityUnleashEvent;
 import org.bukkit.event.player.PlayerUnleashEntityEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemStack;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 
 import java.util.Locale;
