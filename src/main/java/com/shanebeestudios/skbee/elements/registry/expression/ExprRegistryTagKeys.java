@@ -22,7 +22,8 @@ public class ExprRegistryTagKeys extends SimpleExpression<TagKey> {
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprRegistryTagKeys.class, TagKey.class,
-                "tag keys (of|from) %registrykey%")
+                "tag keys (of|from) %registrykey%",
+                "%registrykey% tag keys")
             .name("Registry - TagKeys from Registry")
             .description("Get all the tag keys that belong to a registry.")
             .examples("loop tag keys of block registry:",
