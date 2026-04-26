@@ -16,7 +16,7 @@ public class ExprPlayerListOrder extends SimplePropertyExpression<Player, Number
             .name("Player List Order")
             .description("Get/set the relative order that the player is shown on the in-game player list.")
             .examples("set player list order of player to 100")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
     }
 

@@ -176,7 +176,7 @@ public class EntityEvents extends SimpleEvent {
             .name("Entity Place")
             .description("Triggered when an entity is created in the world by a player \"placing\" an item on a block.",
                 "Note that this event is currently only fired for four specific placements: armor stands, boats, minecarts, and end crystals.")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
 
         reg.newEventValue(EntityPlaceEvent.class, Block.class)

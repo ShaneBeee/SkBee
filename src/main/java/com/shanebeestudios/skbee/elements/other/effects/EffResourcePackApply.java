@@ -25,7 +25,7 @@ public class EffResourcePackApply extends Effect {
                 "\tpacks:",
                 "\t\tapply pack with url \"some.url\" with id (random uuid)",
                 "\t\tapply pack with url \"anoter.url\" with id (random uuid)")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
     }
 

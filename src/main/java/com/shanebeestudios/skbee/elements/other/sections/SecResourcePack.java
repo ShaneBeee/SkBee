@@ -124,7 +124,7 @@ public class SecResourcePack extends Section {
                 "\treceived:",
                 "\t\tif event-status = successfully_loaded:",
                 "\t\t\tsend \"YAY\" to event-audience")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
 
         reg.newEventValue(ResourcePackReceiveEvent.class, UUID.class)

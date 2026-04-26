@@ -22,7 +22,7 @@ public class CondEntityWouldCollideWith extends Condition {
                 "Optionally you can check if an entity would collide with anything at a location.")
             .examples("if player would collide at {_loc}:",
                 "if {_entity} would collide with {_block}:")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
     }
 

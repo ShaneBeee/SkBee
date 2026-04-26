@@ -47,7 +47,7 @@ public class PlayerTypes {
                     "this is not actually part of the pattern.",
                 Util.AUTO_GEN_NOTE)
             .usage(StringUtils.join(status, ", "))
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
     }
 

@@ -72,7 +72,7 @@ public class ExprTeamCreate extends SectionExpression<Team> {
                 "\tsee_friendly_invisibles: true",
                 "\tprefix: colored \"<grey>[<aqua>Blue Team<grey>] \"",
                 "add all players to {-team::blue}")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
     }
 

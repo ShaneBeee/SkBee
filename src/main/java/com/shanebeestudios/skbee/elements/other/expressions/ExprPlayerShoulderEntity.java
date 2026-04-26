@@ -29,7 +29,7 @@ public class ExprPlayerShoulderEntity extends SimplePropertyExpression<Player, E
             .examples("if right shoulder entity of player is set:",
                 "set left should entity of player to {_parrot}",
                 "delete right shoulder entity of player")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
     }
 

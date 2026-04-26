@@ -35,7 +35,7 @@ public class ExprWorldSpawnLimit extends SimpleExpression<Number> {
                 "add 1 to animal spawn limit of world(\"world\")",
                 "reset ambient spawn limit of all worlds",
                 "set {_limit} to the water animal spawn limit")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
     }
 

@@ -18,7 +18,7 @@ public class WorldEvents extends SimpleEvent {
             .examples("on world gamerule change:",
                 "\tif player is not op:",
                 "\t\tcancel event")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
 
         reg.newEventValue(WorldGameRuleChangeEvent.class, String.class)

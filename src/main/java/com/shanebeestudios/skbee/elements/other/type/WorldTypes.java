@@ -28,7 +28,7 @@ public class WorldTypes {
             .user("spawn ?categor(y|ies)")
             .name("Spawn Category")
             .description("Represents groups of entities with shared spawn behaviors and mob caps.")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
 
         if (Classes.getExactClassInfo(TreeType.class) == null) {

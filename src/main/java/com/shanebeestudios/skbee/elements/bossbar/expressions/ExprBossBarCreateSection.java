@@ -72,7 +72,7 @@ public class ExprBossBarCreateSection extends SectionExpression<BossBar> {
                 "\tprogress: 75",
                 "",
                 "add all players to {_bar}")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
     }
 

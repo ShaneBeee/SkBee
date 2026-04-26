@@ -11,7 +11,7 @@ public class CondResourcePackStatusIntermediate extends PropertyCondition<Resour
             "intermediate", "resourcepackstatus")
             .name("ResourcePack - Status - Intermediate")
             .description("Whether, after receiving this status, further status events might occur.")
-            .since("INSERT VERSION")
+            .since("3.21.0")
             .register();
     }
 
