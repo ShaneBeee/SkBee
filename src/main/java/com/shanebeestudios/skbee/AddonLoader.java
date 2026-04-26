@@ -69,8 +69,6 @@ public class AddonLoader {
         this.config = plugin.getPluginConfig();
         this.registration = new Registration("SkBee", true);
         Utils.setDebug(this.config.settings_debug);
-        Utils.setPrefix(Util.PREFIX);
-        Utils.setPrefixError(Util.PREFIX_ERROR);
 
         this.pluginManager = plugin.getServer().getPluginManager();
         MinecraftVersion.replaceLogger(LoggerBee.getLogger());
