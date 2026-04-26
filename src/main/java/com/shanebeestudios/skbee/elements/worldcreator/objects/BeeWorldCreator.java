@@ -5,6 +5,8 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
+import io.papermc.paper.math.FinePosition;
+import io.papermc.paper.math.Position;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -166,7 +168,7 @@ public class BeeWorldCreator implements Keyed {
         this.saveClone = saveClone;
     }
 
-    @SuppressWarnings({"deprecation", "CallToPrintStackTrace"})
+    @SuppressWarnings({"deprecation", "CallToPrintStackTrace", "UnstableApiUsage"})
     public CompletableFuture<World> loadWorld() {
         CompletableFuture<WorldCreator> creatorFuture = new CompletableFuture<>();
         CompletableFuture<World> worldFuture = new CompletableFuture<>();
@@ -206,7 +208,13 @@ public class BeeWorldCreator implements Keyed {
                     if (this.chunkGenerator instanceof com.shanebeestudios.skbee.api.generator.ChunkGenerator customChunkGenerator) {
                         customChunkGenerator.setFixedSpawnLocation(this.fixedSpawnLocation);
                     }
+                } else if (LegacyUtils.IS_RUNNING_MC_26_1_2) {
+                    FinePosition fine = Position.fine(this.fixedSpawnLocation);
+                    float yaw = this.fixedSpawnLocation.getYaw();
+                    float pitch = this.fixedSpawnLocation.getPitch();
+                    worldCreator.forcedSpawnPosition(fine, yaw, pitch);
                 } else {
+                    // Remove after 26.1.2 is lowest supported version
                     this.chunkGenerator = getDummyGenerator(this.fixedSpawnLocation);
                 }
             }
