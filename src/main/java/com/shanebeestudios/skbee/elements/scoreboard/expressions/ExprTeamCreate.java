@@ -9,6 +9,7 @@ import ch.njol.skript.util.Color;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
@@ -45,6 +46,7 @@ public class ExprTeamCreate extends SectionExpression<Team> {
         VALIDATOR = builder.build();
         reg.newCombinedExpression(ExprTeamCreate.class, Team.class,
                 "create [a] new team [for %-scoreboard%]")
+            .validator(VALIDATOR)
             .name("Scoreboard - Team Create")
             .description("Create a new team with a bunch of options.",
                 "If a Scoreboard is not provided the default server Scoreboard will be used.",
@@ -125,10 +127,7 @@ public class ExprTeamCreate extends SectionExpression<Team> {
         String id = this.id.getSingle(event);
         if (id == null) return null;
 
-        Team team = scoreboard.getTeam(id);
-        if (team == null) {
-            team = scoreboard.registerNewTeam(id);
-        }
+        Team team = TeamUtils.getTeam(id, scoreboard);
 
         if (this.displayName != null) {
             Object o = this.displayName.getSingle(event);

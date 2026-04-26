@@ -48,6 +48,7 @@ public class ExprBossBarCreateSection extends SectionExpression<BossBar> {
         VALIDATOR = builder.build();
         reg.newCombinedExpression(ExprBossBarCreateSection.class, BossBar.class,
                 "create [a] new boss[ ]bar")
+            .validator(VALIDATOR)
             .name("BossBar - Create Section")
             .description("Create a new BossBar with some optional values.",
                 "If a BossBar with the same ID already exists, it will be updated with the new values.",
