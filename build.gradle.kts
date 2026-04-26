@@ -38,7 +38,7 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
+    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
 
     // Skript
     compileOnly("com.github.SkriptLang:Skript:2.15.0")
