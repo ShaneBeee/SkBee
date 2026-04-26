@@ -19,8 +19,7 @@ public class ExprFoodComponentProperties extends SimplePropertyExpression<Object
             .name("ItemComponent - Food Properties")
             .description("Get the food properties of an item.",
                 "This will only return a value if the item has a food component.",
-                "See [Food Component](https://minecraft.wiki/w/Data_component_format#food) on McWiki for more details.",
-                "Requires Paper 1.21.3+")
+                "See [Food Component](https://minecraft.wiki/w/Data_component_format#food) on McWiki for more details.")
             .examples("set {_nutrition} to food nutrition of player's tool",
                 "if food saturation of player's tool > 0:")
             .since("3.11.2")

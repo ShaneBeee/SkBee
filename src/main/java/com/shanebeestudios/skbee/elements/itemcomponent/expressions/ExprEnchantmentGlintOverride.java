@@ -20,13 +20,11 @@ public class ExprEnchantmentGlintOverride extends SimplePropertyExpression<Objec
                 "[enchantment] glint [override]", "itemstacks/itemtypes/slots")
             .name("ItemComponent - Enchantment Glint Override")
             .description("Represents the enchantment glint override of an item. ",
-                "Requires Minecraft 1.20.5+",
                 "Overrides the enchantment glint effect on an item.",
                 "When `true`, the item will display a glint, even without enchantments.",
                 "When `false`, the item will not display a glint, even with enchantments.",
                 "**Note**: If no override is applied, will return null.",
                 "See [**EnchantmentGlintOverride**](https://minecraft.wiki/w/Data_component_format#enchantment_glint_override) on McWiki for more details.",
-                "Requires Paper 1.21.3+",
                 "",
                 "**Changers**:",
                 "- `set` = Allows you to override the glint.",
@@ -58,7 +56,7 @@ public class ExprEnchantmentGlintOverride extends SimplePropertyExpression<Objec
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         Boolean glint = delta != null && delta[0] instanceof Boolean bool ? bool : null;
 
-        ItemComponentUtils.modifyComponent(getExpr().getArray(event),  mode, DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, glint);
+        ItemComponentUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.ENCHANTMENT_GLINT_OVERRIDE, glint);
     }
 
     @Override
