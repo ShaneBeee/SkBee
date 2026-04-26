@@ -20,7 +20,6 @@ public class ExprIntangibleProjectileComponent extends SimplePropertyExpression<
             .description("If applied, a projectile item can't be picked up by a player when fired, except in creative mode.",
                 "If the item does not have this component, it will return null, not false.",
                 "See [**Intangible Projectile Component**](https://minecraft.wiki/w/Data_component_format#intangible_projectile) on McWiki for more details.",
-                "Requires Paper 1.21.3+",
                 "",
                 "**Changers**:",
                 "- `set` = If set to true, the component will be applied, otherwise removed.",

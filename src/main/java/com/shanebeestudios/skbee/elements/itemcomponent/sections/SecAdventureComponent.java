@@ -37,19 +37,16 @@ import java.util.List;
 @SuppressWarnings({"UnstableApiUsage", "NullableProblems"})
 public class SecAdventureComponent extends Section {
 
-    private static final EntryValidator VALIDATOR;
+    private static EntryValidator VALIDATOR;
 
-    static {
-        @SuppressWarnings("unchecked")
+    @SuppressWarnings("unchecked")
+    public static void register(Registration reg) {
         Class<Object>[] classes = (Class<Object>[]) CollectionUtils.array(ItemType.class, BlockData.class,
             Tag.class, RegistryKeySet.class, TagKey.class);
-
         VALIDATOR = SimpleEntryValidator.builder()
             .addRequiredEntry("blocks", classes)
             .build();
-    }
 
-    public static void register(Registration reg) {
         reg.newSection(SecAdventureComponent.class, VALIDATOR,
                 "apply (place:can place on|can break) [adventure] predicate to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Adventure Predicate Apply")

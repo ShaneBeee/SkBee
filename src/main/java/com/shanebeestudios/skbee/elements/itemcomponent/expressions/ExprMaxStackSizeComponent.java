@@ -21,7 +21,6 @@ public class ExprMaxStackSizeComponent extends SimplePropertyExpression<Object, 
             .name("ItemComponent - Max Stack Size")
             .description("Represents the max stack size of an item.",
                 "See [**MaxStackSize**](https://minecraft.wiki/w/Data_component_format#max_stack_size) on McWiki for more details.",
-                "Requires Paper 1.21.3+",
                 "",
                 "**Changers**:",
                 "- `set` = Set the max stack size, must be an integer between 1 and 99.",
