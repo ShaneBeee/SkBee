@@ -9,7 +9,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.github.shanebeee.skr.Registration;
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.Bukkit;
@@ -66,11 +66,11 @@ public class EffLoadWorld extends Effect {
         this.world = this.pattern == 2 ? (Expression<World>) exprs[0] : null;
         this.save = this.pattern == 2 && parseResult.mark != 1;
 
-        if (this.pattern == 3 && Util.IS_RUNNING_MC_26_1_1) {
+        if (this.pattern == 3 && LegacyUtils.IS_RUNNING_MC_26_1_1) {
             Skript.error("A world file cannot be deleted by name in Minecraft 26.1+");
             return false;
         }
-        if (this.pattern == 4 && !Util.IS_RUNNING_MC_26_1_1) {
+        if (this.pattern == 4 && !LegacyUtils.IS_RUNNING_MC_26_1_1) {
             Skript.error("A world file cannot be deleted by key in Minecraft 1.21.11 or below.");
             return false;
         }

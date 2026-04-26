@@ -12,7 +12,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.SwingAnimation;
 import io.papermc.paper.datacomponent.item.SwingAnimation.Animation;
@@ -28,7 +28,7 @@ public class SecSwingAnimationComponent extends Section {
     private static EntryValidator VALIDATOR;
 
     public static void register(Registration reg) {
-        if (Util.IS_RUNNING_MC_1_21_11) {
+        if (LegacyUtils.IS_RUNNING_MC_1_21_11) {
             VALIDATOR = SimpleEntryValidator.builder()
                 .addOptionalEntry("type", String.class)
                 .addOptionalEntry("duration", Timespan.class)

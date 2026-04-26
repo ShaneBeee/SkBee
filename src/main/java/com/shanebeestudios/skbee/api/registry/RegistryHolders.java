@@ -4,7 +4,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import com.shanebeestudios.skbee.api.particle.ParticleWrapper;
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.RegistryAccess;
@@ -87,7 +87,7 @@ public class RegistryHolders {
         register(RegistryKey.ENTITY_TYPE, EntityType.class);
         register(RegistryKey.FROG_VARIANT, Frog.Variant.class);
         register(RegistryKey.GAME_EVENT, GameEvent.class);
-        if (Util.IS_RUNNING_MC_1_21_11) {
+        if (LegacyUtils.IS_RUNNING_MC_1_21_11) {
             register(RegistryKey.GAME_RULE, GameRule.class);
         }
         register(RegistryKey.INSTRUMENT, MusicInstrument.class);
@@ -106,7 +106,7 @@ public class RegistryHolders {
         register(RegistryKey.VILLAGER_PROFESSION, Villager.Profession.class);
         register(RegistryKey.VILLAGER_TYPE, Villager.Type.class);
         register(RegistryKey.WOLF_VARIANT, Wolf.Variant.class);
-        if (Util.IS_RUNNING_MC_1_21_11) {
+        if (LegacyUtils.IS_RUNNING_MC_1_21_11) {
             register(RegistryKey.ZOMBIE_NAUTILUS_VARIANT, ZombieNautilus.Variant.class);
         }
     }

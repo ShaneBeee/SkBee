@@ -4,6 +4,7 @@ import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
@@ -245,7 +246,7 @@ public class BeeWorldCreator implements Keyed {
                 if (this.hardcore.isEmpty()) {
                     this.hardcore = Optional.of(world.isHardcore());
                 }
-                if (this.key == null || Util.IS_RUNNING_MC_26_1_1) {
+                if (this.key == null || LegacyUtils.IS_RUNNING_MC_26_1_1) {
                     this.key = world.getKey();
                 }
             }

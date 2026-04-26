@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.elements.worldcreator.objects;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -137,7 +138,7 @@ public class BeeWorldConfig {
             WORLDS.put(key, worldCreator);
         }
         String pathString;
-        if (Util.IS_RUNNING_MC_26_1_1) {
+        if (LegacyUtils.IS_RUNNING_MC_26_1_1) {
             // Clear out old world in config
             if (this.worldConfig.isSet("worlds." + worldCreator.getWorldName())) {
                 this.worldConfig.set("worlds." + worldCreator.getWorldName(), null);
@@ -147,7 +148,7 @@ public class BeeWorldConfig {
             pathString = worldCreator.getWorldName();
         }
         String path = "worlds." + pathString + ".";
-        if (!Util.IS_RUNNING_MC_26_1_1) {
+        if (!LegacyUtils.IS_RUNNING_MC_26_1_1) {
             this.worldConfig.set(path + "key", key.toString());
         }
         this.worldConfig.set(path + "type", worldCreator.getWorldType().toString());

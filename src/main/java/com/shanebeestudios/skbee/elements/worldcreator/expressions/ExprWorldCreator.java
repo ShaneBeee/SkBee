@@ -7,6 +7,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -60,7 +61,7 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
         this.pattern = matchedPattern;
         if (this.pattern == 0 || this.pattern == 2) {
             this.name = (Expression<String>) exprs[0];
-            if (Util.IS_RUNNING_MC_26_1_1) {
+            if (LegacyUtils.IS_RUNNING_MC_26_1_1) {
                 Skript.warning("Named worlds are highly discouraged in Minecraft 26.1+ and you should be using a key instead.");
             }
         } else {

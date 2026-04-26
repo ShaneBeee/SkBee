@@ -36,10 +36,6 @@ public class Util {
     public static final String MCWIKI_TICK_COMMAND = "See [**Tick Command**](https://minecraft.wiki/w/Commands/tick) on McWiki for more details.";
     public static final String AUTO_GEN_NOTE = "NOTE: These are auto-generated and may differ between server versions, currently generated for Minecraft " + Bukkit.getMinecraftVersion() + ".";
 
-    // Shortcut for finding stuff to remove later
-    public static final boolean IS_RUNNING_MC_1_21_11 = Skript.isRunningMinecraft(1, 21, 11);
-    public static final boolean IS_RUNNING_MC_26_1_1 = Skript.isRunningMinecraft(26, 1, 1);
-
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
         Matcher matcher = HEX_PATTERN.matcher(string);

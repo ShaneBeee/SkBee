@@ -9,7 +9,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.DamageResistant;
 import io.papermc.paper.registry.RegistryAccess;
@@ -34,7 +34,7 @@ public class ExprDamageResistantComponent extends SimpleExpression<DamageType> {
     private static final Registry<DamageType> DAMAGE_TYPE_REGISTRY = RegistryAccess.registryAccess().getRegistry(RegistryKey.DAMAGE_TYPE);
 
     public static void register(Registration reg) {
-        if (!Util.IS_RUNNING_MC_26_1_1) return;
+        if (!LegacyUtils.IS_RUNNING_MC_26_1_1) return;
 
         reg.newCombinedExpression(ExprDamageResistantComponent.class, DamageType.class,
                 "damage resistant [component] of %itemstacks/itemtypes/slots%")
