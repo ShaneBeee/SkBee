@@ -141,14 +141,20 @@ public class ExprBossBarCreateSection extends SectionExpression<BossBar> {
         }
 
         List<BarFlag> flags = new ArrayList<>();
-        if (Boolean.TRUE.equals(this.fog.getSingle(event))) {
-            flags.add(BarFlag.CREATE_FOG);
+        if (this.fog != null) {
+            if (Boolean.TRUE.equals(this.fog.getSingle(event))) {
+                flags.add(BarFlag.CREATE_FOG);
+            }
         }
-        if (Boolean.TRUE.equals(this.darkenSky.getSingle(event))) {
-            flags.add(BarFlag.DARKEN_SKY);
+        if (this.darkenSky != null) {
+            if (Boolean.TRUE.equals(this.darkenSky.getSingle(event))) {
+                flags.add(BarFlag.DARKEN_SKY);
+            }
         }
-        if (Boolean.TRUE.equals(this.playBossMusic.getSingle(event))) {
-            flags.add(BarFlag.PLAY_BOSS_MUSIC);
+        if (this.playBossMusic != null) {
+            if (Boolean.TRUE.equals(this.playBossMusic.getSingle(event))) {
+                flags.add(BarFlag.PLAY_BOSS_MUSIC);
+            }
         }
 
         KeyedBossBar bossBar;
