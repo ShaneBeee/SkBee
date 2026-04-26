@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.api.util;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.log.ErrorQuality;
-import ch.njol.skript.util.Version;
 import com.shanebeestudios.skbee.SkBee;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
@@ -27,8 +26,8 @@ import java.util.regex.Pattern;
  */
 public class Util {
 
-    private static final String PREFIX = "&7[&bSk&3Bee&7] ";
-    private static final String PREFIX_ERROR = "&7[&bSk&3Bee &cERROR&7] ";
+    public static final String PREFIX = "&7[&bSk&3Bee&7] ";
+    public static final String PREFIX_ERROR = "&7[&bSk&3Bee &cERROR&7] ";
     private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f\\d]){6}>");
     private static final boolean SKRIPT_IS_THERE = Bukkit.getPluginManager().getPlugin("Skript") != null;
     public static final boolean IS_RUNNING_FOLIA = Skript.classExists("io.papermc.paper.threadedregions.FoliaWatchdogThread");
@@ -40,7 +39,6 @@ public class Util {
     // Shortcut for finding stuff to remove later
     public static final boolean IS_RUNNING_MC_1_21_11 = Skript.isRunningMinecraft(1, 21, 11);
     public static final boolean IS_RUNNING_MC_26_1_1 = Skript.isRunningMinecraft(26, 1, 1);
-    public static final boolean IS_RUNNING_SKRIPT_2_15 = Skript.getVersion().compareTo(new Version(2, 14, 999)) >= 0;
 
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {

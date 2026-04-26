@@ -7,7 +7,7 @@ import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 
 /**
- * Called when a player exits a bound
+ * Called when a player exits a {@link Bound}
  */
 public class BoundExitEvent extends BoundEvent implements Cancellable {
     private static final HandlerList handlers = new HandlerList();

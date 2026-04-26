@@ -5,7 +5,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.generator.ChunkGen;
 import com.shanebeestudios.skbee.api.generator.ChunkGenManager;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;
 import org.bukkit.event.Event;

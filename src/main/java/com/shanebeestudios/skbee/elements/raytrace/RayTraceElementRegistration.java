@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.raytrace;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.raytrace.expressions.ExprRayTraceFromEntity;
 import com.shanebeestudios.skbee.elements.raytrace.expressions.ExprRayTraceFromLocation;
 import com.shanebeestudios.skbee.elements.raytrace.expressions.ExprRayTraceHitBlock;

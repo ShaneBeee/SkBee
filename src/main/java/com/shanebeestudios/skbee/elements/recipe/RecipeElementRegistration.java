@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.recipe;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.recipe.conditions.CondHasDiscoveredRecipe;
 import com.shanebeestudios.skbee.elements.recipe.effects.EffCookingRecipe;
 import com.shanebeestudios.skbee.elements.recipe.effects.EffCraftingRecipe;

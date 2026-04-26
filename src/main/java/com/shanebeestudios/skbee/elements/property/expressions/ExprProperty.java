@@ -10,7 +10,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.property.Property;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -25,7 +25,6 @@ import java.util.List;
 public class ExprProperty<F extends Object, T extends Object> extends SimpleExpression<T> {
 
     public static void register(Registration reg) {
-        // TODO this one won't work, figure out later
         reg.newCombinedExpression( ExprProperty.class, Object.class,
                 "%*property% property of %objects%",
                 "%objects%'[s] %*property% property")

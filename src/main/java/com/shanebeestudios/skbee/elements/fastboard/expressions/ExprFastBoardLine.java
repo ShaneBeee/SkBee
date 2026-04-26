@@ -8,7 +8,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardBase;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -25,8 +25,8 @@ public class ExprFastBoardLine extends SimpleExpression<Object> {
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprFastBoardLine.class, Object.class,
-                "line %number% of %players%'[s] [:score|fast]board[s]",
-                "line %number% of [:score|fast]board[s] of %players%")
+                "line %number% of %players%'[s] [score|:fast]board[s]",
+                "line %number% of [score|:fast]board[s] of %players%")
             .name("FastBoard - Line")
             .description("Get/set/delete lines of a player's fastboard.",
                 "Lines are valid from 1 to 15. 1 being the line at the top and 15 being the bottom (This can be changed in the config).",
@@ -56,8 +56,8 @@ public class ExprFastBoardLine extends SimpleExpression<Object> {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.line = (Expression<Number>) exprs[0];
         this.player = (Expression<Player>) exprs[1];
-        if (parseResult.hasTag("score")) {
-            Skript.warning("'scoreboard' is deprecated, please use 'fastboard' instead.");
+        if (!parseResult.hasTag("fast")) {
+            Skript.warning("'scoreboard/board' is deprecated, please use 'fastboard' instead.");
         }
         return true;
     }

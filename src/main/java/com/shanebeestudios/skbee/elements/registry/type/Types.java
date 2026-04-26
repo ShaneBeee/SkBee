@@ -3,7 +3,8 @@ package com.shanebeestudios.skbee.elements.registry.type;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryHolders;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.registry.RegistryKey;
@@ -12,19 +13,23 @@ import io.papermc.paper.registry.tag.TagKey;
 
 public class Types {
 
+    @SuppressWarnings("rawtypes")
     public static void register(Registration reg) {
         RegistryHolders.init();
-        reg.newType(RegistryKey.class, "registrykey")
+        Registration.TypeRegistrar<RegistryKey> registrykeyInfo = reg.newType(RegistryKey.class, "registrykey")
             .user("registry ?keys?")
             .name("Registry - Registry Key")
             .description("Represents a key for a Minecraft registry.",
                 "Values in square brackets resemble the Skript type linked to the registry.",
                 Util.AUTO_GEN_NOTE)
-            .usage(RegistryHolders.getDocUsage())
             .parser(RegistryHolders.createParser())
             .supplier(RegistryHolders.getSupplier())
-            .since("3.8.0")
-            .register();
+            .since("3.8.0");
+        registrykeyInfo.register();
+        // Delay usage to make sure all other ClassInfos are registered
+        TaskUtils.getGlobalScheduler().runTaskLater(() ->
+            registrykeyInfo.usage(RegistryHolders.getDocUsage()),
+            2);
 
         reg.newType(TagKey.class, "tagkey")
             .user("tag ?keys?")

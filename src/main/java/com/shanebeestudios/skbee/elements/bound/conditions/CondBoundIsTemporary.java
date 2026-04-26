@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.bound.conditions;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
 import com.shanebeestudios.skbee.api.bound.Bound;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 
 public class CondBoundIsTemporary extends PropertyCondition<Bound> {
 

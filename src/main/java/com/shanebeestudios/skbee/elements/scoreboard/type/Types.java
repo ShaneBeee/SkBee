@@ -10,7 +10,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.ScoreboardUtils;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
 import com.shanebeestudios.skbee.api.util.Util;

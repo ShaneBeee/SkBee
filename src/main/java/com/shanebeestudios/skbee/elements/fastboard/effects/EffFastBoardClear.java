@@ -7,7 +7,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardBase;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -17,8 +17,8 @@ public class EffFastBoardClear extends Effect {
 
     public static void register(Registration reg) {
         reg.newEffect(EffFastBoardClear.class,
-                "clear [:score|fast]board[s] of %players%",
-                "clear %players%'[s] [:score|fast]board[s]")
+                "clear [score|:fast]board[s] of %players%",
+                "clear %players%'[s] [score|:fast]board[s]")
             .name("FastBoard - Clear")
             .description("Clear a fastboard of a player.",
                 "NOTE: You do NOT need to clear a fastboard before changing lines.")
@@ -34,8 +34,8 @@ public class EffFastBoardClear extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.player = (Expression<Player>) exprs[0];
-        if (parseResult.hasTag("score")) {
-            Skript.warning("'scoreboard' is deprecated, please use 'fastboard' instead.");
+        if (!parseResult.hasTag("fast")) {
+            Skript.warning("'scoreboard/board' is deprecated, please use 'fastboard' instead.");
         }
         return true;
     }

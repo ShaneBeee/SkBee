@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.fastboard;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.fastboard.conditions.CondFastBoardOn;
 import com.shanebeestudios.skbee.elements.fastboard.effects.EffFastBoardClear;
 import com.shanebeestudios.skbee.elements.fastboard.effects.EffFastBoardToggle;

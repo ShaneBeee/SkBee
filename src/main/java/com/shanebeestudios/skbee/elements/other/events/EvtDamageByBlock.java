@@ -5,8 +5,7 @@ import ch.njol.skript.entity.EntityData;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.EventValues;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
@@ -18,14 +17,13 @@ import org.jetbrains.annotations.Nullable;
 public class EvtDamageByBlock extends SkriptEvent {
 
     public static void register(Registration reg) {
-        reg.newEvent( EvtDamageByBlock.class, EntityDamageByBlockEvent.class,
+        reg.newEvent(EvtDamageByBlock.class, EntityDamageByBlockEvent.class,
                 "damag(e|ing) [of %-entitydata%] (by|from) (block|%itemtypes/blockdatas%)")
             .name("Damage By Block")
             .description("Called when an entity is damaged by a block.",
                 "Anything that works in vanilla Skript's damage event (victim/damage cause/damage/final damage)",
                 "will all work in this event too.",
-                "\n`victim` = Same as vanilla Skript, `victim` is used to get the damaged entity.",
-                "\n`event-block` = The block that damaged the entity")
+                "\n`victim` = Same as vanilla Skript, `victim` is used to get the damaged entity.")
             .examples("on damage of player by sweet berry bush:",
                 "\tcancel event",
                 "",
@@ -34,7 +32,10 @@ public class EvtDamageByBlock extends SkriptEvent {
             .since("3.0.2")
             .register();
 
-        reg.registerEventValue(EntityDamageByBlockEvent.class, Block.class, EntityDamageByBlockEvent::getDamager, EventValues.TIME_NOW);
+        reg.newEventValue(EntityDamageByBlockEvent.class, Block.class)
+            .description("The block that damaged the entity.")
+            .converter(EntityDamageByBlockEvent::getDamager)
+            .register();
     }
 
     private Literal<EntityData<?>> entityType;

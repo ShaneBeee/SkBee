@@ -3,7 +3,7 @@ package com.shanebeestudios.skbee.api.util;
 import java.util.logging.Logger;
 
 /**
- * A Logger wrapper
+ * A Logger wrapper to be used with NBT-API
  */
 public class LoggerBee extends Logger {
 
@@ -11,7 +11,9 @@ public class LoggerBee extends Logger {
         super(name, resourceBundleName);
     }
 
-    /** Get an instance of LoggerBee
+    /**
+     * Get an instance of LoggerBee
+     *
      * @return new instance of LoggerBee
      */
     public static LoggerBee getLogger() {

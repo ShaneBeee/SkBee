@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.generator.expressions;
 
 import ch.njol.skript.expressions.base.EventValueExpression;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.generator.BiomeParameterPoint;
 
 public class ExprBiomeParamPoint extends EventValueExpression<BiomeParameterPoint> {

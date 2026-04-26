@@ -3,8 +3,8 @@ package com.shanebeestudios.skbee.api.bound;
 import ch.njol.skript.Skript;
 import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
+import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -23,6 +23,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Configuration class for bounds
+ * <p>
+ * You can get an instance of this class using {@link SkBee#getBoundConfig()}
+ * </p>
+ */
 @SuppressWarnings("FieldCanBeLocal")
 public class BoundConfig implements Listener {
 

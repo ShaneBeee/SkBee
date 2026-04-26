@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.statistic;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.statistic.expressions.ExprPlayerStatistic;
 import com.shanebeestudios.skbee.elements.statistic.type.Types;
 

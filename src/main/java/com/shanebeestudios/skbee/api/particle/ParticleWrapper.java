@@ -16,7 +16,7 @@ import java.util.Map;
 public class ParticleWrapper {
 
     private static final Map<String, ParticleWrapper> PARTICLES = new HashMap<>();
-    private static final Map<ParticleWrapper, String> PARTICLE_NAMES = new HashMap<>();
+    private static final Map<Particle, ParticleWrapper> PARTICLE_MAP = new HashMap<>();
 
     static {
         Registry.PARTICLE_TYPE.forEach(particle -> {
@@ -24,7 +24,7 @@ public class ParticleWrapper {
             ParticleWrapper particleWrapper = new ParticleWrapper(key, particle);
 
             PARTICLES.put(key, particleWrapper);
-            PARTICLE_NAMES.put(particleWrapper, key);
+            PARTICLE_MAP.put(particle, particleWrapper);
         });
     }
 
@@ -86,6 +86,15 @@ public class ParticleWrapper {
         return particle.getKey();
     }
 
+    /**
+     * Get the ParticleWrapper for a Particle
+     *
+     * @param particle Particle to get wrapper for
+     * @return ParticleWrapper for particle
+     */
+    public static ParticleWrapper getParticle(Particle particle) {
+        return PARTICLE_MAP.get(particle);
+    }
 
     public static @Nullable ParticleWrapper parse(String key) {
         key = key.toLowerCase();

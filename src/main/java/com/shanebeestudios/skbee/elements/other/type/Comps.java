@@ -3,7 +3,7 @@ package com.shanebeestudios.skbee.elements.other.type;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.bukkitutil.EntityUtils;
 import ch.njol.skript.entity.EntityData;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;

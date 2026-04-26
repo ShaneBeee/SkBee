@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.util.EnchantmentType;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.enchantments.Enchantment;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;

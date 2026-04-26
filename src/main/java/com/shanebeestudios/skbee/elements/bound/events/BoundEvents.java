@@ -3,7 +3,6 @@ package com.shanebeestudios.skbee.elements.bound.events;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.EventValues;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.event.bound.BoundEnterEvent;
@@ -11,7 +10,7 @@ import com.shanebeestudios.skbee.api.event.bound.BoundEvent;
 import com.shanebeestudios.skbee.api.event.bound.BoundExitEvent;
 import com.shanebeestudios.skbee.api.listener.BoundBorderListener;
 import com.shanebeestudios.skbee.api.listener.BoundBorderListener.BoundMoveReason;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -24,7 +23,7 @@ public class BoundEvents extends SkriptEvent {
     private static BoundBorderListener boundBorderListener;
 
     public static void register(Registration reg) {
-        reg.newEvent( BoundEvents.class, BoundEnterEvent.class, "(bound enter|enter bound) [with id %-string%]")
+        reg.newEvent(BoundEvents.class, BoundEnterEvent.class, "(bound enter|enter bound) [with id %-string%]")
             .name("Bound - Enter")
             .description("Called when a player enters a bound. Optional ID of bound. 'event-string' = bound ID.",
                 "NOTE: Due to breaking changes in Bukkit API, enter/exit events will not be called when a player mounts/dismounts an entity if running SkBee 3.5.0+ on MC 1.20.4 and below.")
@@ -40,10 +39,9 @@ public class BoundEvents extends SkriptEvent {
             .since("1.0.0, 1.12.2 (Bound IDs)")
             .register();
 
-        reg.newEvent( BoundEvents.class, BoundExitEvent.class, "(bound exit|exit bound) [with id %-string%]")
+        reg.newEvent(BoundEvents.class, BoundExitEvent.class, "(bound exit|exit bound) [with id %-string%]")
             .name("Bound - Exit")
-            .description("Called when a player exits a bound. Optional ID of bound. 'event-string' = bound ID.",
-                "NOTE: Due to breaking changes in Bukkit API, enter/exit events will not be called when a player mounts/dismounts an entity if running SkBee 3.5.0+ on MC 1.20.4 and below.")
+            .description("Called when a player exits a bound. Optional ID of bound. 'event-string' = bound ID.")
             .examples("on bound exit:",
                 "\tsend \"You left a bound\"",
                 "\tif event-bound = {bound}:",
@@ -53,12 +51,25 @@ public class BoundEvents extends SkriptEvent {
             .since("1.0.0, 1.12.2 (Bound IDs)")
             .register();
 
-        reg.registerEventValue(BoundEvent.class, Bound.class, BoundEvent::getBound, EventValues.TIME_NOW);
-        reg.registerEventValue(BoundEvent.class, String.class, event -> event.getBound().getId(), EventValues.TIME_NOW);
-        reg.registerEventValue(BoundEnterEvent.class, Player.class, BoundEnterEvent::getPlayer, 0);
-        reg.registerEventValue(BoundExitEvent.class, Player.class, BoundExitEvent::getPlayer, 0);
-        reg.registerEventValue(BoundEnterEvent.class, BoundMoveReason.class, BoundEnterEvent::getReason);
-        reg.registerEventValue(BoundExitEvent.class, BoundMoveReason.class, BoundExitEvent::getReason);
+        reg.newEventValue(BoundEvent.class, Bound.class)
+            .converter(BoundEvent::getBound)
+            .register();
+        reg.newEventValue(BoundEvent.class, String.class)
+            .description("The ID of the bound in this event.")
+            .converter(event -> event.getBound().getId())
+            .register();
+        reg.newEventValue(BoundEnterEvent.class, Player.class)
+            .converter(BoundEnterEvent::getPlayer)
+            .register();
+        reg.newEventValue(BoundExitEvent.class, Player.class)
+            .converter(BoundExitEvent::getPlayer)
+            .register();
+        reg.newEventValue(BoundEnterEvent.class, BoundMoveReason.class)
+            .converter(BoundEnterEvent::getReason)
+            .register();
+        reg.newEventValue(BoundExitEvent.class, BoundMoveReason.class)
+            .converter(BoundExitEvent::getReason)
+            .register();
     }
 
     private Literal<String> boundID;

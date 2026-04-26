@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.property;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.property.expressions.ExprProperty;
 import com.shanebeestudios.skbee.elements.property.properties.EntityProperties;
 import com.shanebeestudios.skbee.elements.property.properties.ItemProperties;

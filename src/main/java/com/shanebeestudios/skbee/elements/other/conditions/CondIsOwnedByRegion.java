@@ -5,7 +5,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.region.RegionUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Condition;
 import org.bukkit.World;
 import org.bukkit.event.Event;

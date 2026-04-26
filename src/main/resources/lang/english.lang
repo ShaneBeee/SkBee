@@ -74,7 +74,9 @@ types:
     recipetype: recipe type¦s
     registrykey: registry key¦s
     rendertype: render type¦s
+    resourcepackstatus: resource pack status¦es
     respawnreason: respawn reason¦s
+    spawncategory: spawn categor¦y¦ies
     spell: spell¦s
     scoreboard: scoreboard¦s
     signedmessage: signed message¦s

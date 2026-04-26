@@ -1,9 +1,7 @@
 package com.shanebeestudios.skbee.elements.advancement.event;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.util.SimpleEvent;
-import ch.njol.skript.registrations.EventValues;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.player.PlayerAdvancementDoneEvent;
 
@@ -22,8 +20,12 @@ public class SimpleEvents extends SimpleEvent {
             .since("1.17.0")
             .register();
 
-        reg.registerEventValue(PlayerAdvancementDoneEvent.class, String.class, event -> event.getAdvancement().getKey().toString(), EventValues.TIME_NOW);
-        reg.registerEventValue(PlayerAdvancementDoneEvent.class, Advancement.class, PlayerAdvancementDoneEvent::getAdvancement, EventValues.TIME_NOW);
+        reg.newEventValue(PlayerAdvancementDoneEvent.class, String.class)
+            .converter(event -> event.getAdvancement().getKey().toString())
+            .register();
+        reg.newEventValue(PlayerAdvancementDoneEvent.class, Advancement.class)
+            .converter(PlayerAdvancementDoneEvent::getAdvancement)
+            .register();
     }
 
 }

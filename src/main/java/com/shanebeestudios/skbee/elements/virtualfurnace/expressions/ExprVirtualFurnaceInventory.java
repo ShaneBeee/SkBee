@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.expressions;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.vf.api.machine.Furnace;
 import com.shanebeestudios.vf.api.machine.Machine;
 import org.bukkit.inventory.Inventory;

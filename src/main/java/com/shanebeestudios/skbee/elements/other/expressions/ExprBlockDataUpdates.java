@@ -5,7 +5,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.util.Util;

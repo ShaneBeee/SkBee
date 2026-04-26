@@ -124,8 +124,16 @@ public class BoundWorld {
         return locations;
     }
 
+    /**
+     * Get all bounds in a {@link BoundRegion} at a location.
+     *
+     * @param location Location to check for bounds
+     * @return List of bounds in the region,
+     * if no region was created at location, returns an empty list
+     */
     public List<Bound> getBoundsAtLocation(Location location) {
-        BoundRegion region = getOrCreateRegionAtLocation(location);
+        BoundRegion region = getRegionAtLocation(location);
+        if (region == null) return List.of();
         return region.getBounds();
     }
 

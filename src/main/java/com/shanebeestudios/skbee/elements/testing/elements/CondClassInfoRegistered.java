@@ -8,7 +8,7 @@ import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.VerboseAssert;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Condition;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -53,7 +53,8 @@ public class CondClassInfoRegistered extends Condition implements VerboseAssert 
                 if (parser == null) {
                     this.errorMessage = "Parser for ClassInfo '" + ci.getCodeName() + "' is null";
                     return false;
-                } else if (!parser.getClass().toString().contains("com.shanebeestudios.skbee")) {
+                } else if (!parser.getClass().toString().contains("com.shanebeestudios.skbee") &&
+                    !parser.getClass().toString().contains("com.github.shanebeee.skr")) {
                     this.errorMessage = "ClassInfo '" + ci.getCodeName() + "' does not belong to SkBee!";
                     return false;
                 } else {

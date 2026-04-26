@@ -9,7 +9,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;

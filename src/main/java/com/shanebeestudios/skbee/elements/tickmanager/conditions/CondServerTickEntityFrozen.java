@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.tickmanager.conditions;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Entity;

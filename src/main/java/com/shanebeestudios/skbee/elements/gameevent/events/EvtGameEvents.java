@@ -3,8 +3,7 @@ package com.shanebeestudios.skbee.elements.gameevent.events;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.EventValues;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.GameEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -14,7 +13,6 @@ import org.bukkit.event.block.BlockReceiveGameEvent;
 import org.bukkit.event.world.GenericGameEvent;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.skriptlang.skript.lang.converter.Converter;
 
 @SuppressWarnings("unused")
 public class EvtGameEvents extends SkriptEvent {
@@ -46,26 +44,33 @@ public class EvtGameEvents extends SkriptEvent {
             .since("1.14.0")
             .register();
 
-        reg.registerEventValue(GenericGameEvent.class, Entity.class, new Converter<>() {
-            @Nullable
-            @Override
-            public Entity convert(GenericGameEvent event) {
-                return event.getEntity();
-            }
-        }, EventValues.TIME_NOW);
-
-        reg.registerEventValue(GenericGameEvent.class, GameEvent.class, GenericGameEvent::getEvent, EventValues.TIME_NOW);
-        reg.registerEventValue(GenericGameEvent.class, Location.class, GenericGameEvent::getLocation, EventValues.TIME_NOW);
-        reg.registerEventValue(GenericGameEvent.class, Player.class, event -> {
-            if (event.getEntity() instanceof Player player) return player;
-            return null;
-        }, EventValues.TIME_NOW);
-        reg.registerEventValue(BlockReceiveGameEvent.class, Entity.class, BlockReceiveGameEvent::getEntity, EventValues.TIME_NOW);
-        reg.registerEventValue(BlockReceiveGameEvent.class, GameEvent.class, BlockReceiveGameEvent::getEvent, EventValues.TIME_NOW);
-        reg.registerEventValue(BlockReceiveGameEvent.class, Player.class, event -> {
-            if (event.getEntity() instanceof Player player) return player;
-            return null;
-        }, EventValues.TIME_NOW);
+        reg.newEventValue(GenericGameEvent.class, Entity.class)
+            .converter(GenericGameEvent::getEntity)
+            .register();
+        reg.newEventValue(GenericGameEvent.class, GameEvent.class)
+            .converter(GenericGameEvent::getEvent)
+            .register();
+        reg.newEventValue(GenericGameEvent.class, Location.class)
+            .converter(GenericGameEvent::getLocation)
+            .register();
+        reg.newEventValue(GenericGameEvent.class, Player.class)
+            .converter(event -> {
+                if (event.getEntity() instanceof Player player) return player;
+                return null;
+            })
+            .register();
+        reg.newEventValue(BlockReceiveGameEvent.class, Entity.class)
+            .converter(BlockReceiveGameEvent::getEntity)
+            .register();
+        reg.newEventValue(BlockReceiveGameEvent.class, GameEvent.class)
+            .converter(BlockReceiveGameEvent::getEvent)
+            .register();
+        reg.newEventValue(BlockReceiveGameEvent.class, Player.class)
+            .converter(event -> {
+                if (event.getEntity() instanceof Player player) return player;
+                return null;
+            })
+            .register();
     }
 
     private Literal<GameEvent> gameEvents;

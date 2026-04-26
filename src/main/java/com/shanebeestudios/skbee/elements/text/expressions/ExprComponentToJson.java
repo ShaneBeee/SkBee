@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;

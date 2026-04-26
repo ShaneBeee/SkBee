@@ -3,7 +3,7 @@ package com.shanebeestudios.skbee.elements.property.properties;
 import ch.njol.skript.aliases.ItemType;
 import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.property.PropertyRegistry;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.attribute.Attributable;
 import org.bukkit.attribute.Attribute;

@@ -41,7 +41,10 @@ dependencies {
     compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
 
     // Skript
-    compileOnly("com.github.SkriptLang:Skript:2.14.0")
+    compileOnly("com.github.SkriptLang:Skript:2.15.0")
+
+    // SkriptRegistration
+    implementation("com.github.shanebeee:SkriptRegistration:1.0.8")
 
     // commons-io
     compileOnly("commons-io:commons-io:2.14.0")
@@ -90,6 +93,7 @@ tasks {
         relocate("de.tr7zw.annotations", "com.shanebeestudios.skbee.api.nbt.annotations")
         relocate("fr.mrmicky.fastboard", "com.shanebeestudios.skbee.api.fastboard.base")
         relocate("com.shanebeestudios.vf", "com.shanebeestudios.skbee.api.virtualfurnace")
+        relocate("com.github.shanebeee.skr", "com.shanebeestudios.skbee.api.registration")
         relocate("org.bstats", "com.shanebeestudios.skbee.metrics")
         exclude("META-INF/**", "LICENSE", "plugin.yml")
     }
@@ -104,12 +108,15 @@ tasks {
         withSourcesJar()
     }
     javadoc {
+        val options = options as StandardJavadocDocletOptions
+        options.docTitle = "SkBee API - $projectVersion"
+        //options.overview = "src/main/javadoc/overview.html"
         options.encoding = Charsets.UTF_8.name()
         exclude(
             "com/shanebeestudios/skbee/api/listener", "com/shanebeestudios/skbee/elements",
             "com/shanebeestudios/skbee/api/command", "com/shanebeestudios/skbee/game"
         )
-        (options as StandardJavadocDocletOptions).links(
+        options.links(
             "https://javadoc.io/doc/org.jetbrains/annotations/latest/",
             "https://jd.papermc.io/paper/1.21.10/",
             "https://docs.skriptlang.org/javadocs/",

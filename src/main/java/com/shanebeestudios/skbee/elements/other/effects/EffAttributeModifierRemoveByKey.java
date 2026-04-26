@@ -6,7 +6,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.util.Kleenean;
 import com.google.common.collect.Multimap;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.registry.RegistryAccess;

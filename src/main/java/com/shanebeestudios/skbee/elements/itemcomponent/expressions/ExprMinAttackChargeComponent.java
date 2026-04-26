@@ -2,11 +2,10 @@ package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.event.Event;
@@ -59,7 +58,7 @@ public class ExprMinAttackChargeComponent extends SimplePropertyExpression<Objec
         Number chargeNum = delta != null && delta[0] instanceof Number num ? num : null;
 
         float charge = chargeNum != null ? chargeNum.floatValue() : 1.0f;
-        charge = MathUtil.clamp(charge, 0.0f, 1.0f);
+        charge = Math.clamp(charge, 0.0f, 1.0f);
 
         ItemComponentUtils.modifyComponent(getExpr().getArray(event), mode, DataComponentTypes.MINIMUM_ATTACK_CHARGE, charge);
     }

@@ -7,12 +7,11 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.registrations.EventValues;
 import ch.njol.skript.util.slot.Slot;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTCustom;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import de.tr7zw.changeme.nbtapi.NBT;
@@ -84,7 +83,9 @@ public class SecModifyNBT extends Section {
                 "\tset string tag \"owner\" of nbt to {_nameOfPlayer}")
             .since("3.11.0")
             .register();
-        reg.registerEventValue(NBTEditEvent.class, NBTCompound.class, NBTEditEvent::getCompound);
+        reg.newEventValue(NBTEditEvent.class, NBTCompound.class)
+            .converter(NBTEditEvent::getCompound)
+            .register();
     }
 
     private boolean custom;

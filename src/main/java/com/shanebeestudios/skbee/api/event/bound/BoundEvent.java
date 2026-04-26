@@ -5,9 +5,12 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Base {@link Event} for all {@link Bound} events
+ */
 public abstract class BoundEvent extends Event {
 
-    private Bound bound;
+    private final Bound bound;
     private static final HandlerList handlers = new HandlerList();
 
     public BoundEvent(Bound bound) {

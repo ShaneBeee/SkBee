@@ -5,8 +5,7 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
-import com.shanebeestudios.skbee.api.util.MathUtil;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
@@ -58,7 +57,7 @@ public class EffSendBlockDamage extends Effect {
         Number damageNum = this.damage.getSingle(event);
         if (damageNum != null) damage = damageNum.floatValue();
 
-        damage = MathUtil.clamp(damage, 0.0f, 1.0f);
+        damage = Math.clamp(damage, 0.0f, 1.0f);
 
         int entityID = -1;
 

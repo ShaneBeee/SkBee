@@ -4,7 +4,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.tag.TagKey;
@@ -22,7 +22,8 @@ public class ExprRegistryTagKeys extends SimpleExpression<TagKey> {
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprRegistryTagKeys.class, TagKey.class,
-                "tag keys (of|from) %registrykey%")
+                "tag keys (of|from) %registrykey%",
+                "%registrykey% tag keys")
             .name("Registry - TagKeys from Registry")
             .description("Get all the tag keys that belong to a registry.")
             .examples("loop tag keys of block registry:",

@@ -38,7 +38,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Util class to convert {@link NamespacedKey NamespacedKeys} to Skript objects.
+ * Utility class to convert {@link NamespacedKey NamespacedKeys} to Skript objects
  *
  * @param <T> {@link ClassInfo} class for conversion type
  */

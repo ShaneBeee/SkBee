@@ -7,7 +7,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;

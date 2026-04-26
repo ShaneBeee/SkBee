@@ -7,7 +7,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.block.Beacon;
 import org.bukkit.block.Block;
 import org.bukkit.entity.LivingEntity;

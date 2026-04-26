@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.EntityBlockStorage;

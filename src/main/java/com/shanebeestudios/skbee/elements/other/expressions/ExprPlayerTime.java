@@ -8,7 +8,7 @@ import ch.njol.skript.util.Time;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;

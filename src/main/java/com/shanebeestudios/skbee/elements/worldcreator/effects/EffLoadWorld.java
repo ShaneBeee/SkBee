@@ -8,7 +8,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator;

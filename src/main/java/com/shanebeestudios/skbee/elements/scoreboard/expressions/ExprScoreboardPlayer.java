@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.scoreboard.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.ScoreboardUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import org.bukkit.entity.Player;

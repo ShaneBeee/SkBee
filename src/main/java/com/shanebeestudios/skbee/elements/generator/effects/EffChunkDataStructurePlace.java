@@ -3,11 +3,10 @@ package com.shanebeestudios.skbee.elements.generator.effects;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
-import com.shanebeestudios.skbee.api.registration.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
@@ -47,8 +46,8 @@ public class EffChunkDataStructurePlace extends Effect {
         Vector vector = this.vector.getSingle(event);
         if (structure == null || vector == null) return;
 
-        vector.setX((popEvent.getChunkX() << 4) + MathUtil.clamp(vector.getBlockX(), 0, 15));
-        vector.setZ((popEvent.getChunkZ() << 4) + MathUtil.clamp(vector.getBlockZ(), 0, 15));
+        vector.setX((popEvent.getChunkX() << 4) + Math.clamp(vector.getBlockX(), 0, 15));
+        vector.setZ((popEvent.getChunkZ() << 4) + Math.clamp(vector.getBlockZ(), 0, 15));
         structure.place(popEvent.getLimitedRegion(), vector);
     }
 

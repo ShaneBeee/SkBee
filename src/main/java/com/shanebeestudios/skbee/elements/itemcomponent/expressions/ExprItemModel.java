@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;

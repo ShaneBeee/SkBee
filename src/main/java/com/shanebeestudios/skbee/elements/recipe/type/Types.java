@@ -6,7 +6,7 @@ import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.recipe.RecipeType;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Material;
 import org.bukkit.Tag;

@@ -4,7 +4,7 @@ import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.block.BlockState;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -25,18 +25,15 @@ public class ExprBlockStateItemType extends SimplePropertyExpression<BlockState,
 
     @Override
     public @Nullable ItemType convert(BlockState blockState) {
-        // TODO use blockdata when Skript updates to 2.8.4 (See my PR)
-        return new ItemType(blockState.getType());
+        return new ItemType(blockState.getBlockData());
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<?> @Nullable [] acceptChange(ChangeMode mode) {
         if (mode == ChangeMode.SET) return CollectionUtils.array(ItemType.class);
         return null;
     }
 
-    @SuppressWarnings({"ConstantValue", "NullableProblems"})
     @Override
     public void change(Event event, @Nullable Object[] delta, ChangeMode mode) {
         if (delta != null && delta[0] instanceof ItemType itemType) {
@@ -46,7 +43,6 @@ public class ExprBlockStateItemType extends SimplePropertyExpression<BlockState,
         }
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public Class<? extends ItemType> getReturnType() {
         return ItemType.class;

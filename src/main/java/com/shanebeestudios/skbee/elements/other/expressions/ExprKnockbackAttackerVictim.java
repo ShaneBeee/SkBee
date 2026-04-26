@@ -5,7 +5,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import io.papermc.paper.event.entity.EntityKnockbackEvent;
 import io.papermc.paper.event.entity.EntityPushedByEntityAttackEvent;
 import org.bukkit.entity.Entity;

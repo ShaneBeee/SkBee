@@ -13,7 +13,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.dialog.DialogCallbackEvent;
 import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -42,17 +42,23 @@ public class SecDynamicCallbackActionButton extends Section {
 
     public static void register(Registration reg) {
         EntryValidatorBuilder builder = EntryValidator.builder();
-        reg.newEventValue(DialogCallbackEvent.class, NBTCompound.class, DialogCallbackEvent::getNbtCompound)
+        reg.newEventValue(DialogCallbackEvent.class, NBTCompound.class)
+            .converter(DialogCallbackEvent::getNbtCompound)
             .register();
-        reg.newEventValue(DialogCallbackEvent.class, Audience.class, DialogCallbackEvent::getAudience)
+        reg.newEventValue(DialogCallbackEvent.class, Audience.class)
+            .converter(DialogCallbackEvent::getAudience)
             .register();
-        reg.newEventValue(DialogCallbackEvent.class, PlayerConnection.class, DialogCallbackEvent::getConnection)
+        reg.newEventValue(DialogCallbackEvent.class, PlayerConnection.class)
+            .converter(DialogCallbackEvent::getConnection)
             .register();
-        reg.newEventValue(DialogCallbackEvent.class, Player.class, DialogCallbackEvent::getPlayer)
+        reg.newEventValue(DialogCallbackEvent.class, Player.class)
+            .converter(DialogCallbackEvent::getPlayer)
             .register();
-        reg.newEventValue(DialogCallbackEvent.class, UUID.class, DialogCallbackEvent::getUUID)
+        reg.newEventValue(DialogCallbackEvent.class, UUID.class)
+            .converter(DialogCallbackEvent::getUUID)
             .register();
-        reg.newEventValue(DialogCallbackEvent.class, String.class, DialogCallbackEvent::getName)
+        reg.newEventValue(DialogCallbackEvent.class, String.class)
+            .converter(DialogCallbackEvent::getName)
             .register();
         @SuppressWarnings("unchecked")
         Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};

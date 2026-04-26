@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.advancement;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.advancement.conditions.CondAdvancementDone;
 import com.shanebeestudios.skbee.elements.advancement.effects.EffAdvancementCriteriaAward;
 import com.shanebeestudios.skbee.elements.advancement.effects.EffAdvancementLoad;

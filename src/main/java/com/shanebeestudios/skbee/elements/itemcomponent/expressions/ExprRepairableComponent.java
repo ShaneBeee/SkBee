@@ -2,13 +2,12 @@ package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
 import ch.njol.skript.classes.Changer;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.ExpressionType;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.SyntaxStringBuilder;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.Util;

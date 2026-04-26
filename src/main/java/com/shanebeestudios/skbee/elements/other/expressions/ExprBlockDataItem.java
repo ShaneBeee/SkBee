@@ -2,9 +2,8 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.classes.Changer.ChangeMode;
-import ch.njol.skript.expressions.base.PropertyExpression;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.util.BlockDataUtils;
 import org.bukkit.Material;

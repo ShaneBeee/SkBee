@@ -8,7 +8,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.Experience;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.event.player.PlayerFishEvent;
 import org.jetbrains.annotations.NotNull;

@@ -5,9 +5,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.BossBarUtils;
-import com.shanebeestudios.skbee.api.util.MathUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
@@ -98,7 +97,7 @@ public class ExprBossBarCreate extends SimpleExpression<BossBar> {
         if (this.progress != null) {
             Number proNumber = this.progress.getSingle(event);
             if (proNumber != null) {
-                progress = MathUtil.clamp(proNumber.floatValue() / 100, 0, 1);
+                progress = Math.clamp(proNumber.floatValue() / 100, 0, 1);
             }
         }
         BossBar bossBar;

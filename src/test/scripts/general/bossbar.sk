@@ -27,6 +27,31 @@ test "SkBee - Bossbars":
 	assert {_ebar} is set with "The wither should have a bossbar"
 
 	# Cleanup
+	delete {_bar}
 	delete bossbar with id "test_bar"
 	delete entity within {_e}
 	assert size of all bossbars = {_size} with "Size of all bossbars should be what we started with"
+
+	# Creation Section
+	set {_bar} to create new bossbar:
+		id: "some_id"
+		title: "My Bossbar"
+		color: green
+		style: segmented_20
+		fog: true
+		darken_sky: true
+		play_boss_music: false
+		progress: 75
+
+	assert bossbar players of {_bar} is not set with "The bar should have no players"
+	assert bossbar style of {_bar} = segmented_20 with "The bar's style should be segmented_20"
+	assert bossbar title of {_bar} = "My Bossbar" with "The bar's title should be 'My Bossbar'"
+	assert bossbar progress of {_bar} = 75 with "The bar's progress should be 75"
+	assert bossbar visibility of {_bar} = true with "The bar should be visible"
+	assert bossbar flag create_fog of {_bar} = true with "The flag should be true when creating"
+	assert bossbar flag darken_sky of {_bar} = true with "The flag should be true when creating"
+	assert bossbar flag play_boss_music of {_bar} = false with "The flag should be false when creating"
+
+	# Cleanup
+	delete bossbar with id "some_id"
+

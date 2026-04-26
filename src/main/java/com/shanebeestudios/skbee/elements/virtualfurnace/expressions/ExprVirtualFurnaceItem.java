@@ -5,7 +5,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.virtualfurnace.type.Types;
 import com.shanebeestudios.vf.api.property.FurnaceProperties;
 import com.shanebeestudios.vf.api.property.Properties;

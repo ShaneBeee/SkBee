@@ -13,9 +13,10 @@ import ch.njol.skript.lang.SectionSkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
+import ch.njol.skript.lang.UnparsedLiteral;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchBaseEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import org.bukkit.event.Event;
@@ -62,7 +63,7 @@ public class SecCase extends Section implements ReturnHandler<Object> {
             .register();
     }
 
-    private Expression<Object> caseObject;
+    private Expression<?> caseObject;
     private boolean defaultCase;
     private ReturnableTrigger<?> caseSection;
     private Object[] returnObject;
@@ -92,6 +93,9 @@ public class SecCase extends Section implements ReturnHandler<Object> {
             this.defaultCase = true;
         } else {
             this.caseObject = LiteralUtils.defendExpression(exprs[0]);
+            if (!LiteralUtils.canInitSafely(this.caseObject)) {
+                return false;
+            }
             if (switchObject != null && this.caseObject instanceof Literal<?> literal) {
                 for (Object lit : literal.getArray()) {
                     Class<?> switchReturnType = switchObject.getReturnType();

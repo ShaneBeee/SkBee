@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.fishing;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.fishing.effects.EffFishHookPullIn;
 import com.shanebeestudios.skbee.elements.fishing.expressions.ExprFishEventEntity;
 import com.shanebeestudios.skbee.elements.fishing.expressions.ExprFishEventState;

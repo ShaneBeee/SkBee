@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.structure.expressions;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.Location;
 import org.jetbrains.annotations.NotNull;

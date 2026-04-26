@@ -3,8 +3,7 @@ package com.shanebeestudios.skbee.elements.other.events;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.EventValues;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -21,8 +20,7 @@ public class TabEvent extends SkriptEvent {
                 "[skbee] tab complete [(of|for) %-strings%]")
             .name("Tab Complete")
             .description("Called when a player attempts to tab complete the arguments of a command. ",
-                "\nNOTE: Tab complete event is only called for the ARGUMENTS of a command, NOT the command itself.",
-                "\nevent-string = the command.")
+                "\nNOTE: Tab complete event is only called for the ARGUMENTS of a command, NOT the command itself.")
             .examples("on tab complete of \"/mycommand\":",
                 "\tset tab completions for position 1 to \"one\", \"two\" and \"three\"",
                 "\tset tab completions for position 2 to 1, 2 and 3",
@@ -34,14 +32,22 @@ public class TabEvent extends SkriptEvent {
             .since("1.7.0")
             .register();
 
-        reg.registerEventValue(TabCompleteEvent.class, Player.class, event -> {
-            CommandSender sender = event.getSender();
-            if (sender instanceof Player) {
-                return ((Player) sender).getPlayer();
-            }
-            return null;
-        }, EventValues.TIME_NOW);
-        reg.registerEventValue(TabCompleteEvent.class, String.class, event -> event.getBuffer().split(" ")[0], EventValues.TIME_NOW);
+        reg.newEventValue(TabCompleteEvent.class, CommandSender.class)
+            .converter(TabCompleteEvent::getSender)
+            .register();
+        reg.newEventValue(TabCompleteEvent.class, Player.class)
+            .converter(event -> {
+                if (event.getSender() instanceof Player player) {
+                    return player;
+                }
+                return null;
+            })
+            .register();
+        reg.newEventValue(TabCompleteEvent.class, String.class)
+            .description("Represents the command that was attempted to be tab completed.")
+            .converter(event -> event.getBuffer().split(" ")[0])
+            .patterns("command")
+            .register();
     }
 
     private String[] commands;

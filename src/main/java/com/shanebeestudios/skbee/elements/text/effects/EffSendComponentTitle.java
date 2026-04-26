@@ -5,7 +5,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.audience.Audience;
 import org.bukkit.event.Event;

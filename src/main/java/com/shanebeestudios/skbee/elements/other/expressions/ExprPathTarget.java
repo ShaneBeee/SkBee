@@ -8,7 +8,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.destroystokyo.paper.entity.Pathfinder;
 import com.destroystokyo.paper.entity.Pathfinder.PathResult;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import org.bukkit.Location;
 import org.bukkit.entity.LivingEntity;

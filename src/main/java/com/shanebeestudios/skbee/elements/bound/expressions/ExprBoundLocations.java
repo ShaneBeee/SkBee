@@ -10,7 +10,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 import org.bukkit.util.Vector;

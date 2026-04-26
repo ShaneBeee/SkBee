@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.other.conditions;
 
 import ch.njol.skript.conditions.base.PropertyCondition;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 

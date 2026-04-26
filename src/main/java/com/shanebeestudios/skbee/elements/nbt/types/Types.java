@@ -9,7 +9,7 @@ import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomType;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
 import de.tr7zw.changeme.nbtapi.NBTFile;

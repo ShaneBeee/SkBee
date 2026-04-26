@@ -8,7 +8,7 @@ import ch.njol.skript.sections.EffSecSpawn;
 import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Location;
 import org.bukkit.World;

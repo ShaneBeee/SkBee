@@ -8,7 +8,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecFireworksComponent.FireworksExplosionsSectionEvent;

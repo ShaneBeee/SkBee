@@ -11,7 +11,7 @@ import ch.njol.skript.sections.EffSecSpawn;
 import ch.njol.skript.util.Direction;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.EffectSection;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Location;

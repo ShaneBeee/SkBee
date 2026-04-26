@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.nbt;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.nbt.conditions.CondHasNBTTag;
 import com.shanebeestudios.skbee.elements.nbt.conditions.CondNBTFileExists;
 import com.shanebeestudios.skbee.elements.nbt.conditions.CondNBTIsBlank;

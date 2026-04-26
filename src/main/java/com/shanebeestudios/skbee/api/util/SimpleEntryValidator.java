@@ -3,6 +3,9 @@ package com.shanebeestudios.skbee.api.util;
 import org.skriptlang.skript.lang.entry.EntryValidator;
 import org.skriptlang.skript.lang.entry.util.ExpressionEntryData;
 
+/**
+ * A simple version of Skript's {@link EntryValidator}
+ */
 public class SimpleEntryValidator {
 
     public static SimpleEntryValidator builder() {

@@ -25,7 +25,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 /**
- * Reprents a bounding box object
+ * Represents a region like bound that contains a {@link BoundingBox}
  */
 @SuppressWarnings("unused")
 @SerializableAs("Bound")
@@ -184,6 +184,11 @@ public class Bound implements ConfigurationSerializable {
         }
     }
 
+    /**
+     * Get the {@link NamespacedKey} of the world of this bound
+     *
+     * @return World key of this bound
+     */
     public NamespacedKey getWorldKey() {
         return this.worldKey;
     }
@@ -197,8 +202,7 @@ public class Bound implements ConfigurationSerializable {
     public void updateKey() {
         if (this.worldKey != null) return;
         World world = getWorld();
-        NamespacedKey key = world.getKey();
-        this.worldKey = key;
+        this.worldKey = world.getKey();
     }
 
     /**

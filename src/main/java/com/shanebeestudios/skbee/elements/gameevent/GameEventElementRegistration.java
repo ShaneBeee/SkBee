@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.gameevent;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.gameevent.events.EvtGameEvents;
 import com.shanebeestudios.skbee.elements.gameevent.expressions.ExprGameEventRadius;
 import com.shanebeestudios.skbee.elements.gameevent.type.Types;

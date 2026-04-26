@@ -9,7 +9,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.event.Event;

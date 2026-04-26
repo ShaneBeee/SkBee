@@ -1,13 +1,12 @@
 package com.shanebeestudios.skbee.elements.virtualfurnace.events;
 
 import ch.njol.skript.aliases.ItemType;
+import ch.njol.skript.classes.Changer;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
-import ch.njol.skript.registrations.EventConverter;
-import ch.njol.skript.registrations.EventValues;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.vf.api.event.machine.FurnaceCookEvent;
 import com.shanebeestudios.vf.api.event.machine.FurnaceExtractEvent;
 import com.shanebeestudios.vf.api.event.machine.FurnaceFuelBurnEvent;
@@ -35,9 +34,15 @@ public class EvtVirtualFurnace extends SkriptEvent {
             .since("3.15.0")
             .register();
 
-        reg.registerEventValue(FurnaceCookEvent.class, Machine.class, FurnaceCookEvent::getFurnace);
-        reg.registerEventValue(FurnaceCookEvent.class, ItemStack.class, FurnaceCookEvent::getSource);
-        reg.registerEventValue(FurnaceCookEvent.class, ItemType.class, from -> new ItemType(from.getSource()));
+        reg.newEventValue(FurnaceCookEvent.class, Machine.class)
+            .converter(FurnaceCookEvent::getFurnace)
+            .register();
+        reg.newEventValue(FurnaceCookEvent.class, ItemStack.class)
+            .converter(FurnaceCookEvent::getSource)
+            .register();
+        reg.newEventValue(FurnaceCookEvent.class, ItemType.class)
+            .converter(from -> new ItemType(from.getSource()))
+            .register();
 
         // EXTRACT EVENT
         reg.newEvent(EvtVirtualFurnace.class, FurnaceExtractEvent.class,
@@ -50,34 +55,26 @@ public class EvtVirtualFurnace extends SkriptEvent {
             .since("3.15.0")
             .register();
 
-        reg.registerEventValue(FurnaceExtractEvent.class, Machine.class, FurnaceExtractEvent::getFurnace);
-        reg.registerEventValue(FurnaceExtractEvent.class, Player.class, FurnaceExtractEvent::getPlayer);
-        reg.registerEventValue(FurnaceExtractEvent.class, ItemStack.class, new EventConverter<>() {
-            @Override
-            public void set(FurnaceExtractEvent event, @Nullable ItemStack value) {
-                event.setItemStack(value);
-            }
-
-            @Override
-            public @Nullable ItemStack convert(FurnaceExtractEvent event) {
-                return event.getItemStack();
-            }
-        });
-        reg.registerEventValue(FurnaceExtractEvent.class, ItemType.class, new EventConverter<>() {
-            @Override
-            public void set(FurnaceExtractEvent event, @Nullable ItemType value) {
+        reg.newEventValue(FurnaceExtractEvent.class, Machine.class)
+            .converter(FurnaceExtractEvent::getFurnace)
+            .register();
+        reg.newEventValue(FurnaceExtractEvent.class, Player.class)
+            .converter(FurnaceExtractEvent::getPlayer)
+            .register();
+        reg.newEventValue(FurnaceExtractEvent.class, ItemStack.class)
+            .converter(FurnaceExtractEvent::getItemStack)
+            .changer(Changer.ChangeMode.SET, FurnaceExtractEvent::setItemStack)
+            .register();
+        reg.newEventValue(FurnaceExtractEvent.class, ItemType.class)
+            .converter(from -> new ItemType(from.getItemStack()))
+            .changer(Changer.ChangeMode.SET, (event, value) -> {
                 if (value == null) {
                     event.setItemStack(null);
                 } else {
                     event.setItemStack(value.getRandom());
                 }
-            }
-
-            @Override
-            public ItemType convert(FurnaceExtractEvent event) {
-                return new ItemType(event.getItemStack());
-            }
-        });
+            })
+            .register();
 
         // FUEL BURN EVENT
         reg.newEvent(EvtVirtualFurnace.class, FurnaceFuelBurnEvent.class,
@@ -90,27 +87,30 @@ public class EvtVirtualFurnace extends SkriptEvent {
             .since("3.15.0")
             .register();
 
-        reg.registerEventValue(FurnaceFuelBurnEvent.class, Machine.class, FurnaceFuelBurnEvent::getFurnace);
-        reg.registerEventValue(FurnaceFuelBurnEvent.class, Fuel.class, FurnaceFuelBurnEvent::getFuel);
-        reg.registerEventValue(FurnaceFuelBurnEvent.class, ItemStack.class, FurnaceFuelBurnEvent::getFuelItem);
-        reg.registerEventValue(FurnaceFuelBurnEvent.class, ItemType.class, new Converter<>() {
-            @Override
-            public @NonNull ItemType convert(FurnaceFuelBurnEvent event) {
-                return new ItemType(event.getFuelItem());
-            }
-        });
-        reg.registerEventValue(FurnaceFuelBurnEvent.class, Number.class, new EventConverter<>() {
-            @Override
-            public void set(FurnaceFuelBurnEvent event, @Nullable Number value) {
-                int burnTime = value != null ? value.intValue() : 0;
-                event.setBurnTime(burnTime);
-            }
-
-            @Override
-            public @NonNull Number convert(FurnaceFuelBurnEvent event) {
-                return event.getBurnTime();
-            }
-        });
+        reg.newEventValue(FurnaceFuelBurnEvent.class, Machine.class)
+            .converter(FurnaceFuelBurnEvent::getFurnace)
+            .register();
+        reg.newEventValue(FurnaceFuelBurnEvent.class, Fuel.class)
+            .converter(FurnaceFuelBurnEvent::getFuel)
+            .register();
+        reg.newEventValue(FurnaceFuelBurnEvent.class, ItemStack.class)
+            .converter(FurnaceFuelBurnEvent::getFuelItem)
+            .register();
+        reg.newEventValue(FurnaceFuelBurnEvent.class, ItemType.class)
+            .converter(new Converter<>() {
+                @Override
+                public @NonNull ItemType convert(FurnaceFuelBurnEvent event) {
+                    return new ItemType(event.getFuelItem());
+                }
+            })
+            .register();
+        reg.newEventValue(FurnaceFuelBurnEvent.class, Number.class)
+            .converter(FurnaceFuelBurnEvent::getBurnTime)
+            .changer(Changer.ChangeMode.SET, (event, value) -> {
+                if (value == null) return;
+                event.setBurnTime(value.intValue());
+            })
+            .register();
     }
 
     private @Nullable Literal<ItemType> types;

@@ -7,7 +7,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.profile.ProfileProperty;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
@@ -17,10 +18,10 @@ import io.papermc.paper.datacomponent.item.ResolvableProfile;
 import io.papermc.paper.datacomponent.item.ResolvableProfile.SkinPatchBuilder;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
 import org.bukkit.block.Skull;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Mannequin;
+import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.bukkit.profile.PlayerTextures.SkinModel;
 import org.jetbrains.annotations.Nullable;
@@ -51,6 +52,7 @@ public class SecProfileComponent extends Section {
             .name("ItemComponent - Profile Component Apply")
             .description("Apply a profile component to an item/entity/block.",
                 "This is generally used for player heads and mannequins.",
+                "It can also be used on players but please use with caution.",
                 "See [**Profile Component**](https://minecraft.wiki/w/Data_component_format#profile) on McWiki for more details.",
                 "",
                 "**Entries**:",
@@ -84,7 +86,7 @@ public class SecProfileComponent extends Section {
             .register();
     }
 
-    private Expression<Object> items;
+    private Expression<?> objects;
     private Expression<String> name;
     private Expression<UUID> id;
     private Expression<String> textureValue;
@@ -101,7 +103,7 @@ public class SecProfileComponent extends Section {
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 
-        this.items = (Expression<Object>) exprs[0];
+        this.objects = exprs[0];
         this.name = (Expression<String>) container.getOptional("name", false);
         this.id = (Expression<UUID>) container.getOptional("id", false);
         this.textureValue = (Expression<String>) container.getOptional("texture-value", false);
@@ -143,14 +145,17 @@ public class SecProfileComponent extends Section {
         builder.skinPatch(skin(event).build());
         ResolvableProfile profile = builder.build();
 
-        for (Object object : this.items.getArray(event)) {
+        for (Object object : this.objects.getArray(event)) {
             if (object instanceof Entity entity) {
                 if (entity instanceof Mannequin mannequin) {
                     mannequin.setProfile(profile);
+                } else if (entity instanceof Player player) {
+                    profile.resolve().thenAcceptAsync(player::setPlayerProfile,
+                        runnable ->
+                            TaskUtils.getEntityScheduler(player).runTask(runnable));
                 }
             } else if (object instanceof Block block) {
-                BlockState state = block.getState();
-                if (state instanceof Skull skull) {
+                if (block.getState() instanceof Skull skull) {
                     skull.setProfile(profile);
                     skull.update();
                 }
@@ -208,7 +213,7 @@ public class SecProfileComponent extends Section {
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "apply profile component to " + this.items.toString(event, debug);
+        return "apply profile component to " + this.objects.toString(event, debug);
     }
 
 }

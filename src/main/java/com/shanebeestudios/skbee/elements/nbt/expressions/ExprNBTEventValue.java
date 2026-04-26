@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.nbt.expressions;
 
 import ch.njol.skript.doc.NoDoc;
 import ch.njol.skript.expressions.base.EventValueExpression;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 
 @NoDoc

@@ -6,7 +6,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.util.Pair;
 import org.bukkit.Bukkit;

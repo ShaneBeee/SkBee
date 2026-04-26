@@ -3,9 +3,8 @@ package com.shanebeestudios.skbee.elements.other.events;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.EventValues;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.event.world.EntitiesLoadEvent;
@@ -19,10 +18,7 @@ public class EvtEntitiesLoad extends SkriptEvent {
                 CollectionUtils.array(EntitiesLoadEvent.class, EntitiesUnloadEvent.class),
                 "entities [:un]load[ed]")
             .name("Entities Loading")
-            .description("Called when entities are loaded/unloaded.",
-                "Event-Values:",
-                "`event-entities` = The entities that were loaded.",
-                "`event-chunk` = The chunk these entities loaded in (the chunk may or may not be loaded).")
+            .description("Called when entities are loaded/unloaded.")
             .examples("on entities loaded:",
                 "\tif event-entities is set:",
                 "\t\tdelete event-entities",
@@ -30,20 +26,24 @@ public class EvtEntitiesLoad extends SkriptEvent {
             .since("3.5.0")
             .register();
 
-        reg.registerEventValue(EntitiesLoadEvent.class, Entity[].class, event -> event.getEntities().toArray(new Entity[0]), EventValues.TIME_NOW);
-        reg.registerEventValue(EntitiesUnloadEvent.class, Entity[].class, event -> event.getEntities().toArray(new Entity[0]), EventValues.TIME_NOW);
+        reg.newEventValue(EntitiesLoadEvent.class, Entity[].class)
+            .description("The entities that were loaded.")
+            .converter(event -> event.getEntities().toArray(new Entity[0]))
+            .register();
+        reg.newEventValue(EntitiesUnloadEvent.class, Entity[].class)
+            .description("The entities that were unloaded.")
+            .converter(event -> event.getEntities().toArray(new Entity[0]))
+            .register();
     }
 
     private boolean load;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
         this.load = !parseResult.hasTag("un");
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
         if (this.load && event instanceof EntitiesLoadEvent) return true;

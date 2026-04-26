@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.scoreboard;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.scoreboard.conditions.CondObjModifiable;
 import com.shanebeestudios.skbee.elements.scoreboard.conditions.CondTeamRegistered;
 import com.shanebeestudios.skbee.elements.scoreboard.expressions.ExprAllTeams;
@@ -17,6 +17,7 @@ import com.shanebeestudios.skbee.elements.scoreboard.expressions.ExprScoreboard;
 import com.shanebeestudios.skbee.elements.scoreboard.expressions.ExprScoreboardPlayer;
 import com.shanebeestudios.skbee.elements.scoreboard.expressions.ExprTeam;
 import com.shanebeestudios.skbee.elements.scoreboard.expressions.ExprTeamColor;
+import com.shanebeestudios.skbee.elements.scoreboard.expressions.ExprTeamCreate;
 import com.shanebeestudios.skbee.elements.scoreboard.expressions.ExprTeamEntries;
 import com.shanebeestudios.skbee.elements.scoreboard.expressions.ExprTeamName;
 import com.shanebeestudios.skbee.elements.scoreboard.expressions.ExprTeamOption;
@@ -47,6 +48,7 @@ public class ScoreboardElementRegistration {
         ExprScoreboardPlayer.register(reg);
         ExprTeam.register(reg);
         ExprTeamColor.register(reg);
+        ExprTeamCreate.register(reg);
         ExprTeamEntries.register(reg);
         ExprTeamName.register(reg);
         ExprTeamOption.register(reg);

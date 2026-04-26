@@ -8,7 +8,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.dialog.Dialog;

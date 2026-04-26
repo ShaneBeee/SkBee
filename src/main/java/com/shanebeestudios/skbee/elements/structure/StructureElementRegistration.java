@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.structure;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.structure.conditions.CondStructureExists;
 import com.shanebeestudios.skbee.elements.structure.effects.EffStructureFill;
 import com.shanebeestudios.skbee.elements.structure.effects.EffStructurePlace;

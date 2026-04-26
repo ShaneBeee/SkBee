@@ -113,15 +113,6 @@ public class BeeWorldConfig {
             worldCreator.setHardcore(worldConfig.getBoolean(path + "hardcore"));
         }
 
-        if (name != null) {
-            // Remove old named format from config
-            ConfigurationSection sec = this.worldConfig.getConfigurationSection("worlds." + name);
-            this.worldConfig.set("worlds." + name, null);
-            this.worldConfig.set("worlds." + key, sec);
-            Util.log("&eWorld &r'&b%s&r' &ehas been renamed to &r'&b%s&r' &ein the worlds.yml file.", name, key);
-            save();
-        }
-
         if (this.worldConfig.isSet(path + "load-on-start")) {
             boolean loadOnStart = worldConfig.getBoolean(path + "load-on-start");
             worldCreator.setLoadOnStart(loadOnStart);
@@ -145,10 +136,23 @@ public class BeeWorldConfig {
         if (!WORLDS.containsKey(key)) {
             WORLDS.put(key, worldCreator);
         }
-        String path = "worlds." + key + ".";
+        String pathString;
+        if (Util.IS_RUNNING_MC_26_1_1) {
+            // Clear out old world in config
+            if (this.worldConfig.isSet("worlds." + worldCreator.getWorldName())) {
+                this.worldConfig.set("worlds." + worldCreator.getWorldName(), null);
+            }
+            pathString = key.toString();
+        } else {
+            pathString = worldCreator.getWorldName();
+        }
+        String path = "worlds." + pathString + ".";
+        if (!Util.IS_RUNNING_MC_26_1_1) {
+            this.worldConfig.set(path + "key", key.toString());
+        }
         this.worldConfig.set(path + "type", worldCreator.getWorldType().toString());
         this.worldConfig.set(path + "environment", worldCreator.getEnvironment().toString());
-        this.worldConfig.set(path + "seed", worldCreator.seed);
+        this.worldConfig.set(path + "seed", worldCreator.getSeed());
         if (worldCreator.getGeneratorSettings() != null) {
             this.worldConfig.set(path + "generator-settings", worldCreator.getGeneratorSettings());
         }

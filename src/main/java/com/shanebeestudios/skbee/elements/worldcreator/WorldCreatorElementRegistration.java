@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.worldcreator;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.worldcreator.conditions.CondWorldExists;
 import com.shanebeestudios.skbee.elements.worldcreator.effects.EffLoadWorld;
 import com.shanebeestudios.skbee.elements.worldcreator.expressions.ExprLoadedCustomWorlds;

@@ -1,14 +1,16 @@
 package com.shanebeestudios.skbee.elements.other;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.other.conditions.CondBlockCanRandomTick;
 import com.shanebeestudios.skbee.elements.other.conditions.CondChunkContainsBlockData;
 import com.shanebeestudios.skbee.elements.other.conditions.CondCriticalHit;
 import com.shanebeestudios.skbee.elements.other.conditions.CondEntityStorageBlockFull;
+import com.shanebeestudios.skbee.elements.other.conditions.CondEntityWouldCollideWith;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsLocked;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsOwnedByRegion;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsPlayerListed;
 import com.shanebeestudios.skbee.elements.other.conditions.CondPlayerIsTransferred;
+import com.shanebeestudios.skbee.elements.other.conditions.CondResourcePackStatusIntermediate;
 import com.shanebeestudios.skbee.elements.other.conditions.CondSpawnerIsActivated;
 import com.shanebeestudios.skbee.elements.other.effects.EffAbortSpawn;
 import com.shanebeestudios.skbee.elements.other.effects.EffAttributeModifierRemoveByKey;
@@ -35,6 +37,7 @@ import com.shanebeestudios.skbee.elements.other.effects.EffParseEffect;
 import com.shanebeestudios.skbee.elements.other.effects.EffPlayerBreakBlock;
 import com.shanebeestudios.skbee.elements.other.effects.EffPlayerListed;
 import com.shanebeestudios.skbee.elements.other.effects.EffRangedAttack;
+import com.shanebeestudios.skbee.elements.other.effects.EffResourcePackApply;
 import com.shanebeestudios.skbee.elements.other.effects.EffResourcePackRemove;
 import com.shanebeestudios.skbee.elements.other.effects.EffResourcePackSend;
 import com.shanebeestudios.skbee.elements.other.effects.EffSendBlockDamage;
@@ -54,8 +57,14 @@ import com.shanebeestudios.skbee.elements.other.events.EvtPlayerInteract;
 import com.shanebeestudios.skbee.elements.other.events.EvtPlayerUseUnknown;
 import com.shanebeestudios.skbee.elements.other.events.EvtPreSpawn;
 import com.shanebeestudios.skbee.elements.other.events.EvtSpawnerSpawn;
-import com.shanebeestudios.skbee.elements.other.events.OtherEvents;
 import com.shanebeestudios.skbee.elements.other.events.TabEvent;
+import com.shanebeestudios.skbee.elements.other.events.other.BlockEvents;
+import com.shanebeestudios.skbee.elements.other.events.other.EntityEvents;
+import com.shanebeestudios.skbee.elements.other.events.other.OtherEventValues;
+import com.shanebeestudios.skbee.elements.other.events.other.PacketEvents;
+import com.shanebeestudios.skbee.elements.other.events.other.PlayerEvents;
+import com.shanebeestudios.skbee.elements.other.events.other.ServerEvents;
+import com.shanebeestudios.skbee.elements.other.events.other.WorldEvents;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprAbsorptionAmount;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprArmorTrim;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprArmorTrimItem;
@@ -96,6 +105,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprEnchantment;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEnchantmentLevel;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityBlockStorageCount;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityBlockStorageMax;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityCollision;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityOrigin;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityPose;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprEntityVisibility;
@@ -120,6 +130,8 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprParseEffect;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPath;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPathTarget;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerIdleTime;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerListOrder;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerShoulderEntity;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerTime;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPotionTypeItem;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprRegenRate;
@@ -147,15 +159,24 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprTransferCookie;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprTranslationKey;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldAutoSave;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldHeight;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldSpawnLimit;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldTime;
 import com.shanebeestudios.skbee.elements.other.sections.SecAttributeModifier;
+import com.shanebeestudios.skbee.elements.other.sections.SecResourcePack;
 import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import com.shanebeestudios.skbee.elements.other.sections.SecSpawnMinecraftEntity;
 import com.shanebeestudios.skbee.elements.other.sections.SecTransferCookieRetrieve;
 import com.shanebeestudios.skbee.elements.other.sections.SecWhileRunnable;
 import com.shanebeestudios.skbee.elements.other.structures.StructTagAliases;
+import com.shanebeestudios.skbee.elements.other.type.BlockTypes;
 import com.shanebeestudios.skbee.elements.other.type.Comps;
-import com.shanebeestudios.skbee.elements.other.type.Types;
+import com.shanebeestudios.skbee.elements.other.type.EntityTypes;
+import com.shanebeestudios.skbee.elements.other.type.EventTypes;
+import com.shanebeestudios.skbee.elements.other.type.ItemTypes;
+import com.shanebeestudios.skbee.elements.other.type.PlayerTypes;
+import com.shanebeestudios.skbee.elements.other.type.ServerTypes;
+import com.shanebeestudios.skbee.elements.other.type.Functions;
+import com.shanebeestudios.skbee.elements.other.type.WorldTypes;
 
 public class OtherElementRegistration {
 
@@ -165,10 +186,12 @@ public class OtherElementRegistration {
         CondChunkContainsBlockData.register(registration);
         CondCriticalHit.register(registration);
         CondEntityStorageBlockFull.register(registration);
+        CondEntityWouldCollideWith.register(registration);
         CondIsLocked.register(registration);
         CondIsOwnedByRegion.register(registration);
         CondIsPlayerListed.register(registration);
         CondPlayerIsTransferred.register(registration);
+        CondResourcePackStatusIntermediate.register(registration);
         CondSpawnerIsActivated.register(registration);
 
         // EFFECTS
@@ -197,6 +220,7 @@ public class OtherElementRegistration {
         EffPlayerBreakBlock.register(registration);
         EffPlayerListed.register(registration);
         EffRangedAttack.register(registration);
+        EffResourcePackApply.register(registration);
         EffResourcePackRemove.register(registration);
         EffResourcePackSend.register(registration);
         EffSendBlockDamage.register(registration);
@@ -210,6 +234,14 @@ public class OtherElementRegistration {
         EffUpdateRecipeResources.register(registration);
 
         // EVENTS
+        BlockEvents.register(registration);
+        EntityEvents.register(registration);
+        PacketEvents.register(registration);
+        PlayerEvents.register(registration);
+        ServerEvents.register(registration);
+        WorldEvents.register(registration);
+        OtherEventValues.register(registration);
+
         AsyncEvents.register(registration);
         EvtDamageByBlock.register(registration);
         EvtEntitiesLoad.register(registration);
@@ -218,7 +250,6 @@ public class OtherElementRegistration {
         EvtPlayerUseUnknown.register(registration);
         EvtPreSpawn.register(registration);
         EvtSpawnerSpawn.register(registration);
-        OtherEvents.register(registration);
         TabEvent.register(registration);
 
         // EXPRESSIONS
@@ -262,6 +293,7 @@ public class OtherElementRegistration {
         ExprEnchantmentLevel.register(registration);
         ExprEntityBlockStorageCount.register(registration);
         ExprEntityBlockStorageMax.register(registration);
+        ExprEntityCollision.register(registration);
         ExprEntityOrigin.register(registration);
         ExprEntityPose.register(registration);
         ExprEntityVisibility.register(registration);
@@ -286,6 +318,8 @@ public class OtherElementRegistration {
         ExprPath.register(registration);
         ExprPathTarget.register(registration);
         ExprPlayerIdleTime.register(registration);
+        ExprPlayerListOrder.register(registration);
+        ExprPlayerShoulderEntity.register(registration);
         ExprPlayerTime.register(registration);
         ExprPotionTypeItem.register(registration);
         ExprRegenRate.register(registration);
@@ -313,10 +347,12 @@ public class OtherElementRegistration {
         ExprTranslationKey.register(registration);
         ExprWorldAutoSave.register(registration);
         ExprWorldHeight.register(registration);
+        ExprWorldSpawnLimit.register(registration);
         ExprWorldTime.register(registration);
 
         // SECTIONS
         SecAttributeModifier.register(registration);
+        SecResourcePack.register(registration);
         SecRunTaskLater.register(registration);
         SecSpawnMinecraftEntity.register(registration);
         SecTransferCookieRetrieve.register(registration);
@@ -325,9 +361,16 @@ public class OtherElementRegistration {
         // STRUCTURES
         StructTagAliases.register(registration);
 
-        // TYPES
+        // COMPARATORS/FUNCTIONS/TYPES
         Comps.register(registration);
-        Types.register(registration);
+        Functions.register(registration);
+        BlockTypes.register(registration);
+        EntityTypes.register(registration);
+        EventTypes.register(registration);
+        ItemTypes.register(registration);
+        PlayerTypes.register(registration);
+        ServerTypes.register(registration);
+        WorldTypes.register(registration);
     }
 
 }

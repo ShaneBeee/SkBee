@@ -4,7 +4,7 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecConsumableComponent.ConsumeEffectsEvent;

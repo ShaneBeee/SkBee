@@ -1,7 +1,7 @@
 package com.shanebeestudios.skbee.elements.raytrace.expressions;
 
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;

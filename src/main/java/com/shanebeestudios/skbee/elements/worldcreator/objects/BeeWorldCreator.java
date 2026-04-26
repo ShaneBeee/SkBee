@@ -29,7 +29,7 @@ import java.util.concurrent.CompletableFuture;
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "CallToPrintStackTrace"})
 public class BeeWorldCreator implements Keyed {
 
-    private final String worldName;
+    private String worldName;
     private NamespacedKey key;
     private WorldType worldType;
     private Environment environment;
@@ -69,6 +69,16 @@ public class BeeWorldCreator implements Keyed {
             this.key = NamespacedKey.minecraft(key);
         }
         return this.key;
+    }
+
+    public String getWorldName() {
+        if (this.worldName == null) {
+            if (this.world == null) {
+                return getKey().toString();
+            }
+            this.worldName = this.world.getName();
+        }
+        return this.worldName;
     }
 
     public void setWorldType(WorldType worldType) {
@@ -235,7 +245,7 @@ public class BeeWorldCreator implements Keyed {
                 if (this.hardcore.isEmpty()) {
                     this.hardcore = Optional.of(world.isHardcore());
                 }
-                if (this.key == null) {
+                if (this.key == null || Util.IS_RUNNING_MC_26_1_1) {
                     this.key = world.getKey();
                 }
             }
@@ -293,10 +303,10 @@ public class BeeWorldCreator implements Keyed {
     }
 
     private static WorldCreator getWorldCreator(@Nullable String name, @Nullable NamespacedKey key) {
-        if (key != null) {
-            return new WorldCreator(key);
-        } else if (name != null) {
+        if (name != null) {
             return new WorldCreator(name);
+        } else if (key != null) {
+            return new WorldCreator(key);
         } else {
             throw new IllegalArgumentException("Either name or key must be specified");
         }

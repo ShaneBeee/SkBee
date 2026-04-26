@@ -4,9 +4,8 @@ import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
-import ch.njol.skript.registrations.EventValues;
 import com.destroystokyo.paper.event.player.PlayerUseUnknownEntityEvent;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.util.Vector;
@@ -24,24 +23,27 @@ public class EvtPlayerUseUnknown extends SkriptEvent {
             .name("Player Click Unknown Entity")
             .description("Represents an event that is called when a player right-clicks an unknown entity.",
                 "Useful for dealing with virtual entities (entities that aren't actually spawned on the server).",
-                "This event may be called multiple times per interaction (this is a server issue).",
-                "\n`event-vector` = Returns the position relative to the entity that was clicked if available. (Requires Paper 1.20.1+)",
-                "\n`event-number` = Returns the entity id of the unknown entity that was interacted with. (Not sure if this usefull or not)",
-                "\nRequires PaperMC.")
+                "This event may be called multiple times per interaction (this is a server issue).")
             .examples("on right click unknown entity:",
                 "\tteleport player to spawn of world \"world\"")
             .since("2.17.0")
             .register();
 
-        reg.registerEventValue(PlayerUseUnknownEntityEvent.class, Number.class, PlayerUseUnknownEntityEvent::getEntityId, EventValues.TIME_NOW);
+        reg.newEventValue(PlayerUseUnknownEntityEvent.class, Number.class)
+            .description("Returns the entity id of the unknown entity that was interacted with (Not sure if this usefull or not).")
+            .converter(PlayerUseUnknownEntityEvent::getEntityId)
+            .register();
         if (Skript.methodExists(PlayerUseUnknownEntityEvent.class, "getClickedRelativePosition")) {
-            reg.registerEventValue(PlayerUseUnknownEntityEvent.class, Vector.class, event -> {
-                try {
-                    return event.getClickedRelativePosition();
-                } catch (NullPointerException ignore) {
-                    return null;
-                }
-            }, EventValues.TIME_NOW);
+            reg.newEventValue(PlayerUseUnknownEntityEvent.class, Vector.class)
+                .description("Returns the position relative to the entity that was clicked if available.")
+                .converter(event -> {
+                    try {
+                        return event.getClickedRelativePosition();
+                    } catch (NullPointerException ignore) {
+                        return null;
+                    }
+                })
+                .register();
         }
     }
 

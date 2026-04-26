@@ -7,7 +7,7 @@ import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import com.shanebeestudios.skbee.api.particle.ParticleWrapper;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;

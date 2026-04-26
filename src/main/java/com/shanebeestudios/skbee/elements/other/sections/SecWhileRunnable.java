@@ -14,7 +14,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.region.scheduler.task.Task;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;

@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.bound;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.bound.conditions.CondBoundContainsLocation;
 import com.shanebeestudios.skbee.elements.bound.conditions.CondBoundIntersects;
 import com.shanebeestudios.skbee.elements.bound.conditions.CondBoundIsTemporary;

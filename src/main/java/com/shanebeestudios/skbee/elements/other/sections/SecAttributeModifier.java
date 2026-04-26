@@ -7,7 +7,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.EntityUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
@@ -45,8 +45,6 @@ public class SecAttributeModifier extends Section {
                 "apply [:transient] attribute modifier to %itemtypes/livingentities%")
             .name("Attribute Modifier - Apply")
             .description("Apply an attribute modifier to an item or living entity.",
-                "If running Minecraft 1.21+ use `id`",
-                "If running Minecraft 1.20.6 and below, use `name` and `uuid` (uuid is optional, will default to random).",
                 "See [**McWiki Component**](https://minecraft.wiki/w/Data_component_format#attribute_modifiers) and " +
                     "[**McWiki Modifiers**](https://minecraft.wiki/w/Attribute#Modifiers) for further details.",
                 "",
@@ -57,7 +55,7 @@ public class SecAttributeModifier extends Section {
                 "- `slot` = EquipmentSlotGroup the item must be in for the modifier to take effect (optional, default = any).",
                 "- `id` = The NamespacedKey to identify this modifier.",
                 "- `amount` = Amount of change from the modifier.",
-                "- `operation` = The operation to decide how to modify. See [**McWiki**](https://minecraft.wiki/w/Attribute#Operations) for more details.")
+                "- `operation` = The operation to decide how to modify.")
             .examples("#Apply Attribute Modifiers to Items",
                 "set {_i} to a stick",
                 "apply attribute modifier to {_i}:",

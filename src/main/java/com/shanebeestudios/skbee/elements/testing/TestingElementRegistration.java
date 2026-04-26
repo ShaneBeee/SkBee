@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.testing;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.testing.elements.CondClassInfoRegistered;
 import com.shanebeestudios.skbee.elements.testing.elements.EffTestLog;
 import com.shanebeestudios.skbee.elements.testing.elements.ExprLastRuntimeLogs;

@@ -1,6 +1,6 @@
 package com.shanebeestudios.skbee.elements.text;
 
-import com.shanebeestudios.skbee.api.registration.Registration;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.text.effects.EffComponentReplace;
 import com.shanebeestudios.skbee.elements.text.effects.EffSendComponent;
 import com.shanebeestudios.skbee.elements.text.effects.EffSendComponentTitle;
