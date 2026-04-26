@@ -43,7 +43,7 @@ public class ExprBossBarCreateSection extends SectionExpression<BossBar> {
         builder.addOptionalEntry("darken_sky", Boolean.class);
         builder.addOptionalEntry("play_boss_music", Boolean.class);
         builder.addOptionalEntry("progress", Number.class);
-        builder.addOptionalEntry("visiblee", Boolean.class);
+        builder.addOptionalEntry("visible", Boolean.class);
 
         VALIDATOR = builder.build();
         reg.newCombinedExpression(ExprBossBarCreateSection.class, BossBar.class,
