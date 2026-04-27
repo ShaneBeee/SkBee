@@ -28,12 +28,15 @@ public class RegistryHolder<F extends Keyed, T> {
     private final Class<T> returnType;
     private final String registryName;
     private final Converter<F, T> converter;
+    private final Converter<T, F> reverser;
 
-    RegistryHolder(RegistryKey<F> registryKey, Class<T> returnType, String registryName, @Nullable Converter<F, T> converter) {
+    RegistryHolder(RegistryKey<F> registryKey, Class<T> returnType, String registryName,
+                   @Nullable Converter<F, T> converter, @Nullable Converter<T, F> reverser) {
         this.registryKey = registryKey;
         this.returnType = returnType;
         this.registryName = registryName;
         this.converter = converter;
+        this.reverser = reverser;
     }
 
     public RegistryKey<?> getRegistryKey() {
@@ -90,7 +93,21 @@ public class RegistryHolder<F extends Keyed, T> {
             values.sort(Comparator.comparing(Object::toString));
         }
         return values;
+    }
 
+    /**
+     * Get the original value from the registry.
+     *
+     * @param value Value to convert back
+     * @return Original value from registry
+     */
+    @SuppressWarnings("unchecked")
+    public F reverse(T value) {
+        if (this.reverser != null) {
+            return this.reverser.convert(value);
+        } else {
+            return (F) value;
+        }
     }
 
     public String getDocString() {

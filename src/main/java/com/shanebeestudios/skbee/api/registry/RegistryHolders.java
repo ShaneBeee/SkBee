@@ -77,7 +77,9 @@ public class RegistryHolders {
         };
         register(RegistryKey.ATTRIBUTE, Attribute.class);
         register(RegistryKey.BIOME, Biome.class);
-        register(RegistryKey.BLOCK, ItemType.class, blockType -> new ItemType(blockType.asMaterial()), itemTypeComparator);
+        register(RegistryKey.BLOCK, ItemType.class, blockType -> new ItemType(blockType.asMaterial()),
+            itemType -> itemType.getMaterial().asBlockType(),
+            itemTypeComparator);
         register(RegistryKey.CHICKEN_VARIANT, Chicken.Variant.class);
         register(RegistryKey.COW_VARIANT, Cow.Variant.class);
         register(RegistryKey.DAMAGE_TYPE, DamageType.class);
@@ -91,7 +93,9 @@ public class RegistryHolders {
             register(RegistryKey.GAME_RULE, GameRule.class);
         }
         register(RegistryKey.INSTRUMENT, MusicInstrument.class);
-        register(RegistryKey.ITEM, ItemType.class, itemType -> new ItemType(itemType.asMaterial()));
+        register(RegistryKey.ITEM, ItemType.class, itemType -> new ItemType(itemType.asMaterial()),
+            itemType -> itemType.getMaterial().asItemType(),
+            null);
         register(RegistryKey.JUKEBOX_SONG, JukeboxSong.class);
         register(RegistryKey.MEMORY_MODULE_TYPE, MemoryKey.class);
         register(RegistryKey.MOB_EFFECT, PotionEffectType.class);
@@ -122,11 +126,18 @@ public class RegistryHolders {
         register(key, returnType, converter, null);
     }
 
-    private static <F extends Keyed, T> void register(RegistryKey<F> key, Class<T> returnType, @Nullable Converter<F, T> converter, @Nullable Comparator<TagKey, T> tagComparator) {
+    private static <F extends Keyed, T> void register(RegistryKey<F> key, Class<T> returnType, @Nullable Converter<F, T> converter,
+                                                      @Nullable Comparator<TagKey, T> tagComparator) {
+        register(key, returnType, converter, null, tagComparator);
+    }
+
+    private static <F extends Keyed, T> void register(RegistryKey<F> key, Class<T> returnType, @Nullable Converter<F, T> converter,
+                                                      @Nullable Converter<T,F> reverser,
+                                                      @Nullable Comparator<TagKey, T> tagComparator) {
         String name = key.key().value();
         name = name.substring(name.lastIndexOf("/") + 1);
         name = name + " registry";
-        RegistryHolder<F, T> registryHolder = new RegistryHolder<>(key, returnType, name, converter);
+        RegistryHolder<F, T> registryHolder = new RegistryHolder<>(key, returnType, name, converter, reverser);
         REGISTRY_HOLDERS_BY_NAME.put(name, registryHolder);
         String nameNoUnderscore = name.replace("_", " ");
         if (!REGISTRY_HOLDERS_BY_NAME.containsKey(nameNoUnderscore)) {
