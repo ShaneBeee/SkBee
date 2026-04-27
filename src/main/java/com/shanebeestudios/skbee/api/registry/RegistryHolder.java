@@ -21,7 +21,7 @@ import java.util.List;
  * @param <F> Type of registry
  * @param <T> Return type from registry (may differ from F)
  */
-@SuppressWarnings("UnstableApiUsage")
+@SuppressWarnings({"UnstableApiUsage", "unused"})
 public class RegistryHolder<F extends Keyed, T> {
 
     private final RegistryKey<F> registryKey;
@@ -102,9 +102,13 @@ public class RegistryHolder<F extends Keyed, T> {
      * @return Original value from registry
      */
     @SuppressWarnings("unchecked")
-    public F reverse(T value) {
+    public @Nullable F reverse(T value) {
         if (this.reverser != null) {
-            return this.reverser.convert(value);
+            try {
+                return this.reverser.convert(value);
+            } catch (ClassCastException ignored) {
+                return null;
+            }
         } else {
             return (F) value;
         }
