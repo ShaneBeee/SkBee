@@ -14,7 +14,12 @@ import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
+import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
 /**
@@ -74,6 +79,11 @@ public class SkBee extends JavaPlugin {
         if (this.properlyEnabled && this.beeWorldConfig != null) {
             this.beeWorldConfig.loadCustomWorlds();
         }
+
+        if (!this.properlyEnabled) {
+            // Let admins know the plugin didn't load
+            setupJoinListener();
+        }
         // Looks like we made it after all
     }
 
@@ -95,6 +105,20 @@ public class SkBee extends JavaPlugin {
         }
         // Clear debugs in case of some kind of reload
         Util.clearDebugs();
+    }
+
+    private void setupJoinListener() {
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            private void onJoin(PlayerJoinEvent event) {
+                Player player = event.getPlayer();
+                if (!player.hasPermission("skbee.admin")) return;
+
+                TaskUtils.getEntityScheduler(player).runTaskLater(() ->
+                    Util.sendMiniPrefixed(player, "<#F54927>Failed to load addon, see console for further details."),
+                    10);
+            }
+        }, this);
     }
 
     /**
