@@ -83,7 +83,7 @@ public class SecPotionContentsComponent extends Section {
                 "apply potion contents to {_i}:",
                 "\tcustom_color: rgb(126, 207, 243)",
                 "\tcustom_effects:",
-                "\t\tapply effects {_pe::*}",
+                "\t\tapply -> {_pe::*}",
                 "give {_i} to player")
             .since("3.8.1")
             .register();
@@ -152,7 +152,7 @@ public class SecPotionContentsComponent extends Section {
             Variables.setLocalVariables(potionSection, Variables.copyLocalVariables(event));
             Trigger.walk(this.customEffects, potionSection);
             Variables.setLocalVariables(event, Variables.copyLocalVariables(potionSection));
-            Variables.copyLocalVariables(potionSection);
+            Variables.removeLocals(potionSection);
         }
 
         PotionContents potionContents = builder.build();
