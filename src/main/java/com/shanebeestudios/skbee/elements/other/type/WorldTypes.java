@@ -4,6 +4,7 @@ import ch.njol.skript.registrations.Classes;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Chunk;
+import org.bukkit.HeightMap;
 import org.bukkit.TreeType;
 import org.bukkit.entity.SpawnCategory;
 
@@ -23,6 +24,14 @@ public class WorldTypes {
                 .since("2.17.0")
                 .register();
         }
+
+        reg.newEnumType(HeightMap.class, "heightmap")
+            .user("height ?maps?")
+            .name("HeightMap")
+            .description("The height map used during chunk generation.",
+                "See [**HeightMap**](https://minecraft.wiki/w/Heightmap) on McWiki for more info.", Util.AUTO_GEN_NOTE)
+            .since("INSERT VERSION")
+            .register();
 
         reg.newEnumType(SpawnCategory.class, "spawncategory")
             .user("spawn ?categor(y|ies)")
