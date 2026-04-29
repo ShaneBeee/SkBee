@@ -13,9 +13,7 @@ public class Type {
     public static void register(Registration reg) {
         reg.newType(Property.class, "property")
             .user("propert(y|ies)")
-            .name("Property")
-            .description("Represents the diffrent kinds of properties.",
-                "See [**Property Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Properties) for available properties.")
+            .noDoc()
             .supplier(PropertyRegistry.supplier())
             .parser(new Parser<>() {
                 @Override
@@ -39,7 +37,6 @@ public class Type {
                     return "property:" + property.getName();
                 }
             })
-            .since("3.10.0")
             .register();
     }
 

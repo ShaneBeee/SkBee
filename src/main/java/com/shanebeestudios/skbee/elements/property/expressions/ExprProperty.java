@@ -28,10 +28,7 @@ public class ExprProperty<F extends Object, T extends Object> extends SimpleExpr
         reg.newCombinedExpression( ExprProperty.class, Object.class,
                 "%*property% property of %objects%",
                 "%objects%'[s] %*property% property")
-            .name("Property - Property of Object")
-            .description("Represents different properties of an object.",
-                "See [**Property Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Properties) for available properties and examples.")
-            .since("3.10.0")
+            .noDoc()
             .register();
     }
 
