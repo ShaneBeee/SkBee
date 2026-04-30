@@ -39,6 +39,7 @@ types:
     fishingstate: fishing state¦s
     fishhookstate: fish hook state¦s
     gameevent: game event¦s
+    heightmap: height map¦s
     instrument: instrument¦s
     itemdisplaytransform: item display transform¦s
     itemflag: item flag¦s
