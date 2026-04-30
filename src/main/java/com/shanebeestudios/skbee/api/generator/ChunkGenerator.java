@@ -23,6 +23,7 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
     private Trigger noiseGenTrigger;
     private Trigger surfaceGenTrigger;
     private Trigger chunkGenTrigger;
+    private Trigger caveGenTrigger;
     private Trigger heightGenTrigger;
     private Trigger blockPopTrigger;
 
@@ -36,6 +37,10 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
 
     public void setChunkGenTrigger(Trigger chunkGenTrigger) {
         this.chunkGenTrigger = chunkGenTrigger;
+    }
+
+    public void setCaveGenTrigger(Trigger caveGenTrigger) {
+        this.caveGenTrigger = caveGenTrigger;
     }
 
     public void setHeightGenTrigger(Trigger heightGenTrigger) {
@@ -74,7 +79,6 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
     }
 
     // GENERATOR
-
     @Override
     public void generateNoise(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
         if (this.noiseGenTrigger != null) {
@@ -91,6 +95,14 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
         } else if (this.chunkGenTrigger != null) {
             ChunkGenEvent chunkGenEvent = new ChunkGenEvent(chunkData, chunkX, chunkZ);
             this.chunkGenTrigger.execute(chunkGenEvent);
+        }
+    }
+
+    @Override
+    public void generateCaves(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull ChunkData chunkData) {
+        if (this.caveGenTrigger != null) {
+            ChunkGenEvent chunkGenEvent = new ChunkGenEvent(chunkData, chunkX, chunkZ, this);
+            this.caveGenTrigger.execute(chunkGenEvent);
         }
     }
 

@@ -37,6 +37,7 @@ public class StructChunkGen extends Structure {
         builder.addOptionalSection("noise gen");
         builder.addOptionalSection("surface gen");
         builder.addOptionalSection("chunk gen");
+        builder.addOptionalSection("cave gen");
         builder.addOptionalSection("biome gen");
         builder.addOptionalSection("height gen");
         builder.addOptionalSection("block pop");
@@ -46,31 +47,32 @@ public class StructChunkGen extends Structure {
             .description("Register a chunk generator to manipulate the world layout to your liking.",
                 "ENTRIES:",
                 "(These are all optional, and will default to false)",
-                "`vanilla decor` = Whether Minecraft will decorate the surface based on biomes.",
-                "`vanilla caves` = Whether Minecraft will carve caves.",
-                "`vanilla structures` = Whether Minecraft will generate structures based on biomes.",
-                "`vanilla mobs` = Whether Minecraft will spawn mobs based on biomes.",
+                " - `vanilla decor` = Whether Minecraft will decorate the surface based on biomes.",
+                " - `vanilla caves` = Whether Minecraft will carve caves.",
+                " - `vanilla structures` = Whether Minecraft will generate structures based on biomes.",
+                " - `vanilla mobs` = Whether Minecraft will spawn mobs based on biomes.",
                 "SECTIONS:",
-                "(These are all optional, but some do rely on others. `height gen` and `block pop` require `chunk gen`)",
-                "`noise gen` = Generate the base terrain of a chunk.",
-                "`surface gen` = Generate the surface above the base terrain of the chunk.",
-                "`chunk gen` = A combination of noise and surface gen (Cannot be used WITH noise/surface gen).",
-                "`biome gen` = Generate the biomes to be placed in a chunk.",
-                "`height gen` = Tell Minecraft where the highest block in a chunk is for generating structures.",
-                "`block pop` = Used to decorate after initial surface is generated (Structures can be placed during this stage).",
+                "(These are all optional)",
+                " - `noise gen` = Generate the base terrain of a chunk [optional, defaults to vanilla noise].",
+                " - `surface gen` = Generate the surface above the base terrain of the chunk [optional, defaults to vanilla surface].",
+                " - `chunk gen` = A combination of noise and surface gen (Cannot be used WITH noise/surface gen).",
+                " - `cave gen` = Generate caves in a chunk [optional].",
+                " - `biome gen` = Generate the biomes to be placed in a chunk [optional, will default to vanilla biomes].",
+                " - `height gen` = Tell Minecraft where the highest block in a chunk is for generating structures.",
+                " - `block pop` = Used to decorate after initial surface is generated (Structures can be placed during this stage).",
                 "NOTES:",
-                "- `world-creator` needs to be enabled in the config",
-                "- Please see the [**Chunk Generator**](https://github.com/ShaneBeee/SkBee/wiki/Chunk-Generator) wiki for further details.")
+                " - `world-creator` needs to be enabled in the config",
+                " - Please see the [**Chunk Generator**](https://github.com/ShaneBeee/SkBee/wiki/Chunk-Generator) wiki for further details.")
             .examples("register chunk generator with id \"mars\":",
                 "\tvanilla decor: false",
                 "\tvanilla caves: false",
                 "\tvanilla structures: false",
                 "\tvanilla mobs: false",
                 "\tchunk gen:",
-                "\t\tloop 16 times:",
-                "\t\t\tloop 16 times:",
-                "\t\t\t\tset {_x} to (loop-number-1) - 1",
-                "\t\t\t\tset {_z} to (loop-number-2) - 1",
+                "\t\tloop integers between 0 and 15:",
+                "\t\t\tloop integers between 0 and 15:",
+                "\t\t\t\tset {_x} to (loop-number-1)",
+                "\t\t\t\tset {_z} to (loop-number-2)",
                 "",
                 "\t\t\t\t# This is just an expression I created with reflect to give you an idea how it can work",
                 "\t\t\t\tset {_y} to biome noise at vector({_x} + (chunkdata chunk x * 16), 1, {_z} + (chunkdata chunk z * 16))",
@@ -96,6 +98,7 @@ public class StructChunkGen extends Structure {
     private Trigger noiseGenSection;
     private Trigger surfaceGenSection;
     private Trigger chunkGenSection;
+    private Trigger caveGenSection;
     private Trigger biomeGenSection;
     private Trigger heightGenSection;
     private Trigger blockPopSection;
@@ -143,6 +146,12 @@ public class StructChunkGen extends Structure {
             this.chunkGenSection = new Trigger(currentScript, "chunk gen", new SimpleEvent(), ScriptLoader.loadItems(chunkNode));
         }
 
+        SectionNode caveNode = this.entryContainer.getOptional("cave gen", SectionNode.class, false);
+        if (caveNode != null) {
+            getParser().setCurrentEvent("cave gen section", ChunkGenEvent.class);
+            this.caveGenSection = new Trigger(currentScript, "cave gen", new SimpleEvent(), ScriptLoader.loadItems(caveNode));
+        }
+
         SectionNode biomeNode = this.entryContainer.getOptional("biome gen", SectionNode.class, false);
         if (biomeNode != null) {
             getParser().setCurrentEvent("biome gen section", BiomeGenEvent.class);
@@ -182,6 +191,7 @@ public class StructChunkGen extends Structure {
             chunkGenerator.setNoiseGenTrigger(this.noiseGenSection);
             chunkGenerator.setSurfaceGenTrigger(this.surfaceGenSection);
             chunkGenerator.setChunkGenTrigger(this.chunkGenSection);
+            chunkGenerator.setCaveGenTrigger(this.caveGenSection);
             chunkGenerator.setBlockPopTrigger(this.blockPopSection);
             chunkGenerator.setHeightGenTrigger(this.heightGenSection);
         }
