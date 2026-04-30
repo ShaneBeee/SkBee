@@ -9,9 +9,11 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
-import com.shanebeestudios.skbee.api.worldgen.ChunkGenerator;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.worldgen.BeeWorldCreator;
+import com.shanebeestudios.skbee.api.worldgen.ChunkGen;
+import com.shanebeestudios.skbee.api.worldgen.ChunkGenManager;
+import com.shanebeestudios.skbee.api.worldgen.ChunkGenerator;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -45,7 +47,7 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
             .build();
 
         reg.newSimpleExpression(ExprWorldCreatorSection.class, BeeWorldCreator.class,
-            "[[a ]new] world creator")
+                "[[a ]new] world creator")
             .validator(VALIDATOR)
             .name("World Creator - Create Section")
             .description("Create a new world creator with several options to customize.",
@@ -59,7 +61,7 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
                 " - `hardcore` = Whether to enable hardcore mode in the world [optional Boolean, defaults to false].",
                 " - `load_on_start` = Whether to load the world automatically on server start [optional Boolean, defaults to false].",
                 " - `spawn_location` = The spawn location of the world [optional Location, Minecraft will try to find one for you].",
-                " - `chunk_generator` = A custom chunk generator [optional ChunkGenerator].",
+                " - `chunk_generator` = A custom chunk generator [optional String, ID of a custom chunk generator].",
                 " - `copy_world` = A World to copy settings from [optional World].",
                 " - `clone_world` = A World to fully clone [optional World].")
             .examples("set {_w} to new world creator:",
@@ -69,7 +71,15 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
                 "\tstructures: false",
                 "\thardcore: false",
                 "\tseed: 12345",
-                "\tclone_world: world(\"world\")")
+                "\tclone_world: world(\"world\")",
+                "",
+                "set {_w} to new world creator:",
+                "\tkey: \"my_worlds:fancy_world\"",
+                "\tworld_type: normal",
+                "\tenvironment: normal",
+                "\tstructures: true",
+                "\tseed: 9999",
+                "\tchunk_generator: \"my_custom_generator\"")
             .since("INSERT VERSION")
             .register();
     }
@@ -85,8 +95,7 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
     private Expression<Location> spawnLocation;
     private Expression<World> copyWorld;
     private Expression<World> cloneWorld;
-    private Expression<ChunkGenerator> chunkGenerator;
-
+    private Expression<String> chunkGenerator;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -113,7 +122,7 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
             Skript.error("You cannot use copy and clone together.");
             return false;
         }
-        this.chunkGenerator = (Expression<ChunkGenerator>) validate.getOptional("chunk_generator", false);
+        this.chunkGenerator = (Expression<String>) validate.getOptional("chunk_generator", false);
         return true;
     }
 
@@ -175,8 +184,12 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
         }
 
         if (this.chunkGenerator != null) {
-            ChunkGenerator gen = this.chunkGenerator.getSingle(event);
-            creator.setChunkGenerator(gen);
+            String genKey = this.chunkGenerator.getSingle(event);
+            ChunkGen generator = ChunkGenManager.getByID(genKey);
+            if (generator != null) {
+                creator.setChunkGenerator(generator.getChunkGenerator());
+                creator.setBiomeProvider(generator.getBiomeGenerator());
+            }
         }
 
         return new BeeWorldCreator[]{creator};
