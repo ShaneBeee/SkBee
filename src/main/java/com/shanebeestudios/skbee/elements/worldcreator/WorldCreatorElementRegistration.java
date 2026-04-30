@@ -6,6 +6,7 @@ import com.shanebeestudios.skbee.elements.worldcreator.effects.EffLoadWorld;
 import com.shanebeestudios.skbee.elements.worldcreator.expressions.ExprLoadedCustomWorlds;
 import com.shanebeestudios.skbee.elements.worldcreator.expressions.ExprWorldCreator;
 import com.shanebeestudios.skbee.elements.worldcreator.expressions.ExprWorldCreatorOption;
+import com.shanebeestudios.skbee.elements.worldcreator.expressions.ExprWorldCreatorSection;
 import com.shanebeestudios.skbee.elements.worldcreator.type.Types;
 
 public class WorldCreatorElementRegistration {
@@ -21,6 +22,7 @@ public class WorldCreatorElementRegistration {
         ExprLoadedCustomWorlds.register(reg);
         ExprWorldCreator.register(reg);
         ExprWorldCreatorOption.register(reg);
+        ExprWorldCreatorSection.register(reg);
 
         // TYPES
         Types.register(reg);
