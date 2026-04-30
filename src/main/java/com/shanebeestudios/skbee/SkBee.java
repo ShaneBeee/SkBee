@@ -12,7 +12,7 @@ import com.shanebeestudios.skbee.api.util.update.UpdateChecker;
 import com.shanebeestudios.skbee.api.wrapper.LazyLocation;
 import com.shanebeestudios.skbee.config.Config;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
-import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
+import com.shanebeestudios.skbee.api.worldgen.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
