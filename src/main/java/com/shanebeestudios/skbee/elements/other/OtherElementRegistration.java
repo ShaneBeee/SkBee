@@ -54,6 +54,7 @@ import com.shanebeestudios.skbee.elements.other.events.AsyncEvents;
 import com.shanebeestudios.skbee.elements.other.events.EvtDamageByBlock;
 import com.shanebeestudios.skbee.elements.other.events.EvtEntitiesLoad;
 import com.shanebeestudios.skbee.elements.other.events.EvtEntityKnockback;
+import com.shanebeestudios.skbee.elements.other.events.EvtEntityTrackPlayer;
 import com.shanebeestudios.skbee.elements.other.events.EvtPlayerInteract;
 import com.shanebeestudios.skbee.elements.other.events.EvtPlayerUseUnknown;
 import com.shanebeestudios.skbee.elements.other.events.EvtPreSpawn;
@@ -248,6 +249,7 @@ public class OtherElementRegistration {
         EvtDamageByBlock.register(registration);
         EvtEntitiesLoad.register(registration);
         EvtEntityKnockback.register(registration);
+        EvtEntityTrackPlayer.register(registration);
         EvtPlayerInteract.register(registration);
         EvtPlayerUseUnknown.register(registration);
         EvtPreSpawn.register(registration);
