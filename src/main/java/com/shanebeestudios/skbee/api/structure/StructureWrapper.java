@@ -4,6 +4,7 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.PDCWrapper;
 import org.bukkit.Bukkit;
+import org.bukkit.Keyed;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.BlockState;
@@ -15,6 +16,7 @@ import org.bukkit.structure.StructureManager;
 import org.bukkit.util.BlockVector;
 import org.bukkit.util.Vector;
 import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 import java.io.IOException;
 import java.util.List;
@@ -24,7 +26,7 @@ import java.util.Random;
  * Wrapper class for {@link Structure} that includes more information used for saving/placing
  */
 @SuppressWarnings({"unused", "CallToPrintStackTrace"})
-public class StructureWrapper {
+public class StructureWrapper implements Keyed {
 
     private static final StructureManager STRUCTURE_MANAGER = Bukkit.getStructureManager();
     private static final String ROTATION_KEY = "rotation";
@@ -145,7 +147,7 @@ public class StructureWrapper {
      */
     public @Nullable List<BlockState> getBlockStates() {
         if (this.structure.getPaletteCount() > 0) {
-            return this.structure.getPalettes().get(0).getBlocks();
+            return this.structure.getPalettes().getFirst().getBlocks();
         }
         return null;
     }
@@ -173,8 +175,9 @@ public class StructureWrapper {
      *
      * @return Key of this structure
      */
-    public NamespacedKey getKey() {
-        return key;
+    @Override
+    public @NonNull NamespacedKey getKey() {
+        return this.key;
     }
 
     /**
