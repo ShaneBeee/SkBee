@@ -9,7 +9,7 @@ import ch.njol.skript.util.Color;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
+import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.CustomModelData;
 import org.bukkit.event.Event;

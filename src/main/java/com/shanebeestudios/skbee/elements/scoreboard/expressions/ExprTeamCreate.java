@@ -10,7 +10,7 @@ import ch.njol.skript.util.SkriptColor;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
-import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
+import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.TextComponent;

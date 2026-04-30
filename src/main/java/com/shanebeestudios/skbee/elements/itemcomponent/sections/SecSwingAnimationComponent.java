@@ -11,7 +11,7 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
-import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
+import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.SwingAnimation;

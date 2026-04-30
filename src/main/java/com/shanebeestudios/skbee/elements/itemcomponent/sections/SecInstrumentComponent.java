@@ -8,7 +8,7 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
+import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.MusicInstrument;
 import org.bukkit.event.Event;

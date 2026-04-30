@@ -9,7 +9,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
-import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
+import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
 import net.kyori.adventure.audience.Audience;

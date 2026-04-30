@@ -17,7 +17,7 @@ import com.shanebeestudios.skbee.api.generator.event.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.generator.event.ChunkGenEvent;
 import com.shanebeestudios.skbee.api.generator.event.HeightGenEvent;
 import com.github.shanebeee.skr.Registration;
-import com.shanebeestudios.skbee.api.util.SimpleEntryValidator;
+import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.entry.EntryContainer;

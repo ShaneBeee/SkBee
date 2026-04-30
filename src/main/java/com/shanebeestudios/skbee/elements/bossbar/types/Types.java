@@ -9,7 +9,7 @@ import ch.njol.util.coll.CollectionUtils;
 import ch.njol.yggdrasil.Fields;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
-import com.github.shanebeee.skr.EnumWrapper;
+import com.github.shanebeee.skr.skript.EnumWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarFlag;
