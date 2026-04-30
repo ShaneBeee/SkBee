@@ -21,13 +21,6 @@ public class Types {
     }
 
     private static void types(Registration reg) {
-        reg.newType(ChunkGenerator.class, "chunkgenerator")
-            .name("Chunk Generator")
-            .description("A custom chunk generator for a world.")
-            .since("INSERT VERSION")
-            .parser(SkriptUtils.getDefaultParser())
-            .register();
-
         reg.newType(BeeWorldCreator.class, "worldcreator")
             .user("world ?creators?")
             .name("World Creator")
