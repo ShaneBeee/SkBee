@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.util;
 import ch.njol.skript.Skript;
 import ch.njol.skript.log.ErrorQuality;
 import com.shanebeestudios.skbee.SkBee;
+import net.kyori.adventure.key.Key;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ChatColor;
@@ -159,12 +160,21 @@ public class Util {
      * Gets a Minecraft NamespacedKey from string
      * <p>If a namespace is not provided, it will default to "minecraft:" namespace</p>
      *
-     * @param key   Key for new Minecraft NamespacedKey
-     * @param error Whether to send a skript/console error if one occurs
+     * @param keyObject Key for new Minecraft NamespacedKey (supports Key/NamespacedKey/String)
+     * @param error     Whether to send a skript/console error if one occurs
      * @return new Minecraft NamespacedKey
      */
     @Nullable
-    public static NamespacedKey getNamespacedKey(@Nullable String key, boolean error) {
+    public static NamespacedKey getNamespacedKey(@Nullable Object keyObject, boolean error) {
+        if (keyObject instanceof NamespacedKey namespacedKey) {
+            return namespacedKey;
+        }
+        if (keyObject instanceof Key aKey) {
+            return NamespacedKey.fromString(aKey.asString());
+        }
+        if (!(keyObject instanceof String key)) {
+            return null;
+        }
         if (key == null) return null;
         if (!key.contains(":")) key = "minecraft:" + key;
         if (key.length() > Short.MAX_VALUE) {
