@@ -120,6 +120,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprHealthScale;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprItemFromNamespacedKey;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprKnockbackAttackerVictim;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprKnockbackVelocity;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprMapping;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprMemoryValue;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprMinecraftEntityType;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprMobAwareness;
@@ -310,6 +311,7 @@ public class OtherElementRegistration {
         ExprItemFromNamespacedKey.register(registration);
         ExprKnockbackAttackerVictim.register(registration);
         ExprKnockbackVelocity.register(registration);
+        ExprMapping.register(registration);
         ExprMemoryValue.register(registration);
         ExprMinecraftEntityType.register(registration);
         ExprMobAwareness.register(registration);
