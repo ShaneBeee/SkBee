@@ -31,7 +31,7 @@ test "SkBee - Chunk Generator":
 			set chunk generator of {_invalid} to chunk generator with id "test_generator"
 		catch:
 			assert runtime logs contains "Invalid generator: invalid_generator" with "The generator should error"
-			assert runtime logs contains "Invalid world creator: {_invalid} (<none>, as com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldCreator)" with "The generator should errors"
+			assert runtime logs contains "Invalid world creator: {_invalid} (<none>, as com.shanebeestudios.skbee.api.worldgen.BeeWorldCreator)" with "The generator should errors"
 
 		load world from creator {_creator}
 		set {_w} to world("test_world_gen")
