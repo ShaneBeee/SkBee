@@ -20,7 +20,7 @@ public class CondEntityTrackedByPlayer extends Condition {
             .description("Check if entities are tracked by players.")
             .examples("if {_e} is tracked by player:",
                 "if {_e::*} is not tracked by {_p::*}:")
-            .since("INSERT VERSION")
+            .since("3.22.0")
             .register();
     }
 

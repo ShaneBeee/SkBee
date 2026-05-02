@@ -80,7 +80,7 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
                 "\tstructures: true",
                 "\tseed: 9999",
                 "\tchunk_generator: \"my_custom_generator\"")
-            .since("INSERT VERSION")
+            .since("3.22.0")
             .register();
     }
 

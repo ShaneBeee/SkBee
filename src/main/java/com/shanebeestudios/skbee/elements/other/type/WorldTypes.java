@@ -30,7 +30,7 @@ public class WorldTypes {
             .name("HeightMap")
             .description("The height map used during chunk generation.",
                 "See [**HeightMap**](https://minecraft.wiki/w/Heightmap) on McWiki for more info.", Util.AUTO_GEN_NOTE)
-            .since("INSERT VERSION")
+            .since("3.22.0")
             .register();
 
         reg.newEnumType(SpawnCategory.class, "spawncategory")

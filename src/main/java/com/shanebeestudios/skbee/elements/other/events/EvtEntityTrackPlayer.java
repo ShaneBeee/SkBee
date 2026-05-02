@@ -26,7 +26,7 @@ public class EvtEntityTrackPlayer extends SkriptEvent {
             .examples("on player track entity:",
                 "\tif event-entity is a zombie:",
                 "\t\tcancel event")
-            .since("INSERT VERSION")
+            .since("3.22.0")
             .register();
 
         reg.newEventValue(PlayerTrackEntityEvent.class, Entity.class)

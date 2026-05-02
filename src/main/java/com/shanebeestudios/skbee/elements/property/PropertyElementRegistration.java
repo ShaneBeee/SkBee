@@ -7,7 +7,7 @@ import com.shanebeestudios.skbee.elements.property.properties.ItemProperties;
 import com.shanebeestudios.skbee.elements.property.properties.PlayerProperties;
 import com.shanebeestudios.skbee.elements.property.type.Type;
 
-@Deprecated(forRemoval = true, since = "INSERT VERSION")
+@Deprecated(forRemoval = true, since = "3.22.0")
 public class PropertyElementRegistration {
 
     public static void register(Registration reg) {
