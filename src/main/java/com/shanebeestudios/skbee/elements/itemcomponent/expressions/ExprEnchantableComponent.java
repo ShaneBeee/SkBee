@@ -24,11 +24,10 @@ public class ExprEnchantableComponent extends SimplePropertyExpression<Object, N
             .name("ItemComponent - Enchantable")
             .description("If present, and applicable enchantments are available, items with the component can be enchanted in an enchanting table.",
                 "Positive integer representing the item's enchantability. A higher value allows enchantments with a higher cost to be picked.",
-                "Requires Paper 1.21.3+",
                 "See [**Enchantable Component**](https://minecraft.wiki/w/Data_component_format#enchantable) on McWiki for more details.",
                 "",
                 "**Changers**:",
-                "- `set` = Allows you to override the glint.",
+                "- `set` = Allows you to set the enchantability.",
                 "- `reset` = Reset back to default state.",
                 "- `delete` = Will delete any value (vanilla or not).")
             .examples("set enchantable component of player's tool to 10",
