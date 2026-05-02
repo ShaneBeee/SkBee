@@ -24,7 +24,6 @@ import com.shanebeestudios.skbee.elements.dialog.DialogElementRegestration;
 import com.shanebeestudios.skbee.elements.fastboard.FastboardElementRegistration;
 import com.shanebeestudios.skbee.elements.fishing.FishingElementRegistration;
 import com.shanebeestudios.skbee.elements.gameevent.GameEventElementRegistration;
-import com.shanebeestudios.skbee.elements.generator.ChunkGeneratorElementRegistration;
 import com.shanebeestudios.skbee.elements.itemcomponent.ItemComponentElementRegistration;
 import com.shanebeestudios.skbee.elements.nbt.NBTElementRegistration;
 import com.shanebeestudios.skbee.elements.other.OtherElementRegistration;
@@ -43,8 +42,8 @@ import com.shanebeestudios.skbee.elements.tickmanager.TickManagerElementRegistra
 import com.shanebeestudios.skbee.elements.villager.VillagerElementRegistration;
 import com.shanebeestudios.skbee.elements.virtualfurnace.VirtualFurnaceElementRegistration;
 import com.shanebeestudios.skbee.elements.virtualfurnace.listener.VirtualFurnaceListener;
-import com.shanebeestudios.skbee.elements.worldcreator.WorldCreatorElementRegistration;
-import com.shanebeestudios.skbee.elements.worldcreator.objects.BeeWorldConfig;
+import com.shanebeestudios.skbee.elements.worldgen.WorldCreatorElementRegistration;
+import com.shanebeestudios.skbee.api.worldgen.BeeWorldConfig;
 import com.shanebeestudios.vf.api.VirtualFurnaceAPI;
 import de.tr7zw.changeme.nbtapi.utils.MinecraftVersion;
 import org.bukkit.Statistic;
@@ -69,8 +68,6 @@ public class AddonLoader {
         this.config = plugin.getPluginConfig();
         this.registration = new Registration("SkBee", true);
         Utils.setDebug(this.config.settings_debug);
-        Utils.setPrefix(Util.PREFIX);
-        Utils.setPrefixError(Util.PREFIX_ERROR);
 
         this.pluginManager = plugin.getServer().getPluginManager();
         MinecraftVersion.replaceLogger(LoggerBee.getLogger());
@@ -144,7 +141,6 @@ public class AddonLoader {
         loadVillagerElements();
         loadVirtualFurnaceElements();
         loadWorldCreatorElements();
-        loadChunkGenElements();
         loadTestingElements();
 
         // Load elements into Skript
@@ -225,27 +221,6 @@ public class AddonLoader {
             Util.logLoading("&5Bound Elements &asuccessfully loaded");
         } catch (Exception ex) {
             logFailure("Bound", ex);
-        }
-    }
-
-    private void loadChunkGenElements() {
-        if (!this.config.ELEMENTS_CHUNK_GEN) {
-            Util.logLoading("&5Chunk Generator Elements &cdisabled via config");
-            return;
-        }
-        if (!this.config.ELEMENTS_WORLD_CREATOR) {
-            Util.logLoading("&5Chunk Generator &cdisabled via World Creator config");
-            return;
-        }
-        if (Util.IS_RUNNING_FOLIA) {
-            Util.logLoading("&5Chunk Generator Elements &cdisabled &7(&eCurrently not supported on Folia&7)");
-            return;
-        }
-        try {
-            ChunkGeneratorElementRegistration.register(this.registration);
-            Util.logLoading("&5Chunk Generator Elements &asuccessfully loaded");
-        } catch (Exception ex) {
-            logFailure("Chunk Generator", ex);
         }
     }
 

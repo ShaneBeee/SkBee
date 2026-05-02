@@ -23,7 +23,6 @@ import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerCustomClickEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
-import io.papermc.paper.event.player.PlayerTrackEntityEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
 import org.bukkit.Bukkit;
@@ -465,24 +464,6 @@ public class PlayerEvents extends SimpleEvent {
         reg.newEventValue(PlayerStopUsingItemEvent.class, Timespan.class)
             .description("The span of time the item was held for.")
             .converter(event -> new Timespan(Timespan.TimePeriod.TICK, event.getTicksHeldFor()))
-            .register();
-
-        // PlayerTrackEntityEvent
-        reg.newEvent(PlayerEvents.class, PlayerTrackEntityEvent.class, "player track entity")
-            .name("Player Track Entity")
-            .description("Called when a Player tracks an Entity (This means the entity is sent to the client).",
-                "If cancelled entity is not shown to the player and interaction in both directions is not possible.",
-                "(This is copied from Paper javadocs and does not seem true. When testing on a zombie, the zombie still attacked me)",
-                "Adding or removing entities from the world at the point in time this event is called is completely unsupported and should be avoided.",
-                "Requires PaperMC 1.19+.")
-            .examples("on player track entity:",
-                "\tif event-entity is a zombie:",
-                "\t\tcancel event")
-            .since("3.5.1")
-            .register();
-
-        reg.newEventValue(PlayerTrackEntityEvent.class, Entity.class)
-            .converter(PlayerTrackEntityEvent::getEntity)
             .register();
 
     }

@@ -3,8 +3,11 @@ package com.shanebeestudios.skbee.api.particle;
 import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.util.StringUtils;
+import org.bukkit.Keyed;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Particle;
 import org.bukkit.Registry;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -13,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class ParticleWrapper {
+public class ParticleWrapper implements Keyed {
 
     private static final Map<String, ParticleWrapper> PARTICLES = new HashMap<>();
     private static final Map<Particle, ParticleWrapper> PARTICLE_MAP = new HashMap<>();
@@ -66,12 +69,12 @@ public class ParticleWrapper {
 
             @Override
             public String toString(ParticleWrapper particle, int flags) {
-                return particle.getKey();
+                return particle.getStringKey();
             }
 
             @Override
             public String toVariableNameString(ParticleWrapper particle) {
-                return "minecraft_particle:" + particle.getKey();
+                return "minecraft_particle:" + particle.getStringKey();
             }
         };
     }
@@ -83,7 +86,7 @@ public class ParticleWrapper {
      * @return Minecraft name of particle
      */
     public static String getName(ParticleWrapper particle) {
-        return particle.getKey();
+        return particle.getStringKey();
     }
 
     /**
@@ -115,12 +118,17 @@ public class ParticleWrapper {
         this.particle = particle;
     }
 
-    public String getKey() {
+    public String getStringKey() {
         return this.key;
     }
 
     public Particle getParticle() {
         return this.particle;
+    }
+
+    @Override
+    public @NotNull NamespacedKey getKey() {
+        return this.particle.getKey();
     }
 
 }

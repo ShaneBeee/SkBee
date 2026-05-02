@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.BlockDamageAbortEvent;
 import org.bukkit.event.block.BlockExplodeEvent;
 import org.bukkit.event.block.MoistureChangeEvent;
+import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
 import org.skriptlang.skript.lang.converter.Converter;
@@ -32,6 +33,14 @@ public class BlockEvents extends SimpleEvent {
 
         reg.newEventValue(BlockDamageAbortEvent.class, Player.class)
             .converter(BlockDamageAbortEvent::getPlayer)
+            .register();
+        reg.newEventValue(BlockDamageAbortEvent.class, ItemStack.class)
+            .description("Gets the ItemStack for the item currently in the player's hand.")
+            .converter(BlockDamageAbortEvent::getItemInHand)
+            .register();
+        reg.newEventValue(BlockDamageAbortEvent.class, ItemType.class)
+            .description("Gets the ItemType for the item currently in the player's hand.")
+            .converter(event -> new ItemType(event.getItemInHand()))
             .register();
 
         // Block Explode Event

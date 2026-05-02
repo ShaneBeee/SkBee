@@ -6,7 +6,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.damage.DamageType;
 import org.bukkit.event.Event;
@@ -17,7 +17,7 @@ import org.jspecify.annotations.Nullable;
 public class ExprDamageTypeComponent extends SimplePropertyExpression<Object, DamageType> {
 
     public static void register(Registration reg) {
-        if (Util.IS_RUNNING_MC_1_21_11) {
+        if (LegacyUtils.IS_RUNNING_MC_1_21_11) {
             reg.newPropertyExpression(ExprDamageTypeComponent.class, DamageType.class,
                     "damage type [component]", "itemstacks/itemtypes/slots")
                 .name("ItemComponent - Damage Type")

@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.other.type;
 
 import ch.njol.skript.registrations.Classes;
 import com.github.shanebeee.skr.Registration;
-import com.github.shanebeee.skr.RegistryClassInfo;
+import com.github.shanebeee.skr.skript.RegistryClassInfo;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Registry;
 import org.bukkit.entity.EntityType;

@@ -3,6 +3,9 @@ package com.shanebeestudios.skbee.api.util;
 import ch.njol.skript.Skript;
 import ch.njol.skript.log.ErrorQuality;
 import com.shanebeestudios.skbee.SkBee;
+import net.kyori.adventure.key.Key;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
@@ -27,18 +30,17 @@ import java.util.regex.Pattern;
 public class Util {
 
     public static final String PREFIX = "&7[&bSk&3Bee&7] ";
+    public static final String PREFIX_MINI = "<grey>[<gradient:#19C5E7:#17E9B6>SkBee</gradient><grey>] ";
     public static final String PREFIX_ERROR = "&7[&bSk&3Bee &cERROR&7] ";
+    public static final String PREFIX_ERRORR_MINI = "<grey>[<gradient:#19C5E7:#17E9B6>SkBee</gradient> <red>ERROR<grey>] ";
     private static final Pattern HEX_PATTERN = Pattern.compile("<#([A-Fa-f\\d]){6}>");
+    private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
     private static final boolean SKRIPT_IS_THERE = Bukkit.getPluginManager().getPlugin("Skript") != null;
     public static final boolean IS_RUNNING_FOLIA = Skript.classExists("io.papermc.paper.threadedregions.FoliaWatchdogThread");
 
     // QuickLinks
     public static final String MCWIKI_TICK_COMMAND = "See [**Tick Command**](https://minecraft.wiki/w/Commands/tick) on McWiki for more details.";
     public static final String AUTO_GEN_NOTE = "NOTE: These are auto-generated and may differ between server versions, currently generated for Minecraft " + Bukkit.getMinecraftVersion() + ".";
-
-    // Shortcut for finding stuff to remove later
-    public static final boolean IS_RUNNING_MC_1_21_11 = Skript.isRunningMinecraft(1, 21, 11);
-    public static final boolean IS_RUNNING_MC_26_1_1 = Skript.isRunningMinecraft(26, 1, 1);
 
     @SuppressWarnings("deprecation") // Paper deprecation
     public static String getColString(String string) {
@@ -57,13 +59,44 @@ public class Util {
         return ChatColor.translateAlternateColorCodes('&', string);
     }
 
+    public static Component getMini(String format, Object... objects) {
+        return MINI_MESSAGE.deserialize(String.format(format, objects));
+    }
+
     public static void sendColMsg(CommandSender receiver, String format, Object... objects) {
         receiver.sendMessage(getColString(String.format(format, objects)));
+    }
+
+    /**
+     * Send a message to a receiver with MiniMessage support.
+     *
+     * @param receiver CommandSender to get message
+     * @param format   Format of message
+     * @param objects  Objects to include in format
+     */
+    public static void sendMini(CommandSender receiver, String format, Object... objects) {
+        receiver.sendMessage(getMini(String.format(format, objects)));
+    }
+
+    /**
+     * Send a prefixed message to a receiver with MiniMessage support.
+     *
+     * @param receiver CommandSender to get message
+     * @param format   Format of message
+     * @param objects  Objects to include in format
+     */
+    public static void sendMiniPrefixed(CommandSender receiver, String format, Object... objects) {
+        receiver.sendMessage(getMini(PREFIX_MINI + String.format(format, objects)));
     }
 
     public static void log(String format, Object... objects) {
         String log = String.format(format, objects);
         Bukkit.getConsoleSender().sendMessage(getColString(PREFIX + log));
+    }
+
+    public static void logMini(String format, Object... objects) {
+        String log = String.format(format, objects);
+        Bukkit.getConsoleSender().sendMessage(getMini(PREFIX_MINI + log));
     }
 
     public static void skriptError(String format, Object... objects) {
@@ -94,12 +127,25 @@ public class Util {
         }
     }
 
+    public static void debugMini(String format, Object... objects) {
+        if (SkBee.isDebug()) {
+            String debug = String.format(format, objects);
+            Bukkit.getConsoleSender().sendMessage(getMini(PREFIX_ERRORR_MINI + debug));
+        }
+    }
+
     private static final List<String> DEBUGS = new ArrayList<>();
 
     public static void logLoading(String format, Object... objects) {
         String form = String.format(format, objects);
         DEBUGS.add(form);
         log(form);
+    }
+
+    public static void logLoadingMini(String format, Object... objects) {
+        String form = String.format(format, objects);
+        DEBUGS.add(form);
+        logMini(form);
     }
 
     public static List<String> getDebugs() {
@@ -114,12 +160,21 @@ public class Util {
      * Gets a Minecraft NamespacedKey from string
      * <p>If a namespace is not provided, it will default to "minecraft:" namespace</p>
      *
-     * @param key   Key for new Minecraft NamespacedKey
-     * @param error Whether to send a skript/console error if one occurs
+     * @param keyObject Key for new Minecraft NamespacedKey (supports Key/NamespacedKey/String)
+     * @param error     Whether to send a skript/console error if one occurs
      * @return new Minecraft NamespacedKey
      */
     @Nullable
-    public static NamespacedKey getNamespacedKey(@Nullable String key, boolean error) {
+    public static NamespacedKey getNamespacedKey(@Nullable Object keyObject, boolean error) {
+        if (keyObject instanceof NamespacedKey namespacedKey) {
+            return namespacedKey;
+        }
+        if (keyObject instanceof Key aKey) {
+            return NamespacedKey.fromString(aKey.asString());
+        }
+        if (!(keyObject instanceof String key)) {
+            return null;
+        }
         if (key == null) return null;
         if (!key.contains(":")) key = "minecraft:" + key;
         if (key.length() > Short.MAX_VALUE) {

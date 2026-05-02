@@ -5,6 +5,7 @@ import com.shanebeestudios.skbee.elements.other.conditions.CondBlockCanRandomTic
 import com.shanebeestudios.skbee.elements.other.conditions.CondChunkContainsBlockData;
 import com.shanebeestudios.skbee.elements.other.conditions.CondCriticalHit;
 import com.shanebeestudios.skbee.elements.other.conditions.CondEntityStorageBlockFull;
+import com.shanebeestudios.skbee.elements.other.conditions.CondEntityTrackedByPlayer;
 import com.shanebeestudios.skbee.elements.other.conditions.CondEntityWouldCollideWith;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsLocked;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsOwnedByRegion;
@@ -53,6 +54,7 @@ import com.shanebeestudios.skbee.elements.other.events.AsyncEvents;
 import com.shanebeestudios.skbee.elements.other.events.EvtDamageByBlock;
 import com.shanebeestudios.skbee.elements.other.events.EvtEntitiesLoad;
 import com.shanebeestudios.skbee.elements.other.events.EvtEntityKnockback;
+import com.shanebeestudios.skbee.elements.other.events.EvtEntityTrackPlayer;
 import com.shanebeestudios.skbee.elements.other.events.EvtPlayerInteract;
 import com.shanebeestudios.skbee.elements.other.events.EvtPlayerUseUnknown;
 import com.shanebeestudios.skbee.elements.other.events.EvtPreSpawn;
@@ -118,6 +120,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprHealthScale;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprItemFromNamespacedKey;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprKnockbackAttackerVictim;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprKnockbackVelocity;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprMapping;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprMemoryValue;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprMinecraftEntityType;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprMobAwareness;
@@ -186,6 +189,7 @@ public class OtherElementRegistration {
         CondChunkContainsBlockData.register(registration);
         CondCriticalHit.register(registration);
         CondEntityStorageBlockFull.register(registration);
+        CondEntityTrackedByPlayer.register(registration);
         CondEntityWouldCollideWith.register(registration);
         CondIsLocked.register(registration);
         CondIsOwnedByRegion.register(registration);
@@ -246,6 +250,7 @@ public class OtherElementRegistration {
         EvtDamageByBlock.register(registration);
         EvtEntitiesLoad.register(registration);
         EvtEntityKnockback.register(registration);
+        EvtEntityTrackPlayer.register(registration);
         EvtPlayerInteract.register(registration);
         EvtPlayerUseUnknown.register(registration);
         EvtPreSpawn.register(registration);
@@ -306,6 +311,7 @@ public class OtherElementRegistration {
         ExprItemFromNamespacedKey.register(registration);
         ExprKnockbackAttackerVictim.register(registration);
         ExprKnockbackVelocity.register(registration);
+        ExprMapping.register(registration);
         ExprMemoryValue.register(registration);
         ExprMinecraftEntityType.register(registration);
         ExprMobAwareness.register(registration);

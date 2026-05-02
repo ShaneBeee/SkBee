@@ -15,6 +15,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Keyed;
 import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
@@ -22,22 +23,24 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+import org.skriptlang.skript.bukkit.particles.particleeffects.ParticleEffect;
 
 public class ExprNamespacedKeyObject extends SimplePropertyExpression<Object, NamespacedKey> {
 
     public static void register(Registration reg) {
         reg.newSimpleExpression(ExprNamespacedKeyObject.class, NamespacedKey.class,
-            "(minecraft|mc|namespaced|resource)[ ](key|id[entifier]|location)[s] [(from|of)] %objects%")
+                "(minecraft|mc|namespaced|resource)[ ](key|id[entifier]|location)[s] [(from|of)] %objects%")
             .name("NamespacedKey - Get")
             .description("Get the namespaced key of an object or from a string.",
-                "\nNote when getting key from string:",
-                "NamespacedKeys are a string based key which consists of two components - a namespace and a key (ex: \"namespace:key\").",
-                "Namespaces may only contain lowercase alphanumeric characters, periods, underscores, and hyphens.",
-                "Minecraft uses the \"minecraft:\" namespace for built in objects.",
-                "If a namespace is not provided, the Minecraft namespace will be used by default -> \"minecraft:your_key\"",
-                "Keys may only contain lowercase alphanumeric characters, periods, underscores, hyphens, and forward slashes.",
-                "Keep an eye on your console when using namespaced keys as errors will spit out when they're invalid.",
-                "For more info please check out [**McWiki**](https://minecraft.wiki/w/Resource_location).")
+                "Note when getting key from string:",
+                " - NamespacedKeys are a string based key which consists of two components - a namespace and a key (ex: \"namespace:key\").",
+                " - Namespaces may only contain lowercase alphanumeric characters, periods, underscores, and hyphens.",
+                " - Keys may only contain lowercase alphanumeric characters, periods, underscores, hyphens, and forward slashes.",
+                " - Minecraft uses the \"minecraft:\" namespace for built in objects.",
+                " - If a namespace is not provided, the Minecraft namespace will be used by default -> \"minecraft:your_key\"",
+                " - Keys may only contain lowercase alphanumeric characters, periods, underscores, hyphens, and forward slashes.",
+                " - Keep an eye on your console when using namespaced keys as errors will spit out when they're invalid.",
+                "For more info please check out [**Identifier**](https://minecraft.wiki/w/Identifier) on McWiki.")
             .examples("set {_key} to mc key of target block",
                 "set {_key} to namespaced key of player's tool",
                 "set {_key} to minecraft key of biome at player",
@@ -48,7 +51,6 @@ public class ExprNamespacedKeyObject extends SimplePropertyExpression<Object, Na
             .register();
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         Expression<Object> objects = LiteralUtils.defendExpression(exprs[0]);
@@ -56,17 +58,21 @@ public class ExprNamespacedKeyObject extends SimplePropertyExpression<Object, Na
         return LiteralUtils.canInitSafely(objects);
     }
 
-    @SuppressWarnings("ConstantValue")
+
     @Override
     public @Nullable NamespacedKey convert(Object object) {
         if (object instanceof String string) {
             return Util.getNamespacedKey(string, true);
         } else if (object instanceof Keyed keyed) {
             return keyed.getKey();
+        } else if (object instanceof net.kyori.adventure.key.Keyed keyed) {
+            return new NamespacedKey(keyed.key().namespace(), keyed.key().value());
         } else if (object instanceof Block block) {
-            return block.getBlockData().getMaterial().getKey();
+            return block.getType().getKey();
         } else if (object instanceof BlockData blockData) {
             return blockData.getMaterial().getKey();
+        } else if (object instanceof BlockState blockState) {
+            return blockState.getType().getKey();
         } else if (object instanceof Entity entity) {
             return entity.getType().getKey();
         } else if (object instanceof EntityData<?> entityData) {
@@ -82,6 +88,8 @@ public class ExprNamespacedKeyObject extends SimplePropertyExpression<Object, Na
         } else if (object instanceof EnchantmentType enchantmentType) {
             Enchantment type = enchantmentType.getType();
             if (type != null) return type.getKey();
+        } else if (object instanceof ParticleEffect pe) {
+            return pe.particle().getKey();
         }
         return null;
     }

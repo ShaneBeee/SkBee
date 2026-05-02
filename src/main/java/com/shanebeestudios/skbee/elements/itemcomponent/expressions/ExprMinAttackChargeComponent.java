@@ -6,7 +6,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
@@ -16,7 +16,7 @@ import org.jspecify.annotations.Nullable;
 public class ExprMinAttackChargeComponent extends SimplePropertyExpression<Object, Number> {
 
     public static void register(Registration reg) {
-        if (Util.IS_RUNNING_MC_1_21_11) {
+        if (LegacyUtils.IS_RUNNING_MC_1_21_11) {
             reg.newPropertyExpression(ExprMinAttackChargeComponent.class, Number.class,
                     "min[imum] attack charge [component]", "itemstacks/itemtypes/slots")
                 .name("ItemComponent - Minimum Attack Charge")

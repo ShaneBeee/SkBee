@@ -9,8 +9,8 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.property.Property;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.property.Property;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -28,10 +28,7 @@ public class ExprProperty<F extends Object, T extends Object> extends SimpleExpr
         reg.newCombinedExpression( ExprProperty.class, Object.class,
                 "%*property% property of %objects%",
                 "%objects%'[s] %*property% property")
-            .name("Property - Property of Object")
-            .description("Represents different properties of an object.",
-                "See [**Property Wiki**](https://github.com/ShaneBeee/SkBee/wiki/Properties) for available properties and examples.")
-            .since("3.10.0")
+            .noDoc()
             .register();
     }
 
@@ -41,6 +38,7 @@ public class ExprProperty<F extends Object, T extends Object> extends SimpleExpr
     @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        Skript.warning("Properties have been deprecated and will be removed in the future.");
         this.property = (Literal<Property<F, T>>) exprs[matchedPattern];
         this.objects = LiteralUtils.defendExpression(exprs[matchedPattern == 0 ? 1 : 0]);
         if (this.objects.getReturnType().isAssignableFrom(this.property.getSingle().getPropertyHolder())) return true;

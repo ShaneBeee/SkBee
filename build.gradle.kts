@@ -38,13 +38,13 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:26.1.1.build.+")
+    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
 
     // Skript
     compileOnly("com.github.SkriptLang:Skript:2.15.0")
 
     // SkriptRegistration
-    implementation("com.github.shanebeee:SkriptRegistration:1.0.9")
+    implementation("com.github.ShaneBeee:SkriptRegistration:1.1.0")
 
     // commons-io
     compileOnly("commons-io:commons-io:2.14.0")
