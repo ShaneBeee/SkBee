@@ -56,12 +56,12 @@ public class ExprItemWithNBT extends SimpleExpression<ItemType> {
         if (item == null || nbt == null) {
             return null;
         }
-        Material material = item.getMaterial();
-        if (!material.isItem()) {
+        ItemType itemItem = item.getItem();
+        if (itemItem == null || !itemItem.getMaterial().isItem()) {
             warning("Cannot add nbt to a non-item (block only) itemtype: " + Classes.toString(item));
             return null;
         }
-        if (material == Material.AIR || item.getAmount() < 1) {
+        if (itemItem.getMaterial() == Material.AIR || item.getAmount() < 1) {
             warning("Cannot add nbt to an empty/air item: " + Classes.toString(item));
             return null;
         }
