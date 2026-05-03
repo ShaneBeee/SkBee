@@ -14,7 +14,7 @@ public class EvtEntityTrackPlayer extends SkriptEvent {
 
     @SuppressWarnings("unchecked")
     public static void register(Registration reg) {
-        reg.newEvent(EvtPlayerInteract.class,
+        reg.newEvent(EvtEntityTrackPlayer.class,
                 new Class[]{PlayerTrackEntityEvent.class, PlayerUntrackEntityEvent.class},
                 "player track entity", "player untrack entity")
             .name("Player Track/Untrack Entity")
