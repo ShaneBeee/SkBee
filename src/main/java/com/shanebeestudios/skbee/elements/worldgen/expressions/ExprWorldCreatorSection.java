@@ -13,7 +13,6 @@ import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.worldgen.BeeWorldCreator;
 import com.shanebeestudios.skbee.api.worldgen.ChunkGen;
 import com.shanebeestudios.skbee.api.worldgen.ChunkGenManager;
-import com.shanebeestudios.skbee.api.worldgen.ChunkGenerator;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -41,7 +40,7 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
             .addOptionalEntry("hardcore", Boolean.class)
             .addOptionalEntry("load_on_start", Boolean.class)
             .addOptionalEntry("spawn_location", Location.class)
-            .addOptionalEntry("chunk_generator", ChunkGenerator.class)
+            .addOptionalEntry("chunk_generator", String.class)
             .addOptionalEntry("copy_world", World.class)
             .addOptionalEntry("clone_world", World.class)
             .build();

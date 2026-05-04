@@ -19,6 +19,7 @@ import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprMaxStack
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprMinAttackChargeComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprRepairCost;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprRepairableComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprStoredEnchant;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprTooltipStyleComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprUseRemainderComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecAdventureComponent;
@@ -69,6 +70,7 @@ public class ItemComponentElementRegistration {
         ExprMinAttackChargeComponent.register(reg);
         ExprRepairableComponent.register(reg);
         ExprRepairCost.register(reg);
+        ExprStoredEnchant.register(reg);
         ExprTooltipStyleComponent.register(reg);
         ExprUseRemainderComponent.register(reg);
 
