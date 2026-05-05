@@ -26,7 +26,7 @@ import java.util.UUID;
 
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 
-    private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().NBT_ALLOW_UNSAFE_OPERATIONS;
+    private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().nbt_allow_unsafe_operations;
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprTagOfNBT.class, Object.class,

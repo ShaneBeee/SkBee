@@ -15,8 +15,8 @@ import java.util.regex.Pattern;
  */
 public interface SyntaxRuntimeErrorProducer extends org.skriptlang.skript.log.runtime.SyntaxRuntimeErrorProducer {
 
-    boolean DISABLE_ERROR = SkBee.getPlugin().getPluginConfig().RUNTIME_DISABLE_ERRORS;
-    boolean DISABLE_WARNING = SkBee.getPlugin().getPluginConfig().RUNTIME_DISABLE_WARNINGS;
+    boolean DISABLE_ERROR = SkBee.getPlugin().getPluginConfig().runtime_disable_errors;
+    boolean DISABLE_WARNING = SkBee.getPlugin().getPluginConfig().runtime_disable_warnings;
 
     @Override
     default void error(String message) {

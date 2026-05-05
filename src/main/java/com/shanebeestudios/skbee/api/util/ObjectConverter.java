@@ -138,7 +138,7 @@ public abstract class ObjectConverter<T> {
             }
         });
         register(PotionType.class, Registry.POTION);
-        if (SkBee.getPlugin().getPluginConfig().ELEMENTS_STATISTIC)
+        if (SkBee.getPlugin().getPluginConfig().elements_statistic)
             register(Statistic.class, Registry.STATISTIC);
         // Paper method
         if (Skript.methodExists(Bukkit.class, "getWorld", NamespacedKey.class)) {

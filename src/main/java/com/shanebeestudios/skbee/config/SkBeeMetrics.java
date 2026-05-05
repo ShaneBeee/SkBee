@@ -18,7 +18,7 @@ public class SkBeeMetrics {
     public static void loadMetrics(SkBee plugin, boolean enabled, Version skbeeVersion) { //6719
         Metrics metrics = new Metrics(plugin, 6719);
         metrics.addCustomChart(new SimplePie("skript_version", () -> Skript.getVersion().toString()));
-        metrics.addCustomChart(new SimplePie("virtual_furnace", () -> String.valueOf(plugin.getPluginConfig().ELEMENTS_VIRTUAL_FURNACE)));
+        metrics.addCustomChart(new SimplePie("virtual_furnace", () -> String.valueOf(plugin.getPluginConfig().elements_virtual_furnace)));
         metrics.addCustomChart(new SimplePie("online_mode_proxy", () -> String.valueOf(Bukkit.getServerConfig().isProxyOnlineMode())));
         metrics.addCustomChart(new SimplePie("addon_loaded", () -> String.valueOf(enabled)));
 

@@ -102,7 +102,7 @@ public class Types {
 
                 @Override
                 public String toString(@NotNull NBTCompound nbt, int flags) {
-                    if (!Bukkit.isPrimaryThread() && !SkBee.getPlugin().getPluginConfig().NBT_ALLOW_UNSAFE_OPERATIONS) {
+                    if (!Bukkit.isPrimaryThread() && !SkBee.getPlugin().getPluginConfig().nbt_allow_unsafe_operations) {
                         Skript.error("NBT cannot be converted to a string off the main thread.");
                         return null;
                     }

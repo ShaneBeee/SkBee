@@ -37,9 +37,9 @@ public class UpdateChecker implements Listener {
         this.pluginVersion = new Version(plugin.getDescription().getVersion());
 
         Config config = plugin.getPluginConfig();
-        if (config.SETTINGS_UPDATE_CHECKER_ENABLED) {
+        if (config.settings_update_checker_enabled) {
             setupJoinListener();
-            checkUpdate(config.SETTINGS_UPDATE_CHECKER_ASYNC);
+            checkUpdate(config.settings_update_checker_async);
         } else {
             Util.log("&3Update checker disabled!");
         }

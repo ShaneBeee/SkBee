@@ -18,7 +18,7 @@ import org.jetbrains.annotations.Nullable;
 public class ExprTeamPrefixComp extends SimplePropertyExpression<Team, ComponentWrapper> {
 
     public static void register(Registration reg) {
-        if (!Util.IS_RUNNING_FOLIA && SkBee.getPlugin().getPluginConfig().ELEMENTS_SCOREBOARD) {
+        if (!Util.IS_RUNNING_FOLIA && SkBee.getPlugin().getPluginConfig().elements_scoreboard) {
             reg.newPropertyExpression(ExprTeamPrefixComp.class, ComponentWrapper.class,
                     "component team (prefix|1:suffix)", "teams")
                 .name("TextComponent - Team Prefix/Suffix")

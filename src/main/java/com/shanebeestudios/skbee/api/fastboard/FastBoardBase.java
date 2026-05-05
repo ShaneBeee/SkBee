@@ -14,7 +14,7 @@ public abstract class FastBoardBase<T, B> {
     private static Scoreboard DUMMY_BOARD;
 
     public static void init(SkBee plugin) {
-        REVERSE = plugin.getPluginConfig().SETTINGS_FASTBOARD_LINES;
+        REVERSE = plugin.getPluginConfig().settings_fastboard_lines;
 
         // Make sure to initialize dummy scoreboard before usage
         // Prevents errors if setting scoreboards off the main thread

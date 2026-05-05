@@ -36,7 +36,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
-    private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().NBT_ALLOW_UNSAFE_OPERATIONS;
+    private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().nbt_allow_unsafe_operations;
 
     public static void register(Registration reg) {
         reg.newSimpleExpression(ExprNbtCompound.class, NBTCompound.class,

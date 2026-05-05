@@ -36,7 +36,7 @@ public class BeeWorldConfig {
 
     public BeeWorldConfig(SkBee plugin) {
         this.plugin = plugin;
-        this.autoLoadWorlds = plugin.getPluginConfig().AUTO_LOAD_WORLDS;
+        this.autoLoadWorlds = plugin.getPluginConfig().auto_load_worlds;
         loadConfig();
     }
 
