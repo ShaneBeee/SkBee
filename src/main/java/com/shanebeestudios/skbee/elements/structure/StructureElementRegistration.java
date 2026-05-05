@@ -6,6 +6,7 @@ import com.shanebeestudios.skbee.elements.structure.effects.EffStructureFill;
 import com.shanebeestudios.skbee.elements.structure.effects.EffStructurePlace;
 import com.shanebeestudios.skbee.elements.structure.effects.EffStructureSave;
 import com.shanebeestudios.skbee.elements.structure.expressions.ExprStructureBlockStates;
+import com.shanebeestudios.skbee.elements.structure.expressions.ExprStructureEntities;
 import com.shanebeestudios.skbee.elements.structure.expressions.ExprStructureLastPlacedLocation;
 import com.shanebeestudios.skbee.elements.structure.expressions.ExprStructureObject;
 import com.shanebeestudios.skbee.elements.structure.expressions.ExprStructureProperties;
@@ -24,6 +25,7 @@ public class StructureElementRegistration {
 
         // EXPRESSIONS
         ExprStructureBlockStates.register(reg);
+        ExprStructureEntities.register(reg);
         ExprStructureLastPlacedLocation.register(reg);
         ExprStructureObject.register(reg);
         ExprStructureProperties.register(reg);
