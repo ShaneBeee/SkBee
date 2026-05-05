@@ -6,6 +6,7 @@ import com.shanebeestudios.skbee.elements.itemcomponent.effects.EffApplyToCompon
 import com.shanebeestudios.skbee.elements.itemcomponent.effects.EffClearComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprBundleContents;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprChargedProjectilesComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprContainerComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprDamageResistantComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprDamageTypeComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprDyedColorComponent;
@@ -58,6 +59,7 @@ public class ItemComponentElementRegistration {
         // EXPRESSIONS
         ExprBundleContents.register(reg);
         ExprChargedProjectilesComponent.register(reg);
+        ExprContainerComponent.register(reg);
         ExprDamageResistantComponent.register(reg);
         ExprDamageTypeComponent.register(reg);
         ExprDyedColorComponent.register(reg);
