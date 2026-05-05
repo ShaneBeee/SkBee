@@ -42,6 +42,7 @@ import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecToolRule;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecTooltipDisplayComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecUseCooldownComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecUseEffectsComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecWeaponComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.types.Types;
 
 public class ItemComponentElementRegistration {
@@ -95,6 +96,7 @@ public class ItemComponentElementRegistration {
         SecTooltipDisplayComponent.register(reg);
         SecUseCooldownComponent.register(reg);
         SecUseEffectsComponent.register(reg);
+        SecWeaponComponent.register(reg);
 
         // TYPES
         Types.register(reg);
