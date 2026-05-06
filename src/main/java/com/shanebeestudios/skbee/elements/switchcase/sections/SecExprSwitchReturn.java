@@ -12,6 +12,7 @@ import ch.njol.skript.util.LiteralUtils;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchReturnEvent;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchSecEvent;
 import org.bukkit.event.Event;
@@ -66,6 +67,7 @@ public class SecExprSwitchReturn extends SectionExpression<Object> {
     @Override
     public boolean init(Expression<?>[] exprs, int pattern, Kleenean delayed, ParseResult result, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
         if (sectionNode == null) return false;
+        SkBeeMetrics.Features.SWITCH_CASE.used();
         this.switchedObject = LiteralUtils.defendExpression(exprs[0]);
 
         Class<? extends Event>[] currentEvents = getParser().getCurrentEvents();

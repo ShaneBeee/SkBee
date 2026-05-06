@@ -8,6 +8,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +35,7 @@ public class EffStructureSave extends Effect {
     @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.STRUCTURE_TEMPLATES.used();
         this.structures = (Expression<StructureWrapper>) exprs[0];
         this.save = parseResult.mark == 0;
         return true;

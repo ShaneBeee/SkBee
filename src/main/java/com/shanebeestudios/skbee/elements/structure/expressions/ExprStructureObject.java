@@ -9,6 +9,7 @@ import com.shanebeestudios.skbee.SkBee;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,6 +45,7 @@ public class ExprStructureObject extends SimpleExpression<StructureWrapper> {
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.STRUCTURE_TEMPLATES.used();
         if (matchedPattern == 0) {
             Skript.warning("'structure' alone is deprecated and you should use 'structure template' instead.");
         }

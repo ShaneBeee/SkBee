@@ -7,6 +7,7 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Scoreboard;
 import org.bukkit.scoreboard.Team;
@@ -33,6 +34,7 @@ public class ExprTeamWithId extends SimpleExpression<Team> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        SkBeeMetrics.Features.SCOREBOARD_TEAMS.used();
         this.teamId = (Expression<String>) expressions[0];
         this.scoreboard = (Expression<Scoreboard>) expressions[1];
         return true;

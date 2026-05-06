@@ -18,6 +18,7 @@ import com.shanebeestudios.skbee.api.worldgen.event.ChunkGenEvent;
 import com.shanebeestudios.skbee.api.worldgen.event.HeightGenEvent;
 import com.github.shanebeee.skr.Registration;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.entry.EntryContainer;
@@ -106,6 +107,7 @@ public class StructChunkGen extends Structure {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, EntryContainer entryContainer) {
+        SkBeeMetrics.Features.WORLD_GEN.used();
         this.id = (Literal<String>) args[0];
         if (entryContainer == null) return false;
         this.entryContainer = entryContainer;

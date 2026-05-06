@@ -16,6 +16,7 @@ import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.region.scheduler.task.Task;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -83,6 +84,7 @@ public class SecRunTaskLater extends LoopSection {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.RUN_TASK.used();
         this.async = parseResult.hasTag("async");
         this.timespan = (Expression<Timespan>) exprs[0];
         if (matchedPattern == 1) {

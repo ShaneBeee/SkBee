@@ -11,6 +11,7 @@ import com.github.shanebeee.skr.Registration;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.skript.base.EffectSection;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Weapon;
 import org.bukkit.event.Event;
@@ -53,6 +54,7 @@ public class SecWeaponComponent extends EffectSection {
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
                         SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
         this.items = (Expression<Object>) expressions[0];
         if (sectionNode != null) {
             EntryContainer container = VALIDATOR.validate(sectionNode);

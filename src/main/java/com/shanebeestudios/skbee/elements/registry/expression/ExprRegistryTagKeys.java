@@ -5,6 +5,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.tag.TagKey;
@@ -37,6 +38,7 @@ public class ExprRegistryTagKeys extends SimpleExpression<TagKey> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.REGISTRY.used();
         this.registryKey = (Expression<RegistryKey<Keyed>>) exprs[0];
         return true;
     }

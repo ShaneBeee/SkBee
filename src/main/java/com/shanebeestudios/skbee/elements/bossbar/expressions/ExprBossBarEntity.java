@@ -5,6 +5,7 @@ import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Boss;
@@ -40,7 +41,8 @@ public class ExprBossBarEntity extends SimpleExpression<BossBar> {
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
-        pattern = matchedPattern;
+        SkBeeMetrics.Features.BOSSBARS.used();
+        this.pattern = matchedPattern;
         this.entity = pattern == 0 ? (Expression<Entity>) exprs[0] : null;
         this.players = pattern == 1 ? (Expression<Player>) exprs[0] : null;
         return true;

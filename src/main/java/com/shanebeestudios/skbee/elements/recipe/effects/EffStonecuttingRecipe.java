@@ -10,6 +10,7 @@ import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
@@ -47,6 +48,7 @@ public class EffStonecuttingRecipe extends Effect {
     @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
+        SkBeeMetrics.Features.RECIPE_EFFECTS.used();
         item = (Expression<ItemType>) exprs[0];
         ingredient = (Expression<Object>) exprs[1];
         key = (Expression<String>) exprs[2];

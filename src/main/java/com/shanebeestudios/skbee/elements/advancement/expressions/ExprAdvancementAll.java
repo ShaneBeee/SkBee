@@ -6,6 +6,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.iterator.IteratorIterable;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Bukkit;
 import org.bukkit.advancement.Advancement;
 import org.bukkit.event.Event;
@@ -32,6 +33,7 @@ public class ExprAdvancementAll extends SimpleExpression<Advancement> {
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] expr, int i, Kleenean kleenean, ParseResult parseResult) {
+        SkBeeMetrics.Features.ADVANCEMENTS.used();
         return true;
     }
 

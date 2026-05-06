@@ -11,6 +11,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Repairable;
 import io.papermc.paper.registry.RegistryAccess;
@@ -72,6 +73,7 @@ public class ExprRepairableComponent extends SimpleExpression<Object> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
         this.items = (Expression<Object>) exprs[0];
         this.tag = matchedPattern == 1;
         return true;

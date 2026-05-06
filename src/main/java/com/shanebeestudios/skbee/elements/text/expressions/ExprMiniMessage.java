@@ -7,6 +7,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import net.kyori.adventure.text.minimessage.tag.resolver.TagResolver;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -45,6 +46,7 @@ public class ExprMiniMessage extends SimpleExpression<ComponentWrapper> {
     @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.TEXT_COMPONENTS.used();
         this.string = (Expression<String>) exprs[0];
         this.resolvers = (Expression<TagResolver>) exprs[1];
         return true;

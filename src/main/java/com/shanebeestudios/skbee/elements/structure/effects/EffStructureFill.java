@@ -6,6 +6,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -32,6 +33,7 @@ public class EffStructureFill extends Effect {
     @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.STRUCTURE_TEMPLATES.used();
         structure = (Expression<StructureWrapper>) exprs[0];
         loc1 = (Expression<Location>) exprs[1];
         loc2 = (Expression<Location>) exprs[2];

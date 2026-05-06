@@ -5,6 +5,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
@@ -31,6 +32,7 @@ public class ExprObjGet extends SimpleExpression<Objective> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.SCOREBOARD_OBJECTIVES.used();
         this.id = (Expression<String>) exprs[0];
         this.scoreboard = (Expression<Scoreboard>) exprs[1];
         return true;

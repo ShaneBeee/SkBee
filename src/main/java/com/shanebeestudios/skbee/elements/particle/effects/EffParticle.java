@@ -9,6 +9,7 @@ import com.shanebeestudios.skbee.api.particle.ParticleUtil;
 import com.shanebeestudios.skbee.api.particle.ParticleWrapper;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -63,6 +64,7 @@ public class EffParticle extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
+        SkBeeMetrics.Features.PARTICLES.used();
         count = (Expression<Number>) exprs[0];
         particle = (Expression<ParticleWrapper>) exprs[1];
         data = LiteralUtils.defendExpression(exprs[2]);

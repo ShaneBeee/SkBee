@@ -9,6 +9,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import com.shanebeestudios.skbee.api.worldgen.BeeWorldCreator;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.event.Event;
@@ -58,6 +59,7 @@ public class ExprWorldCreator extends SimpleExpression<BeeWorldCreator> {
     @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
+        SkBeeMetrics.Features.WORLD_CREATOR.used();
         this.pattern = matchedPattern;
         if (this.pattern == 0 || this.pattern == 2) {
             this.name = (Expression<String>) exprs[0];

@@ -13,6 +13,7 @@ import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.worldgen.BeeWorldCreator;
 import com.shanebeestudios.skbee.api.worldgen.ChunkGen;
 import com.shanebeestudios.skbee.api.worldgen.ChunkGenManager;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -100,6 +101,7 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
     @Override
     public boolean init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result,
                         @Nullable SectionNode node, @Nullable List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.WORLD_CREATOR.used();
         EntryContainer validate = VALIDATOR.validate(node);
         if (validate == null) {
             Skript.error("Invalid world creator section. Please check your syntax and try again.");

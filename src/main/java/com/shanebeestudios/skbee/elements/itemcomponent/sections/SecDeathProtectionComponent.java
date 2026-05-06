@@ -10,6 +10,7 @@ import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.DeathProtection;
@@ -89,6 +90,7 @@ public class SecDeathProtectionComponent extends EffectSection {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
         this.items = (Expression<Object>) exprs[0];
         if (sectionNode == null) return true;
         EntryContainer container = VALIDATOR.validate(sectionNode);

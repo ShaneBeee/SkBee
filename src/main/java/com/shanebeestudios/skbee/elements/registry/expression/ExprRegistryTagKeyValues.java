@@ -8,6 +8,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.registry.RegistryHolder;
 import com.shanebeestudios.skbee.api.registry.RegistryHolders;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.tag.TagKey;
 import org.bukkit.event.Event;
@@ -34,6 +35,7 @@ public class ExprRegistryTagKeyValues extends SimpleExpression<Object> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.REGISTRY.used();
         this.tagKey = (Expression<TagKey<?>>) exprs[0];
         if (this.tagKey instanceof Literal<TagKey<?>> literal) {
             this.returnType = RegistryHolders.getRegistryHolder(literal.getSingle().registryKey()).getReturnType();

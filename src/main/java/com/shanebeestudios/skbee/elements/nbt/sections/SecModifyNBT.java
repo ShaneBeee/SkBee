@@ -14,6 +14,7 @@ import com.shanebeestudios.skbee.api.nbt.NBTCustom;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.iface.ReadWriteNBT;
@@ -95,6 +96,7 @@ public class SecModifyNBT extends Section {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
                         SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.NBT.used();
         this.custom = parseResult.hasTag("custom");
         this.object = exprs[0];
         if (sectionNode == null) return false;

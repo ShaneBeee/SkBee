@@ -9,6 +9,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.scoreboard.TeamUtils;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.scoreboard.Scoreboard;
@@ -37,6 +38,7 @@ public class ExprTeam extends SimpleExpression<Team> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.SCOREBOARD_TEAMS.used();
         this.entities = (Expression<Entity>) exprs[0];
         this.scoreboard = (Expression<Scoreboard>) exprs[1];
         return true;

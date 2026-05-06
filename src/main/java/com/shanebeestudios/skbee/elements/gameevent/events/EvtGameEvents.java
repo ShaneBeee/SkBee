@@ -4,6 +4,7 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.GameEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -78,6 +79,7 @@ public class EvtGameEvents extends SkriptEvent {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult) {
+        SkBeeMetrics.Features.GAME_EVENTS.used();
         if (args[0] != null) {
             gameEvents = ((Literal<GameEvent>) args[0]);
         }

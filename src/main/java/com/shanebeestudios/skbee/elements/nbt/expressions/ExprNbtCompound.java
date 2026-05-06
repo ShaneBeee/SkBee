@@ -18,6 +18,7 @@ import com.shanebeestudios.skbee.api.nbt.NBTCustomSlot;
 import com.shanebeestudios.skbee.api.nbt.NBTCustomTileEntity;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import com.shanebeestudios.skbee.elements.nbt.conditions.CondHasNBTTag;
 import de.tr7zw.changeme.nbtapi.NBTChunk;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
@@ -96,6 +97,7 @@ public class ExprNbtCompound extends PropertyExpression<Object, NBTCompound> {
 
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
+        SkBeeMetrics.Features.NBT.used();
         Expression<?> expr = LiteralUtils.defendExpression(exprs[0]);
         setExpr(expr);
         this.isFullItem = parseResult.hasTag("full");

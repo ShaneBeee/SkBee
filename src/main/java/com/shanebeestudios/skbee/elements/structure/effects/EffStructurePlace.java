@@ -7,6 +7,7 @@ import ch.njol.skript.util.Direction;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Location;
 import org.bukkit.event.Event;
 
@@ -33,6 +34,7 @@ public class EffStructurePlace extends Effect {
     @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.STRUCTURE_TEMPLATES.used();
         this.structure = (Expression<StructureWrapper>) exprs[0];
         this.palette = (Expression<Number>) exprs[1];
         this.locations = Direction.combine((Expression<? extends Direction>) exprs[2], (Expression<? extends Location>) exprs[3]);

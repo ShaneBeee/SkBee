@@ -11,6 +11,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.util.LiteralUtils;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import com.shanebeestudios.skbee.elements.switchcase.events.SwitchSecEvent;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -58,6 +59,7 @@ public class SecSwitch extends Section {
     @SuppressWarnings({"unchecked", "DataFlowIssue"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.SWITCH_CASE.used();
         this.switchedObject = LiteralUtils.defendExpression(exprs[0]);
         Class<? extends Event>[] currentEvents = getParser().getCurrentEvents();
         Class<? extends Event>[] events = new Class[currentEvents.length + 1];

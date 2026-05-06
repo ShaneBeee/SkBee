@@ -5,6 +5,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.advancement.AdvancementProgress;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -29,6 +30,7 @@ public class EffAdvancementCriteriaAward extends Effect {
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
+        SkBeeMetrics.Features.ADVANCEMENTS.used();
         this.award = parseResult.mark == 0;
         this.criteria = (Expression<String>) exprs[0];
         this.progress = (Expression<AdvancementProgress>) exprs[1];

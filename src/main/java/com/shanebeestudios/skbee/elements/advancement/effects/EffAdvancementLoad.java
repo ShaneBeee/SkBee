@@ -7,6 +7,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
@@ -45,6 +46,7 @@ public class EffAdvancementLoad extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.ADVANCEMENTS.used();
         this.advancement = (Expression<String>) expressions[0];
         this.key = (Expression<String>) expressions[1];
         return true;

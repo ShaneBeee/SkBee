@@ -13,6 +13,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Equippable;
@@ -95,6 +96,7 @@ public class SecEquippableComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
         this.items = (Expression<Object>) exprs[0];
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;

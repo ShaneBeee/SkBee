@@ -11,6 +11,7 @@ import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.UseEffects;
 import org.bukkit.event.Event;
@@ -64,6 +65,7 @@ public class SecUseEffectsComponent extends Section {
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
         if (sectionNode == null) return false;
         EntryContainer validate = VALIDATOR.validate(sectionNode);
         if (validate == null) {

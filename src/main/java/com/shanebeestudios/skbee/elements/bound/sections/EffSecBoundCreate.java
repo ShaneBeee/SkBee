@@ -16,6 +16,7 @@ import com.shanebeestudios.skbee.api.event.bound.BoundCreateEvent;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprLastCreatedBound;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -69,6 +70,7 @@ public class EffSecBoundCreate extends EffectSection {
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.BOUNDS.used();
         this.boundID = (Expression<String>) exprs[0];
         this.point1 = exprs[1];
         this.point2 = exprs[2];
