@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.elements.structure.effects;
 
 import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
-import ch.njol.skript.lang.SkriptParser;
+import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
@@ -15,12 +15,12 @@ public class EffStructureFill extends Effect {
 
     public static void register(Registration reg) {
         reg.newEffect(EffStructureFill.class,
-                "fill [structure] %structure% (between|within) %location% and %location%")
-            .name("Structure - Fill")
-            .description("Fill a structure with blocks.")
-            .examples("set {_s} to structure with id \"my_structure\"",
-                "fill structure {_s} between {loc1} and {loc2}",
-                "fill structure {_s} between location at player and location(10,10,10, world \"world\")")
+                "fill [structure [template]] %structuretemplate% (between|within) %location% and %location%")
+            .name("Structure - Template Fill")
+            .description("Fill a structure template with blocks from the world.")
+            .examples("set {_s} to structure template with id \"my_structure\"",
+                "fill structure template {_s} between {loc1} and {loc2}",
+                "fill structure template {_s} between location at player and location(10,10,10, world \"world\")")
             .since("1.12.0")
             .register();
     }
@@ -29,16 +29,15 @@ public class EffStructureFill extends Effect {
     private Expression<Location> loc1;
     private Expression<Location> loc2;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
-    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+    public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         structure = (Expression<StructureWrapper>) exprs[0];
         loc1 = (Expression<Location>) exprs[1];
         loc2 = (Expression<Location>) exprs[2];
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     protected void execute(Event event) {
         StructureWrapper structure = this.structure.getSingle(event);
@@ -69,10 +68,9 @@ public class EffStructureFill extends Effect {
         structure.fill(low, offset);
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public String toString(Event e, boolean d) {
-        return String.format("fill structure %s between %s and %s",
+        return String.format("fill structure template %s between %s and %s",
             structure.toString(e, d), loc1.toString(e, d), loc2.toString(e, d));
     }
 

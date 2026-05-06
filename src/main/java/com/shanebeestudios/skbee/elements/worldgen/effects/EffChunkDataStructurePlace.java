@@ -15,7 +15,7 @@ public class EffChunkDataStructurePlace extends Effect {
 
     public static void register(Registration reg) {
         reg.newEffect(EffChunkDataStructurePlace.class,
-                "place chunk[ ]data structure %structure% at %vector%")
+                "place chunk[ ]data structure %structuretemplate% at %vector%")
             .name("ChunkGenerator - Structure Place")
             .description("Place a structure in a block populator.",
                 "Due to the chunk not being finalized yet,",

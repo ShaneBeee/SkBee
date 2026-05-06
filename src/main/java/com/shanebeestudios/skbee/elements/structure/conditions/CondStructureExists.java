@@ -17,19 +17,20 @@ public class CondStructureExists extends Condition {
 
     public static void register(Registration reg) {
         STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
-        reg.newCondition(CondStructureExists.class, "structure %string% exists",
-                "structure %string% (doesn't|does not) exist")
-            .name("Structure - Exists")
-            .description("Check if a structure exists. This can be helpful to prevent overriding structures.")
-            .examples("if structure \"my_structures:house\" exists:",
-                "if structure \"my_structures:town_hall\" doesn't exist:")
+        reg.newCondition(CondStructureExists.class, "structure template %string% exists",
+                "structure template %string% (doesn't|does not) exist")
+            .name("Structure - Template Exists")
+            .description("Check if a structure template exists.",
+                "This can be helpful to prevent overriding structure templates.")
+            .examples("if structure template \"my_structures:house\" exists:",
+                "if structure template \"my_structures:town_hall\" doesn't exist:")
             .since("2.3.0")
             .register();
     }
 
     private Expression<String> structure;
 
-    @SuppressWarnings({"NullableProblems", "unchecked"})
+    @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.structure = (Expression<String>) exprs[0];
@@ -45,7 +46,7 @@ public class CondStructureExists extends Condition {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String reg = isNegated() ? " doesn't exist" : " exists";
-        return "structure " + this.structure.toString(e, d) + reg;
+        return "structure template " + this.structure.toString(e, d) + reg;
     }
 
 }

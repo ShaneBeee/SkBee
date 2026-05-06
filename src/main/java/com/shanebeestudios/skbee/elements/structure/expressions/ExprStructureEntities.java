@@ -14,12 +14,12 @@ public class ExprStructureEntities extends SimpleExpression<Entity> {
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprStructureEntities.class, Entity.class,
-                "structure entities of %structure%")
-            .name("Structure - Entities")
-            .description("Get a list of entities in a structure.",
+                "structure template entities of %structuretemplate%")
+            .name("Structure - Template Entities")
+            .description("Get a list of entities in a structure template.",
                 "This cannot be modified.")
-            .examples("loop structure entities of {_structure}:",
-                "set {_size} to size of structure entities of {_structure}")
+            .examples("loop structure template entities of {_structure}:",
+                "set {_size} to size of structure template entities of {_structure}")
             .since("INSERT VERSION")
             .register();
     }
@@ -52,7 +52,7 @@ public class ExprStructureEntities extends SimpleExpression<Entity> {
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "structure entities of " + this.structure.toString(event, debug);
+        return "structure template entities of " + this.structure.toString(event, debug);
     }
 
 }

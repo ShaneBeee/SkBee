@@ -11,12 +11,12 @@ public class ExprStructureLastPlacedLocation extends SimplePropertyExpression<St
 
     public static void register(Registration reg) {
         reg.newPropertyExpression(ExprStructureLastPlacedLocation.class, Location.class,
-                "last placed location", "structures")
-            .name("Structure - Last Placed Location")
-            .description("Represents the location of the last place a structure was placed using the place structure effect.",
+                "last placed location", "structuretemplates")
+            .name("Structure - Template Last Placed Location")
+            .description("Represents the location of the last place a structure template was placed using the place structure effect.",
                 "**NOTE**: This will only be saved to file if you use the save effect after placing a structure,",
                 "otherwise it will not persist thru stop/restart.")
-            .examples("set {_s} to structure named \"test\"",
+            .examples("set {_s} to structure template named \"test\"",
                 "place structure {_s} above traget block",
                 "save structure {_s}",
                 "set {_last} to last placed location of {_s}")

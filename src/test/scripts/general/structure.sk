@@ -1,12 +1,12 @@
 test "SkBee - Structures":
 	# CondStructureExists
-	assert structure "minecraft:village/plains/houses/plains_small_house_1" exists
+	assert structure template "minecraft:village/plains/houses/plains_small_house_1" exists
 
 	# ExprStructureObject
-	set {_village} to structure with id "minecraft:village/plains/houses/plains_small_house_1"
+	set {_village} to structure template with id "minecraft:village/plains/houses/plains_small_house_1"
 	assert {_village} is set with "The structure should be set"
 	## use a random number because loading this test locally many times won't work
-	set {_blank} to structure with id "test:test_%random integer between 1 and 1000000%"
+	set {_blank} to structure template with id "test:test_%random integer between 1 and 1000000%"
 	assert {_blank} is set with "The structure should be set"
 
 	# ExprStructureblockStates
