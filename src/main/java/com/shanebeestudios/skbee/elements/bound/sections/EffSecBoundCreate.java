@@ -47,7 +47,7 @@ public class EffSecBoundCreate extends EffectSection {
             .examples("# Create bounds using locations",
                 "create bound with id \"le-test\" between {_1} and {_2}:",
                 "\tset bound value \"le-value\" of event-bound to 52",
-                "\tset owner of event-bound to player",
+                "\tset bound owner of event-bound to {_p}",
                 "create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
                 "create a temporary bound with id \"%{_world}%.safezone-%random uuid%\" between {loc1} and {loc2}",
                 "create a full bound with id \"spawn\" between {loc} and location of player",
