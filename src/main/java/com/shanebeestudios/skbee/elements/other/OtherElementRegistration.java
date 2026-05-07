@@ -139,6 +139,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerShoulderEn
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerTime;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPotionTypeItem;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprRegenRate;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprServerPauseTime;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprServerPlatform;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprShootBowConsumable;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprShootBowForce;
@@ -330,6 +331,7 @@ public class OtherElementRegistration {
         ExprPlayerTime.register(registration);
         ExprPotionTypeItem.register(registration);
         ExprRegenRate.register(registration);
+        ExprServerPauseTime.register(registration);
         ExprServerPlatform.register(registration);
         ExprShootBowConsumable.register(registration);
         ExprShootBowForce.register(registration);
