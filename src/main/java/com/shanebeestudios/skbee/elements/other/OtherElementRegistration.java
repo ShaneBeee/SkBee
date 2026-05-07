@@ -12,6 +12,7 @@ import com.shanebeestudios.skbee.elements.other.conditions.CondIsOwnedByRegion;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsPlayerListed;
 import com.shanebeestudios.skbee.elements.other.conditions.CondPlayerIsTransferred;
 import com.shanebeestudios.skbee.elements.other.conditions.CondResourcePackStatusIntermediate;
+import com.shanebeestudios.skbee.elements.other.conditions.CondServerIsPaused;
 import com.shanebeestudios.skbee.elements.other.conditions.CondSpawnerIsActivated;
 import com.shanebeestudios.skbee.elements.other.effects.EffAbortSpawn;
 import com.shanebeestudios.skbee.elements.other.effects.EffAttributeModifierRemoveByKey;
@@ -195,6 +196,7 @@ public class OtherElementRegistration {
         CondIsPlayerListed.register(registration);
         CondPlayerIsTransferred.register(registration);
         CondResourcePackStatusIntermediate.register(registration);
+        CondServerIsPaused.register(registration);
         CondSpawnerIsActivated.register(registration);
 
         // EFFECTS
