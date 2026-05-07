@@ -3,11 +3,11 @@ package com.shanebeestudios.skbee.elements.worldgen.effects;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.worldgen.ChunkGen;
-import com.shanebeestudios.skbee.api.worldgen.ChunkGenManager;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.worldgen.BeeWorldCreator;
+import com.shanebeestudios.skbee.api.worldgen.ChunkGenManager;
+import com.shanebeestudios.skbee.api.worldgen.CustomChunkGenerator;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -51,15 +51,12 @@ public class EffWorldCreatorSetGenerator extends Effect {
             return;
         }
 
-        ChunkGen chunkGen = ChunkGenManager.getByID(id);
-        if (chunkGen == null) {
+        CustomChunkGenerator customChunkGenerator = ChunkGenManager.getByID(id);
+        if (customChunkGenerator == null) {
             error("Invalid generator: " + id);
             return;
         }
-        worldCreator.setChunkGenerator(chunkGen.getChunkGenerator());
-        worldCreator.setBiomeProvider(chunkGen.getBiomeGenerator());
-        // Prevent autoloading world before generator is created
-        worldCreator.setLoadOnStart(false);
+        worldCreator.setChunkGenerator(customChunkGenerator);
     }
 
     @Override

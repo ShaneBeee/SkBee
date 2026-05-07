@@ -11,8 +11,8 @@ import com.github.shanebeee.skr.Registration;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.worldgen.BeeWorldCreator;
-import com.shanebeestudios.skbee.api.worldgen.ChunkGen;
 import com.shanebeestudios.skbee.api.worldgen.ChunkGenManager;
+import com.shanebeestudios.skbee.api.worldgen.CustomChunkGenerator;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
@@ -186,10 +186,9 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
 
         if (this.chunkGenerator != null) {
             String genKey = this.chunkGenerator.getSingle(event);
-            ChunkGen generator = ChunkGenManager.getByID(genKey);
+            CustomChunkGenerator generator = ChunkGenManager.getByID(genKey);
             if (generator != null) {
-                creator.setChunkGenerator(generator.getChunkGenerator());
-                creator.setBiomeProvider(generator.getBiomeGenerator());
+                creator.setChunkGenerator(generator);
             }
         }
 

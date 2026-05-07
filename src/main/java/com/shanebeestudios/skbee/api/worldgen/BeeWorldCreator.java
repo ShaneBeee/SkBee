@@ -77,7 +77,7 @@ public class BeeWorldCreator implements Keyed {
     public String getWorldName() {
         if (this.worldName == null) {
             if (this.world == null) {
-                return getKey().toString();
+                return getKey().toString().replace(":", "_");
             }
             this.worldName = this.world.getName();
         }
@@ -122,6 +122,10 @@ public class BeeWorldCreator implements Keyed {
 
     public void setGenerator(String generator) {
         this.generator = generator;
+    }
+
+    public ChunkGenerator getChunkGenerator() {
+        return this.chunkGenerator;
     }
 
     public void setChunkGenerator(ChunkGenerator chunkGenerator) {
@@ -205,7 +209,7 @@ public class BeeWorldCreator implements Keyed {
 
             if (this.fixedSpawnLocation != null) {
                 if (this.chunkGenerator != null) {
-                    if (this.chunkGenerator instanceof com.shanebeestudios.skbee.api.worldgen.ChunkGenerator customChunkGenerator) {
+                    if (this.chunkGenerator instanceof CustomChunkGenerator customChunkGenerator) {
                         customChunkGenerator.setFixedSpawnLocation(this.fixedSpawnLocation);
                     }
                 } else if (LegacyUtils.IS_RUNNING_MC_26_1_2) {
