@@ -12,6 +12,8 @@ configurations.matching { it.isCanBeResolved }.configureEach {
 
 // Version of SkBee
 val projectVersion = "3.22.1"
+// Server version
+val serverVersion = "26.1.2"
 // Minimum version of Minecraft that SkBee supports
 val apiVersion = "1.21.10"
 // Where this builds on the server
@@ -38,7 +40,7 @@ repositories {
 
 dependencies {
     // Paper
-    compileOnly("io.papermc.paper:paper-api:26.1.2.build.+")
+    compileOnly("io.papermc.paper:paper-api:$serverVersion.build.+")
 
     // Skript
     compileOnly("com.github.SkriptLang:Skript:2.15.0")
@@ -118,9 +120,9 @@ tasks {
         )
         options.links(
             "https://javadoc.io/doc/org.jetbrains/annotations/latest/",
-            "https://jd.papermc.io/paper/1.21.10/",
+            "https://jd.papermc.io/paper/$serverVersion/",
             "https://docs.skriptlang.org/javadocs/",
-            "https://jd.advntr.dev/api/4.25.0/",
+            "https://jd.advntr.dev/api/4.26.1/",
             "https://tr7zw.github.io/Item-NBT-API/v2-api/"
         )
     }
