@@ -16,6 +16,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Wrapper for Bukkit Particles
+ * <p>
+ * This was created due to Skript registering an unusable Particle ClassInfo
+ * </p>
+ */
 public class ParticleWrapper implements Keyed {
 
     private static final Map<String, ParticleWrapper> PARTICLES = new HashMap<>();

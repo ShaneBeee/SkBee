@@ -29,6 +29,9 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * A custom {@link WorldCreator} for managing custom world creation settings.
+ */
 @SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "CallToPrintStackTrace", "UnstableApiUsage"})
 public class BeeWorldCreator implements Keyed {
 

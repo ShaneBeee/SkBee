@@ -6,6 +6,9 @@ import org.jetbrains.annotations.Nullable;
 import java.util.HashMap;
 import java.util.Map;
 
+/**
+ * Manager for custom chunk generators.
+ */
 public class ChunkGenManager {
 
     private static final Map<String, CustomChunkGenerator> GENERATORS = new HashMap<>();

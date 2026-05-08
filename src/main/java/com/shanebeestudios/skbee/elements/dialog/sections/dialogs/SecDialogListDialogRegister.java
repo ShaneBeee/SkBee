@@ -11,7 +11,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.api.event.internal.dialog.DialogRegisterEvent;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.RegistryKey;

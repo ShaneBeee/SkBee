@@ -8,7 +8,7 @@ import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.api.worldgen.event.HeightGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.HeightGenEvent;
 import com.github.shanebeee.skr.Registration;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;

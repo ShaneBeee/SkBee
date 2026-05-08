@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * Represents the NBT of a non tile entity block
+ * Wrapper class for {@link NBTContainer} using a Bukkit {@link Block}
  */
 public class NBTCustomBlock extends NBTContainer implements NBTCustom {
 

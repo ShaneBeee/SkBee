@@ -116,7 +116,8 @@ tasks {
         options.encoding = Charsets.UTF_8.name()
         exclude(
             "com/shanebeestudios/skbee/api/listener", "com/shanebeestudios/skbee/elements",
-            "com/shanebeestudios/skbee/api/command", "com/shanebeestudios/skbee/game"
+            "com/shanebeestudios/skbee/api/command", "com/shanebeestudios/skbee/game",
+            "com/shanebeestudios/skbee/api/event/internal"
         )
         options.links(
             "https://javadoc.io/doc/org.jetbrains/annotations/latest/",

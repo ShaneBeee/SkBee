@@ -14,6 +14,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.File;
 import java.io.IOException;
 
+/**
+ * Wrapper class for {@link NBTFile} using a Bukkit {@link OfflinePlayer}
+ */
 public class NBTCustomOfflinePlayer extends NBTFile implements NBTCustom {
 
     private static final String PLAYER_FOLDER;

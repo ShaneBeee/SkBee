@@ -2,15 +2,14 @@ package com.shanebeestudios.skbee.elements.worldgen.types;
 
 import ch.njol.skript.registrations.Classes;
 import com.github.shanebeee.skr.Registration;
-import com.shanebeestudios.skbee.api.worldgen.event.BiomeGenEvent;
-import com.shanebeestudios.skbee.api.worldgen.event.HeightGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.BiomeGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.HeightGenEvent;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.worldgen.BeeWorldCreator;
 import org.bukkit.Location;
 import org.bukkit.WorldType;
 import org.bukkit.generator.BiomeParameterPoint;
-import org.bukkit.generator.ChunkGenerator;
 import org.skriptlang.skript.common.function.DefaultFunction;
 
 public class Types {

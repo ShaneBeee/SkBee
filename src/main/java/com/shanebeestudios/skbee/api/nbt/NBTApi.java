@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Main NBT api for SkBee
+ * Helper class for NBT operations
  */
 @SuppressWarnings("deprecation")
 public class NBTApi {

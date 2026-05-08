@@ -3,6 +3,7 @@ package com.shanebeestudios.skbee.api.nbt;
 import ch.njol.util.StringUtils;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTType;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -13,6 +14,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
 
+/**
+ * Represents the different types of NBT tags that can be used in NBT.
+ */
 public enum NBTCustomType {
 
     NBTTagEnd("tag end", NBTType.NBTTagEnd),
@@ -53,14 +57,29 @@ public enum NBTCustomType {
         this.typeClass = typeClass;
     }
 
+    /**
+     * Get the name of this custom NBT type.
+     *
+     * @return The name of this custom NBT type.
+     */
     public String getName() {
         return this.name;
     }
 
+    /**
+     * Get the type class associated with this custom type.
+     *
+     * @return The type class associated with this custom type.
+     */
     public Class<?> getTypeClass() {
         return this.typeClass;
     }
 
+    /**
+     * Get the NBTType associated with NBT-API.
+     *
+     * @return The NBTType associated with this custom type.
+     */
     public NBTType getNbtType() {
         return this.nbtType;
     }
@@ -78,6 +97,12 @@ public enum NBTCustomType {
         }
     }
 
+    /**
+     * Get a custom NBT type by its name.
+     *
+     * @param name The name of the custom NBT type.
+     * @return The custom NBT type, or null if not found.
+     */
     @Nullable
     public static NBTCustomType fromName(String name) {
         String s = name.toLowerCase(Locale.ROOT);
@@ -87,9 +112,15 @@ public enum NBTCustomType {
         return null;
     }
 
-    @SuppressWarnings("DataFlowIssue")
-    @Nullable
-    public static NBTCustomType getByTag(NBTCompound compound, String key) {
+    /**
+     * Get a custom NBT type by its NBT tag.
+     *
+     * @param compound The NBT compound to get the type from.
+     * @param key      The key of the NBT tag.
+     * @return The custom NBT type, or null if not found.
+     */
+    @Contract("null, _ -> null")
+    public static @Nullable NBTCustomType getByTag(NBTCompound compound, String key) {
         if (compound == null) return null;
         NBTType nbtType = compound.getType(key);
         if (BY_TYPE.containsKey(nbtType)) {
@@ -101,7 +132,7 @@ public enum NBTCustomType {
                     case NBTTagDouble -> NBTTagDoubleList;
                     case NBTTagString -> NBTTagStringList;
                     case NBTTagCompound -> NBTTagCompoundList;
-                    default -> null;
+                    case null, default -> null;
                 };
             }
             return BY_TYPE.get(nbtType);
@@ -109,6 +140,11 @@ public enum NBTCustomType {
         return null;
     }
 
+    /**
+     * Get all names for doc generation.
+     *
+     * @return All names of custom NBT types.
+     */
     public static String getNames() {
         List<String> names = new ArrayList<>(BY_NAME.keySet());
         Collections.sort(names);

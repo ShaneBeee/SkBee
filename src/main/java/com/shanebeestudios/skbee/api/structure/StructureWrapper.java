@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Random;
 
 /**
- * Wrapper class for {@link Structure} that includes more information used for saving/placing
+ * Wrapper class for {@link Structure Structure Templates} that includes more information used for saving/placing
  */
 @SuppressWarnings({"unused", "CallToPrintStackTrace"})
 public class StructureWrapper implements Keyed {
@@ -36,7 +36,7 @@ public class StructureWrapper implements Keyed {
     private static final String LAST_SAVED_LOCATION_KEY = "lastSavedLocation";
 
     /**
-     * Wrap a structure
+     * Wrap a structure.
      *
      * @param structure Structure to wrap
      * @param key       Key of structure to wrap
@@ -72,17 +72,17 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Fill a structure between 2 locations
+     * Fill a structure between 2 locations.
      *
      * @param location    Starting location
-     * @param blockVector Vector for opposing corner
+     * @param blockVector Vector for the opposing corner
      */
     public void fill(Location location, BlockVector blockVector) {
         structure.fill(location, blockVector, true);
     }
 
     /**
-     * Place the structure at a location
+     * Place the structure at a location.
      *
      * @param location Location to player
      * @param palette  Which palette to place (-1 will be random)
@@ -94,13 +94,22 @@ public class StructureWrapper implements Keyed {
         structure.place(location, includeEntities, rotation, mirror, palette, integrity, new Random());
     }
 
+    /**
+     * Place the structure at a location in a LimitedRegion.
+     * <p>
+     * This is used in chunk generation to place structures.
+     * </p>
+     *
+     * @param region Region to place structure in
+     * @param vector Vector for placement
+     */
     public void place(LimitedRegion region, Vector vector) {
         structure.place(region, new BlockVector(vector),
             this.includeEntities, this.rotation, this.mirror, -1, this.integrity, new Random());
     }
 
     /**
-     * Place the structure at a location
+     * Place the structure at a location.
      * <p>This will place with a random palette, see {@link #place(Location, int)}</p>
      *
      * @param location Location to player
@@ -110,7 +119,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Save structure to file
+     * Save structure to file.
      */
     public void save() {
         try {
@@ -124,7 +133,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Delete structure
+     * Delete structure.
      */
     public void delete() {
         try {
@@ -139,7 +148,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Get a list of available {@link BlockState BlockStates} of this {@link Structure}
+     * Get a list of available {@link BlockState BlockStates} of this {@link Structure}.
      * <br>
      * Will return an empty list of no blocks have been filled
      *
@@ -153,7 +162,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Get the instance of the {@link Structure Bukkit Structure}
+     * Get the instance of the Bukkit {@link Structure Structure Template}.
      *
      * @return Bukkit structure
      */
@@ -162,16 +171,16 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Get the name of this structure
+     * Get the name of this structure.
      *
      * @return Name of structure
      */
     public String getName() {
-        return key.getKey();
+        return this.key.getKey();
     }
 
     /**
-     * Get the {@link NamespacedKey key} of this structure
+     * Get the {@link NamespacedKey key} of this structure.
      *
      * @return Key of this structure
      */
@@ -181,16 +190,16 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Get the rotation of this structure
+     * Get the rotation of this structure.
      *
      * @return Rotation of this structure
      */
     public StructureRotation getRotation() {
-        return rotation;
+        return this.rotation;
     }
 
     /**
-     * Set the rotation of this structure
+     * Set the rotation of this structure.
      *
      * @param rotation Rotation of this structure
      */
@@ -200,7 +209,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Get the mirror of this structure
+     * Get the mirror of this structure.
      *
      * @return Mirror of this structure
      */
@@ -209,7 +218,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Set the mirror of this structure
+     * Set the mirror of this structure.
      * <p>Represents how a Structure can be mirrored upon being loaded.</p>
      *
      * @param mirror mirror of this structure
@@ -220,7 +229,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Get the integrity of this structure
+     * Get the integrity of this structure.
      *
      * @return Integrity of this structure
      * @see #setIntegrity(float) for description of integrity
@@ -230,7 +239,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Set the integrity of this structure
+     * Set the integrity of this structure.
      * <p>
      * Determines how damaged the building should look by randomly skipping blocks to place.
      * This value can range from 0 to 1.
@@ -245,7 +254,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Whether or not this structure is including entities
+     * Whether or not this structure is including entities.
      *
      * @return Whether or not this structure is including entities
      */
@@ -254,7 +263,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Set whether this structure should include entities
+     * Set whether this structure should include entities.
      *
      * @param includeEntities Whether to include entities
      */
@@ -264,7 +273,7 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Get the size of this structure represented as a {@link Vector}
+     * Get the size of this structure represented as a {@link Vector}.
      *
      * @return Size of structure
      */
@@ -285,8 +294,10 @@ public class StructureWrapper implements Keyed {
     }
 
     /**
-     * Reset variables in this structure
+     * Reset variables in this structure.
+     * <p>
      * (including mirror, rotation, integrity and inclusion of entities)
+     * </p>
      */
     public void reset() {
         setMirror(Mirror.NONE);

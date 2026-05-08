@@ -9,6 +9,9 @@ import org.bukkit.block.BlockState;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Wrapper class for {@link NBTTileEntity} using a Bukkit {@link BlockState}
+ */
 @SuppressWarnings("deprecation")
 public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
 

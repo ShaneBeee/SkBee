@@ -11,6 +11,9 @@ import org.bukkit.entity.Entity;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Wrapper class for {@link NBTEntity} using a Bukkit {@link Entity}
+ */
 @SuppressWarnings("deprecation")
 public class NBTCustomEntity extends NBTEntity implements NBTCustom {
 

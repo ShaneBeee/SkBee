@@ -1,10 +1,10 @@
 package com.shanebeestudios.skbee.api.worldgen;
 
 import ch.njol.skript.lang.Trigger;
-import com.shanebeestudios.skbee.api.worldgen.event.BiomeGenEvent;
-import com.shanebeestudios.skbee.api.worldgen.event.BlockPopulateEvent;
-import com.shanebeestudios.skbee.api.worldgen.event.ChunkGenEvent;
-import com.shanebeestudios.skbee.api.worldgen.event.HeightGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.BiomeGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.BlockPopulateEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.ChunkGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.HeightGenEvent;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.HeightMap;
@@ -24,6 +24,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+/**
+ * A custom {@link ChunkGenerator} for which implements triggers for custom generation.
+ */
 public class CustomChunkGenerator extends ChunkGenerator {
 
     // SKRIPT STUFF

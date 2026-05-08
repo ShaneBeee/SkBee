@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.event.dialog;
+package com.shanebeestudios.skbee.api.event.internal.dialog;
 
 import io.papermc.paper.registry.data.dialog.input.SingleOptionDialogInput.OptionEntry;
 import org.bukkit.event.Event;

@@ -7,7 +7,7 @@ import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.event.recipe.ShapelessRecipeCreateEvent;
+import com.shanebeestudios.skbee.api.event.internal.recipe.ShapelessRecipeCreateEvent;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;

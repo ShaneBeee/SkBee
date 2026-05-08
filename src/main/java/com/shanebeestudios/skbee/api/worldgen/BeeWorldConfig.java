@@ -25,6 +25,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A configuration class for saving/loading custom world creation settings.
+ */
 @SuppressWarnings("CallToPrintStackTrace")
 public class BeeWorldConfig {
 

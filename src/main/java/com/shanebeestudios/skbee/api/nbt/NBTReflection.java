@@ -13,6 +13,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+/**
+ * Reflection utilities for NBT
+ */
 @SuppressWarnings({"SequencedCollectionMethodCanBeUsed", "CallToPrintStackTrace", "DataFlowIssue"})
 public class NBTReflection {
 
@@ -88,8 +91,8 @@ public class NBTReflection {
     }
 
     /**
-     * Get the vanilla version of NBT of an item
-     * <br>This will show components which don't normally show in NBT
+     * Get the vanilla version of NBT of an item.
+     * <p>This will show components which don't normally show in NBT.
      *
      * @param itemStack Item to grab NBT from
      * @return Vanilla NBT of item
@@ -114,7 +117,7 @@ public class NBTReflection {
     }
 
     /**
-     * Get a pretty NBT string
+     * Get a pretty NBT string.
      * <p>This is the same as what vanilla Minecraft outputs when using the '/data' command</p>
      *
      * @param compound Compound to convert to pretty
