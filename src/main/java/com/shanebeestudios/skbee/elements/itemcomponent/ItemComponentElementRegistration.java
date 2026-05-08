@@ -25,8 +25,10 @@ import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprTooltipS
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprUseRemainderComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecAdventureComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecAttackRangeComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecBlocksAttacksComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecConsumableComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecCustomModelDataComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecDamageReduction;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecDeathProtectionComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecEquippableComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecFireworkExplosionComponent;
@@ -80,8 +82,10 @@ public class ItemComponentElementRegistration {
         // SECTIONS
         SecAdventureComponent.register(reg);
         SecAttackRangeComponent.register(reg);
+        SecBlocksAttacksComponent.register(reg);
         SecConsumableComponent.register(reg);
         SecCustomModelDataComponent.register(reg);
+        SecDamageReduction.register(reg);
         SecDeathProtectionComponent.register(reg);
         SecEquippableComponent.register(reg);
         SecFireworkExplosionComponent.register(reg);
