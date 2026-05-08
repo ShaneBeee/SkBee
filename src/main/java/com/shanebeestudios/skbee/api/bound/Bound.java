@@ -311,7 +311,7 @@ public class Bound implements ConfigurationSerializable {
     }
 
     /**
-     * Add an owner to this obund
+     * Add an owner to this bound
      *
      * @param owner Owner to add
      */
