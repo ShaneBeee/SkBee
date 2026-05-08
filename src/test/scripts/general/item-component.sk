@@ -389,3 +389,23 @@ test "SkBee - Item Component test" when running minecraft "1.21.11":
 		speed_multiplier: 0.01
 		interact_vibrations: false
 	assert {_i} has item component minecraft:use_effects with "The stick should now have a use effects component"
+
+	#
+	set {_i} to 1 of stick
+	apply blocks attacks to {_i}:
+		block_delay_seconds: 0.25 seconds
+		disable_cooldown_scale: 1.5
+		item_damage_threshold: 1.0
+		item_damage_base: 1.0
+		item_damage_factor: 3.0
+		block_sound: "minecraft:item.shield.block"
+		disabled_sound: "minecraft:item.shield.break"
+		bypassed_by: "minecraft:bypasses_shield"
+		damage_reductions:
+			apply damage reduction:
+				type: mob attack, campfire
+				base: 1.0
+				factor: 2.5
+				horizontal_blocking_angle: 25
+
+	assert {_i} has item component minecraft:blocks_attacks with "The stick should now have a blocks attacks component"
