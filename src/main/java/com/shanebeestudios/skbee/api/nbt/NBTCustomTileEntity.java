@@ -6,9 +6,6 @@ import de.tr7zw.changeme.nbtapi.NBTTileEntity;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.block.BlockState;
-import org.bukkit.block.TileState;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +20,6 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
     public NBTCustomTileEntity(BlockState tile) {
         super(tile);
         this.blockState = tile;
-        convert();
     }
 
     @Override
@@ -120,19 +116,6 @@ public class NBTCustomTileEntity extends NBTTileEntity implements NBTCustom {
             return compound;
         } catch (NbtApiException ignore) {
             return new NBTContainer();
-        }
-    }
-
-    private void convert() {
-        PersistentDataContainer container = ((TileState) blockState).getPersistentDataContainer();
-        if (container.has(OLD_KEY, PersistentDataType.STRING)) {
-            String data = container.get(OLD_KEY, PersistentDataType.STRING);
-            container.remove(OLD_KEY);
-            if (data != null) {
-                blockState.update();
-                NBTCompound custom = getOrCreateCompound("custom");
-                custom.mergeCompound(new NBTContainer(data));
-            }
         }
     }
 

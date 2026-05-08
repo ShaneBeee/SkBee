@@ -1,7 +1,6 @@
 package com.shanebeestudios.skbee.api.nbt;
 
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.util.Util;
 import de.tr7zw.changeme.nbtapi.NBT;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTContainer;
@@ -9,8 +8,6 @@ import de.tr7zw.changeme.nbtapi.NBTEntity;
 import de.tr7zw.changeme.nbtapi.NBTType;
 import de.tr7zw.changeme.nbtapi.NbtApiException;
 import org.bukkit.entity.Entity;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
@@ -25,7 +22,6 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
     public NBTCustomEntity(Entity entity) {
         super(entity);
         this.entity = entity;
-        convert();
     }
 
     @Override
@@ -140,18 +136,6 @@ public class NBTCustomEntity extends NBTEntity implements NBTCustom {
                 ex.printStackTrace();
             }
             return new NBTContainer();
-        }
-    }
-
-    private void convert() {
-        PersistentDataContainer container = entity.getPersistentDataContainer();
-        if (container.has(OLD_KEY, PersistentDataType.STRING)) {
-            String data = container.get(OLD_KEY, PersistentDataType.STRING);
-            NBTCompound custom = getOrCreateCompound("custom");
-            if (data != null) {
-                custom.mergeCompound(new NBTContainer(data));
-            }
-            container.remove(OLD_KEY);
         }
     }
 
