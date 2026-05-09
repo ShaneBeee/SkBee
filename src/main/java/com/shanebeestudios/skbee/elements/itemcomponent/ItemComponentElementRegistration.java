@@ -36,6 +36,8 @@ import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecFireworksCom
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecFoodComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecInstrumentComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecJukeboxPlayableComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecKineticWeaponComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecKineticWeaponCondition;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecPiercingWeapon;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecPotionContentsComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecProfileComponent;
@@ -93,6 +95,8 @@ public class ItemComponentElementRegistration {
         SecFoodComponent.register(reg);
         SecInstrumentComponent.register(reg);
         SecJukeboxPlayableComponent.register(reg);
+        SecKineticWeaponComponent.register(reg);
+        SecKineticWeaponCondition.register(reg);
         SecPiercingWeapon.register(reg);
         SecPotionContentsComponent.register(reg);
         SecProfileComponent.register(reg);

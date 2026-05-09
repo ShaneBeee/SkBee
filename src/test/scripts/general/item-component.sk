@@ -390,7 +390,7 @@ test "SkBee - Item Component test" when running minecraft "1.21.11":
 		interact_vibrations: false
 	assert {_i} has item component minecraft:use_effects with "The stick should now have a use effects component"
 
-	#
+	# Blocks Attacks Component Section
 	set {_i} to 1 of stick
 	apply blocks attacks to {_i}:
 		block_delay_seconds: 0.25 seconds
@@ -409,3 +409,22 @@ test "SkBee - Item Component test" when running minecraft "1.21.11":
 				horizontal_blocking_angle: 25
 
 	assert {_i} has item component minecraft:blocks_attacks with "The stick should now have a blocks attacks component"
+
+	# Kinetic Weapons Section
+	set {_i} to 1 of stick
+
+	apply kinetic weapon component to {_i}:
+		delay_ticks: 13 ticks
+		forward_movement: 0.38
+		damage_multiplier: 0.82
+		sound: "minecraft:item.spear.use"
+		hit_sound: "minecraft:item.spear.hit"
+		damage_conditions:
+			apply kinetic weapon condition:
+				max_duration_ticks: 250 ticks
+				min_relative_speed: 4.6
+		dismount_conditions:
+			apply kinetic weapon condition:
+				max_duration_ticks: 80 ticks
+				min_speed: 12.0
+	assert {_i} has item component minecraft:kinetic_weapon with "The stick should now have a kinetic weapon component"
