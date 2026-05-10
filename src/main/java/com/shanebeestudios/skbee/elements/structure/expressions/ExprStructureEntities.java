@@ -20,7 +20,7 @@ public class ExprStructureEntities extends SimpleExpression<Entity> {
                 "This cannot be modified.")
             .examples("loop structure template entities of {_structure}:",
                 "set {_size} to size of structure template entities of {_structure}")
-            .since("INSERT VERSION")
+            .since("3.23.0")
             .register();
     }
 

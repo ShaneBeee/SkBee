@@ -18,7 +18,7 @@ public class CondServerIsPaused extends Condition {
             .name("Server Is Paused")
             .description("Checks whether the server is sleeping/paused.",
                 "The server is paused when no players have been online longer than `pause-when-empty-seconds` setting.")
-            .since("INSERT VERSION")
+            .since("3.23.0")
             .register();
     }
 

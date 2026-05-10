@@ -42,7 +42,7 @@ public class SecWeaponComponent extends EffectSection {
             .examples("apply weapon component to player's tool:",
                 "\titem_damage: 2",
                 "\tdisable_blocking: 5 seconds")
-            .since("INSERT VERSION")
+            .since("3.23.0")
             .register();
     }
 

@@ -68,7 +68,7 @@ public class SecDamageReduction extends Section {
                 "\t\t\tbase: 1.0",
                 "\t\t\tfactor: 2.5",
                 "\t\t\thorizontal_blocking_angle: 25")
-            .since("INSERT VERSION")
+            .since("3.23.0")
             .register();
     }
 

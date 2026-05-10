@@ -25,7 +25,7 @@ public class ExprServerPauseTime extends SimpleExpression<Timespan> {
             .examples("set {_time} to server pause when empty time",
                 "set server pause when empty time to 1 minute",
                 "delete server pause when empty time")
-            .since("INSERT VERSION")
+            .since("3.23.0")
             .register();
     }
 

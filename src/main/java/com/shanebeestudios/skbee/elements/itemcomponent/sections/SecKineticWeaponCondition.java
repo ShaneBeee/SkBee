@@ -55,7 +55,7 @@ public class SecKineticWeaponCondition extends Section {
                 "\t\tapply kinetic weapon condition:",
                 "\t\t\tmax_duration_ticks: 80 ticks",
                 "\t\t\tmin_speed: 12.0")
-            .since("INSERT VERSION")
+            .since("3.23.0")
             .register();
     }
 
