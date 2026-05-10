@@ -41,7 +41,7 @@ public class BoundBorderListener implements Listener {
 
     private void setupListeners(SkBee plugin, Config config) {
         PluginManager pluginManager = Bukkit.getPluginManager();
-        if (config.BOUND_EVENTS_PLAYER_MOVE) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_player_move) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onBoundBorder(PlayerMoveEvent event) {
                 Player player = event.getPlayer();
@@ -58,7 +58,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_PLAYER_TELEPORT) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_player_teleport) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onPlayerTeleport(PlayerTeleportEvent event) {
                 Player player = event.getPlayer();
@@ -70,7 +70,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_PLAYER_RESPAWN) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_player_respawn) pluginManager.registerEvents(new Listener() {
             @SuppressWarnings("deprecation")
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onRespawn(PlayerRespawnEvent event) {
@@ -86,7 +86,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_PLAYER_BED_ENTER) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_player_bed_enter) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onEnterBed(PlayerBedEnterEvent event) {
                 Player player = event.getPlayer();
@@ -98,7 +98,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_PLAYER_BED_LEAVE) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_player_bed_leave) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onExitBed(PlayerBedLeaveEvent event) {
                 Player player = event.getPlayer();
@@ -114,7 +114,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_ENTITY_MOUNT) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_entity_mount) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onMount(EntityMountEvent event) {
                 if (event.getEntity() instanceof Player player) {
@@ -127,7 +127,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_ENTITY_DISMOUNT) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_entity_dismount) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onDismount(EntityDismountEvent event) {
                 if (event.getEntity() instanceof Player player) {
@@ -144,7 +144,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_VEHICLE_ENTER) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_vehicle_enter) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onVehicleEnter(VehicleEnterEvent event) {
                 if (event.getEntered() instanceof Player player) {
@@ -157,7 +157,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_VEHICLE_EXIT) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_vehicle_exit) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onVehicleExit(VehicleExitEvent event) {
                 Location from = event.getVehicle().getLocation().clone();
@@ -174,7 +174,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_VEHICLE_MOVE) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_vehicle_move) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onVehicleMove(VehicleMoveEvent event) {
                 Vehicle vehicle = event.getVehicle();
@@ -194,7 +194,7 @@ public class BoundBorderListener implements Listener {
             }
         }, plugin);
 
-        if (config.BOUND_EVENTS_VEHICLE_DESTROY) pluginManager.registerEvents(new Listener() {
+        if (config.bound_events_vehicle_destroy) pluginManager.registerEvents(new Listener() {
             @EventHandler(priority = EventPriority.MONITOR, ignoreCancelled = true)
             private void onVehicleDestroy(VehicleDestroyEvent event) {
                 Vehicle vehicle = event.getVehicle();

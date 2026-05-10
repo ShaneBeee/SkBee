@@ -15,6 +15,7 @@ import com.shanebeestudios.skbee.api.region.TaskUtils;
 import com.shanebeestudios.skbee.api.region.scheduler.Scheduler;
 import com.shanebeestudios.skbee.api.region.scheduler.task.Task;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
@@ -59,6 +60,7 @@ public class SecWhileRunnable extends LoopSection {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.WHILE_RUNNABLE.used();
         String group = parseResult.regexes.getFirst().group();
         this.condition = Condition.parse(group, "some error");
         if (this.condition == null) return false;

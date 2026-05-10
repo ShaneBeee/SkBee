@@ -11,6 +11,7 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecFireworksComponent.FireworksExplosionsSectionEvent;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.FireworkEffect;
@@ -85,6 +86,7 @@ public class SecFireworkExplosionComponent extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
         EntryContainer validate = VALIDATOR.validate(sectionNode);
         if (validate == null) {
             return false;

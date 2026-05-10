@@ -1,13 +1,17 @@
 package com.shanebeestudios.skbee.elements.itemcomponent.expressions;
 
 import ch.njol.skript.classes.Changer.ChangeMode;
+import ch.njol.skript.lang.Expression;
+import ch.njol.skript.lang.SkriptParser;
 import ch.njol.skript.util.Color;
 import ch.njol.skript.util.ColorRGB;
+import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.DyedItemColor;
 import org.bukkit.event.Event;
@@ -36,6 +40,12 @@ public class ExprDyedColorComponent extends SimplePropertyExpression<Object, Col
                 "reset dyed color of {_item}")
             .since("3.9.0")
             .register();
+    }
+
+    @Override
+    public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
+        return super.init(expressions, matchedPattern, isDelayed, parseResult);
     }
 
     @Override

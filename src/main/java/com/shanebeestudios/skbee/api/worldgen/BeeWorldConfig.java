@@ -13,6 +13,7 @@ import org.bukkit.WorldType;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.generator.ChunkGenerator;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -24,6 +25,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 
+/**
+ * A configuration class for saving/loading custom world creation settings.
+ */
 @SuppressWarnings("CallToPrintStackTrace")
 public class BeeWorldConfig {
 
@@ -36,7 +40,7 @@ public class BeeWorldConfig {
 
     public BeeWorldConfig(SkBee plugin) {
         this.plugin = plugin;
-        this.autoLoadWorlds = plugin.getPluginConfig().AUTO_LOAD_WORLDS;
+        this.autoLoadWorlds = plugin.getPluginConfig().auto_load_worlds;
         loadConfig();
     }
 
@@ -114,6 +118,12 @@ public class BeeWorldConfig {
             worldCreator.setHardcore(worldConfig.getBoolean(path + "hardcore"));
         }
 
+        if (this.worldConfig.isSet(path + "custom-chunk-generator")) {
+            String genKey = this.worldConfig.getString(path + "custom-chunk-generator.key");
+            boolean hasBiome = this.worldConfig.getBoolean(path + "custom-chunk-generator.has-biome-provider");
+            worldCreator.setChunkGenerator(ChunkGenManager.registerOrGetGenerator(genKey, hasBiome));
+        }
+
         if (this.worldConfig.isSet(path + "load-on-start")) {
             boolean loadOnStart = worldConfig.getBoolean(path + "load-on-start");
             worldCreator.setLoadOnStart(loadOnStart);
@@ -164,6 +174,12 @@ public class BeeWorldConfig {
         worldCreator.genStructures.ifPresent(aBoolean -> this.worldConfig.set(path + "structures", aBoolean));
         worldCreator.hardcore.ifPresent(aBoolean -> this.worldConfig.set(path + "hardcore", aBoolean));
         worldCreator.loadOnStart.ifPresent(aBoolean -> this.worldConfig.set(path + "load-on-start", aBoolean));
+
+        ChunkGenerator chunkGenerator = worldCreator.getChunkGenerator();
+        if (chunkGenerator instanceof CustomChunkGenerator customChunkGenerator) {
+            this.worldConfig.set(path + "custom-chunk-generator.key", customChunkGenerator.getKey());
+            this.worldConfig.set(path + "custom-chunk-generator.has-biome-provider", customChunkGenerator.hasBiomeProvider());
+        }
 
         save();
     }

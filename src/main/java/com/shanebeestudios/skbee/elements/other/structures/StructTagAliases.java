@@ -12,6 +12,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
@@ -76,6 +77,7 @@ public class StructTagAliases extends Structure {
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, @Nullable EntryContainer entryContainer) {
         if (entryContainer == null) return false;
+        SkBeeMetrics.Features.TAG_ALIASES.used();
 
         SectionNode rootNode = entryContainer.getSource();
         rootNode.convertToEntries(0, "=");

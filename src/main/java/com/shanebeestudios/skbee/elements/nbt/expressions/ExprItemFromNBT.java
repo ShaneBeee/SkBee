@@ -6,6 +6,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.PropertyExpression;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import org.bukkit.event.Event;
@@ -33,6 +34,7 @@ public class ExprItemFromNBT extends PropertyExpression<NBTCompound, ItemType> {
     @SuppressWarnings({"null", "unchecked"})
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean i, @NotNull ParseResult parseResult) {
+        SkBeeMetrics.Features.NBT.used();
         setExpr((Expression<? extends NBTCompound>) exprs[0]);
         return true;
     }

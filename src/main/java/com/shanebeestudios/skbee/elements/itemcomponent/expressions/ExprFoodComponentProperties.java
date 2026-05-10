@@ -6,6 +6,7 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.FoodProperties;
 import org.jetbrains.annotations.Nullable;
@@ -30,6 +31,7 @@ public class ExprFoodComponentProperties extends SimplePropertyExpression<Object
 
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
         this.saturation = parseResult.hasTag("saturation");
         return super.init(expressions, matchedPattern, isDelayed, parseResult);
     }

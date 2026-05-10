@@ -7,6 +7,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.event.Event;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,7 @@ public class ExprBoundFromID extends SimpleExpression<Bound> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean kleenean, ParseResult parseResult) {
+        SkBeeMetrics.Features.BOUNDS.used();
         this.ids = (Expression<String>) exprs[0];
         return true;
     }

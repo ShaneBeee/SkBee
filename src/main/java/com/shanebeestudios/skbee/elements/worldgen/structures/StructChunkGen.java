@@ -8,16 +8,15 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.Trigger;
 import ch.njol.skript.lang.util.SimpleEvent;
-import com.shanebeestudios.skbee.api.worldgen.BiomeGenerator;
-import com.shanebeestudios.skbee.api.worldgen.ChunkGen;
-import com.shanebeestudios.skbee.api.worldgen.ChunkGenManager;
-import com.shanebeestudios.skbee.api.worldgen.ChunkGenerator;
-import com.shanebeestudios.skbee.api.worldgen.event.BiomeGenEvent;
-import com.shanebeestudios.skbee.api.worldgen.event.BlockPopulateEvent;
-import com.shanebeestudios.skbee.api.worldgen.event.ChunkGenEvent;
-import com.shanebeestudios.skbee.api.worldgen.event.HeightGenEvent;
 import com.github.shanebeee.skr.Registration;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
+import com.shanebeestudios.skbee.api.worldgen.ChunkGenManager;
+import com.shanebeestudios.skbee.api.worldgen.CustomChunkGenerator;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.BiomeGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.BlockPopulateEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.ChunkGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.HeightGenEvent;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 import org.skriptlang.skript.lang.entry.EntryContainer;
@@ -106,6 +105,7 @@ public class StructChunkGen extends Structure {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?>[] args, int matchedPattern, ParseResult parseResult, EntryContainer entryContainer) {
+        SkBeeMetrics.Features.WORLD_GEN.used();
         this.id = (Literal<String>) args[0];
         if (entryContainer == null) return false;
         this.entryContainer = entryContainer;
@@ -175,33 +175,25 @@ public class StructChunkGen extends Structure {
 
     @Override
     public boolean load() {
-        ChunkGen chunkGen = ChunkGenManager.registerOrGetGenerator(this.id.getSingle(), biomeGenSection != null);
+        CustomChunkGenerator gen = ChunkGenManager.registerOrGetGenerator(this.id.getSingle(), this.biomeGenSection != null);
 
-        ChunkGenerator chunkGenerator = chunkGen.getChunkGenerator();
-        if (chunkGenerator != null) {
-            boolean vanillaDecor = this.vanillaDecor != null && this.vanillaDecor.getOptionalSingle(null).orElse(false);
-            chunkGenerator.setVanillaDecor(vanillaDecor);
-            boolean vanillaCaves = this.vanillaCaves != null && this.vanillaCaves.getOptionalSingle(null).orElse(false);
-            chunkGenerator.setVanillaCaves(vanillaCaves);
-            boolean vanillaStructures = this.vanillaStructures != null && this.vanillaStructures.getOptionalSingle(null).orElse(false);
-            chunkGenerator.setVanillaStructures(vanillaStructures);
-            boolean vanillaMobs = this.vanillaMobs != null && this.vanillaMobs.getOptionalSingle(null).orElse(false);
-            chunkGenerator.setVanillaMobs(vanillaMobs);
+        boolean vanillaDecor = this.vanillaDecor != null && this.vanillaDecor.getOptionalSingle(null).orElse(false);
+        gen.setVanillaDecor(vanillaDecor);
+        boolean vanillaCaves = this.vanillaCaves != null && this.vanillaCaves.getOptionalSingle(null).orElse(false);
+        gen.setVanillaCaves(vanillaCaves);
+        boolean vanillaStructures = this.vanillaStructures != null && this.vanillaStructures.getOptionalSingle(null).orElse(false);
+        gen.setVanillaStructures(vanillaStructures);
+        boolean vanillaMobs = this.vanillaMobs != null && this.vanillaMobs.getOptionalSingle(null).orElse(false);
+        gen.setVanillaMobs(vanillaMobs);
 
-            chunkGenerator.setNoiseGenTrigger(this.noiseGenSection);
-            chunkGenerator.setSurfaceGenTrigger(this.surfaceGenSection);
-            chunkGenerator.setChunkGenTrigger(this.chunkGenSection);
-            chunkGenerator.setCaveGenTrigger(this.caveGenSection);
-            chunkGenerator.setBlockPopTrigger(this.blockPopSection);
-            chunkGenerator.setHeightGenTrigger(this.heightGenSection);
-        }
+        gen.setNoiseGenTrigger(this.noiseGenSection);
+        gen.setSurfaceGenTrigger(this.surfaceGenSection);
+        gen.setChunkGenTrigger(this.chunkGenSection);
+        gen.setCaveGenTrigger(this.caveGenSection);
+        gen.setBlockPopTrigger(this.blockPopSection);
+        gen.setHeightGenTrigger(this.heightGenSection);
+        gen.setBiomeGenTrigger(this.biomeGenSection);
 
-        if (this.biomeGenSection != null) {
-            BiomeGenerator biomeGenerator = chunkGen.getBiomeGenerator();
-            if (biomeGenerator != null) {
-                biomeGenerator.setTrigger(this.biomeGenSection);
-            }
-        }
         return true;
     }
 

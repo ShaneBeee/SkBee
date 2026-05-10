@@ -10,6 +10,7 @@ import com.shanebeestudios.skbee.api.fastboard.FastBoardBase;
 import com.shanebeestudios.skbee.api.fastboard.FastBoardManager;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
@@ -44,6 +45,7 @@ public class ExprFastBoardTitle extends SimpleExpression<Object> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.FASTBOARDS.used();
         this.player = (Expression<Player>) exprs[0];
         if (!parseResult.hasTag("fast")) {
             Skript.warning("'scoreboard/board' is deprecated, please use 'fastboard' instead.");

@@ -6,7 +6,7 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
-import com.shanebeestudios.skbee.api.worldgen.event.BlockPopulateEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import org.bukkit.Location;
 import org.bukkit.TreeType;

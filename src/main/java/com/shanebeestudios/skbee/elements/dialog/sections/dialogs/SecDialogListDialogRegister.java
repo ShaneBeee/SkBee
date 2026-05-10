@@ -11,7 +11,8 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.api.event.internal.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.dialog.Dialog;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.TypedKey;
@@ -113,6 +114,7 @@ public class SecDialogListDialogRegister extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.DIALOGS.used();
         this.audiences = (Expression<Audience>) exprs[0];
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;

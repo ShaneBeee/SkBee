@@ -27,7 +27,7 @@ public class ExprCriteriaCreate extends SimpleExpression<Criteria> {
     public static void register(Registration reg) {
         List<String> patterns = new ArrayList<>();
         patterns.add("criteria with id %string%");
-        if (SkBee.getPlugin().getPluginConfig().ELEMENTS_STATISTIC) {
+        if (SkBee.getPlugin().getPluginConfig().elements_statistic) {
             patterns.add("criteria from [statistic] %statistic% [(using|with) %-itemtype/blockdata/entitydata%]");
         }
 

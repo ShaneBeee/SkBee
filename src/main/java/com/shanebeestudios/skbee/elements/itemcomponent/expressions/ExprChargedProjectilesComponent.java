@@ -10,6 +10,7 @@ import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.ChargedProjectiles;
 import org.bukkit.event.Event;
@@ -46,6 +47,7 @@ public class ExprChargedProjectilesComponent extends SimpleExpression<Object> {
 
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
         this.items = exprs[0];
         return true;
     }

@@ -11,6 +11,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.event.Event;
@@ -75,6 +76,7 @@ public class SecTransmuteRecipe extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.RECIPE_SECTIONS.used();
         EntryContainer container = VALIDATOR.validate(sectionNode);
         if (container == null) return false;
 

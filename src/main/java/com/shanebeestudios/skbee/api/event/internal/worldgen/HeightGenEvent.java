@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.worldgen.event;
+package com.shanebeestudios.skbee.api.event.internal.worldgen;
 
 import org.bukkit.Location;
 

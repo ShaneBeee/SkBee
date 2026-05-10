@@ -33,7 +33,7 @@ public class NBTListener {
         // called in Skript is handled before we touch it
         // This way a user can retrieve the nbt before it's deleted
 
-        if (config.NBT_EVENTS_BREAK_BLOCK) {
+        if (config.nbt_events_break_block) {
             // If a player breaks a block with NBT, remove the NBT
             pluginManager.registerEvents(new Listener() {
                 @EventHandler(priority = EventPriority.MONITOR)
@@ -44,7 +44,7 @@ public class NBTListener {
             }, plugin);
         }
 
-        if (config.NBT_EVENTS_ENTITY_CHANGE_BLOCK) {
+        if (config.nbt_events_entity_change_block) {
             pluginManager.registerEvents(new Listener() {
                 // If an entity breaks a block with NBT, remove the NBT
                 @EventHandler(priority = EventPriority.MONITOR)
@@ -63,7 +63,7 @@ public class NBTListener {
             }, plugin);
         }
 
-        if (config.NBT_EVENTS_BLOCK_EXPLODE) {
+        if (config.nbt_events_block_explode) {
             pluginManager.registerEvents(new Listener() {
                 // If a block explodes, remove NBT from the exploded blocks
                 @EventHandler(priority = EventPriority.MONITOR)
@@ -74,7 +74,7 @@ public class NBTListener {
             }, plugin);
         }
 
-        if (config.NBT_EVENTS_ENTITY_EXPLODE) {
+        if (config.nbt_events_entity_explode) {
             pluginManager.registerEvents(new Listener() {
                 // If an entity explodes, remove NBT from the exploded blocks
                 @EventHandler(priority = EventPriority.MONITOR)
@@ -85,7 +85,7 @@ public class NBTListener {
             }, plugin);
         }
 
-        if (config.NBT_EVENTS_PISTON_EXTEND) {
+        if (config.nbt_events_piston_extend) {
             pluginManager.registerEvents(new Listener() {
                 // If a piston moves a block with NBT, we remove the NBT
                 @EventHandler(priority = EventPriority.MONITOR)

@@ -25,7 +25,7 @@ import java.util.List;
 public class ExprObjectiveScoreCustomName extends SimpleExpression<Object> {
 
     public static void register(Registration reg) {
-        if (!Util.IS_RUNNING_FOLIA && SkBee.getPlugin().getPluginConfig().ELEMENTS_SCOREBOARD && Skript.methodExists(Score.class, "customName")) {
+        if (!Util.IS_RUNNING_FOLIA && SkBee.getPlugin().getPluginConfig().elements_scoreboard && Skript.methodExists(Score.class, "customName")) {
             reg.newCombinedExpression(ExprObjectiveScoreCustomName.class, Object.class,
                     "[:component] custom score name of %entities/strings% for %objective%")
                 .name("Scoreboard - Objective Score Custom Name")

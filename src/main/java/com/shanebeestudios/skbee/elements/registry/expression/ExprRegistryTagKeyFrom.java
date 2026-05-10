@@ -8,6 +8,7 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.registry.RegistryKey;
 import io.papermc.paper.registry.tag.TagKey;
 import net.kyori.adventure.key.Key;
@@ -41,6 +42,7 @@ public class ExprRegistryTagKeyFrom extends SimpleExpression<TagKey> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.REGISTRY.used();
         this.key = (Expression<String>) exprs[matchedPattern];
         this.registryKey = (Expression<RegistryKey<Keyed>>) exprs[matchedPattern ^ 1];
         return true;

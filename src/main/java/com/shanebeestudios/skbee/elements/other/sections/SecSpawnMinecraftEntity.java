@@ -14,6 +14,7 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.EffectSection;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
@@ -73,6 +74,7 @@ public class SecSpawnMinecraftEntity extends EffectSection {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult,
                         @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.MINECRAFT_ENTITY.used();
         this.amount = (Expression<Number>) exprs[0];
         this.entityType = exprs[1];
         this.location = Direction.combine((Expression<? extends Direction>) exprs[2], (Expression<? extends Location>) exprs[3]);

@@ -165,20 +165,20 @@ public class AddonLoader {
         Util.log(" - %s effects", effectCount);
         Util.log(" - %s expressions", expressionCount);
         Util.log(" - %s conditions", conditionCount);
-        if (this.config.ELEMENTS_PROPERTY) {
+        if (this.config.elements_property) {
             Util.log(" - %s properties", propertyCount);
         }
 
-        if (this.config.RUNTIME_DISABLE_ERRORS) {
+        if (this.config.runtime_disable_errors) {
             Util.logLoading("&eRuntime Errors have been disabled via config!");
         }
-        if (this.config.RUNTIME_DISABLE_WARNINGS) {
+        if (this.config.runtime_disable_warnings) {
             Util.logLoading("&eRuntime Warnings have been disabled via config!");
         }
     }
 
     private void loadAdvancementElements() {
-        if (!this.config.ELEMENTS_ADVANCEMENT) {
+        if (!this.config.elements_advancement) {
             Util.logLoading("&5Advancement Elements &cdisabled via config");
             return;
         }
@@ -191,7 +191,7 @@ public class AddonLoader {
     }
 
     private void loadBossBarElements() {
-        if (!this.config.ELEMENTS_BOSS_BAR) {
+        if (!this.config.elements_boss_bar) {
             Util.logLoading("&5BossBar Elements &cdisabled via config");
             return;
         }
@@ -211,7 +211,7 @@ public class AddonLoader {
     }
 
     private void loadBoundElements() {
-        if (!this.config.ELEMENTS_BOUND) {
+        if (!this.config.elements_bound) {
             Util.logLoading("&5Bound Elements &cdisabled via config");
             return;
         }
@@ -225,7 +225,7 @@ public class AddonLoader {
     }
 
     private void loadDamageSourceElements() {
-        if (!this.config.ELEMENTS_DAMAGE_SOURCE) {
+        if (!this.config.elements_damage_source) {
             Util.logLoading("&5Damage Source Elements &cdisabled via config");
             return;
         }
@@ -240,7 +240,7 @@ public class AddonLoader {
     }
 
     private void loadDialogElements() {
-        if (!this.config.ELEMENTS_DIALOG) {
+        if (!this.config.elements_dialog) {
             Util.logLoading("&5Dialog elements &cdisabled via config");
             return;
         }
@@ -249,7 +249,7 @@ public class AddonLoader {
     }
 
     private void loadGameEventElements() {
-        if (!this.config.ELEMENTS_GAME_EVENT) {
+        if (!this.config.elements_game_event) {
             Util.logLoading("&5Game Event Elements &cdisabled via config");
             return;
         }
@@ -263,7 +263,7 @@ public class AddonLoader {
     }
 
     private void loadFastboardElements() {
-        if (!this.config.ELEMENTS_FASTBOARD) {
+        if (!this.config.elements_fastboard) {
             Util.logLoading("&5Fastboard Elements &cdisabled via config");
             return;
         }
@@ -277,7 +277,7 @@ public class AddonLoader {
     }
 
     private void loadFishingElements() {
-        if (!this.config.ELEMENTS_FISHING) {
+        if (!this.config.elements_fishing) {
             Util.logLoading("&5Fishing Elements &cdisabled via config");
             return;
         }
@@ -290,7 +290,7 @@ public class AddonLoader {
     }
 
     private void loadItemComponentElements() {
-        if (!this.config.ELEMENTS_ITEM_COMPONENT) {
+        if (!this.config.elements_item_component) {
             Util.logLoading("&5Item Component Elements &cdisabled via config");
             return;
         }
@@ -303,7 +303,7 @@ public class AddonLoader {
     }
 
     private void loadNBTElements() {
-        if (!this.config.ELEMENTS_NBT) {
+        if (!this.config.elements_nbt) {
             Util.logLoading("&5NBT Elements &cdisabled via config");
             return;
         }
@@ -333,7 +333,7 @@ public class AddonLoader {
     }
 
     private void loadPropertyElements() {
-        if (!this.config.ELEMENTS_PROPERTY) {
+        if (!this.config.elements_property) {
             Util.logLoading("&5Property elements &cdisabled via config");
             return;
         }
@@ -342,7 +342,7 @@ public class AddonLoader {
     }
 
     private void loadRayTraceElements() {
-        if (!this.config.ELEMENTS_RAYTRACE) {
+        if (!this.config.elements_raytrace) {
             Util.logLoading("&5RayTrace Elements &cdisabled via config");
             return;
         }
@@ -355,7 +355,7 @@ public class AddonLoader {
     }
 
     private void loadRecipeElements() {
-        if (!this.config.ELEMENTS_RECIPE) {
+        if (!this.config.elements_recipe) {
             Util.logLoading("&5Recipe Elements &cdisabled via config");
             return;
         }
@@ -377,7 +377,7 @@ public class AddonLoader {
     }
 
     private void loadScoreboardElements() {
-        if (!this.config.ELEMENTS_SCOREBOARD) {
+        if (!this.config.elements_scoreboard) {
             Util.logLoading("&5Scoreboard Elements &cdisabled via config");
             return;
         }
@@ -400,7 +400,7 @@ public class AddonLoader {
     }
 
     private void loadStatisticElements() {
-        if (!this.config.ELEMENTS_STATISTIC) {
+        if (!this.config.elements_statistic) {
             Util.logLoading("&5Statistic Elements &cdisabled via config");
             return;
         }
@@ -419,7 +419,7 @@ public class AddonLoader {
     }
 
     private void loadStructureElements() {
-        if (!this.config.ELEMENTS_STRUCTURE) {
+        if (!this.config.elements_structure) {
             Util.logLoading("&5Structure Elements &cdisabled via config");
             return;
         }
@@ -434,7 +434,7 @@ public class AddonLoader {
     }
 
     private void loadSwitchCaseElements() {
-        if (!this.config.ELEMENTS_SWITCH_CASE) {
+        if (!this.config.elements_switch_case) {
             Util.logLoading("&5SwitchCase Elements &cdisabled via config");
             return;
         }
@@ -472,7 +472,7 @@ public class AddonLoader {
     }
 
     private void loadTickManagerElements() {
-        if (!this.config.ELEMENTS_TICK_MANAGER) {
+        if (!this.config.elements_tick_manager) {
             Util.logLoading("&5Tick Manager Elements &cdisabled via config");
             return;
         }
@@ -485,7 +485,7 @@ public class AddonLoader {
     }
 
     private void loadVillagerElements() {
-        if (!this.config.ELEMENTS_VILLAGER) {
+        if (!this.config.elements_villager) {
             Util.logLoading("&5Villager Elements &cdisabled via config");
             return;
         }
@@ -498,7 +498,7 @@ public class AddonLoader {
     }
 
     private void loadVirtualFurnaceElements() {
-        if (!this.config.ELEMENTS_VIRTUAL_FURNACE) {
+        if (!this.config.elements_virtual_furnace) {
             Util.logLoading("&5Virtual Furnace Elements &cdisabled via config");
             return;
         }
@@ -513,7 +513,7 @@ public class AddonLoader {
     }
 
     private void loadWorldCreatorElements() {
-        if (!this.config.ELEMENTS_WORLD_CREATOR) {
+        if (!this.config.elements_world_creator) {
             Util.logLoading("&5World Creator Elements &cdisabled via config");
             return;
         }

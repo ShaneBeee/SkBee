@@ -7,6 +7,7 @@ import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.EntityUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.FluidCollisionMode;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -53,6 +54,7 @@ public class ExprRayTraceFromEntity extends SimpleExpression<RayTraceResult> {
     @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.RAYTRACE.used();
         this.entities = (Expression<LivingEntity>) exprs[0];
         this.maxDistance = (Expression<Number>) exprs[1];
         this.raySize = (Expression<Number>) exprs[2];

@@ -12,6 +12,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.BossBarUtils;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
@@ -91,6 +92,7 @@ public class ExprBossBarCreateSection extends SectionExpression<BossBar> {
     @Override
     public boolean init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result,
                         @Nullable SectionNode node, @Nullable List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.BOSSBARS.used();
         EntryContainer validate = VALIDATOR.validate(node);
         if (validate == null) {
             return false;

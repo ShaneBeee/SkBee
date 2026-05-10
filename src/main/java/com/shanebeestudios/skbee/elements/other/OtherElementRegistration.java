@@ -12,6 +12,7 @@ import com.shanebeestudios.skbee.elements.other.conditions.CondIsOwnedByRegion;
 import com.shanebeestudios.skbee.elements.other.conditions.CondIsPlayerListed;
 import com.shanebeestudios.skbee.elements.other.conditions.CondPlayerIsTransferred;
 import com.shanebeestudios.skbee.elements.other.conditions.CondResourcePackStatusIntermediate;
+import com.shanebeestudios.skbee.elements.other.conditions.CondServerIsPaused;
 import com.shanebeestudios.skbee.elements.other.conditions.CondSpawnerIsActivated;
 import com.shanebeestudios.skbee.elements.other.effects.EffAbortSpawn;
 import com.shanebeestudios.skbee.elements.other.effects.EffAttributeModifierRemoveByKey;
@@ -19,6 +20,7 @@ import com.shanebeestudios.skbee.elements.other.effects.EffBlockLock;
 import com.shanebeestudios.skbee.elements.other.effects.EffBlockRandomlyTick;
 import com.shanebeestudios.skbee.elements.other.effects.EffBlockstateUpdate;
 import com.shanebeestudios.skbee.elements.other.effects.EffBreakBlocksWithEffects;
+import com.shanebeestudios.skbee.elements.other.effects.EffChunkLoad;
 import com.shanebeestudios.skbee.elements.other.effects.EffChunkRefresh;
 import com.shanebeestudios.skbee.elements.other.effects.EffChunkUnload;
 import com.shanebeestudios.skbee.elements.other.effects.EffDispatchCommand;
@@ -30,7 +32,6 @@ import com.shanebeestudios.skbee.elements.other.effects.EffEquipmentChange;
 import com.shanebeestudios.skbee.elements.other.effects.EffFreezePlayerConnection;
 import com.shanebeestudios.skbee.elements.other.effects.EffGiveOrDrop;
 import com.shanebeestudios.skbee.elements.other.effects.EffHurtAnimation;
-import com.shanebeestudios.skbee.elements.other.effects.EffChunkLoad;
 import com.shanebeestudios.skbee.elements.other.effects.EffOpenContainerAnimation;
 import com.shanebeestudios.skbee.elements.other.effects.EffOpenRealInventory;
 import com.shanebeestudios.skbee.elements.other.effects.EffOpenSign;
@@ -138,6 +139,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerShoulderEn
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPlayerTime;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprPotionTypeItem;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprRegenRate;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprServerPauseTime;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprServerPlatform;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprShootBowConsumable;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprShootBowForce;
@@ -152,7 +154,6 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprSpawnerSpawnCoun
 import com.shanebeestudios.skbee.elements.other.expressions.ExprSpawnerSpawnDelay;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprSpawnerSpawnRange;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprSpellcasterSpell;
-import com.shanebeestudios.skbee.elements.other.expressions.ExprStoredEnchant;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprSuspiciousBlock;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprTabCompletion;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprTabCompletionArgs;
@@ -175,10 +176,10 @@ import com.shanebeestudios.skbee.elements.other.type.BlockTypes;
 import com.shanebeestudios.skbee.elements.other.type.Comps;
 import com.shanebeestudios.skbee.elements.other.type.EntityTypes;
 import com.shanebeestudios.skbee.elements.other.type.EventTypes;
+import com.shanebeestudios.skbee.elements.other.type.Functions;
 import com.shanebeestudios.skbee.elements.other.type.ItemTypes;
 import com.shanebeestudios.skbee.elements.other.type.PlayerTypes;
 import com.shanebeestudios.skbee.elements.other.type.ServerTypes;
-import com.shanebeestudios.skbee.elements.other.type.Functions;
 import com.shanebeestudios.skbee.elements.other.type.WorldTypes;
 
 public class OtherElementRegistration {
@@ -196,6 +197,7 @@ public class OtherElementRegistration {
         CondIsPlayerListed.register(registration);
         CondPlayerIsTransferred.register(registration);
         CondResourcePackStatusIntermediate.register(registration);
+        CondServerIsPaused.register(registration);
         CondSpawnerIsActivated.register(registration);
 
         // EFFECTS
@@ -329,6 +331,7 @@ public class OtherElementRegistration {
         ExprPlayerTime.register(registration);
         ExprPotionTypeItem.register(registration);
         ExprRegenRate.register(registration);
+        ExprServerPauseTime.register(registration);
         ExprServerPlatform.register(registration);
         ExprShootBowConsumable.register(registration);
         ExprShootBowForce.register(registration);
@@ -343,7 +346,6 @@ public class OtherElementRegistration {
         ExprSpawnerSpawnDelay.register(registration);
         ExprSpawnerSpawnRange.register(registration);
         ExprSpellcasterSpell.register(registration);
-        ExprStoredEnchant.register(registration);
         ExprSuspiciousBlock.register(registration);
         ExprTabCompletion.register(registration);
         ExprTabCompletionArgs.register(registration);

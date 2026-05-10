@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.event.dialog;
+package com.shanebeestudios.skbee.api.event.internal.dialog;
 
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import io.papermc.paper.connection.PlayerConfigurationConnection;

@@ -158,6 +158,3 @@ runtime:
   disable-errors: false
   # Disable SkBee's runtime warnings if you find them overbearing
   disable-warnings: false
-
-special:
-  on-the-flip-side: true

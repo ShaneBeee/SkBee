@@ -9,6 +9,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.Enchantable;
 import org.bukkit.event.Event;
@@ -39,6 +40,7 @@ public class ExprEnchantableComponent extends SimplePropertyExpression<Object, N
 
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, SkriptParser.ParseResult parseResult) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
         return super.init(expressions, matchedPattern, isDelayed, parseResult);
     }
 

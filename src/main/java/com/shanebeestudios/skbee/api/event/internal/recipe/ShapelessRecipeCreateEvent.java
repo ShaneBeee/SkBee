@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.event.recipe;
+package com.shanebeestudios.skbee.api.event.internal.recipe;
 
 import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;

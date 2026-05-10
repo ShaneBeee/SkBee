@@ -8,6 +8,7 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.ChatUtil;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
 
@@ -65,6 +66,7 @@ public class ExprTextComponent extends SimpleExpression<ComponentWrapper> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?> @NotNull [] exprs, int matchedPattern, @NotNull Kleenean isDelayed, @NotNull ParseResult parseResult) {
+        SkBeeMetrics.Features.TEXT_COMPONENTS.used();
         if (matchedPattern == 4) {
             this.empty = true;
             return true;

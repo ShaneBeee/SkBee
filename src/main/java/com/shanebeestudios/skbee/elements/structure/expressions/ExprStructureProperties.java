@@ -17,19 +17,19 @@ public class ExprStructureProperties extends PropertyExpression<StructureWrapper
 
     public static void register(Registration reg) {
         reg.newSimpleExpression(ExprStructureProperties.class, Object.class,
-                "structure mirror of %structures%",
-                "structure rotation of %structures%",
-                "structure integrity of %structures%",
-                "structure include entities of %structures%",
-                "structure size of %structures%")
-            .name("Structure - Properties")
-            .description("Represents different properties of a structure, including mirroring, rotation, inclusion of entities and integrity.",
-                "These properties are only used for placing the structure in a world, they are NOT saved to the structure file.",
+                "structure mirror of %structuretemplates%",
+                "structure rotation of %structuretemplates%",
+                "structure integrity of %structuretemplates%",
+                "structure include entities of %structuretemplates%",
+                "structure size of %structuretemplates%")
+            .name("Structure - Template Properties")
+            .description("Represents different properties of a structure template, including mirroring, rotation, inclusion of entities and integrity.",
+                "These properties are only used for placing the structure template in a world, they are NOT saved to the structure file.",
                 "Mirror determines which way the structure mirrors, either 'none', 'front back' or 'left right'.",
                 "Rotation determines which way the structure is rotated, either 'none', 'clockwise 90', 'clockwise 180' or 'counterclockwise 90'.",
                 "Integrity determines how damaged the building should look by randomly skipping blocks to place. This value can range from 0 to 1.",
                 "With 0 removing all blocks and 1 spawning the structure in pristine condition.",
-                "Include entities determines if saved entities should be spawned into the structure (true by default).",
+                "Include entities determines if saved entities should be spawned into the structure template (true by default).",
                 "Size returns a vector offset from the starting point of the structure. This cannot be changed.",
                 "\nNOTE: `reset` will reset the value back to default. (added in v-2.7.2)")
             .examples("set structure rotation of {_s} to clockwise 90",
@@ -130,7 +130,7 @@ public class ExprStructureProperties extends PropertyExpression<StructureWrapper
             case 4 -> "size";
             default -> "";
         };
-        return String.format("%s property of structure %s", property, this.structures.toString(e, d));
+        return String.format("%s property of structure template %s", property, this.structures.toString(e, d));
     }
 
 }

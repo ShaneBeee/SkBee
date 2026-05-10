@@ -9,7 +9,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Manager class for structures
+ * Manager class for {@link Structure Structure Templates}
  */
 public class StructureManager {
 

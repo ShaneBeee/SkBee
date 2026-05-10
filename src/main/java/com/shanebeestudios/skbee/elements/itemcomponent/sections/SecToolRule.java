@@ -12,6 +12,7 @@ import ch.njol.util.coll.CollectionUtils;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.registry.RegistryUtils;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecToolComponent.ToolComponentApplyRulesEvent;
 import io.papermc.paper.datacomponent.item.Tool;
 import io.papermc.paper.registry.RegistryKey;
@@ -85,6 +86,7 @@ public class SecToolRule extends Section {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.ITEM_COMPONENTS.used();
         if (!getParser().isCurrentEvent(ToolComponentApplyRulesEvent.class)) {
             Skript.error("Tool rules can only be applied in a 'rules' section of a tool component section.");
             return false;

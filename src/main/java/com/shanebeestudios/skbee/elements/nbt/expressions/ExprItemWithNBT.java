@@ -8,6 +8,7 @@ import ch.njol.util.Kleenean;
 import com.shanebeestudios.skbee.api.nbt.NBTApi;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import org.bukkit.Material;
 import org.bukkit.event.Event;
@@ -43,6 +44,7 @@ public class ExprItemWithNBT extends SimpleExpression<ItemType> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.NBT.used();
         this.item = (Expression<ItemType>) exprs[0];
         this.nbt = (Expression<NBTCompound>) exprs[1];
         this.custom = parseResult.hasTag("custom");

@@ -8,6 +8,7 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.BossBarUtils;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Bukkit;
 import org.bukkit.NamespacedKey;
 import org.bukkit.boss.BarColor;
@@ -46,6 +47,7 @@ public class ExprBossBarCreate extends SimpleExpression<BossBar> {
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.BOSSBARS.used();
         this.key = (Expression<String>) exprs[0];
         this.title = (Expression<String>) exprs[1];
         this.color = (Expression<SkriptColor>) exprs[2];

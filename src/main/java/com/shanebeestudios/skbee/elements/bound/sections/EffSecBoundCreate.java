@@ -16,6 +16,7 @@ import com.shanebeestudios.skbee.api.event.bound.BoundCreateEvent;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import com.shanebeestudios.skbee.elements.bound.expressions.ExprLastCreatedBound;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -47,7 +48,7 @@ public class EffSecBoundCreate extends EffectSection {
             .examples("# Create bounds using locations",
                 "create bound with id \"le-test\" between {_1} and {_2}:",
                 "\tset bound value \"le-value\" of event-bound to 52",
-                "\tset owner of event-bound to player",
+                "\tset bound owner of event-bound to {_p}",
                 "create a new bound with id \"%uuid of player%.home\" between {loc1} and {loc2}",
                 "create a temporary bound with id \"%{_world}%.safezone-%random uuid%\" between {loc1} and {loc2}",
                 "create a full bound with id \"spawn\" between {loc} and location of player",
@@ -69,6 +70,7 @@ public class EffSecBoundCreate extends EffectSection {
     @SuppressWarnings({"NullableProblems", "unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, @Nullable SectionNode sectionNode, @Nullable List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.BOUNDS.used();
         this.boundID = (Expression<String>) exprs[0];
         this.point1 = exprs[1];
         this.point2 = exprs[2];

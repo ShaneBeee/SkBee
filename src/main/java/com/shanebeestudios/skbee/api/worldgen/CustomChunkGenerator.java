@@ -1,13 +1,20 @@
 package com.shanebeestudios.skbee.api.worldgen;
 
 import ch.njol.skript.lang.Trigger;
-import com.shanebeestudios.skbee.api.worldgen.event.BlockPopulateEvent;
-import com.shanebeestudios.skbee.api.worldgen.event.ChunkGenEvent;
-import com.shanebeestudios.skbee.api.worldgen.event.HeightGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.BiomeGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.BlockPopulateEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.ChunkGenEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.HeightGenEvent;
+import io.papermc.paper.registry.RegistryAccess;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.HeightMap;
 import org.bukkit.Location;
 import org.bukkit.World;
+import org.bukkit.block.Biome;
+import org.bukkit.generator.BiomeParameterPoint;
+import org.bukkit.generator.BiomeProvider;
 import org.bukkit.generator.BlockPopulator;
+import org.bukkit.generator.ChunkGenerator;
 import org.bukkit.generator.LimitedRegion;
 import org.bukkit.generator.WorldInfo;
 import org.jetbrains.annotations.NotNull;
@@ -17,7 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
+/**
+ * A custom {@link ChunkGenerator} for which implements triggers for custom generation.
+ */
+public class CustomChunkGenerator extends ChunkGenerator {
 
     // SKRIPT STUFF
     private Trigger noiseGenTrigger;
@@ -26,6 +36,7 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
     private Trigger caveGenTrigger;
     private Trigger heightGenTrigger;
     private Trigger blockPopTrigger;
+    private Trigger biomeGenTrigger;
 
     public void setNoiseGenTrigger(Trigger noiseGenTrigger) {
         this.noiseGenTrigger = noiseGenTrigger;
@@ -51,12 +62,32 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
         this.blockPopTrigger = blockPopTrigger;
     }
 
+    public void setBiomeGenTrigger(Trigger biomeGenTrigger) {
+        this.biomeGenTrigger = biomeGenTrigger;
+        this.hasBiomeProvider = true;
+    }
+
     // OTHER STUFF
+    private final String key;
+    private boolean hasBiomeProvider;
     private boolean vanillaDecor = false;
     private boolean vanillaCaves = false;
     private boolean vanillaStructures = false;
     private boolean vanillaMobs = false;
     private Location fixedSpawnLocation = null;
+
+    public CustomChunkGenerator(String key, boolean hasBiomeProvider) {
+        this.key = key;
+        this.hasBiomeProvider = hasBiomeProvider;
+    }
+
+    public String getKey() {
+        return this.key;
+    }
+
+    public boolean hasBiomeProvider() {
+        return this.hasBiomeProvider;
+    }
 
     public void setVanillaDecor(boolean vanillaDecor) {
         this.vanillaDecor = vanillaDecor;
@@ -162,13 +193,48 @@ public class ChunkGenerator extends org.bukkit.generator.ChunkGenerator {
         populators.add(new BlockPopulator() {
             @Override
             public void populate(@NotNull WorldInfo worldInfo, @NotNull Random random, int chunkX, int chunkZ, @NotNull LimitedRegion limitedRegion) {
-                if (ChunkGenerator.this.blockPopTrigger != null) {
+                if (CustomChunkGenerator.this.blockPopTrigger != null) {
                     BlockPopulateEvent populateEvent = new BlockPopulateEvent(limitedRegion, chunkX, chunkZ, random);
-                    ChunkGenerator.this.blockPopTrigger.execute(populateEvent);
+                    CustomChunkGenerator.this.blockPopTrigger.execute(populateEvent);
                 }
             }
         });
         return populators;
+    }
+
+    @Override
+    public @Nullable BiomeProvider getDefaultBiomeProvider(@NotNull WorldInfo worldInfo) {
+        if (!this.hasBiomeProvider) {
+            // Will default to vanilla biome provider
+            return null;
+        }
+
+        return new BiomeProvider() {
+            @SuppressWarnings("DataFlowIssue")
+            @Override
+            public @NotNull Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z) {
+                // Never actually called
+                return null;
+            }
+
+            @Override
+            public @NotNull Biome getBiome(@NotNull WorldInfo worldInfo, int x, int y, int z, @NotNull BiomeParameterPoint param) {
+                if (CustomChunkGenerator.this.biomeGenTrigger == null) {
+                    // If the trigger is not set yet, default to plains
+                    return Biome.PLAINS;
+                }
+
+                Location location = new Location((World) worldInfo, x, y, z);
+                BiomeGenEvent biomeGenEvent = new BiomeGenEvent(location, param);
+                CustomChunkGenerator.this.biomeGenTrigger.execute(biomeGenEvent);
+                return biomeGenEvent.getBiome();
+            }
+
+            @Override
+            public @NotNull List<Biome> getBiomes(@NotNull WorldInfo worldInfo) {
+                return RegistryAccess.registryAccess().getRegistry(RegistryKey.BIOME).stream().toList();
+            }
+        };
     }
 
 }

@@ -1,4 +1,4 @@
-package com.shanebeestudios.skbee.api.event.dialog;
+package com.shanebeestudios.skbee.api.event.internal.dialog;
 
 import io.papermc.paper.registry.data.dialog.ActionButton;
 import io.papermc.paper.registry.data.dialog.body.DialogBody;

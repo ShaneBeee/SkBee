@@ -26,7 +26,7 @@ import java.util.UUID;
 
 public class ExprTagOfNBT extends SimpleExpression<Object> {
 
-    private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().NBT_ALLOW_UNSAFE_OPERATIONS;
+    private static final boolean ALLOW_UNSAFE_OPERATIONS = SkBee.getPlugin().getPluginConfig().nbt_allow_unsafe_operations;
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprTagOfNBT.class, Object.class,
@@ -35,17 +35,20 @@ public class ExprTagOfNBT extends SimpleExpression<Object> {
             .description(
                 "Get/set/delete the value of the specified tag of an NBT compound. Also supports getting nested tags using a semi colon as a delimiter.",
                 "If the return value is a list, you can use it as a list, as it will automatically split it for ya.",
-                "**NOTES**:",
+                "**Notes**:",
                 "- `uuid tag` will set an int array tag (This is how MC stores uuids). On return it'll convert back to a uuid.",
-                "- Entities/blocks can not natively hold custom NBT tags. SkBee allows you to put custom nbt",
-                "data in the \"custom\" compound tag of a block/entity's NBT compound. Due to Minecraft not supporting this, I had to use some hacky methods to make this happen.",
-                "That said, this system is a tad convoluted, see the SkBee WIKI for more details.",
-                "- 1.20.5+: All custom data on items must be stored in the \"minecraft:custom_data\" compound (see examples and [**McWiki**](https://minecraft.wiki/w/Data_component_format#custom_data)).",
-                "- For more info regarding 1.20.5+ components please see [**Data Component Format**](https://minecraft.wiki/w/Data_component_format) on McWiki.",
+                "- `boolean tag` will store as a byte but will convert to/from a boolean.",
                 "- GET FROM LIST BY POSITION: You can get the element of a list by adding `[%number%]` to the end of a tag",
                 "(This only works for getters, not set/add/remove/delete) see examples.",
                 "",
-                "**CHANGERS**:",
+                "**Custom Tags**:",
+                "Not all objects in Minecraft support custom NBT data, here are some examples of where custom data can be stored.",
+                "Optionally you can use `custom nbt of %object%` and let SkBee handle custom data storage.",
+                " - Entity: Custom data can be stored in the \"data\" compound tag of an entity's NBT compound.",
+                " - Block Entity (such as furnace/cheset): Custom data can be stored in the \"components\" tag within the \"minecraft:custom_data\" tag.",
+                " - Item: Custom data can be stored in the \"minecraft:custom_data\" tag.",
+                "",
+                "**Changers**:",
                 "- ADD: You can add numbers to number type tags, you can also add numbers/strings/compounds to lists type tags.",
                 "- REMOVE: You can remove numbers from number type tags, you can also remove numbers/strings from lists type tags.(You can NOT remove compounds from lists type tags)"
             )

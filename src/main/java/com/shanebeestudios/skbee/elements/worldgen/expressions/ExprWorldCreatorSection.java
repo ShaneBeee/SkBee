@@ -11,9 +11,9 @@ import com.github.shanebeee.skr.Registration;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.worldgen.BeeWorldCreator;
-import com.shanebeestudios.skbee.api.worldgen.ChunkGen;
 import com.shanebeestudios.skbee.api.worldgen.ChunkGenManager;
-import com.shanebeestudios.skbee.api.worldgen.ChunkGenerator;
+import com.shanebeestudios.skbee.api.worldgen.CustomChunkGenerator;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.World;
@@ -41,7 +41,7 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
             .addOptionalEntry("hardcore", Boolean.class)
             .addOptionalEntry("load_on_start", Boolean.class)
             .addOptionalEntry("spawn_location", Location.class)
-            .addOptionalEntry("chunk_generator", ChunkGenerator.class)
+            .addOptionalEntry("chunk_generator", String.class)
             .addOptionalEntry("copy_world", World.class)
             .addOptionalEntry("clone_world", World.class)
             .build();
@@ -101,6 +101,7 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
     @Override
     public boolean init(Expression<?>[] expressions, int pattern, Kleenean delayed, ParseResult result,
                         @Nullable SectionNode node, @Nullable List<TriggerItem> triggerItems) {
+        SkBeeMetrics.Features.WORLD_CREATOR.used();
         EntryContainer validate = VALIDATOR.validate(node);
         if (validate == null) {
             Skript.error("Invalid world creator section. Please check your syntax and try again.");
@@ -185,10 +186,9 @@ public class ExprWorldCreatorSection extends SectionExpression<BeeWorldCreator> 
 
         if (this.chunkGenerator != null) {
             String genKey = this.chunkGenerator.getSingle(event);
-            ChunkGen generator = ChunkGenManager.getByID(genKey);
+            CustomChunkGenerator generator = ChunkGenManager.getByID(genKey);
             if (generator != null) {
-                creator.setChunkGenerator(generator.getChunkGenerator());
-                creator.setBiomeProvider(generator.getBiomeGenerator());
+                creator.setChunkGenerator(generator);
             }
         }
 

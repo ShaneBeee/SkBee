@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Main NBT api for SkBee
+ * Helper class for NBT operations
  */
 @SuppressWarnings("deprecation")
 public class NBTApi {
@@ -50,7 +50,7 @@ public class NBTApi {
         Util.log("&aLoading NBTApi...");
         MinecraftVersion version = MinecraftVersion.getVersion();
         if (version == MinecraftVersion.UNKNOWN) {
-            if (config.NBT_ALLOW_FORCE_LOAD_UNKNOWN_VERSION) {
+            if (config.nbt_allow_force_load_unknown_version) {
                 Util.log("&eAttempting to force load NBT-API with an unknown Minecraft version.");
                 try {
                     // Failsafe to make sure API is properly loaded each time

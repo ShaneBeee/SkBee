@@ -4,7 +4,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
-import com.shanebeestudios.skbee.api.worldgen.event.BlockPopulateEvent;
+import com.shanebeestudios.skbee.api.event.internal.worldgen.BlockPopulateEvent;
 import com.shanebeestudios.skbee.api.skript.base.Effect;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.event.Event;
@@ -15,7 +15,7 @@ public class EffChunkDataStructurePlace extends Effect {
 
     public static void register(Registration reg) {
         reg.newEffect(EffChunkDataStructurePlace.class,
-                "place chunk[ ]data structure %structure% at %vector%")
+                "place chunk[ ]data structure %structuretemplate% at %vector%")
             .name("ChunkGenerator - Structure Place")
             .description("Place a structure in a block populator.",
                 "Due to the chunk not being finalized yet,",

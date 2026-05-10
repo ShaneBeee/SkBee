@@ -29,7 +29,10 @@ import java.util.Optional;
 import java.util.Random;
 import java.util.concurrent.CompletableFuture;
 
-@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "CallToPrintStackTrace"})
+/**
+ * A custom {@link WorldCreator} for managing custom world creation settings.
+ */
+@SuppressWarnings({"OptionalUsedAsFieldOrParameterType", "CallToPrintStackTrace", "UnstableApiUsage"})
 public class BeeWorldCreator implements Keyed {
 
     private String worldName;
@@ -77,7 +80,7 @@ public class BeeWorldCreator implements Keyed {
     public String getWorldName() {
         if (this.worldName == null) {
             if (this.world == null) {
-                return getKey().toString();
+                return getKey().toString().replace(":", "_");
             }
             this.worldName = this.world.getName();
         }
@@ -122,6 +125,10 @@ public class BeeWorldCreator implements Keyed {
 
     public void setGenerator(String generator) {
         this.generator = generator;
+    }
+
+    public ChunkGenerator getChunkGenerator() {
+        return this.chunkGenerator;
     }
 
     public void setChunkGenerator(ChunkGenerator chunkGenerator) {
@@ -205,7 +212,7 @@ public class BeeWorldCreator implements Keyed {
 
             if (this.fixedSpawnLocation != null) {
                 if (this.chunkGenerator != null) {
-                    if (this.chunkGenerator instanceof com.shanebeestudios.skbee.api.worldgen.ChunkGenerator customChunkGenerator) {
+                    if (this.chunkGenerator instanceof CustomChunkGenerator customChunkGenerator) {
                         customChunkGenerator.setFixedSpawnLocation(this.fixedSpawnLocation);
                     }
                 } else if (LegacyUtils.IS_RUNNING_MC_26_1_2) {
@@ -275,6 +282,7 @@ public class BeeWorldCreator implements Keyed {
         return worldCreatorCompletableFuture;
     }
 
+    @SuppressWarnings("ResultOfMethodCallIgnored")
     private CompletableFuture<WorldCreator> cloneWorld() {
         File worldContainer = Bukkit.getWorldContainer();
         File worldDirectorToClone = this.world.getWorldFolder();
@@ -286,16 +294,36 @@ public class BeeWorldCreator implements Keyed {
         // Let's clone files on another thread
         CompletableFuture<WorldCreator> worldCompletableFuture = new CompletableFuture<>();
         TaskUtils.getGlobalScheduler().runTaskAsync(() -> {
-            File cloneDirectory = new File(worldContainer, cloneName);
-            if (worldDirectorToClone.exists()) {
+            if (LegacyUtils.IS_RUNNING_MC_26_1_1) {
+                File worldDirectory = Bukkit.getServer().getLevelDirectory().toFile();
+                File dimensions = new File(worldDirectory, "dimensions");
+                NamespacedKey keyToClone = this.world.getKey();
+                File namespaceToClone = new File(dimensions, keyToClone.namespace());
+                if (!namespaceToClone.exists() || !namespaceToClone.isDirectory()) return;
+
+                File dimensionToClone = new File(namespaceToClone, keyToClone.getKey());
+                if (!dimensionToClone.exists() || !dimensionToClone.isDirectory()) return;
+
+                File destinationNamespace = new File(dimensions, getKey().namespace());
+                if (!destinationNamespace.exists()) {
+                    destinationNamespace.mkdirs();
+                }
+                File destinationDimension = new File(destinationNamespace, getKey().getKey());
+                if (!destinationDimension.exists()) {
+                    destinationDimension.mkdirs();
+                }
                 try {
-                    for (File file : Objects.requireNonNull(worldDirectorToClone.listFiles())) {
+                    for (File file : Objects.requireNonNull(dimensionToClone.listFiles())) {
                         String fileName = file.getName();
                         if (file.isDirectory()) {
-                            FileUtils.copyDirectory(file, new File(cloneDirectory, fileName));
+                            FileUtils.copyDirectory(file, new File(destinationDimension, fileName));
                         } else if (!fileName.contains("session") && !fileName.contains("uid.dat")) {
-                            FileUtils.copyFile(file, new File(cloneDirectory, fileName));
+                            FileUtils.copyFile(file, new File(destinationDimension, fileName));
                         }
+                    }
+                    File meta = new File(destinationDimension, "/data/paper/metadata.dat");
+                    if (meta.exists()) {
+                        meta.delete();
                     }
                     WorldCreator creator = getWorldCreator(cloneName, this.key);
                     TaskUtils.getGlobalScheduler().runTaskLater(() -> {
@@ -304,6 +332,28 @@ public class BeeWorldCreator implements Keyed {
                     }, 0);
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+
+            } else {
+                File cloneDirectory = new File(worldContainer, cloneName);
+                if (worldDirectorToClone.exists()) {
+                    try {
+                        for (File file : Objects.requireNonNull(worldDirectorToClone.listFiles())) {
+                            String fileName = file.getName();
+                            if (file.isDirectory()) {
+                                FileUtils.copyDirectory(file, new File(cloneDirectory, fileName));
+                            } else if (!fileName.contains("session") && !fileName.contains("uid.dat")) {
+                                FileUtils.copyFile(file, new File(cloneDirectory, fileName));
+                            }
+                        }
+                        WorldCreator creator = getWorldCreator(cloneName, this.key);
+                        TaskUtils.getGlobalScheduler().runTaskLater(() -> {
+                            // Let's head back to the main thread
+                            worldCompletableFuture.complete(creator);
+                        }, 0);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         });

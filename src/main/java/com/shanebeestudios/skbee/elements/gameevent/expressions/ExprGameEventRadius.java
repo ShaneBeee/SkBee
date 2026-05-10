@@ -10,6 +10,7 @@ import ch.njol.skript.log.ErrorQuality;
 import ch.njol.util.Kleenean;
 import ch.njol.util.coll.CollectionUtils;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.event.Event;
 import org.bukkit.event.world.GenericGameEvent;
 import org.jetbrains.annotations.NotNull;
@@ -32,6 +33,7 @@ public class ExprGameEventRadius extends SimpleExpression<Number> {
     @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.GAME_EVENTS.used();
         if (!ParserInstance.get().isCurrentEvent(GenericGameEvent.class)) {
             Skript.error("'" + parseResult.expr + "' can only be used in a generic game event", ErrorQuality.SEMANTIC_ERROR);
             return false;

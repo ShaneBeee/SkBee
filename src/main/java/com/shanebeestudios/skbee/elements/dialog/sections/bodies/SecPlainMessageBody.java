@@ -9,10 +9,10 @@ import ch.njol.skript.lang.util.SimpleLiteral;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.event.internal.dialog.DialogRegisterEvent;
+import com.shanebeestudios.skbee.api.event.internal.dialog.PlainMessageEvent;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
-import com.shanebeestudios.skbee.api.event.dialog.DialogRegisterEvent;
-import com.shanebeestudios.skbee.api.event.dialog.PlainMessageEvent;
 import io.papermc.paper.registry.data.dialog.body.DialogBody;
 import io.papermc.paper.registry.data.dialog.body.PlainMessageDialogBody;
 import net.kyori.adventure.text.Component;
@@ -33,7 +33,7 @@ public class SecPlainMessageBody extends Section {
     static {
         EntryValidatorBuilder builder = EntryValidator.builder();
         @SuppressWarnings("unchecked")
-        Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class};
+        Class<Object>[] compClasses = new Class[]{String.class, ComponentWrapper.class, Component.class};
         builder.addEntryData(new ExpressionEntryData<>("contents", null, false, compClasses));
         builder.addEntryData(new ExpressionEntryData<>("width", new SimpleLiteral<>(200, true), true, Integer.class));
         VALIDATOR = builder.build();
@@ -79,13 +79,14 @@ public class SecPlainMessageBody extends Section {
 
         Component contents;
         Object contentsSingle = this.contents.getSingle(event);
-        if (contentsSingle instanceof ComponentWrapper cw) {
-            contents = cw.getComponent();
-        } else if (contentsSingle instanceof String string) {
-            contents = ComponentWrapper.fromText(string).getComponent();
-        } else {
-            error("Unknown contents object: " + Classes.toString(contentsSingle));
-            return next;
+        switch (contentsSingle) {
+            case Component comp -> contents = comp;
+            case ComponentWrapper cw -> contents = cw.getComponent();
+            case String string -> contents = ComponentWrapper.fromText(string).getComponent();
+            case null, default -> {
+                error("Unknown contents object: " + Classes.toString(contentsSingle));
+                return next;
+            }
         }
         int width = this.width.getSingle(event);
 

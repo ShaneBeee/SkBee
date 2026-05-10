@@ -8,6 +8,7 @@ import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.registry.RegistryHolder;
 import com.shanebeestudios.skbee.api.registry.RegistryHolders;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +35,7 @@ public class ExprRegistryValues extends SimpleExpression<Object> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        SkBeeMetrics.Features.REGISTRY.used();
         this.registryKey = (Expression<RegistryKey<?>>) exprs[0];
         if (this.registryKey instanceof Literal<RegistryKey<?>> literal) {
             this.returnType = RegistryHolders.getRegistryHolder(literal.getSingle()).getReturnType();

@@ -6,6 +6,7 @@ import com.shanebeestudios.skbee.elements.itemcomponent.effects.EffApplyToCompon
 import com.shanebeestudios.skbee.elements.itemcomponent.effects.EffClearComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprBundleContents;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprChargedProjectilesComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprContainerComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprDamageResistantComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprDamageTypeComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprDyedColorComponent;
@@ -19,12 +20,15 @@ import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprMaxStack
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprMinAttackChargeComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprRepairCost;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprRepairableComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprStoredEnchant;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprTooltipStyleComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.expressions.ExprUseRemainderComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecAdventureComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecAttackRangeComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecBlocksAttacksComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecConsumableComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecCustomModelDataComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecDamageReduction;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecDeathProtectionComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecEquippableComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecFireworkExplosionComponent;
@@ -32,6 +36,8 @@ import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecFireworksCom
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecFoodComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecInstrumentComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecJukeboxPlayableComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecKineticWeaponComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecKineticWeaponCondition;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecPiercingWeapon;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecPotionContentsComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecProfileComponent;
@@ -41,6 +47,7 @@ import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecToolRule;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecTooltipDisplayComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecUseCooldownComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecUseEffectsComponent;
+import com.shanebeestudios.skbee.elements.itemcomponent.sections.SecWeaponComponent;
 import com.shanebeestudios.skbee.elements.itemcomponent.types.Types;
 
 public class ItemComponentElementRegistration {
@@ -56,6 +63,7 @@ public class ItemComponentElementRegistration {
         // EXPRESSIONS
         ExprBundleContents.register(reg);
         ExprChargedProjectilesComponent.register(reg);
+        ExprContainerComponent.register(reg);
         ExprDamageResistantComponent.register(reg);
         ExprDamageTypeComponent.register(reg);
         ExprDyedColorComponent.register(reg);
@@ -69,14 +77,17 @@ public class ItemComponentElementRegistration {
         ExprMinAttackChargeComponent.register(reg);
         ExprRepairableComponent.register(reg);
         ExprRepairCost.register(reg);
+        ExprStoredEnchant.register(reg);
         ExprTooltipStyleComponent.register(reg);
         ExprUseRemainderComponent.register(reg);
 
         // SECTIONS
         SecAdventureComponent.register(reg);
         SecAttackRangeComponent.register(reg);
+        SecBlocksAttacksComponent.register(reg);
         SecConsumableComponent.register(reg);
         SecCustomModelDataComponent.register(reg);
+        SecDamageReduction.register(reg);
         SecDeathProtectionComponent.register(reg);
         SecEquippableComponent.register(reg);
         SecFireworkExplosionComponent.register(reg);
@@ -84,6 +95,8 @@ public class ItemComponentElementRegistration {
         SecFoodComponent.register(reg);
         SecInstrumentComponent.register(reg);
         SecJukeboxPlayableComponent.register(reg);
+        SecKineticWeaponComponent.register(reg);
+        SecKineticWeaponCondition.register(reg);
         SecPiercingWeapon.register(reg);
         SecPotionContentsComponent.register(reg);
         SecProfileComponent.register(reg);
@@ -93,6 +106,7 @@ public class ItemComponentElementRegistration {
         SecTooltipDisplayComponent.register(reg);
         SecUseCooldownComponent.register(reg);
         SecUseEffectsComponent.register(reg);
+        SecWeaponComponent.register(reg);
 
         // TYPES
         Types.register(reg);

@@ -23,11 +23,11 @@ public class Types {
     private static final StructureManager STRUCTURE_MANAGER = SkBee.getPlugin().getStructureManager();
 
     public static void register(Registration reg) {
-        reg.newType(StructureWrapper.class, "structure")
-            .user("structures?")
-            .name("Structure")
-            .description("Represents a structure that can be saved or pasted into a world.",
-                "In Minecraft these are actually called [**Structure Templates**](https://minecraft.wiki/w/Structure_file).",
+        reg.newType(StructureWrapper.class, "structuretemplate")
+            .user("structure ?templates?")
+            .name("Structure - Template")
+            .description("Represents a structure template that can be saved or pasted into a world.",
+                "See [**Structure Templates**](https://minecraft.wiki/w/Structure_file) on McWiki for more info.",
                 "These can also be placed using the `/place template` command.",
                 "Use the 'Structure-Object' expression to get a new/existing structure object.",
                 "When using `all structures`, this will only show structures that have been currently loaded into the game.")
@@ -46,7 +46,7 @@ public class Types {
 
                 @Override
                 public String toString(StructureWrapper structure, int flags) {
-                    return "structure '" + structure.getKey() + "'";
+                    return "structure template '" + structure.getKey() + "'";
                 }
 
                 @Override
@@ -76,7 +76,7 @@ public class Types {
             reg.newEnumType(Mirror.class, "mirror")
                 .user("mirrors?")
                 .name("Structure - Mirror")
-                .description("Represents the different states of mirroring for a structure. Requires MC 1.17.1+")
+                .description("Represents the different states of mirroring for a structure.")
                 .examples("set structure mirror of structure {_s} to front back")
                 .since("1.12.0")
                 .register();
@@ -86,7 +86,7 @@ public class Types {
             reg.newEnumType(StructureRotation.class, "structurerotation")
                 .user("structure ?rotations?")
                 .name("Structure - Rotation")
-                .description("Represents the different states of rotation for a structure. Requires MC 1.17.1+")
+                .description("Represents the different states of rotation for a structure template.")
                 .examples("set structure rotation of structure {_s} to clockwise 90")
                 .since("1.12.0")
                 .register();
