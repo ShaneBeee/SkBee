@@ -15,16 +15,16 @@ import org.jetbrains.annotations.NotNull;
 public class ExprKnockbackAttackerVictim extends SimpleExpression<Entity> implements EventRestrictedSyntax {
 
     public static void register(Registration reg) {
-        reg.newSimpleExpression(ExprKnockbackAttackerVictim.class, Entity.class, "simple",
-                        "[the] knockback (:attacker|victim)")
-                .name("Knockback Attacker/Victim")
-                .description("The attacker/victim in an entity knockback event.")
-                .examples("on entity knockback:",
-                        "\tif knockback attacker is a player:",
-                        "\t\tif knockback victim is a sheep:",
-                        "\t\t\tcancel event")
-                .since("1.8.0")
-                .register();
+        reg.newSimpleExpression(ExprKnockbackAttackerVictim.class, Entity.class,
+                "[the] knockback (:attacker|victim)")
+            .name("Knockback Attacker/Victim")
+            .description("The attacker/victim in an entity knockback event.")
+            .examples("on entity knockback:",
+                "\tif knockback attacker is a player:",
+                "\t\tif knockback victim is a sheep:",
+                "\t\t\tcancel event")
+            .since("1.8.0")
+            .register();
     }
 
     private boolean useAttacker;
