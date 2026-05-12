@@ -6,6 +6,7 @@ import ch.njol.skript.registrations.Classes;
 import ch.njol.util.Math2;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.registry.KeyUtils;
+import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect;
 import io.papermc.paper.datacomponent.item.consumable.ConsumeEffect.ApplyStatusEffects;
@@ -60,7 +61,8 @@ public class Types {
             .user("data ?component ?types?")
             .name("Data Component Type")
             .description("Represents the different types of data components.",
-                "See [**Data Components**](https://minecraft.wiki/w/Data_component_format#List_of_components) on McWiki for more detailed info.")
+                "See [**Data Components**](https://minecraft.wiki/w/Data_component_format#List_of_components) on McWiki for more detailed info.",
+                Util.AUTO_GEN_NOTE)
             .since("3.11.0")
             .register();
 
