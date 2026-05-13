@@ -82,8 +82,14 @@ public class BlockEvents extends SimpleEvent {
                 }
             })
             .register();
+        reg.newEventValue(BlockExplodeEvent.class, Number.class)
+            .description("Represents the percentage of blocks to drop from this explosion.")
+            .patterns("yield")
+            .converter(BlockExplodeEvent::getYield)
+            .changer(Changer.ChangeMode.SET, (event, value) -> event.setYield(value.floatValue()))
+            .register();
         reg.newEventValue(BlockExplodeEvent.class, Block[].class)
-            .description("The blocks which exploded.")
+            .description("Represents the blocks which exploded.")
             .patterns("exploded-blocks")
             .converter(from -> from.blockList().toArray(new Block[0]))
             .changer(Changer.ChangeMode.SET, (event, value) -> {
