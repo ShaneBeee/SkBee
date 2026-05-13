@@ -5,7 +5,7 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.api.region.scheduler.task.Task;
+import com.github.shanebeee.skr.scheduling.scheduler.task.Task;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import org.bukkit.event.Event;

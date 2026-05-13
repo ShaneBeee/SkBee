@@ -8,7 +8,7 @@ import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.destroystokyo.paper.profile.ProfileProperty;
 import com.github.shanebeee.skr.Registration;
-import com.shanebeestudios.skbee.api.region.TaskUtils;
+import com.github.shanebeee.skr.scheduling.TaskUtils;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
