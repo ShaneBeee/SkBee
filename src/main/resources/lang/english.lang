@@ -83,8 +83,10 @@ types:
     signedmessage: signed message¦s
     spellcasterspell: spell¦s
     statistic: statistic¦s
+    structure: structure¦s
     structurerotation: structure rotation¦s
     structuretemplate: structure template¦s
+    structuretype: structure type¦s
     tagresolver: tag resolver¦s
     tagkey: tag key¦s
     team: team¦s

@@ -5,13 +5,17 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.coll.CollectionUtils;
-import com.shanebeestudios.skbee.SkBee;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
+import com.shanebeestudios.skbee.api.util.Util;
+import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.Bukkit;
 import org.bukkit.block.structure.Mirror;
 import org.bukkit.block.structure.StructureRotation;
+import org.bukkit.generator.structure.Structure;
+import org.bukkit.generator.structure.StructureType;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -89,6 +93,26 @@ public class Types {
                 .description("Represents the different states of rotation for a structure template.")
                 .examples("set structure rotation of structure {_s} to clockwise 90")
                 .since("1.12.0")
+                .register();
+        }
+
+        if (Classes.getExactClassInfo(Structure.class) == null) {
+            reg.newRegistryType(RegistryKey.STRUCTURE, Structure.class, "structure")
+                .name("Structure - Structure")
+                .user("structures?")
+                .description("Represents a structure that can be found in the world, such as a plains village and a mineshaft.",
+                    Util.AUTO_GEN_NOTE)
+                .since("INSERT VERSION")
+                .register();
+        }
+
+        if (Classes.getExactClassInfo(StructureType.class) == null && Classes.getClassInfoNoError("structuretype") == null) {
+            reg.newRegistryType(RegistryKey.STRUCTURE_TYPE, StructureType.class, "structuretype")
+                .name("Structure - Structure Type")
+                .user("structure ?types?")
+                .description("Represents the different types of structures that can be found in the world, such as mineshafts, jigsaw, and swamp huts.",
+                    "Requires Skript 2.16+", Util.AUTO_GEN_NOTE)
+                .since("INSERT VERSION")
                 .register();
         }
     }
