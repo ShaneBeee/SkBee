@@ -166,6 +166,7 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldHeight;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldSpawnLimit;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldTime;
 import com.shanebeestudios.skbee.elements.other.sections.SecAttributeModifier;
+import com.shanebeestudios.skbee.elements.other.sections.SecLocateBiome;
 import com.shanebeestudios.skbee.elements.other.sections.SecResourcePack;
 import com.shanebeestudios.skbee.elements.other.sections.SecRunTaskLater;
 import com.shanebeestudios.skbee.elements.other.sections.SecSpawnMinecraftEntity;
@@ -360,6 +361,7 @@ public class OtherElementRegistration {
 
         // SECTIONS
         SecAttributeModifier.register(registration);
+        SecLocateBiome.register(registration);
         SecResourcePack.register(registration);
         SecRunTaskLater.register(registration);
         SecSpawnMinecraftEntity.register(registration);
