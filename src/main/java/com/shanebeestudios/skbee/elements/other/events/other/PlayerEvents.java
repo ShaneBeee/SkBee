@@ -6,6 +6,7 @@ import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.util.Experience;
 import ch.njol.skript.util.Timespan;
+import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.skript.util.slot.Slot;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
@@ -22,6 +23,7 @@ import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerCustomClickEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
+import io.papermc.paper.event.player.PlayerItemGroupCooldownEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
@@ -346,6 +348,25 @@ public class PlayerEvents extends SimpleEvent {
             .converter(PlayerLeashEntityEvent::getLeashHolder)
             .register();
 
+        // Player Item Group Cooldown Event
+        reg.newEvent(PlayerEvents.class, PlayerItemGroupCooldownEvent.class,
+                "player item group cooldown", "player item cooldown")
+            .name("Player Item Group Cooldown")
+            .description("Fired when a player receives an item cooldown.")
+            .since("INSERT VERSION")
+            .register();
+
+        reg.newEventValue(PlayerItemGroupCooldownEvent.class, Timespan.class)
+            .description("Represents the cooldown.")
+            .converter(event -> new Timespan(TimePeriod.TICK, event.getCooldown()))
+            .changer(ChangeMode.SET, (event, timespan) -> event.setCooldown((int) timespan.getAs(TimePeriod.TICK)))
+            .register();
+        reg.newEventValue(PlayerItemGroupCooldownEvent.class, NamespacedKey.class)
+            .description("Represents the cooldown group as defined by an item's UseCooldownComponent.")
+            .patterns("cooldown-group", "group")
+            .converter(PlayerItemGroupCooldownEvent::getCooldownGroup)
+            .register();
+
         // Player Pickup XP Event
         reg.newEvent(PlayerEvents.class, PlayerPickupExperienceEvent.class,
                 "player pickup (experience|xp) [orb]")
@@ -479,7 +500,7 @@ public class PlayerEvents extends SimpleEvent {
             .register();
         reg.newEventValue(PlayerStopUsingItemEvent.class, Timespan.class)
             .description("The span of time the item was held for.")
-            .converter(event -> new Timespan(Timespan.TimePeriod.TICK, event.getTicksHeldFor()))
+            .converter(event -> new Timespan(TimePeriod.TICK, event.getTicksHeldFor()))
             .register();
 
     }
