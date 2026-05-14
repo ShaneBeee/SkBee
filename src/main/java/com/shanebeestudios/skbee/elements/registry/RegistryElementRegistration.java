@@ -6,6 +6,7 @@ import com.shanebeestudios.skbee.elements.registry.expression.ExprRegistryTagKey
 import com.shanebeestudios.skbee.elements.registry.expression.ExprRegistryTagKeys;
 import com.shanebeestudios.skbee.elements.registry.expression.ExprRegistryValue;
 import com.shanebeestudios.skbee.elements.registry.expression.ExprRegistryValues;
+import com.shanebeestudios.skbee.elements.registry.expression.SecExprMusicalInstrument;
 import com.shanebeestudios.skbee.elements.registry.type.Types;
 
 public class RegistryElementRegistration {
@@ -17,6 +18,7 @@ public class RegistryElementRegistration {
         ExprRegistryTagKeyValues.register(reg);
         ExprRegistryValue.register(reg);
         ExprRegistryValues.register(reg);
+        SecExprMusicalInstrument.register(reg);
 
         // TYPES
         Types.register(reg);
