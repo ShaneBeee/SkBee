@@ -38,7 +38,7 @@ public class PlayerTypes {
             status.add(value.name().toLowerCase() + "[" + value.intermediate() + "]");
         }
         status.sort(String::compareTo);
-        reg.newEnumType(ResourcePackStatus.class, "resourcepackstatus")
+        reg.newEnumType(ResourcePackStatus.class, "resourcepackstatus", info -> info.usage(StringUtils.join(status, ", ")))
             .name("ResourcePack - Status")
             .user("resource ?pack ?status(es)?")
             .description("Represents the status of a resource pack request.",
@@ -46,7 +46,6 @@ public class PlayerTypes {
                     "(Whether, after receiving this status, further status events might occur), " +
                     "this is not actually part of the pattern.",
                 Util.AUTO_GEN_NOTE)
-            .usage(StringUtils.join(status, ", "))
             .since("3.21.0")
             .register();
     }
