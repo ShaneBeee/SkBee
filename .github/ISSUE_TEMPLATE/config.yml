@@ -5,7 +5,7 @@ contact_links:
     about: Find SkBee's docs and 100's of examples on Skript Hub
   - name: 💻 Skript Hub Discord
     url: https://discord.gg/da9n4S7
-    about: For general help with Skript & SkBee ask in the #skript-help channel in the Skript Hub discord
-  - name: 🚰 SpigotMC Resource
-    url: https://www.spigotmc.org/resources/skbee-skript-addon.75839/
-    about: Read about SkBee on spigot!
+    about: For general help with Skript & SkBee ask in the `#skript-help` channel in the Skript Hub discord
+  - name: 🛠️Modrinth Resource
+    url: https://modrinth.com/plugin/skbee
+    about: Read about SkBee on Modrinth!
