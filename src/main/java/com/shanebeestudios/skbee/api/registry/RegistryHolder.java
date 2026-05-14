@@ -4,10 +4,12 @@ import ch.njol.skript.classes.ClassInfo;
 import ch.njol.skript.registrations.Classes;
 import io.papermc.paper.registry.RegistryAccess;
 import io.papermc.paper.registry.RegistryKey;
+import io.papermc.paper.registry.TypedKey;
 import io.papermc.paper.registry.tag.Tag;
 import io.papermc.paper.registry.tag.TagKey;
 import org.bukkit.Keyed;
 import org.bukkit.Registry;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.lang.converter.Converter;
 
@@ -16,7 +18,7 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * Holder class for registry elements
+ * Holder class for {@link Registry} elements
  *
  * @param <F> Type of registry
  * @param <T> Return type from registry (may differ from F)
@@ -39,20 +41,35 @@ public class RegistryHolder<F extends Keyed, T> {
         this.reverser = reverser;
     }
 
+    /**
+     * Get the RegistryKey that belongs to this {@link Registry}.
+     *
+     * @return RegistryKey
+     */
     public RegistryKey<?> getRegistryKey() {
         return registryKey;
     }
 
+    /**
+     * Get the type of class returned by this {@link Registry}.
+     *
+     * @return Class type
+     */
     public Class<?> getReturnType() {
         return returnType;
     }
 
+    /**
+     * Get the name of this {@link Registry}.
+     *
+     * @return Registry name
+     */
     public String getRegistryName() {
         return registryName;
     }
 
     /**
-     * Get all values from this {@link Registry}
+     * Get all values from this {@link Registry}.
      * <p>May be converted</p>
      *
      * @return List of values from the registry
@@ -72,7 +89,7 @@ public class RegistryHolder<F extends Keyed, T> {
     }
 
     /**
-     * Get all values of a TagKey
+     * Get all values of a TagKey from this {@link Registry}.
      *
      * @param tagKey TagKey to get values from
      * @return Values from tagkey
@@ -96,6 +113,24 @@ public class RegistryHolder<F extends Keyed, T> {
     }
 
     /**
+     * Get the value of a TypedKey from this {@link Registry}.
+     *
+     * @param typedKey TypedKey to get value from
+     * @return Value from registry
+     */
+    @SuppressWarnings("unchecked")
+    public @Nullable T getValue(TypedKey<F> typedKey) {
+        Registry<F> registry = RegistryAccess.registryAccess().getRegistry(this.registryKey);
+        F f = registry.get(typedKey);
+        if (f == null) return null;
+
+        if (this.converter != null) {
+            return this.converter.convert(f);
+        }
+        return (T) f;
+    }
+
+    /**
      * Get the original value from the registry.
      *
      * @param value Value to convert back
@@ -114,6 +149,10 @@ public class RegistryHolder<F extends Keyed, T> {
         }
     }
 
+    /**
+     * @hidden
+     */
+    @ApiStatus.Internal
     public String getDocString() {
         ClassInfo<?> info = Classes.getExactClassInfo(this.returnType);
         String className = info != null ? info.getDocName() : "unsupported";
