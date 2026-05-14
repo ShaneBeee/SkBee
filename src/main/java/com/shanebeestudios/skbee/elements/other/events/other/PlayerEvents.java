@@ -40,8 +40,10 @@ import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
@@ -503,6 +505,22 @@ public class PlayerEvents extends SimpleEvent {
             .converter(event -> new Timespan(TimePeriod.TICK, event.getTicksHeldFor()))
             .register();
 
+        // Player Velocity Event
+        reg.newEvent(PlayerEvents.class, PlayerVelocityEvent.class,
+                "player velocity", "player velocity change", "player velocity changed")
+            .name("Player Velocity")
+            .description("Called when a player's velocity changes.")
+            .examples("on player velocity changed:",
+                "\tset event-velocity to vector(0, 10, 0)")
+            .since("INSERT VERSION")
+            .register();
+
+        reg.newEventValue(PlayerVelocityEvent.class, Vector.class)
+            .description("Represents the velocity vector that will be sent to the player.")
+            .patterns("velocity")
+            .converter(PlayerVelocityEvent::getVelocity)
+            .changer(ChangeMode.SET, PlayerVelocityEvent::setVelocity)
+            .register();
     }
 
 
