@@ -72,6 +72,7 @@ public class VillagerEvents extends SimpleEvent {
 
         reg.newEvent(VillagerEvents.class, VillagerAcquireTradeEvent.class,
                 "villager acquire trade")
+            .name("Villager Acquire Trade")
             .description("Called whenever a villager acquires a new trade.")
             .since("INSERT VERSION")
             .register();
