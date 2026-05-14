@@ -17,14 +17,14 @@ import org.jetbrains.annotations.Nullable;
 public class ExprKnockbackVelocity extends SimpleExpression<Vector> implements EventRestrictedSyntax {
 
     public static void register(Registration reg) {
-        reg.newSimpleExpression(ExprKnockbackVelocity.class, Vector.class, "simple",
-                        "[the] knockback velocity")
-                .name("Knockback Velocity")
-                .description("The knockback velocity in an entity knockback event.")
-                .examples("on entity knockback:",
-                        "\tset knockback velocity to knockback velocity * -1")
-                .since("3.16.0")
-                .register();
+        reg.newSimpleExpression(ExprKnockbackVelocity.class, Vector.class,
+                "[the] knockback velocity")
+            .name("Knockback Velocity")
+            .description("The knockback velocity in an entity knockback event.")
+            .examples("on entity knockback:",
+                "\tset knockback velocity to knockback velocity * -1")
+            .since("3.16.0")
+            .register();
     }
 
     @Override

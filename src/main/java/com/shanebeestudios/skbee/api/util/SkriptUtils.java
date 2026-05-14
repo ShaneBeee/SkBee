@@ -33,12 +33,12 @@ public class SkriptUtils {
      * @return True if parsed correctly else false
      */
     public static boolean parseEffect(String stringEffect, CommandSender sender, Event parentEvent) {
-        Effect effect = Effect.parse(stringEffect, null);
-        if (effect == null) return false;
-
         Event newEvent = new EffectCommandEvent(sender, stringEffect);
         ParserInstance parserInstance = ParserInstance.get();
         parserInstance.setCurrentEvent("effect command", EffectCommandEvent.class);
+
+        Effect effect = Effect.parse(stringEffect, null);
+        if (effect == null) return false;
 
         AtomicBoolean parsed = new AtomicBoolean(false);
         Variables.withLocalVariables(parentEvent, newEvent, () -> parsed.set(TriggerItem.walk(effect, newEvent)));
