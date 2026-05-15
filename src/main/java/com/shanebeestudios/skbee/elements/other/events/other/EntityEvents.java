@@ -11,7 +11,9 @@ import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.entity.SlimePathfindEvent;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
+import io.papermc.paper.event.entity.EntityLungeEvent;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -155,11 +157,29 @@ public class EntityEvents extends SimpleEvent {
             .converter(EntityInsideBlockEvent::getBlock)
             .register();
 
+        if (LegacyUtils.HAS_LUNGE_EVENT) {
+            reg.newEvent(EntityEvents.class, EntityLungeEvent.class, "entity lunge")
+                .name("Entity Lunge")
+                .description("Called when a living entity tries to lunge with a spear.")
+                .examples("on entity lunge:",
+                    "\tset event-lunge-power to 5")
+                .since("INSERT VERSION")
+                .register();
+
+            reg.newEventValue(EntityLungeEvent.class, Number.class)
+                .description("Represents the lunge power, which when initially passed, matches the enchantment level of the item, but can be higher.",
+                    "If set higher than 3, the power of the lunge will continue to scale like normal, as if the max enchantment level is higher.")
+                .patterns("power", "lunge-power")
+                .converter(EntityLungeEvent::getLungePower)
+                .changer(Changer.ChangeMode.SET, (event, value) -> event.setLungePower(value.intValue()))
+                .register();
+        }
+
         // Entity Pathfind Event
         reg.newEvent(EntityEvents.class, new Class[]{EntityPathfindEvent.class, SlimePathfindEvent.class}, "entity start[s] pathfinding")
             .name("Entity Pathfind")
             .description("Called when an Entity decides to start moving towards a location. This event does not fire for the entities " +
-                "actual movement. Only when it is choosing to start moving to a location. Requires Paper.")
+                "actual movement. Only when it is choosing to start moving to a location.")
             .examples("on entity starts pathfinding:",
                 "\tif event-entity is a sheep:",
                 "\t\tcancel event")

@@ -2,10 +2,11 @@ package com.shanebeestudios.skbee.elements.other.events.other;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.util.SimpleEvent;
 import ch.njol.skript.util.Experience;
 import ch.njol.skript.util.Timespan;
+import ch.njol.skript.util.Timespan.TimePeriod;
 import ch.njol.skript.util.slot.Slot;
 import com.destroystokyo.paper.event.player.PlayerElytraBoostEvent;
 import com.destroystokyo.paper.event.player.PlayerPickupExperienceEvent;
@@ -22,6 +23,7 @@ import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerCustomClickEvent;
 import io.papermc.paper.event.player.PlayerFailMoveEvent;
+import io.papermc.paper.event.player.PlayerItemGroupCooldownEvent;
 import io.papermc.paper.event.player.PlayerStopUsingItemEvent;
 import net.kyori.adventure.audience.Audience;
 import net.kyori.adventure.nbt.api.BinaryTagHolder;
@@ -33,12 +35,15 @@ import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
+import org.bukkit.event.entity.EntityExhaustionEvent;
 import org.bukkit.event.entity.PlayerLeashEntityEvent;
 import org.bukkit.event.inventory.PrepareAnvilEvent;
 import org.bukkit.event.player.PlayerAttemptPickupItemEvent;
 import org.bukkit.event.player.PlayerShearEntityEvent;
+import org.bukkit.event.player.PlayerVelocityEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.skriptlang.skript.bukkit.lang.eventvalue.EventValue;
@@ -54,6 +59,21 @@ public class PlayerEvents extends SimpleEvent {
 
     @SuppressWarnings("UnstableApiUsage")
     public static void register(Registration reg) {
+        // EntityExhaustionEvent
+        reg.newEvent(PlayerEvents.class, EntityExhaustionEvent.class, "player exhaustion")
+            .name("Player Exhaustion")
+            .description("Called when a human entity experiences exhaustion.",
+                "An exhaustion level greater than 4.0 causes a decrease in saturation by 1.")
+            .since("INSERT VERSION")
+            .register();
+
+        reg.newEventValue(EntityExhaustionEvent.class, Number.class)
+            .description("Represents the amount of exhaustion to add to the player's current exhaustion.")
+            .patterns("exhaustion")
+            .converter(EntityExhaustionEvent::getExhaustion)
+            .changer(ChangeMode.SET, (event, value) -> event.setExhaustion(value.floatValue()))
+            .register();
+
         // PlayerAttemptPickupItemEvent
         reg.newEvent(PlayerEvents.class, PlayerAttemptPickupItemEvent.class, "player attempt item pickup")
             .name("Player Attempt Item Pickup")
@@ -298,13 +318,13 @@ public class PlayerEvents extends SimpleEvent {
         reg.newEventValue(PlayerFailMoveEvent.class, Boolean.class)
             .description("Whether the player is allowed to move.")
             .converter(PlayerFailMoveEvent::isAllowed)
-            .changer(Changer.ChangeMode.SET, PlayerFailMoveEvent::setAllowed)
+            .changer(ChangeMode.SET, PlayerFailMoveEvent::setAllowed)
             .register();
         reg.newEventValue(PlayerFailMoveEvent.class, Boolean.class)
             .description("Whether to log warning to console.")
             .time(EventValue.Time.FUTURE)
             .converter(PlayerFailMoveEvent::getLogWarning)
-            .changer(Changer.ChangeMode.SET, PlayerFailMoveEvent::setLogWarning)
+            .changer(ChangeMode.SET, PlayerFailMoveEvent::setLogWarning)
             .register();
 
         // Player Leash Entity Event
@@ -330,6 +350,25 @@ public class PlayerEvents extends SimpleEvent {
             .converter(PlayerLeashEntityEvent::getLeashHolder)
             .register();
 
+        // Player Item Group Cooldown Event
+        reg.newEvent(PlayerEvents.class, PlayerItemGroupCooldownEvent.class,
+                "player item group cooldown", "player item cooldown")
+            .name("Player Item Group Cooldown")
+            .description("Fired when a player receives an item cooldown.")
+            .since("INSERT VERSION")
+            .register();
+
+        reg.newEventValue(PlayerItemGroupCooldownEvent.class, Timespan.class)
+            .description("Represents the cooldown.")
+            .converter(event -> new Timespan(TimePeriod.TICK, event.getCooldown()))
+            .changer(ChangeMode.SET, (event, timespan) -> event.setCooldown((int) timespan.getAs(TimePeriod.TICK)))
+            .register();
+        reg.newEventValue(PlayerItemGroupCooldownEvent.class, NamespacedKey.class)
+            .description("Represents the cooldown group as defined by an item's UseCooldownComponent.")
+            .patterns("cooldown-group", "group")
+            .converter(PlayerItemGroupCooldownEvent::getCooldownGroup)
+            .register();
+
         // Player Pickup XP Event
         reg.newEvent(PlayerEvents.class, PlayerPickupExperienceEvent.class,
                 "player pickup (experience|xp) [orb]")
@@ -343,7 +382,7 @@ public class PlayerEvents extends SimpleEvent {
         reg.newEventValue(PlayerPickupExperienceEvent.class, Experience.class)
             .description("Represents the experience picked up (This is Skript's version of XP).")
             .converter(event -> new Experience(event.getExperienceOrb().getExperience()))
-            .changer(Changer.ChangeMode.SET, (event, value) -> {
+            .changer(ChangeMode.SET, (event, value) -> {
                 if (value == null) return;
                 event.getExperienceOrb().setExperience(value.getXP());
             })
@@ -351,7 +390,7 @@ public class PlayerEvents extends SimpleEvent {
         reg.newEventValue(PlayerPickupExperienceEvent.class, Number.class)
             .description("represents the experience picked up as a number.")
             .converter(event -> event.getExperienceOrb().getExperience())
-            .changer(Changer.ChangeMode.SET, (event, value) -> {
+            .changer(ChangeMode.SET, (event, value) -> {
                 if (value == null) return;
                 event.getExperienceOrb().setExperience(value.intValue());
             })
@@ -426,12 +465,12 @@ public class PlayerEvents extends SimpleEvent {
         reg.newEventValue(PlayerShearEntityEvent.class, ItemStack[].class)
             .description("Get a list of drops for this shearing.")
             .converter(event -> event.getDrops().toArray(new ItemStack[0]))
-            .changer(Changer.ChangeMode.SET, (event, value) -> event.setDrops(Arrays.asList(value)))
+            .changer(ChangeMode.SET, (event, value) -> event.setDrops(Arrays.asList(value)))
             .register();
         reg.newEventValue(PlayerShearEntityEvent.class, ItemType[].class)
             .description("Get a list of drops for this shearing.")
             .converter(event -> event.getDrops().stream().map(ItemType::new).toArray(ItemType[]::new))
-            .changer(Changer.ChangeMode.SET, (event, value) -> {
+            .changer(ChangeMode.SET, (event, value) -> {
                 List<ItemStack> items = new ArrayList<>();
                 for (ItemType itemType : value) {
                     items.add(itemType.getRandom());
@@ -463,9 +502,25 @@ public class PlayerEvents extends SimpleEvent {
             .register();
         reg.newEventValue(PlayerStopUsingItemEvent.class, Timespan.class)
             .description("The span of time the item was held for.")
-            .converter(event -> new Timespan(Timespan.TimePeriod.TICK, event.getTicksHeldFor()))
+            .converter(event -> new Timespan(TimePeriod.TICK, event.getTicksHeldFor()))
             .register();
 
+        // Player Velocity Event
+        reg.newEvent(PlayerEvents.class, PlayerVelocityEvent.class,
+                "player velocity", "player velocity change", "player velocity changed")
+            .name("Player Velocity")
+            .description("Called when a player's velocity changes.")
+            .examples("on player velocity changed:",
+                "\tset event-velocity to vector(0, 10, 0)")
+            .since("INSERT VERSION")
+            .register();
+
+        reg.newEventValue(PlayerVelocityEvent.class, Vector.class)
+            .description("Represents the velocity vector that will be sent to the player.")
+            .patterns("velocity")
+            .converter(PlayerVelocityEvent::getVelocity)
+            .changer(ChangeMode.SET, PlayerVelocityEvent::setVelocity)
+            .register();
     }
 
 

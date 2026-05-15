@@ -3,7 +3,7 @@ package com.shanebeestudios.skbee.elements.villager;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.elements.villager.effects.EffOpenMerchant;
 import com.shanebeestudios.skbee.elements.villager.effects.EffVillagerEffects;
-import com.shanebeestudios.skbee.elements.villager.event.SimpleEvents;
+import com.shanebeestudios.skbee.elements.villager.event.VillagerEvents;
 import com.shanebeestudios.skbee.elements.villager.expressions.ExprMerchant;
 import com.shanebeestudios.skbee.elements.villager.expressions.ExprMerchantRecipe;
 import com.shanebeestudios.skbee.elements.villager.expressions.ExprMerchantRecipeIngredients;
@@ -19,7 +19,7 @@ public class VillagerElementRegistration {
         EffVillagerEffects.register(reg);
 
         // EVENTS
-        SimpleEvents.register(reg);
+        VillagerEvents.register(reg);
 
         // EXPRESSIONS
         ExprMerchant.register(reg);
