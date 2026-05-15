@@ -51,6 +51,7 @@ import com.shanebeestudios.skbee.elements.other.effects.EffSpawnerResetTimer;
 import com.shanebeestudios.skbee.elements.other.effects.EffTaskStop;
 import com.shanebeestudios.skbee.elements.other.effects.EffTransferCookieStore;
 import com.shanebeestudios.skbee.elements.other.effects.EffUpdateRecipeResources;
+import com.shanebeestudios.skbee.elements.other.effects.EffWeightedListAddEntry;
 import com.shanebeestudios.skbee.elements.other.events.AsyncEvents;
 import com.shanebeestudios.skbee.elements.other.events.EvtDamageByBlock;
 import com.shanebeestudios.skbee.elements.other.events.EvtEntitiesLoad;
@@ -161,6 +162,8 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprTaskID;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprTickingState;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprTransferCookie;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprTranslationKey;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprWeightedListCreate;
+import com.shanebeestudios.skbee.elements.other.expressions.ExprWeightedListRandomElement;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldAutoSave;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldHeight;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprWorldSpawnLimit;
@@ -175,6 +178,7 @@ import com.shanebeestudios.skbee.elements.other.sections.SecWhileRunnable;
 import com.shanebeestudios.skbee.elements.other.structures.StructTagAliases;
 import com.shanebeestudios.skbee.elements.other.type.BlockTypes;
 import com.shanebeestudios.skbee.elements.other.type.Comps;
+import com.shanebeestudios.skbee.elements.other.type.CustomTypes;
 import com.shanebeestudios.skbee.elements.other.type.EntityTypes;
 import com.shanebeestudios.skbee.elements.other.type.EventTypes;
 import com.shanebeestudios.skbee.elements.other.type.Functions;
@@ -239,6 +243,7 @@ public class OtherElementRegistration {
         EffTaskStop.register(registration);
         EffTransferCookieStore.register(registration);
         EffUpdateRecipeResources.register(registration);
+        EffWeightedListAddEntry.register(registration);
 
         // EVENTS
         BlockEvents.register(registration);
@@ -354,6 +359,8 @@ public class OtherElementRegistration {
         ExprTickingState.register(registration);
         ExprTransferCookie.register(registration);
         ExprTranslationKey.register(registration);
+        ExprWeightedListCreate.register(registration);
+        ExprWeightedListRandomElement.register(registration);
         ExprWorldAutoSave.register(registration);
         ExprWorldHeight.register(registration);
         ExprWorldSpawnLimit.register(registration);
@@ -375,6 +382,7 @@ public class OtherElementRegistration {
         Comps.register(registration);
         Functions.register(registration);
         BlockTypes.register(registration);
+        CustomTypes.register(registration);
         EntityTypes.register(registration);
         EventTypes.register(registration);
         ItemTypes.register(registration);
