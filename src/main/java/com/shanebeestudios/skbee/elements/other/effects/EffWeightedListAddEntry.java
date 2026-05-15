@@ -15,7 +15,8 @@ public class EffWeightedListAddEntry extends Effect {
 
     public static void register(Registration reg) {
         reg.newEffect(EffWeightedListAddEntry.class,
-                "add %object% to %weightedlist% with weight %number%")
+                "add %object% to %weightedlist% with [a] weight [of] %number%",
+                "add %object% with [a] weight [of] %number% to %weightedlist%")
             .name("WeightedList - Add Entry")
             .description("Adds an entry to a weighted list with a specified weight.",
                 "Weight must be greater than 0.")
@@ -40,8 +41,8 @@ public class EffWeightedListAddEntry extends Effect {
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.object = LiteralUtils.defendExpression(expressions[0]);
-        this.weightedList = (Expression<WeightedList>) expressions[1];
-        this.weight = (Expression<Number>) expressions[2];
+        this.weightedList = (Expression<WeightedList>) expressions[matchedPattern + 1];
+        this.weight = (Expression<Number>) expressions[matchedPattern == 0 ? 2 : 1];
         return LiteralUtils.canInitSafely(this.object);
     }
 
