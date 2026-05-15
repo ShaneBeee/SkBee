@@ -103,6 +103,7 @@ types:
     typedkey: typed key¦s
     vibration: vibration¦s @-
     villagertype: villager type¦s
+    weightedlist: weighted list¦s
     worldborder: world border¦s
     worldcreator: world creator
     worldtype: world type¦s @-
