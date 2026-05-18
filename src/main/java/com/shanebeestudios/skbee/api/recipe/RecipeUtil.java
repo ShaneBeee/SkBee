@@ -7,11 +7,15 @@ import ch.njol.skript.util.slot.Slot;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.recipe.sections.SecRecipeSmithing;
+import io.papermc.paper.event.server.ServerResourcesReloadedEvent;
 import io.papermc.paper.potion.PotionMix;
 import org.bukkit.Bukkit;
 import org.bukkit.Keyed;
 import org.bukkit.Material;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Tag;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
 import org.bukkit.inventory.CookingRecipe;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.Recipe;
@@ -39,12 +43,30 @@ import java.util.StringJoiner;
 public class RecipeUtil {
 
     private static final Map<String, CraftingBookCategory> CATEGORY_MAP = new HashMap<>();
+    private static final Map<NamespacedKey, Recipe> CUSTOM_RECIPES = new HashMap<>();
 
     static {
         for (CraftingBookCategory value : CraftingBookCategory.values()) {
             String name = value.name().toLowerCase(Locale.ROOT);
             CATEGORY_MAP.put(name, value);
         }
+
+        Bukkit.getPluginManager().registerEvents(new Listener() {
+            @EventHandler
+            private void onServerReloadResources(ServerResourcesReloadedEvent event) {
+                int count = CUSTOM_RECIPES.size();
+                if (count == 0) return;
+
+                String plural = count == 1 ? "" : "s";
+                log("Detected server resource reload, re-adding %d custom recipe%s", count, plural);
+                CUSTOM_RECIPES.forEach((key, recipe) -> {
+                    if (SkBee.isDebug()) {
+                        log("Re-dding custom recipe: '%s'", key);
+                    }
+                    Bukkit.addRecipe(recipe);
+                });
+            }
+        }, SkBee.getPlugin());
     }
 
     /**
@@ -88,7 +110,29 @@ public class RecipeUtil {
             });
             Bukkit.clearRecipes();
             recipes.forEach(Bukkit::addRecipe);
+            if (SkBee.isDebug()) {
+                log("&aRemoving all Minecraft recipes.");
+            }
         } catch (NoSuchElementException ignore) {
+        }
+    }
+
+    public static void removeAllRecipes() {
+        Bukkit.clearRecipes();
+        if (SkBee.isDebug()) {
+            log("&aRemoving all recipes.");
+        }
+        CUSTOM_RECIPES.clear();
+    }
+
+    public static void removeRecipe(String recipe) {
+        NamespacedKey key = Util.getNamespacedKey(recipe, false);
+        if (key != null) {
+            Bukkit.removeRecipe(key);
+            CUSTOM_RECIPES.remove(key);
+            if (SkBee.isDebug()) {
+                log("&aRemoving recipe: " + recipe);
+            }
         }
     }
 
@@ -103,7 +147,8 @@ public class RecipeUtil {
      * @param recipe      Recipe to log
      * @param ingredients Ingredients of recipe to log
      */
-    public static void logRecipe(Recipe recipe, RecipeChoice... ingredients) {
+    public static void logRecipe(NamespacedKey key, Recipe recipe, RecipeChoice... ingredients) {
+        CUSTOM_RECIPES.put(key, recipe);
         if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         if (!(recipe instanceof Keyed)) return;
         log("&aRegistered new recipe: &7(&b%s&7)", ((Keyed) recipe).getKey().toString());
@@ -122,6 +167,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logCookingRecipe(CookingRecipe<?> recipe) {
+        CUSTOM_RECIPES.put(recipe.getKey(), recipe);
         if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         String type = recipe.getClass().getSimpleName().replace("Recipe", "").toLowerCase(Locale.ROOT);
         log("&aRegistered new %s recipe: &7(&b%s&7)", type, ((Keyed) recipe).getKey().toString());
@@ -142,6 +188,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logShapelessRecipe(ShapelessRecipe recipe) {
+        CUSTOM_RECIPES.put(recipe.getKey(), recipe);
         if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         log("&aRegistered new shapeless recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
@@ -161,6 +208,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logShapedRecipe(ShapedRecipe recipe) {
+        CUSTOM_RECIPES.put(recipe.getKey(), recipe);
         if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         log("&aRegistered new shaped recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
@@ -204,6 +252,7 @@ public class RecipeUtil {
      * @param recipe Recipe to log
      */
     public static void logSmithingRecipe(SmithingTransformRecipe recipe) {
+        CUSTOM_RECIPES.put(recipe.getKey(), recipe);
         if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         log("&aRegistered new smithing recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult());
@@ -217,6 +266,7 @@ public class RecipeUtil {
     }
 
     public static void logTransmuteRecipe(TransmuteRecipe recipe) {
+        CUSTOM_RECIPES.put(recipe.getKey(), recipe);
         if (!SkBee.isDebug() || TestMode.DEV_MODE) return;
         log("&aRegistering new transmute recipe: &7(&b%s&7)", recipe.getKey().toString());
         log(" - &7Result: &e%s", recipe.getResult().getType().getKey());

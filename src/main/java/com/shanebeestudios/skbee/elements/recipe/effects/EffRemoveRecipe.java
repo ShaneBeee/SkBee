@@ -4,12 +4,8 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.github.shanebeee.skr.Registration;
-import com.shanebeestudios.skbee.api.util.Util;
-import org.bukkit.Bukkit;
-import org.bukkit.NamespacedKey;
+import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import org.bukkit.event.Event;
 
 public class EffRemoveRecipe extends Effect {
@@ -44,48 +40,36 @@ public class EffRemoveRecipe extends Effect {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int pattern, Kleenean kleenean, SkriptParser.ParseResult parseResult) {
-        all = pattern == 1;
-        minecraft = parseResult.mark == 1;
-        recipes = pattern == 0 ? (Expression<String>) exprs[0] : null;
+        this.all = pattern == 1;
+        this.minecraft = parseResult.mark == 1;
+        this.recipes = pattern == 0 ? (Expression<String>) exprs[0] : null;
         return true;
     }
 
     @Override
     protected void execute(Event event) {
-        if (all) {
-            if (minecraft) {
+        if (this.all) {
+            if (this.minecraft) {
                 RecipeUtil.removeAllMCRecipes();
-                if (SkBee.isDebug()) {
-                    RecipeUtil.log("&aRemoving all Minecraft recipes.");
-                }
             } else {
-                Bukkit.clearRecipes();
-                if (SkBee.isDebug()) {
-                    RecipeUtil.log("&aRemoving all recipes.");
-                }
+                RecipeUtil.removeAllRecipes();
             }
             return;
         }
 
         for (String recipe : this.recipes.getAll(event)) {
-            NamespacedKey key = Util.getNamespacedKey(recipe, false);
-            if (key != null) {
-                Bukkit.removeRecipe(key);
-                if (SkBee.isDebug()) {
-                    RecipeUtil.log("&aRemoving recipe: " + recipe);
-                }
-            }
+            RecipeUtil.removeRecipe(recipe);
         }
     }
 
     @Override
     public String toString(Event e, boolean d) {
-        if (all) {
+        if (this.all) {
             return "remove all minecraft recipes";
-        } else if (minecraft) {
-            return "remove minecraft recipes " + recipes.toString(e, d);
+        } else if (this.minecraft) {
+            return "remove minecraft recipes " + this.recipes.toString(e, d);
         } else {
-            return "remove custom recipes " + recipes.toString(e, d);
+            return "remove custom recipes " + this.recipes.toString(e, d);
         }
     }
 

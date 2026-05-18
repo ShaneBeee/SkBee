@@ -5,9 +5,9 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.util.Kleenean;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
-import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Bukkit;
@@ -169,10 +169,8 @@ public class EffCraftingRecipe extends Effect {
                 recipe.setIngredient(keyChar[i], recipeChoice);
             }
         }
-        if (SkBee.isDebug()) {
-            RecipeUtil.logShapedRecipe(recipe);
-        }
         Bukkit.addRecipe(recipe);
+        RecipeUtil.logShapedRecipe(recipe);
     }
 
     private void registerShapeless(ItemType item, Object[] ingredients, NamespacedKey key, String group) {
@@ -204,9 +202,7 @@ public class EffCraftingRecipe extends Effect {
             }
         }
         Bukkit.addRecipe(recipe);
-        if (SkBee.isDebug()) {
-            RecipeUtil.logShapelessRecipe(recipe);
-        }
+        RecipeUtil.logShapelessRecipe(recipe);
     }
 
     @Override

@@ -6,9 +6,8 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.util.Timespan;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Bukkit;
@@ -132,9 +131,7 @@ public class EffCookingRecipe extends Effect {
 
         recipe.setGroup(group);
         Bukkit.addRecipe(recipe);
-        if (SkBee.isDebug()) {
-            RecipeUtil.logCookingRecipe(recipe);
-        }
+        RecipeUtil.logCookingRecipe(recipe);
     }
 
     private int getDefaultCookTime(int t) {
