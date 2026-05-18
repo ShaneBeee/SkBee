@@ -7,17 +7,23 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimpleExpression;
 import com.shanebeestudios.skbee.api.structure.StructureWrapper;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.EntitySnapshot;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.Nullable;
 
-public class ExprStructureEntities extends SimpleExpression<Entity> {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ExprStructureEntities extends SimpleExpression<Object> {
 
     public static void register(Registration reg) {
-        reg.newCombinedExpression(ExprStructureEntities.class, Entity.class,
-                "structure template entities of %structuretemplate%")
+        reg.newCombinedExpression(ExprStructureEntities.class, Object.class,
+                "structure template entities of %structuretemplate%",
+                "structure template entity snapshots of %structuretemplate%")
             .name("Structure - Template Entities")
             .description("Get a list of entities in a structure template.",
-                "This cannot be modified.")
+                "Optionally you can return entity snapshots instead of entities.",
+                "These cannot be modified.")
             .examples("loop structure template entities of {_structure}:",
                 "set {_size} to size of structure template entities of {_structure}")
             .since("3.23.0")
@@ -25,18 +31,28 @@ public class ExprStructureEntities extends SimpleExpression<Entity> {
     }
 
     private Expression<StructureWrapper> structure;
+    private boolean snapshots;
 
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] expressions, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.structure = (Expression<StructureWrapper>) expressions[0];
+        this.snapshots = matchedPattern == 1;
         return true;
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
-    protected Entity @Nullable [] get(Event event) {
+    protected Object @Nullable [] get(Event event) {
         StructureWrapper structure = this.structure.getSingle(event);
         if (structure == null) return null;
+        if (this.snapshots) {
+            List<EntitySnapshot> snapshotList = new ArrayList<>();
+            for (Entity entity : structure.getBukkitStructure().getEntities()) {
+                snapshotList.add(entity.createSnapshot());
+            }
+            return snapshotList.toArray(new EntitySnapshot[0]);
+        }
         return structure.getBukkitStructure().getEntities().toArray(new Entity[0]);
     }
 
@@ -46,13 +62,15 @@ public class ExprStructureEntities extends SimpleExpression<Entity> {
     }
 
     @Override
-    public Class<? extends Entity> getReturnType() {
+    public Class<?> getReturnType() {
+        if (this.snapshots) return EntitySnapshot.class;
         return Entity.class;
     }
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "structure template entities of " + this.structure.toString(event, debug);
+        String type = this.snapshots ? "entity snapshots" : "entities";
+        return "structure template " + type + " of " + this.structure.toString(event, debug);
     }
 
 }
