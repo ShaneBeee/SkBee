@@ -19,6 +19,7 @@ import io.papermc.paper.connection.PlayerCommonConnection;
 import io.papermc.paper.connection.PlayerConfigurationConnection;
 import io.papermc.paper.connection.PlayerConnection;
 import io.papermc.paper.connection.PlayerGameConnection;
+import io.papermc.paper.event.block.PlayerShearBlockEvent;
 import io.papermc.paper.event.packet.PlayerChunkLoadEvent;
 import io.papermc.paper.event.packet.PlayerChunkUnloadEvent;
 import io.papermc.paper.event.player.PlayerCustomClickEvent;
@@ -31,6 +32,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.NamespacedKey;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
@@ -412,6 +414,35 @@ public class PlayerEvents extends SimpleEvent {
 
         reg.newEventValue(PlayerRecipeBookClickEvent.class, String.class)
             .converter(event -> event.getRecipe().toString())
+            .register();
+
+        // Player Shear Block Event
+        reg.newEvent(PlayerEvents.class, PlayerShearBlockEvent.class, "player shear block")
+            .name("Player Shear Block")
+            .description("Called when a player uses shears on a block.",
+                "This event is not called when a player breaks blocks with shears, but rather when a player uses the shears on a block to collect drops from it and/or modify its state.",
+                "Examples include shearing a pumpkin to turn it into a carved pumpkin or shearing a beehive to get honeycomb.")
+            .examples("")
+            .since("INSERT VERSION")
+            .register();
+
+        reg.newEventValue(PlayerShearBlockEvent.class, Block.class)
+            .description("Gets the block being sheared in this event.")
+            .converter(PlayerShearBlockEvent::getBlock)
+            .register();
+        reg.newEventValue(PlayerShearBlockEvent.class, ItemStack.class)
+            .description("Gets the item used to shear the block.")
+            .converter(PlayerShearBlockEvent::getItem)
+            .register();
+        reg.newEventValue(PlayerShearBlockEvent.class, ItemStack[].class)
+            .description("Gets the resulting drops of this event.")
+            .patterns("drops")
+            .converter(event -> event.getDrops().toArray(new ItemStack[0]))
+            .register();
+        reg.newEventValue(PlayerShearBlockEvent.class, EquipmentSlot.class)
+            .description("Gets the hand used to shear the block.")
+            .patterns("hand")
+            .converter(PlayerShearBlockEvent::getHand)
             .register();
 
         // Player Spawn Change Event
