@@ -57,7 +57,7 @@ public class SecDynamicRunCommandActionButton extends Section {
                 "- `width` = The width of the button. Value between 1 and 1024 — Defaults to 150.",
                 "- `template` = The command template including macros that will run when clicked.")
             .examples("command /message:",
-                "\trigger:",
+                "\ttrigger:",
                 "\t\topen multi action dialog to player:",
                 "\t\t\ttitle: \"Send a message:\"",
                 "\t\t\tinputs:",
