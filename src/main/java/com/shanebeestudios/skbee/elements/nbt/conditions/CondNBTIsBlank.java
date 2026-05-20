@@ -7,7 +7,7 @@ import de.tr7zw.changeme.nbtapi.NBTCompound;
 public class CondNBTIsBlank extends PropertyCondition<NBTCompound> {
 
     public static void register(Registration reg) {
-        reg.newCondition(CondNBTIsBlank.class, "[a[n]] (blank|empty) nbt compound", "nbtcompounds")
+        reg.newPropertyCondition(CondNBTIsBlank.class, "[a[n]] (blank|empty) nbt compound", "nbtcompounds")
             .name("NBT - Is Blank Compound")
             .description("Checks whether or not the provided nbt compounds are empty.")
             .examples("broadcast whether empty nbt compound is an empty nbt compound",
