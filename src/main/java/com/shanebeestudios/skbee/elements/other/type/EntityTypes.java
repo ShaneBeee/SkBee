@@ -2,7 +2,6 @@ package com.shanebeestudios.skbee.elements.other.type;
 
 import ch.njol.skript.registrations.Classes;
 import com.github.shanebeee.skr.Registration;
-import com.github.shanebeee.skr.skript.RegistryClassInfo;
 import com.shanebeestudios.skbee.api.util.Util;
 import org.bukkit.Registry;
 import org.bukkit.entity.EntityType;
@@ -33,10 +32,12 @@ public class EntityTypes {
 
         if (Classes.getExactClassInfo(MemoryKey.class) == null) {
             //noinspection unchecked,rawtypes
-            Classes.registerClass(RegistryClassInfo.create(Registry.MEMORY_MODULE_TYPE, (Class) MemoryKey.class, "memory")
+            reg.newRegistryType(Registry.MEMORY_MODULE_TYPE, (Class) MemoryKey.class, "memory")
                 .user("memor(y|ies)")
                 .name("Memory")
-                .description("Represents the different memories of an entity.", Util.AUTO_GEN_NOTE));
+                .description("Represents the different memories of an entity.", Util.AUTO_GEN_NOTE)
+                .since("3.4.0")
+                .register();
         } else {
             Util.logLoading("It looks like another addon registered 'memory' already.");
             Util.logLoading("You may have to use their ItemFlags in SkBee's syntaxes.");
