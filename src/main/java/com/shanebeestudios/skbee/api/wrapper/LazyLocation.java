@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.api.wrapper;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.NamespacedKey;
 import org.bukkit.World;
 import org.bukkit.configuration.serialization.SerializableAs;
 import org.bukkit.util.NumberConversions;
@@ -18,15 +19,22 @@ import java.util.Map;
 public class LazyLocation extends Location {
 
     private String worldName;
+    private NamespacedKey worldKey;
 
     public LazyLocation(World world, double x, double y, double z, float yaw, float pitch) {
         super(world, x, y, z, yaw, pitch);
-        this.worldName = world.getName();
+        this.worldKey = world.getKey();
     }
 
+    @Deprecated(forRemoval = true, since = "INSERT VERSION")
     public LazyLocation(String worldName, double x, double y, double z, float yaw, float pitch) {
         super(null, x, y, z, yaw, pitch);
         this.worldName = worldName;
+    }
+
+    public LazyLocation(NamespacedKey worldKey, double x, double y, double z, float yaw, float pitch) {
+        super(null, x, y, z, yaw, pitch);
+        this.worldKey = worldKey;
     }
 
     public LazyLocation(Location location) {
@@ -54,8 +62,11 @@ public class LazyLocation extends Location {
     public @NotNull Map<String, Object> serialize() {
         Map<String, Object> data = super.serialize();
 
-        if (!data.containsKey("world")) {
+        if (!data.containsKey("world") && this.worldName != null) {
             data.put("world", this.worldName);
+        }
+        if (!data.containsKey("world_key") && this.worldKey != null) {
+            data.put("world_key", this.worldKey.toString());
         }
 
         return data;
@@ -72,6 +83,15 @@ public class LazyLocation extends Location {
             world = Bukkit.getWorld(name);
             if (world == null) {
                 return new LazyLocation(name, NumberConversions.toDouble(args.get("x")), NumberConversions.toDouble(args.get("y")), NumberConversions.toDouble(args.get("z")), NumberConversions.toFloat(args.get("yaw")), NumberConversions.toFloat(args.get("pitch")));
+            }
+        }
+        if (args.containsKey("world_key")) {
+            String name = (String) args.get("world_key");
+            NamespacedKey key = NamespacedKey.fromString(name);
+            assert key != null : "NamespacedKey cannot be null";
+            world = Bukkit.getWorld(key);
+            if (world == null) {
+                return new LazyLocation(key, NumberConversions.toDouble(args.get("x")), NumberConversions.toDouble(args.get("y")), NumberConversions.toDouble(args.get("z")), NumberConversions.toFloat(args.get("yaw")), NumberConversions.toFloat(args.get("pitch")));
             }
         }
         return new LazyLocation(world, NumberConversions.toDouble(args.get("x")), NumberConversions.toDouble(args.get("y")), NumberConversions.toDouble(args.get("z")), NumberConversions.toFloat(args.get("yaw")), NumberConversions.toFloat(args.get("pitch")));
