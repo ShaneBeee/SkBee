@@ -5,7 +5,7 @@ import ch.njol.skript.util.Version;
 import com.github.shanebeee.skr.scheduling.TaskUtils;
 import com.shanebeestudios.skbee.api.bound.Bound;
 import com.shanebeestudios.skbee.api.bound.BoundConfig;
-import com.shanebeestudios.skbee.api.command.SkBeeInfo;
+import com.shanebeestudios.skbee.api.command.SkBeeCommand;
 import com.shanebeestudios.skbee.api.structure.StructureManager;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.update.UpdateChecker;
@@ -63,7 +63,7 @@ public class SkBee extends JavaPlugin {
         // Check if SkriptAddon can actually load
         this.properlyEnabled = this.addonLoader.canLoadPlugin();
 
-        registerCommand("skbee", new SkBeeInfo(this));
+        SkBeeCommand.registerCommand(this);
         SkBeeMetrics.loadMetrics(this, this.properlyEnabled, skBeeVersion);
 
         // Beta check + notice
