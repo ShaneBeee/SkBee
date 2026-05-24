@@ -15,7 +15,7 @@ public class CustomTypes {
             .user("weighted ?lists?")
             .name("WeightedList")
             .description("A weighted list that allows for random selection based on entry weights.")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .property(Property.SIZE, "The amount of elements in a weighted list.", new WeightedListSize())
             .property(Property.NUMBER, "The amount of elements in a weighted list.", new WeightedListSize())
             .property(Property.AMOUNT, "The amount of elements in a weighted list.", new WeightedListSize())

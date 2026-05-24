@@ -66,7 +66,7 @@ public class PlayerEvents extends SimpleEvent {
             .name("Player Exhaustion")
             .description("Called when a human entity experiences exhaustion.",
                 "An exhaustion level greater than 4.0 causes a decrease in saturation by 1.")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
 
         reg.newEventValue(EntityExhaustionEvent.class, Number.class)
@@ -357,7 +357,7 @@ public class PlayerEvents extends SimpleEvent {
                 "player item group cooldown", "player item cooldown")
             .name("Player Item Group Cooldown")
             .description("Fired when a player receives an item cooldown.")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
 
         reg.newEventValue(PlayerItemGroupCooldownEvent.class, Timespan.class)
@@ -423,7 +423,7 @@ public class PlayerEvents extends SimpleEvent {
                 "This event is not called when a player breaks blocks with shears, but rather when a player uses the shears on a block to collect drops from it and/or modify its state.",
                 "Examples include shearing a pumpkin to turn it into a carved pumpkin or shearing a beehive to get honeycomb.")
             .examples("")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
 
         reg.newEventValue(PlayerShearBlockEvent.class, Block.class)
@@ -543,7 +543,7 @@ public class PlayerEvents extends SimpleEvent {
             .description("Called when a player's velocity changes.")
             .examples("on player velocity changed:",
                 "\tset event-velocity to vector(0, 10, 0)")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
 
         reg.newEventValue(PlayerVelocityEvent.class, Vector.class)

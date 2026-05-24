@@ -68,7 +68,7 @@ public class SecStructureLocate extends Section {
                 "Once the structure is found, the location and structure will be available in the section.")
             .examples("locate structure minecraft:village_savanna in radius 5000 around player:",
                 "\tteleport player to block above highest block at event-location")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
 
         reg.newEventValue(LocateStructureEvent.class, Location.class)

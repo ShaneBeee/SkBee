@@ -55,7 +55,7 @@ public class SecExprMusicalInstrument extends SectionExpression<MusicInstrument>
                 "set {_i} to 1 of goat horn",
                 "apply instrument component to {_i}:",
                 "\tinstrument: {_m}")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
     }
 

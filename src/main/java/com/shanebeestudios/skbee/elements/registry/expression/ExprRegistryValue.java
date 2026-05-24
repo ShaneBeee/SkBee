@@ -31,7 +31,7 @@ public class ExprRegistryValue extends SimpleExpression<Object> {
             .examples("set {_v} to value of \"minecraft:plains\" in biome registry",
                 "set {_v} to value of \"minecraft:diamond_sword\" from item registry",
                 "set {_v} to block registry value of \"minecraft:stone\"")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
     }
 

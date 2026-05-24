@@ -27,7 +27,7 @@ public class ExprWeightedListRandomElement extends SimpleExpression<Object> {
                 "",
                 "set {_random} to random weighted element of {_loot}",
                 "set {_random::*} to 5 random weighted elements of {_loot}\n")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
     }
 

@@ -18,7 +18,7 @@ public class StatisticEvents extends SimpleEvent {
                 "player statistic increment")
             .name("Statistic - Increment")
             .description("Called when a player statistic is incremented.")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
 
         reg.newEventValue(PlayerStatisticIncrementEvent.class, Statistic.class)

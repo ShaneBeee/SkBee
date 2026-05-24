@@ -26,7 +26,7 @@ public class LazyLocation extends Location {
         this.worldKey = world.getKey();
     }
 
-    @Deprecated(forRemoval = true, since = "INSERT VERSION")
+    @Deprecated(forRemoval = true, since = "3.24.0")
     public LazyLocation(String worldName, double x, double y, double z, float yaw, float pitch) {
         super(null, x, y, z, yaw, pitch);
         this.worldName = worldName;

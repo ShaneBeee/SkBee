@@ -80,7 +80,7 @@ public class SecLocateBiome extends Section {
                 "\t\t# Pass back to the main thread so we can teleport the player",
                 "\t\twait 1 tick",
                 "\t\tteleport player to block above highest block at event-location")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
 
         reg.newEventValue(LocateBiomeEvent.class, Location.class)

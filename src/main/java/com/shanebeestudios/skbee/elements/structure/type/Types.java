@@ -102,7 +102,7 @@ public class Types {
                 .user("structures?")
                 .description("Represents a structure that can be found in the world, such as a plains village and a mineshaft.",
                     Util.AUTO_GEN_NOTE)
-                .since("INSERT VERSION")
+                .since("3.24.0")
                 .register();
         }
 
@@ -112,7 +112,7 @@ public class Types {
                 .user("structure ?types?")
                 .description("Represents the different types of structures that can be found in the world, such as mineshafts, jigsaw, and swamp huts.",
                     "Requires Skript 2.16+", Util.AUTO_GEN_NOTE)
-                .since("INSERT VERSION")
+                .since("3.24.0")
                 .register();
         }
     }

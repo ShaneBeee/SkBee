@@ -150,7 +150,7 @@ public class EntityEvents extends SimpleEvent {
                 "\tif event-entity is a sheep:",
                 "\t\tif event-dye is red:",
                 "\t\t\tcancel event")
-            .since("INSERT VERSION")
+            .since("3.24.0")
             .register();
 
         reg.newEventValue(EntityDyeEvent.class, Player.class)
@@ -194,7 +194,7 @@ public class EntityEvents extends SimpleEvent {
                 .description("Called when a living entity tries to lunge with a spear.")
                 .examples("on entity lunge:",
                     "\tset event-lunge-power to 5")
-                .since("INSERT VERSION")
+                .since("3.24.0")
                 .register();
 
             reg.newEventValue(EntityLungeEvent.class, Number.class)
