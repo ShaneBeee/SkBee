@@ -124,6 +124,7 @@ public class BlockEvents extends SimpleEvent {
         reg.newEvent(BlockEvents.class, BlockLockCheckEvent.class, "block lock check")
             .name("Block Lock Check")
             .description("Called when the server tries to check the lock on a lockable block entity.")
+            .since("3.24.0")
             .register();
 
         reg.newEventValue(BlockLockCheckEvent.class, Player.class)
