@@ -1,7 +1,8 @@
 package com.shanebeestudios.skbee.elements.other.events.other;
 
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.util.SimpleEvent;
+import ch.njol.skript.util.SkriptColor;
 import ch.njol.skript.util.Timespan;
 import com.destroystokyo.paper.event.entity.EntityAddToWorldEvent;
 import com.destroystokyo.paper.event.entity.EntityPathfindEvent;
@@ -11,7 +12,11 @@ import com.destroystokyo.paper.event.entity.SkeletonHorseTrapEvent;
 import com.destroystokyo.paper.event.entity.SlimePathfindEvent;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.event.EntityBlockInteractEvent;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
+import io.papermc.paper.event.entity.EntityDyeEvent;
 import io.papermc.paper.event.entity.EntityInsideBlockEvent;
+import io.papermc.paper.event.entity.EntityLungeEvent;
+import org.bukkit.DyeColor;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.block.Block;
@@ -87,12 +92,12 @@ public class EntityEvents extends SimpleEvent {
         reg.newEventValue(EntityAirChangeEvent.class, Number.class)
             .description("The amount of air the entity will have left (measured in ticks).")
             .converter(EntityAirChangeEvent::getAmount)
-            .changer(Changer.ChangeMode.SET, (event, value) ->
+            .changer(ChangeMode.SET, (event, value) ->
                 event.setAmount(value != null ? value.intValue() : 0))
             .register();
         reg.newEventValue(EntityAirChangeEvent.class, Timespan.class)
             .converter(event -> new Timespan(Timespan.TimePeriod.TICK, Math.max(event.getAmount(), 0)))
-            .changer(Changer.ChangeMode.SET, (event, value) -> {
+            .changer(ChangeMode.SET, (event, value) -> {
                 int amount = value != null ? (int) value.getAs(Timespan.TimePeriod.TICK) : 0;
                 event.setAmount(amount);
             })
@@ -136,6 +141,34 @@ public class EntityEvents extends SimpleEvent {
             .converter(EntityChangeBlockEvent::getBlockData)
             .register();
 
+        // Entity Dye Event
+        reg.newEvent(EntityEvents.class, EntityDyeEvent.class, "entity dye")
+            .name("Entity Dye")
+            .description("Called when an entity is dyed.",
+                "Currently, this is called for Sheep being dyed, and Wolf/Cat collars being dyed.")
+            .examples("on entity dye:",
+                "\tif event-entity is a sheep:",
+                "\t\tif event-dye is red:",
+                "\t\t\tcancel event")
+            .since("INSERT VERSION")
+            .register();
+
+        reg.newEventValue(EntityDyeEvent.class, Player.class)
+            .description("Returns the player dyeing the entity, if available.")
+            .converter(EntityDyeEvent::getPlayer)
+            .register();
+
+        reg.newEventValue(EntityDyeEvent.class, SkriptColor.class)
+            .description("The color that the entity was dyed with.")
+            .patterns("dye")
+            .converter(event -> SkriptColor.fromDyeColor(event.getColor()))
+            .changer(ChangeMode.SET, (event, value) -> {
+                DyeColor dyeColor = value.asDyeColor();
+                if (dyeColor == null) return;
+                event.setColor(dyeColor);
+            })
+            .register();
+
         // EntityInsideBlockEvent
         reg.newEvent(EntityEvents.class, EntityInsideBlockEvent.class, "entity inside block")
             .name("Entity Inside Block")
@@ -155,11 +188,29 @@ public class EntityEvents extends SimpleEvent {
             .converter(EntityInsideBlockEvent::getBlock)
             .register();
 
+        if (LegacyUtils.HAS_LUNGE_EVENT) {
+            reg.newEvent(EntityEvents.class, EntityLungeEvent.class, "entity lunge")
+                .name("Entity Lunge")
+                .description("Called when a living entity tries to lunge with a spear.")
+                .examples("on entity lunge:",
+                    "\tset event-lunge-power to 5")
+                .since("INSERT VERSION")
+                .register();
+
+            reg.newEventValue(EntityLungeEvent.class, Number.class)
+                .description("Represents the lunge power, which when initially passed, matches the enchantment level of the item, but can be higher.",
+                    "If set higher than 3, the power of the lunge will continue to scale like normal, as if the max enchantment level is higher.")
+                .patterns("power", "lunge-power")
+                .converter(EntityLungeEvent::getLungePower)
+                .changer(ChangeMode.SET, (event, value) -> event.setLungePower(value.intValue()))
+                .register();
+        }
+
         // Entity Pathfind Event
         reg.newEvent(EntityEvents.class, new Class[]{EntityPathfindEvent.class, SlimePathfindEvent.class}, "entity start[s] pathfinding")
             .name("Entity Pathfind")
             .description("Called when an Entity decides to start moving towards a location. This event does not fire for the entities " +
-                "actual movement. Only when it is choosing to start moving to a location. Requires Paper.")
+                "actual movement. Only when it is choosing to start moving to a location.")
             .examples("on entity starts pathfinding:",
                 "\tif event-entity is a sheep:",
                 "\t\tcancel event")

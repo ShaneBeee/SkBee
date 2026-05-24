@@ -139,7 +139,6 @@ public class SecRecipeSmithing extends Section {
         Bukkit.removeRecipe(key);
         Bukkit.addRecipe(recipe);
         RecipeUtil.logSmithingRecipe(recipe);
-
     }
 
     @Override

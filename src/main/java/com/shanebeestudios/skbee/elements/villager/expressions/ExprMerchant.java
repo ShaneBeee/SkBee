@@ -15,20 +15,23 @@ public class ExprMerchant extends SimpleExpression<Merchant> {
 
     public static void register(Registration reg) {
         reg.newSimpleExpression(ExprMerchant.class, Merchant.class,
-                "[new ]merchant named %string%")
+                "[new ]merchant named %string% [to (copy|clone) %-merchant%]")
             .name("Merchant - Create")
-            .description("Creates a new Merchant object with a title.")
+            .description("Creates a new Merchant object with a title.",
+                "You can optionally clone another merchant's recipes.")
             .examples("set {_merch} to new merchant named \"Le-Merchant\"")
             .since("1.17.0")
             .register();
     }
 
     private Expression<String> name;
+    private Expression<Merchant> copy;
 
     @SuppressWarnings({"unchecked"})
     @Override
     public boolean init(Expression<?>[] exprs, int i, Kleenean kleenean, ParseResult parseResult) {
         this.name = (Expression<String>) exprs[0];
+        this.copy = (Expression<Merchant>) exprs[1];
         return true;
     }
 
@@ -38,6 +41,12 @@ public class ExprMerchant extends SimpleExpression<Merchant> {
         String name = this.name.getSingle(event);
         if (name != null) {
             Merchant merchant = Bukkit.createMerchant(name);
+            if (this.copy != null) {
+                Merchant copy = this.copy.getSingle(event);
+                if (copy != null) {
+                    merchant.setRecipes(copy.getRecipes());
+                }
+            }
             return new Merchant[]{merchant};
         }
         return null;
@@ -55,7 +64,8 @@ public class ExprMerchant extends SimpleExpression<Merchant> {
 
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
-        return "new merchant named " + name.toString(e, d);
+        String copy = this.copy != null ? " to copy " + this.copy.toString(e, d) : "";
+        return "new merchant named " + name.toString(e, d) + copy;
     }
 
 }

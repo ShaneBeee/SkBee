@@ -1,9 +1,14 @@
 package com.shanebeestudios.skbee.elements.other.events.other;
 
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.skript.classes.Changer;
+import ch.njol.skript.bukkitutil.SoundUtils;
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.util.SimpleEvent;
 import com.github.shanebeee.skr.Registration;
+import io.papermc.paper.event.block.BlockLockCheckEvent;
+import net.kyori.adventure.sound.Sound;
+import net.kyori.adventure.text.Component;
+import org.bukkit.NamespacedKey;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.data.BlockData;
@@ -82,31 +87,81 @@ public class BlockEvents extends SimpleEvent {
                 }
             })
             .register();
+        reg.newEventValue(BlockExplodeEvent.class, Number.class)
+            .description("Represents the percentage of blocks to drop from this explosion.")
+            .patterns("yield")
+            .converter(BlockExplodeEvent::getYield)
+            .changer(ChangeMode.SET, (event, value) -> event.setYield(value.floatValue()))
+            .register();
         reg.newEventValue(BlockExplodeEvent.class, Block[].class)
-            .description("The blocks which exploded.")
+            .description("Represents the blocks which exploded.")
             .patterns("exploded-blocks")
             .converter(from -> from.blockList().toArray(new Block[0]))
-            .changer(Changer.ChangeMode.SET, (event, value) -> {
+            .changer(ChangeMode.SET, (event, value) -> {
                 event.blockList().clear();
                 if (value != null && value.length > 0) {
                     event.blockList().addAll(List.of(value));
                 }
             })
-            .changer(Changer.ChangeMode.ADD, (event, value) -> {
+            .changer(ChangeMode.ADD, (event, value) -> {
                 if (value != null) {
                     for (Block block : value) {
                         event.blockList().add(block);
                     }
                 }
             })
-            .changer(Changer.ChangeMode.REMOVE, (event, value) -> {
+            .changer(ChangeMode.REMOVE, (event, value) -> {
                 if (value != null) {
                     for (Block block : value) {
                         event.blockList().remove(block);
                     }
                 }
             })
-            .changer(Changer.ChangeMode.DELETE, (event, value) -> event.blockList().clear())
+            .changer(ChangeMode.DELETE, (event, value) -> event.blockList().clear())
+            .register();
+
+        // Block Lock Check Event
+        reg.newEvent(BlockEvents.class, BlockLockCheckEvent.class, "block lock check")
+            .name("Block Lock Check")
+            .description("Called when the server tries to check the lock on a lockable block entity.")
+            .register();
+
+        reg.newEventValue(BlockLockCheckEvent.class, Player.class)
+            .description("Get the player involved this lock check.")
+            .converter(BlockLockCheckEvent::getPlayer)
+            .register();
+        reg.newEventValue(BlockLockCheckEvent.class, ItemStack.class)
+            .description("Represents the item used to check the lock.")
+            .converter(BlockLockCheckEvent::getKeyItem)
+            .changer(ChangeMode.SET, BlockLockCheckEvent::setKeyItem)
+            .register();
+        reg.newEventValue(BlockLockCheckEvent.class, Component.class)
+            .description("Represents the locked message that will be sent if the player cannot open the block.")
+            .patterns("locked-message", "locked message")
+            .converter(BlockLockCheckEvent::getLockedMessage)
+            .changer(ChangeMode.SET, BlockLockCheckEvent::setLockedMessage)
+            .register();
+        reg.newEventValue(BlockLockCheckEvent.class, String.class)
+            .description("Represents the locked sound that will play if the player cannot open the block.")
+            .converter(event -> {
+                Sound lockedSound = event.getLockedSound();
+                if (lockedSound == null) return null;
+
+                return lockedSound.name().toString();
+            })
+            .changer(ChangeMode.SET, (event, sound) -> {
+                NamespacedKey key = SoundUtils.getKey(sound);
+                if (key == null) return;
+
+                Sound lockedSound = event.getLockedSound();
+
+                Sound.Source source = lockedSound != null ? lockedSound.source() : Sound.Source.BLOCK;
+                float volume = lockedSound != null ? lockedSound.volume() : 1.0f;
+                float pitch = lockedSound != null ? lockedSound.pitch() : 1.0f;
+                Sound sound1 = Sound.sound(key, source, volume, pitch);
+
+                event.setLockedSound(sound1);
+            })
             .register();
 
         // Moisture Change Event

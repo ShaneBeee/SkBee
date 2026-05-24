@@ -44,13 +44,13 @@ public class StructChunkGen extends Structure {
                 "register chunk generator with id %string%")
             .name("ChunkGenerator - Register Generator")
             .description("Register a chunk generator to manipulate the world layout to your liking.",
-                "ENTRIES:",
+                "**ENTRIES**:",
                 "(These are all optional, and will default to false)",
                 " - `vanilla decor` = Whether Minecraft will decorate the surface based on biomes.",
                 " - `vanilla caves` = Whether Minecraft will carve caves.",
                 " - `vanilla structures` = Whether Minecraft will generate structures based on biomes.",
                 " - `vanilla mobs` = Whether Minecraft will spawn mobs based on biomes.",
-                "SECTIONS:",
+                "**SECTIONS**:",
                 "(These are all optional)",
                 " - `noise gen` = Generate the base terrain of a chunk [optional, defaults to vanilla noise].",
                 " - `surface gen` = Generate the surface above the base terrain of the chunk [optional, defaults to vanilla surface].",
@@ -59,7 +59,7 @@ public class StructChunkGen extends Structure {
                 " - `biome gen` = Generate the biomes to be placed in a chunk [optional, will default to vanilla biomes].",
                 " - `height gen` = Tell Minecraft where the highest block in a chunk is for generating structures.",
                 " - `block pop` = Used to decorate after initial surface is generated (Structures can be placed during this stage).",
-                "NOTES:",
+                "**NOTES**:",
                 " - `world-creator` needs to be enabled in the config",
                 " - Please see the [**Chunk Generator**](https://github.com/ShaneBeee/SkBee/wiki/Chunk-Generator) wiki for further details.")
             .examples("register chunk generator with id \"mars\":",

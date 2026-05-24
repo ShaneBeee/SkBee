@@ -1,5 +1,6 @@
 package com.shanebeestudios.skbee.elements.villager.event;
 
+import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.lang.util.SimpleEvent;
 import com.github.shanebeee.skr.Registration;
 import io.papermc.paper.event.player.PlayerPurchaseEvent;
@@ -7,15 +8,16 @@ import io.papermc.paper.event.player.PlayerTradeEvent;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.event.entity.VillagerAcquireTradeEvent;
 import org.bukkit.event.inventory.TradeSelectEvent;
 import org.bukkit.inventory.Merchant;
 import org.bukkit.inventory.MerchantInventory;
 import org.bukkit.inventory.MerchantRecipe;
 
-public class SimpleEvents extends SimpleEvent {
+public class VillagerEvents extends SimpleEvent {
 
     public static void register(Registration reg) {
-        reg.newEvent(SimpleEvents.class, TradeSelectEvent.class, "trade select")
+        reg.newEvent(VillagerEvents.class, TradeSelectEvent.class, "trade select")
             .name("Trade Select")
             .description("This event is called whenever a player clicks a new trade on the trades sidebar.",
                 "This event allows the user to get the index of the trade, letting them get the MerchantRecipe via the Merchant.",
@@ -47,7 +49,7 @@ public class SimpleEvents extends SimpleEvent {
             })
             .register();
 
-        reg.newEvent(SimpleEvents.class, PlayerPurchaseEvent.class,
+        reg.newEvent(VillagerEvents.class, PlayerPurchaseEvent.class,
                 "player purchase")
             .name("Player Purchase")
             .description("Called when a player trades with a standalone merchant/villager GUI. Requires PaperMC.")
@@ -66,6 +68,20 @@ public class SimpleEvents extends SimpleEvent {
                 }
                 return null;
             })
+            .register();
+
+        reg.newEvent(VillagerEvents.class, VillagerAcquireTradeEvent.class,
+                "villager acquire trade")
+            .name("Villager Acquire Trade")
+            .description("Called whenever a villager acquires a new trade.")
+            .since("INSERT VERSION")
+            .register();
+
+        reg.newEventValue(VillagerAcquireTradeEvent.class, MerchantRecipe.class)
+            .description("Represents the recipe to be acquired.")
+            .patterns("recipe")
+            .converter(VillagerAcquireTradeEvent::getRecipe)
+            .changer(ChangeMode.SET, VillagerAcquireTradeEvent::setRecipe)
             .register();
     }
 

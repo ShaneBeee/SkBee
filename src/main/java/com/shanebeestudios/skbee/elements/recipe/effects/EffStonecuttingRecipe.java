@@ -6,9 +6,8 @@ import ch.njol.skript.lang.Effect;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser;
 import ch.njol.util.Kleenean;
-import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.recipe.RecipeUtil;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Bukkit;
@@ -102,9 +101,7 @@ public class EffStonecuttingRecipe extends Effect {
         Bukkit.removeRecipe(key);
 
         Bukkit.addRecipe(recipe);
-        if (SkBee.isDebug()) {
-            RecipeUtil.logRecipe(recipe, recipe.getInputChoice());
-        }
+        RecipeUtil.logRecipe(key, recipe, recipe.getInputChoice());
     }
 
     @Override

@@ -61,13 +61,13 @@ public class SecSingleOptionInput extends Section {
                 "\tkey: \"le_key\"",
                 "\tlabel: \"Choose favorite animal\"",
                 "\toptions:",
-                "\t\tadd options entity:",
+                "\t\tadd options entry:",
                 "\t\t\tdisplay: \"cat\"",
-                "\t\tadd options entity:",
+                "\t\tadd options entry:",
                 "\t\t\tdisplay: \"dog\"",
-                "\t\tadd options entity:",
+                "\t\tadd options entry:",
                 "\t\t\tdisplay: \"turtle\"",
-                "\t\tadd options entity:",
+                "\t\tadd options entry:",
                 "\t\t\tdisplay: \"spider\"")
             .since("3.16.0")
             .register();

@@ -5,7 +5,7 @@ import ch.njol.skript.variables.FlatFileStorage;
 import ch.njol.skript.variables.Variables;
 import ch.njol.skript.variables.VariablesStorage;
 import com.shanebeestudios.skbee.api.reflection.ReflectionUtils;
-import com.shanebeestudios.skbee.api.region.TaskUtils;
+import com.github.shanebeee.skr.scheduling.TaskUtils;
 import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.Util;
 

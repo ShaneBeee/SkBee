@@ -10,6 +10,7 @@ import com.shanebeestudios.skbee.elements.structure.expressions.ExprStructureEnt
 import com.shanebeestudios.skbee.elements.structure.expressions.ExprStructureLastPlacedLocation;
 import com.shanebeestudios.skbee.elements.structure.expressions.ExprStructureObject;
 import com.shanebeestudios.skbee.elements.structure.expressions.ExprStructureProperties;
+import com.shanebeestudios.skbee.elements.structure.sections.SecStructureLocate;
 import com.shanebeestudios.skbee.elements.structure.type.Types;
 
 public class StructureElementRegistration {
@@ -29,6 +30,9 @@ public class StructureElementRegistration {
         ExprStructureLastPlacedLocation.register(reg);
         ExprStructureObject.register(reg);
         ExprStructureProperties.register(reg);
+
+        // SECTIONS
+        SecStructureLocate.register(reg);
 
         // TYPES
         Types.register(reg);

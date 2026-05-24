@@ -4,7 +4,7 @@ import ch.njol.skript.classes.Parser;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import com.github.shanebeee.skr.Registration;
-import com.shanebeestudios.skbee.api.region.TaskUtils;
+import com.github.shanebeee.skr.scheduling.TaskUtils;
 import com.shanebeestudios.skbee.api.registry.RegistryHolders;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.registry.RegistryKey;

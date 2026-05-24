@@ -2,7 +2,7 @@ package com.shanebeestudios.skbee.api.worldgen;
 
 import ch.njol.skript.Skript;
 import com.shanebeestudios.skbee.SkBee;
-import com.shanebeestudios.skbee.api.region.TaskUtils;
+import com.github.shanebeee.skr.scheduling.TaskUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import io.papermc.paper.math.FinePosition;
