@@ -19,6 +19,7 @@ import java.awt.geom.Ellipse2D;
 import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
@@ -437,8 +438,8 @@ public class Pong {
         aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
 
         // Animation timer: repaint splash at ~60fps
-        final java.util.concurrent.atomic.AtomicBoolean gameStarted = new java.util.concurrent.atomic.AtomicBoolean(false);
-        javax.swing.Timer animTimer = new javax.swing.Timer(16, e -> {
+        final AtomicBoolean gameStarted = new AtomicBoolean(false);
+        Timer animTimer = new Timer(16, e -> {
             if (splash.isVisible()) splash.repaint();
         });
         animTimer.start();
@@ -464,7 +465,7 @@ public class Pong {
                     // Any other key starts the game
                     splashFadingOut[0] = true;
                     fadeOutStart[0] = System.currentTimeMillis();
-                    new javax.swing.Timer(520, ev -> {
+                    new Timer(520, ev -> {
                         splash.setVisible(false);
                         rootPane.remove(splash);
                         scoreDisplay.setSize(mid.width * 2, mid.height * 2);
@@ -481,7 +482,7 @@ public class Pong {
                         rootPane.requestFocus();
                         gameStarted.set(true);
                         animTimer.stop();
-                        ((javax.swing.Timer) ev.getSource()).stop();
+                        ((Timer) ev.getSource()).stop();
                     }) {{
                         setRepeats(false);
                     }}.start();
