@@ -1,7 +1,15 @@
 package com.shanebeestudios.skbee.game.pong;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.util.concurrent.ThreadLocalRandom;
@@ -9,10 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class Pong {
-    private final JFrame frame;
-    private final JPanel rootPane;
 
-    private float velX, velY;
     private int playerScore = 0;
     private int aiScore = 0;
     private boolean paused = false;
@@ -22,7 +27,7 @@ public class Pong {
     }
 
     public Pong() {
-        frame = new JFrame("SkBee Pong!");
+        JFrame frame = new JFrame("SkBee Pong!");
         frame.setSize(640, 640);
         frame.setResizable(false);
 
@@ -32,7 +37,7 @@ public class Pong {
         int y = (int) ((dimension.getHeight() - frame.getHeight()) / 2);
         frame.setLocation(x, y);
 
-        rootPane = new JPanel();
+        JPanel rootPane = new JPanel();
         rootPane.setLayout(null);
 
         rootPane.setBackground(Color.BLACK);
@@ -157,14 +162,15 @@ public class Pong {
             public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_UP) fuckYouJava[0] = false;
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) fuckYouJava[1] = false;
-                if (!(fuckYouJava[0] || fuckYouJava[1]) && (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN)) addPlayerVel[0] = 0;
+                if (!(fuckYouJava[0] || fuckYouJava[1]) && (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN))
+                    addPlayerVel[0] = 0;
             }
         });
         rootPane.requestFocus();
 
         var random = ThreadLocalRandom.current();
-        velX = 2.0f;
-        velY = random.nextInt(5) * 2 - 5;
+        float velX = 2.0f;
+        float velY = random.nextInt(5) * 2 - 5;
 
         //noinspection InfiniteLoopStatement
         while (true) {
@@ -222,4 +228,5 @@ public class Pong {
             while (System.nanoTime() < time + 16667000L) Thread.onSpinWait();
         }
     }
+
 }
