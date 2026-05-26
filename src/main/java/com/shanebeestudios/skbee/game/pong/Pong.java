@@ -28,6 +28,13 @@ public class Pong {
     private int aiScore = 0;
     private boolean paused = false;
 
+    // 0=Easy, 1=Medium, 2=Hard
+    private volatile int difficulty = 1;
+    private static final String[] DIFF_NAMES = {"EASY", "MEDIUM", "HARD"};
+    // AI speed (px/frame) and positional error (how far the AI aims from ball centre)
+    private static final int[] DIFF_SPEED = {2, 4, 6};
+    private static final int[] DIFF_ERROR = {55, 18, 0};
+
     static final Color BG_COLOR = new Color(8, 8, 20);
     static final Color PLAYER_COLOR = new Color(0, 255, 240);
     static final Color AI_COLOR = new Color(255, 0, 200);
@@ -161,10 +168,10 @@ public class Pong {
                 g2.setColor(new Color(0, 0, 0, 60));
                 for (int y = 0; y < getHeight(); y += 4) g2.drawLine(0, y, getWidth(), y);
                 g2.setColor(new Color(0, 255, 240, 40));
-                g2.fillRoundRect(getWidth() / 2 - 170, getHeight() / 2 - 80, 340, 160, 16, 16);
+                g2.fillRoundRect(getWidth() / 2 - 170, getHeight() / 2 - 95, 340, 195, 16, 16);
                 g2.setColor(new Color(0, 255, 240, 120));
                 g2.setStroke(new BasicStroke(2));
-                g2.drawRoundRect(getWidth() / 2 - 170, getHeight() / 2 - 80, 340, 160, 16, 16);
+                g2.drawRoundRect(getWidth() / 2 - 170, getHeight() / 2 - 95, 340, 195, 16, 16);
                 g2.setFont(new Font("Monospaced", Font.BOLD, 64));
                 FontMetrics fm = g2.getFontMetrics();
                 String title = "PAUSED";
@@ -182,6 +189,13 @@ public class Pong {
                 String h1 = "[ ESC ]  Resume", h2 = "[  Q  ]  Quit";
                 g2.drawString(h1, getWidth() / 2 - fm.stringWidth(h1) / 2, getHeight() / 2 + 44);
                 g2.drawString(h2, getWidth() / 2 - fm.stringWidth(h2) / 2, getHeight() / 2 + 66);
+                // Difficulty indicator
+                Color[] dCols = {new Color(0, 255, 100, 200), new Color(255, 200, 0, 200), new Color(255, 80, 80, 200)};
+                g2.setFont(new Font("Monospaced", Font.PLAIN, 12));
+                fm = g2.getFontMetrics();
+                String dStr = "DIFFICULTY: " + DIFF_NAMES[difficulty];
+                g2.setColor(dCols[difficulty]);
+                g2.drawString(dStr, getWidth() / 2 - fm.stringWidth(dStr) / 2, getHeight() / 2 + 92);
             }
         };
 
@@ -276,15 +290,14 @@ public class Pong {
                 g2.drawLine(W - bx - bw, H - by, W - bx, H - by);
                 g2.drawLine(W - bx, H - by, W - bx, H - by - bh);
 
-                // Decorative paddles (fade in with brackets)
+
+                // Decorative paddles — flank the title area
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, bracketAlpha * masterAlpha));
+                int padH = 90, padW = 14, padY = H / 2 - padH / 2;
                 g2.setPaint(new Color(0, 255, 240, 180));
-                g2.fillRoundRect(50, H / 2 - 55, 14, 90, 6, 6);
+                g2.fillRoundRect(50, padY, padW, padH, 6, 6);
                 g2.setPaint(new Color(255, 0, 200, 180));
-                g2.fillRoundRect(W - 64, H / 2 - 55, 14, 90, 6, 6);
-                // Decorative ball
-                g2.setColor(new Color(255, 230, 0, 200));
-                g2.fill(new Ellipse2D.Float(W / 2f - 9, H / 2f - 9, 18, 18));
+                g2.fillRoundRect(W - 50 - padW, padY, padW, padH, 6, 6);
 
                 // ── "SKBEE" — type-in: one char every 80ms, starting at 400ms ────
                 g2.setFont(new Font("Monospaced", Font.BOLD, 96));
@@ -312,9 +325,9 @@ public class Pong {
                     float t = clamp((animElapsed - pongStart) / 260f);
                     // bounce easing: overshoot then settle
                     float ease = bounce(t);
-                    int baseY = H / 2 + 90;
                     int targetY = H / 2 + 85;
-                    int currentY = (int) (baseY + (targetY - baseY) * ease) + (int) ((1 - ease) * (H - targetY));
+                    int startY = H + 60; // slides up from below the screen
+                    int currentY = (int) (startY + (targetY - startY) * ease);
                     // alpha fade in quickly
                     float a2 = clamp((animElapsed - pongStart) / 150f);
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, a2 * masterAlpha));
@@ -322,8 +335,55 @@ public class Pong {
                     glowText(g2, AI_COLOR, TITLE2, x2, currentY);
                 }
 
-                // ── Subtitle "PRESS ANY KEY" — blinking, appears after everything ─
+                // ── Difficulty selector — appears with subtitle ────────────────
                 long subtitleStart = pongStart + 400;
+                if (animElapsed > subtitleStart) {
+                    float selAlpha = clamp((animElapsed - subtitleStart) / 300f) * masterAlpha;
+                    g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, selAlpha));
+
+                    g2.setFont(new Font("Monospaced", Font.BOLD, 13));
+                    FontMetrics dfm = g2.getFontMetrics();
+                    String label = "DIFFICULTY:";
+                    int labelW = dfm.stringWidth(label);
+                    String dName = DIFF_NAMES[difficulty];
+                    // pick colour per difficulty
+                    Color[] dCols = {new Color(0, 255, 100), new Color(255, 200, 0), new Color(255, 60, 60)};
+                    Color dCol = dCols[difficulty];
+
+                    int rowY = H - 145;
+                    // label
+                    g2.setColor(new Color(200, 200, 200, 200));
+                    g2.drawString(label, W / 2 - labelW / 2, rowY);
+
+                    // Use the widest name as the fixed slot so arrows don't jump around
+                    int slotW = dfm.stringWidth("MEDIUM");
+                    int nameW = dfm.stringWidth(dName);
+                    int arrowW = dfm.stringWidth("<");
+                    int gap = 14; // px between arrow and name
+                    int totalW = arrowW + gap + slotW + gap + arrowW;
+                    int startX = W / 2 - totalW / 2;
+                    int nameX = startX + arrowW + gap + (slotW - nameW) / 2; // centred in slot
+                    int rightAX = startX + arrowW + gap + slotW + gap;
+
+                    // left arrow
+                    g2.setColor(difficulty > 0 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 120));
+                    g2.drawString("<", startX, rowY + 22);
+
+                    // difficulty name with glow, centred in fixed slot
+                    for (int l = 3; l >= 1; l--) {
+                        g2.setColor(new Color(dCol.getRed(), dCol.getGreen(), dCol.getBlue(), 20 * l));
+                        g2.drawString(dName, nameX + l, rowY + 22 + l);
+                        g2.drawString(dName, nameX - l, rowY + 22 - l);
+                    }
+                    g2.setColor(dCol);
+                    g2.drawString(dName, nameX, rowY + 22);
+
+                    // right arrow
+                    g2.setColor(difficulty < 2 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 120));
+                    g2.drawString(">", rightAX, rowY + 22);
+                }
+
+                // ── Subtitle "PRESS ANY KEY" — blinking, appears after everything ─
                 if (animElapsed > subtitleStart) {
                     boolean blink = splashDone[0] && ((animElapsed / 500) % 2 == 0);
                     float subAlpha = splashDone[0] ? (blink ? 0.65f : 0.3f) : clamp((animElapsed - subtitleStart) / 300f) * 0.55f;
@@ -332,7 +392,7 @@ public class Pong {
                     FontMetrics sfm = g2.getFontMetrics();
                     String sub = "PRESS ANY KEY TO START";
                     g2.setColor(Color.WHITE);
-                    g2.drawString(sub, W / 2 - sfm.stringWidth(sub) / 2, H - 80);
+                    g2.drawString(sub, W / 2 - sfm.stringWidth(sub) / 2, H - 55);
                     // mark animation done so blink can begin
                     if (!splashDone[0] && animElapsed > subtitleStart + 400) splashDone[0] = true;
                 }
@@ -342,7 +402,7 @@ public class Pong {
             }
 
             private float clamp(float v) {
-                return Math.max(0f, Math.min(1f, v));
+                return Math.clamp(v, 0f, 1f);
             }
 
             /** Bounce easing: goes past 1 then settles back */
@@ -389,15 +449,23 @@ public class Pong {
 
             @Override
             public void keyPressed(KeyEvent e) {
-                // Intercept key while splash is showing
+                // While splash is visible and animation is done
                 if (splash.isVisible() && splashDone[0] && !splashFadingOut[0]) {
+                    // Left/right cycle difficulty — do NOT start the game
+                    if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                        if (e.getKeyCode() == KeyEvent.VK_LEFT)
+                            difficulty = Math.max(0, difficulty - 1);
+                        else
+                            difficulty = Math.min(2, difficulty + 1);
+                        splash.repaint();
+                        return;
+                    }
+                    // Any other key starts the game
                     splashFadingOut[0] = true;
                     fadeOutStart[0] = System.currentTimeMillis();
-                    // Remove splash after fade completes
                     new javax.swing.Timer(520, ev -> {
                         splash.setVisible(false);
                         rootPane.remove(splash);
-                        // Now add game components in correct Z-order (added last = on top)
                         scoreDisplay.setSize(mid.width * 2, mid.height * 2);
                         scoreDisplay.setLocation(0, 0);
                         rootPane.add(aiPaddle);
@@ -471,8 +539,14 @@ public class Pong {
                 playerPaddle.repaint();
 
                 var aiLoc = aiPaddle.getLocation();
+                // Difficulty: speed cap + positional error so easy AI aims slightly off-centre
+                int aiSpeed = DIFF_SPEED[difficulty];
+                int aiError = DIFF_ERROR[difficulty];
+                // On easy/medium the AI tracks a point offset from the true ball centre
+                int aiTarget = loc.y - 50 + aiError;
+                int aiDelta = Integer.compare(aiTarget, aiLoc.y) * aiSpeed;
                 aiPaddle.setLocation(aiLoc.x, Math.min(mid.height * 2 - 100,
-                    Math.max(0, aiLoc.y + Integer.compare(loc.y - 50, aiLoc.y) * 4)));
+                    Math.max(0, aiLoc.y + aiDelta)));
                 aiPaddle.repaint();
 
                 if (loc.y < 10) velY = Math.abs(velY);
