@@ -1,5 +1,9 @@
 package com.shanebeestudios.skbee.game.pong;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -16,8 +20,7 @@ import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
-import java.util.ArrayDeque;
-import java.util.Deque;
+import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -53,6 +56,68 @@ public class Pong {
         g2.setStroke(new BasicStroke(1));
     }
 
+    /**
+     * Synthesises and plays a tone asynchronously on a daemon thread.
+     * freqHz = base pitch, ms = duration, volume = 0-1, sweep = Hz to slide to over duration
+     */
+    private static void beep(double freqHz, int ms, float volume, double sweep) {
+        Thread t = new Thread(() -> {
+            try {
+                float sampleRate = 44100f;
+                int samples = (int) (sampleRate * ms / 1000.0);
+                byte[] buf = new byte[samples * 2];
+                for (int i = 0; i < samples; i++) {
+                    double freq = freqHz + sweep * ((double) i / samples);
+                    double angle = 2.0 * Math.PI * freq * i / sampleRate;
+                    // Short fade-in / fade-out envelope to avoid clicks
+                    double env = 1.0;
+                    int fadeIn = (int) (sampleRate * 0.005);
+                    int fadeOut = (int) (sampleRate * 0.010);
+                    if (i < fadeIn) env = (double) i / fadeIn;
+                    if (i > samples - fadeOut) env = (double) (samples - i) / fadeOut;
+                    short val = (short) (Math.sin(angle) * 32767 * volume * env);
+                    buf[i * 2] = (byte) (val & 0xFF);
+                    buf[i * 2 + 1] = (byte) ((val >> 8) & 0xFF);
+                }
+                AudioFormat fmt = new AudioFormat(sampleRate, 16, 1, true, false);
+                Clip clip = AudioSystem.getClip();
+                clip.open(fmt, buf, 0, buf.length);
+                clip.start();
+                Thread.sleep(ms + 50);
+                clip.close();
+            } catch (LineUnavailableException | InterruptedException ignored) {
+            }
+        });
+        t.setDaemon(true);
+        t.start();
+    }
+
+    // ── Named sound effects ───────────────────────────────────────────
+    private static void soundPaddleHit() {
+        beep(900, 55, 0.35f, 120);
+    }
+
+    private static void soundWallBounce() {
+        beep(420, 45, 0.25f, -80);
+    }
+
+    private static void soundPlayerScore() {
+        beep(440, 80, 0.40f, 220);
+        beep(660, 100, 0.40f, 0);
+    }
+
+    private static void soundAiScore() {
+        beep(330, 80, 0.40f, -150);
+        beep(220, 120, 0.35f, 0);
+    }
+
+    private static void soundGameStart() {
+        beep(330, 60, 0.30f, 0);
+        beep(440, 60, 0.30f, 0);
+        beep(660, 80, 0.35f, 0);
+        beep(880, 120, 0.35f, 80);
+    }
+
     public static void main(String[] args) {
         new Pong();
     }
@@ -72,7 +137,7 @@ public class Pong {
 
         // ── Game components ───────────────────────────────────────────
         final int TRAIL_LEN = 10;
-        Deque<Point> trail = new ArrayDeque<>(TRAIL_LEN + 1);
+        ConcurrentLinkedDeque<Point> trail = new ConcurrentLinkedDeque<>();
 
         JComponent ball = new JComponent() {
             @Override
@@ -480,6 +545,7 @@ public class Pong {
                         rootPane.revalidate();
                         rootPane.repaint();
                         rootPane.requestFocus();
+                        soundGameStart();
                         gameStarted.set(true);
                         animTimer.stop();
                         ((Timer) ev.getSource()).stop();
@@ -550,10 +616,17 @@ public class Pong {
                 aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + aiDelta, 0, mid.height * 2 - 100));
                 aiPaddle.repaint();
 
-                if (loc.y < 10) velY = Math.abs(velY);
-                if (loc.y > mid.height * 2 - 10) velY = -Math.abs(velY);
+                if (loc.y < 10) {
+                    velY = Math.abs(velY);
+                    soundWallBounce();
+                }
+                if (loc.y > mid.height * 2 - 10) {
+                    velY = -Math.abs(velY);
+                    soundWallBounce();
+                }
 
                 if (loc.x < 10) {
+                    soundAiScore();
                     aiScore++;
                     velX = 2.0f;
                     velY = random.nextInt(5) * 2 - 5;
@@ -563,6 +636,7 @@ public class Pong {
                     aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
                     scoreDisplay.repaint();
                 } else if (loc.x > mid.width * 2 - 10) {
+                    soundPlayerScore();
                     playerScore++;
                     velX = -2.0f;
                     velY = random.nextInt(5) * 2 - 5;
@@ -574,10 +648,12 @@ public class Pong {
                 }
 
                 if (aiPaddle.getBounds().intersects(ball.getBounds())) {
+                    soundPaddleHit();
                     velX = -(Math.abs(velX) * random.nextFloat(1.0f) + (random.nextInt(100) == 2 ? 10f : 1f));
                     velY = ((loc.y + 10) - (aiLoc.y + 50)) / 5.0f;
                 }
                 if (playerPaddle.getBounds().intersects(ball.getBounds())) {
+                    soundPaddleHit();
                     velX = (Math.abs(velX) * random.nextFloat(1.0f) + (random.nextInt(100) == 2 ? 10f : 1f));
                     velY = ((loc.y + 10) - (playerPaddle.getLocation().y + 50)) / 5.0f;
                 }
