@@ -29,7 +29,7 @@ public class Pong {
     private boolean paused = false;
 
     // 0=Easy, 1=Medium, 2=Hard
-    private volatile int difficulty = 1;
+    private int difficulty = 1;
     private static final String[] DIFF_NAMES = {"EASY", "MEDIUM", "HARD"};
     // AI speed (px/frame) and positional error (how far the AI aims from ball centre)
     private static final int[] DIFF_SPEED = {2, 4, 6};
@@ -42,6 +42,7 @@ public class Pong {
     static final Color SCANLINE_COLOR = new Color(0, 0, 0, 40);
     static final Color CENTER_COLOR = new Color(255, 255, 255, 60);
 
+    @SuppressWarnings("SameParameterValue")
     private static void drawGlow(Graphics2D g2, Color base, Runnable shape, int layers) {
         for (int i = layers; i >= 1; i--) {
             g2.setColor(new Color(base.getRed(), base.getGreen(), base.getBlue(), Math.min(255, 28 * i)));
@@ -302,7 +303,7 @@ public class Pong {
                 // ── "SKBEE" — type-in: one char every 80ms, starting at 400ms ────
                 g2.setFont(new Font("Monospaced", Font.BOLD, 96));
                 FontMetrics fm = g2.getFontMetrics();
-                int charsVisible1 = (int) Math.min(TITLE1.length(), Math.max(0, (animElapsed - 400) / 80));
+                int charsVisible1 = (int) Math.clamp((animElapsed - 400) / 80, 0, TITLE1.length());
                 if (charsVisible1 > 0) {
                     String partial = TITLE1.substring(0, charsVisible1);
                     // flicker on the last char while typing
@@ -534,7 +535,7 @@ public class Pong {
 
                 if (addPlayerVel[0] != 0) {
                     var pl = playerPaddle.getLocation();
-                    playerPaddle.setLocation(pl.x, Math.min(mid.height * 2 - 100, Math.max(0, pl.y + addPlayerVel[0])));
+                    playerPaddle.setLocation(pl.x, Math.clamp(pl.y + addPlayerVel[0], 0, mid.height * 2 - 100));
                 }
                 playerPaddle.repaint();
 
@@ -545,8 +546,7 @@ public class Pong {
                 // On easy/medium the AI tracks a point offset from the true ball centre
                 int aiTarget = loc.y - 50 + aiError;
                 int aiDelta = Integer.compare(aiTarget, aiLoc.y) * aiSpeed;
-                aiPaddle.setLocation(aiLoc.x, Math.min(mid.height * 2 - 100,
-                    Math.max(0, aiLoc.y + aiDelta)));
+                aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + aiDelta, 0, mid.height * 2 - 100));
                 aiPaddle.repaint();
 
                 if (loc.y < 10) velY = Math.abs(velY);
