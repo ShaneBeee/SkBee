@@ -13,6 +13,12 @@ public class Pong {
     private final JPanel rootPane;
 
     private float velX, velY;
+    private int playerScore = 0;
+    private int aiScore = 0;
+
+    public static void main(String[] args) {
+        new Pong();
+    }
 
     public Pong() {
         frame = new JFrame("SkBee Pong!");
@@ -54,6 +60,24 @@ public class Pong {
             }
         };
 
+        JComponent scoreDisplay = new JComponent() {
+            @Override
+            public void paint(Graphics g) {
+                g.setColor(Color.WHITE);
+                g.setFont(new Font("Monospaced", Font.BOLD, 48));
+                FontMetrics fm = g.getFontMetrics();
+                String playerStr = String.valueOf(playerScore);
+                String aiStr = String.valueOf(aiScore);
+                // Player score on left quarter, AI score on right quarter
+                g.drawString(playerStr, getWidth() / 4 - fm.stringWidth(playerStr) / 2, fm.getAscent() + 20);
+                g.drawString(aiStr, 3 * getWidth() / 4 - fm.stringWidth(aiStr) / 2, fm.getAscent() + 20);
+                // Center dividing line
+                Graphics2D g2d = (Graphics2D) g;
+                g2d.setStroke(new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_BEVEL, 0, new float[]{10}, 0));
+                g2d.drawLine(getWidth() / 2, 0, getWidth() / 2, getHeight());
+            }
+        };
+
         ball.setSize(20, 20);
         playerPaddle.setSize(20, 100);
         aiPaddle.setSize(20, 100);
@@ -68,6 +92,9 @@ public class Pong {
         frame.setVisible(true);
 
         var mid = new Dimension(rootPane.getSize().width / 2, rootPane.getSize().height / 2);
+        scoreDisplay.setSize(mid.width * 2, mid.height * 2);
+        scoreDisplay.setLocation(0, 0);
+        rootPane.add(scoreDisplay);
         ball.setLocation(mid.width - 10, mid.height - 10);
         playerPaddle.setLocation(20, mid.height - 50);
         aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
@@ -123,12 +150,24 @@ public class Pong {
             if (loc.y < 10) velY = Math.abs(velY);
             if (loc.y > mid.height * 2 - 10) velY = -(Math.abs(velY));
 
-            if (loc.x < 10 || loc.x > mid.height * 2 - 10) {
+            if (loc.x < 10) {
+                // Ball passed player's side — AI scores
+                aiScore++;
                 velX = 2.0f;
                 velY = random.nextInt(5) * 2 - 5;
                 ball.setLocation(mid.width - 10, mid.height - 10);
                 playerPaddle.setLocation(20, mid.height - 50);
                 aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
+                scoreDisplay.repaint();
+            } else if (loc.x > mid.width * 2 - 10) {
+                // Ball passed AI's side — Player scores
+                playerScore++;
+                velX = -2.0f;
+                velY = random.nextInt(5) * 2 - 5;
+                ball.setLocation(mid.width - 10, mid.height - 10);
+                playerPaddle.setLocation(20, mid.height - 50);
+                aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
+                scoreDisplay.repaint();
             }
 
             if (aiPaddle.getBounds().intersects(ball.getBounds())) {
