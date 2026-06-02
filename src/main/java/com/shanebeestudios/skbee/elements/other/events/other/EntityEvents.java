@@ -191,7 +191,8 @@ public class EntityEvents extends SimpleEvent {
         if (LegacyUtils.HAS_LUNGE_EVENT) {
             reg.newEvent(EntityEvents.class, EntityLungeEvent.class, "entity lunge")
                 .name("Entity Lunge")
-                .description("Called when a living entity tries to lunge with a spear.")
+                .description("Called when a living entity tries to lunge with a spear.",
+                    "Requires Minecraft 26.1.2+")
                 .examples("on entity lunge:",
                     "\tset event-lunge-power to 5")
                 .since("3.24.0")
