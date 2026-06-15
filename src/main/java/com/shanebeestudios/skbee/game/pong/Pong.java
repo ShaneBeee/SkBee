@@ -118,13 +118,14 @@ public class Pong {
     private static void soundWin()  { beep(440,80,0.4f,0); beep(550,80,0.4f,0); beep(660,80,0.4f,0); beep(880,200,0.45f,100); }
     private static void soundLose() { beep(440,100,0.4f,-100); beep(330,100,0.4f,-80); beep(220,180,0.4f,-100); }
 
+    // This is only here for testing in IJ
     public static void main(String[] args) {
-        // Must be set before AWT initialises — controls the macOS dock app name
-        System.setProperty("apple.awt.application.name", "SkBee Pong");
         new Pong();
     }
 
     public Pong() {
+        // Must be set before AWT initialises — controls the macOS dock app name
+        System.setProperty("apple.awt.application.name", "SkBee Pong");
         JFrame frame = new JFrame("SkBee Pong!");
         frame.setSize(640, 640);
         frame.setResizable(false);
