@@ -1,5 +1,9 @@
 package com.shanebeestudios.skbee.game.pong;
 
+import javax.sound.sampled.AudioFormat;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.LineUnavailableException;
 import javax.swing.*;
 import java.awt.AlphaComposite;
 import java.awt.BasicStroke;
@@ -8,25 +12,21 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.GradientPaint;
-import java.awt.Image;
-import java.awt.Taskbar;
-import java.awt.image.BufferedImage;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.RenderingHints;
+import java.awt.Taskbar;
 import java.awt.Toolkit;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-import javax.sound.sampled.AudioFormat;
-import javax.sound.sampled.AudioSystem;
-import javax.sound.sampled.Clip;
-import javax.sound.sampled.LineUnavailableException;
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
 public class Pong {
@@ -76,18 +76,32 @@ public class Pong {
         g.drawLine(size / 2, size / 8, size / 2, 7 * size / 8);
         g.setStroke(new BasicStroke(1));
         int padW = Math.max(3, size / 16), padH = size / 3, padX = size / 10, padY = size / 2 - padH / 2, radius = padW;
-        for (int i = 3; i >= 1; i--) { g.setColor(new Color(0,255,240,22*i)); g.setStroke(new BasicStroke(i*1.5f)); g.drawRoundRect(padX-i,padY-i,padW+i*2,padH+i*2,radius,radius); }
+        for (int i = 3; i >= 1; i--) {
+            g.setColor(new Color(0, 255, 240, 22 * i));
+            g.setStroke(new BasicStroke(i * 1.5f));
+            g.drawRoundRect(padX - i, padY - i, padW + i * 2, padH + i * 2, radius, radius);
+        }
         g.setStroke(new BasicStroke(1));
-        g.setPaint(new GradientPaint(padX,0,new Color(0,180,170),padX+padW,0,new Color(0,255,240)));
+        g.setPaint(new GradientPaint(padX, 0, new Color(0, 180, 170), padX + padW, 0, new Color(0, 255, 240)));
         g.fillRoundRect(padX, padY, padW, padH, radius, radius);
         int aiPadX = size - padX - padW;
-        for (int i = 3; i >= 1; i--) { g.setColor(new Color(255,0,200,22*i)); g.setStroke(new BasicStroke(i*1.5f)); g.drawRoundRect(aiPadX-i,padY-i,padW+i*2,padH+i*2,radius,radius); }
+        for (int i = 3; i >= 1; i--) {
+            g.setColor(new Color(255, 0, 200, 22 * i));
+            g.setStroke(new BasicStroke(i * 1.5f));
+            g.drawRoundRect(aiPadX - i, padY - i, padW + i * 2, padH + i * 2, radius, radius);
+        }
         g.setStroke(new BasicStroke(1));
-        g.setPaint(new GradientPaint(aiPadX,0,new Color(255,0,200),aiPadX+padW,0,new Color(180,0,140)));
+        g.setPaint(new GradientPaint(aiPadX, 0, new Color(255, 0, 200), aiPadX + padW, 0, new Color(180, 0, 140)));
         g.fillRoundRect(aiPadX, padY, padW, padH, radius, radius);
-        int ballR = Math.max(4, size / 10), ballX = size/2-ballR/2, ballY2 = size/2-ballR/2;
-        for (int i = 3; i >= 1; i--) { g.setColor(new Color(255,230,0,22*i)); g.setStroke(new BasicStroke(i*1.5f)); g.drawOval(ballX-i,ballY2-i,ballR+i*2,ballR+i*2); }
-        g.setStroke(new BasicStroke(1)); g.setColor(new Color(255,230,0)); g.fillOval(ballX,ballY2,ballR,ballR);
+        int ballR = Math.max(4, size / 10), ballX = size / 2 - ballR / 2, ballY2 = size / 2 - ballR / 2;
+        for (int i = 3; i >= 1; i--) {
+            g.setColor(new Color(255, 230, 0, 22 * i));
+            g.setStroke(new BasicStroke(i * 1.5f));
+            g.drawOval(ballX - i, ballY2 - i, ballR + i * 2, ballR + i * 2);
+        }
+        g.setStroke(new BasicStroke(1));
+        g.setColor(new Color(255, 230, 0));
+        g.fillOval(ballX, ballY2, ballR, ballR);
         g.dispose();
         return img;
     }
@@ -95,28 +109,70 @@ public class Pong {
     private static void beep(double freqHz, int ms, float volume, double sweep) {
         Thread t = new Thread(() -> {
             try {
-                float sr = 44100f; int n = (int)(sr*ms/1000.0); byte[] buf = new byte[n*2];
+                float sr = 44100f;
+                int n = (int) (sr * ms / 1000.0);
+                byte[] buf = new byte[n * 2];
                 for (int i = 0; i < n; i++) {
-                    double freq = freqHz + sweep*((double)i/n);
-                    double angle = 2.0*Math.PI*freq*i/sr;
-                    double env = 1.0; int fi=(int)(sr*0.005),fo=(int)(sr*0.010);
-                    if(i<fi) env=(double)i/fi; if(i>n-fo) env=(double)(n-i)/fo;
-                    short val=(short)(Math.sin(angle)*32767*volume*env);
-                    buf[i*2]=(byte)(val&0xFF); buf[i*2+1]=(byte)((val>>8)&0xFF);
+                    double freq = freqHz + sweep * ((double) i / n);
+                    double angle = 2.0 * Math.PI * freq * i / sr;
+                    double env = 1.0;
+                    int fi = (int) (sr * 0.005), fo = (int) (sr * 0.010);
+                    if (i < fi) env = (double) i / fi;
+                    if (i > n - fo) env = (double) (n - i) / fo;
+                    short val = (short) (Math.sin(angle) * 32767 * volume * env);
+                    buf[i * 2] = (byte) (val & 0xFF);
+                    buf[i * 2 + 1] = (byte) ((val >> 8) & 0xFF);
                 }
-                AudioFormat fmt=new AudioFormat(sr,16,1,true,false);
-                Clip clip=AudioSystem.getClip(); clip.open(fmt,buf,0,buf.length); clip.start();
-                Thread.sleep(ms+50); clip.close();
-            } catch(LineUnavailableException|InterruptedException ignored){}
-        }); t.setDaemon(true); t.start();
+                AudioFormat fmt = new AudioFormat(sr, 16, 1, true, false);
+                Clip clip = AudioSystem.getClip();
+                clip.open(fmt, buf, 0, buf.length);
+                clip.start();
+                Thread.sleep(ms + 50);
+                clip.close();
+            } catch (LineUnavailableException | InterruptedException ignored) {
+            }
+        });
+        t.setDaemon(true);
+        t.start();
     }
-    private static void soundPaddleHit()   { beep(900,55,0.35f,120); }
-    private static void soundWallBounce()  { beep(420,45,0.25f,-80); }
-    private static void soundPlayerScore() { beep(440,80,0.40f,220); beep(660,100,0.40f,0); }
-    private static void soundAiScore()     { beep(330,80,0.40f,-150); beep(220,120,0.35f,0); }
-    private static void soundGameStart()   { beep(330,60,0.30f,0); beep(440,60,0.30f,0); beep(660,80,0.35f,0); beep(880,120,0.35f,80); }
-    private static void soundWin()  { beep(440,80,0.4f,0); beep(550,80,0.4f,0); beep(660,80,0.4f,0); beep(880,200,0.45f,100); }
-    private static void soundLose() { beep(440,100,0.4f,-100); beep(330,100,0.4f,-80); beep(220,180,0.4f,-100); }
+
+    private static void soundPaddleHit() {
+        beep(900, 55, 0.35f, 120);
+    }
+
+    private static void soundWallBounce() {
+        beep(420, 45, 0.25f, -80);
+    }
+
+    private static void soundPlayerScore() {
+        beep(440, 80, 0.40f, 220);
+        beep(660, 100, 0.40f, 0);
+    }
+
+    private static void soundAiScore() {
+        beep(330, 80, 0.40f, -150);
+        beep(220, 120, 0.35f, 0);
+    }
+
+    private static void soundGameStart() {
+        beep(330, 60, 0.30f, 0);
+        beep(440, 60, 0.30f, 0);
+        beep(660, 80, 0.35f, 0);
+        beep(880, 120, 0.35f, 80);
+    }
+
+    private static void soundWin() {
+        beep(440, 80, 0.4f, 0);
+        beep(550, 80, 0.4f, 0);
+        beep(660, 80, 0.4f, 0);
+        beep(880, 200, 0.45f, 100);
+    }
+
+    private static void soundLose() {
+        beep(440, 100, 0.4f, -100);
+        beep(330, 100, 0.4f, -80);
+        beep(220, 180, 0.4f, -100);
+    }
 
     // This is only here for testing in IJ
     public static void main(String[] args) {
@@ -137,7 +193,13 @@ public class Pong {
 
         Image appIcon = createIcon(512);
         frame.setIconImage(appIcon);
-        try { if(Taskbar.isTaskbarSupported()){Taskbar tb=Taskbar.getTaskbar();if(tb.isSupported(Taskbar.Feature.ICON_IMAGE))tb.setIconImage(appIcon);} } catch(Exception ignored){}
+        try {
+            if (Taskbar.isTaskbarSupported()) {
+                Taskbar tb = Taskbar.getTaskbar();
+                if (tb.isSupported(Taskbar.Feature.ICON_IMAGE)) tb.setIconImage(appIcon);
+            }
+        } catch (Exception ignored) {
+        }
 
         JPanel rootPane = new JPanel(null);
         rootPane.setBackground(BG_COLOR);
@@ -274,35 +336,44 @@ public class Pong {
 
         // ── Win overlay ───────────────────────────────────────────────
         JComponent winOverlay = new JComponent() {
-            @Override public void paint(Graphics g) {
+            @Override
+            public void paint(Graphics g) {
                 if (!gameOver) return;
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(new Color(8, 8, 20, 210)); g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.setColor(new Color(8, 8, 20, 210));
+                g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setColor(new Color(0, 0, 0, 60));
                 for (int y = 0; y < getHeight(); y += 4) g2.drawLine(0, y, getWidth(), y);
                 boolean playerWon = playerScore >= WIN_SCORE;
                 Color tc = playerWon ? PLAYER_COLOR : AI_COLOR;
                 String tt = playerWon ? "YOU WIN!" : "YOU LOSE";
-                g2.setColor(new Color(tc.getRed(),tc.getGreen(),tc.getBlue(),35));
-                g2.fillRoundRect(getWidth()/2-200,getHeight()/2-110,400,220,16,16);
-                g2.setColor(new Color(tc.getRed(),tc.getGreen(),tc.getBlue(),140));
+                g2.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 35));
+                g2.fillRoundRect(getWidth() / 2 - 200, getHeight() / 2 - 110, 400, 220, 16, 16);
+                g2.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 140));
                 g2.setStroke(new BasicStroke(2));
-                g2.drawRoundRect(getWidth()/2-200,getHeight()/2-110,400,220,16,16);
-                g2.setFont(new Font("Monospaced",Font.BOLD,68));
-                FontMetrics fm=g2.getFontMetrics();
-                int tx=getWidth()/2-fm.stringWidth(tt)/2, ty=getHeight()/2-10;
-                for(int l=5;l>=1;l--){g2.setColor(new Color(tc.getRed(),tc.getGreen(),tc.getBlue(),16*l));g2.drawString(tt,tx+l,ty+l);g2.drawString(tt,tx-l,ty-l);}
-                g2.setColor(tc); g2.drawString(tt,tx,ty);
-                g2.setFont(new Font("Monospaced",Font.PLAIN,18)); fm=g2.getFontMetrics();
-                String score="PLAYER  "+playerScore+"  —  "+aiScore+"  CPU";
-                g2.setColor(new Color(200,200,200,200));
-                g2.drawString(score,getWidth()/2-fm.stringWidth(score)/2,getHeight()/2+44);
-                if((System.currentTimeMillis()/500)%2==0){
-                    g2.setFont(new Font("Monospaced",Font.PLAIN,13)); fm=g2.getFontMetrics();
-                    String prompt="PRESS ANY KEY TO CONTINUE";
-                    g2.setColor(new Color(180,180,180,180));
-                    g2.drawString(prompt,getWidth()/2-fm.stringWidth(prompt)/2,getHeight()/2+80);
+                g2.drawRoundRect(getWidth() / 2 - 200, getHeight() / 2 - 110, 400, 220, 16, 16);
+                g2.setFont(new Font("Monospaced", Font.BOLD, 68));
+                FontMetrics fm = g2.getFontMetrics();
+                int tx = getWidth() / 2 - fm.stringWidth(tt) / 2, ty = getHeight() / 2 - 10;
+                for (int l = 5; l >= 1; l--) {
+                    g2.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 16 * l));
+                    g2.drawString(tt, tx + l, ty + l);
+                    g2.drawString(tt, tx - l, ty - l);
+                }
+                g2.setColor(tc);
+                g2.drawString(tt, tx, ty);
+                g2.setFont(new Font("Monospaced", Font.PLAIN, 18));
+                fm = g2.getFontMetrics();
+                String score = "PLAYER  " + playerScore + "  —  " + aiScore + "  CPU";
+                g2.setColor(new Color(200, 200, 200, 200));
+                g2.drawString(score, getWidth() / 2 - fm.stringWidth(score) / 2, getHeight() / 2 + 44);
+                if ((System.currentTimeMillis() / 500) % 2 == 0) {
+                    g2.setFont(new Font("Monospaced", Font.PLAIN, 13));
+                    fm = g2.getFontMetrics();
+                    String prompt = "PRESS ANY KEY TO CONTINUE";
+                    g2.setColor(new Color(180, 180, 180, 180));
+                    g2.drawString(prompt, getWidth() / 2 - fm.stringWidth(prompt) / 2, getHeight() / 2 + 80);
                 }
             }
         };
@@ -347,7 +418,10 @@ public class Pong {
                 if (splashFadingOut[0]) {
                     float t = (now - fadeOutStart[0]) / 500f;
                     masterAlpha = Math.max(0f, 1f - t);
-                    if (masterAlpha <= 0f) { setVisible(false); return; }
+                    if (masterAlpha <= 0f) {
+                        setVisible(false);
+                        return;
+                    }
                 } else if (elapsed < BLACK_HOLD) {
                     return;
                 } else {
@@ -370,11 +444,15 @@ public class Pong {
                 g2.setStroke(new BasicStroke(1.2f));
                 int bx = 38, by = 44, bw = 60, bh = 40;
                 g2.setColor(new Color(0, 255, 240, 130));
-                g2.drawLine(bx, by + bh, bx, by); g2.drawLine(bx, by, bx + bw, by);
-                g2.drawLine(W - bx - bw, by, W - bx, by); g2.drawLine(W - bx, by, W - bx, by + bh);
+                g2.drawLine(bx, by + bh, bx, by);
+                g2.drawLine(bx, by, bx + bw, by);
+                g2.drawLine(W - bx - bw, by, W - bx, by);
+                g2.drawLine(W - bx, by, W - bx, by + bh);
                 g2.setColor(new Color(255, 0, 200, 130));
-                g2.drawLine(bx, H - by - bh, bx, H - by); g2.drawLine(bx, H - by, bx + bw, H - by);
-                g2.drawLine(W - bx - bw, H - by, W - bx, H - by); g2.drawLine(W - bx, H - by, W - bx, H - by - bh);
+                g2.drawLine(bx, H - by - bh, bx, H - by);
+                g2.drawLine(bx, H - by, bx + bw, H - by);
+                g2.drawLine(W - bx - bw, H - by, W - bx, H - by);
+                g2.drawLine(W - bx, H - by, W - bx, H - by - bh);
 
                 // Decorative paddles
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, bracketAlpha * masterAlpha));
@@ -443,7 +521,8 @@ public class Pong {
                         g2.drawString(dName, nameX + l, rowY + 22 + l);
                         g2.drawString(dName, nameX - l, rowY + 22 - l);
                     }
-                    g2.setColor(dCol); g2.drawString(dName, nameX, rowY + 22);
+                    g2.setColor(dCol);
+                    g2.drawString(dName, nameX, rowY + 22);
                     g2.setColor(difficulty < 2 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 120));
                     g2.drawString(">", rightAX, rowY + 22);
                 }
@@ -464,11 +543,14 @@ public class Pong {
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
             }
 
-            private float clamp(float v) { return Math.clamp(v, 0f, 1f); }
+            private float clamp(float v) {
+                return Math.clamp(v, 0f, 1f);
+            }
 
             private float bounce(float t) {
                 if (t >= 1f) return 1f;
-                double s = 1.70158; t = t - 1;
+                double s = 1.70158;
+                t = t - 1;
                 return (float) (t * t * ((s + 1) * t + s) + 1);
             }
         };
@@ -509,46 +591,80 @@ public class Pong {
                     if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
                         if (e.getKeyCode() == KeyEvent.VK_LEFT) difficulty = Math.max(0, difficulty - 1);
                         else difficulty = Math.min(2, difficulty + 1);
-                        splash.repaint(); return;
+                        splash.repaint();
+                        return;
                     }
                     splashFadingOut[0] = true;
                     fadeOutStart[0] = System.currentTimeMillis();
                     new Timer(520, ev -> {
-                        splash.setVisible(false); rootPane.remove(splash);
-                        scoreDisplay.setSize(mid.width * 2, mid.height * 2); scoreDisplay.setLocation(0, 0);
-                        rootPane.add(aiPaddle); rootPane.add(playerPaddle); rootPane.add(ball); rootPane.add(scoreDisplay);
-                        pauseOverlay.setSize(mid.width * 2, mid.height * 2); pauseOverlay.setLocation(0, 0); rootPane.add(pauseOverlay);
-                        winOverlay.setSize(mid.width*2, mid.height*2); winOverlay.setLocation(0, 0); rootPane.add(winOverlay);
-                        rootPane.revalidate(); rootPane.repaint(); rootPane.requestFocus();
-                        soundGameStart(); gameStarted.set(true); animTimer.stop();
+                        splash.setVisible(false);
+                        rootPane.remove(splash);
+                        scoreDisplay.setSize(mid.width * 2, mid.height * 2);
+                        scoreDisplay.setLocation(0, 0);
+                        rootPane.add(aiPaddle);
+                        rootPane.add(playerPaddle);
+                        rootPane.add(ball);
+                        rootPane.add(scoreDisplay);
+                        pauseOverlay.setSize(mid.width * 2, mid.height * 2);
+                        pauseOverlay.setLocation(0, 0);
+                        rootPane.add(pauseOverlay);
+                        winOverlay.setSize(mid.width * 2, mid.height * 2);
+                        winOverlay.setLocation(0, 0);
+                        rootPane.add(winOverlay);
+                        rootPane.revalidate();
+                        rootPane.repaint();
+                        rootPane.requestFocus();
+                        soundGameStart();
+                        gameStarted.set(true);
+                        animTimer.stop();
                         ((Timer) ev.getSource()).stop();
-                    }) {{ setRepeats(false); }}.start();
+                    }) {{
+                        setRepeats(false);
+                    }}.start();
                     return;
                 }
                 if (splash.isVisible()) return;
 
                 if (gameOver) {
-                    gameOver = false; playerScore = 0; aiScore = 0;
-                    rootPane.remove(winOverlay); rootPane.remove(pauseOverlay);
-                    rootPane.remove(scoreDisplay); rootPane.remove(ball);
-                    rootPane.remove(playerPaddle); rootPane.remove(aiPaddle);
+                    gameOver = false;
+                    playerScore = 0;
+                    aiScore = 0;
+                    rootPane.remove(winOverlay);
+                    rootPane.remove(pauseOverlay);
+                    rootPane.remove(scoreDisplay);
+                    rootPane.remove(ball);
+                    rootPane.remove(playerPaddle);
+                    rootPane.remove(aiPaddle);
                     trail.clear();
-                    ball.setLocation(mid.width-10, mid.height-10);
-                    playerPaddle.setLocation(20, mid.height-50);
-                    aiPaddle.setLocation(mid.width*2-40, mid.height-50);
+                    ball.setLocation(mid.width - 10, mid.height - 10);
+                    playerPaddle.setLocation(20, mid.height - 50);
+                    aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
                     gameStarted.set(false);
                     animStart[0] = System.currentTimeMillis();
-                    splashDone[0] = false; splashFadingOut[0] = false;
-                    splash.setVisible(true); rootPane.add(splash);
-                    rootPane.revalidate(); rootPane.repaint();
-                    animTimer.start(); return;
+                    splashDone[0] = false;
+                    splashFadingOut[0] = false;
+                    splash.setVisible(true);
+                    rootPane.add(splash);
+                    rootPane.revalidate();
+                    rootPane.repaint();
+                    animTimer.start();
+                    return;
                 }
 
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) { paused = !paused; pauseOverlay.repaint(); return; }
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                    paused = !paused;
+                    pauseOverlay.repaint();
+                    return;
+                }
                 if (e.getKeyCode() == KeyEvent.VK_Q && paused) System.exit(0);
                 if (paused) return;
-                if (e.getKeyCode() == KeyEvent.VK_UP) { addPlayerVel[0] = -4; fuckYouJava[0] = true; }
-                else if (e.getKeyCode() == KeyEvent.VK_DOWN) { addPlayerVel[0] = 4; fuckYouJava[1] = true; }
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    addPlayerVel[0] = -4;
+                    fuckYouJava[0] = true;
+                } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    addPlayerVel[0] = 4;
+                    fuckYouJava[1] = true;
+                }
             }
 
             @Override
@@ -570,14 +686,17 @@ public class Pong {
         while (true) {
             var time = System.nanoTime();
 
-            if (gameOver) { winOverlay.repaint(); }
+            if (gameOver) {
+                winOverlay.repaint();
+            }
             if (gameStarted.get() && !paused && !gameOver) {
                 var loc = ball.getLocation();
                 trail.addLast(new Point(loc.x, loc.y));
                 if (trail.size() > TRAIL_LEN) trail.pollFirst();
 
                 ball.setLocation((int) (loc.x + Math.ceil(velX)), (int) (loc.y + Math.ceil(velY)));
-                ball.repaint(); scoreDisplay.repaint();
+                ball.repaint();
+                scoreDisplay.repaint();
 
                 if (addPlayerVel[0] != 0) {
                     var pl = playerPaddle.getLocation();
@@ -592,24 +711,42 @@ public class Pong {
                 aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + aiDelta, 0, mid.height * 2 - 100));
                 aiPaddle.repaint();
 
-                if (loc.y < 10)                   { velY = Math.abs(velY);  soundWallBounce(); }
-                if (loc.y > mid.height * 2 - 10) { velY = -Math.abs(velY); soundWallBounce(); }
+                if (loc.y < 10) {
+                    velY = Math.abs(velY);
+                    soundWallBounce();
+                }
+                if (loc.y > mid.height * 2 - 10) {
+                    velY = -Math.abs(velY);
+                    soundWallBounce();
+                }
 
                 if (loc.x < 10) {
-                    soundAiScore(); aiScore++;
-                    if (aiScore >= WIN_SCORE) { gameOver = true; soundLose(); }
-                    velX = 2.0f; velY = random.nextInt(5) * 2 - 5; trail.clear();
-                    ball.setLocation(mid.width-10, mid.height-10);
-                    playerPaddle.setLocation(20, mid.height-50);
-                    aiPaddle.setLocation(mid.width*2-40, mid.height-50);
+                    soundAiScore();
+                    aiScore++;
+                    if (aiScore >= WIN_SCORE) {
+                        gameOver = true;
+                        soundLose();
+                    }
+                    velX = 2.0f;
+                    velY = random.nextInt(5) * 2 - 5;
+                    trail.clear();
+                    ball.setLocation(mid.width - 10, mid.height - 10);
+                    playerPaddle.setLocation(20, mid.height - 50);
+                    aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
                     scoreDisplay.repaint();
                 } else if (loc.x > mid.width * 2 - 10) {
-                    soundPlayerScore(); playerScore++;
-                    if (playerScore >= WIN_SCORE) { gameOver = true; soundWin(); }
-                    velX = -2.0f; velY = random.nextInt(5) * 2 - 5; trail.clear();
-                    ball.setLocation(mid.width-10, mid.height-10);
-                    playerPaddle.setLocation(20, mid.height-50);
-                    aiPaddle.setLocation(mid.width*2-40, mid.height-50);
+                    soundPlayerScore();
+                    playerScore++;
+                    if (playerScore >= WIN_SCORE) {
+                        gameOver = true;
+                        soundWin();
+                    }
+                    velX = -2.0f;
+                    velY = random.nextInt(5) * 2 - 5;
+                    trail.clear();
+                    ball.setLocation(mid.width - 10, mid.height - 10);
+                    playerPaddle.setLocation(20, mid.height - 50);
+                    aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
                     scoreDisplay.repaint();
                 }
 
