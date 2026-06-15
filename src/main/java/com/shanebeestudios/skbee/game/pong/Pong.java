@@ -51,6 +51,9 @@ public class Pong {
     private volatile boolean gameOver = false;
     private float rallySpeed = 1.0f;
 
+    // Easy AI "lazy" state
+    private int aiZonedOutFrames = 0;  // >0 means AI is ignoring the ball
+
     // Screen flash on score
     private volatile long flashStartMs = 0;
     private volatile Color flashColor = null;
@@ -792,10 +795,64 @@ public class Pong {
                 playerPaddle.repaint();
 
                 var aiLoc = aiPaddle.getLocation();
-                int aiSpeed = DIFF_SPEED[difficulty], aiError = DIFF_ERROR[difficulty];
-                int aiTarget = loc.y - 50 + aiError;
-                int aiDelta = Integer.compare(aiTarget, aiLoc.y) * aiSpeed;
-                aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + aiDelta, 0, mid.height * 2 - 100));
+                int aiSpeed = DIFF_SPEED[difficulty];
+
+                if (difficulty == 0) {
+                    // ── EASY: lazy AI — randomly zones out, wakes up if ball is dangerously close ──
+                    boolean ballComingAtAI = velX > 0;
+                    boolean ballNearAI = loc.x > mid.width * 2 - 120;
+                    if (aiZonedOutFrames > 0) {
+                        // Snap back if ball is about to hit us
+                        if (ballComingAtAI && ballNearAI) {
+                            aiZonedOutFrames = 0;
+                        } else {
+                            aiZonedOutFrames--;
+                            // drift lazily toward centre while zoned out
+                            int centrePaddle = mid.height - 50;
+                            int driftDelta = Integer.compare(centrePaddle, aiLoc.y);
+                            aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + driftDelta, 0, mid.height * 2 - 100));
+                        }
+                    } else {
+                        // 2% chance to zone out each frame (only when ball is moving away)
+                        if (!ballComingAtAI && random.nextInt(50) == 0) {
+                            aiZonedOutFrames = 30 + random.nextInt(40);
+                        } else {
+                            int aiTarget = loc.y - 50 + DIFF_ERROR[0];
+                            int aiDelta = Integer.compare(aiTarget, aiLoc.y) * aiSpeed;
+                            aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + aiDelta, 0, mid.height * 2 - 100));
+                        }
+                    }
+
+                } else if (difficulty == 2) {
+                    // ── HARD: predictive AI — simulate where the ball will be when it reaches paddle X ──
+                    int fieldH = mid.height * 2;
+                    // Simulate ball trajectory to find Y at AI paddle X
+                    float simX = loc.x, simY = loc.y + 10; // ball centre
+                    float simVX = velX * rallySpeed, simVY = velY * rallySpeed;
+                    // Only predict when ball is heading toward AI
+                    if (simVX > 0) {
+                        float targetX = mid.width * 2 - 40f; // AI paddle X
+                        int maxSteps = 200;
+                        while (simX < targetX && maxSteps-- > 0) {
+                            simX += simVX;
+                            simY += simVY;
+                            // Bounce off top/bottom walls
+                            if (simY < 10)           { simY = 10;          simVY = Math.abs(simVY); }
+                            if (simY > fieldH - 10)  { simY = fieldH - 10; simVY = -Math.abs(simVY); }
+                        }
+                    }
+                    // Aim paddle centre at predicted ball Y
+                    int predictedTarget = (int) simY - 50;
+                    int aiDelta = Integer.compare(predictedTarget, aiLoc.y) * aiSpeed;
+                    aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + aiDelta, 0, mid.height * 2 - 100));
+
+                } else {
+                    // ── MEDIUM: original tracking with error ──
+                    int aiTarget = loc.y - 50 + DIFF_ERROR[1];
+                    int aiDelta = Integer.compare(aiTarget, aiLoc.y) * aiSpeed;
+                    aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + aiDelta, 0, mid.height * 2 - 100));
+                }
+
                 aiPaddle.repaint();
 
                 if (loc.y < 10) {
@@ -818,7 +875,7 @@ public class Pong {
                     }
                     velX = 2.0f;
                     velY = random.nextInt(5) * 2 - 5;
-                    rallySpeed = 1.0f;
+                    rallySpeed = 1.0f; aiZonedOutFrames = 0;
                     trail.clear();
                     ball.setLocation(mid.width - 10, mid.height - 10);
                     playerPaddle.setLocation(20, mid.height - 50);
@@ -834,7 +891,7 @@ public class Pong {
                     }
                     velX = -2.0f;
                     velY = random.nextInt(5) * 2 - 5;
-                    rallySpeed = 1.0f;
+                    rallySpeed = 1.0f; aiZonedOutFrames = 0;
                     trail.clear();
                     ball.setLocation(mid.width - 10, mid.height - 10);
                     playerPaddle.setLocation(20, mid.height - 50);
