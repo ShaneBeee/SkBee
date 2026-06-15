@@ -23,6 +23,9 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
@@ -47,6 +50,21 @@ public class Pong {
     private int splashRow = 0; // 0 = difficulty selected, 1 = score to win selected
     private volatile boolean gameOver = false;
     private float rallySpeed = 1.0f;
+
+    // Screen flash on score
+    private volatile long flashStartMs = 0;
+    private volatile Color flashColor = null;
+    private static final long FLASH_DURATION_MS = 200;
+
+    // Particles
+    private static class Particle {
+        float x, y, vx, vy, life; // life: 1.0 -> 0.0
+        Color color;
+        Particle(float x, float y, float vx, float vy, Color color) {
+            this.x = x; this.y = y; this.vx = vx; this.vy = vy; this.color = color; this.life = 1.0f;
+        }
+    }
+    private final List<Particle> particles = new ArrayList<>();
 
     static final Color BG_COLOR = new Color(8, 8, 20);
     static final Color PLAYER_COLOR = new Color(0, 255, 240);
@@ -252,12 +270,17 @@ public class Pong {
                 g2.setColor(SCANLINE_COLOR);
                 for (int y = 0; y < getHeight(); y += 4) g2.drawLine(0, y, getWidth(), y);
 
-                // Trail
+                // Trail — colour shifts yellow→orange→red with rallySpeed
                 int ti = 0;
                 for (Point p : trail) {
                     float frac = (float) ti / TRAIL_LEN;
                     float size = 14 * frac;
-                    g2.setColor(new Color(255, 200, 0, (int) (frac * 140)));
+                    // speed ratio 0..1 across the rally speed range
+                    float speedRatio = Math.clamp((rallySpeed - 1.0f) / 1.2f, 0f, 1f);
+                    // yellow (255,200,0) -> orange (255,120,0) -> red (255,40,0)
+                    int tg = (int)(200 - speedRatio * 160);
+                    int tb = 0;
+                    g2.setColor(new Color(255, tg, tb, (int) (frac * 140)));
                     g2.fill(new Ellipse2D.Float(p.x + 10 - size / 2, p.y + 10 - size / 2, size, size));
                     ti++;
                 }
@@ -293,6 +316,30 @@ public class Pong {
                 g2.drawString(ps, getWidth() / 4 - fm.stringWidth(ps) / 2, fm.getAscent() + 22);
                 g2.setColor(AI_COLOR);
                 g2.drawString(as, 3 * getWidth() / 4 - fm.stringWidth(as) / 2, fm.getAscent() + 22);
+
+                // Particles
+                synchronized (particles) {
+                    Iterator<Particle> it = particles.iterator();
+                    while (it.hasNext()) {
+                        Particle p = it.next();
+                        int alpha = (int)(p.life * 220);
+                        float size = 4 * p.life;
+                        g2.setColor(new Color(p.color.getRed(), p.color.getGreen(), p.color.getBlue(), alpha));
+                        g2.fill(new Ellipse2D.Float(p.x - size/2, p.y - size/2, size, size));
+                    }
+                }
+
+                // Screen flash
+                if (flashColor != null) {
+                    long elapsed = System.currentTimeMillis() - flashStartMs;
+                    if (elapsed < FLASH_DURATION_MS) {
+                        float alpha = 0.35f * (1f - (float)elapsed / FLASH_DURATION_MS);
+                        g2.setColor(new Color(flashColor.getRed(), flashColor.getGreen(), flashColor.getBlue(), (int)(alpha * 255)));
+                        g2.fillRect(0, 0, getWidth(), getHeight());
+                    } else {
+                        flashColor = null;
+                    }
+                }
             }
         };
 
@@ -663,7 +710,8 @@ public class Pong {
                 }
                 if (splash.isVisible()) return;
 
-                if (gameOver) {
+                if (gameOver && e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN
+                        && e.getKeyCode() != KeyEvent.VK_LEFT && e.getKeyCode() != KeyEvent.VK_RIGHT) {
                     gameOver = false;
                     playerScore = 0;
                     aiScore = 0;
@@ -763,6 +811,7 @@ public class Pong {
                 if (loc.x < 10) {
                     soundAiScore();
                     aiScore++;
+                    flashColor = AI_COLOR; flashStartMs = System.currentTimeMillis();
                     if (aiScore >= winScore) {
                         gameOver = true;
                         soundLose();
@@ -778,6 +827,7 @@ public class Pong {
                 } else if (loc.x > mid.width * 2 - 10) {
                     soundPlayerScore();
                     playerScore++;
+                    flashColor = PLAYER_COLOR; flashStartMs = System.currentTimeMillis();
                     if (playerScore >= winScore) {
                         gameOver = true;
                         soundWin();
@@ -799,6 +849,15 @@ public class Pong {
                     float speedX = (Math.abs(velX) + 0.5f) * rallySpeed;
                     velX = -(speedX + (random.nextInt(100) == 2 ? 10f : 0f));
                     velY = hitPos * 6.0f;
+                    // spark burst at AI paddle contact point
+                    synchronized (particles) {
+                        for (int i = 0; i < 7; i++) {
+                            float ang = (float)(random.nextDouble() * Math.PI * 2);
+                            float spd = 1.5f + random.nextFloat() * 3f;
+                            particles.add(new Particle(aiPaddle.getX(), loc.y + 10,
+                                (float)Math.cos(ang)*spd, (float)Math.sin(ang)*spd, AI_COLOR));
+                        }
+                    }
                 }
                 if (playerPaddle.getBounds().intersects(ball.getBounds())) {
                     soundPaddleHit();
@@ -807,6 +866,26 @@ public class Pong {
                     float speedX = (Math.abs(velX) + 0.5f) * rallySpeed;
                     velX = speedX + (random.nextInt(100) == 2 ? 10f : 0f);
                     velY = hitPos * 6.0f;
+                    // spark burst at player paddle contact point
+                    synchronized (particles) {
+                        for (int i = 0; i < 7; i++) {
+                            float ang = (float)(random.nextDouble() * Math.PI * 2);
+                            float spd = 1.5f + random.nextFloat() * 3f;
+                            particles.add(new Particle(playerPaddle.getX() + 20, loc.y + 10,
+                                (float)Math.cos(ang)*spd, (float)Math.sin(ang)*spd, PLAYER_COLOR));
+                        }
+                    }
+                }
+
+                // Tick particles
+                synchronized (particles) {
+                    Iterator<Particle> it = particles.iterator();
+                    while (it.hasNext()) {
+                        Particle p = it.next();
+                        p.x += p.vx; p.y += p.vy;
+                        p.life -= 0.045f;
+                        if (p.life <= 0) it.remove();
+                    }
                 }
             }
 
