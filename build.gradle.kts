@@ -17,7 +17,7 @@ val serverVersion = "26.1.2"
 // Minimum version of Minecraft that SkBee supports
 val apiVersion = "1.21.10"
 // Where this builds on the server
-val serverLocation = "Minecraft/Skript/26-1"
+val serverLocation = "Minecraft/Skript/26-2"
 
 java.sourceCompatibility = JavaVersion.VERSION_25
 
@@ -67,6 +67,8 @@ dependencies {
 
 tasks {
     register("server", Copy::class) {
+        group = "bee-building"
+        description = "Build the SkBee jar in the pre-defined server location."
         dependsOn("shadowJar")
         from("build/libs") {
             include("SkBee-*.jar")
