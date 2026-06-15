@@ -7,15 +7,14 @@ import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.LoopSection;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
-import ch.njol.skript.lang.Variable;
 import ch.njol.skript.lang.parser.ParserInstance;
 import ch.njol.skript.util.Timespan;
 import ch.njol.skript.variables.Variables;
 import ch.njol.util.Kleenean;
+import com.github.shanebeee.skr.Registration;
 import com.github.shanebeee.skr.scheduling.TaskUtils;
 import com.github.shanebeee.skr.scheduling.scheduler.Scheduler;
 import com.github.shanebeee.skr.scheduling.scheduler.task.Task;
-import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.Location;
 import org.bukkit.entity.Entity;
@@ -92,8 +91,8 @@ public class SecRunTaskLater extends LoopSection {
         }
         this.repeating = (Expression<Timespan>) exprs[1];
         this.idStorage = (Expression<Object>) exprs[2 + matchedPattern];
-        if (this.idStorage != null && (!(this.idStorage instanceof Variable<?>))) {
-            Skript.error("The id can only be stored in a variable.");
+        if (this.idStorage != null && this.idStorage.acceptChange(ChangeMode.SET) == null) {
+            Skript.error("The id can only be stored in a changeable object such as a variable.");
             return false;
         }
         ParserInstance parserInstance = ParserInstance.get();
