@@ -42,8 +42,11 @@ public class Pong {
     private static final int[] DIFF_SPEED = {2, 4, 6};
     private static final int[] DIFF_ERROR = {55, 18, 0};
 
-    private static final int WIN_SCORE = 5;
+    private static final int[] WIN_OPTIONS = {3, 5, 7, 10};
+    private int winOptionIndex = 1; // default: first to 5
+    private int splashRow = 0; // 0 = difficulty selected, 1 = score to win selected
     private volatile boolean gameOver = false;
+    private float rallySpeed = 1.0f;
 
     static final Color BG_COLOR = new Color(8, 8, 20);
     static final Color PLAYER_COLOR = new Color(0, 255, 240);
@@ -328,7 +331,7 @@ public class Pong {
                 Color[] dCols = {new Color(0, 255, 100, 200), new Color(255, 200, 0, 200), new Color(255, 80, 80, 200)};
                 g2.setFont(new Font("Monospaced", Font.PLAIN, 12));
                 fm = g2.getFontMetrics();
-                String dStr = "DIFFICULTY: " + DIFF_NAMES[difficulty];
+                String dStr = "DIFFICULTY: " + DIFF_NAMES[difficulty] + "  |  FIRST TO: " + WIN_OPTIONS[winOptionIndex];
                 g2.setColor(dCols[difficulty]);
                 g2.drawString(dStr, getWidth() / 2 - fm.stringWidth(dStr) / 2, getHeight() / 2 + 92);
             }
@@ -345,7 +348,7 @@ public class Pong {
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setColor(new Color(0, 0, 0, 60));
                 for (int y = 0; y < getHeight(); y += 4) g2.drawLine(0, y, getWidth(), y);
-                boolean playerWon = playerScore >= WIN_SCORE;
+                boolean playerWon = playerScore >= WIN_OPTIONS[winOptionIndex];
                 Color tc = playerWon ? PLAYER_COLOR : AI_COLOR;
                 String tt = playerWon ? "YOU WIN!" : "YOU LOSE";
                 g2.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 35));
@@ -500,31 +503,55 @@ public class Pong {
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, selAlpha));
                     g2.setFont(new Font("Monospaced", Font.BOLD, 13));
                     FontMetrics dfm = g2.getFontMetrics();
-                    String label = "DIFFICULTY:";
-                    int labelW = dfm.stringWidth(label);
+                    int arrowW = dfm.stringWidth("<"), gap = 14;
+
+                    // difficulty row
+                    String diffLabel = "DIFFICULTY:";
+                    g2.setColor(splashRow == 0 ? new Color(255, 255, 255, 220) : new Color(200, 200, 200, 120));
+                    g2.drawString(diffLabel, W / 2 - dfm.stringWidth(diffLabel) / 2, H - 175);
                     String dName = DIFF_NAMES[difficulty];
                     Color[] dCols = {new Color(0, 255, 100), new Color(255, 200, 0), new Color(255, 60, 60)};
-                    Color dCol = dCols[difficulty];
-                    int rowY = H - 145;
-                    g2.setColor(new Color(200, 200, 200, 200));
-                    g2.drawString(label, W / 2 - labelW / 2, rowY);
-                    int slotW = dfm.stringWidth("MEDIUM"), nameW = dfm.stringWidth(dName);
-                    int arrowW = dfm.stringWidth("<"), gap = 14;
-                    int totalW = arrowW + gap + slotW + gap + arrowW;
-                    int startX = W / 2 - totalW / 2;
-                    int nameX = startX + arrowW + gap + (slotW - nameW) / 2;
-                    int rightAX = startX + arrowW + gap + slotW + gap;
-                    g2.setColor(difficulty > 0 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 120));
-                    g2.drawString("<", startX, rowY + 22);
+                    Color dCol = splashRow == 0 ? dCols[difficulty] : new Color(dCols[difficulty].getRed(), dCols[difficulty].getGreen(), dCols[difficulty].getBlue(), 120);
+                    int dSlotW = dfm.stringWidth("MEDIUM"), dNameW = dfm.stringWidth(dName);
+                    int dTotalW = arrowW + gap + dSlotW + gap + arrowW;
+                    int dStartX = W / 2 - dTotalW / 2;
+                    int dNameX = dStartX + arrowW + gap + (dSlotW - dNameW) / 2;
+                    int dRightAX = dStartX + arrowW + gap + dSlotW + gap;
+                    g2.setColor(splashRow == 0 && difficulty > 0 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 80));
+                    g2.drawString("<", dStartX, H - 155);
                     for (int l = 3; l >= 1; l--) {
-                        g2.setColor(new Color(dCol.getRed(), dCol.getGreen(), dCol.getBlue(), 20 * l));
-                        g2.drawString(dName, nameX + l, rowY + 22 + l);
-                        g2.drawString(dName, nameX - l, rowY + 22 - l);
+                        g2.setColor(new Color(dCol.getRed(), dCol.getGreen(), dCol.getBlue(), splashRow == 0 ? 20 * l : 8 * l));
+                        g2.drawString(dName, dNameX + l, H - 155 + l);
+                        g2.drawString(dName, dNameX - l, H - 155 - l);
                     }
                     g2.setColor(dCol);
-                    g2.drawString(dName, nameX, rowY + 22);
-                    g2.setColor(difficulty < 2 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 120));
-                    g2.drawString(">", rightAX, rowY + 22);
+                    g2.drawString(dName, dNameX, H - 155);
+                    g2.setColor(splashRow == 0 && difficulty < 2 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 80));
+                    g2.drawString(">", dRightAX, H - 155);
+
+                    // score to win row
+                    String winLabel = "SCORE TO WIN:";
+                    g2.setColor(splashRow == 1 ? new Color(255, 255, 255, 220) : new Color(200, 200, 200, 120));
+                    g2.drawString(winLabel, W / 2 - dfm.stringWidth(winLabel) / 2, H - 120);
+                    String wName = String.valueOf(WIN_OPTIONS[winOptionIndex]);
+                    int wSlotW = dfm.stringWidth("10"), wNameW = dfm.stringWidth(wName);
+                    int wTotalW = arrowW + gap + wSlotW + gap + arrowW;
+                    int wStartX = W / 2 - wTotalW / 2;
+                    int wNameX = wStartX + arrowW + gap + (wSlotW - wNameW) / 2;
+                    int wRightAX = wStartX + arrowW + gap + wSlotW + gap;
+                    g2.setColor(splashRow == 1 && winOptionIndex > 0 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 80));
+                    g2.drawString("<", wStartX, H - 100);
+                    g2.setColor(splashRow == 1 ? new Color(180, 180, 255, 220) : new Color(180, 180, 255, 100));
+                    g2.drawString(wName, wNameX, H - 100);
+                    g2.setColor(splashRow == 1 && winOptionIndex < WIN_OPTIONS.length - 1 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 80));
+                    g2.drawString(">", wRightAX, H - 100);
+
+                    // small nav hint
+                    g2.setFont(new Font("Monospaced", Font.PLAIN, 11));
+                    FontMetrics hfm = g2.getFontMetrics();
+                    String hint = splashRow == 0 ? "\u25bc  to select SCORE TO WIN" : "\u25b2  to select DIFFICULTY";
+                    g2.setColor(new Color(150, 150, 150, 140));
+                    g2.drawString(hint, W / 2 - hfm.stringWidth(hint) / 2, H - 70);
                 }
 
                 // "PRESS ANY KEY"
@@ -589,8 +616,19 @@ public class Pong {
             public void keyPressed(KeyEvent e) {
                 if (splash.isVisible() && splashDone[0] && !splashFadingOut[0]) {
                     if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                        if (e.getKeyCode() == KeyEvent.VK_LEFT) difficulty = Math.max(0, difficulty - 1);
-                        else difficulty = Math.min(2, difficulty + 1);
+                        if (splashRow == 0) {
+                            if (e.getKeyCode() == KeyEvent.VK_LEFT) difficulty = Math.max(0, difficulty - 1);
+                            else difficulty = Math.min(2, difficulty + 1);
+                        } else {
+                            if (e.getKeyCode() == KeyEvent.VK_LEFT) winOptionIndex = Math.max(0, winOptionIndex - 1);
+                            else winOptionIndex = Math.min(WIN_OPTIONS.length - 1, winOptionIndex + 1);
+                        }
+                        splash.repaint();
+                        return;
+                    }
+                    if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
+                        if (e.getKeyCode() == KeyEvent.VK_DOWN) splashRow = Math.min(1, splashRow + 1);
+                        else splashRow = Math.max(0, splashRow - 1);
                         splash.repaint();
                         return;
                     }
@@ -643,6 +681,7 @@ public class Pong {
                     animStart[0] = System.currentTimeMillis();
                     splashDone[0] = false;
                     splashFadingOut[0] = false;
+                    splashRow = 0;
                     splash.setVisible(true);
                     rootPane.add(splash);
                     rootPane.revalidate();
@@ -694,7 +733,7 @@ public class Pong {
                 trail.addLast(new Point(loc.x, loc.y));
                 if (trail.size() > TRAIL_LEN) trail.pollFirst();
 
-                ball.setLocation((int) (loc.x + Math.ceil(velX)), (int) (loc.y + Math.ceil(velY)));
+                ball.setLocation((int) (loc.x + Math.ceil(velX * rallySpeed)), (int) (loc.y + Math.ceil(velY * rallySpeed)));
                 ball.repaint();
                 scoreDisplay.repaint();
 
@@ -720,15 +759,17 @@ public class Pong {
                     soundWallBounce();
                 }
 
+                int winScore = WIN_OPTIONS[winOptionIndex];
                 if (loc.x < 10) {
                     soundAiScore();
                     aiScore++;
-                    if (aiScore >= WIN_SCORE) {
+                    if (aiScore >= winScore) {
                         gameOver = true;
                         soundLose();
                     }
                     velX = 2.0f;
                     velY = random.nextInt(5) * 2 - 5;
+                    rallySpeed = 1.0f;
                     trail.clear();
                     ball.setLocation(mid.width - 10, mid.height - 10);
                     playerPaddle.setLocation(20, mid.height - 50);
@@ -737,12 +778,13 @@ public class Pong {
                 } else if (loc.x > mid.width * 2 - 10) {
                     soundPlayerScore();
                     playerScore++;
-                    if (playerScore >= WIN_SCORE) {
+                    if (playerScore >= winScore) {
                         gameOver = true;
                         soundWin();
                     }
                     velX = -2.0f;
                     velY = random.nextInt(5) * 2 - 5;
+                    rallySpeed = 1.0f;
                     trail.clear();
                     ball.setLocation(mid.width - 10, mid.height - 10);
                     playerPaddle.setLocation(20, mid.height - 50);
@@ -752,13 +794,19 @@ public class Pong {
 
                 if (aiPaddle.getBounds().intersects(ball.getBounds())) {
                     soundPaddleHit();
-                    velX = -(Math.abs(velX) * random.nextFloat(1.0f) + (random.nextInt(100) == 2 ? 10f : 1f));
-                    velY = ((loc.y + 10) - (aiLoc.y + 50)) / 5.0f;
+                    rallySpeed = Math.min(rallySpeed + 0.08f, 2.2f);
+                    float hitPos = Math.clamp(((loc.y + 10) - (aiLoc.y + 50)) / 50.0f, -1f, 1f);
+                    float speedX = (Math.abs(velX) + 0.5f) * rallySpeed;
+                    velX = -(speedX + (random.nextInt(100) == 2 ? 10f : 0f));
+                    velY = hitPos * 6.0f;
                 }
                 if (playerPaddle.getBounds().intersects(ball.getBounds())) {
                     soundPaddleHit();
-                    velX = (Math.abs(velX) * random.nextFloat(1.0f) + (random.nextInt(100) == 2 ? 10f : 1f));
-                    velY = ((loc.y + 10) - (playerPaddle.getLocation().y + 50)) / 5.0f;
+                    rallySpeed = Math.min(rallySpeed + 0.08f, 2.2f);
+                    float hitPos = Math.clamp(((loc.y + 10) - (playerPaddle.getLocation().y + 50)) / 50.0f, -1f, 1f);
+                    float speedX = (Math.abs(velX) + 0.5f) * rallySpeed;
+                    velX = speedX + (random.nextInt(100) == 2 ? 10f : 0f);
+                    velY = hitPos * 6.0f;
                 }
             }
 
