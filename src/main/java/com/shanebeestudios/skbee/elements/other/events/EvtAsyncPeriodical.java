@@ -92,7 +92,7 @@ public class EvtAsyncPeriodical extends SkriptEvent {
 
     @Override
     public String toString(@Nullable Event event, boolean debug) {
-        return "every " + this.period;
+        return "async every " + this.period;
     }
 
 }
