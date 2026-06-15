@@ -54,6 +54,7 @@ import com.shanebeestudios.skbee.elements.other.effects.EffTransferCookieStore;
 import com.shanebeestudios.skbee.elements.other.effects.EffUpdateRecipeResources;
 import com.shanebeestudios.skbee.elements.other.effects.EffWeightedListAddEntry;
 import com.shanebeestudios.skbee.elements.other.events.AsyncEvents;
+import com.shanebeestudios.skbee.elements.other.events.EvtAsyncPeriodical;
 import com.shanebeestudios.skbee.elements.other.events.EvtDamageByBlock;
 import com.shanebeestudios.skbee.elements.other.events.EvtEntitiesLoad;
 import com.shanebeestudios.skbee.elements.other.events.EvtEntityKnockback;
@@ -258,6 +259,7 @@ public class OtherElementRegistration {
         OtherEventValues.register(registration);
 
         AsyncEvents.register(registration);
+        EvtAsyncPeriodical.register(registration);
         EvtDamageByBlock.register(registration);
         EvtEntitiesLoad.register(registration);
         EvtEntityKnockback.register(registration);
