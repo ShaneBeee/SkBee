@@ -23,6 +23,7 @@ import com.shanebeestudios.skbee.elements.other.effects.EffBreakBlocksWithEffect
 import com.shanebeestudios.skbee.elements.other.effects.EffChunkLoad;
 import com.shanebeestudios.skbee.elements.other.effects.EffChunkRefresh;
 import com.shanebeestudios.skbee.elements.other.effects.EffChunkUnload;
+import com.shanebeestudios.skbee.elements.other.effects.EffDisconnectConnection;
 import com.shanebeestudios.skbee.elements.other.effects.EffDispatchCommand;
 import com.shanebeestudios.skbee.elements.other.effects.EffDropItem;
 import com.shanebeestudios.skbee.elements.other.effects.EffEntityBlockStorage;
@@ -59,6 +60,7 @@ import com.shanebeestudios.skbee.elements.other.events.EvtEntityKnockback;
 import com.shanebeestudios.skbee.elements.other.events.EvtEntityTrackPlayer;
 import com.shanebeestudios.skbee.elements.other.events.EvtPlayerInteract;
 import com.shanebeestudios.skbee.elements.other.events.EvtPlayerUseUnknown;
+import com.shanebeestudios.skbee.elements.other.events.EvtPlayerValidateLogin;
 import com.shanebeestudios.skbee.elements.other.events.EvtPreSpawn;
 import com.shanebeestudios.skbee.elements.other.events.EvtSpawnerSpawn;
 import com.shanebeestudios.skbee.elements.other.events.TabEvent;
@@ -216,6 +218,7 @@ public class OtherElementRegistration {
         EffChunkLoad.register(registration);
         EffChunkRefresh.register(registration);
         EffChunkUnload.register(registration);
+        EffDisconnectConnection.register(registration);
         EffDispatchCommand.register(registration);
         EffEntityBlockStorage.register(registration);
         EffEntityDamageEntity.register(registration);
@@ -261,6 +264,7 @@ public class OtherElementRegistration {
         EvtEntityTrackPlayer.register(registration);
         EvtPlayerInteract.register(registration);
         EvtPlayerUseUnknown.register(registration);
+        EvtPlayerValidateLogin.register(registration);
         EvtPreSpawn.register(registration);
         EvtSpawnerSpawn.register(registration);
         TabEvent.register(registration);
