@@ -28,7 +28,7 @@ public class SecWhileRunnable extends LoopSection {
 
     public static void register(Registration reg) {
         reg.newSection(SecWhileRunnable.class,
-                "while <.+> repeating every %timespan% [globally]",
+                "[:async] while <.+> repeating every %timespan% [globally]",
                 "while <.+> repeating every %timespan% [(at|on|for) %-entity/location%]")
             .name("Repeating While Loop")
             .description("Similar to Skript's while loop, this while loop will repeat at the given timespan.",
@@ -38,6 +38,7 @@ public class SecWhileRunnable extends LoopSection {
                 "The 2nd pattern is only of concern if you are running Folia or have Paper schedulers enabled in the config, " +
                     "otherwise just use the first pattern.",
                 "- `globally` = Will run this loop on the global scheduler (Use this for non entity/block related tasks).",
+                "- `async` = Will run the task off the main thread (Only works for global schedulers).",
                 "- `for %entity` = Will run this task for an entity, will follow the entity around (region wise)" +
                     "and will cancel itself when the entity is no longer valid.",
                 "- `at %location%` = Will run this loop at a specific location (Use this for block related tasks).")
@@ -55,6 +56,7 @@ public class SecWhileRunnable extends LoopSection {
     private Expression<Timespan> timespan;
     private Expression<?> taskObject;
     private Task<?> task;
+    private boolean async;
     private TriggerItem next;
 
     @SuppressWarnings("unchecked")
@@ -62,6 +64,7 @@ public class SecWhileRunnable extends LoopSection {
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         SkBeeMetrics.Features.WHILE_RUNNABLE.used();
         String group = parseResult.regexes.getFirst().group();
+        this.async = parseResult.hasTag("async");
         this.condition = Condition.parse(group, "some error");
         if (this.condition == null) return false;
         this.timespan = (Expression<Timespan>) exprs[0];
@@ -99,24 +102,38 @@ public class SecWhileRunnable extends LoopSection {
         if (scheduler == null) return null;
 
         AtomicReference<Object> originalVars = new AtomicReference<>(Variables.copyLocalVariables(event));
-        this.task = scheduler.runTaskTimer(() -> {
-            Variables.setLocalVariables(event, originalVars.get());
-            if (this.condition.check(event)) {
-                TriggerItem.walk(this.first, event);
-                originalVars.set(Variables.copyLocalVariables(event));
-            } else {
-                exit(event);
-                TriggerItem.walk(this.next, event);
-            }
-        }, 1, ticks);
+        if (this.async) {
+            this.task = scheduler.runTaskTimerAsync(() -> {
+                Variables.setLocalVariables(event, originalVars.get());
+                if (this.condition.check(event)) {
+                    TriggerItem.walk(this.first, event);
+                    originalVars.set(Variables.copyLocalVariables(event));
+                } else {
+                    exit(event);
+                    TriggerItem.walk(this.next, event);
+                }
+            }, 1, ticks);
+        } else {
+            this.task = scheduler.runTaskTimer(() -> {
+                Variables.setLocalVariables(event, originalVars.get());
+                if (this.condition.check(event)) {
+                    TriggerItem.walk(this.first, event);
+                    originalVars.set(Variables.copyLocalVariables(event));
+                } else {
+                    exit(event);
+                    TriggerItem.walk(this.next, event);
+                }
+            }, 1, ticks);
+        }
         if (this.last != null) this.last.setNext(null);
         return null;
     }
 
     @Override
     public String toString(Event e, boolean d) {
+        String async = this.async ? "async " : "";
         String type = this.taskObject != null ? (" for " + this.taskObject.toString(e, d)) : " globally";
-        return "while " + this.condition.toString(e, d) + " repeating every " + this.timespan.toString(e, d) + type;
+        return async + "while " + this.condition.toString(e, d) + " repeating every " + this.timespan.toString(e, d) + type;
     }
 
     @Override
