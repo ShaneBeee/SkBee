@@ -29,6 +29,12 @@ import java.util.List;
 import java.util.concurrent.ConcurrentLinkedDeque;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.IOException;
 
 import static javax.swing.WindowConstants.EXIT_ON_CLOSE;
 
@@ -53,6 +59,39 @@ public class Pong {
 
     // Easy AI "lazy" state
     private int aiZonedOutFrames = 0;  // >0 means AI is ignoring the ball
+
+    // High scores: [difficulty][0]=wins, [difficulty][1]=losses, [difficulty][2]=longestRally
+    private final int[][] scores = new int[3][3];
+    private int currentRally = 0;
+    private static final File SCORE_FILE = new File(System.getProperty("user.home"), ".skbee_pong_scores");
+
+    private void loadScores() {
+        if (!SCORE_FILE.exists()) return;
+        try (BufferedReader br = new BufferedReader(new FileReader(SCORE_FILE))) {
+            String line;
+            while ((line = br.readLine()) != null) {
+                // format: DIFF,wins,losses,longestRally
+                String[] parts = line.trim().split(",");
+                if (parts.length == 4) {
+                    int d = Integer.parseInt(parts[0]);
+                    if (d >= 0 && d < 3) {
+                        scores[d][0] = Integer.parseInt(parts[1]);
+                        scores[d][1] = Integer.parseInt(parts[2]);
+                        scores[d][2] = Integer.parseInt(parts[3]);
+                    }
+                }
+            }
+        } catch (IOException | NumberFormatException ignored) {}
+    }
+
+    private void saveScores() {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(SCORE_FILE))) {
+            for (int d = 0; d < 3; d++) {
+                bw.write(d + "," + scores[d][0] + "," + scores[d][1] + "," + scores[d][2]);
+                bw.newLine();
+            }
+        } catch (IOException ignored) {}
+    }
 
     // Screen flash on score
     private volatile long flashStartMs = 0;
@@ -160,52 +199,28 @@ public class Pong {
         t.start();
     }
 
-    private static void soundPaddleHit() {
-        beep(900, 55, 0.35f, 120);
-    }
-
-    private static void soundWallBounce() {
-        beep(420, 45, 0.25f, -80);
-    }
-
-    private static void soundPlayerScore() {
-        beep(440, 80, 0.40f, 220);
-        beep(660, 100, 0.40f, 0);
-    }
-
-    private static void soundAiScore() {
-        beep(330, 80, 0.40f, -150);
-        beep(220, 120, 0.35f, 0);
-    }
-
+    private static void soundPaddleHit() { beep(900, 55, 0.35f, 120); }
+    private static void soundWallBounce() { beep(420, 45, 0.25f, -80); }
+    private static void soundPlayerScore() { beep(440, 80, 0.40f, 220); beep(660, 100, 0.40f, 0); }
+    private static void soundAiScore() { beep(330, 80, 0.40f, -150); beep(220, 120, 0.35f, 0); }
     private static void soundGameStart() {
-        beep(330, 60, 0.30f, 0);
-        beep(440, 60, 0.30f, 0);
-        beep(660, 80, 0.35f, 0);
-        beep(880, 120, 0.35f, 80);
+        beep(330, 60, 0.30f, 0); beep(440, 60, 0.30f, 0);
+        beep(660, 80, 0.35f, 0); beep(880, 120, 0.35f, 80);
     }
-
     private static void soundWin() {
-        beep(440, 80, 0.4f, 0);
-        beep(550, 80, 0.4f, 0);
-        beep(660, 80, 0.4f, 0);
-        beep(880, 200, 0.45f, 100);
+        beep(440, 80, 0.4f, 0); beep(550, 80, 0.4f, 0);
+        beep(660, 80, 0.4f, 0); beep(880, 200, 0.45f, 100);
     }
-
     private static void soundLose() {
-        beep(440, 100, 0.4f, -100);
-        beep(330, 100, 0.4f, -80);
-        beep(220, 180, 0.4f, -100);
+        beep(440, 100, 0.4f, -100); beep(330, 100, 0.4f, -80); beep(220, 180, 0.4f, -100);
     }
 
     // This is only here for testing in IJ
-    public static void main(String[] args) {
-        new Pong();
-    }
+    public static void main(String[] args) { new Pong(); }
 
     public Pong() {
-        // Must be set before AWT initialises — controls the macOS dock app name
         System.setProperty("apple.awt.application.name", "SkBee Pong");
+        loadScores();
         JFrame frame = new JFrame("SkBee Pong!");
         frame.setSize(640, 640);
         frame.setResizable(false);
@@ -222,19 +237,16 @@ public class Pong {
                 Taskbar tb = Taskbar.getTaskbar();
                 if (tb.isSupported(Taskbar.Feature.ICON_IMAGE)) tb.setIconImage(appIcon);
             }
-        } catch (Exception ignored) {
-        }
+        } catch (Exception ignored) {}
 
         JPanel rootPane = new JPanel(null);
         rootPane.setBackground(BG_COLOR);
 
-        // ── Game components ───────────────────────────────────────────
         final int TRAIL_LEN = 10;
         ConcurrentLinkedDeque<Point> trail = new ConcurrentLinkedDeque<>();
 
         JComponent ball = new JComponent() {
-            @Override
-            public void paint(Graphics g) {
+            @Override public void paint(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(BALL_COLOR);
@@ -244,8 +256,7 @@ public class Pong {
         };
 
         JComponent playerPaddle = new JComponent() {
-            @Override
-            public void paint(Graphics g) {
+            @Override public void paint(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setPaint(new GradientPaint(0, 0, PLAYER_COLOR.darker(), 20, 0, PLAYER_COLOR));
@@ -255,8 +266,7 @@ public class Pong {
         };
 
         JComponent aiPaddle = new JComponent() {
-            @Override
-            public void paint(Graphics g) {
+            @Override public void paint(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setPaint(new GradientPaint(0, 0, AI_COLOR, 20, 0, AI_COLOR.darker()));
@@ -266,8 +276,7 @@ public class Pong {
         };
 
         JComponent scoreDisplay = new JComponent() {
-            @Override
-            public void paint(Graphics g) {
+            @Override public void paint(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(SCANLINE_COLOR);
@@ -278,12 +287,9 @@ public class Pong {
                 for (Point p : trail) {
                     float frac = (float) ti / TRAIL_LEN;
                     float size = 14 * frac;
-                    // speed ratio 0..1 across the rally speed range
                     float speedRatio = Math.clamp((rallySpeed - 1.0f) / 1.2f, 0f, 1f);
-                    // yellow (255,200,0) -> orange (255,120,0) -> red (255,40,0)
                     int tg = (int)(200 - speedRatio * 160);
-                    int tb = 0;
-                    g2.setColor(new Color(255, tg, tb, (int) (frac * 140)));
+                    g2.setColor(new Color(255, tg, 0, (int)(frac * 140)));
                     g2.fill(new Ellipse2D.Float(p.x + 10 - size / 2, p.y + 10 - size / 2, size, size));
                     ti++;
                 }
@@ -307,7 +313,7 @@ public class Pong {
                 fm = g2.getFontMetrics();
                 String ps = String.valueOf(playerScore), as = String.valueOf(aiScore);
                 for (int l = 4; l >= 1; l--) {
-                    int a = (int) (0.08f * l * 255);
+                    int a = (int)(0.08f * l * 255);
                     g2.setColor(new Color(PLAYER_COLOR.getRed(), PLAYER_COLOR.getGreen(), PLAYER_COLOR.getBlue(), a));
                     g2.drawString(ps, getWidth() / 4 - fm.stringWidth(ps) / 2 + l, fm.getAscent() + 22 + l);
                     g2.drawString(ps, getWidth() / 4 - fm.stringWidth(ps) / 2 - l, fm.getAscent() + 22 - l);
@@ -328,7 +334,7 @@ public class Pong {
                         int alpha = (int)(p.life * 220);
                         float size = 4 * p.life;
                         g2.setColor(new Color(p.color.getRed(), p.color.getGreen(), p.color.getBlue(), alpha));
-                        g2.fill(new Ellipse2D.Float(p.x - size/2, p.y - size/2, size, size));
+                        g2.fill(new Ellipse2D.Float(p.x - size / 2, p.y - size / 2, size, size));
                     }
                 }
 
@@ -336,7 +342,7 @@ public class Pong {
                 if (flashColor != null) {
                     long elapsed = System.currentTimeMillis() - flashStartMs;
                     if (elapsed < FLASH_DURATION_MS) {
-                        float alpha = 0.35f * (1f - (float)elapsed / FLASH_DURATION_MS);
+                        float alpha = 0.35f * (1f - (float) elapsed / FLASH_DURATION_MS);
                         g2.setColor(new Color(flashColor.getRed(), flashColor.getGreen(), flashColor.getBlue(), (int)(alpha * 255)));
                         g2.fillRect(0, 0, getWidth(), getHeight());
                     } else {
@@ -347,19 +353,16 @@ public class Pong {
         };
 
         JComponent pauseOverlay = new JComponent() {
-            @Override
-            public void paint(Graphics g) {
+            @Override public void paint(Graphics g) {
                 if (!paused) return;
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(new Color(8, 8, 20, 200));
-                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.setColor(new Color(8, 8, 20, 200)); g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setColor(new Color(0, 0, 0, 60));
                 for (int y = 0; y < getHeight(); y += 4) g2.drawLine(0, y, getWidth(), y);
                 g2.setColor(new Color(0, 255, 240, 40));
                 g2.fillRoundRect(getWidth() / 2 - 170, getHeight() / 2 - 95, 340, 195, 16, 16);
-                g2.setColor(new Color(0, 255, 240, 120));
-                g2.setStroke(new BasicStroke(2));
+                g2.setColor(new Color(0, 255, 240, 120)); g2.setStroke(new BasicStroke(2));
                 g2.drawRoundRect(getWidth() / 2 - 170, getHeight() / 2 - 95, 340, 195, 16, 16);
                 g2.setFont(new Font("Monospaced", Font.BOLD, 64));
                 FontMetrics fm = g2.getFontMetrics();
@@ -367,66 +370,59 @@ public class Pong {
                 int tx = getWidth() / 2 - fm.stringWidth(title) / 2, ty = getHeight() / 2 - 10;
                 for (int l = 5; l >= 1; l--) {
                     g2.setColor(new Color(0, 255, 240, 18 * l));
-                    g2.drawString(title, tx + l, ty + l);
-                    g2.drawString(title, tx - l, ty - l);
+                    g2.drawString(title, tx + l, ty + l); g2.drawString(title, tx - l, ty - l);
                 }
-                g2.setColor(PLAYER_COLOR);
-                g2.drawString(title, tx, ty);
-                g2.setFont(new Font("Monospaced", Font.PLAIN, 16));
-                fm = g2.getFontMetrics();
+                g2.setColor(PLAYER_COLOR); g2.drawString(title, tx, ty);
+                g2.setFont(new Font("Monospaced", Font.PLAIN, 16)); fm = g2.getFontMetrics();
                 g2.setColor(new Color(200, 200, 200, 200));
                 String h1 = "[ ESC ]  Resume", h2 = "[  Q  ]  Quit";
                 g2.drawString(h1, getWidth() / 2 - fm.stringWidth(h1) / 2, getHeight() / 2 + 44);
                 g2.drawString(h2, getWidth() / 2 - fm.stringWidth(h2) / 2, getHeight() / 2 + 66);
                 Color[] dCols = {new Color(0, 255, 100, 200), new Color(255, 200, 0, 200), new Color(255, 80, 80, 200)};
-                g2.setFont(new Font("Monospaced", Font.PLAIN, 12));
-                fm = g2.getFontMetrics();
+                g2.setFont(new Font("Monospaced", Font.PLAIN, 12)); fm = g2.getFontMetrics();
                 String dStr = "DIFFICULTY: " + DIFF_NAMES[difficulty] + "  |  FIRST TO: " + WIN_OPTIONS[winOptionIndex];
                 g2.setColor(dCols[difficulty]);
                 g2.drawString(dStr, getWidth() / 2 - fm.stringWidth(dStr) / 2, getHeight() / 2 + 92);
             }
         };
 
-        // ── Win overlay ───────────────────────────────────────────────
         JComponent winOverlay = new JComponent() {
-            @Override
-            public void paint(Graphics g) {
+            @Override public void paint(Graphics g) {
                 if (!gameOver) return;
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(new Color(8, 8, 20, 210));
-                g2.fillRect(0, 0, getWidth(), getHeight());
+                g2.setColor(new Color(8, 8, 20, 210)); g2.fillRect(0, 0, getWidth(), getHeight());
                 g2.setColor(new Color(0, 0, 0, 60));
                 for (int y = 0; y < getHeight(); y += 4) g2.drawLine(0, y, getWidth(), y);
                 boolean playerWon = playerScore >= WIN_OPTIONS[winOptionIndex];
                 Color tc = playerWon ? PLAYER_COLOR : AI_COLOR;
                 String tt = playerWon ? "YOU WIN!" : "YOU LOSE";
                 g2.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 35));
-                g2.fillRoundRect(getWidth() / 2 - 200, getHeight() / 2 - 110, 400, 220, 16, 16);
+                g2.fillRoundRect(getWidth() / 2 - 200, getHeight() / 2 - 110, 400, 240, 16, 16);
                 g2.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 140));
                 g2.setStroke(new BasicStroke(2));
-                g2.drawRoundRect(getWidth() / 2 - 200, getHeight() / 2 - 110, 400, 220, 16, 16);
+                g2.drawRoundRect(getWidth() / 2 - 200, getHeight() / 2 - 110, 400, 240, 16, 16);
                 g2.setFont(new Font("Monospaced", Font.BOLD, 68));
                 FontMetrics fm = g2.getFontMetrics();
                 int tx = getWidth() / 2 - fm.stringWidth(tt) / 2, ty = getHeight() / 2 - 10;
                 for (int l = 5; l >= 1; l--) {
                     g2.setColor(new Color(tc.getRed(), tc.getGreen(), tc.getBlue(), 16 * l));
-                    g2.drawString(tt, tx + l, ty + l);
-                    g2.drawString(tt, tx - l, ty - l);
+                    g2.drawString(tt, tx + l, ty + l); g2.drawString(tt, tx - l, ty - l);
                 }
-                g2.setColor(tc);
-                g2.drawString(tt, tx, ty);
-                g2.setFont(new Font("Monospaced", Font.PLAIN, 18));
-                fm = g2.getFontMetrics();
-                String score = "PLAYER  " + playerScore + "  —  " + aiScore + "  CPU";
+                g2.setColor(tc); g2.drawString(tt, tx, ty);
+                g2.setFont(new Font("Monospaced", Font.PLAIN, 18)); fm = g2.getFontMetrics();
+                String score = "PLAYER  " + playerScore + "  \u2014  " + aiScore + "  CPU";
                 g2.setColor(new Color(200, 200, 200, 200));
                 g2.drawString(score, getWidth() / 2 - fm.stringWidth(score) / 2, getHeight() / 2 + 44);
+                g2.setFont(new Font("Monospaced", Font.PLAIN, 13)); fm = g2.getFontMetrics();
+                String record = DIFF_NAMES[difficulty] + "  \u2014  W: " + scores[difficulty][0] + "  L: " + scores[difficulty][1] + "  BEST RALLY: " + scores[difficulty][2];
+                g2.setColor(new Color(160, 160, 160, 180));
+                g2.drawString(record, getWidth() / 2 - fm.stringWidth(record) / 2, getHeight() / 2 + 66);
                 if ((System.currentTimeMillis() / 500) % 2 == 0) {
-                    g2.setFont(new Font("Monospaced", Font.PLAIN, 13));
-                    fm = g2.getFontMetrics();
+                    g2.setFont(new Font("Monospaced", Font.PLAIN, 13)); fm = g2.getFontMetrics();
                     String prompt = "PRESS ANY KEY TO CONTINUE";
                     g2.setColor(new Color(180, 180, 180, 180));
-                    g2.drawString(prompt, getWidth() / 2 - fm.stringWidth(prompt) / 2, getHeight() / 2 + 80);
+                    g2.drawString(prompt, getWidth() / 2 - fm.stringWidth(prompt) / 2, getHeight() / 2 + 100);
                 }
             }
         };
@@ -444,15 +440,12 @@ public class Pong {
             private void glowText(Graphics2D g2, Color c, String s, int x, int y) {
                 for (int l = 5; l >= 1; l--) {
                     g2.setColor(new Color(c.getRed(), c.getGreen(), c.getBlue(), 14 * l));
-                    g2.drawString(s, x + l, y + l);
-                    g2.drawString(s, x - l, y - l);
+                    g2.drawString(s, x + l, y + l); g2.drawString(s, x - l, y - l);
                 }
-                g2.setColor(c);
-                g2.drawString(s, x, y);
+                g2.setColor(c); g2.drawString(s, x, y);
             }
 
-            @Override
-            public void paint(Graphics g) {
+            @Override public void paint(Graphics g) {
                 int W = getWidth(), H = getHeight();
                 Graphics2D g2 = (Graphics2D) g;
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -460,21 +453,15 @@ public class Pong {
 
                 long now = System.currentTimeMillis();
                 long elapsed = now - animStart[0];
+                final long BLACK_HOLD = 500L, FADE_IN = 700L;
 
-                final long BLACK_HOLD = 500L;
-                final long FADE_IN = 700L;
-
-                g2.setColor(Color.BLACK);
-                g2.fillRect(0, 0, W, H);
+                g2.setColor(Color.BLACK); g2.fillRect(0, 0, W, H);
 
                 float masterAlpha;
                 if (splashFadingOut[0]) {
                     float t = (now - fadeOutStart[0]) / 500f;
                     masterAlpha = Math.max(0f, 1f - t);
-                    if (masterAlpha <= 0f) {
-                        setVisible(false);
-                        return;
-                    }
+                    if (masterAlpha <= 0f) { setVisible(false); return; }
                 } else if (elapsed < BLACK_HOLD) {
                     return;
                 } else {
@@ -484,8 +471,7 @@ public class Pong {
                 long animElapsed = Math.max(0, elapsed - BLACK_HOLD);
 
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, masterAlpha));
-                g2.setColor(BG_COLOR);
-                g2.fillRect(0, 0, W, H);
+                g2.setColor(BG_COLOR); g2.fillRect(0, 0, W, H);
 
                 float scanAlpha = clamp((animElapsed - 100) / 400f);
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, scanAlpha * masterAlpha));
@@ -497,25 +483,17 @@ public class Pong {
                 g2.setStroke(new BasicStroke(1.2f));
                 int bx = 38, by = 44, bw = 60, bh = 40;
                 g2.setColor(new Color(0, 255, 240, 130));
-                g2.drawLine(bx, by + bh, bx, by);
-                g2.drawLine(bx, by, bx + bw, by);
-                g2.drawLine(W - bx - bw, by, W - bx, by);
-                g2.drawLine(W - bx, by, W - bx, by + bh);
+                g2.drawLine(bx, by + bh, bx, by); g2.drawLine(bx, by, bx + bw, by);
+                g2.drawLine(W - bx - bw, by, W - bx, by); g2.drawLine(W - bx, by, W - bx, by + bh);
                 g2.setColor(new Color(255, 0, 200, 130));
-                g2.drawLine(bx, H - by - bh, bx, H - by);
-                g2.drawLine(bx, H - by, bx + bw, H - by);
-                g2.drawLine(W - bx - bw, H - by, W - bx, H - by);
-                g2.drawLine(W - bx, H - by, W - bx, H - by - bh);
+                g2.drawLine(bx, H - by - bh, bx, H - by); g2.drawLine(bx, H - by, bx + bw, H - by);
+                g2.drawLine(W - bx - bw, H - by, W - bx, H - by); g2.drawLine(W - bx, H - by, W - bx, H - by - bh);
 
-                // Decorative paddles
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, bracketAlpha * masterAlpha));
                 int padH = 90, padW = 14, padY = H / 2 - padH / 2;
-                g2.setPaint(new Color(0, 255, 240, 180));
-                g2.fillRoundRect(50, padY, padW, padH, 6, 6);
-                g2.setPaint(new Color(255, 0, 200, 180));
-                g2.fillRoundRect(W - 50 - padW, padY, padW, padH, 6, 6);
+                g2.setPaint(new Color(0, 255, 240, 180)); g2.fillRoundRect(50, padY, padW, padH, 6, 6);
+                g2.setPaint(new Color(255, 0, 200, 180)); g2.fillRoundRect(W - 50 - padW, padY, padW, padH, 6, 6);
 
-                // "SKBEE" type-in
                 g2.setFont(new Font("Monospaced", Font.BOLD, 96));
                 FontMetrics fm = g2.getFontMetrics();
                 int charsVisible1 = (int) Math.clamp((animElapsed - 400) / 80, 0, TITLE1.length());
@@ -524,8 +502,7 @@ public class Pong {
                     float flicker = (charsVisible1 < TITLE1.length()) ? (0.6f + 0.4f * (float) Math.sin(animElapsed * 0.03)) : 1f;
                     float a1 = clamp((animElapsed - 400) / 200f) * flicker;
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, a1 * masterAlpha));
-                    int x1 = W / 2 - fm.stringWidth(TITLE1) / 2;
-                    int y1 = H / 2 - 30;
+                    int x1 = W / 2 - fm.stringWidth(TITLE1) / 2, y1 = H / 2 - 30;
                     glowText(g2, PLAYER_COLOR, partial, x1, y1);
                     if (charsVisible1 < TITLE1.length() && (animElapsed / 120) % 2 == 0) {
                         g2.setColor(PLAYER_COLOR);
@@ -533,20 +510,17 @@ public class Pong {
                     }
                 }
 
-                // "PONG" slam up
                 long pongStart = 400 + TITLE1.length() * 80L + 80;
                 if (animElapsed > pongStart) {
                     float t = clamp((animElapsed - pongStart) / 260f);
                     float ease = bounce(t);
                     int targetY = H / 2 + 85, startY = H + 60;
-                    int currentY = (int) (startY + (targetY - startY) * ease);
+                    int currentY = (int)(startY + (targetY - startY) * ease);
                     float a2 = clamp((animElapsed - pongStart) / 150f);
                     g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, a2 * masterAlpha));
-                    int x2 = W / 2 - fm.stringWidth(TITLE2) / 2;
-                    glowText(g2, AI_COLOR, TITLE2, x2, currentY);
+                    glowText(g2, AI_COLOR, TITLE2, W / 2 - fm.stringWidth(TITLE2) / 2, currentY);
                 }
 
-                // Difficulty selector
                 long subtitleStart = pongStart + 400;
                 if (animElapsed > subtitleStart) {
                     float selAlpha = clamp((animElapsed - subtitleStart) / 300f) * masterAlpha;
@@ -555,56 +529,52 @@ public class Pong {
                     FontMetrics dfm = g2.getFontMetrics();
                     int arrowW = dfm.stringWidth("<"), gap = 14;
 
-                    // difficulty row
-                    String diffLabel = "DIFFICULTY:";
+                    // Difficulty row
                     g2.setColor(splashRow == 0 ? new Color(255, 255, 255, 220) : new Color(200, 200, 200, 120));
-                    g2.drawString(diffLabel, W / 2 - dfm.stringWidth(diffLabel) / 2, H - 175);
+                    g2.drawString("DIFFICULTY:", W / 2 - dfm.stringWidth("DIFFICULTY:") / 2, H - 175);
                     String dName = DIFF_NAMES[difficulty];
                     Color[] dCols = {new Color(0, 255, 100), new Color(255, 200, 0), new Color(255, 60, 60)};
                     Color dCol = splashRow == 0 ? dCols[difficulty] : new Color(dCols[difficulty].getRed(), dCols[difficulty].getGreen(), dCols[difficulty].getBlue(), 120);
                     int dSlotW = dfm.stringWidth("MEDIUM"), dNameW = dfm.stringWidth(dName);
-                    int dTotalW = arrowW + gap + dSlotW + gap + arrowW;
-                    int dStartX = W / 2 - dTotalW / 2;
+                    int dStartX = W / 2 - (arrowW + gap + dSlotW + gap + arrowW) / 2;
                     int dNameX = dStartX + arrowW + gap + (dSlotW - dNameW) / 2;
-                    int dRightAX = dStartX + arrowW + gap + dSlotW + gap;
                     g2.setColor(splashRow == 0 && difficulty > 0 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 80));
                     g2.drawString("<", dStartX, H - 155);
                     for (int l = 3; l >= 1; l--) {
                         g2.setColor(new Color(dCol.getRed(), dCol.getGreen(), dCol.getBlue(), splashRow == 0 ? 20 * l : 8 * l));
-                        g2.drawString(dName, dNameX + l, H - 155 + l);
-                        g2.drawString(dName, dNameX - l, H - 155 - l);
+                        g2.drawString(dName, dNameX + l, H - 155 + l); g2.drawString(dName, dNameX - l, H - 155 - l);
                     }
-                    g2.setColor(dCol);
-                    g2.drawString(dName, dNameX, H - 155);
+                    g2.setColor(dCol); g2.drawString(dName, dNameX, H - 155);
                     g2.setColor(splashRow == 0 && difficulty < 2 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 80));
-                    g2.drawString(">", dRightAX, H - 155);
+                    g2.drawString(">", dStartX + arrowW + gap + dSlotW + gap, H - 155);
 
-                    // score to win row
-                    String winLabel = "SCORE TO WIN:";
+                    // Score to win row
                     g2.setColor(splashRow == 1 ? new Color(255, 255, 255, 220) : new Color(200, 200, 200, 120));
-                    g2.drawString(winLabel, W / 2 - dfm.stringWidth(winLabel) / 2, H - 120);
+                    g2.drawString("SCORE TO WIN:", W / 2 - dfm.stringWidth("SCORE TO WIN:") / 2, H - 120);
                     String wName = String.valueOf(WIN_OPTIONS[winOptionIndex]);
                     int wSlotW = dfm.stringWidth("10"), wNameW = dfm.stringWidth(wName);
-                    int wTotalW = arrowW + gap + wSlotW + gap + arrowW;
-                    int wStartX = W / 2 - wTotalW / 2;
+                    int wStartX = W / 2 - (arrowW + gap + wSlotW + gap + arrowW) / 2;
                     int wNameX = wStartX + arrowW + gap + (wSlotW - wNameW) / 2;
-                    int wRightAX = wStartX + arrowW + gap + wSlotW + gap;
                     g2.setColor(splashRow == 1 && winOptionIndex > 0 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 80));
                     g2.drawString("<", wStartX, H - 100);
                     g2.setColor(splashRow == 1 ? new Color(180, 180, 255, 220) : new Color(180, 180, 255, 100));
                     g2.drawString(wName, wNameX, H - 100);
                     g2.setColor(splashRow == 1 && winOptionIndex < WIN_OPTIONS.length - 1 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 80));
-                    g2.drawString(">", wRightAX, H - 100);
+                    g2.drawString(">", wStartX + arrowW + gap + wSlotW + gap, H - 100);
 
-                    // small nav hint
+                    // Nav hint
                     g2.setFont(new Font("Monospaced", Font.PLAIN, 11));
                     FontMetrics hfm = g2.getFontMetrics();
                     String hint = splashRow == 0 ? "\u25bc  to select SCORE TO WIN" : "\u25b2  to select DIFFICULTY";
                     g2.setColor(new Color(150, 150, 150, 140));
                     g2.drawString(hint, W / 2 - hfm.stringWidth(hint) / 2, H - 70);
+
+                    // Stats for selected difficulty
+                    String statsStr = "W: " + scores[difficulty][0] + "  L: " + scores[difficulty][1] + "  BEST RALLY: " + scores[difficulty][2];
+                    g2.setColor(new Color(120, 120, 120, 160));
+                    g2.drawString(statsStr, W / 2 - hfm.stringWidth(statsStr) / 2, H - 50);
                 }
 
-                // "PRESS ANY KEY"
                 if (animElapsed > subtitleStart) {
                     boolean blink = splashDone[0] && ((animElapsed / 500) % 2 == 0);
                     float subAlpha = splashDone[0] ? (blink ? 0.65f : 0.3f) : clamp((animElapsed - subtitleStart) / 300f) * 0.55f;
@@ -613,48 +583,34 @@ public class Pong {
                     FontMetrics sfm = g2.getFontMetrics();
                     String sub = "PRESS ANY KEY TO START";
                     g2.setColor(Color.WHITE);
-                    g2.drawString(sub, W / 2 - sfm.stringWidth(sub) / 2, H - 55);
+                    g2.drawString(sub, W / 2 - sfm.stringWidth(sub) / 2, H - 30);
                     if (!splashDone[0] && animElapsed > subtitleStart + 400) splashDone[0] = true;
                 }
 
                 g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1f));
             }
 
-            private float clamp(float v) {
-                return Math.clamp(v, 0f, 1f);
-            }
-
+            private float clamp(float v) { return Math.clamp(v, 0f, 1f); }
             private float bounce(float t) {
                 if (t >= 1f) return 1f;
-                double s = 1.70158;
-                t = t - 1;
-                return (float) (t * t * ((s + 1) * t + s) + 1);
+                double s = 1.70158; t = t - 1;
+                return (float)(t * t * ((s + 1) * t + s) + 1);
             }
         };
 
-        // ── Layout ────────────────────────────────────────────────────
-        ball.setSize(20, 20);
-        playerPaddle.setSize(20, 100);
-        aiPaddle.setSize(20, 100);
-
+        ball.setSize(20, 20); playerPaddle.setSize(20, 100); aiPaddle.setSize(20, 100);
         frame.add(rootPane);
         frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
         frame.setVisible(true);
 
         var mid = new Dimension(rootPane.getSize().width / 2, rootPane.getSize().height / 2);
-
-        splash.setSize(mid.width * 2, mid.height * 2);
-        splash.setLocation(0, 0);
-        rootPane.add(splash);
-
+        splash.setSize(mid.width * 2, mid.height * 2); splash.setLocation(0, 0); rootPane.add(splash);
         ball.setLocation(mid.width - 10, mid.height - 10);
         playerPaddle.setLocation(20, mid.height - 50);
         aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
 
         final AtomicBoolean gameStarted = new AtomicBoolean(false);
-        Timer animTimer = new Timer(16, e -> {
-            if (splash.isVisible()) splash.repaint();
-        });
+        Timer animTimer = new Timer(16, e -> { if (splash.isVisible()) splash.repaint(); });
         animTimer.start();
 
         final int[] addPlayerVel = {0};
@@ -662,8 +618,7 @@ public class Pong {
         rootPane.addKeyListener(new KeyAdapter() {
             private final boolean[] fuckYouJava = new boolean[2];
 
-            @Override
-            public void keyPressed(KeyEvent e) {
+            @Override public void keyPressed(KeyEvent e) {
                 if (splash.isVisible() && splashDone[0] && !splashFadingOut[0]) {
                     if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
                         if (splashRow == 0) {
@@ -673,92 +628,55 @@ public class Pong {
                             if (e.getKeyCode() == KeyEvent.VK_LEFT) winOptionIndex = Math.max(0, winOptionIndex - 1);
                             else winOptionIndex = Math.min(WIN_OPTIONS.length - 1, winOptionIndex + 1);
                         }
-                        splash.repaint();
-                        return;
+                        splash.repaint(); return;
                     }
                     if (e.getKeyCode() == KeyEvent.VK_UP || e.getKeyCode() == KeyEvent.VK_DOWN) {
                         if (e.getKeyCode() == KeyEvent.VK_DOWN) splashRow = Math.min(1, splashRow + 1);
                         else splashRow = Math.max(0, splashRow - 1);
-                        splash.repaint();
-                        return;
+                        splash.repaint(); return;
                     }
                     splashFadingOut[0] = true;
                     fadeOutStart[0] = System.currentTimeMillis();
                     new Timer(520, ev -> {
-                        splash.setVisible(false);
-                        rootPane.remove(splash);
-                        scoreDisplay.setSize(mid.width * 2, mid.height * 2);
-                        scoreDisplay.setLocation(0, 0);
-                        rootPane.add(aiPaddle);
-                        rootPane.add(playerPaddle);
-                        rootPane.add(ball);
-                        rootPane.add(scoreDisplay);
-                        pauseOverlay.setSize(mid.width * 2, mid.height * 2);
-                        pauseOverlay.setLocation(0, 0);
-                        rootPane.add(pauseOverlay);
-                        winOverlay.setSize(mid.width * 2, mid.height * 2);
-                        winOverlay.setLocation(0, 0);
-                        rootPane.add(winOverlay);
-                        rootPane.revalidate();
-                        rootPane.repaint();
-                        rootPane.requestFocus();
-                        soundGameStart();
-                        gameStarted.set(true);
-                        animTimer.stop();
+                        splash.setVisible(false); rootPane.remove(splash);
+                        scoreDisplay.setSize(mid.width * 2, mid.height * 2); scoreDisplay.setLocation(0, 0);
+                        rootPane.add(aiPaddle); rootPane.add(playerPaddle); rootPane.add(ball); rootPane.add(scoreDisplay);
+                        pauseOverlay.setSize(mid.width * 2, mid.height * 2); pauseOverlay.setLocation(0, 0); rootPane.add(pauseOverlay);
+                        winOverlay.setSize(mid.width * 2, mid.height * 2); winOverlay.setLocation(0, 0); rootPane.add(winOverlay);
+                        rootPane.revalidate(); rootPane.repaint(); rootPane.requestFocus();
+                        soundGameStart(); gameStarted.set(true); animTimer.stop();
                         ((Timer) ev.getSource()).stop();
-                    }) {{
-                        setRepeats(false);
-                    }}.start();
+                    }) {{ setRepeats(false); }}.start();
                     return;
                 }
                 if (splash.isVisible()) return;
 
                 if (gameOver && e.getKeyCode() != KeyEvent.VK_UP && e.getKeyCode() != KeyEvent.VK_DOWN
                         && e.getKeyCode() != KeyEvent.VK_LEFT && e.getKeyCode() != KeyEvent.VK_RIGHT) {
-                    gameOver = false;
-                    playerScore = 0;
-                    aiScore = 0;
-                    rootPane.remove(winOverlay);
-                    rootPane.remove(pauseOverlay);
-                    rootPane.remove(scoreDisplay);
-                    rootPane.remove(ball);
-                    rootPane.remove(playerPaddle);
-                    rootPane.remove(aiPaddle);
+                    gameOver = false; playerScore = 0; aiScore = 0;
+                    rootPane.remove(winOverlay); rootPane.remove(pauseOverlay);
+                    rootPane.remove(scoreDisplay); rootPane.remove(ball);
+                    rootPane.remove(playerPaddle); rootPane.remove(aiPaddle);
                     trail.clear();
                     ball.setLocation(mid.width - 10, mid.height - 10);
                     playerPaddle.setLocation(20, mid.height - 50);
                     aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
                     gameStarted.set(false);
                     animStart[0] = System.currentTimeMillis();
-                    splashDone[0] = false;
-                    splashFadingOut[0] = false;
-                    splashRow = 0;
-                    splash.setVisible(true);
-                    rootPane.add(splash);
-                    rootPane.revalidate();
-                    rootPane.repaint();
-                    animTimer.start();
-                    return;
+                    splashDone[0] = false; splashFadingOut[0] = false; splashRow = 0;
+                    splash.setVisible(true); rootPane.add(splash);
+                    rootPane.revalidate(); rootPane.repaint();
+                    animTimer.start(); return;
                 }
 
-                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
-                    paused = !paused;
-                    pauseOverlay.repaint();
-                    return;
-                }
+                if (e.getKeyCode() == KeyEvent.VK_ESCAPE) { paused = !paused; pauseOverlay.repaint(); return; }
                 if (e.getKeyCode() == KeyEvent.VK_Q && paused) System.exit(0);
                 if (paused) return;
-                if (e.getKeyCode() == KeyEvent.VK_UP) {
-                    addPlayerVel[0] = -4;
-                    fuckYouJava[0] = true;
-                } else if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                    addPlayerVel[0] = 4;
-                    fuckYouJava[1] = true;
-                }
+                if (e.getKeyCode() == KeyEvent.VK_UP) { addPlayerVel[0] = -4; fuckYouJava[0] = true; }
+                else if (e.getKeyCode() == KeyEvent.VK_DOWN) { addPlayerVel[0] = 4; fuckYouJava[1] = true; }
             }
 
-            @Override
-            public void keyReleased(KeyEvent e) {
+            @Override public void keyReleased(KeyEvent e) {
                 if (e.getKeyCode() == KeyEvent.VK_UP) fuckYouJava[0] = false;
                 if (e.getKeyCode() == KeyEvent.VK_DOWN) fuckYouJava[1] = false;
                 if (!(fuckYouJava[0] || fuckYouJava[1]) &&
@@ -776,17 +694,14 @@ public class Pong {
         while (true) {
             var time = System.nanoTime();
 
-            if (gameOver) {
-                winOverlay.repaint();
-            }
+            if (gameOver) winOverlay.repaint();
             if (gameStarted.get() && !paused && !gameOver) {
                 var loc = ball.getLocation();
                 trail.addLast(new Point(loc.x, loc.y));
                 if (trail.size() > TRAIL_LEN) trail.pollFirst();
 
-                ball.setLocation((int) (loc.x + Math.ceil(velX * rallySpeed)), (int) (loc.y + Math.ceil(velY * rallySpeed)));
-                ball.repaint();
-                scoreDisplay.repaint();
+                ball.setLocation((int)(loc.x + Math.ceil(velX * rallySpeed)), (int)(loc.y + Math.ceil(velY * rallySpeed)));
+                ball.repaint(); scoreDisplay.repaint();
 
                 if (addPlayerVel[0] != 0) {
                     var pl = playerPaddle.getLocation();
@@ -798,100 +713,65 @@ public class Pong {
                 int aiSpeed = DIFF_SPEED[difficulty];
 
                 if (difficulty == 0) {
-                    // ── EASY: lazy AI — randomly zones out, wakes up if ball is dangerously close ──
-                    boolean ballComingAtAI = velX > 0;
-                    boolean ballNearAI = loc.x > mid.width * 2 - 120;
+                    boolean ballComingAtAI = velX > 0, ballNearAI = loc.x > mid.width * 2 - 120;
                     if (aiZonedOutFrames > 0) {
-                        // Snap back if ball is about to hit us
-                        if (ballComingAtAI && ballNearAI) {
-                            aiZonedOutFrames = 0;
-                        } else {
+                        if (ballComingAtAI && ballNearAI) { aiZonedOutFrames = 0; }
+                        else {
                             aiZonedOutFrames--;
-                            // drift lazily toward centre while zoned out
-                            int centrePaddle = mid.height - 50;
-                            int driftDelta = Integer.compare(centrePaddle, aiLoc.y);
+                            int driftDelta = Integer.compare(mid.height - 50, aiLoc.y);
                             aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + driftDelta, 0, mid.height * 2 - 100));
                         }
                     } else {
-                        // 2% chance to zone out each frame (only when ball is moving away)
                         if (!ballComingAtAI && random.nextInt(50) == 0) {
                             aiZonedOutFrames = 30 + random.nextInt(40);
                         } else {
-                            int aiTarget = loc.y - 50 + DIFF_ERROR[0];
-                            int aiDelta = Integer.compare(aiTarget, aiLoc.y) * aiSpeed;
+                            int aiDelta = Integer.compare(loc.y - 50 + DIFF_ERROR[0], aiLoc.y) * aiSpeed;
                             aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + aiDelta, 0, mid.height * 2 - 100));
                         }
                     }
-
                 } else if (difficulty == 2) {
-                    // ── HARD: predictive AI — simulate where the ball will be when it reaches paddle X ──
                     int fieldH = mid.height * 2;
-                    // Simulate ball trajectory to find Y at AI paddle X
-                    float simX = loc.x, simY = loc.y + 10; // ball centre
-                    float simVX = velX * rallySpeed, simVY = velY * rallySpeed;
-                    // Only predict when ball is heading toward AI
+                    float simX = loc.x, simY = loc.y + 10, simVX = velX * rallySpeed, simVY = velY * rallySpeed;
                     if (simVX > 0) {
-                        float targetX = mid.width * 2 - 40f; // AI paddle X
+                        float targetX = mid.width * 2 - 40f;
                         int maxSteps = 200;
                         while (simX < targetX && maxSteps-- > 0) {
-                            simX += simVX;
-                            simY += simVY;
-                            // Bounce off top/bottom walls
-                            if (simY < 10)           { simY = 10;          simVY = Math.abs(simVY); }
-                            if (simY > fieldH - 10)  { simY = fieldH - 10; simVY = -Math.abs(simVY); }
+                            simX += simVX; simY += simVY;
+                            if (simY < 10) { simY = 10; simVY = Math.abs(simVY); }
+                            if (simY > fieldH - 10) { simY = fieldH - 10; simVY = -Math.abs(simVY); }
                         }
                     }
-                    // Aim paddle centre at predicted ball Y
-                    int predictedTarget = (int) simY - 50;
-                    int aiDelta = Integer.compare(predictedTarget, aiLoc.y) * aiSpeed;
+                    int aiDelta = Integer.compare((int) simY - 50, aiLoc.y) * aiSpeed;
                     aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + aiDelta, 0, mid.height * 2 - 100));
-
                 } else {
-                    // ── MEDIUM: original tracking with error ──
-                    int aiTarget = loc.y - 50 + DIFF_ERROR[1];
-                    int aiDelta = Integer.compare(aiTarget, aiLoc.y) * aiSpeed;
+                    int aiDelta = Integer.compare(loc.y - 50 + DIFF_ERROR[1], aiLoc.y) * aiSpeed;
                     aiPaddle.setLocation(aiLoc.x, Math.clamp(aiLoc.y + aiDelta, 0, mid.height * 2 - 100));
                 }
-
                 aiPaddle.repaint();
 
-                if (loc.y < 10) {
-                    velY = Math.abs(velY);
-                    soundWallBounce();
-                }
-                if (loc.y > mid.height * 2 - 10) {
-                    velY = -Math.abs(velY);
-                    soundWallBounce();
-                }
+                if (loc.y < 10) { velY = Math.abs(velY); soundWallBounce(); }
+                if (loc.y > mid.height * 2 - 10) { velY = -Math.abs(velY); soundWallBounce(); }
 
                 int winScore = WIN_OPTIONS[winOptionIndex];
                 if (loc.x < 10) {
-                    soundAiScore();
-                    aiScore++;
+                    soundAiScore(); aiScore++;
+                    if (currentRally > scores[difficulty][2]) scores[difficulty][2] = currentRally;
+                    currentRally = 0;
                     flashColor = AI_COLOR; flashStartMs = System.currentTimeMillis();
-                    if (aiScore >= winScore) {
-                        gameOver = true;
-                        soundLose();
-                    }
-                    velX = 2.0f;
-                    velY = random.nextInt(5) * 2 - 5;
-                    rallySpeed = 1.0f; aiZonedOutFrames = 0;
+                    if (aiScore >= winScore) { scores[difficulty][1]++; saveScores(); gameOver = true; soundLose(); }
+                    velX = 2.0f; velY = random.nextInt(5) * 2 - 5; rallySpeed = 1.0f; aiZonedOutFrames = 0;
                     trail.clear();
                     ball.setLocation(mid.width - 10, mid.height - 10);
                     playerPaddle.setLocation(20, mid.height - 50);
                     aiPaddle.setLocation(mid.width * 2 - 40, mid.height - 50);
                     scoreDisplay.repaint();
                 } else if (loc.x > mid.width * 2 - 10) {
-                    soundPlayerScore();
-                    playerScore++;
+                    soundPlayerScore(); playerScore++;
+                    if (currentRally > scores[difficulty][2]) scores[difficulty][2] = currentRally;
+                    currentRally = 0;
                     flashColor = PLAYER_COLOR; flashStartMs = System.currentTimeMillis();
-                    if (playerScore >= winScore) {
-                        gameOver = true;
-                        soundWin();
-                    }
-                    velX = -2.0f;
-                    velY = random.nextInt(5) * 2 - 5;
-                    rallySpeed = 1.0f; aiZonedOutFrames = 0;
+                    if (playerScore >= winScore) { scores[difficulty][0]++; saveScores(); gameOver = true; soundWin(); }
+                    velX = -2.0f; velY = random.nextInt(5) * 2 - 5; rallySpeed = 1.0f; aiZonedOutFrames = 0;
                     trail.clear();
                     ball.setLocation(mid.width - 10, mid.height - 10);
                     playerPaddle.setLocation(20, mid.height - 50);
@@ -900,47 +780,41 @@ public class Pong {
                 }
 
                 if (aiPaddle.getBounds().intersects(ball.getBounds())) {
-                    soundPaddleHit();
+                    soundPaddleHit(); currentRally++;
                     rallySpeed = Math.min(rallySpeed + 0.08f, 2.2f);
                     float hitPos = Math.clamp(((loc.y + 10) - (aiLoc.y + 50)) / 50.0f, -1f, 1f);
                     float speedX = (Math.abs(velX) + 0.5f) * rallySpeed;
                     velX = -(speedX + (random.nextInt(100) == 2 ? 10f : 0f));
                     velY = hitPos * 6.0f;
-                    // spark burst at AI paddle contact point
                     synchronized (particles) {
                         for (int i = 0; i < 7; i++) {
                             float ang = (float)(random.nextDouble() * Math.PI * 2);
                             float spd = 1.5f + random.nextFloat() * 3f;
-                            particles.add(new Particle(aiPaddle.getX(), loc.y + 10,
-                                (float)Math.cos(ang)*spd, (float)Math.sin(ang)*spd, AI_COLOR));
+                            particles.add(new Particle(aiPaddle.getX(), loc.y + 10, (float)Math.cos(ang)*spd, (float)Math.sin(ang)*spd, AI_COLOR));
                         }
                     }
                 }
                 if (playerPaddle.getBounds().intersects(ball.getBounds())) {
-                    soundPaddleHit();
+                    soundPaddleHit(); currentRally++;
                     rallySpeed = Math.min(rallySpeed + 0.08f, 2.2f);
                     float hitPos = Math.clamp(((loc.y + 10) - (playerPaddle.getLocation().y + 50)) / 50.0f, -1f, 1f);
                     float speedX = (Math.abs(velX) + 0.5f) * rallySpeed;
                     velX = speedX + (random.nextInt(100) == 2 ? 10f : 0f);
                     velY = hitPos * 6.0f;
-                    // spark burst at player paddle contact point
                     synchronized (particles) {
                         for (int i = 0; i < 7; i++) {
                             float ang = (float)(random.nextDouble() * Math.PI * 2);
                             float spd = 1.5f + random.nextFloat() * 3f;
-                            particles.add(new Particle(playerPaddle.getX() + 20, loc.y + 10,
-                                (float)Math.cos(ang)*spd, (float)Math.sin(ang)*spd, PLAYER_COLOR));
+                            particles.add(new Particle(playerPaddle.getX() + 20, loc.y + 10, (float)Math.cos(ang)*spd, (float)Math.sin(ang)*spd, PLAYER_COLOR));
                         }
                     }
                 }
 
-                // Tick particles
                 synchronized (particles) {
                     Iterator<Particle> it = particles.iterator();
                     while (it.hasNext()) {
                         Particle p = it.next();
-                        p.x += p.vx; p.y += p.vy;
-                        p.life -= 0.045f;
+                        p.x += p.vx; p.y += p.vy; p.life -= 0.045f;
                         if (p.life <= 0) it.remove();
                     }
                 }
