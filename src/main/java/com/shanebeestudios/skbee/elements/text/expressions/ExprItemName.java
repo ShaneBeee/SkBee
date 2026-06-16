@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.classes.Changer.ChangeMode;
 import ch.njol.skript.expressions.base.SimplePropertyExpression;
 import ch.njol.skript.lang.Expression;
@@ -14,7 +13,6 @@ import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import net.kyori.adventure.text.Component;
 import org.bukkit.event.Event;
-import org.bukkit.inventory.meta.ItemMeta;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,10 +42,6 @@ public class ExprItemName extends SimplePropertyExpression<Object, ComponentWrap
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.itemName = parseResult.hasTag("item");
-        if (this.itemName && !ComponentWrapper.HAS_ITEM_NAME) {
-            Skript.error("'custom item name' requires Minecraft 1.20.5+");
-            return false;
-        }
         return super.init(exprs, matchedPattern, isDelayed, parseResult);
     }
 
@@ -58,8 +52,7 @@ public class ExprItemName extends SimplePropertyExpression<Object, ComponentWrap
             if (itemStack.hasData(type)) {
                 return itemStack.getData(type);
             }
-            ItemMeta itemMeta = itemStack.getItemMeta();
-            return itemName ? itemMeta.itemName() : itemMeta.displayName();
+            return null;
         });
         if (component == null) return null;
         return ComponentWrapper.fromComponent(component);

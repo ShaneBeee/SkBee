@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.api.wrapper;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.skript.util.Color;
@@ -61,11 +60,6 @@ import java.util.regex.PatternSyntaxException;
  */
 @SuppressWarnings({"PatternValidation", "CallToPrintStackTrace"})
 public class ComponentWrapper {
-
-    /**
-     * Check if ItemMeta supports 'itemName' ('item_name' component
-     */
-    public static final boolean HAS_ITEM_NAME = Skript.methodExists(ItemMeta.class, "itemName");
 
     /**
      * Create an empty component
