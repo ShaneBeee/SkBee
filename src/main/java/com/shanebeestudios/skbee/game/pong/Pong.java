@@ -562,17 +562,12 @@ public class Pong {
                     g2.setColor(splashRow == 1 && winOptionIndex < WIN_OPTIONS.length - 1 ? new Color(200, 200, 200, 200) : new Color(100, 100, 100, 80));
                     g2.drawString(">", wStartX + arrowW + gap + wSlotW + gap, H - 100);
 
-                    // Nav hint
+                    // Nav hint — single persistent line covering both axes
                     g2.setFont(new Font("Monospaced", Font.PLAIN, 11));
                     FontMetrics hfm = g2.getFontMetrics();
-                    String hint = splashRow == 0 ? "\u25bc  to select SCORE TO WIN" : "\u25b2  to select DIFFICULTY";
+                    String hint = "\u25b2\u25bc  navigate     \u25c4  \u25ba  change";
                     g2.setColor(new Color(150, 150, 150, 140));
-                    g2.drawString(hint, W / 2 - hfm.stringWidth(hint) / 2, H - 70);
-
-                    // Stats for selected difficulty
-                    String statsStr = "W: " + scores[difficulty][0] + "  L: " + scores[difficulty][1] + "  BEST RALLY: " + scores[difficulty][2];
-                    g2.setColor(new Color(120, 120, 120, 160));
-                    g2.drawString(statsStr, W / 2 - hfm.stringWidth(statsStr) / 2, H - 50);
+                    g2.drawString(hint, W / 2 - hfm.stringWidth(hint) / 2, H - 85);
                 }
 
                 if (animElapsed > subtitleStart) {
@@ -583,7 +578,8 @@ public class Pong {
                     FontMetrics sfm = g2.getFontMetrics();
                     String sub = "PRESS ANY KEY TO START";
                     g2.setColor(Color.WHITE);
-                    g2.drawString(sub, W / 2 - sfm.stringWidth(sub) / 2, H - 30);
+                    // Sits at the very bottom edge, clearly separated from the selectors
+                    g2.drawString(sub, W / 2 - sfm.stringWidth(sub) / 2, H - 44 - 10);
                     if (!splashDone[0] && animElapsed > subtitleStart + 400) splashDone[0] = true;
                 }
 
