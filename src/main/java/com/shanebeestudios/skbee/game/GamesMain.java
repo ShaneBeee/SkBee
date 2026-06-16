@@ -62,7 +62,7 @@ public class GamesMain {
         // Pre-render the game icons
         Image[] icons = {
             createPongIcon(160),
-            createCheckersIcon(160)
+            Checkers.createCheckersIcon(160)
         };
 
         JPanel panel = new JPanel(null) {
@@ -332,7 +332,8 @@ public class GamesMain {
         return img;
     }
 
-    // ── Checkers icon — neon checkerboard ────────────────────────────
+    /** @deprecated use {@link Checkers#createCheckersIcon(int)} */
+    @Deprecated
     private static Image createCheckersIcon(int size) {
         BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g = img.createGraphics();
