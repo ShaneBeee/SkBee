@@ -685,6 +685,13 @@ public class Pong {
                 if(!(fuckYouJava[0]||fuckYouJava[1])&&(e.getKeyCode()==KeyEvent.VK_UP||e.getKeyCode()==KeyEvent.VK_DOWN)) addPlayerVel[0]=0;
             }
         });
+        rootPane.addMouseWheelListener(e -> {
+            if (!gameStarted.get() || paused || gameOver || countdownStartMs >= 0) return;
+            int pl = playerPaddle.getLocation().y;
+            int delta = (int)(e.getPreciseWheelRotation() * 6);
+            playerPaddle.setLocation(20, Math.clamp(pl + delta, 0, mid.height * 2 - 100));
+            playerPaddle.repaint();
+        });
         rootPane.requestFocus();
 
         var random=ThreadLocalRandom.current();
