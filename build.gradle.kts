@@ -15,7 +15,7 @@ val projectVersion = "3.24.0"
 // Server version
 val serverVersion = "26.1.2"
 // Minimum version of Minecraft that SkBee supports
-val apiVersion = "1.21.10"
+val apiVersion = "1.21.11"
 // Where this builds on the server
 val serverLocation = "Minecraft/Skript/26-2"
 

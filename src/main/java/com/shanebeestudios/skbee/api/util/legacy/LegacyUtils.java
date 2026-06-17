@@ -8,7 +8,6 @@ import ch.njol.skript.Skript;
 public class LegacyUtils {
 
     // Shortcut for finding stuff to remove later
-    public static final boolean IS_RUNNING_MC_1_21_11 = Skript.isRunningMinecraft(1, 21, 11);
     public static final boolean IS_RUNNING_MC_26_1_1 = Skript.isRunningMinecraft(26, 1, 1);
     public static final boolean IS_RUNNING_MC_26_1_2 = Skript.isRunningMinecraft(26, 1, 2);
 
