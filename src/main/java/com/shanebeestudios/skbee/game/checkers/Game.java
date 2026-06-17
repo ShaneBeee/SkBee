@@ -32,11 +32,15 @@ public class Game extends JPanel implements MouseInputListener {
         Graphics2D g2 = (Graphics2D) g;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-        // Centre the board vertically in the panel
-        offset = (getHeight() - 512) / 2;
+        // Centre the board in the panel
+        int cellSize = Math.min(getWidth(), getHeight()) / 8;
+        int boardPx = cellSize * 8;
+        int ox = (getWidth() - boardPx) / 2;
+        int oy = (getHeight() - boardPx) / 2;
+        offset = oy; // keep offset in sync for click mapping
 
-        renderTiles(g2);
-        renderPieces(g2);
+        renderTiles(g2, cellSize, ox, oy);
+        renderPieces(g2, cellSize, ox, oy);
 
         // Scanlines over everything
         g2.setColor(new Color(0, 0, 0, 35));
@@ -102,8 +106,10 @@ public class Game extends JPanel implements MouseInputListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        var x = e.getX() / 64;
-        var y = (e.getY() - offset) / 64;
+        int cellSize = Math.min(getWidth(), getHeight()) / 8;
+        int ox = (getWidth() - cellSize * 8) / 2;
+        var x = (e.getX() - ox) / cellSize;
+        var y = (e.getY() - offset) / cellSize;
         if (x < 0 || x > 7 || y < 0 || y > 7) return;
         if (winner != null) {
             if (onReturnToMenu != null) onReturnToMenu.run();
@@ -272,60 +278,54 @@ public class Game extends JPanel implements MouseInputListener {
         }
     }
 
-    private void renderPieces(Graphics2D g2) {
+    private void renderPieces(Graphics2D g2, int cellSize, int ox, int oy) {
         for (Piece piece : pieces) {
             if (piece.isNull()) continue;
             var image = switch (piece.color) {
                 case RED -> piece.type.red;
                 case BLUE -> piece.type.blue;
             };
-            g2.drawImage(image, piece.x * 64, piece.y * 64 + offset, 64, 64, null);
+            g2.drawImage(image, ox + piece.x * cellSize, oy + piece.y * cellSize, cellSize, cellSize, null);
         }
     }
 
-    private void renderTiles(Graphics2D g2) {
-        // Dark CRT board colours
-        Color darkSquare  = new Color(8, 8, 20);      // deep navy — same as Pong BG
-        Color lightSquare = new Color(28, 30, 55);     // slightly lighter navy
-        Color selectedCol = new Color(0, 255, 240, 60);  // cyan tint for selection
-        Color moveCol     = new Color(255, 0, 200, 45);  // magenta tint for valid moves
+    private void renderTiles(Graphics2D g2, int cellSize, int ox, int oy) {
+        Color darkSquare  = new Color(8, 8, 20);
+        Color lightSquare = new Color(28, 30, 55);
+        Color selectedCol = new Color(0, 255, 240, 60);
+        Color moveCol     = new Color(255, 0, 200, 45);
+        int dotR = Math.max(4, cellSize / 8);
 
         for (int x = 0; x < 8; x++) {
             for (int y = 0; y < 8; y++) {
-                int px = x * 64, py = y * 64 + offset;
+                int px = ox + x * cellSize, py = oy + y * cellSize;
 
-                // Base square colour
                 g2.setColor((x + y) % 2 == 0 ? lightSquare : darkSquare);
-                g2.fillRect(px, py, 64, 64);
+                g2.fillRect(px, py, cellSize, cellSize);
 
-                // Selection highlight
                 if (x == selectedX && y == selectedY) {
                     g2.setColor(selectedCol);
-                    g2.fillRect(px, py, 64, 64);
-                    // Cyan border
+                    g2.fillRect(px, py, cellSize, cellSize);
                     g2.setColor(new Color(0, 255, 240, 200));
                     g2.setStroke(new BasicStroke(2));
-                    g2.drawRect(px + 1, py + 1, 62, 62);
+                    g2.drawRect(px + 1, py + 1, cellSize - 2, cellSize - 2);
                     g2.setStroke(new BasicStroke(1));
                 }
 
-                // Valid move indicator — magenta corner dots
                 if (hasMove(x, y)) {
                     g2.setColor(moveCol);
-                    g2.fillRect(px, py, 64, 64);
-                    // Magenta dot in centre
-                    int dotR = 8;
+                    g2.fillRect(px, py, cellSize, cellSize);
+                    int cx = px + cellSize / 2, cy = py + cellSize / 2;
                     for (int l = 3; l >= 1; l--) {
                         g2.setColor(new Color(255, 0, 200, 18 * l));
-                        g2.fillOval(px + 32 - dotR - l, py + 32 - dotR - l, (dotR + l) * 2, (dotR + l) * 2);
+                        g2.fillOval(cx - dotR - l, cy - dotR - l, (dotR + l) * 2, (dotR + l) * 2);
                     }
                     g2.setColor(new Color(255, 0, 200, 200));
-                    g2.fillOval(px + 32 - dotR, py + 32 - dotR, dotR * 2, dotR * 2);
+                    g2.fillOval(cx - dotR, cy - dotR, dotR * 2, dotR * 2);
                 }
 
-                // Subtle grid line
                 g2.setColor(new Color(255, 255, 255, 8));
-                g2.drawRect(px, py, 64, 64);
+                g2.drawRect(px, py, cellSize, cellSize);
             }
         }
     }

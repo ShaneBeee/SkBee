@@ -13,7 +13,7 @@ public class Checkers {
     public Checkers() {
         var frame = new JFrame("Checkers \uD83D\uDE0E");
         frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-        frame.getContentPane().setPreferredSize(new Dimension(512, 512));
+        frame.getContentPane().setPreferredSize(new Dimension(640, 640));
         frame.pack();
 
         Image icon = createCheckersIcon(512);
@@ -175,6 +175,7 @@ public class Checkers {
         splash.addKeyListener(new KeyAdapter() {
             @Override public void keyPressed(KeyEvent e) {
                 if (!splashDone[0] || fadingOut[0]) return;
+                if (e.getKeyCode()==KeyEvent.VK_ESCAPE) { animTimer.stop(); frame.dispose(); new com.shanebeestudios.skbee.game.GamesMain(); return; }
                 if (e.getKeyCode()==KeyEvent.VK_LEFT)  { difficulty=Math.max(0,difficulty-1); splash.repaint(); return; }
                 if (e.getKeyCode()==KeyEvent.VK_RIGHT) { difficulty=Math.min(2,difficulty+1); splash.repaint(); return; }
                 // Any other key — fade out and start game
@@ -183,9 +184,9 @@ public class Checkers {
                     animTimer.stop();
                     splash.setVisible(false);
                     frame.remove(splash);
-                    var panel = new Game(512);
+                    var panel = new Game(640);
                     panel.difficulty = difficulty;
-                    panel.setSize(512, 512);
+                    panel.setSize(640, 640);
                     panel.onReturnToMenu = () -> {
                         frame.remove(panel);
                         animStart[0] = System.currentTimeMillis();
