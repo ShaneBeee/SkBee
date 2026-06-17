@@ -2,16 +2,20 @@ package com.shanebeestudios.skbee.elements.other.type;
 
 import ch.njol.skript.bukkitutil.BukkitUtils;
 import ch.njol.skript.classes.Parser;
+import ch.njol.skript.classes.Serializer;
 import ch.njol.skript.lang.ParseContext;
 import ch.njol.skript.registrations.Classes;
 import ch.njol.util.StringUtils;
+import ch.njol.yggdrasil.Fields;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.api.registry.RegistryUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
 import io.papermc.paper.registry.RegistryKey;
 import org.bukkit.JukeboxSong;
 import org.bukkit.MusicInstrument;
+import org.bukkit.NamespacedKey;
 import org.bukkit.Registry;
 import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.inventory.EquipmentSlotGroup;
@@ -22,12 +26,16 @@ import org.bukkit.potion.PotionType;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.StreamCorruptedException;
 import java.util.Map;
 
 public class ItemTypes {
 
     public static void register(Registration reg) {
         if (Classes.getExactClassInfo(ArmorTrim.class) == null) {
+            Registry<TrimPattern> patternReg = RegistryUtils.getRegistry(RegistryKey.TRIM_PATTERN);
+            Registry<TrimMaterial> materialReg = RegistryUtils.getRegistry(RegistryKey.TRIM_MATERIAL);
+
             reg.newType(ArmorTrim.class, "armortrim")
                 .user("armor ?trims?")
                 .name("ArmorTrim")
@@ -51,6 +59,48 @@ public class ItemTypes {
                     @Override
                     public @NotNull String toVariableNameString(ArmorTrim o) {
                         return toString(o, 0);
+                    }
+                })
+                .serializer(new Serializer<>() {
+                    @SuppressWarnings("removal")
+                    @Override
+                    public Fields serialize(ArmorTrim trim) {
+                        Fields fields = new Fields();
+                        fields.putObject("pattern", trim.getPattern().getKey().toString());
+                        fields.putObject("material", trim.getMaterial().getKey().toString());
+                        return fields;
+                    }
+
+                    @Override
+                    protected ArmorTrim deserialize(Fields fields) throws StreamCorruptedException {
+                        String patternKeyString = fields.getObject("pattern", String.class);
+                        String materialKeyString = fields.getObject("material", String.class);
+                        if (patternKeyString == null || materialKeyString == null) {
+                            throw new StreamCorruptedException("Missing pattern/material key");
+                        }
+                        NamespacedKey patternKey = Util.getNamespacedKey(patternKeyString, false);
+                        NamespacedKey materialKey = Util.getNamespacedKey(materialKeyString, false);
+                        if (patternKey == null || materialKey == null) {
+                            throw new StreamCorruptedException("Invalid pattern/material key");
+                        }
+
+                        TrimPattern trimPattern = patternReg.get(patternKey);
+                        TrimMaterial trimMaterial = materialReg.get(materialKey);
+                        if (trimPattern == null || trimMaterial == null) {
+                            throw new StreamCorruptedException("Invalid pattern/material");
+                        }
+
+                        return new ArmorTrim(trimMaterial, trimPattern);
+                    }
+
+                    @Override
+                    public boolean mustSyncDeserialization() {
+                        return true;
+                    }
+
+                    @Override
+                    protected boolean canBeInstantiated() {
+                        return false;
                     }
                 })
                 .register();
@@ -189,7 +239,6 @@ public class ItemTypes {
                 .since("2.13.0")
                 .register();
         }
-
     }
 
 }
