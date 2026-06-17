@@ -332,7 +332,9 @@ public class GamesMain {
         return img;
     }
 
-    /** @deprecated use {@link Checkers#createCheckersIcon(int)} */
+    /**
+     * @deprecated use {@link Checkers#createCheckersIcon(int)}
+     */
     @Deprecated
     private static Image createCheckersIcon(int size) {
         BufferedImage img = new BufferedImage(size, size, BufferedImage.TYPE_INT_ARGB);

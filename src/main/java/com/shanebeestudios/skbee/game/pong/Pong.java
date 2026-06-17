@@ -774,7 +774,12 @@ public class Pong {
             @Override
             public void keyPressed(KeyEvent e) {
                 if (splash.isVisible() && !splashFadingOut[0]) {
-                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) { animTimer.stop(); frame.dispose(); new com.shanebeestudios.skbee.game.GamesMain(); return; }
+                    if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+                        animTimer.stop();
+                        frame.dispose();
+                        new com.shanebeestudios.skbee.game.GamesMain();
+                        return;
+                    }
                 }
                 if (splash.isVisible() && splashDone[0] && !splashFadingOut[0]) {
                     if (e.getKeyCode() == KeyEvent.VK_LEFT || e.getKeyCode() == KeyEvent.VK_RIGHT) {
