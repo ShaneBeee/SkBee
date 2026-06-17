@@ -6,7 +6,7 @@ test "SkBee - GameEvents":
 	spawn a sheep at event-location:
 		set {_e} to entity
 
-	# Fire checkersGame event
+	# Fire game event
 	set {test_game_event_sheep} to true
 	kill {_e}
 	assert {test_game_event_sheep} is not set with "The variable should have been removed"
@@ -18,7 +18,7 @@ test "SkBee - GameEvents":
 	delete entity within {_e} # just in case
 	unload chunk at event-location
 
-on checkersGame event entity_die:
+on game event entity_die:
 	if {test_game_event_sheep} is set:
 		delete {test_game_event_sheep}
 		assert event-entity is a sheep with "We killed a sheep"
