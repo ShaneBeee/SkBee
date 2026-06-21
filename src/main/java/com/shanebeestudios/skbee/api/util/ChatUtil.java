@@ -9,7 +9,6 @@ import ch.njol.skript.util.slot.Slot;
 import net.kyori.adventure.text.format.TextColor;
 import net.kyori.adventure.translation.Translatable;
 import net.md_5.bungee.api.ChatColor;
-import org.bukkit.Bukkit;
 import org.bukkit.block.data.BlockData;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.EntityType;
@@ -72,10 +71,10 @@ public enum ChatUtil {
     public static @Nullable String getTranslation(Object object) {
         if (object instanceof Entity entity) {
             EntityType type = entity.getType();
-            return Bukkit.getUnsafe().getTranslationKey(type);
+            return type.translationKey();
         } else if (object instanceof EntityData<?> entityData) {
             EntityType type = EntityUtils.toBukkitEntityType(entityData);
-            return Bukkit.getUnsafe().getTranslationKey(type);
+            return type.translationKey();
         } else if (object instanceof ItemStack itemStack) {
             return itemStack.getType().translationKey();
         } else if (object instanceof ItemType itemType) {

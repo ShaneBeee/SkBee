@@ -1,6 +1,5 @@
 package com.shanebeestudios.skbee.elements.text.expressions;
 
-import ch.njol.skript.Skript;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
@@ -16,16 +15,14 @@ import org.bukkit.entity.Entity;
 import org.bukkit.event.Event;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 @SuppressWarnings("rawtypes")
 public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
-
-    private static final boolean HAS_SHOW_ENITY = Skript.methodExists(ShowEntity.class, "showEntity", Key.class, UUID.class);
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprHoverEvent.class, HoverEvent.class, "[a] [new] hover event showing %strings/textcomps/itemstacks/entities%")
@@ -40,23 +37,19 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
 
     private Expression<?> object;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.object = exprs[0];
         return true;
     }
 
-    @SuppressWarnings({"NullableProblems", "UnstableApiUsage", "deprecation"})
     @Nullable
     @Override
     protected HoverEvent[] get(Event event) {
         if (this.object.isSingle() && this.object.getSingle(event) instanceof Entity entity) {
             Key key = entity.getType().key();
             UUID uuid = entity.getUniqueId();
-            ShowEntity showEntity;
-            if (HAS_SHOW_ENITY) showEntity = ShowEntity.showEntity(key, uuid);
-            else showEntity = ShowEntity.of(key, uuid);
+            ShowEntity showEntity = ShowEntity.showEntity(key, uuid);
             return new HoverEvent[]{HoverEvent.hoverEvent(Action.SHOW_ENTITY, showEntity)};
         } else if (this.object.isSingle() && this.object.getSingle(event) instanceof ItemStack itemStack) {
             if (itemStack.getType().isAir() || !itemStack.getType().isItem()) {
@@ -88,7 +81,6 @@ public class ExprHoverEvent extends SimpleExpression<HoverEvent> {
         return HoverEvent.class;
     }
 
-    @SuppressWarnings("DataFlowIssue")
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         return "hover event showing " + this.object.toString(e, d);

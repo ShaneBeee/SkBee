@@ -81,7 +81,6 @@ import com.shanebeestudios.skbee.elements.other.expressions.ExprAttributeModifie
 import com.shanebeestudios.skbee.elements.other.expressions.ExprAvailableMaterials;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprAverageTickTime;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprBeaconEntitiesInRange;
-import com.shanebeestudios.skbee.elements.other.expressions.ExprBiomeKeyLocation;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockDataAllStates;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockDataItem;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprBlockDataItemTag;
@@ -281,7 +280,6 @@ public class OtherElementRegistration {
         ExprAvailableMaterials.register(registration);
         ExprAverageTickTime.register(registration);
         ExprBeaconEntitiesInRange.register(registration);
-        ExprBiomeKeyLocation.register(registration);
         ExprBlockDataAllStates.register(registration);
         ExprBlockDataItem.register(registration);
         ExprBlockDataItemTag.register(registration);

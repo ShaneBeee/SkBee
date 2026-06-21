@@ -8,8 +8,8 @@ import com.github.shanebeee.skr.Registration;
 import org.bukkit.Bukkit;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.io.File;
 
 public class CondWorldExists extends Condition {
