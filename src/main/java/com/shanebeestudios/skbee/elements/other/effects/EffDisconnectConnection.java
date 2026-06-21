@@ -26,7 +26,7 @@ public class EffDisconnectConnection extends Effect {
                 "\t\t\tif transfer cookie = \"%event-uuid%-transfer\":",
                 "\t\t\t\tstop",
                 "\t\tdisconnect event-connection due to \"<red>ILLEGAL TRANSFER\"")
-            .since("INSERT VERSION")
+            .since("3.25.0")
             .register();
     }
 

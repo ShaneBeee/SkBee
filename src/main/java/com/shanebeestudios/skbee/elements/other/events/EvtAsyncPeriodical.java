@@ -30,7 +30,7 @@ public class EvtAsyncPeriodical extends SkriptEvent {
                 "every tick async: # can cause lag depending on the code inside the event",
                 "every 3 minecraft days async:",
                 "every 2 seconds async in \"world\":")
-            .since("INSERT VERSION")
+            .since("3.25.0")
             .register();
     }
 
