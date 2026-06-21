@@ -56,7 +56,7 @@ dependencies {
     implementation("de.tr7zw:item-nbt-api:2.15.7")
 
     // FastBoard
-    implementation("fr.mrmicky:fastboard:2.1.5")
+    implementation("fr.mrmicky:fastboard:2.2.0")
 
     // Virtual Furnace
     implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.1.2")
