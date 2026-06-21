@@ -22,7 +22,8 @@ public class EvtEntityKnockback extends SkriptEvent {
                 "%entitydatas% knockback[ed] [by %-entitydatas%]")
             .name("Entity Knockback")
             .description("Fired when an Entity is knocked back by the hit of another Entity. " +
-                "If this event is cancelled, the entity is not knocked back.")
+                "If this event is cancelled, the entity is not knocked back.",
+                "Use the 'Knockback Attacker/Victim' expression to get the attacker/victim in this event.")
             .examples("on entity knockback:", "\tif knockback victim is a cow:", "\t\tcancel event")
             .since("1.8.0")
             .register();

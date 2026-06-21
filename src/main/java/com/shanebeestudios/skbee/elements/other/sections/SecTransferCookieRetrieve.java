@@ -13,6 +13,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.Util;
 import com.shanebeestudios.skbee.elements.other.expressions.ExprTransferCookie;
+import io.papermc.paper.connection.ReadablePlayerCookieConnection;
 import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -21,12 +22,13 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
+@SuppressWarnings("UnstableApiUsage")
 public class SecTransferCookieRetrieve extends Section {
 
     public static void register(Registration reg) {
         if (Skript.methodExists(Player.class, "retrieveCookie", NamespacedKey.class)) {
             reg.newSection(SecTransferCookieRetrieve.class,
-                    "retrieve cookie with key %namespacedkey/string% [from %player%]")
+                    "retrieve cookie with key %namespacedkey/string% [from %player/playerconnection%]")
                 .name("Transfer - Retrieve Cookie")
                 .description("Retrieve a cookie from a player.",
                     "Due to the retrieval process happening async, this will delay proceeding code.",
@@ -54,13 +56,12 @@ public class SecTransferCookieRetrieve extends Section {
     }
 
     private Expression<?> key;
-    private Expression<Player> player;
+    private Expression<?> player;
 
-    @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult, SectionNode sectionNode, List<TriggerItem> triggerItems) {
         this.key = exprs[0];
-        this.player = (Expression<Player>) exprs[1];
+        this.player = exprs[1];
         ParserInstance parserInstance = ParserInstance.get();
         Kleenean hasDelayBefore = parserInstance.getHasDelayBefore();
         parserInstance.setHasDelayBefore(Kleenean.TRUE);
@@ -70,6 +71,7 @@ public class SecTransferCookieRetrieve extends Section {
         return true;
     }
 
+    @SuppressWarnings("PatternVariableHidesField")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         TriggerItem next = getNext();
@@ -77,9 +79,9 @@ public class SecTransferCookieRetrieve extends Section {
         // Let's save you guys for later after the cookie has loaded
         Object localVars = Variables.copyLocalVariables(event);
 
-        Player player = this.player.getSingle(event);
+        Object playerObject = this.player.getSingle(event);
         Object keyObject = this.key.getSingle(event);
-        if (player == null || keyObject == null) {
+        if (playerObject == null || keyObject == null) {
             return null;
         }
 
@@ -94,23 +96,29 @@ public class SecTransferCookieRetrieve extends Section {
             return next;
         }
 
-        player.retrieveCookie(key).thenAccept(bytes -> {
-            Delay.addDelayedEvent(event); // Delay event to make sure kick effect still works
-            ExprTransferCookie.setLastTransferCookie(bytes != null ? new String(bytes) : null);
-            // re-set local variables
-            if (localVars != null) Variables.setLocalVariables(event, localVars);
-
-            if (this.first != null) {
-                // Walk the section if there is one
-                TriggerItem.walk(this.first, event);
-            }
-
-            // remove local vars as we're now done
-            Variables.removeLocals(event);
-            // Clear cookie data before moving on
-            ExprTransferCookie.setLastTransferCookie(null);
-        });
+        if (playerObject instanceof Player player) {
+            player.retrieveCookie(key).thenAccept(bytes -> handleCookie(event, localVars, bytes));
+        } else if (playerObject instanceof ReadablePlayerCookieConnection playerConnection) {
+            playerConnection.retrieveCookie(key).thenAccept(bytes -> handleCookie(event, localVars, bytes));
+        }
         return null;
+    }
+
+    private void handleCookie(Event event, Object localVars, byte[] bytes) {
+        Delay.addDelayedEvent(event); // Delay event to make sure kick effect still works
+        ExprTransferCookie.setLastTransferCookie(bytes != null ? new String(bytes) : null);
+        // re-set local variables
+        if (localVars != null) Variables.setLocalVariables(event, localVars);
+
+        if (this.first != null) {
+            // Walk the section if there is one
+            TriggerItem.walk(this.first, event);
+        }
+
+        // remove local vars as we're now done
+        Variables.removeLocals(event);
+        // Clear cookie data before moving on
+        ExprTransferCookie.setLastTransferCookie(null);
     }
 
     @Override

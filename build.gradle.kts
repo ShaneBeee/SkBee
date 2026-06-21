@@ -15,9 +15,9 @@ val projectVersion = "3.24.0"
 // Server version
 val serverVersion = "26.1.2"
 // Minimum version of Minecraft that SkBee supports
-val apiVersion = "1.21.10"
+val apiVersion = "1.21.11"
 // Where this builds on the server
-val serverLocation = "Minecraft/Skript/26-1"
+val serverLocation = "Minecraft/Skript/26-2"
 
 java.sourceCompatibility = JavaVersion.VERSION_25
 
@@ -56,7 +56,7 @@ dependencies {
     implementation("de.tr7zw:item-nbt-api:2.15.7")
 
     // FastBoard
-    implementation("fr.mrmicky:fastboard:2.1.5")
+    implementation("fr.mrmicky:fastboard:2.2.0")
 
     // Virtual Furnace
     implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.1.2")
@@ -67,6 +67,8 @@ dependencies {
 
 tasks {
     register("server", Copy::class) {
+        group = "bee-building"
+        description = "Build the SkBee jar in the pre-defined server location."
         dependsOn("shadowJar")
         from("build/libs") {
             include("SkBee-*.jar")

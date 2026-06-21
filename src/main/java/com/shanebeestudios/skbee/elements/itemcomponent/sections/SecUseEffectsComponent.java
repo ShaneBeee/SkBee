@@ -7,10 +7,9 @@ import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.TriggerItem;
 import ch.njol.util.Kleenean;
 import com.github.shanebeee.skr.Registration;
+import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
-import com.github.shanebeee.skr.skript.SimpleEntryValidator;
-import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.UseEffects;
@@ -27,35 +26,33 @@ public class SecUseEffectsComponent extends Section {
     private static EntryValidator VALIDATOR;
 
     public static void register(Registration reg) {
-        if (LegacyUtils.IS_RUNNING_MC_1_21_11) {
-            VALIDATOR = SimpleEntryValidator.builder()
-                .addOptionalEntry("can_sprint", Boolean.class)
-                .addOptionalEntry("speed_multiplier", Number.class)
-                .addOptionalEntry("interact_vibrations", Boolean.class)
-                .build();
+        VALIDATOR = SimpleEntryValidator.builder()
+            .addOptionalEntry("can_sprint", Boolean.class)
+            .addOptionalEntry("speed_multiplier", Number.class)
+            .addOptionalEntry("interact_vibrations", Boolean.class)
+            .build();
 
-            reg.newSection(SecUseEffectsComponent.class, VALIDATOR,
-                    "apply use effects component to %itemstacks/itemtypes/slots%")
-                .name("ItemComponent - Use Effects Component Apply")
-                .description("Controls how the player behaves when using an item (right mouse click).",
-                    "See [**Use Effects Component**](https://minecraft.wiki/w/Data_component_format#use_effects) on McWiki for more details.",
-                    "Requires Minecraft 1.21.11+",
-                    "",
-                    "**ENTRIES**:",
-                    "All entries are optional and will use their defaults when omitted.",
-                    "- `can_sprint` = Boolean, whether the player can sprint during use. Defaults to false",
-                    "- `speed_multiplier` = A ranged float (0.0-1.0 inclusive) speed multiplier inflicted during use. Defaults to 0.2",
-                    "- `interact_vibrations` = Boolean, whether using this item emits the `minecraft:item_interact_start` and `minecraft:item_interact_finish` game events. Defaults to true")
-                .examples("set {_i} to 1 of shield",
-                    "apply use effects component to {_i}:",
-                    "\tcan_sprint: true",
-                    "\tspeed_multiplier: 0.7",
-                    "\tinteract_vibrations: false",
-                    "",
-                    "give player 1 of {_i}")
-                .since("3.16.0")
-                .register();
-        }
+        reg.newSection(SecUseEffectsComponent.class, VALIDATOR,
+                "apply use effects component to %itemstacks/itemtypes/slots%")
+            .name("ItemComponent - Use Effects Component Apply")
+            .description("Controls how the player behaves when using an item (right mouse click).",
+                "See [**Use Effects Component**](https://minecraft.wiki/w/Data_component_format#use_effects) on McWiki for more details.",
+                "Requires Minecraft 1.21.11+",
+                "",
+                "**ENTRIES**:",
+                "All entries are optional and will use their defaults when omitted.",
+                "- `can_sprint` = Boolean, whether the player can sprint during use. Defaults to false",
+                "- `speed_multiplier` = A ranged float (0.0-1.0 inclusive) speed multiplier inflicted during use. Defaults to 0.2",
+                "- `interact_vibrations` = Boolean, whether using this item emits the `minecraft:item_interact_start` and `minecraft:item_interact_finish` game events. Defaults to true")
+            .examples("set {_i} to 1 of shield",
+                "apply use effects component to {_i}:",
+                "\tcan_sprint: true",
+                "\tspeed_multiplier: 0.7",
+                "\tinteract_vibrations: false",
+                "",
+                "give player 1 of {_i}")
+            .since("3.16.0")
+            .register();
     }
 
     private Expression<?> items;

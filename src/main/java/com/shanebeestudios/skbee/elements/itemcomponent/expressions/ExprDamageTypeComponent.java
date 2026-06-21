@@ -9,7 +9,6 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.skript.base.SimplePropertyExpression;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
 import com.shanebeestudios.skbee.api.util.ItemUtils;
-import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import org.bukkit.damage.DamageType;
@@ -21,24 +20,22 @@ import org.jspecify.annotations.Nullable;
 public class ExprDamageTypeComponent extends SimplePropertyExpression<Object, DamageType> {
 
     public static void register(Registration reg) {
-        if (LegacyUtils.IS_RUNNING_MC_1_21_11) {
-            reg.newPropertyExpression(ExprDamageTypeComponent.class, DamageType.class,
-                    "damage type [component]", "itemstacks/itemtypes/slots")
-                .name("ItemComponent - Damage Type")
-                .description("Represents the damage type component of an item.",
-                    "See [**Damage Type**](https://minecraft.wiki/w/Data_component_format#damage_type) on McWiki for more details.",
-                    "Requires Minecraft 1.21.11+",
-                    "",
-                    "**Changers**:",
-                    "`set` = Will set the damage type of the item.",
-                    "`delete` = Will delete the damage type of this item.",
-                    "`reset` = Will reset the damage type back to the original value.")
-                .examples("set damage type of player's tool to cactus",
-                    "delete damage type of player's tool",
-                    "reset damage type component of player's tool")
-                .since("3.16.0")
-                .register();
-        }
+        reg.newPropertyExpression(ExprDamageTypeComponent.class, DamageType.class,
+                "damage type [component]", "itemstacks/itemtypes/slots")
+            .name("ItemComponent - Damage Type")
+            .description("Represents the damage type component of an item.",
+                "See [**Damage Type**](https://minecraft.wiki/w/Data_component_format#damage_type) on McWiki for more details.",
+                "Requires Minecraft 1.21.11+",
+                "",
+                "**Changers**:",
+                "`set` = Will set the damage type of the item.",
+                "`delete` = Will delete the damage type of this item.",
+                "`reset` = Will reset the damage type back to the original value.")
+            .examples("set damage type of player's tool to cactus",
+                "delete damage type of player's tool",
+                "reset damage type component of player's tool")
+            .since("3.16.0")
+            .register();
     }
 
     @Override
