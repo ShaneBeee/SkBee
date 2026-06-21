@@ -1,7 +1,9 @@
 package com.shanebeestudios.skbee.game.checkers;
 
 import javax.swing.*;
-import java.awt.*;
+import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.net.URL;
 
