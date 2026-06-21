@@ -2,15 +2,14 @@ package com.shanebeestudios.skbee.api.particle;
 
 import ch.njol.skript.Skript;
 import ch.njol.skript.aliases.ItemType;
-import ch.njol.util.StringUtils;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import org.bukkit.Color;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
 import org.bukkit.Particle.DustTransition;
-import org.bukkit.Registry;
 import org.bukkit.Vibration;
 import org.bukkit.World;
 import org.bukkit.block.data.BlockData;
@@ -20,12 +19,6 @@ import org.bukkit.util.Vector;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Utility class for {@link Particle particles}
  */
@@ -34,6 +27,7 @@ public class ParticleUtil {
     private ParticleUtil() {
     }
 
+    private static final boolean HAS_GEYSER = LegacyUtils.IS_RUNNING_MC_26_2;
     private static final boolean HAS_PLAYER_FORCE = Skript.methodExists(Player.class, "spawnParticle",
         Particle.class, Location.class, int.class, double.class, double.class, double.class, double.class, Object.class, boolean.class);
 
@@ -82,6 +76,10 @@ public class ParticleUtil {
             return "trail";
         } else if (dataType == Particle.Spell.class) {
             return "spell";
+        } else if (HAS_GEYSER && dataType == Particle.GeyserBase.class) {
+            return "geyserbase";
+        } else if (HAS_GEYSER && dataType == Particle.Geyser.class) {
+            return "geyser";
         }
         // For future particle data additions that haven't been added here yet
         Util.debug("Missing particle data type: '&e" + dataType.getName() + "&7'");
@@ -121,6 +119,10 @@ public class ParticleUtil {
         } else if (dataType == Particle.Trail.class && data instanceof Particle.Trail) {
             return data;
         } else if (dataType == Particle.Spell.class && data instanceof Particle.Spell) {
+            return data;
+        } else if (HAS_GEYSER && dataType == Particle.GeyserBase.class && data instanceof Particle.GeyserBase) {
+            return data;
+        } else if (HAS_GEYSER && dataType == Particle.Geyser.class && data instanceof Particle.Geyser) {
             return data;
         }
         return null;
