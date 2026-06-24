@@ -4,6 +4,7 @@ import ch.njol.skript.lang.Literal;
 import ch.njol.skript.lang.SkriptEvent;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import com.github.shanebeee.skr.Registration;
+import com.shanebeestudios.skbee.config.SkBeeMetrics;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -55,6 +56,7 @@ public class TabEvent extends SkriptEvent {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Literal<?> @NotNull [] args, int matchedPattern, @NotNull ParseResult parseResult) {
+        SkBeeMetrics.Features.TAB_COMPLETE.used();
         commands = args[0] == null ? null : ((Literal<String>) args[0]).getAll();
         return true;
     }
