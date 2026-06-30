@@ -21,12 +21,12 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprBlockDataTag.class, Object.class,
-                "block[ ](data|state) tag %string% of %blocks/blockdatas% [1:without updates]")
+                "block(data|state) tag %string% of %blocks/blockdatas% [1:without updates]")
             .name("BlockData - Tag")
             .description("Get/set a block data tag of BlockData or a Block.")
             .examples("set {_water} to block data tag \"waterlogged\" of event-block",
-                "set block data tag \"waterlogged\" of {_blockData} to true",
-                "set block data tag \"waterlogged\" of event-block to true",
+                "set blockdata tag \"waterlogged\" of {_blockData} to true",
+                "set blockdata tag \"waterlogged\" of event-block to true",
                 "set blockdata tag \"waterlogged\" of event-block without updates to true")
             .since("1.0.0, 2.16.1 (Variable Support)")
             .register();
@@ -115,7 +115,7 @@ public class ExprBlockDataTag extends SimpleExpression<Object> {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         String updates = !this.applyPhysics ? " without updates" : "";
-        return "block data tag " + this.tag.toString(e, d) + " of " + this.object.toString(e, d) + updates;
+        return "blockdata tag " + this.tag.toString(e, d) + " of " + this.object.toString(e, d) + updates;
     }
 
     private void tagError(String message) {
