@@ -18,8 +18,7 @@ import org.bukkit.World;
 import org.bukkit.WorldCreator;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class EffLoadWorld extends Effect {
 

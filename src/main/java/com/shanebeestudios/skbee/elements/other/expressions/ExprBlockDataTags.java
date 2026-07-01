@@ -3,8 +3,8 @@ package com.shanebeestudios.skbee.elements.other.expressions;
 import ch.njol.skript.lang.Expression;
 import ch.njol.skript.lang.SkriptParser.ParseResult;
 import ch.njol.skript.lang.util.SimpleExpression;
-import com.github.shanebeee.skr.Registration;
 import ch.njol.util.Kleenean;
+import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.util.BlockDataUtils;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.BlockData;
@@ -19,18 +19,17 @@ public class ExprBlockDataTags extends SimpleExpression<String> {
 
     public static void register(Registration reg) {
         reg.newPropertyExpression(ExprBlockDataTags.class, String.class,
-                "block[ ](data|state) tags", "blocks/blockdatas")
+                "block(data|state) tags", "blocks/blockdatas")
             .name("BlockData - Tags")
-            .description("Get a list of all block data tags of a Block or BlockData.")
-            .examples("set {_data::*} to block data tags of target block of player",
-                "loop block data tags of target block of player:")
+            .description("Get a list of all blockdata tags of a Block or BlockData.")
+            .examples("set {_data::*} to blockdata tags of target block of player",
+                "loop blockdata tags of target block of player:")
             .since("1.0.0, 2.16.1 (BlockData Support)")
             .register();
     }
 
     private Expression<?> objects;
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.objects = exprs[0];
@@ -66,7 +65,7 @@ public class ExprBlockDataTags extends SimpleExpression<String> {
 
     @Override
     public @NotNull String toString(Event e, boolean d) {
-        return "block data tags of " + this.objects.toString(e, d);
+        return "blockdata tags of " + this.objects.toString(e, d);
     }
 
 }

@@ -32,7 +32,7 @@ public class EvtPlayerInteract extends SkriptEvent {
                 "`event-blockaction` = .")
             .examples("on player interact:",
                 "\tif all:",
-                "\t\tevent-equipmentslot = off_hand_slot",
+                "\t\tevent-equipmentslot = off hand slot",
                 "\t\tevent-blockaction = right_click_block",
                 "\t\ttype of event-item = torch",
                 "\t\tname of event-item = \"Mr Torchie\"",
@@ -44,7 +44,7 @@ public class EvtPlayerInteract extends SkriptEvent {
                 "",
                 "on player interact on entity:",
                 "\tif all:",
-                "\t\tevent-equipmentslot = off_hand_slot",
+                "\t\tevent-equipmentslot = off hand slot",
                 "\t\ttype of event-item = leash",
                 "\t\tname of event-item = \"Mr Leashie\"",
                 "\tthen:",

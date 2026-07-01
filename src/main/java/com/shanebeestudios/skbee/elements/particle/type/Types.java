@@ -10,6 +10,7 @@ import com.github.shanebeee.skr.Registration;
 import com.shanebeestudios.skbee.api.particle.ParticleWrapper;
 import com.shanebeestudios.skbee.api.util.SkriptUtils;
 import com.shanebeestudios.skbee.api.util.Util;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.Particle.DustOptions;
@@ -122,6 +123,30 @@ public class Types {
         } else {
             Util.logLoading("It looks like another addon registered 'particlespell' already.");
             Util.logLoading("You may have to use their Particle Spell in SkBee's syntaxes.");
+        }
+
+        if (LegacyUtils.IS_RUNNING_MC_26_2) {
+            if (Classes.getExactClassInfo(Particle.Geyser.class) == null) {
+                reg.newType(Particle.Geyser.class, "geyser")
+                    .noDoc()
+                    .user("geysers?")
+                    .parser(SkriptUtils.getDefaultParser())
+                    .register();
+            } else {
+                Util.logLoading("It looks like another addon registered 'geyser' already.");
+                Util.logLoading("You may have to use their Geyser in SkBee's syntaxes.");
+            }
+
+            if (Classes.getExactClassInfo(Particle.GeyserBase.class) == null) {
+                reg.newType(Particle.GeyserBase.class, "geyserbase")
+                    .noDoc()
+                    .user("geyser ?bases?")
+                    .parser(SkriptUtils.getDefaultParser())
+                    .register();
+            } else {
+                Util.logLoading("It looks like another addon registered 'geyserbase' already.");
+                Util.logLoading("You may have to use their GeyserBase in SkBee's syntaxes.");
+            }
         }
     }
 
@@ -237,6 +262,37 @@ public class Types {
                 "make 10 of effect using {_spell} at location of player's head")
             .since("3.13.1")
             .register();
+
+        if (LegacyUtils.IS_RUNNING_MC_26_2) {
+            DefaultFunction<Particle.Geyser> geyserFunc = DefaultFunction.builder(reg.getAddon(), "geyser", Particle.Geyser.class)
+                .parameter("water_blocks", Number.class)
+                .build(params -> {
+                    Number waterBlocks = params.get("water_blocks");
+                    return new Particle.Geyser(waterBlocks.intValue());
+                });
+            reg.newFunction(geyserFunc)
+                .name("Particle - Geyser")
+                .description("Options which can be applied to geyser particles.",
+                    "`water_blocks` = Positive integer, scales the particle size and its burst impulse.")
+                .since("INSERT VERSION")
+                .register();
+            DefaultFunction<Particle.GeyserBase> geyserBaseFunc = DefaultFunction.builder(reg.getAddon(), "geyserbase", Particle.GeyserBase.class)
+                .parameter("water_blocks", Number.class)
+                .parameter("burst_impulse_base", Number.class)
+                .build(params -> {
+                    Number waterBlocks = params.get("water_blocks");
+                    Number burstImpulse = params.get("burst_impulse_base");
+
+                    return new Particle.GeyserBase(waterBlocks.intValue(), burstImpulse.floatValue());
+                });
+            reg.newFunction(geyserBaseFunc)
+                .name("Particle - GeyserBase")
+                .description("Options which can be applied to geyserbase particles.",
+                    "`water_blocks` = Positive integer, scales the particle size and its burst impulse.",
+                    "`burst_impulse_base` = Float, scales the initial burst impulse.")
+                .since("INSERT VERSION")
+                .register();
+        }
     }
 
 }

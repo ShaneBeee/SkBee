@@ -12,8 +12,7 @@ import org.bukkit.entity.HumanEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 public class CondHasDiscoveredRecipe extends Condition {
 
@@ -40,7 +39,7 @@ public class CondHasDiscoveredRecipe extends Condition {
     @SuppressWarnings("null")
     private Expression<String> recipes;
 
-    @SuppressWarnings({"unchecked", "null", "NullableProblems"})
+    @SuppressWarnings({"unchecked", "null"})
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         players = (Expression<Player>) exprs[0];
@@ -49,7 +48,6 @@ public class CondHasDiscoveredRecipe extends Condition {
         return true;
     }
 
-    @SuppressWarnings("NullableProblems")
     @Override
     public boolean check(Event event) {
         return players.check(event, player -> recipes.check(event, recipeString -> {

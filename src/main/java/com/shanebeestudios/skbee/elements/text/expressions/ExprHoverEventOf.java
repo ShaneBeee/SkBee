@@ -11,8 +11,7 @@ import com.shanebeestudios.skbee.api.wrapper.ComponentWrapper;
 import net.kyori.adventure.text.event.HoverEvent;
 import org.bukkit.event.Event;
 import org.jetbrains.annotations.NotNull;
-
-import javax.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 
 @SuppressWarnings("rawtypes")
 public class ExprHoverEventOf extends PropertyExpression<ComponentWrapper, HoverEvent> {

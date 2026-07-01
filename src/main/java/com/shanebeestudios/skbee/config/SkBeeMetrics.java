@@ -134,6 +134,7 @@ public class SkBeeMetrics {
         STATISTICS,
         STRUCTURE_TEMPLATES,
         SWITCH_CASE,
+        TAB_COMPLETE,
         TAG_ALIASES,
         TEXT_COMPONENTS,
         WHILE_RUNNABLE,
