@@ -16,19 +16,23 @@ public class ExprChunkAt extends SimpleExpression<Chunk> {
 
     public static void register(Registration reg) {
         reg.newCombinedExpression(ExprChunkAt.class, Chunk.class,
-                "chunk at [coord[inate]s] %number%,[ ]%number% [(in|of) %world%] [nogen:without (generating|loading)]")
-            .name("Chunk at Coords")
-            .description("Get a chunk using chunk coords.",
+                "chunk at [coord[inate]s] %number%,[ ]%-number% [(in|of) %world%] [nogen:without (generating|loading)]",
+                "chunk from key %number% [(in|of) %world%] [nogen:without (generating|loading)]")
+            .name("Chunk at Coords/Key")
+            .description("Get a chunk using chunk coords or a chunk key.",
                 "NOTE: Chunk coords are different than location coords.",
                 "Chunk coords are basically location coords divided by 16.",
                 "Optionally get the chunk without generating it (possibly doesn't load as well).")
             .examples("set {_chunk} to chunk at coords 1,1",
                 "set {_chunk} to chunk at coords 1,1 in world \"world\"",
-                "set {_chunk} to chunk at 50,50 in world \"world_nether\" without generating")
+                "set {_chunk} to chunk at 50,50 in world \"world_nether\" without generating",
+                "set {_chunk} to chunk from key {_key} in world of player",
+                "set {_chunk} to chunk from key {_key} in world \"world\"")
             .since("2.14.0")
             .register();
     }
 
+    private int pattern;
     private Expression<Number> chunkX, chunkZ;
     private Expression<World> world;
     private boolean generate;
@@ -36,9 +40,14 @@ public class ExprChunkAt extends SimpleExpression<Chunk> {
     @SuppressWarnings("unchecked")
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
+        this.pattern = matchedPattern;
         this.chunkX = (Expression<Number>) exprs[0];
-        this.chunkZ = (Expression<Number>) exprs[1];
-        this.world = (Expression<World>) exprs[2];
+        if (matchedPattern == 0) {
+            this.chunkZ = (Expression<Number>) exprs[1];
+            this.world = (Expression<World>) exprs[2];
+        } else {
+            this.world = (Expression<World>) exprs[1];
+        }
         this.generate = !parseResult.hasTag("nogen");
         return true;
     }
@@ -47,13 +56,22 @@ public class ExprChunkAt extends SimpleExpression<Chunk> {
     protected Chunk @Nullable [] get(Event event) {
         World world = this.world.getSingle(event);
         Number x = this.chunkX.getSingle(event);
-        Number z = this.chunkZ.getSingle(event);
+        Number z = this.chunkZ != null ? this.chunkZ.getSingle(event) : null;
 
-        if (world == null || x == null || z == null) {
+        if (world == null || x == null) {
             return null;
         }
 
-        Chunk chunkAt = world.getChunkAt(x.intValue(), z.intValue(), this.generate);
+        if (this.pattern == 0 && z == null) {
+            return null;
+        }
+
+        Chunk chunkAt;
+        if (z == null) {
+            chunkAt = world.getChunkAt(x.intValue(), this.generate);
+        } else {
+            chunkAt = world.getChunkAt(x.intValue(), z.intValue(), this.generate);
+        }
         return new Chunk[]{chunkAt};
     }
 
@@ -70,9 +88,15 @@ public class ExprChunkAt extends SimpleExpression<Chunk> {
     @Override
     public @NotNull String toString(@Nullable Event e, boolean d) {
         SyntaxStringBuilder builder = new SyntaxStringBuilder(e, d);
-        builder.append("chunk at coords [", this.chunkX, ",", this.chunkZ, "]");
+        if (this.pattern == 0) {
+            builder.append("chunk at coords [", this.chunkX, ",", this.chunkZ, "]");
+        } else {
+            builder.append("chunk from key [", this.chunkX, "]");
+        }
         builder.append("in world '", this.world, "'");
-        if (!this.generate) builder.append("without generating");
+        if (!this.generate) {
+            builder.append("without generating");
+        }
         return builder.toString();
     }
 
