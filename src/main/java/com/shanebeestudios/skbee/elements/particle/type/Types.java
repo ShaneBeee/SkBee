@@ -274,7 +274,7 @@ public class Types {
                 .name("Particle - Geyser")
                 .description("Options which can be applied to geyser particles.",
                     "`water_blocks` = Positive integer, scales the particle size and its burst impulse.")
-                .since("INSERT VERSION")
+                .since("3.25.1")
                 .register();
             DefaultFunction<Particle.GeyserBase> geyserBaseFunc = DefaultFunction.builder(reg.getAddon(), "geyserbase", Particle.GeyserBase.class)
                 .parameter("water_blocks", Number.class)
@@ -290,7 +290,7 @@ public class Types {
                 .description("Options which can be applied to geyserbase particles.",
                     "`water_blocks` = Positive integer, scales the particle size and its burst impulse.",
                     "`burst_impulse_base` = Float, scales the initial burst impulse.")
-                .since("INSERT VERSION")
+                .since("3.25.1")
                 .register();
         }
     }
