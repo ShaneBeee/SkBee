@@ -19,6 +19,7 @@ import org.checkerframework.common.value.qual.IntRange;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -52,7 +53,9 @@ public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
     protected EnchantmentType[] get(Event event) {
         List<EnchantmentType> enchants = new ArrayList<>();
         ItemComponentUtils.takeAPeakAtComponent(this.items.getArray(event), DataComponentTypes.STORED_ENCHANTMENTS, ie -> {
-            ie.enchantments().forEach((e, i) -> enchants.add(new EnchantmentType(e, i)));
+            if (ie != null) {
+                ie.enchantments().forEach((e, i) -> enchants.add(new EnchantmentType(e, i)));
+            }
         });
         return enchants.toArray(new EnchantmentType[0]);
     }
@@ -80,7 +83,7 @@ public class ExprStoredEnchant extends SimpleExpression<EnchantmentType> {
 
         DataComponentType.Valued<ItemEnchantments> dataType = DataComponentTypes.STORED_ENCHANTMENTS;
         ItemComponentUtils.modifyComponent(this.items.getArray(event), dataType, (ie, itemStack) -> {
-            Map<Enchantment, @IntRange(from = 1L, to = 255L) Integer> enchantments = new java.util.HashMap<>(ie.enchantments());
+            Map<Enchantment, @IntRange(from = 1L, to = 255L) Integer> enchantments = ie != null ? new HashMap<>(ie.enchantments()) : new HashMap<>();
 
             switch (mode) {
                 case SET -> {
