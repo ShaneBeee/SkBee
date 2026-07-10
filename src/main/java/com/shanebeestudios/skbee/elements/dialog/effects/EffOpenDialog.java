@@ -42,7 +42,7 @@ public class EffOpenDialog extends Effect {
     @Override
     public boolean init(Expression<?>[] exprs, int matchedPattern, Kleenean isDelayed, ParseResult parseResult) {
         this.close = matchedPattern == 0;
-        if (this.close) {
+        if (!this.close) {
             this.id = exprs[0];
         }
         this.audiences = (Expression<Audience>) exprs[matchedPattern];
