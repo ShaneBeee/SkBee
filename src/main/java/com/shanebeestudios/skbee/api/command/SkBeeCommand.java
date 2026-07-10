@@ -122,7 +122,8 @@ public class SkBeeCommand {
                 // Response is a JSON array; we only requested 1 element so it's [[timestamp, {feature: {true: n, false: n}}]]
                 JsonObject root = new Gson().fromJson(reader, JsonObject.class);
                 JsonArray drilldownData = root.getAsJsonArray("drilldownData");
-                int totalServers = root.getAsJsonArray("seriesData").get(0).getAsJsonObject().get("y").getAsInt();
+                JsonArray seriesData = root.getAsJsonArray("seriesData");
+                int totalServers = seriesData.get(seriesData.size() - 1).getAsJsonObject().get("y").getAsInt();
 
                 sendColMsg(sender, "&7Total servers: &b%d", totalServers);
 
