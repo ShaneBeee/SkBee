@@ -160,9 +160,10 @@ public class Types {
             .parameter("size", Number.class)
             .build(args -> {
                 Object color = args.get("color");
-                Number size = args.get("size");
+                Number numSize = args.get("size");
                 if (color instanceof Color) {
-                    return new DustOptions(((Color) color).asBukkitColor(), size.floatValue());
+                    float size = Math.clamp(numSize.floatValue(), 0.01F, 4.0F);
+                    return new DustOptions(((Color) color).asBukkitColor(), size);
                 }
                 return null;
             });
@@ -170,7 +171,7 @@ public class Types {
         reg.newFunction(dustFunc)
             .name("Dust Option")
             .description("Creates a new dust option to be used with 'dust' particle. Color can either be a regular color or an RGB color using",
-                "Skript's rgb() function. Size is the size the particle will be.")
+                "Skript's rgb() function. Size is the size the particle will be (limited between 0.01 and 4.0).")
             .examples("set {_c} to dustOption(red, 1.5)", "set {_c} to dustOption(rgb(1, 255, 1), 3)")
             .since("1.9.0")
             .register();
@@ -184,9 +185,10 @@ public class Types {
             .build(params -> {
                 Object fromColor = params.get("fromColor");
                 Object toColor = params.get("toColor");
-                Number size = params.get("size");
+                Number numSize = params.get("size");
                 if (fromColor instanceof Color && toColor instanceof Color) {
-                    return new DustTransition(((Color) fromColor).asBukkitColor(), ((Color) toColor).asBukkitColor(), size.floatValue());
+                    float size = Math.clamp(numSize.floatValue(), 0.01F, 4.0F);
+                    return new DustTransition(((Color) fromColor).asBukkitColor(), ((Color) toColor).asBukkitColor(), size);
                 }
                 return null;
             });
@@ -195,9 +197,9 @@ public class Types {
             .name("Dust Transition")
             .description("Creates a new dust transition to be used with 'dust_color_transition' particle.",
                 "Color can either be a regular color or an RGB color using Skript's rgb() function.",
-                "Size is the size the particle will be.")
-            .examples("set {_d} to dustTransition(red, green, 10)",
-                "set {_d} to dustTransition(blue, rgb(1,1,1), 5)")
+                "Size is the size the particle will be (limited between 0.01 and 4.0).")
+            .examples("set {_d} to dustTransition(red, green, 4)",
+                "set {_d} to dustTransition(blue, rgb(1,1,1), 2)")
             .since("1.11.1")
             .register();
 
@@ -268,7 +270,7 @@ public class Types {
                 .parameter("water_blocks", Number.class)
                 .build(params -> {
                     Number waterBlocks = params.get("water_blocks");
-                    return new Particle.Geyser(waterBlocks.intValue());
+                    return new Particle.Geyser(Math.max(waterBlocks.intValue(), 1));
                 });
             reg.newFunction(geyserFunc)
                 .name("Particle - Geyser")
@@ -283,7 +285,7 @@ public class Types {
                     Number waterBlocks = params.get("water_blocks");
                     Number burstImpulse = params.get("burst_impulse_base");
 
-                    return new Particle.GeyserBase(waterBlocks.intValue(), burstImpulse.floatValue());
+                    return new Particle.GeyserBase(Math.max(waterBlocks.intValue(), 1), burstImpulse.floatValue());
                 });
             reg.newFunction(geyserBaseFunc)
                 .name("Particle - GeyserBase")
