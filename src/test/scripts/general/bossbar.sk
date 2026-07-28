@@ -1,4 +1,4 @@
-test "SkBee - Bossbars":
+test "SkBee - Bossbars" when class info with codename "bossbar" is registered:
 	set {_size} to size of all bossbars
 	# Creation
 	set {_bar} to new bossbar with id "test_bar" with title "Test Bossbar" with color red with style segmented_6 with progress 50

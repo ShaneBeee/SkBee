@@ -2,6 +2,7 @@ package com.shanebeestudios.skbee.api.nbt;
 
 import ch.njol.skript.aliases.ItemType;
 import ch.njol.skript.registrations.Classes;
+import ch.njol.skript.test.runner.TestMode;
 import com.shanebeestudios.skbee.SkBee;
 import com.shanebeestudios.skbee.api.util.Pair;
 import com.shanebeestudios.skbee.api.util.Util;
@@ -50,7 +51,7 @@ public class NBTApi {
         Util.log("&aLoading NBTApi...");
         MinecraftVersion version = MinecraftVersion.getVersion();
         if (version == MinecraftVersion.UNKNOWN) {
-            if (config.nbt_allow_force_load_unknown_version) {
+            if (config.nbt_allow_force_load_unknown_version || TestMode.ENABLED) {
                 Util.log("&eAttempting to force load NBT-API with an unknown Minecraft version.");
                 try {
                     // Failsafe to make sure API is properly loaded each time

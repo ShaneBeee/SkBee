@@ -153,7 +153,7 @@ public class SkBeeCommand {
                     int polled = (int) entry.getValue()[2];
                     int green = (int) Math.round(percent / 100.0 * 40);
                     int red = 40 - green;
-                    String bar = "&a" + "|".repeat(green) + "&c" + "|".repeat(red);
+                    String bar = "<#25FA07>" + "▇".repeat(green) + "<#424040>" + "▇".repeat(red);
                     sendColMsg(sender, "&7- &b%-25s &7[%s&7] &f%.1f%% &7(&b%d&7/&b%d&7)", entry.getKey(), bar, percent, servers, polled);
                 }
             } catch (Exception e) {

@@ -20,10 +20,8 @@ public class FastBoardAdventure extends FastBoardBase<ComponentWrapper, Componen
 
     @Override
     public void setTitle(Object title) {
-        ComponentWrapper titleComp;
-        if (title instanceof ComponentWrapper cw) titleComp = cw;
-        else if (title instanceof String s) titleComp = ComponentWrapper.fromText(s);
-        else return;
+        ComponentWrapper titleComp = convert(title);
+        if (titleComp == null) return;
 
         // Only update if title changes
         if (this.title.equals(titleComp)) return;
@@ -37,14 +35,8 @@ public class FastBoardAdventure extends FastBoardBase<ComponentWrapper, Componen
     public void setLine(int lineNumber, Object line, @Nullable Object lineFormat) {
         if (lineNumber > 15 || lineNumber < 1) return;
 
-        ComponentWrapper lineComp;
-        if (line instanceof ComponentWrapper cw) lineComp = cw;
-        else if (line instanceof String s) lineComp = ComponentWrapper.fromText(s);
-        else lineComp = null;
-
-        ComponentWrapper formatComp = null;
-        if (lineFormat instanceof ComponentWrapper cw) formatComp = cw;
-        else if (lineFormat instanceof String s) formatComp = ComponentWrapper.fromText(s);
+        ComponentWrapper lineComp = convert(line);
+        ComponentWrapper formatComp = convert(lineFormat);
 
         ComponentWrapper previousLine = this.lines[REVERSE ? 15 - lineNumber : lineNumber - 1];
         ComponentWrapper previousScore = this.formats[REVERSE ? 15 - lineNumber : lineNumber - 1];
@@ -91,6 +83,15 @@ public class FastBoardAdventure extends FastBoardBase<ComponentWrapper, Componen
         }
         if (this.fastBoard == null) return;
         this.fastBoard.updateLines(lines, formats);
+    }
+
+    private ComponentWrapper convert(Object object) {
+        return switch (object) {
+            case ComponentWrapper cw -> cw;
+            case Component c -> ComponentWrapper.fromComponent(c);
+            case String s -> ComponentWrapper.fromText(s);
+            case null, default -> null;
+        };
     }
 
 }
