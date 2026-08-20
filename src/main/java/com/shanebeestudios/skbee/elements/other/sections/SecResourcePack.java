@@ -189,7 +189,7 @@ public class SecResourcePack extends Section {
 
         // Apply packs
         ResourcePackPacksEvent resourcePackPacksEvent = new ResourcePackPacksEvent();
-        Variables.setLocalVariables(resourcePackPacksEvent, variables);
+        Variables.setLocalVariables(resourcePackPacksEvent, variables.get());
         TriggerItem.walk(this.packs, resourcePackPacksEvent);
         variables.set(Variables.removeLocals(resourcePackPacksEvent));
 
