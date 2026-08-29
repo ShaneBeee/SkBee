@@ -11,7 +11,7 @@ configurations.matching { it.isCanBeResolved }.configureEach {
 }
 
 // Version of SkBee
-val projectVersion = "3.25.3"
+val projectVersion = "3.25.4"
 // Server version
 val serverVersion = "26.2"
 // Minimum version of Minecraft that SkBee supports
