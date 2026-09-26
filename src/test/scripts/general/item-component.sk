@@ -367,16 +367,16 @@ test "SkBee - Item Component test" when running minecraft "1.21.11":
 
 	# Swing Animation Component Section
 	set {_i} to 1 of diamond sword
-	assert {_i} has item component minecraft:swing_animation with "The sword should have a default swing animation component"
+	assert {_i} has item component minecraft:attack_animation with "The sword should have a default swing animation component"
 
 	set {_i} to 1 of stick
-	clear minecraft:swing_animation data component of {_i} #they come with one by default
-	assert {_i} doesn't have item component minecraft:swing_animation with "The stick should not have a swing component"
+	clear minecraft:attack_animation data component of {_i} #they come with one by default
+	assert {_i} doesn't have item component minecraft:attack_animation with "The stick should not have a swing component"
 
-	apply swing animation component to {_i}:
+	apply attack animation component to {_i}:
 		type: "stab"
 		duration: 10 seconds
-	assert {_i} has item component minecraft:swing_animation with "The stick should now have a default swing component again"
+	assert {_i} has item component minecraft:attack_animation with "The stick should now have a default swing component again"
 	delete {_i}
 
 	# Use Effects Component Section
