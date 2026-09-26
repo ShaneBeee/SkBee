@@ -140,7 +140,7 @@ public class ItemUtils {
         else if (object instanceof ItemType itemType) itemStack = itemType.getRandom();
         else if (object instanceof Slot slot) itemStack = slot.getItem();
 
-        if (itemStack == null) return;
+        if (itemStack == null || itemStack.isEmpty()) return;
         itemConsumer.accept(itemStack);
 
         if (object instanceof ItemType itemType) {
