@@ -12,7 +12,9 @@ import com.github.shanebeee.skr.Registration;
 import com.github.shanebeee.skr.skript.SimpleEntryValidator;
 import com.shanebeestudios.skbee.api.skript.base.Section;
 import com.shanebeestudios.skbee.api.util.ItemComponentUtils;
+import com.shanebeestudios.skbee.api.util.legacy.LegacyUtils;
 import com.shanebeestudios.skbee.config.SkBeeMetrics;
+import io.papermc.paper.datacomponent.DataComponentType;
 import io.papermc.paper.datacomponent.DataComponentTypes;
 import io.papermc.paper.datacomponent.item.SwingAnimation;
 import io.papermc.paper.datacomponent.item.SwingAnimation.Animation;
@@ -28,24 +30,28 @@ public class SecSwingAnimationComponent extends Section {
     private static EntryValidator VALIDATOR;
 
     public static void register(Registration reg) {
+        if (!LegacyUtils.IS_RUNNING_MC_26_3) return;
+
         VALIDATOR = SimpleEntryValidator.builder()
             .addOptionalEntry("type", String.class)
             .addOptionalEntry("duration", Timespan.class)
             .build();
 
         reg.newSection(SecSwingAnimationComponent.class, VALIDATOR,
-                "apply swing animation component to %itemstacks/itemtypes/slots%")
+                "apply (swing|interact|:attack) animation component to %itemstacks/itemtypes/slots%")
             .name("ItemComponent - Swing Animation Component Apply")
             .description("Specifies the swing animation to play when attacking or interacting using this item.",
-                "See [**Swing Animation Component**](https://minecraft.wiki/w/Data_component_format#swing_animation) on McWiki for more details.",
-                "Requires Minecraft 1.21.11+",
+                "See [**Attack Animation Component**](https://minecraft.wiki/w/Data_component_format#attack_animation) " +
+                    "and [**Interact Animation Component**](https://minecraft.wiki/w/Data_component_format#interact_animation) " +
+                    "on McWiki for more details.",
+                "Requires Minecraft 26.3+",
                 "",
                 "**ENTRIES**:",
                 "All entries are optional and will use their defaults when omitted.",
                 "- `type` = String, The type of swinging animation. Can be \"none\", \"whack\", \"stab\". Defaults to \"whack\".",
                 "- `duration` = A timespan that determines the animation's duration. Defaults to 6 ticks.")
             .examples("set {_i} to 1 of diamond sword",
-                "apply swing animation component to {_i}:",
+                "apply attack animation component to {_i}:",
                 "\ttype: \"stab\"",
                 "\tduration: 60 ticks",
                 "",
@@ -57,6 +63,7 @@ public class SecSwingAnimationComponent extends Section {
     private Expression<?> items;
     private Expression<String> type;
     private Expression<Timespan> duration;
+    private boolean attack;
 
     @SuppressWarnings("unchecked")
     @Override
@@ -71,14 +78,15 @@ public class SecSwingAnimationComponent extends Section {
         this.type = (Expression<String>) validate.getOptional("type", false);
         this.duration = (Expression<Timespan>) validate.getOptional("duration", false);
         this.items = exprs[0];
+        this.attack = parseResult.hasTag("attack");
 
         return true;
     }
 
-    @SuppressWarnings("UnstableApiUsage")
     @Override
     protected @Nullable TriggerItem walk(Event event) {
         SwingAnimation.Builder builder = SwingAnimation.swingAnimation();
+        DataComponentType.Valued<SwingAnimation> dataComponent = this.attack ? DataComponentTypes.ATTACK_ANIMATION : DataComponentTypes.INTERACT_ANIMATION;
 
         if (this.type != null) {
             String typeString = this.type.getSingle(event);
@@ -97,14 +105,15 @@ public class SecSwingAnimationComponent extends Section {
         }
 
         ItemComponentUtils.modifyComponent(this.items.getArray(event), ChangeMode.SET,
-            DataComponentTypes.SWING_ANIMATION, builder.build());
+            dataComponent, builder.build());
 
         return super.walk(event, false);
     }
 
     @Override
     public String toString(@Nullable Event e, boolean d) {
-        return "apply swing animation component to " + this.items.toString(e, d);
+        String type = this.attack ? "attack" : "interact";
+        return "apply " + type + " animation component to " + this.items.toString(e, d);
     }
 
 }
