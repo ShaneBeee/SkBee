@@ -17,7 +17,7 @@ val serverVersion = "26.2"
 // Minimum version of Minecraft that SkBee supports
 val apiVersion = "1.21.11"
 // Where this builds on the server
-val serverLocation = "Minecraft/Skript/26-2"
+val serverLocation = "Minecraft/Skript/26-3"
 
 java.sourceCompatibility = JavaVersion.VERSION_25
 
@@ -53,10 +53,10 @@ dependencies {
     compileOnly("org.apache.commons:commons-text:1.10.0")
 
     // NBT-API
-    implementation("de.tr7zw:item-nbt-api:2.16.0")
+    implementation("de.tr7zw:item-nbt-api:2.16.1")
 
     // FastBoard
-    implementation("fr.mrmicky:fastboard:2.2.0")
+    implementation("fr.mrmicky:fastboard:2.2.2")
 
     // Virtual Furnace
     implementation("com.github.ShaneBeeStudios:VirtualFurnace:1.1.2")
